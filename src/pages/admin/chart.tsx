@@ -1,16 +1,16 @@
-import { tag, Component } from 'omi'
-import * as echarts from 'echarts/core'
-import { LineChart } from 'echarts/charts'
-import { GridComponent, TooltipComponent, ToolboxComponent } from 'echarts/components'
-import { CanvasRenderer } from 'echarts/renderers'
+import { tag, Component } from 'omi';
+import * as echarts from 'echarts/core';
+import { LineChart } from 'echarts/charts';
+import { GridComponent, TooltipComponent, ToolboxComponent } from 'echarts/components';
+import { CanvasRenderer } from 'echarts/renderers';
 
 // 注册必须的组件
-echarts.use([LineChart, GridComponent, TooltipComponent, ToolboxComponent, CanvasRenderer])
+echarts.use([LineChart, GridComponent, TooltipComponent, ToolboxComponent, CanvasRenderer]);
 
 export function createLineChart(container: HTMLElement, option: echarts.EChartsCoreOption) {
-  const chart = echarts.init(container)
-  chart.setOption(option)
-  return chart
+  const chart = echarts.init(container);
+  chart.setOption(option);
+  return chart;
 }
 
 @tag('admin-chart')
@@ -22,11 +22,11 @@ export class AdminChart extends Component {
           <div class="w-full h-40 border rounded" ref={(e) => (this.chartDivs[i] = e)}></div>
         ))}
       </div>
-    )
+    );
   }
 
-  chartDivs: Array<HTMLElement | null> = []
-  charts: Array<echarts.ECharts | null> = []
+  chartDivs: Array<HTMLElement | null> = [];
+  charts: Array<echarts.ECharts | null> = [];
 
   installed() {
     const option = {
@@ -49,37 +49,37 @@ export class AdminChart extends Component {
           type: 'line',
         },
       ],
-    }
+    };
 
     this.chartDivs.forEach((div, i) => {
       if (div) {
         setTimeout(() => {
           option.series[0].data = Array.from({ length: 7 }).map((): number => {
-            return this.random()
-          }) as any
-          this.charts[i] = createLineChart(div, option)
-        }, i * 50)
+            return this.random();
+          }) as any;
+          this.charts[i] = createLineChart(div, option);
+        }, i * 50);
       }
-    })
+    });
 
     // Add a window resize event listener to update the chart dimensions
-    window.addEventListener('resize', this.onWindowResize)
+    window.addEventListener('resize', this.onWindowResize);
   }
 
   random(): number {
-    return Math.floor(Math.random() * 1000)
+    return Math.floor(Math.random() * 1000);
   }
 
   onWindowResize = () => {
     this.charts.forEach((chart) => {
       if (chart) {
-        chart.resize()
+        chart.resize();
       }
-    })
-  }
+    });
+  };
 
   // Remove the event listener when the component is unmounted
   uninstall() {
-    window.removeEventListener('resize', this.onWindowResize)
+    window.removeEventListener('resize', this.onWindowResize);
   }
 }

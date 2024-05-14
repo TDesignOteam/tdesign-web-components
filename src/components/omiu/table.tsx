@@ -1,5 +1,5 @@
-import { Component, tag } from 'omi'
-import './tag.tsx'
+import { Component, tag } from 'omi';
+import './tag.tsx';
 
 @tag('o-table')
 export class Table extends Component {
@@ -85,11 +85,11 @@ export class Table extends Component {
                       </a>
                     </td>
                   </tr>
-                )
+                );
               })}
           </tbody>
         </table>
       </div>
-    )
+    );
   }
 }

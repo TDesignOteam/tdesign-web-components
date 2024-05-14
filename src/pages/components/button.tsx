@@ -1,4 +1,4 @@
-import '@/components/omiu/button'
+import '@/components/button';
 
 export function Questionnaire() {
   return (
@@ -103,5 +103,5 @@ export function Questionnaire() {
         </div>
       </div>
     </div>
-  )
+  );
 }

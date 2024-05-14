@@ -1,82 +1,82 @@
-import { Component, tag } from 'omi'
-import { createPopper, Instance } from '@popperjs/core'
+import { Component, tag } from 'omi';
+import { createPopper, Instance } from '@popperjs/core';
 
 type Props = {
-  options: { text: string; value: string }[]
-  value: string
-}
+  options: { text: string; value: string }[];
+  value: string;
+};
 @tag('o-select')
 export class Select extends Component<Props> {
   static css = `
   :host {
     display: inline-block;
   }
-  `
+  `;
 
   state = {
     isOpen: false,
     selectedValue: '',
     selectedText: '',
-  }
+  };
 
   install() {
-    this.setSelectedOption()
+    this.setSelectedOption();
     // 添加事件监听器
-    document.addEventListener('click', this.handleClickOutside.bind(this))
+    document.addEventListener('click', this.handleClickOutside.bind(this));
   }
 
   setSelectedOption() {
-    const selectedOption = this.props.options.find((option) => this.props.value === option.value)
+    const selectedOption = this.props.options.find((option) => this.props.value === option.value);
     if (selectedOption) {
-      this.state.selectedValue = selectedOption.value
-      this.state.selectedText = selectedOption.text
+      this.state.selectedValue = selectedOption.value;
+      this.state.selectedText = selectedOption.text;
     }
   }
 
   receiveProps() {
-    this.setSelectedOption()
+    this.setSelectedOption();
   }
 
   uninstall() {
     // 移除事件监听器
-    document.removeEventListener('click', this.handleClickOutside.bind(this))
+    document.removeEventListener('click', this.handleClickOutside.bind(this));
   }
 
   handleClickOutside(event: MouseEvent) {
     if (this.button && !this.button.contains(event.target as Node) && this.state.isOpen) {
-      this.state.isOpen = false
-      this.update()
+      this.state.isOpen = false;
+      this.update();
     }
   }
 
-  button: HTMLElement | null = null
-  menu: HTMLElement | null = null
-  popper: Instance | null = null
+  button: HTMLElement | null = null;
+  menu: HTMLElement | null = null;
+  popper: Instance | null = null;
 
   onToggleOpen(event: MouseEvent) {
-    event.stopPropagation()
+    event.stopPropagation();
 
-    this.state.isOpen = !this.state.isOpen
-    this.update()
-    this.popper && this.popper.destroy()
+    this.state.isOpen = !this.state.isOpen;
+    this.update();
+    this.popper && this.popper.destroy();
     if (this.state.isOpen && this.button && this.menu) {
       this.popper = createPopper(this.button, this.menu, {
         placement: 'bottom-start',
-      })
+      });
     }
   }
 
   onSelectOption(option: { text: string; value: string }) {
     if (option.value === this.state.selectedValue) {
-      return
+      return;
     }
-    this.state.selectedValue = option.value
-    this.state.selectedText = option.text
-    this.state.isOpen = false
-    this.update()
+    this.state.selectedValue = option.value;
+    this.state.selectedText = option.text;
+    this.state.isOpen = false;
+    this.update();
     this.fire('change', {
       value: option.value,
-    })
+    });
   }
 
   render() {
@@ -128,6 +128,6 @@ export class Select extends Component<Props> {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

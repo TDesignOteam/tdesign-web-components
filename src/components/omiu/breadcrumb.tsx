@@ -1,15 +1,15 @@
-import { Component, tag } from 'omi'
+import { Component, tag } from 'omi';
 
 type BreadcrumbItem = {
-  label: string
-  href: string
-  icon: string
-  separator?: string
-}
+  label: string;
+  href: string;
+  icon: string;
+  separator?: string;
+};
 
 type BreadcrumbProps = {
-  items?: BreadcrumbItem[]
-}
+  items?: BreadcrumbItem[];
+};
 
 @tag('o-breadcrumb')
 export class Breadcrumb extends Component<BreadcrumbProps> {
@@ -17,10 +17,10 @@ export class Breadcrumb extends Component<BreadcrumbProps> {
   :host {
     display: inline-flex;
   }
-  `
+  `;
   static defaultProps = {
     items: [],
-  }
+  };
 
   render() {
     return (
@@ -56,10 +56,10 @@ export class Breadcrumb extends Component<BreadcrumbProps> {
                   </a>
                 </div>
               </li>
-            )
+            );
           })}
         </ol>
       </nav>
-    )
+    );
   }
 }

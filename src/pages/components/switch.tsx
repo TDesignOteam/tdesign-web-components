@@ -1,4 +1,4 @@
-import '@/components/omiu/switch'
+import '@/components/omiu/switch';
 
 export function Questionnaire() {
   return (
@@ -20,5 +20,5 @@ export function Questionnaire() {
         <o-switch disabled size="large"></o-switch>
       </div>
     </div>
-  )
+  );
 }

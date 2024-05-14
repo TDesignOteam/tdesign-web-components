@@ -1,13 +1,13 @@
-import 'omi-suspense'
-import './index.css'
-import { SiteLayout } from './components/site-layout'
-import { AdminLayout } from './components/admin-layout'
-import { ComponentLayout } from './components/component-layout'
-import { pending } from './components/pending'
-import { fallback } from './components/fallback'
-import { Router } from 'omi-router'
-import { Component } from 'omi'
-import './components/appear'
+import 'omi-suspense';
+import './index.css';
+import { SiteLayout } from './pages/components/site-layout';
+import { AdminLayout } from './pages/components/admin-layout';
+import { ComponentLayout } from './pages/components/component-layout';
+import { pending } from './pages/components/pending';
+import { fallback } from './pages/components/fallback';
+import { Router } from 'omi-router';
+import { Component } from 'omi';
+import './pages/components/appear';
 
 export const routes = [
   createRoute('/', () => import('./pages/home')),
@@ -39,10 +39,10 @@ export const routes = [
     path: '/before-enter/test',
     beforeEnter: () => {
       // reject the navigation
-      return false
+      return false;
     },
   },
-]
+];
 
 function createRoute(path: string, componentImport: () => Promise<unknown>) {
   return {
@@ -58,28 +58,28 @@ function createRoute(path: string, componentImport: () => Promise<unknown>) {
                 <o-appear
                   class="opacity-0 translate-y-4"
                   onReady={() => {
-                    window.refreshDark()
-                    window.scrollTo(0, 0)
+                    window.refreshDark();
+                    window.scrollTo(0, 0);
                   }}
                 >
                   {results[0][Object.keys(results[0])[0]](router.params)}
                 </o-appear>
-              )
+              );
             }}
             fallback={fallback}
             beforePending={async (suspense: Component) => {
-              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4')
-              return new Promise((resolve) => setTimeout(resolve, 300))
+              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4');
+              return new Promise((resolve) => setTimeout(resolve, 300));
             }}
             pending={pending}
             onLoaded={() => {
-              window.refreshDark()
+              window.refreshDark();
             }}
           ></o-suspense>
         </SiteLayout>
-      )
+      );
     },
-  }
+  };
 }
 
 function createComponentRoute(path: string, componentImport: () => Promise<unknown>) {
@@ -92,33 +92,33 @@ function createComponentRoute(path: string, componentImport: () => Promise<unkno
             minLoadingTime={400}
             imports={[componentImport()]}
             customRender={(results: { [x: string]: Function }[]) => {
-              const Module = results[0][Object.keys(results[0])[0]]
+              const Module = results[0][Object.keys(results[0])[0]];
               return (
                 <o-appear
                   class="opacity-0 translate-y-4"
                   onReady={() => {
-                    window.refreshDark()
-                    window.scrollTo(0, 0)
+                    window.refreshDark();
+                    window.scrollTo(0, 0);
                   }}
                 >
                   {isClassOrFunction(Module) === 'Function' ? Module(router.params) : <Module></Module>}
                 </o-appear>
-              )
+              );
             }}
             fallback={fallback}
             beforePending={async (suspense: Component) => {
-              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4')
-              return new Promise((resolve) => setTimeout(resolve, 300))
+              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4');
+              return new Promise((resolve) => setTimeout(resolve, 300));
             }}
             pending={pending}
             onLoaded={() => {
-              window.refreshDark()
+              window.refreshDark();
             }}
           ></o-suspense>
         </ComponentLayout>
-      )
+      );
     },
-  }
+  };
 }
 
 function createAdminRoute(path: string, componentImport: () => Promise<unknown>) {
@@ -131,33 +131,33 @@ function createAdminRoute(path: string, componentImport: () => Promise<unknown>)
             minLoadingTime={400}
             imports={[componentImport()]}
             customRender={(results: { [x: string]: Function }[]) => {
-              const Module = results[0][Object.keys(results[0])[0]]
+              const Module = results[0][Object.keys(results[0])[0]];
               return (
                 <o-appear
                   class="opacity-0 translate-y-4"
                   onReady={() => {
-                    window.refreshDark()
-                    window.scrollTo(0, 0)
+                    window.refreshDark();
+                    window.scrollTo(0, 0);
                   }}
                 >
                   {isClassOrFunction(Module) === 'Function' ? Module(router.params) : <Module></Module>}
                 </o-appear>
-              )
+              );
             }}
             fallback={fallback}
             beforePending={async (suspense: Component) => {
-              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4')
-              return new Promise((resolve) => setTimeout(resolve, 300))
+              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4');
+              return new Promise((resolve) => setTimeout(resolve, 300));
             }}
             pending={pending}
             onLoaded={() => {
-              window.refreshDark()
+              window.refreshDark();
             }}
           ></o-suspense>
         </AdminLayout>
-      )
+      );
     },
-  }
+  };
 }
 
 function createBaseRoute(path: string, componentImport: () => Promise<unknown>) {
@@ -173,23 +173,23 @@ function createBaseRoute(path: string, componentImport: () => Promise<unknown>) 
               <o-appear
                 class="opacity-0 translate-y-4"
                 onReady={() => {
-                  window.refreshDark()
-                  window.scrollTo(0, 0)
+                  window.refreshDark();
+                  window.scrollTo(0, 0);
                 }}
               >
                 {results[0][Object.keys(results[0])[0]](router.params)}
               </o-appear>
-            )
+            );
           }}
           fallback={fallback}
           pending={pending}
           onLoaded={() => {
-            window.refreshDark()
+            window.refreshDark();
           }}
         ></o-suspense>
-      )
+      );
     },
-  }
+  };
 }
 
 function createDocsRoute(path: string, componentImport: () => Promise<unknown>) {
@@ -206,8 +206,8 @@ function createDocsRoute(path: string, componentImport: () => Promise<unknown>) 
                 <o-appear
                   class="opacity-0 translate-y-4"
                   onReady={() => {
-                    window.refreshDark()
-                    window.scrollTo(0, 0)
+                    window.refreshDark();
+                    window.scrollTo(0, 0);
                   }}
                 >
                   <product-docs
@@ -216,35 +216,35 @@ function createDocsRoute(path: string, componentImport: () => Promise<unknown>) 
                     section={router.params.section}
                   ></product-docs>
                 </o-appear>
-              )
+              );
             }}
             fallback={fallback}
             beforePending={async (suspense: Component) => {
-              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4')
-              return new Promise((resolve) => setTimeout(resolve, 300))
+              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4');
+              return new Promise((resolve) => setTimeout(resolve, 300));
             }}
             pending={pending}
             onLoaded={() => {
-              window.refreshDark()
+              window.refreshDark();
             }}
           ></o-suspense>
         </SiteLayout>
-      )
+      );
     },
-  }
+  };
 }
 
 function isClassOrFunction(obj: any) {
   if (typeof obj !== 'function') {
-    return 'Not a function or class'
+    return 'Not a function or class';
   }
 
   if (obj.prototype && obj.prototype.constructor === obj) {
     if (obj.toString().startsWith('class ')) {
-      return 'Class'
+      return 'Class';
     } else {
-      return 'Function'
+      return 'Function';
     }
   }
-  return 'Not a function or class'
+  return 'Not a function or class';
 }

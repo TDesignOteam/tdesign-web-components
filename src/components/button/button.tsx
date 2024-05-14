@@ -1,6 +1,6 @@
-import { Component, tag } from 'omi'
-import { cva, type VariantProps } from 'class-variance-authority'
-import { cn } from './utils'
+import { Component, tag } from 'omi';
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '../omiu/utils';
 
 // In order to have tailwindcss scan containing these:
 // border-primary !bg-primary hover:!bg-primary/70 text-primary hover:border-primary/70 hover:text-primary/70
@@ -8,39 +8,37 @@ import { cn } from './utils'
 // border-warning !bg-warning hover:!bg-warning/70 text-warning hover:border-warning/70 hover:text-warning/70
 // border-success !bg-success hover:!bg-success/70 text-success hover:border-success/70 hover:text-success/70
 
-type Theme = 'default' | 'primary' | 'danger' | 'warning' | 'success'
-type Variant = 'base' | 'outline' | 'dashed' | 'text'
+type Theme = 'default' | 'primary' | 'danger' | 'warning' | 'success';
+type Variant = 'base' | 'outline' | 'dashed' | 'text';
 
 const getCompoundVariantsByTheme = (
   theme: Theme,
 ): {
-  variant: Variant
-  theme: Theme
-  className: string
-}[] => {
-  return [
-    {
-      variant: 'base',
-      theme,
-      className: `!bg-${theme} !text-primary-foreground hover:!bg-${theme}/70`,
-    },
-    {
-      variant: 'outline',
-      theme,
-      className: `bg-transparent text-${theme} border-${theme} hover:border-${theme}/70 hover:text-${theme}/70 dark:brightness-125`,
-    },
-    {
-      variant: 'dashed',
-      theme,
-      className: `bg-transparent border border-dashed border-${theme} hover:text-${theme}/70 hover:border-${theme}/70 text-${theme} dark:brightness-125`,
-    },
-    {
-      variant: 'text',
-      theme,
-      className: `bg-transparent text-${theme} hover:text-${theme}/70 hover:bg-zinc-200 dark:hover:bg-zinc-800 dark:brightness-125`,
-    },
-  ]
-}
+  variant: Variant;
+  theme: Theme;
+  className: string;
+}[] => [
+  {
+    variant: 'base',
+    theme,
+    className: `!bg-${theme} !text-primary-foreground hover:!bg-${theme}/70`,
+  },
+  {
+    variant: 'outline',
+    theme,
+    className: `bg-transparent text-${theme} border-${theme} hover:border-${theme}/70 hover:text-${theme}/70 dark:brightness-125`,
+  },
+  {
+    variant: 'dashed',
+    theme,
+    className: `bg-transparent border border-dashed border-${theme} hover:text-${theme}/70 hover:border-${theme}/70 text-${theme} dark:brightness-125`,
+  },
+  {
+    variant: 'text',
+    theme,
+    className: `bg-transparent text-${theme} hover:text-${theme}/70 hover:bg-zinc-200 dark:hover:bg-zinc-800 dark:brightness-125`,
+  },
+];
 
 export const buttonVariants = cva(
   'inline-flex text-sm items-center justify-center whitespace-nowrap rounded ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 box-border gap-2',
@@ -112,24 +110,24 @@ export const buttonVariants = cva(
       theme: 'default',
     },
   },
-)
+);
 
 export type ButtonProps = VariantProps<typeof buttonVariants> & {
   // 使用 clsn， 避免使用 className 同时作用 host 和 内部的 root
-  cls?: string
-  tag: string
-  className?: string
-  block?: boolean
-  disabled?: boolean
-  ghost?: boolean
-  icon?: string
-  loading?: boolean
-  shape?: 'rectangle' | 'square' | 'round' | 'circle'
-  size?: 'small' | 'medium' | 'large'
-  type?: 'submit' | 'reset' | 'button'
-  variant?: Variant
-  theme?: Theme
-}
+  cls?: string;
+  tag: string;
+  className?: string;
+  block?: boolean;
+  disabled?: boolean;
+  ghost?: boolean;
+  icon?: string;
+  loading?: boolean;
+  shape?: 'rectangle' | 'square' | 'round' | 'circle';
+  size?: 'small' | 'medium' | 'large';
+  type?: 'submit' | 'reset' | 'button';
+  variant?: Variant;
+  theme?: Theme;
+};
 
 @tag('o-button')
 export class Button extends Component<ButtonProps> {
@@ -137,32 +135,20 @@ export class Button extends Component<ButtonProps> {
     `:host {
       display: inline-flex;
     }`,
-  ]
+  ];
 
   static defaultProps = {
     tag: 'button',
-  }
+  };
 
   render() {
     // 取出 className 不使用，防止覆盖
-    const {
-      tag: Tag,
-      cls,
-      variant,
-      size,
-      className,
-      block,
-      disabled,
-      ghost,
-      loading,
-      shape,
-      theme,
-      ...props
-    } = this.props
+    delete this.props.className;
+    const { tag: Tag, cls, variant, size, block, disabled, ghost, loading, shape, theme, ...props } = this.props;
 
     // Add disabled attribute if the button is disabled
     if (disabled) {
-      ;(props as { disabled?: boolean }).disabled = true
+      (props as { disabled?: boolean }).disabled = true;
     }
 
     return (
@@ -186,6 +172,6 @@ export class Button extends Component<ButtonProps> {
         {loading && <i class="t-icon t-icon-loading text-base animate-spin"></i>}
         <slot></slot>
       </Tag>
-    )
+    );
   }
 }

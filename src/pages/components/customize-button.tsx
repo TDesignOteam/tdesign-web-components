@@ -1,4 +1,4 @@
-import { showCustomize } from './customize.tsx'
+import { showCustomize } from './customize.tsx';
 
 export function CustomizeButton() {
   return (
@@ -6,8 +6,8 @@ export function CustomizeButton() {
       <button
         class="flex border bg-zinc-100 dark:bg-background dark:text-foreground p-2 rounded-full text-zinc-600 hover:text-primary"
         onClick={(evt) => {
-          evt.stopPropagation()
-          showCustomize()
+          evt.stopPropagation();
+          showCustomize();
         }}
       >
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="">
@@ -19,5 +19,5 @@ export function CustomizeButton() {
         <span class="ml-2">参数调节</span>
       </button>
     </div>
-  )
+  );
 }

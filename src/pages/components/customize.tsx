@@ -1,25 +1,25 @@
-import { render, tag, Component, bind, classNames } from 'omi'
-import { isDark } from '../store'
+import { render, tag, Component, bind, classNames } from 'omi';
+import { isDark } from '../../store';
 
 declare global {
   interface Window {
-    setDarkMode(): void
-    setLightMode(): void
-    refreshDark(): void
+    setDarkMode(): void;
+    setLightMode(): void;
+    refreshDark(): void;
   }
 }
 
-let currentTheme = ''
+let currentTheme = '';
 
 @tag('o-customize')
 class Customize extends Component {
   @bind
   onColorClick(evt: MouseEvent) {
-    const target = evt.currentTarget as HTMLElement
-    this.state.selectedColor = target.dataset.color || ''
-    currentTheme = this.state.selectedColor
-    this.update()
-    target.dataset.color && setPrimary(target.dataset.color.replace(/hsl\(|\)/g, ''))
+    const target = evt.currentTarget as HTMLElement;
+    this.state.selectedColor = target.dataset.color || '';
+    currentTheme = this.state.selectedColor;
+    this.update();
+    target.dataset.color && setPrimary(target.dataset.color.replace(/hsl\(|\)/g, ''));
   }
 
   colors = [
@@ -56,20 +56,20 @@ class Customize extends Component {
     { color: 'hsl(340, 50%, 50%)', name: 'Crimson' },
     { color: 'hsl(360, 50%, 50%)', name: 'Scarlet' },
     { color: 'hsl(380, 50%, 50%)', name: 'Coral' },
-  ]
+  ];
 
   state = {
     selectedColor: currentTheme || this.colors[0].color,
-  }
+  };
 
   @bind
   setDarkMode() {
-    isDark.value = true
+    isDark.value = true;
   }
 
   @bind
   setLightMode() {
-    isDark.value = false
+    isDark.value = false;
   }
 
   render() {
@@ -121,7 +121,7 @@ class Customize extends Component {
                       </span>
                       {item.name}
                     </button>
-                  )
+                  );
                 })}
               </div>
             </div>
@@ -202,47 +202,47 @@ class Customize extends Component {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-let dom: HTMLElement | null = null
+let dom: HTMLElement | null = null;
 
 export function showCustomize(): void {
-  if (dom) return
+  if (dom) return;
   dom = render(
     <Customize class="z-[100002] opacity-0 scale-0 transition-all ease-in-out duration-300 fixed right-6 bottom-24" />,
     document.body,
-  )
+  );
   requestAnimationFrame(() => {
-    dom!.classList.remove('opacity-0')
-    dom!.classList.remove('scale-0')
-    dom!.classList.add('opacity-100')
-    dom!.classList.add('scale-100')
-    document.addEventListener('mousedown', handleClickOutside)
+    dom!.classList.remove('opacity-0');
+    dom!.classList.remove('scale-0');
+    dom!.classList.add('opacity-100');
+    dom!.classList.add('scale-100');
+    document.addEventListener('mousedown', handleClickOutside);
     // 后来出现的 dom 需要刷一遍黑夜白天模式加上 dark class
-    window.refreshDark()
-  })
+    window.refreshDark();
+  });
 }
 
 export function hideCustomize(): void {
-  if (!dom) return
-  dom.classList.add('opacity-0')
-  dom.classList.add('scale-0')
-  dom.classList.remove('opacity-100')
-  dom.classList.remove('scale-100')
+  if (!dom) return;
+  dom.classList.add('opacity-0');
+  dom.classList.add('scale-0');
+  dom.classList.remove('opacity-100');
+  dom.classList.remove('scale-100');
   dom.addEventListener('transitionend', () => {
-    dom && dom.remove()
-    document.removeEventListener('mousedown', handleClickOutside)
-    dom = null
-  })
+    dom && dom.remove();
+    document.removeEventListener('mousedown', handleClickOutside);
+    dom = null;
+  });
 }
 
 function handleClickOutside(event: MouseEvent): void {
-  if (!dom || dom.contains(event.target as Node)) return
-  hideCustomize()
+  if (!dom || dom.contains(event.target as Node)) return;
+  hideCustomize();
 }
 
 export const setPrimary = (color: string) => {
-  document.documentElement.style.setProperty('--primary', color)
-}
+  document.documentElement.style.setProperty('--primary', color);
+};

@@ -1,33 +1,33 @@
-import { signal, effect } from 'omi'
-import './components/dark-switch'
+import { signal, effect } from 'omi';
+import './pages/components/dark-switch';
 
-export const isDark = signal(document.documentElement.classList.contains('dark'))
+export const isDark = signal(document.documentElement.classList.contains('dark'));
 
 document.addEventListener('DOMContentLoaded', () => {
-  isDark.value = document.documentElement.classList.contains('dark')
-})
+  isDark.value = document.documentElement.classList.contains('dark');
+});
 
 effect(() => {
   if (isDark.value) {
-    window.setDarkMode()
+    window.setDarkMode();
   } else {
-    window.setLightMode()
+    window.setLightMode();
   }
-})
+});
 
 interface NavbarItem {
-  path?: string
-  value?: string
-  children?: NavbarItem[]
-  type?: string
-  text?: string
-  href?: string
-  target?: string
-  img?: string
-  inner?: string
-  tag?: string
-  icon?: string
-  isOpen?: boolean
+  path?: string;
+  value?: string;
+  children?: NavbarItem[];
+  type?: string;
+  text?: string;
+  href?: string;
+  target?: string;
+  img?: string;
+  inner?: string;
+  tag?: string;
+  icon?: string;
+  isOpen?: boolean;
 }
 
 export const navbarItems = signal<NavbarItem[]>([
@@ -176,23 +176,23 @@ export const navbarItems = signal<NavbarItem[]>([
   {
     tag: 'dark-switch',
   },
-])
+]);
 
-const value = getValueByPath(location.hash.slice(1), navbarItems.value)
-export const activeMenuItem = signal(value || 'home')
+const value = getValueByPath(location.hash.slice(1), navbarItems.value);
+export const activeMenuItem = signal(value || 'home');
 
 export function getValueByPath(path: string, navbarItems: NavbarItem[]): string | null {
   for (let i = 0; i < navbarItems.length; i++) {
     if (navbarItems[i].path === path) {
-      return navbarItems[i].value || null
+      return navbarItems[i].value || null;
     }
     if (navbarItems[i].children) {
       // @ts-ignore
-      let found = getValueByPath(path, navbarItems[i].children)
-      if (found) return found
+      let found = getValueByPath(path, navbarItems[i].children);
+      if (found) return found;
     }
   }
-  return null // return null if no matching path is found
+  return null; // return null if no matching path is found
 }
 
 export const sidebarItems = signal<NavbarItem[]>([
@@ -264,7 +264,7 @@ export const sidebarItems = signal<NavbarItem[]>([
       },
     ],
   },
-])
+]);
 
-export const activeSidebarItem = signal('dashboard')
-export const isSidebarOpen = signal(true)
+export const activeSidebarItem = signal('dashboard');
+export const isSidebarOpen = signal(true);

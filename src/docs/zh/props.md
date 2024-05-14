@@ -5,12 +5,12 @@
 通过 Props 向子组件传递数据，比如：
 
 ```tsx
-import { Component, tag, render } from 'omi'
+import { Component, tag, render } from 'omi';
 
 @tag('my-element')
 class MyElement extends Component {
   render(props) {
-    return <h1>Hello, {props.name}!</h1>
+    return <h1>Hello, {props.name}!</h1>;
   }
 }
 ```
@@ -27,7 +27,7 @@ class MyElement extends Component {
 @tag('my-element')
 class MyElement extends Component {
   render(props) {
-    return <h1>Hello, {props.myObj.name}!</h1>
+    return <h1>Hello, {props.myObj.name}!</h1>;
   }
 }
 ```
@@ -46,7 +46,7 @@ class MyElement extends Component {
   static defaultProps = {
     name: 'Omi',
     myAge: 18,
-  }
+  };
 
   // 不是必须定义，当您使用 omi 单独写组件时候才需要定义 propTypes
   static propTypes = {
@@ -54,14 +54,14 @@ class MyElement extends Component {
     myAge: Number,
     // 也支持多类型
     color: [String, Array],
-  }
+  };
 
   render(props) {
     return (
       <h1>
         Hello, {props.name}! Age {props.myAge}
       </h1>
-    )
+    );
   }
 }
 ```
@@ -94,14 +94,14 @@ class MyElement extends Component {
 props 的 ts 类型定义如下:
 
 ```ts
-type PropType = String | Number | Boolean | Array<any> | Object | Array<PropType>
+type PropType = String | Number | Boolean | Array<any> | Object | Array<PropType>;
 
 type Props = {
   [key: string]: {
-    type?: PropType
-    default?: any
-    reflect?: boolean | ((value: any) => any)
-    changed?: (newValue: any, oldValue: any) => void
-  }
-}
+    type?: PropType;
+    default?: any;
+    reflect?: boolean | ((value: any) => any);
+    changed?: (newValue: any, oldValue: any) => void;
+  };
+};
 ```

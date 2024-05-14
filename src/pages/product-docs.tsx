@@ -1,100 +1,100 @@
-import '../components/md-docs'
-import '../components/docs-sidebar'
-import { Component, tag, bind, classNames } from 'omi'
-import { docsConfig } from '../docs/config'
-import * as MarkdownIt from 'markdown-it'
+import './components/md-docs';
+import './components/docs-sidebar';
+import { Component, tag, bind, classNames } from 'omi';
+import { docsConfig } from '../docs/config';
+import * as MarkdownIt from 'markdown-it';
 
 // @ts-ignore
-const MdIt = MarkdownIt.default ? MarkdownIt.default : MarkdownIt
+const MdIt = MarkdownIt.default ? MarkdownIt.default : MarkdownIt;
 
 type NavTreeNode = {
-  title: string
-  children: NavTreeNode[]
-}
+  title: string;
+  children: NavTreeNode[];
+};
 
 type Props = {
-  lang: string
-  section: string
-  markdownContent: string
-}
+  lang: string;
+  section: string;
+  markdownContent: string;
+};
 
-type Lang = 'zh' | 'en'
+type Lang = 'zh' | 'en';
 
 @tag('product-docs')
 export class ProductDocs extends Component<Props> {
   state: {
-    markdownContent: string
-    navTree: NavTreeNode
-    active: [string, string]
+    markdownContent: string;
+    navTree: NavTreeNode;
+    active: [string, string];
   } = {
     markdownContent: '',
     navTree: { title: '', children: [] },
     active: ['', ''],
-  }
+  };
 
   @bind
   async onChange(evt: CustomEvent) {
     // 滚动到最顶
-    window.scrollTo(0, 0)
-    history.pushState(null, '', evt.detail.item.path)
-    const { default: markdownContent } = await import(`../docs/${this.props.lang}/${evt.detail.item.value}.md?raw`)
-    this.state.markdownContent = markdownContent
-    this.update()
+    window.scrollTo(0, 0);
+    history.pushState(null, '', evt.detail.item.path);
+    const { default: markdownContent } = await import(`../docs/${this.props.lang}/${evt.detail.item.value}.md?raw`);
+    this.state.markdownContent = markdownContent;
+    this.update();
   }
 
-  md: MarkdownIt = new MdIt()
+  md: MarkdownIt = new MdIt();
 
   install() {
-    this.state.markdownContent = this.props.markdownContent
+    this.state.markdownContent = this.props.markdownContent;
 
-    this.setNavTree()
+    this.setNavTree();
   }
 
   // 提取 markdown 中的标题
   setNavTree() {
-    const tokens = this.md.parse(this.state.markdownContent, {})
+    const tokens = this.md.parse(this.state.markdownContent, {});
 
-    let currentNode: NavTreeNode = this.state.navTree
+    let currentNode: NavTreeNode = this.state.navTree;
 
     for (let i = 0; i < tokens.length; i++) {
-      const token = tokens[i]
+      const token = tokens[i];
       if (token.type === 'heading_open') {
-        const title = tokens[i + 1].content
-        const newNode: NavTreeNode = { title, children: [] }
+        const title = tokens[i + 1].content;
+        const newNode: NavTreeNode = { title, children: [] };
 
         if (token.tag === 'h2') {
-          this.state.navTree.children.push(newNode)
-          currentNode = newNode
+          this.state.navTree.children.push(newNode);
+          currentNode = newNode;
         } else if (token.tag === 'h3') {
-          currentNode.children.push(newNode)
+          currentNode.children.push(newNode);
         }
       }
     }
-    this.state.active = [this.state.navTree.children[0].title, this.state.navTree.children[0].children?.[0]?.title]
+    this.state.active = [this.state.navTree.children[0].title, this.state.navTree.children[0].children?.[0]?.title];
   }
 
   goToSection = (item: NavTreeNode) => () => {
-    this.state.active = [item.title, '']
-    this.update()
-    this.scrollToH2(item.title)
-  }
+    this.state.active = [item.title, ''];
+    this.update();
+    this.scrollToH2(item.title);
+  };
 
   goToSubSection = (item: NavTreeNode, child: NavTreeNode) => () => {
-    this.state.active = [item.title, child.title]
-    this.update()
-    this.scrollToH3(child.title)
-  }
+    this.state.active = [item.title, child.title];
+    this.update();
+    this.scrollToH3(child.title);
+  };
 
   scrollToH2(title: string) {
     const h2Elements = (
       this.rootElement?.querySelector('md-docs') as HTMLElement & {
-        rootElement: HTMLElement
+        rootElement: HTMLElement;
       }
-    )?.rootElement.getElementsByTagName('h2')
+    )?.rootElement.getElementsByTagName('h2');
     for (let i = 0; i < h2Elements.length; i++) {
       if (h2Elements[i].textContent === title) {
-        h2Elements[i].scrollIntoView({ behavior: 'smooth' })
-        break
+        h2Elements[i].scrollIntoView({ behavior: 'smooth' });
+        break;
       }
     }
   }
@@ -102,13 +102,13 @@ export class ProductDocs extends Component<Props> {
   scrollToH3(title: string) {
     const h2Elements = (
       this.rootElement?.querySelector('md-docs') as HTMLElement & {
-        rootElement: HTMLElement
+        rootElement: HTMLElement;
       }
-    ).rootElement.getElementsByTagName('h3')
+    ).rootElement.getElementsByTagName('h3');
     for (let i = 0; i < h2Elements.length; i++) {
       if (h2Elements[i].textContent === title) {
-        h2Elements[i].scrollIntoView({ behavior: 'smooth' })
-        break
+        h2Elements[i].scrollIntoView({ behavior: 'smooth' });
+        break;
       }
     }
   }
@@ -205,11 +205,11 @@ export class ProductDocs extends Component<Props> {
                                   {child.title}
                                 </a>
                               </li>
-                            )
+                            );
                           })}
                         </ol>
                       </li>
-                    )
+                    );
                   })}
                 </ol>
               </nav>
@@ -217,6 +217,6 @@ export class ProductDocs extends Component<Props> {
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

@@ -16,21 +16,21 @@ Omi (读音 /ˈomɪ/，类似于 欧米) 是 Web Components 框架，内置 JSX 
 - 💒 使用 **Constructable Stylesheets** 轻松管理和共享样式
 
 ```tsx
-import { render, signal, tag, Component, h } from 'omi'
+import { render, signal, tag, Component, h } from 'omi';
 
-const count = signal(0)
+const count = signal(0);
 
 function add() {
-  count.value++
+  count.value++;
 }
 
 function sub() {
-  count.value--
+  count.value--;
 }
 
 @tag('counter-demo')
 export class CounterDemo extends Component {
-  static css = 'span { color: red; }'
+  static css = 'span { color: red; }';
 
   render() {
     return (
@@ -39,7 +39,7 @@ export class CounterDemo extends Component {
         <span>{count.value}</span>
         <button onClick={add}>+</button>
       </>
-    )
+    );
   }
 }
 ```
@@ -47,18 +47,18 @@ export class CounterDemo extends Component {
 使用该组件:
 
 ```tsx
-import { h } from 'omi'
-import './counter-demo'
+import { h } from 'omi';
+import './counter-demo';
 
-render(<counter-demo />, document.body)
+render(<counter-demo />, document.body);
 
 // 或者
-import { CounterDemo, Other } from './counter-demo'
+import { CounterDemo, Other } from './counter-demo';
 // 当需要导入其他东西的时候，防止被 tree shaking
-render(<CounterDemo />, document.body)
+render(<CounterDemo />, document.body);
 
 // 或者
-document.body.appendChild(document.createElement('counter-demo'))
+document.body.appendChild(document.createElement('counter-demo'));
 ```
 
 ## 安装
@@ -137,43 +137,43 @@ $ npm run build       # release
 在数据驱动编程中，我们将重点放在数据本身和对数据的操作上，而不是数据所在的对象或数据结构。这种编程范式强调的是数据的变化和流动，以及如何响应这些变化。基于响应式函数的 TodoApp 就是一个很好的例子，它使用了响应式编程的概念，当数据（即待办事项列表）发生变化时，UI 会自动更新以反映这些变化。
 
 ```tsx
-import { render, signal, computed, tag, Component, h } from 'omi'
+import { render, signal, computed, tag, Component, h } from 'omi';
 
 const todos = signal([
   { text: 'Learn OMI', completed: true },
   { text: 'Learn Web Components', completed: false },
   { text: 'Learn JSX', completed: false },
   { text: 'Learn Signal', completed: false },
-])
+]);
 
 const completedCount = computed(() => {
-  return todos.value.filter((todo) => todo.completed).length
-})
+  return todos.value.filter((todo) => todo.completed).length;
+});
 
-const newItem = signal('')
+const newItem = signal('');
 
 function addTodo() {
   // api a，不会重新创建数组
-  todos.value.push({ text: newItem.value, completed: false })
-  todos.update() // 非值类型的数据更新需要手动调用 update 方法
+  todos.value.push({ text: newItem.value, completed: false });
+  todos.update(); // 非值类型的数据更新需要手动调用 update 方法
 
   // api b, 和上面的 api a 效果一样，但是会创建新的数组
   // todos.value = [...todos.value, { text: newItem.value, completed: false }]
 
-  newItem.value = '' // 值类型的数据更新需会自动 update
+  newItem.value = ''; // 值类型的数据更新需会自动 update
 }
 
 function removeTodo(index: number) {
-  todos.value.splice(index, 1)
-  todos.update() // 非值类型的数据更新需要手动调用 update 方法
+  todos.value.splice(index, 1);
+  todos.update(); // 非值类型的数据更新需要手动调用 update 方法
 }
 
 @tag('todo-list')
 class TodoList extends Component {
   onInput = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    newItem.value = target.value
-  }
+    const target = event.target as HTMLInputElement;
+    newItem.value = target.value;
+  };
 
   render() {
     return (
@@ -189,24 +189,24 @@ class TodoList extends Component {
                     type="checkbox"
                     checked={todo.completed}
                     onInput={() => {
-                      todo.completed = !todo.completed
-                      todos.update()
+                      todo.completed = !todo.completed;
+                      todos.update();
                     }}
                   />
                   {todo.completed ? <s>{todo.text}</s> : todo.text}
                 </label>{' '}
                 <button onClick={() => removeTodo(index)}>❌</button>
               </li>
-            )
+            );
           })}
         </ul>
         <p>Completed count: {completedCount.value}</p>
       </>
-    )
+    );
   }
 }
 
-render(<todo-list />, document.body)
+render(<todo-list />, document.body);
 ```
 
 ### TodoApp 使用信号类 Signal
@@ -216,41 +216,41 @@ render(<todo-list />, document.body)
 在面向对象编程中，我们将重点放在对象上，对象包含了数据和操作数据的方法。这种编程范式强调的是对象之间的交互和协作，以及如何通过对象的封装、继承和多态性来组织和管理代码。基于响应式函数的 TodoApp 也可以使用面向对象的方式来实现，例如，我们可以创建一个 TodoList 类，这个类包含了待办事项列表的数据和操作这些数据的方法，以及一个 `update` 方法来更新 UI。
 
 ```tsx
-import { render, Signal, tag, Component, h, computed } from 'omi'
+import { render, Signal, tag, Component, h, computed } from 'omi';
 
-type Todo = { text: string; completed: boolean }
+type Todo = { text: string; completed: boolean };
 
 class TodoApp extends Signal<{ todos: Todo[]; filter: string; newItem: string }> {
-  completedCount: ReturnType<typeof computed>
+  completedCount: ReturnType<typeof computed>;
 
   constructor(todos: Todo[] = []) {
-    super({ todos, filter: 'all', newItem: '' })
-    this.completedCount = computed(() => this.value.todos.filter((todo) => todo.completed).length)
+    super({ todos, filter: 'all', newItem: '' });
+    this.completedCount = computed(() => this.value.todos.filter((todo) => todo.completed).length);
   }
 
   addTodo = () => {
     // api a
-    this.value.todos.push({ text: this.value.newItem, completed: false })
-    this.value.newItem = ''
-    this.update()
+    this.value.todos.push({ text: this.value.newItem, completed: false });
+    this.value.newItem = '';
+    this.update();
 
     // api b, same as api a
     // this.update((value) => {
     //   value.todos.push({ text: value.newItem, completed: false })
     //   value.newItem = ''
     // })
-  }
+  };
 
   toggleTodo = (index: number) => {
-    const todo = this.value.todos[index]
-    todo.completed = !todo.completed
-    this.update()
-  }
+    const todo = this.value.todos[index];
+    todo.completed = !todo.completed;
+    this.update();
+  };
 
   removeTodo = (index: number) => {
-    this.value.todos.splice(index, 1)
-    this.update()
-  }
+    this.value.todos.splice(index, 1);
+    this.update();
+  };
 }
 
 const todoApp = new TodoApp([
@@ -258,18 +258,18 @@ const todoApp = new TodoApp([
   { text: 'Learn Web Components', completed: false },
   { text: 'Learn JSX', completed: false },
   { text: 'Learn Signal', completed: false },
-])
+]);
 
 @tag('todo-list')
 class TodoList extends Component {
   onInput = (event: Event) => {
-    const target = event.target as HTMLInputElement
-    todoApp.value.newItem = target.value
-  }
+    const target = event.target as HTMLInputElement;
+    todoApp.value.newItem = target.value;
+  };
 
   render() {
-    const { todos } = todoApp.value
-    const { completedCount, toggleTodo, addTodo, removeTodo } = todoApp
+    const { todos } = todoApp.value;
+    const { completedCount, toggleTodo, addTodo, removeTodo } = todoApp;
     return (
       <>
         <input type="text" value={todoApp.value.newItem} onInput={this.onInput} />
@@ -284,16 +284,16 @@ class TodoList extends Component {
                 </label>{' '}
                 <button onClick={() => removeTodo(index)}>❌</button>
               </li>
-            )
+            );
           })}
         </ul>
         <p>Completed count: {completedCount.value}</p>
       </>
-    )
+    );
   }
 }
 
-render(<todo-list />, document.body)
+render(<todo-list />, document.body);
 ```
 
 这里不讨论哪种方式(DOP,OOP)的好坏，使用 omi 两种方式都可以任意选择。
@@ -303,7 +303,7 @@ render(<todo-list />, document.body)
 vite.config.js:
 
 ```tsx
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export default defineConfig({
   esbuild: {
@@ -311,7 +311,7 @@ export default defineConfig({
     jsxFactory: 'h',
     jsxFragment: 'h.f',
   },
-})
+});
 ```
 
 你可以在构建时候注入代码，这样就不用手动导出 `h`。
@@ -325,7 +325,7 @@ export default defineConfig({
 my-counter.tsx:
 
 ```tsx
-import { tag, Component, h, bind } from 'omi'
+import { tag, Component, h, bind } from 'omi';
 
 @tag('my-counter')
 class MyCounter extends Component {
@@ -334,32 +334,32 @@ class MyCounter extends Component {
       type: Number,
       default: 0,
       changed(newValue, oldValue) {
-        this.state.count = newValue
-        this.update()
+        this.state.count = newValue;
+        this.update();
       },
     },
-  }
+  };
 
   state = {
     count: null,
-  }
+  };
 
   install() {
-    this.state.count = this.props.count
+    this.state.count = this.props.count;
   }
 
   @bind
   sub() {
-    this.state.count--
-    this.update()
-    this.fire('change', this.state.count)
+    this.state.count--;
+    this.update();
+    this.fire('change', this.state.count);
   }
 
   @bind
   add() {
-    this.state.count++
-    this.update()
-    this.fire('change', this.state.count)
+    this.state.count++;
+    this.update();
+    this.fire('change', this.state.count);
   }
 
   render() {
@@ -369,7 +369,7 @@ class MyCounter extends Component {
         <span>{this.state.count}</span>
         <button onClick={this.add}>+</button>
       </>
-    )
+    );
   }
 }
 ```
@@ -378,19 +378,19 @@ class MyCounter extends Component {
 
 ```html
 <script setup>
-  import { ref } from 'vue'
+  import { ref } from 'vue';
   // 导入 omi 组件
-  import './my-counter'
+  import './my-counter';
 
   defineProps({
     msg: String,
-  })
+  });
 
-  const count = ref(0)
+  const count = ref(0);
 
   const change = (e) => {
-    count.value = e.detail
-  }
+    count.value = e.detail;
+  };
 </script>
 
 <template>
@@ -409,7 +409,7 @@ class MyCounter extends Component {
 如果在 omi 组件中使用:
 
 ```ts
-this.fire('count-change', this.state.count)
+this.fire('count-change', this.state.count);
 ```
 
 在 vue 中使用组件监听事件如下:
@@ -421,26 +421,26 @@ this.fire('count-change', this.state.count)
 ### 在 React 中使用
 
 ```tsx
-import { useState, useRef, useEffect } from 'react'
-import useEventListener from '@use-it/event-listener'
-import './my-counter'
+import { useState, useRef, useEffect } from 'react';
+import useEventListener from '@use-it/event-listener';
+import './my-counter';
 
 function App() {
-  const [count, setCount] = useState(100)
-  const myCounterRef = useRef(null)
+  const [count, setCount] = useState(100);
+  const myCounterRef = useRef(null);
 
   useEffect(() => {
-    const counter = myCounterRef.current
+    const counter = myCounterRef.current;
     if (counter) {
       const handleChange = (evt) => {
-        setCount(evt.detail)
-      }
-      counter.addEventListener('change', handleChange)
+        setCount(evt.detail);
+      };
+      counter.addEventListener('change', handleChange);
       return () => {
-        counter.removeEventListener('change', handleChange)
-      }
+        counter.removeEventListener('change', handleChange);
+      };
     }
-  }, [])
+  }, []);
 
   return (
     <>
@@ -450,10 +450,10 @@ function App() {
         <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
 ```
 
 ## License

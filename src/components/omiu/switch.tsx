@@ -1,10 +1,10 @@
-import { Component, classNames, tag } from 'omi'
+import { Component, classNames, tag } from 'omi';
 
 type SwitchProps = {
-  size?: 'small' | 'medium' | 'large'
-  value?: boolean
-  disabled?: boolean
-}
+  size?: 'small' | 'medium' | 'large';
+  value?: boolean;
+  disabled?: boolean;
+};
 
 @tag('o-switch')
 export class Switch extends Component<SwitchProps> {
@@ -12,19 +12,19 @@ export class Switch extends Component<SwitchProps> {
   :host {
     display: inline-flex;
   }
-  `
+  `;
   static defaultProps = {
     size: 'medium',
     value: false,
     disabled: false,
-  }
+  };
 
   onChange = (e: Event) => {
-    e.stopPropagation()
+    e.stopPropagation();
     this.fire('change', {
       value: (e.target as HTMLInputElement).checked,
-    })
-  }
+    });
+  };
 
   render() {
     return (
@@ -55,6 +55,6 @@ export class Switch extends Component<SwitchProps> {
           )}
         ></div>
       </label>
-    )
+    );
   }
 }

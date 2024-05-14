@@ -1,23 +1,23 @@
-import { tag, Component, classNames, bind } from 'omi'
+import { tag, Component, classNames, bind } from 'omi';
 
-import { Calendar, CalendarLocale } from './calendar'
-import '../select'
+import { Calendar, CalendarLocale } from './calendar';
+import '../select';
 
 const theme = {
   td: 'text-center data-[dpk-cell-disabled]:text-neutral-300 data-[dpk-cell-disabled]:cursor-default data-[dpk-cell-disabled]:pointer-events-none data-[dpk-cell-disabled]:hover:cursor-default hover:cursor-pointer group w-6 h-8',
   tdInner:
     'mx-auto box-border group-[:not([dpk-cell-disabled]):not([dpk-cell-selected]):hover]:bg-neutral-300 group-[[dpk-cell-selected]]:bg-primary group-[[dpk-cell-selected]]:text-white group-[:not([dpk-cell-selected])[dpk-cell-focused]]:bg-neutral-100 group-[[dpk-cell-focused]]:data-[dpk-cell-selected]:bg-primary group-[[dpk-cell-current]]:border-solid group-[[dpk-cell-current]]:border-black group-[[dpk-cell-current]]:border dark:group-[:not([dpk-cell-disabled]):not([dpk-cell-selected]):hover]:bg-white/10 dark:group-[[dpk-cell-current]]:border-white bg-background text-foreground dark:group-[:not([dpk-cell-selected])[dpk-cell-focused]]:bg-white/10 dark:group-[[dpk-cell-disabled]]:text-neutral-500 w-6 h-6 leading-6 rounded text-[13px] group-[[dpk-cell-current]]:leading-[21px] ',
-}
+};
 
 // dpk-cell-selected
 // dpk-cell-current
 
 interface Props {
-  value: string
-  locale: CalendarLocale
-  range: boolean
-  className: string
-  hasFooter: boolean
+  value: string;
+  locale: CalendarLocale;
+  range: boolean;
+  className: string;
+  hasFooter: boolean;
 }
 
 @tag('o-calendar')
@@ -27,19 +27,19 @@ export class CalendarComponent extends Component<Props> {
     display: block;
   }
   `,
-  ]
+  ];
   // @ts-ignore
-  calendar: Calendar
+  calendar: Calendar;
 
-  calendarMatrix: string[][] = []
+  calendarMatrix: string[][] = [];
   state: {
-    selectedYear: number | null
-    selectedMonth: number | null
-    selectedDay: number | null
+    selectedYear: number | null;
+    selectedMonth: number | null;
+    selectedDay: number | null;
 
-    currentYear: number | null
-    currentMonth: number | null
-    currentDay: number | null
+    currentYear: number | null;
+    currentMonth: number | null;
+    currentDay: number | null;
   } = {
     selectedYear: null,
     selectedMonth: null,
@@ -48,103 +48,103 @@ export class CalendarComponent extends Component<Props> {
     currentYear: null,
     currentMonth: null,
     currentDay: null,
-  }
+  };
 
   // @ts-ignore
-  years: number[]
+  years: number[];
 
   @bind
   onClick(evt: MouseEvent) {
     // @ts-ignore
-    const arr = evt.currentTarget.dataset.date.split('-')
-    this.state.selectedYear = Number(arr[0])
-    this.state.selectedMonth = Number(arr[1]) - 1
-    this.state.selectedDay = Number(arr[2])
-    this.update()
+    const arr = evt.currentTarget.dataset.date.split('-');
+    this.state.selectedYear = Number(arr[0]);
+    this.state.selectedMonth = Number(arr[1]) - 1;
+    this.state.selectedDay = Number(arr[2]);
+    this.update();
     this.fire('select', {
       date: (evt.currentTarget as HTMLElement).dataset.date,
       nativeEvent: evt,
-    })
+    });
   }
 
   @bind
   onMonthClick(evt: CustomEvent) {
-    this.state.currentMonth = evt.detail.value
-    this.calendar.setMonth(this.state.currentYear as number, this.state.currentMonth as number)
-    this.generateMonthCalendar()
-    this.update()
+    this.state.currentMonth = evt.detail.value;
+    this.calendar.setMonth(this.state.currentYear as number, this.state.currentMonth as number);
+    this.generateMonthCalendar();
+    this.update();
   }
 
   @bind
   onYearClick(evt: CustomEvent) {
-    this.state.currentYear = evt.detail.value
-    this.calendar.setMonth(this.state.currentYear as number, this.state.currentMonth as number)
-    this.generateMonthCalendar()
-    this.update()
+    this.state.currentYear = evt.detail.value;
+    this.calendar.setMonth(this.state.currentYear as number, this.state.currentMonth as number);
+    this.generateMonthCalendar();
+    this.update();
   }
 
   @bind
   prevMonth() {
-    this.calendar.prevMonth()
-    this.state.currentYear = this.calendar.getYear()
-    this.state.currentMonth = this.calendar.getMonth()
-    this.generateMonthCalendar()
-    this.update()
+    this.calendar.prevMonth();
+    this.state.currentYear = this.calendar.getYear();
+    this.state.currentMonth = this.calendar.getMonth();
+    this.generateMonthCalendar();
+    this.update();
   }
 
   @bind
   currentMonth() {
-    this.calendar.currentMonth()
-    this.state.currentYear = this.calendar.getYear()
-    this.state.currentMonth = this.calendar.getMonth()
-    this.generateMonthCalendar()
-    this.update()
+    this.calendar.currentMonth();
+    this.state.currentYear = this.calendar.getYear();
+    this.state.currentMonth = this.calendar.getMonth();
+    this.generateMonthCalendar();
+    this.update();
   }
 
   @bind
   nextMonth() {
-    this.calendar.nextMonth()
-    this.state.currentYear = this.calendar.getYear()
-    this.state.currentMonth = this.calendar.getMonth()
-    this.generateMonthCalendar()
-    this.update()
+    this.calendar.nextMonth();
+    this.state.currentYear = this.calendar.getYear();
+    this.state.currentMonth = this.calendar.getMonth();
+    this.generateMonthCalendar();
+    this.update();
   }
 
   generateMonthCalendar() {
     this.calendar.setDate(
       `${this.state.currentYear}-${(this.state.currentMonth as number) + 1}-${this.state.currentDay}`,
-    )
-    this.calendarMatrix = this.calendar.generateMonthCalendar()
+    );
+    this.calendarMatrix = this.calendar.generateMonthCalendar();
   }
 
   install(): void {
     if (this.props.value) {
-      const arr = this.props.value.split('-')
-      this.state.currentYear = Number(arr[0])
-      this.state.currentMonth = Number(arr[1]) - 1
-      this.state.currentDay = Number(arr[2])
-      this.state.selectedYear = Number(arr[0])
-      this.state.selectedMonth = Number(arr[1]) - 1
-      this.state.selectedDay = Number(arr[2])
+      const arr = this.props.value.split('-');
+      this.state.currentYear = Number(arr[0]);
+      this.state.currentMonth = Number(arr[1]) - 1;
+      this.state.currentDay = Number(arr[2]);
+      this.state.selectedYear = Number(arr[0]);
+      this.state.selectedMonth = Number(arr[1]) - 1;
+      this.state.selectedDay = Number(arr[2]);
     }
 
-    this.calendar = new Calendar(this.props.value, this.props.locale)
-    this.calendarMatrix = this.calendar.generateMonthCalendar()
+    this.calendar = new Calendar(this.props.value, this.props.locale);
+    this.calendarMatrix = this.calendar.generateMonthCalendar();
 
-    const currentYear = new Date().getFullYear()
-    const years = []
+    const currentYear = new Date().getFullYear();
+    const years = [];
 
     for (let i = currentYear - 101; i <= currentYear + 101; i++) {
-      years.push(i)
+      years.push(i);
     }
 
-    this.years = years
+    this.years = years;
   }
 
   setDate(date: string): void {
-    this.calendar.setDate(date)
-    this.calendarMatrix = this.calendar.generateMonthCalendar()
-    this.update()
+    this.calendar.setDate(date);
+    this.calendarMatrix = this.calendar.generateMonthCalendar();
+    this.update();
   }
 
   static defaultProps = {
@@ -153,7 +153,7 @@ export class CalendarComponent extends Component<Props> {
     range: false,
     className: '',
     hasFooter: false,
-  }
+  };
 
   @bind
   onYearShow() {}
@@ -174,7 +174,7 @@ export class CalendarComponent extends Component<Props> {
                 return {
                   text: month,
                   value: index,
-                }
+                };
               })}
             ></o-select>
 
@@ -186,7 +186,7 @@ export class CalendarComponent extends Component<Props> {
                 return {
                   text: year,
                   value: year,
-                }
+                };
               })}
             ></o-select>
 
@@ -260,14 +260,14 @@ export class CalendarComponent extends Component<Props> {
                       >
                         {day}
                       </th>
-                    )
+                    );
                   })}
                 </tr>
               </thead>
               <tbody>
                 {this.calendarMatrix.map((week) => {
-                  const year = this.calendar.getYear()
-                  const month = this.calendar.getMonth() + 1
+                  const year = this.calendar.getYear();
+                  const month = this.calendar.getMonth() + 1;
                   return (
                     <tr>
                       {week.map((day) => {
@@ -293,16 +293,16 @@ export class CalendarComponent extends Component<Props> {
                           >
                             <div class={classNames(theme.tdInner)}>{day}</div>
                           </td>
-                        )
+                        );
                       })}
                     </tr>
-                  )
+                  );
                 })}
               </tbody>
             </table>
           </div>
         </div>
       </div>
-    )
+    );
   }
 }

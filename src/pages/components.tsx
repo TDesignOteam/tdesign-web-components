@@ -1,7 +1,7 @@
-import '../components/omiu/calendar/index'
-import '../components/omiu/button'
-import '../components/omiu/switch'
-import '../components/omiu/breadcrumb'
+import '../components/omiu/calendar/index';
+import '../components/button/button';
+import '../components/omiu/switch';
+import '../components/omiu/breadcrumb';
 
 export function Questionnaire() {
   return (
@@ -147,5 +147,5 @@ export function Questionnaire() {
         ></o-breadcrumb>
       </div>
     </div>
-  )
+  );
 }

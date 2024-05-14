@@ -1,5 +1,5 @@
-import { isDark } from '../store.ts'
-import '../components/omiu/button.tsx'
+import { isDark } from '../store.ts';
+import '../components/button/button.tsx';
 
 export function Login() {
   return (
@@ -67,5 +67,5 @@ export function Login() {
         <p class="text-sm text-zinc-400 dark:text-zinc-500">Copyright @ 2024-2025 Tencent. All Rights Reserved</p>
       </footer>
     </div>
-  )
+  );
 }

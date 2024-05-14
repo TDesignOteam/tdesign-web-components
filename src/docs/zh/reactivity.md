@@ -9,13 +9,13 @@
 signal 是一个包装了值的对象，signal 是一个具有 .value 属性的对象，该属性保存了一个值通过 `.value` 访问。这有一个重要的特性：信号的值可以改变，但信号本身始终保持不变。它允许你观察和修改这个值。当值发生变化时，它会通知所有依赖于这个值的函数。我们可以使用 `signal` 函数来创建一个 signal 对象。
 
 ```tsx
-const counter = signal(0)
+const counter = signal(0);
 ```
 
 上面的代码创建了一个 signal 对象，其初始值为 0。我们可以使用 `value` 属性来访问和修改 signal 的值。
 
 ```tsx
-console.log(counter.value) // 输出 0
+console.log(counter.value); // 输出 0
 ```
 
 ## 使用 computed 创建计算属性
@@ -25,13 +25,13 @@ computed 是一个根据其他 signal 值计算出的 Signal。当依赖的 sign
 我们可以使用 `computed` 函数来创建一个 computed Signal。
 
 ```tsx
-const counter = signal(0)
-const doubledCounter = computed(() => counter.value * 2)
+const counter = signal(0);
+const doubledCounter = computed(() => counter.value * 2);
 
-console.log(doubledCounter.value) // 输出 0
+console.log(doubledCounter.value); // 输出 0
 
-counter.value = 1
-console.log(doubledCounter.value) // 输出 2
+counter.value = 1;
+console.log(doubledCounter.value); // 输出 2
 ```
 
 上面的代码创建了一个名为 doubledCounter 的 computed Signal，它的值始终是 counter 值的两倍。
@@ -39,20 +39,20 @@ console.log(doubledCounter.value) // 输出 2
 ## 使用 peek 偷看 signal 值
 
 ```tsx
-const name = signal('Dnt')
-const surname = signal('Zhang')
-const fullName = computed(() => name.peek() + ' ' + surname.value)
+const name = signal('Dnt');
+const surname = signal('Zhang');
+const fullName = computed(() => name.peek() + ' ' + surname.value);
 
-let effectTimes = 0
+let effectTimes = 0;
 effect(() => {
   // 访问 fullName.value 会触发依赖
-  fullName.value
-  effectTimes++
-})
+  fullName.value;
+  effectTimes++;
+});
 
-name.value = 'John'
+name.value = 'John';
 // 因为 peek 不会触发依赖，所以 effectTimes 仍然是 1
-expect(effectTimes).toBe(1)
+expect(effectTimes).toBe(1);
 ```
 
 ## 使用 effect 跟踪依赖关系
@@ -62,14 +62,14 @@ effect 是一个允许我们在函数中跟踪 signal 值变化的功能。当�
 我们可以使用 `effect` 函数来创建一个 Effect。
 
 ```tsx
-const counter = signal(0)
+const counter = signal(0);
 
 const dispose = effect(() => {
-  console.log(`Counter: ${counter.value}`)
-})
+  console.log(`Counter: ${counter.value}`);
+});
 
 // 停止跟踪依赖关系
-dispose()
+dispose();
 ```
 
 上面的代码将在 counter 值发生变化时输出新的值。例如，当我们将 counter 值更改为 1 时，Effect 函数将输出 "Counter: 1"。
@@ -77,16 +77,16 @@ dispose()
 ## 使用 update 触发 effect
 
 ```tsx
-const testSignal = signal([1, 2, 3])
-let effectTimes = 0
+const testSignal = signal([1, 2, 3]);
+let effectTimes = 0;
 effect(() => {
-  console.log(testSignal.value)
-  effectTimes++
-})
-testSignal.value.push(4)
+  console.log(testSignal.value);
+  effectTimes++;
+});
+testSignal.value.push(4);
 // 和 testSignal.value = testSignal.value 一样会触发 effect
-testSignal.update()
-expect(effectTimes).toBe(2)
+testSignal.update();
+expect(effectTimes).toBe(2);
 ```
 
 ## 总结

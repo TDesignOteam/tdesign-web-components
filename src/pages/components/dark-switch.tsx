@@ -1,16 +1,16 @@
-import { tag, Component, bind, classNames } from 'omi'
-import { isDark } from '../store'
+import { tag, Component, bind, classNames } from 'omi';
+import { isDark } from '../../store';
 
 @tag('dark-switch')
 export class DarkSwitch extends Component {
   @bind
   onLightClick() {
-    isDark.value = false
+    isDark.value = false;
   }
 
   @bind
   onDarkClick() {
-    isDark.value = true
+    isDark.value = true;
   }
 
   render() {
@@ -84,6 +84,6 @@ export class DarkSwitch extends Component {
           </svg>
         </div>
       </div>
-    )
+    );
   }
 }

@@ -1,9 +1,9 @@
-import { Component, tag, classNames, VNode } from 'omi'
-import './sidebar.tsx'
-import { navbarItems, activeMenuItem } from '../store.ts'
-import { sidebarItems, activeSidebarItem, isSidebarOpen } from '../store.ts'
-import { CustomizeButton } from './customize-button.tsx'
-import './navbar.tsx'
+import { Component, tag, classNames, VNode } from 'omi';
+import './sidebar.tsx';
+import { navbarItems, activeMenuItem } from '../../store.ts';
+import { sidebarItems, activeSidebarItem, isSidebarOpen } from '../../store.ts';
+import { CustomizeButton } from './customize-button.tsx';
+import './navbar.tsx';
 
 /* Because the menu needs to update user avatars, a separate component is packaged for local updates */
 @tag('sidebar-wrpapper')
@@ -17,7 +17,7 @@ export class SidebarWrapper extends Component {
         isOpen={isSidebarOpen.value}
         onInstalled={window.refreshDark}
       ></o-sidebar>
-    )
+    );
   }
 }
 
@@ -66,5 +66,5 @@ export function AdminLayout(props: { current?: string; children?: VNode | VNode[
 
       <CustomizeButton />
     </div>
-  )
+  );
 }

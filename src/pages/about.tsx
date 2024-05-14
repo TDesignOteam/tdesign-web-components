@@ -67,5 +67,5 @@ export function About() {
         <p>如果您有任何问题或建议，请随时与我们联系，我们期待与您合作！</p>
       </div>
     </main>
-  )
+  );
 }

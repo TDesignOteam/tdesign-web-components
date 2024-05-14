@@ -53,5 +53,5 @@ export function ServerError() {
         </div>
       </div>
     </div>
-  )
+  );
 }

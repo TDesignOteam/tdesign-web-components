@@ -32,5 +32,5 @@ export function Fail() {
         </div>
       </div>
     </div>
-  )
+  );
 }

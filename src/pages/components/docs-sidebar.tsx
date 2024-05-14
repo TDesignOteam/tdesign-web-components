@@ -1,34 +1,34 @@
-import { tag, Component, classNames, bind } from 'omi'
+import { tag, Component, classNames, bind } from 'omi';
 
 type SidebarItem = {
-  text: string
-  href: string
-  target: string
-  name: string
-  path: string
-  value: string
-  type: string
-  img?: string
-  inner?: string
-  children: any[]
-  tag?: string
-  childrenHeight?: number
-  isOpen?: boolean
-  icon?: string
-}
+  text: string;
+  href: string;
+  target: string;
+  name: string;
+  path: string;
+  value: string;
+  type: string;
+  img?: string;
+  inner?: string;
+  children: any[];
+  tag?: string;
+  childrenHeight?: number;
+  isOpen?: boolean;
+  icon?: string;
+};
 
 type Props = {
-  items: SidebarItem[]
-  active: string
-  isOpen: boolean
-}
+  items: SidebarItem[];
+  active: string;
+  isOpen: boolean;
+};
 
 const theme = {
   base: 'block w-full pl-3.5 before:pointer-events-none before:absolute before:-left-1 before:top-1/2 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full',
   unactive:
     'text-zinc-500 before:hidden before:bg-zinc-300 hover:text-zinc-600 hover:before:block dark:text-zinc-400 dark:before:bg-zinc-700 dark:hover:text-zinc-300',
   active: 'font-semibold text-primary before:bg-primary brightness-125',
-}
+};
 
 @tag('o-docs-sidebar')
 export class Sidebar extends Component<Props> {
@@ -36,29 +36,29 @@ export class Sidebar extends Component<Props> {
   :host {
     display: block;
   }
-  `
+  `;
 
   @bind
   onClick(item: SidebarItem, evt: MouseEvent) {
-    this.state.active = item.value
-    this.update()
+    this.state.active = item.value;
+    this.update();
     this.fire('change', {
       item: item,
       nativeEvent: evt,
-    })
+    });
   }
 
   static defaultProps = {
     items: [],
     active: '',
-  }
+  };
 
   state = {
     active: '',
-  }
+  };
 
   install() {
-    this.state.active = this.props.active
+    this.state.active = this.props.active;
   }
 
   render() {
@@ -87,14 +87,14 @@ export class Sidebar extends Component<Props> {
                           {child.text}
                         </a>
                       </li>
-                    )
+                    );
                   })}
                 </ul>
               </li>
-            )
+            );
           })}
         </ul>
       </nav>
-    )
+    );
   }
 }

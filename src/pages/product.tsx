@@ -1,5 +1,5 @@
-import '../components/omiu/select'
-import '../components/omiu/button'
+import '../components/omiu/select';
+import '../components/button/button';
 
 export function Product(props: { id: string }) {
   return (
@@ -347,5 +347,5 @@ export function Product(props: { id: string }) {
         </div>
       </div>
     </>
-  )
+  );
 }

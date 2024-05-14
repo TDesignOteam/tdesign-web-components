@@ -1,5 +1,5 @@
-import '../components/omiu/table'
-import '../components/omiu/switch'
+import '../components/omiu/table';
+import '../components/omiu/switch';
 
 export function Personal() {
   return (
@@ -196,5 +196,5 @@ export function Personal() {
         </div>
       </div>
     </div>
-  )
+  );
 }

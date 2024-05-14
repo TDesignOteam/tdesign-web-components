@@ -1,33 +1,33 @@
-import { tag, Component, classNames, bind } from 'omi'
-import { createPopper } from '@popperjs/core'
-import { Router } from 'omi-router'
+import { tag, Component, classNames, bind } from 'omi';
+import { createPopper } from '@popperjs/core';
+import { Router } from 'omi-router';
 
 interface ComponentWithRouter extends Sidebar {
-  router?: Router
+  router?: Router;
 }
 
 type SidebarItem = {
-  text: string
-  href: string
-  target: string
-  name: string
-  path: string
-  value: string
-  type: string
-  img?: string
-  inner?: string
-  children: any[]
-  tag?: string
-  childrenHeight?: number
-  isOpen?: boolean
-  icon?: string
-}
+  text: string;
+  href: string;
+  target: string;
+  name: string;
+  path: string;
+  value: string;
+  type: string;
+  img?: string;
+  inner?: string;
+  children: any[];
+  tag?: string;
+  childrenHeight?: number;
+  isOpen?: boolean;
+  icon?: string;
+};
 
 type Props = {
-  items: SidebarItem[]
-  active: string
-  isOpen: boolean
-}
+  items: SidebarItem[];
+  active: string;
+  isOpen: boolean;
+};
 
 @tag('o-sidebar')
 export class Sidebar extends Component<Props> {
@@ -35,34 +35,34 @@ export class Sidebar extends Component<Props> {
   :host {
     display: block;
   }
-  `
+  `;
 
   state = {
     isOpen: false,
     active: '',
-  }
+  };
 
   onMouseEnter(item: SidebarItem) {
-    if (this.state.isOpen) return
+    if (this.state.isOpen) return;
     // @ts-ignore
-    item.tooltip.classList.remove('hidden')
+    item.tooltip.classList.remove('hidden');
     // @ts-ignore
-    item.popper.update()
+    item.popper.update();
   }
 
   onMouseLeave(item: SidebarItem) {
-    if (this.state.isOpen) return
+    if (this.state.isOpen) return;
     // @ts-ignore
-    item.tooltip.classList.add('hidden')
+    item.tooltip.classList.add('hidden');
     // @ts-ignore
-    item.popper.update()
+    item.popper.update();
   }
 
   installed() {
-    const triggers = this.shadowRoot?.querySelectorAll('.trigger')!
+    const triggers = this.shadowRoot?.querySelectorAll('.trigger')!;
 
     triggers.forEach((trigger: Element, index: number) => {
-      const tooltip = trigger.querySelector('.tip') as HTMLElement
+      const tooltip = trigger.querySelector('.tip') as HTMLElement;
 
       if (trigger && tooltip) {
         const popper = createPopper(trigger, tooltip, {
@@ -75,44 +75,44 @@ export class Sidebar extends Component<Props> {
               },
             },
           ],
-        })
+        });
         // @ts-ignore
-        this.props.items[index].popper = popper
+        this.props.items[index].popper = popper;
         // @ts-ignore
-        this.props.items[index].tooltip = tooltip
+        this.props.items[index].tooltip = tooltip;
       }
-    })
+    });
   }
 
   onItemClick(item: SidebarItem) {
-    item.isOpen = !item.isOpen
-    item.childrenHeight = item.children.length * 36
-    this.update()
+    item.isOpen = !item.isOpen;
+    item.childrenHeight = item.children.length * 36;
+    this.update();
   }
 
   receiveProps(props: Props) {
-    this.state.active = props.active
-    this.state.isOpen = props.isOpen
+    this.state.active = props.active;
+    this.state.isOpen = props.isOpen;
   }
 
   install() {
-    this.state.active = this.props.active
-    this.state.isOpen = this.props.isOpen
+    this.state.active = this.props.active;
+    this.state.isOpen = this.props.isOpen;
 
     this.props.items.forEach((item) => {
-      item.childrenHeight = item.isOpen ? item.children.length * 36 : 0
-    })
+      item.childrenHeight = item.isOpen ? item.children.length * 36 : 0;
+    });
   }
 
   @bind
   select(item: SidebarItem) {
-    ;(this as ComponentWithRouter).router?.push(item.href.replace('#', ''))
+    (this as ComponentWithRouter).router?.push(item.href.replace('#', ''));
 
-    this.state.active = this.props.active
-    this.update()
+    this.state.active = this.props.active;
+    this.update();
     this.fire('change', {
       item,
-    })
+    });
   }
 
   renderChild(child: SidebarItem) {
@@ -130,7 +130,7 @@ export class Sidebar extends Component<Props> {
           <span>{child.text}</span>
         </a>
       </li>
-    )
+    );
   }
 
   renderToolTipChild(child: SidebarItem) {
@@ -140,7 +140,7 @@ export class Sidebar extends Component<Props> {
           <span>{child.text}</span>
         </a>
       </li>
-    )
+    );
   }
 
   render() {
@@ -177,7 +177,7 @@ export class Sidebar extends Component<Props> {
             <nav class="h-[calc(100vh-300px)] overflow-auto">
               <ul>
                 {this.props.items.map((item: SidebarItem) => {
-                  const hasChildren = !!(item.children && item.children.length)
+                  const hasChildren = !!(item.children && item.children.length);
                   return (
                     <li>
                       <a
@@ -201,7 +201,7 @@ export class Sidebar extends Component<Props> {
                           }}
                         >
                           {item.children.map((child: SidebarItem) => {
-                            return this.renderToolTipChild(child)
+                            return this.renderToolTipChild(child);
                           })}
                         </ul>
 
@@ -225,12 +225,12 @@ export class Sidebar extends Component<Props> {
                           }}
                         >
                           {item.children.map((child: SidebarItem) => {
-                            return this.renderChild(child)
+                            return this.renderChild(child);
                           })}
                         </ul>
                       )}
                     </li>
-                  )
+                  );
                 })}
               </ul>
             </nav>
@@ -248,6 +248,6 @@ export class Sidebar extends Component<Props> {
           )}
         </div>
       </div>
-    )
+    );
   }
 }

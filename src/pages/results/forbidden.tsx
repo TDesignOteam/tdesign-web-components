@@ -50,5 +50,5 @@ export function Forbidden() {
         </div>
       </div>
     </div>
-  )
+  );
 }

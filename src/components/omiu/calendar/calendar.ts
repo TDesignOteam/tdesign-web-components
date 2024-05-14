@@ -9,13 +9,13 @@ export enum CalendarLocale {
 }
 
 export interface CalendarTranslations {
-  weekdaysShort: string[]
-  months: string[]
-  today?: string
-  cancel?: string
-  ok?: string
-  weekdays: string[]
-  clear?: string
+  weekdaysShort: string[];
+  months: string[];
+  today?: string;
+  cancel?: string;
+  ok?: string;
+  weekdays: string[];
+  clear?: string;
 }
 
 export const calendarTranslations: Record<CalendarLocale, CalendarTranslations> = {
@@ -50,138 +50,138 @@ export const calendarTranslations: Record<CalendarLocale, CalendarTranslations> 
     ok: '确定',
     clear: '清除',
   },
-}
+};
 
 export class Calendar {
-  private locale: CalendarLocale
-  private currentDate: Date
-  private firstDayOfWeek: FirstDayOfWeek
-  translations: CalendarTranslations
+  private locale: CalendarLocale;
+  private currentDate: Date;
+  private firstDayOfWeek: FirstDayOfWeek;
+  translations: CalendarTranslations;
 
   constructor(date?: Date | string, locale: CalendarLocale = CalendarLocale.English) {
-    this.currentDate = date ? new Date(date) : new Date()
+    this.currentDate = date ? new Date(date) : new Date();
 
-    this.locale = locale
+    this.locale = locale;
     if (this.locale === CalendarLocale.Chinese) {
-      this.firstDayOfWeek = FirstDayOfWeek.Monday
+      this.firstDayOfWeek = FirstDayOfWeek.Monday;
     } else {
-      this.firstDayOfWeek = FirstDayOfWeek.Sunday
+      this.firstDayOfWeek = FirstDayOfWeek.Sunday;
     }
 
-    this.translations = calendarTranslations[this.locale]
+    this.translations = calendarTranslations[this.locale];
   }
 
   public getYear(): number {
-    return this.currentDate.getFullYear()
+    return this.currentDate.getFullYear();
   }
 
   public setDate(dateString: string): void {
-    this.currentDate = new Date(dateString)
+    this.currentDate = new Date(dateString);
   }
 
   public getLocaleMonth(): string {
-    return this.getTranslations().months[this.currentDate.getMonth()]
+    return this.getTranslations().months[this.currentDate.getMonth()];
   }
 
   public getMonth(): number {
-    return this.currentDate.getMonth()
+    return this.currentDate.getMonth();
   }
 
   public getDate(): number {
-    return this.currentDate.getDate()
+    return this.currentDate.getDate();
   }
 
   public now(): string {
-    const date = new Date()
-    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+    const date = new Date();
+    return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   }
 
   public getDateString(): string {
     if (this.locale === CalendarLocale.Chinese) {
-      return `${this.getYear()}年${this.getMonth() + 1}月`
+      return `${this.getYear()}年${this.getMonth() + 1}月`;
     }
-    return `${calendarTranslations[CalendarLocale.English].months[this.getMonth()]} ${this.getYear()}`
+    return `${calendarTranslations[CalendarLocale.English].months[this.getMonth()]} ${this.getYear()}`;
   }
 
   public getMonthString(): string {
-    return `${calendarTranslations[this.locale].months[this.getMonth()]}`
+    return `${calendarTranslations[this.locale].months[this.getMonth()]}`;
   }
 
   public generateMonthCalendar(): string[][] {
-    const year = this.currentDate.getFullYear()
-    const month = this.currentDate.getMonth()
-    const firstDayOfMonth = new Date(year, month, 1)
-    const lastDayOfMonth = new Date(year, month + 1, 0)
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth();
+    const firstDayOfMonth = new Date(year, month, 1);
+    const lastDayOfMonth = new Date(year, month + 1, 0);
 
-    const calendar: string[][] = []
-    let week: string[] = []
+    const calendar: string[][] = [];
+    let week: string[] = [];
 
     // Calculate the blank days of the first week
-    const firstWeekBlankDays = (firstDayOfMonth.getDay() - this.firstDayOfWeek + 7) % 7
+    const firstWeekBlankDays = (firstDayOfMonth.getDay() - this.firstDayOfWeek + 7) % 7;
     for (let i = 0; i < firstWeekBlankDays; i++) {
-      week.push('')
+      week.push('');
     }
 
     for (let day = 1; day <= lastDayOfMonth.getDate(); day++) {
-      week.push(day.toString())
+      week.push(day.toString());
       if (week.length === 7) {
-        calendar.push(week)
-        week = []
+        calendar.push(week);
+        week = [];
       }
     }
 
     // If the last week is less than 7 days, fill it with empty strings
     while (week.length < 7) {
-      week.push('')
+      week.push('');
     }
-    calendar.push(week)
+    calendar.push(week);
 
     // If the calendar has only 5 rows, add an empty row
     if (calendar.length === 5) {
-      calendar.push(Array(7).fill(''))
+      calendar.push(Array(7).fill(''));
     }
 
-    return calendar
+    return calendar;
   }
 
   public prevMonth(): void {
-    const currentMonth = this.currentDate.getMonth()
+    const currentMonth = this.currentDate.getMonth();
     if (currentMonth === 0) {
-      this.currentDate.setFullYear(this.currentDate.getFullYear() - 1)
-      this.currentDate.setMonth(11)
+      this.currentDate.setFullYear(this.currentDate.getFullYear() - 1);
+      this.currentDate.setMonth(11);
     } else {
-      this.currentDate.setMonth(currentMonth - 1)
+      this.currentDate.setMonth(currentMonth - 1);
     }
   }
 
   public currentMonth(): void {
-    this.currentDate = new Date()
+    this.currentDate = new Date();
   }
 
   public nextMonth(): void {
-    const currentMonth = this.currentDate.getMonth()
+    const currentMonth = this.currentDate.getMonth();
     if (currentMonth === 11) {
-      this.currentDate.setFullYear(this.currentDate.getFullYear() + 1)
-      this.currentDate.setMonth(0)
+      this.currentDate.setFullYear(this.currentDate.getFullYear() + 1);
+      this.currentDate.setMonth(0);
     } else {
-      this.currentDate.setMonth(currentMonth + 1)
+      this.currentDate.setMonth(currentMonth + 1);
     }
   }
 
   public setMonth(year: number, month: number): void {
-    this.currentDate.setFullYear(year, month)
+    this.currentDate.setFullYear(year, month);
   }
 
   public setLocale(locale: CalendarLocale): void {
-    this.locale = locale
+    this.locale = locale;
   }
 
   public getLocale(): CalendarLocale {
-    return this.locale
+    return this.locale;
   }
 
   public getTranslations(): CalendarTranslations {
-    return calendarTranslations[this.locale]
+    return calendarTranslations[this.locale];
   }
 }
 

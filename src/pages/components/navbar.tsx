@@ -1,23 +1,23 @@
-import { tag, Component, bind, classNames } from 'omi'
-import './dark-switch'
+import { tag, Component, bind, classNames } from 'omi';
+import './dark-switch';
 
 type NavbarItem = {
-  text: string
-  href: string
-  target: string
-  path: string
-  value: string
-  type: string
-  img?: string
-  inner?: string
-  children: any[]
-  tag?: string
-}
+  text: string;
+  href: string;
+  target: string;
+  path: string;
+  value: string;
+  type: string;
+  img?: string;
+  inner?: string;
+  children: any[];
+  tag?: string;
+};
 
 type Props = {
-  items: NavbarItem[]
-  active: string
-}
+  items: NavbarItem[];
+  active: string;
+};
 
 @tag('o-navbar')
 export class Navbar extends Component<Props> {
@@ -25,47 +25,47 @@ export class Navbar extends Component<Props> {
   :host {
     display: block;
   }
-  `
+  `;
 
   state = {
     isOpen: false,
     active: '',
-  }
+  };
 
   install() {
-    this.state.active = this.props.active
+    this.state.active = this.props.active;
   }
 
   @bind
   onItemClick(evt: MouseEvent, navbarItem: NavbarItem) {
     if (!navbarItem.value) {
-      return
+      return;
     }
-    this.state.isOpen = false
-    this.state.active = navbarItem.value
-    this.update()
+    this.state.isOpen = false;
+    this.state.active = navbarItem.value;
+    this.update();
     this.fire('item-click', {
       item: navbarItem,
       nativeEvent: evt,
-    })
+    });
   }
 
   @bind
   onSubItemClick(evt: MouseEvent, navbarItem: NavbarItem) {
-    this.state.isOpen = false
-    evt.stopPropagation()
-    this.state.active = navbarItem.value
-    this.update()
+    this.state.isOpen = false;
+    evt.stopPropagation();
+    this.state.active = navbarItem.value;
+    this.update();
     this.fire('item-click', {
       item: navbarItem,
       nativeEvent: evt,
-    })
+    });
   }
 
   @bind
   onClick() {
-    this.state.isOpen = !this.state.isOpen
-    this.update()
+    this.state.isOpen = !this.state.isOpen;
+    this.update();
   }
 
   renderNavbarItemChild(navbarItemChild: NavbarItem) {
@@ -75,13 +75,13 @@ export class Navbar extends Component<Props> {
           <li class="text-slate-300 dark:text-zinc-500 text-sm px-5 pt-2 cursor-default dark:text-foreground">
             {navbarItemChild.text}
           </li>
-        )
+        );
       case 'spliter':
         return (
           <li class="p-1">
             <hr class="border-t mx-auto" />
           </li>
-        )
+        );
       default:
         if (navbarItemChild.href) {
           return (
@@ -110,7 +110,7 @@ export class Navbar extends Component<Props> {
                 </div>
               </a>
             </li>
-          )
+          );
         }
 
         return (
@@ -129,9 +129,10 @@ export class Navbar extends Component<Props> {
               {navbarItemChild.text}
             </a>
           </li>
-        )
+        );
     }
   }
+
   render() {
     return (
       <nav class="container mx-auto flex flex-wrap items-center">
@@ -188,7 +189,7 @@ export class Navbar extends Component<Props> {
                   <li class="md:relative md:mr-2 p-1 border-b md:border-none group md:rounded-md">
                     <navbarItem.tag></navbarItem.tag>
                   </li>
-                )
+                );
               }
               return (
                 <li
@@ -252,18 +253,18 @@ export class Navbar extends Component<Props> {
                     )}
                     {navbarItem.children && (
                       <ul class="md:absolute md:left-1/2 md:-translate-x-1/2 w-auto  mt-2 text-sm md:text-base dark:bg-background bg-[#fafafa] md:border static text-zinc-600 overflow-hidden md:shadow-md md:invisible group-hover:visible transition-all duration-150 delay-100 rounded-md hover:text-primary z-50">
-                        {navbarItem.children.map((navbarItemChild: NavbarItem) => {
-                          return this.renderNavbarItemChild(navbarItemChild)
-                        })}
+                        {navbarItem.children.map((navbarItemChild: NavbarItem) =>
+                          this.renderNavbarItemChild(navbarItemChild),
+                        )}
                       </ul>
                     )}
                   </a>
                 </li>
-              )
+              );
             })}
           </ul>
         </div>
       </nav>
-    )
+    );
   }
 }

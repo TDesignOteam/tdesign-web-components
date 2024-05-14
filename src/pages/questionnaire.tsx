@@ -1,6 +1,6 @@
-import '../components/omiu/calendar/index'
-import '../components/omiu/button'
-import '../components/omiu/select'
+import '../components/omiu/calendar/index';
+import '../components/button/button';
+import '../components/omiu/select';
 
 export function Questionnaire() {
   return (
@@ -92,5 +92,5 @@ export function Questionnaire() {
         </div>
       </form>
     </div>
-  )
+  );
 }

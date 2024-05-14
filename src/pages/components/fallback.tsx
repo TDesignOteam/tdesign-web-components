@@ -44,4 +44,4 @@ export const fallback = (
       </div>
     </div>
   </div>
-)
+);
