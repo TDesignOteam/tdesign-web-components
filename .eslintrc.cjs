@@ -62,5 +62,9 @@ module.exports = {
     'consistent-return': 'off',
     'default-case': 'off',
     'object-curly-spacing': 'warn',
+    'class-methods-use-this': 'off',
+    'no-script-url': 'warn',
+    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^html'] }],
+    'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname'] }],
   },
 };

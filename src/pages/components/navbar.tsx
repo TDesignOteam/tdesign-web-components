@@ -68,6 +68,16 @@ export class Navbar extends Component<Props> {
     this.update();
   }
 
+  getHref(navbarItem: NavbarItem) {
+    if (navbarItem.children) {
+      return 'javascript:void(0)';
+    }
+    if (navbarItem.href) {
+      return navbarItem.href;
+    }
+    return `#${navbarItem.path}`;
+  }
+
   renderNavbarItemChild(navbarItemChild: NavbarItem) {
     switch (navbarItemChild.type) {
       case 'title':
@@ -203,13 +213,7 @@ export class Navbar extends Component<Props> {
                     class="block text-zinc-800 cursor-pointer hover:text-primary p-2 md:py-1"
                     target={navbarItem.href ? navbarItem.target || '_blank' : '_self'}
                     unsafeHTML={navbarItem.inner ? { html: navbarItem.inner } : null}
-                    href={
-                      navbarItem.children
-                        ? 'javascript:void(0)'
-                        : navbarItem.href
-                        ? navbarItem.href
-                        : `#${navbarItem.path}`
-                    }
+                    href={this.getHref(navbarItem)}
                   >
                     {navbarItem.img && (
                       <img class="h-6 w-6 inline-block rounded-full mr-1 relative -top-0.5" src={navbarItem.img}></img>

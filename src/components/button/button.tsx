@@ -1,6 +1,6 @@
 import { Component, tag } from 'omi';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { cn } from '../omiu/utils';
+import { cn } from '../utils';
 
 // In order to have tailwindcss scan containing these:
 // border-primary !bg-primary hover:!bg-primary/70 text-primary hover:border-primary/70 hover:text-primary/70

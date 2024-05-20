@@ -1,5 +1,5 @@
 import * as copyToClipboard from 'copy-to-clipboard';
-import { showMsg } from '../components/message/msg';
+import { showMsg } from '../message/msg';
 
 // @ts-ignore
 const copy = copyToClipboard.default || copyToClipboard;

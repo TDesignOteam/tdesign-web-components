@@ -43,7 +43,7 @@ export class Sidebar extends Component<Props> {
     this.state.active = item.value;
     this.update();
     this.fire('change', {
-      item: item,
+      item,
       nativeEvent: evt,
     });
   }
@@ -65,34 +65,30 @@ export class Sidebar extends Component<Props> {
     return (
       <nav class="text-base lg:text-sm">
         <ul role="list" class="space-y-9">
-          {this.props.items.map((item) => {
-            return (
-              <li>
-                <h2 class="font-display font-medium text-zinc-900 dark:text-white">{item.text}</h2>
-                <ul
-                  role="list"
-                  class="mt-2 space-y-2 border-l-2 border-zinc-100 lg:mt-4 lg:space-y-4 lg:border-zinc-200 dark:border-zinc-700"
-                >
-                  {item.children.map((child) => {
-                    return (
-                      <li class="relative">
-                        <a
-                          class={classNames(theme.base, {
-                            [theme.active]: this.state.active === child.value,
-                            [theme.unactive]: this.state.active !== child.value,
-                          })}
-                          onClick={(evt: MouseEvent) => this.onClick(child, evt)}
-                          href="javascript:void(0)"
-                        >
-                          {child.text}
-                        </a>
-                      </li>
-                    );
-                  })}
-                </ul>
-              </li>
-            );
-          })}
+          {this.props.items.map((item) => (
+            <li>
+              <h2 class="font-display font-medium text-zinc-900 dark:text-white">{item.text}</h2>
+              <ul
+                role="list"
+                class="mt-2 space-y-2 border-l-2 border-zinc-100 lg:mt-4 lg:space-y-4 lg:border-zinc-200 dark:border-zinc-700"
+              >
+                {item.children.map((child) => (
+                  <li class="relative">
+                    <a
+                      class={classNames(theme.base, {
+                        [theme.active]: this.state.active === child.value,
+                        [theme.unactive]: this.state.active !== child.value,
+                      })}
+                      onClick={(evt: MouseEvent) => this.onClick(child, evt)}
+                      href="javascript:void(0)"
+                    >
+                      {child.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
         </ul>
       </nav>
     );

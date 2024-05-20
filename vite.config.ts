@@ -1,5 +1,6 @@
-import { defineConfig } from 'vite'
-import { resolve } from 'path'
+import { defineConfig } from 'vite';
+import { resolve } from 'path';
+import tdocPlugin from './script/plugin-tdoc';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -7,12 +8,14 @@ export default defineConfig({
   esbuild: {
     jsxFactory: 'h',
     jsxFragment: 'h.f',
-    jsxInject: `import { h } from 'omi'`
+    jsxInject: `import { h } from 'omi'`,
   },
   resolve: {
     alias: {
       // "omi": resolve("./src/omi/index.ts"),
-      "@": resolve("./src/"),
+      '@': resolve('./src/'),
+      'tdesign-web-components': resolve('./src/components/'),
     },
   },
-})
+  plugins: [tdocPlugin()],
+});

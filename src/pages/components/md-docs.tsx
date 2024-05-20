@@ -1,10 +1,10 @@
 import * as MarkdownIt from 'markdown-it';
-import prismStyle from './prism.css?raw';
 import * as Prism from 'prismjs';
 import 'prismjs/components/prism-jsx';
 import 'prismjs/components/prism-bash';
 import 'prismjs/components/prism-tsx';
 import { tag, Component } from 'omi';
+import prismStyle from './prism.css?raw';
 
 // @ts-ignore
 const MdIt = MarkdownIt.default ? MarkdownIt.default : MarkdownIt;
@@ -12,6 +12,7 @@ const MdIt = MarkdownIt.default ? MarkdownIt.default : MarkdownIt;
 @tag('md-docs')
 export class MarkdownRenderer extends Component {
   static css = [prismStyle];
+
   md: any;
 
   install() {
@@ -32,7 +33,7 @@ export class MarkdownRenderer extends Component {
     const codes = Array.from(this.shadowRoot?.querySelectorAll('code') || []);
     codes.forEach((code) => {
       const arr = code.className.match(/{([\S\s]*)}/);
-      let pre = code.parentNode as HTMLElement;
+      const pre = code.parentNode as HTMLElement;
       if (arr) {
         pre.setAttribute('data-line', arr[1]);
       }
@@ -42,12 +43,13 @@ export class MarkdownRenderer extends Component {
         const lan = temp?.split('-')[1] || 'markup';
         const pl = Prism.languages[lan];
         if (temp && pl) {
+          // eslint-disable-next-line no-param-reassign
           code.innerHTML = Prism.highlight(code.innerText, pl, lan).trim();
         }
       }
     });
 
-    //fix line-highlight
+    // fix line-highlight
     window.dispatchEvent(new Event('resize'));
   }
 
