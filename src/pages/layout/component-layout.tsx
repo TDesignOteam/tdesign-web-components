@@ -20,6 +20,8 @@ function throttle(func: Function, delay: number) {
 const routerList = JSON.parse(JSON.stringify(sidebarConfig).replace(/component:.+/g, ''));
 @tag('component-layout')
 export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
+  asideRef: any = null;
+
   scroll = throttle(() => {
     const { scrollTop } = document.documentElement;
     const t = document
@@ -37,16 +39,26 @@ export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
     }
   }, 100);
 
+  componentLoaded = () => {
+    document.addEventListener('scroll', this.scroll);
+  };
+
+  asideChange = ({ detail }: { detail: string }) => {
+    if (window.location.pathname === detail) return;
+    window.location.pathname = detail;
+  };
+
   static css = styles;
 
   ready(): void {
-    window.addEventListener('component-loaded', () => {
-      document.addEventListener('scroll', this.scroll);
-    });
+    window.addEventListener('component-loaded', this.componentLoaded);
+    this.asideRef?.addEventListener?.('change', this.asideChange);
   }
 
   uninstall(): void {
+    window.removeEventListener('component-loaded', this.componentLoaded);
     document.removeEventListener('scroll', this.scroll);
+    this.asideRef?.removeEventListener?.('change', this.asideChange);
   }
 
   render() {
@@ -56,7 +68,7 @@ export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
           <td-header framework="web-components" slot="header">
             <td-doc-search slot="search" docsearchInfo="搜索" />
           </td-header>
-          <td-doc-aside title="Web Components" routerList={routerList}>
+          <td-doc-aside ref={(e: any) => (this.asideRef = e)} title="Web Components" routerList={routerList}>
             <td-select value="0.0.1" options={[{ label: '0.0.1', value: '0.0.1' }]} slot="extra"></td-select>
           </td-doc-aside>
           <td-doc-content pageStatus="show">
