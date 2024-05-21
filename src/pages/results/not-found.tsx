@@ -55,5 +55,5 @@ export function NotFound() {
         </div>
       </div>
     </div>
-  )
+  );
 }

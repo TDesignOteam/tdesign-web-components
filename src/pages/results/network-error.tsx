@@ -48,5 +48,5 @@ export function NetworkError() {
         </div>
       </div>
     </div>
-  )
+  );
 }

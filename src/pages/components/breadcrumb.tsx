@@ -1,4 +1,4 @@
-import '@/components/omiu/breadcrumb'
+import '@/components/omiu/breadcrumb';
 
 export function Questionnaire() {
   return (
@@ -25,5 +25,5 @@ export function Questionnaire() {
         ></o-breadcrumb>
       </div>
     </div>
-  )
+  );
 }

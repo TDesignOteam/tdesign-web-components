@@ -137,5 +137,5 @@ export function BrowserNotSupport() {
         </div>
       </div>
     </div>
-  )
+  );
 }

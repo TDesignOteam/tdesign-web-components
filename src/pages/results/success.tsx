@@ -1,4 +1,4 @@
-import '../../components/omiu/button'
+import '../../components/button/button';
 
 export function SuccessResult() {
   return (
@@ -27,5 +27,5 @@ export function SuccessResult() {
         </div>
       </div>
     </div>
-  )
+  );
 }

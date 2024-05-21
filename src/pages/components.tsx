@@ -1,151 +1,179 @@
-import '../components/omiu/calendar/index'
-import '../components/omiu/button'
-import '../components/omiu/switch'
-import '../components/omiu/breadcrumb'
+import './components/md-docs.tsx';
+import './components/docs-sidebar.tsx';
+import { Component, tag, bind, classNames } from 'omi';
+import * as MarkdownIt from 'markdown-it';
+// import { docsConfig } from '../docs/config';
+import { sidebarItems, activeSidebarItem, isSidebarOpen } from '../store.ts';
 
-export function Questionnaire() {
-  return (
-    <div class="max-w-[800px] mx-auto text-left px-4 py-10">
-      <h1 class="text-3xl font-bold mb-6">Button 按钮</h1>
-      <p>按钮用于开启一个闭环的操作任务，如“删除”对象、“购买”商品等。</p>
+// @ts-ignore
+const MdIt = MarkdownIt.default ? MarkdownIt.default : MarkdownIt;
 
-      <h2 class="text-2xl font-bold my-6">按钮 Variant 和 Theme</h2>
+type NavTreeNode = {
+  title: string;
+  children: NavTreeNode[];
+};
 
-      <div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="default">填充按钮</o-button>
-          <o-button variant="outline" theme="default">
-            描边按钮
-          </o-button>
-          <o-button variant="dashed" theme="default">
-            虚框按钮
-          </o-button>
-          <o-button variant="text" theme="default">
-            文字按钮
-          </o-button>
-        </div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="primary">填充按钮</o-button>
-          <o-button variant="outline" theme="primary">
-            描边按钮
-          </o-button>
-          <o-button variant="dashed" theme="primary">
-            虚框按钮
-          </o-button>
-          <o-button variant="text" theme="primary">
-            文字按钮
-          </o-button>
-        </div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="danger">填充按钮</o-button>
-          <o-button variant="outline" theme="danger">
-            描边按钮
-          </o-button>
-          <o-button variant="dashed" theme="danger">
-            虚框按钮
-          </o-button>
-          <o-button variant="text" theme="danger">
-            文字按钮
-          </o-button>
-        </div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="warning">填充按钮</o-button>
-          <o-button variant="outline" theme="warning">
-            描边按钮
-          </o-button>
-          <o-button variant="dashed" theme="warning">
-            虚框按钮
-          </o-button>
-          <o-button variant="text" theme="warning">
-            文字按钮
-          </o-button>
-        </div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="success">填充按钮</o-button>
-          <o-button variant="outline" theme="success">
-            描边按钮
-          </o-button>
-          <o-button variant="dashed" theme="success">
-            虚框按钮
-          </o-button>
-          <o-button variant="text" theme="success">
-            文字按钮
-          </o-button>
+type Props = {
+  component: string;
+  markdownContent: string;
+};
+
+@tag('product-docs')
+export class ProductDocs extends Component<Props> {
+  state: {
+    markdownContent: string;
+    navTree: NavTreeNode;
+    active: [string, string];
+  } = {
+    markdownContent: '',
+    navTree: { title: '', children: [] },
+    active: ['', ''],
+  };
+
+  @bind
+  async onChange(evt: CustomEvent) {
+    // 滚动到最顶
+    window.scrollTo(0, 0);
+    history.pushState(null, '', evt.detail.item.path);
+    const { default: markdownContent } = await import(`../components/${evt.detail.item.value}/README.md?raw`);
+    this.state.markdownContent = markdownContent;
+    this.update();
+  }
+
+  md: MarkdownIt = new MdIt();
+
+  install() {
+    this.state.markdownContent = this.props.markdownContent;
+
+    activeSidebarItem.value = this.props.component;
+
+    this.setNavTree();
+  }
+
+  // 提取 markdown 中的标题
+  setNavTree() {
+    const tokens = this.md.parse(this.state.markdownContent, {});
+
+    let currentNode: NavTreeNode = this.state.navTree;
+
+    for (let i = 0; i < tokens.length; i++) {
+      const token = tokens[i];
+      if (token.type === 'heading_open') {
+        const title = tokens[i + 1].content;
+        const newNode: NavTreeNode = { title, children: [] };
+
+        if (token.tag === 'h2') {
+          this.state.navTree.children.push(newNode);
+          currentNode = newNode;
+        } else if (token.tag === 'h3') {
+          currentNode.children.push(newNode);
+        }
+      }
+    }
+    this.state.active = [this.state.navTree.children[0].title, this.state.navTree.children[0].children?.[0]?.title];
+  }
+
+  goToSection = (item: NavTreeNode) => () => {
+    this.state.active = [item.title, ''];
+    this.update();
+    this.scrollToH2(item.title);
+  };
+
+  goToSubSection = (item: NavTreeNode, child: NavTreeNode) => () => {
+    this.state.active = [item.title, child.title];
+    this.update();
+    this.scrollToH3(child.title);
+  };
+
+  scrollToH2(title: string) {
+    const h2Elements = (
+      this.rootElement?.querySelector('md-docs') as HTMLElement & {
+        rootElement: HTMLElement;
+      }
+    )?.rootElement.getElementsByTagName('h2');
+    for (let i = 0; i < h2Elements.length; i++) {
+      if (h2Elements[i].textContent === title) {
+        h2Elements[i].scrollIntoView({ behavior: 'smooth' });
+        break;
+      }
+    }
+  }
+
+  scrollToH3(title: string) {
+    const h2Elements = (
+      this.rootElement?.querySelector('md-docs') as HTMLElement & {
+        rootElement: HTMLElement;
+      }
+    ).rootElement.getElementsByTagName('h3');
+    for (let i = 0; i < h2Elements.length; i++) {
+      if (h2Elements[i].textContent === title) {
+        h2Elements[i].scrollIntoView({ behavior: 'smooth' });
+        break;
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div class="flex min-h-full bg-white dark:bg-zinc-800">
+        <div class="flex w-full flex-col">
+          <div class="relative mx-auto flex w-full max-w-8xl flex-auto justify-center sm:pr-2 lg:pr-8 xl:pr-12">
+            <div class="fixed top-[58px] left-0 overflow-y-auto">
+              <o-sidebar
+                onChange={(evt: CustomEvent) => (activeSidebarItem.value = evt.detail.item.value)}
+                items={sidebarItems.value}
+                active={activeSidebarItem.value}
+                isOpen={isSidebarOpen.value}
+                onInstalled={window.refreshDark}
+              ></o-sidebar>
+            </div>
+            <div class="min-w-0 max-w-2xl flex-auto px-4 py-16 ml-[240px] lg:max-w-none lg:pl-8 lg:pr-0 xl:px-16">
+              <article>
+                <md-docs content={this.state.markdownContent}></md-docs>
+              </article>
+            </div>
+            <div class="hidden xl:sticky xl:top-[4.75rem] xl:-mr-6 xl:block xl:h-[calc(100vh-4.75rem)] xl:flex-none xl:overflow-y-auto xl:py-16 xl:pr-6">
+              <nav aria-labelledby="on-this-page-title" class="w-56">
+                <h2 id="on-this-page-title" class="font-display text-sm font-medium text-slate-900 dark:text-white">
+                  On this page
+                </h2>
+                <ol role="list" class="mt-4 space-y-3 text-sm">
+                  {this.state.navTree.children.map((item: NavTreeNode) => (
+                    <li class="text-slate-500 dark:text-slate-400">
+                      <h3 onClick={this.goToSection(item)}>
+                        <a
+                          class={classNames({
+                            'text-primary brightness-125': this.state.active[0] === item.title,
+                            'hover:text-slate-600 dark:hover:text-slate-300': this.state.active[0] !== item.title,
+                          })}
+                          href="javascript:void(0)"
+                        >
+                          {item.title}
+                        </a>
+                      </h3>
+                      <ol role="list" class="mt-2 space-y-3 pl-5">
+                        {item.children.map((child: NavTreeNode) => (
+                          <li onClick={this.goToSubSection(item, child)}>
+                            <a
+                              class={classNames({
+                                'text-primary brightness-125': this.state.active[1] === child.title,
+                                'hover:text-slate-600 dark:hover:text-slate-300': this.state.active[1] !== child.title,
+                              })}
+                              href="javascript:void(0)"
+                            >
+                              {child.title}
+                            </a>
+                          </li>
+                        ))}
+                      </ol>
+                    </li>
+                  ))}
+                </ol>
+              </nav>
+            </div>
+          </div>
         </div>
       </div>
-
-      <h2 class="text-2xl font-bold my-6">图标按钮</h2>
-
-      <div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="primary">
-            <i class="t-icon t-icon-add text-base"></i>
-            新建
-          </o-button>
-          <o-button variant="outline" icon="cloud-upload">
-            上传文件
-          </o-button>
-          <o-button shape="circle" icon="discount" theme="primary"></o-button>
-          <o-button shape="circle" icon="cloud-download" theme="primary"></o-button>
-          <o-button variant="outline" icon="search">
-            搜索
-          </o-button>
-        </div>
-      </div>
-
-      <h2 class="text-2xl font-bold my-6">不同状态的按钮</h2>
-
-      <div>
-        <div class="flex gap-3 mb-2">
-          <o-button theme="primary" disabled>
-            禁用的按钮
-          </o-button>
-          <o-button theme="primary" loading>
-            加载中
-          </o-button>
-        </div>
-      </div>
-
-      <hr class="my-3"></hr>
-      <h1 class="text-3xl font-bold my-6">Switch 开关</h1>
-      <p>用于两个互斥选项，用来打开或关闭选项的选择控件。</p>
-
-      <h2 class="text-2xl font-bold my-6">不同尺寸</h2>
-      <div class="flex gap-6 items-center">
-        <o-switch size="small"></o-switch>
-        <o-switch size="medium"></o-switch>
-        <o-switch size="large"></o-switch>
-      </div>
-
-      <h2 class="text-2xl font-bold my-6">禁用</h2>
-      <div class="flex gap-6 items-center">
-        <o-switch disabled size="small"></o-switch>
-        <o-switch disabled size="medium"></o-switch>
-        <o-switch disabled size="large"></o-switch>
-      </div>
-
-      <hr class="my-3"></hr>
-      <h1 class="text-3xl font-bold my-6">Breadcrumb 面包屑</h1>
-      <p>显示当前页面在系统层级结构的位置，并能返回之前任意层级的页面。</p>
-
-      <h2 class="text-2xl font-bold my-6">默认</h2>
-      <div class="flex gap-6 items-center">
-        <o-breadcrumb
-          items={[
-            {
-              label: 'Home',
-              icon: 'home',
-              href: '#/',
-            },
-            {
-              label: 'Project',
-            },
-            {
-              label: 'OMI',
-            },
-          ]}
-        ></o-breadcrumb>
-      </div>
-    </div>
-  )
+    );
+  }
 }

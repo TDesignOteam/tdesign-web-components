@@ -1,5 +1,5 @@
-import { isDark } from '../store.ts'
-import '../components/omiu/button.tsx'
+import { isDark } from '../store.ts';
+import '../components/button/button.tsx';
 
 export function Home() {
   return (
@@ -159,5 +159,5 @@ export function Home() {
         </div>
       </section>
     </>
-  )
+  );
 }
