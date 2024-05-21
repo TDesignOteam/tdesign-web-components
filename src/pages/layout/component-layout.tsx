@@ -1,14 +1,28 @@
 import { VNode } from 'omi';
 import '../components/navbar.tsx';
 import sidebarConfig from '../../sidebar.config.ts';
-// import { navbarItems, activeMenuItem } from '../../store.ts';
-// import { CustomizeButton } from '../components/customize-button.tsx';
-// import tdesignLogo from '@/assets/tdesign.svg?raw';
+
+import 'tdesign-site-components/lib/styles/style.css';
+import 'tdesign-site-components/lib/styles/prism-theme.less';
+import 'tdesign-site-components/lib/styles/prism-theme-dark.less';
+
+function throttle(func: Function, delay: number) {
+  let lastCall = 0;
+
+  return (...args: any[]) => {
+    const now = new Date().getTime();
+    if (now - lastCall >= delay) {
+      lastCall = now;
+      // @ts-ignore
+      return func.apply(this, args);
+    }
+  };
+}
+
 const routerList = JSON.parse(JSON.stringify(sidebarConfig).replace(/component:.+/g, ''));
 
 export function ComponentLayout(props: { children?: VNode | VNode[] }) {
-  // const router = [{ title: '按钮', name: 'button', path: '/#/components/button' }];
-  document.addEventListener('scroll', () => {
+  const scroll = throttle(() => {
     const { scrollTop } = document.documentElement;
     const t = document
       .querySelector('router-view')
@@ -22,7 +36,20 @@ export function ComponentLayout(props: { children?: VNode | VNode[] }) {
     } else {
       Object.assign(t.style, { position: 'absolute', top: '228px' });
     }
+  }, 100);
+
+  document.addEventListener('scroll', scroll);
+
+  import('tdesign-site-components/lib/styles/style.css').then((r) => {
+    const suspense = document.querySelector('router-view')?.shadowRoot?.querySelector('o-suspense')?.shadowRoot;
+    if (!suspense?.querySelector('style[id="tdesign"]')) {
+      const s = document.createElement('style');
+      s.innerHTML = r.default;
+      s.id = 'tdesign';
+      document.querySelector('router-view')?.shadowRoot?.querySelector('o-suspense')?.shadowRoot?.appendChild(s);
+    }
   });
+
   return (
     <>
       <td-doc-layout>

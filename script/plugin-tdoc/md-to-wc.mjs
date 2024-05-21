@@ -60,7 +60,6 @@ export default function mdToReact(options) {
       const tabRef = signal({});
 
       effect(() => {
-        console.log('==tabRef',tabRef);
         tabRef.value?.addEventListener?.('change', (event) => {
           tab.value = event.detail;
           const query = useQuery();

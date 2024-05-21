@@ -6,6 +6,8 @@ usage: { title: '', description: '' }
 spline: base
 ---
 
+### 基础使用
+
 {{ base }}
 
 ## API
