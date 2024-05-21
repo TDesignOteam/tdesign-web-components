@@ -9,6 +9,19 @@ import { pending } from './pages/components/pending';
 import { fallback } from './pages/components/fallback';
 import './pages/layout/component-layout';
 import './pages/components/appear';
+import sidebar from './sidebar.config';
+
+function createComponentRoutes(config: any[] = []) {
+  const routes: any[] = [];
+  config.forEach((item) => {
+    if (item.children) {
+      item.children.forEach((c: any) => {
+        routes.push(createComponentRoute(c.path, c.component));
+      });
+    }
+  });
+  return routes;
+}
 
 @tag('td-suspense')
 export class tdSuspense extends Component<{ componentImport: () => Promise<any> }> {
@@ -41,7 +54,7 @@ export const routes = [
   createRoute('/results/server-error', () => import('./pages/results/server-error')),
   createRoute('/results/system-maintenance', () => import('./pages/results/system-maintenance')),
   createRoute('/results/not-found', () => import('./pages/results/not-found')),
-  createComponentRoute('/components/button', () => import('./components/button/README.md')),
+  ...createComponentRoutes(sidebar),
   createRoute('/icons', () => import('./pages/icons')),
   createRoute('*', () => import('./pages/results/not-found')),
   {

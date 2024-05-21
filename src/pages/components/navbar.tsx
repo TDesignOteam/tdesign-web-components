@@ -75,7 +75,7 @@ export class Navbar extends Component<Props> {
     if (navbarItem.href) {
       return navbarItem.href;
     }
-    return `#${navbarItem.path}`;
+    return `${navbarItem.path}`;
   }
 
   renderNavbarItemChild(navbarItemChild: NavbarItem) {
