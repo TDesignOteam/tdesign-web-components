@@ -1,13 +1,35 @@
 import 'omi-suspense';
 import './index.css';
 import { Router } from 'omi-router';
-import { Component } from 'omi';
+import { Component, VNode, tag } from 'omi';
+import styles from 'tdesign-site-components/lib/styles/style.css?raw';
+
 import { SiteLayout } from './pages/layout/site-layout';
 import { pending } from './pages/components/pending';
 import { fallback } from './pages/components/fallback';
-import { ComponentLayout } from './pages/layout/component-layout';
+import './pages/layout/component-layout';
 import './pages/components/appear';
-// import Button from './components/button/README.md';
+
+@tag('td-suspense')
+export class tdSuspense extends Component<{ componentImport: () => Promise<any> }> {
+  component: VNode = null as any;
+
+  static css = styles;
+
+  install(): void {
+    this.props?.componentImport?.().then((c) => {
+      this.component = c.default();
+      this.update();
+      window.dispatchEvent?.(new Event('component-loaded'));
+      window.refreshDark();
+    });
+  }
+
+  render() {
+    const { component } = this;
+    return component ? component : pending;
+  }
+}
 
 export const routes = [
   createRoute('/', () => import('./pages/home')),
@@ -71,29 +93,11 @@ function createRoute(path: string, componentImport: () => Promise<unknown>) {
 function createComponentRoute(path: string, componentImport: () => Promise<unknown>) {
   return {
     path,
-    render(router: Router) {
+    render() {
       return (
-        <ComponentLayout>
-          <o-suspense
-            minLoadingTime={400}
-            imports={[componentImport()]}
-            customRender={(results: { [x: string]: Function }[]) => {
-              const Component = results[0].default;
-              return <Component router={router} />;
-            }}
-            fallback={fallback}
-            beforePending={async (suspense: Component) => {
-              suspense.shadowRoot?.firstElementChild?.classList.add('opacity-0', 'translate-y-4');
-              return new Promise((resolve) => {
-                setTimeout(resolve, 300);
-              });
-            }}
-            pending={pending}
-            onLoaded={() => {
-              window.refreshDark();
-            }}
-          ></o-suspense>
-        </ComponentLayout>
+        <component-layout>
+          <td-suspense componentImport={componentImport}></td-suspense>
+        </component-layout>
       );
     },
   };

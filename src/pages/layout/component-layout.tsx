@@ -1,10 +1,8 @@
-import { VNode } from 'omi';
+import { Component, VNode, tag } from 'omi';
 import '../components/navbar.tsx';
-import sidebarConfig from '../../sidebar.config.ts';
+import styles from 'tdesign-site-components/lib/styles/style.css?raw';
 
-import 'tdesign-site-components/lib/styles/style.css';
-import 'tdesign-site-components/lib/styles/prism-theme.less';
-import 'tdesign-site-components/lib/styles/prism-theme-dark.less';
+import sidebarConfig from '../../sidebar.config.ts';
 
 function throttle(func: Function, delay: number) {
   let lastCall = 0;
@@ -20,13 +18,14 @@ function throttle(func: Function, delay: number) {
 }
 
 const routerList = JSON.parse(JSON.stringify(sidebarConfig).replace(/component:.+/g, ''));
-
-export function ComponentLayout(props: { children?: VNode | VNode[] }) {
-  const scroll = throttle(() => {
+@tag('component-layout')
+export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
+  scroll = throttle(() => {
     const { scrollTop } = document.documentElement;
     const t = document
       .querySelector('router-view')
-      ?.shadowRoot?.querySelector('o-suspense')
+      ?.shadowRoot?.querySelector('component-layout')
+      ?.shadowRoot?.querySelector('td-suspense')
       ?.shadowRoot?.querySelector('td-doc-tabs') as any;
     if (!t) {
       return;
@@ -38,33 +37,35 @@ export function ComponentLayout(props: { children?: VNode | VNode[] }) {
     }
   }, 100);
 
-  document.addEventListener('scroll', scroll);
+  static css = styles;
 
-  import('tdesign-site-components/lib/styles/style.css').then((r) => {
-    const suspense = document.querySelector('router-view')?.shadowRoot?.querySelector('o-suspense')?.shadowRoot;
-    if (!suspense?.querySelector('style[id="tdesign"]')) {
-      const s = document.createElement('style');
-      s.innerHTML = r.default;
-      s.id = 'tdesign';
-      document.querySelector('router-view')?.shadowRoot?.querySelector('o-suspense')?.shadowRoot?.appendChild(s);
-    }
-  });
+  ready(): void {
+    window.addEventListener('component-loaded', () => {
+      document.addEventListener('scroll', this.scroll);
+    });
+  }
 
-  return (
-    <>
-      <td-doc-layout>
-        <td-header framework="web-components" slot="header">
-          <td-doc-search slot="search" docsearchInfo="搜索" />
-        </td-header>
-        <td-doc-aside title="Web Components" routerList={routerList}>
-          <td-select value="0.0.1" options={[{ label: '0.0.1', value: '0.0.1' }]} slot="extra"></td-select>
-        </td-doc-aside>
-        <td-doc-content pageStatus="show">
-          {props.children}
-          <td-doc-footer slot="doc-footer"></td-doc-footer>
-        </td-doc-content>
-      </td-doc-layout>
-      <td-theme-generator />
-    </>
-  );
+  uninstall(): void {
+    document.removeEventListener('scroll', this.scroll);
+  }
+
+  render() {
+    return (
+      <>
+        <td-doc-layout>
+          <td-header framework="web-components" slot="header">
+            <td-doc-search slot="search" docsearchInfo="搜索" />
+          </td-header>
+          <td-doc-aside title="Web Components" routerList={routerList}>
+            <td-select value="0.0.1" options={[{ label: '0.0.1', value: '0.0.1' }]} slot="extra"></td-select>
+          </td-doc-aside>
+          <td-doc-content pageStatus="show">
+            {this.props.children}
+            <td-doc-footer slot="doc-footer"></td-doc-footer>
+          </td-doc-content>
+        </td-doc-layout>
+        <td-theme-generator />
+      </>
+    );
+  }
 }

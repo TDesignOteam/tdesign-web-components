@@ -22,7 +22,7 @@ export default function mdToReact(options) {
     ${demoDefsStr}
     ${demoCodesDefsStr}
 
-    export default function TdDoc({router}) {
+    export default function TdDoc() {
       const isComponent  = ${mdSegment.isComponent};
       const mdSegment = ${JSON.stringify(mdSegment)};
 
@@ -37,9 +37,10 @@ export default function mdToReact(options) {
       header.spline = '${mdSegment.spline}';
       header.platform = 'web';
       // slot只作用一层的原因
-      const hasHeader = document.querySelector('router-view')?.shadowRoot?.querySelector('td-doc-header');
+      const headerWrapper = document.querySelector("router-view")?.shadowRoot?.querySelector("component-layout");
+      const hasHeader = headerWrapper?.shadowRoot?.querySelector('td-doc-header');
       if(mdSegment.tdDocHeader && !hasHeader){
-        document.querySelector("router-view")?.shadowRoot?.querySelector("td-doc-content")?.append(header);
+        headerWrapper?.shadowRoot?.querySelector('td-doc-content')?.append(header);
       }
 
       function useQuery() {

@@ -20,7 +20,7 @@
     "copy-to-clipboard": "^3.3.3",
     "markdown-it": "^14.0.0",
     "omi": "7.6.7",
-    "omi-router": "latest",
+    "omi-router": "4.1.8",
     "omi-suspense": "latest",
     "prismjs": "^1.29.0",
     "tailwind-merge": "^2.2.1"
