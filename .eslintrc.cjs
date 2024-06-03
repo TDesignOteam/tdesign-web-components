@@ -2,11 +2,10 @@ module.exports = {
   extends: [
     'airbnb-base',
     'prettier', // eslint-config-prettier 处理冲突
-    'plugin:import/typescript',
     'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
   env: {
     browser: true,
     node: true,
@@ -32,13 +31,27 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'error', // codecc
-    'import/order': 'error',
+    'simple-import-sort/imports': [
+      'error',
+      {
+        groups: [
+          // Side effect imports.
+          ['^\\u0000'],
+          // Packages. `react` related packages come first.
+          ['^react', '^@?\\w'],
+          ['^(echarts)(/.*|$)'],
+          // Internal packages.
+          ['^(@|hooks|utils)(/.*|$)'],
+          // Parent and other relative imports. Put `.` last.
+          ['^\\.\\.(?!/?$)', '^\\.\\./?$', '^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
+          // Style imports.
+          ['^.+\\.less$'],
+        ],
+      },
+    ],
     'import/extensions': 'off',
-    'import/no-named-as-default': 'off',
+    'import/no-unresolved': 'off',
     'import/prefer-default-export': 'off',
-    'import/no-extraneous-dependencies': 'off',
-    'import/no-cycle': 'off', // TODO: turn on this rule later
-    'import/no-unresolved': 'off', // TODO: turn on this rule later
     'max-len': 'off',
     'no-shadow': 'off',
     'no-console': 'off',
