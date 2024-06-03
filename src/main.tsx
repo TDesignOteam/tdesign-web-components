@@ -1,6 +1,7 @@
 import { Router } from 'omi-router';
 import { routes } from './routes';
 import 'tdesign-site-components';
+import 'tdesign-theme-generator';
 import './tailwind/index';
 
 import 'tdesign-site-components/lib/styles/style.css';

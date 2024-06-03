@@ -1,6 +1,8 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { VitePWA } from 'vite-plugin-pwa';
 import tdocPlugin from './script/plugin-tdoc';
+import pwaConfig from './pwaConfig';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -17,5 +19,5 @@ export default defineConfig({
       'tdesign-web-components': resolve('./src/components/'),
     },
   },
-  plugins: [tdocPlugin()],
+  plugins: [tdocPlugin(), VitePWA(pwaConfig)],
 });

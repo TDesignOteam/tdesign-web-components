@@ -1,8 +1,7 @@
-/* eslint-disable */
 import fs from 'fs';
-import path from 'path';
 import matter from 'gray-matter';
 import esbuild from 'esbuild';
+import { spawn } from 'node:child_process';
 // import camelCase from 'camelcase';
 // import { compileUsage } from '../../src/_common/docs/compile';
 
@@ -10,8 +9,28 @@ import esbuild from 'esbuild';
 
 // import { transformSync } from '@babel/core';
 
-export default function mdToReact(options) {
-  const mdSegment = customRender(options);
+/**
+ * 获取文件 git 最后更新时间
+ * @param {string} file
+ * @returns {Promise<number>}
+ */
+
+function getGitTimestamp(file) {
+  return new Promise((resolve, reject) => {
+    const child = spawn('git', ['log', '-1', '--pretty="%ci"', file]);
+    let output = '';
+    child.stdout.on('data', (d) => {
+      output += String(d);
+    });
+    child.on('close', () => {
+      resolve(+new Date(output));
+    });
+    child.on('error', reject);
+  });
+}
+
+export default async function mdToReact(options) {
+  const mdSegment = await customRender(options);
   const { demoDefsStr, demoCodesDefsStr } = options;
 
   const reactSource = `
@@ -37,10 +56,10 @@ export default function mdToReact(options) {
       header.spline = '${mdSegment.spline}';
       header.platform = 'web';
       // slot只作用一层的原因
-      const headerWrapper = document.querySelector("router-view")?.shadowRoot?.querySelector("component-layout");
+      const headerWrapper = document.querySelector("router-view")?.shadowRoot?.querySelector("td-wc-content");
       const hasHeader = headerWrapper?.shadowRoot?.querySelector('td-doc-header');
       if(mdSegment.tdDocHeader && !hasHeader){
-        headerWrapper?.shadowRoot?.querySelector('td-doc-content')?.append(header);
+        headerWrapper?.append(header);
       }
 
       function useQuery() {
@@ -82,7 +101,7 @@ export default function mdToReact(options) {
             <>
               <td-doc-tabs ref={(e) => {tabRef.value = e;tabRef.update();}} tabs={tabs} tab={tab.value}></td-doc-tabs>
               <div style={isShow('demo')} name="DEMO">
-                ${mdSegment.demoMd.replace(/class=/g, 'cls=')}
+                ${mdSegment.demoMd}
                 <td-contributors platform="web" framework="web-components" component-name="${
                   mdSegment.componentName
                 }" ></td-contributors>
@@ -91,8 +110,11 @@ export default function mdToReact(options) {
                 ${mdSegment.apiMd}
               </div>
             </>
-          ) : <div name="DOC" className="${mdSegment.docClass}">${mdSegment.docMd.replace(/class=/g, 'cls=')}</div>
+          ) : <div name="DOC" className="${mdSegment.docClass}">${mdSegment.docMd}</div>
         }
+        <div style={{ marginTop: 48 }}>
+          <td-doc-history time={${mdSegment.lastUpdated}} key={${mdSegment.lastUpdated}}></td-doc-history>
+        </div>
         </>
       )
     }
@@ -114,9 +136,9 @@ const DEAULT_TABS = [
 ];
 
 // 解析 markdown 内容
-function customRender({ source, file, md }) {
-  let { content, data } = matter(source);
-  // console.log('data', data);
+async function customRender({ source, file, md }) {
+  const { content, data } = matter(source);
+  const lastUpdated = (await getGitTimestamp(file)) || Math.round(fs.statSync(file).mtimeMs);
 
   // md top data
   const pageData = {
@@ -129,7 +151,7 @@ function customRender({ source, file, md }) {
     tdDocTabs: DEAULT_TABS,
     apiFlag: /#+\s*API/,
     docClass: '',
-    lastUpdated: Math.round(fs.statSync(file).mtimeMs),
+    lastUpdated,
     ...data,
   };
 
@@ -138,13 +160,14 @@ function customRender({ source, file, md }) {
   const componentName = reg && reg[1];
 
   // split md
+  // eslint-disable-next-line prefer-const
   let [demoMd = '', apiMd = ''] = content.split(pageData.apiFlag);
 
   // fix table | render error
-  demoMd = demoMd.replace(/`([^`\r\n]+)`/g, (str, codeStr) => {
-    codeStr = codeStr.replace(/"/g, "'");
-    return `<td-code text="${codeStr}"></td-code>`;
-  });
+  demoMd = demoMd.replace(
+    /`([^`\r\n]+)`/g,
+    (str, codeStr) => `<td-code text="${codeStr.replace(/"/g, "'")}"></td-code>`,
+  );
 
   const mdSegment = {
     ...pageData,
