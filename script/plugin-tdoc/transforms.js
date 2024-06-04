@@ -1,7 +1,6 @@
-/* eslint-disable indent */
 /* eslint-disable no-param-reassign */
-import path from 'path';
 import fs from 'fs';
+import path from 'path';
 
 import mdToWc from './md-to-wc.mjs';
 
@@ -11,7 +10,7 @@ let demoCodesImports = {};
 export default {
   before({ source, file }) {
     const resourceDir = path.dirname(file);
-    const reg = file.match(/src\/components\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
+    const reg = file.match(/src\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
     const name = reg && reg[1];
     demoImports = {};
     demoCodesImports = {};

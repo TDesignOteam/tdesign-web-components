@@ -1,6 +1,7 @@
-import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
+
 import tdocPlugin from './script/plugin-tdoc';
 import pwaConfig from './pwaConfig';
 
@@ -16,7 +17,8 @@ export default defineConfig({
     alias: {
       // "omi": resolve("./src/omi/index.ts"),
       '@': resolve('./src/'),
-      'tdesign-web-components': resolve('./src/components/'),
+      '@common': resolve('./src/_common/'),
+      'tdesign-web-components': resolve('./src/'),
     },
   },
   plugins: [tdocPlugin(), VitePWA(pwaConfig)],

@@ -2,113 +2,119 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" href="https://omi.cdn-go.cn/play/latest/assets/favicon.974a6ddb.ico">
+    <link rel="icon" href="https://static.tdesign.tencent.com/react/favicon.ico">
+    <link rel="apple-touch-icon" href="https://static.tdesign.tencent.com/react/apple-touch-icon.png" sizes="180x180">
+    <meta name="description" content="TDesign Web Components">
+    <meta name="theme-color" content="#ffffff">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TDesign Web Components</title>
+    <meta name="msapplication-TileColor" content="#FFFFFF">
+    <link rel="mask-icon" href="/favicon.svg" color="#FFFFFF">
   </head>
   <body>
     <div id="app"></div>
     <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        try {
-          if (
-            localStorage.theme === "dark" ||
-            (!("theme" in localStorage) &&
-              window.matchMedia("(prefers-color-scheme: dark)").matches)
-          ) {
-            walkDOMAndToggleDark(document.body, false)
-            document.documentElement.classList.add("dark");
-          } else {
-            walkDOMAndToggleDark(document.body, true)
-            document.documentElement.classList.remove("dark");
-          }
-        } catch (_) { }
-      })
+      // 主题方案采用css变量，此处先注释
+      // document.addEventListener('DOMContentLoaded', function () {
+      //   try {
+      //     if (
+      //       localStorage.theme === "dark" ||
+      //       (!("theme" in localStorage) &&
+      //         window.matchMedia("(prefers-color-scheme: dark)").matches)
+      //     ) {
+      //       walkDOMAndToggleDark(document.body, false)
+      //       document.documentElement.classList.add("dark");
+      //     } else {
+      //       walkDOMAndToggleDark(document.body, true)
+      //       document.documentElement.classList.remove("dark");
+      //     }
+      //   } catch (_) { }
+      // })
   
   
-      function toggleNodeDark(node, isDark) {
-        if (
-          node instanceof HTMLElement &&
-          node.tagName.toLowerCase().indexOf("-") !== -1
-        ) {
-          if (isDark) {
-            node.classList.remove("dark");
-          } else {
-            node.classList.add("dark");
-          }
+      // function toggleNodeDark(node, isDark) {
+      //   if (
+      //     node instanceof HTMLElement &&
+      //     node.tagName.toLowerCase().indexOf("-") !== -1
+      //   ) {
+      //     if (isDark) {
+      //       node.classList.remove("dark");
+      //     } else {
+      //       node.classList.add("dark");
+      //     }
   
-        }
-      }
+      //   }
+      // }
   
-      function walkDOMAndToggleDark(rootNode, isDark) {
-        if (isDark) {
-          document.documentElement.classList.remove("dark");
-        } else {
-          document.documentElement.classList.add("dark");
-        }
-        const treeWalker = document.createTreeWalker(
-          rootNode,
-          NodeFilter.SHOW_ELEMENT,
-          null,
-          false
-        );
+      // function walkDOMAndToggleDark(rootNode, isDark) {
+      //   if (isDark) {
+      //     document.documentElement.classList.remove("dark");
+      //   } else {
+      //     document.documentElement.classList.add("dark");
+      //   }
+      //   const treeWalker = document.createTreeWalker(
+      //     rootNode,
+      //     NodeFilter.SHOW_ELEMENT,
+      //     null,
+      //     false
+      //   );
   
-        while (treeWalker.nextNode()) {
-          const node = treeWalker.currentNode;
-          toggleNodeDark(node, isDark);
+      //   while (treeWalker.nextNode()) {
+      //     const node = treeWalker.currentNode;
+      //     toggleNodeDark(node, isDark);
   
-          // Check if the node has a shadow root
-          if (node.shadowRoot) {
-            walkDOMAndToggleDark(node.shadowRoot, isDark);
-          }
+      //     // Check if the node has a shadow root
+      //     if (node.shadowRoot) {
+      //       walkDOMAndToggleDark(node.shadowRoot, isDark);
+      //     }
   
-          // Check if the node has assigned nodes (for slots)
-          if (node.assignedNodes) {
-            node.assignedNodes().forEach((assignedNode) => {
-              if (assignedNode.nodeType === Node.ELEMENT_NODE) {
-                walkDOMAndToggleDark(assignedNode, isDark);
-              }
-            });
-          }
-        }
-      }
+      //     // Check if the node has assigned nodes (for slots)
+      //     if (node.assignedNodes) {
+      //       node.assignedNodes().forEach((assignedNode) => {
+      //         if (assignedNode.nodeType === Node.ELEMENT_NODE) {
+      //           walkDOMAndToggleDark(assignedNode, isDark);
+      //         }
+      //       });
+      //     }
+      //   }
+      // }
   
-      function toogleDark() {
-        if (document.documentElement.classList.contains("dark")) {
-          localStorage.theme = "light";
-          walkDOMAndToggleDark(document.body, true)
-          document.documentElement.classList.remove("dark");
-        } else {
-          localStorage.theme = "dark";
-          walkDOMAndToggleDark(document.body, false)
-          document.documentElement.classList.add("dark");
-        }
-      }
+      // function toogleDark() {
+      //   if (document.documentElement.classList.contains("dark")) {
+      //     localStorage.theme = "light";
+      //     walkDOMAndToggleDark(document.body, true)
+      //     document.documentElement.classList.remove("dark");
+      //   } else {
+      //     localStorage.theme = "dark";
+      //     walkDOMAndToggleDark(document.body, false)
+      //     document.documentElement.classList.add("dark");
+      //   }
+      // }
 
-      function setDarkMode() {
-        localStorage.theme = "dark";
-        walkDOMAndToggleDark(document.body, false)
-        document.documentElement.classList.add("dark");
-      }
+      // function setDarkMode() {
+      //   localStorage.theme = "dark";
+      //   walkDOMAndToggleDark(document.body, false)
+      //   document.documentElement.classList.add("dark");
+      // }
 
-      function setLightMode() {
-        localStorage.theme = "light";
-        walkDOMAndToggleDark(document.body, true)
-        document.documentElement.classList.remove("dark");
-      }
+      // function setLightMode() {
+      //   localStorage.theme = "light";
+      //   walkDOMAndToggleDark(document.body, true)
+      //   document.documentElement.classList.remove("dark");
+      // }
   
-      function refreshDark() {
-        if (document.documentElement.classList.contains("dark")) {
-          walkDOMAndToggleDark(document.body, false)
-        } else {
-          walkDOMAndToggleDark(document.body, true)
-        }
-      }
+      // function refreshDark() {
+      //   if (document.documentElement.classList.contains("dark")) {
+      //     walkDOMAndToggleDark(document.body, false)
+      //   } else {
+      //     walkDOMAndToggleDark(document.body, true)
+      //   }
+      // }
   
-      window.addEventListener('load', function() {
-        refreshDark()
-      })
+      // window.addEventListener('load', function() {
+      //   refreshDark()
+      // })
     </script>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/site/main.tsx"></script>
   </body>
 </html>

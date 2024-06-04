@@ -1,6 +1,6 @@
+import esbuild from 'esbuild';
 import fs from 'fs';
 import matter from 'gray-matter';
-import esbuild from 'esbuild';
 import { spawn } from 'node:child_process';
 // import camelCase from 'camelcase';
 // import { compileUsage } from '../../src/_common/docs/compile';
@@ -102,9 +102,7 @@ export default async function mdToReact(options) {
               <td-doc-tabs ref={(e) => {tabRef.value = e;tabRef.update();}} tabs={tabs} tab={tab.value}></td-doc-tabs>
               <div style={isShow('demo')} name="DEMO">
                 ${mdSegment.demoMd}
-                <td-contributors platform="web" framework="web-components" component-name="${
-                  mdSegment.componentName
-                }" ></td-contributors>
+                // 先隐藏贡献值，因为接口还拉不出来
               </div>
               <div style={isShow('api')} name="API">
                 ${mdSegment.apiMd}
@@ -156,7 +154,7 @@ async function customRender({ source, file, md }) {
   };
 
   // md filename
-  const reg = file.match(/src\/components\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
+  const reg = file.match(/src\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
   const componentName = reg && reg[1];
 
   // split md
