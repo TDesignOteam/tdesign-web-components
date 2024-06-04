@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const componentsPath = path.resolve(__dirname, '../src/components');
+const componentsPath = path.resolve(__dirname, '../src');
 
 const components = fs.readdirSync(componentsPath).filter((name) => {
   const componentPath = path.resolve(componentsPath, name);

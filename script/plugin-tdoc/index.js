@@ -1,7 +1,7 @@
 import vitePluginTdoc from 'vite-plugin-tdoc';
 
-import transforms from './transforms';
 import renderDemo from './demo';
+import transforms from './transforms';
 
 export default () =>
   vitePluginTdoc({

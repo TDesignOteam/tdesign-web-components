@@ -1,5 +1,5 @@
-import path from 'path';
 import Markdownitfence from 'markdown-it-fence';
+import path from 'path';
 
 function mdInJsx(_md) {
   return new Markdownitfence(_md, 'md_in_jsx', {
