@@ -24,6 +24,11 @@
       "npm run lint:fix"
     ]
   },
+  "config": {
+    "commitizen": {
+      "path": "@commitlint/cz-commitlint"
+    }
+  },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "class-variance-authority": "^0.7.0",
@@ -33,6 +38,9 @@
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.3.0",
+    "@commitlint/config-conventional": "^19.2.2",
+    "@commitlint/cz-commitlint": "^19.2.0",
     "@tailwindcss/typography": "^0.5.10",
     "@types/markdown-it": "^13.0.7",
     "@types/prismjs": "^1.26.3",

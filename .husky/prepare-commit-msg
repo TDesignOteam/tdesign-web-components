@@ -1,0 +1,8 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo $PUBLICK_TYPE
+
+if [ "${PUBLICK_TYPE}" != "lerna" ]; then
+  exec < /dev/tty && npx git-cz --hook
+fi
