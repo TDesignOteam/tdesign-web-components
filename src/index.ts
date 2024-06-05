@@ -1,4 +1,3 @@
-export * from './_common';
 export * from './breadcrumb';
 export * from './button';
 export * from './calendar';

@@ -102,7 +102,6 @@ export default async function mdToReact(options) {
               <td-doc-tabs ref={(e) => {tabRef.value = e;tabRef.update();}} tabs={tabs} tab={tab.value}></td-doc-tabs>
               <div style={isShow('demo')} name="DEMO">
                 ${mdSegment.demoMd}
-                // 先隐藏贡献值，因为接口还拉不出来
               </div>
               <div style={isShow('api')} name="API">
                 ${mdSegment.apiMd}

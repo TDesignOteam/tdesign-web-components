@@ -21,7 +21,6 @@ export const routes = [
     redirect: '/components/button',
   },
   ...createComponentRoutes(sidebar),
-  createComponentRoute('/icons', () => import('./pages/icons')),
   {
     path: '/before-enter/test',
     beforeEnter: () =>
