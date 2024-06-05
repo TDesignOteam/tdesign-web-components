@@ -7,7 +7,6 @@ import { Router } from 'omi-router';
 
 import { routes } from './routes';
 
-import '@common/style/web/docs.less';
 import 'tdesign-site-components/lib/styles/prism-theme.less';
 import 'tdesign-site-components/lib/styles/prism-theme-dark.less';
 

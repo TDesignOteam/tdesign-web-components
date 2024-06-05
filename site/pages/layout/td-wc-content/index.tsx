@@ -1,3 +1,4 @@
+import docStyles from '@common/style/web/docs.less?inline';
 import type { VNode } from 'omi';
 import { bind, Component, tag } from 'omi';
 import siteStyles from 'tdesign-site-components/lib/styles/style.css?raw';
@@ -13,10 +14,10 @@ const FIXED_HEADER_TOP = 228;
 function anchorHighlight() {
   const selectors = ['div[name="DEMO"]', 'div[name="API"]', 'div[name="DESIGN"]', 'div[name="DOC"]'];
 
-  function getLinkTopList(anchorList: HTMLAnchorElement[]) {
+  function getLinkTopList(anchorList: HTMLAnchorElement[], wrapper: any) {
     const linkList = anchorList.map((anchor) => {
       const [, id] = decodeURIComponent(anchor.href).split('#');
-      return document.getElementById(id);
+      return wrapper.querySelector(`#${id}`);
     });
     return linkList.map((link) => {
       if (!link) return 0;
@@ -43,7 +44,7 @@ function anchorHighlight() {
     if (!wrapper) return;
 
     const anchorList = (Array.from(wrapper.querySelectorAll('.tdesign-toc_list_item_a')) || []) as HTMLAnchorElement[];
-    const linkTopList = getLinkTopList(anchorList);
+    const linkTopList = getLinkTopList(anchorList, wrapper);
     highlightAnchor(anchorList, linkTopList);
   });
 }
@@ -54,7 +55,7 @@ export class tdWcContent extends Component<{ componentImport: () => Promise<any>
 
   pageStatus: string = 'show';
 
-  static css = [siteStyles, styles];
+  static css = [siteStyles, docStyles, styles];
 
   changeTocAndTitleHeight() {
     const { scrollTop } = document.documentElement;
@@ -124,7 +125,8 @@ export class tdWcContent extends Component<{ componentImport: () => Promise<any>
         this.handleAnchorScroll();
         document.addEventListener('scroll', this.changeTocAndTitleHeight);
       })
-      .catch(() => {
+      .catch((error) => {
+        console.error(error);
         this.component = fallback;
         this.update();
       });

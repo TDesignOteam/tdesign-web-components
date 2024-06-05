@@ -1,6 +1,8 @@
+import 'tdesign-web-components/icon';
+
 import * as copyToClipboard from 'copy-to-clipboard';
 
-import { showMsg } from '../../src/message/msg';
+import { showMsg } from '../../message/msg';
 
 // @ts-ignore
 const copy = copyToClipboard.default || copyToClipboard;
@@ -9,7 +11,7 @@ const icons =
     ',',
   );
 
-export function Icons() {
+export default function Icons() {
   return (
     <div class="container mx-auto text-center m-10">
       <div class="grid gap-2" style="grid-template-columns: repeat(auto-fill, 90px);">
@@ -18,14 +20,14 @@ export function Icons() {
             class="icon-item hover:bg-zinc-200 dark:hover:bg-zinc-500 dark:hover:text-white p-2 rounded cursor-pointer whitespace-nowrap"
             data-icon-name={icon}
             onClick={() => {
-              copy(`<i class="t-icon t-icon-${icon}"></i>`);
+              copy(`<t-icon name="${icon}"></t-icon>`);
               showMsg({
                 type: 'success',
                 content: 'Copied!',
               });
             }}
           >
-            <i class={`t-icon text-2xl t-icon-${icon}`}></i>
+            <t-icon name={icon}></t-icon>
             <p class="text-xs text-center text-ellipsis overflow-hidden">{icon}</p>
           </div>
         ))}

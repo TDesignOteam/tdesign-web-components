@@ -80,6 +80,6 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-script-url': 'warn',
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^html'] }],
-    'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname'] }],
+    'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '__TDESIGN_THEME_PREFIX__'] }],
   },
 };
