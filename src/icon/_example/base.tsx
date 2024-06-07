@@ -2,8 +2,6 @@ import 'tdesign-web-components/icon';
 
 import * as copyToClipboard from 'copy-to-clipboard';
 
-import { showMsg } from '../../message/msg';
-
 // @ts-ignore
 const copy = copyToClipboard.default || copyToClipboard;
 const icons =
@@ -21,10 +19,6 @@ export default function Icons() {
             data-icon-name={icon}
             onClick={() => {
               copy(`<t-icon name="${icon}"></t-icon>`);
-              showMsg({
-                type: 'success',
-                content: 'Copied!',
-              });
             }}
           >
             <t-icon name={icon}></t-icon>

@@ -1,25 +1,37 @@
 {
   "compilerOptions": {
-    "target": "ES5",
     "experimentalDecorators": true,
-    "useDefineForClassFields": true,
-    "lib": ["ES6", "DOM", "DOM.Iterable"],
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
+    "outDir": "lib",
+    "declaration": true,
+    "sourceMap": true,
+    "lib": ["esnext", "dom"],
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "./",
+    "paths": {
+      "tdesign-web-components": ["src"],
+      "tdesign-web-components/*": ["src/*"],
+      "@test/utils": ["test/utils"],
+      "@common/*": ["src/_common/*"]
+    },
     "noEmit": true,
+    "allowImportingTsExtensions": true,
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "h.f",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    "allowJs": true,
+    "checkJs": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true
   },
-  "include": ["site", "src"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["src", "site", "./globals.d.ts"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"],
+  "types": [
+    "node",
+    "vitest/globals",
+  ],
+  "compileOnSave": false
 }

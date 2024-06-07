@@ -121,6 +121,7 @@ export default async function mdToReact(options) {
     loader: 'tsx',
     jsxFactory: 'h',
     jsxFragment: 'h.f',
+    sourcemap: true,
   });
 
   return { code: result.code, map: result.map };

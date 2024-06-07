@@ -4,16 +4,35 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "main": "lib/index.js",
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run generate:entry && vite --host --force",
-    "build": "tsc && vite build",
+    "dev": "npm run generate:entry && cd site && vite",
+    "site": "cd site && vite build",
+    "site:intranet": "cd site && vite build --mode intranet",
+    "site:preview": "cd site && vite build --mode preview",
+    "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "generate:entry": "node ./script/generate-entry.js",
     "prepare": "husky"
   },
+  "files": [
+    "esm",
+    "es",
+    "lib",
+    "cjs",
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": [
+    "dist/*",
+    "site/**/*.{ts,tsx}",
+    "src/**/*.{ts,tsx}"
+  ],
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
       "prettier --write",
@@ -70,6 +89,7 @@
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
     "vite-plugin-pwa": "^0.20.0",
-    "vite-plugin-tdoc": "^2.0.4"
+    "vite-plugin-tdoc": "^2.0.4",
+    "workbox-precaching": "^7.1.0"
   }
 }
