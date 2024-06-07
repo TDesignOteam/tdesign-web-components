@@ -4,15 +4,16 @@ import './pages/layout/component-layout';
 import sidebar from './sidebar.config';
 
 function createComponentRoutes(config: any[] = []) {
-  const routes: any[] = [];
-  config.forEach((item) => {
-    if (item.children) {
-      item.children.forEach((c: any) => {
-        routes.push(createComponentRoute(c.path, c.component));
-      });
-    }
-  });
-  return routes;
+  return config
+    .map((item) => item?.children || [])
+    .flat()
+    .map((item) => {
+      if (item.component) {
+        return createComponentRoute(item.path, item.component);
+      }
+      return null;
+    })
+    .filter((item) => item);
 }
 
 export const routes = [
