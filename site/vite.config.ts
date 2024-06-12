@@ -14,7 +14,6 @@ const publicPathMap = {
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  console.log(mode);
   if (mode !== 'development' && fs.existsSync(resolve('../_site/'))) {
     fs.rmdirSync(resolve('../_site/'), { recursive: true });
   }
