@@ -39,7 +39,7 @@ export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
           </td-doc-aside>
           <slot></slot>
         </td-doc-layout>
-        <td-theme-generator />
+        {/* <td-theme-generator /> */}
       </>
     );
   }

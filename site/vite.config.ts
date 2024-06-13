@@ -4,7 +4,7 @@ import { defineConfig } from 'vite';
 import { VitePWA } from 'vite-plugin-pwa';
 
 import tdocPlugin from '../script/plugin-tdoc';
-import pwaConfig from './pwaConfig';
+import pwaConfig from './pwaConfig.js';
 
 const publicPathMap = {
   preview: '/',
@@ -51,5 +51,6 @@ export default ({ mode }) => {
       },
     },
     plugins: [tdocPlugin(), VitePWA(pwaConfig)],
+    logLevel: 'error',
   });
 };
