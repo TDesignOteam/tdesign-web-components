@@ -15,10 +15,9 @@
       "tdesign-web-components": ["src"],
       "tdesign-web-components/*": ["src/*"],
       "@test/utils": ["test/utils"],
-      "@common/*": ["src/_common/*"]
+      "@common/*": ["src/_common/*"],
+      "@": ["src"]
     },
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "h.f",
@@ -27,7 +26,7 @@
     "downlevelIteration": true,
     "esModuleInterop": true
   },
-  "include": ["src", "site", "./globals.d.ts"],
+  "include": ["src", "site", "typings.d.ts"],
   "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"],
   "types": [
     "node",

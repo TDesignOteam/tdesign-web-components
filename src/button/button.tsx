@@ -1,8 +1,6 @@
 import { Component, tag, VNode } from 'omi';
 
-import { classname, getClassPrefix } from '@/utils';
-
-import styles from '../_common/style/web/components/button/_index.less?inline';
+import { classname, getClassPrefix } from '../utils';
 
 type Theme = 'default' | 'primary' | 'danger' | 'warning' | 'success';
 type Variant = 'base' | 'outline' | 'dashed' | 'text';
@@ -25,8 +23,8 @@ export interface ButtonProps {
 }
 
 @tag('t-button')
-export class Button extends Component<ButtonProps> {
-  static css = [styles];
+export default class Button extends Component<ButtonProps> {
+  static css = [];
 
   constructor() {
     super();

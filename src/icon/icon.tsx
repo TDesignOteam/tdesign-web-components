@@ -58,7 +58,7 @@ i.t-size-l {
 `;
 
 @tag('t-icon')
-export class Icon extends Component<IconProps> {
+export default class Icon extends Component<IconProps> {
   static css?: string | CSSStyleSheet | (string | CSSStyleSheet)[] | undefined = [iconStyleString];
 
   install(): void {

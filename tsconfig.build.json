@@ -1,6 +1,6 @@
 {
   "extends": "./tsconfig",
-  "include": ["./src", "./globals.d.ts"],
+  "include": ["./src", "typings.d.ts"],
   "exclude": [
     "**/**/__tests__/*",
     "**/**/_example/*",
@@ -13,7 +13,4 @@
     "cjs",
     "es"
   ],
-  "compilerOptions": {
-    "paths":{}
-  }
 }
