@@ -1,5 +1,40 @@
 export default [
   {
+    title: '开始',
+    titleEn: 'Start',
+    type: 'doc',
+    children: [
+      {
+        title: '快速开始',
+        titleEn: 'Getting Started',
+        name: 'getting-started',
+        path: '/getting-started',
+        component: () => import('@docs/getting-started.md'),
+      },
+      {
+        title: '最佳实践',
+        titleEn: 'Starter Kit',
+        name: 'quick-start',
+        path: '/quick-start',
+        component: () => import('@docs/starter.md'),
+      },
+      {
+        title: '更新日志',
+        titleEn: 'CHANGELOG',
+        name: 'changelog',
+        path: '/changelog',
+        component: () => import('@/CHANGELOG.md'),
+      },
+      {
+        title: '组件概览',
+        titleEn: 'Overview',
+        name: 'overview',
+        path: '/overview',
+        component: () => import('@common/docs/web/overview.md'),
+      },
+    ],
+  },
+  {
     title: '基础',
     name: 'base',
     type: 'component', // 组件文档

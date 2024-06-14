@@ -89,10 +89,11 @@ export default async function mdToReact(options) {
         })
       })
 
-
       document.title = \`${mdSegment.title} | TDesign\`;
 
-      Prismjs.highlightAll();
+      setTimeout(() => {
+        Prismjs.highlightAll();
+      }, 10);
 
       return (
         <>

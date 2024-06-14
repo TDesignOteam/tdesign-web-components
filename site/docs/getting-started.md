@@ -1,0 +1,109 @@
+---
+title: Tdesign Web Components
+description: TDesign 适配桌面端的组件库，可以在任何前端项目中使用。
+spline: explain
+---
+
+### 安装
+
+#### 使用 npm 安装
+
+推荐使用 npm 方式进行开发
+
+```bash
+npm i tdesign-web-components
+```
+
+#### 浏览器引入
+
+目前可以通过 [unpkg.com/tdesign-react](https://unpkg.com/tdesign-react) 获取到最新版本的资源，在页面上引入 js 和 css 文件即可开始使用。
+
+```html
+<link rel="stylesheet" href="https://unpkg.com/tdesign-react/dist/tdesign.min.css" />
+<script src="https://unpkg.com/tdesign-react/dist/tdesign.min.js"></script>
+```
+> 请注意，我们不推荐使用这种方式，这样无法实现按需加载等优化手段，生产项目会直接受版本更新影响，同时也可能受到 CDN 的稳定性的影响。
+
+npm package 中提供了多种构建产物，可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解不同目录下产物的差别。
+
+### 基础使用
+
+无需额外配置即可实现组件按需引入：
+
+```javascript
+import 'tdesign-web-components/lib/style/index.css'; // 少量公共样式
+import 'tdesign-web-components/lib/button';
+```
+
+也可以整体引入
+
+```javascript
+import 'tdesign-web-components/lib/style/index.css'; // 少量公共样式
+import 'tdesign-web-components';
+```
+
+### 更改主题
+
+由于原始样式基于 less 编写，需要自行处理 less 文件的编译（例如安装 less、less-loader）
+
+更多 less 变量定义 [查看这里](https://github.com/Tencent/tdesign-common/blob/main/style/web/_variables.less)
+
+```javascript
+import 'tdesign-web-components/esm/button'
+import 'tdesign-web-components/esm/style/index.js' // 少量公共样式
+```
+
+在 vite 中定制主题
+
+```javascript
+// vite.config.js
+export default {
+  css: {
+    preprocessorOptions: {
+      less: {
+        modifyVars: {
+          '@btn-height-default': '40px',
+        },
+      },
+    },
+  },
+};
+```
+
+在 webpack 中定制主题
+
+```javascript
+// webpack.config.js
+module.exports = {
+  rules: [{
+    test: /\.less$/,
+    use: [{
+      loader: 'style-loader',
+    }, {
+      loader: 'css-loader', // translates CSS into CommonJS
+    }, {
+      loader: 'less-loader', // compiles Less to CSS
++     options: {
++       lessOptions: { // 如果使用less-loader@5，请移除 lessOptions 这一级直接配置选项。
++         modifyVars: {
++           '@btn-height-default': '40px',
++         },
++         javascriptEnabled: true,
++       },
++     },
+    }],
+  }],
+}
+```
+
+### 浏览器兼容性
+
+| [<img src="https://tdesign.gtimg.com/docs/edge_48x48.png" alt="IE / Edge" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/> IE / Edge | [<img src="https://tdesign.gtimg.com/docs/firefox_48x48.png" alt="Firefox" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Firefox | [<img src="https://tdesign.gtimg.com/docs/chrome_48x48.png" alt="Chrome" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Chrome | [<img src="https://tdesign.gtimg.com/docs/safari_48x48.png" alt="Safari" width="24px" height="24px" />](http://godban.github.io/browsers-support-badges/)<br/>Safari |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Edge >=84                                                                                                                                                                 | Firefox >=83                                                                                                                                                            | Chrome >=84                                                                                                                                                          | Safari >=14.1                                                                                                                                                        |
+
+## FAQ
+
+Q: 是否内置 reset 样式统一页面元素的默认样式 ？
+
+A: 我们不引入 `reset.less`

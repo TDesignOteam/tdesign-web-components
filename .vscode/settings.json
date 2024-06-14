@@ -25,5 +25,14 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
-  "cSpell.words": ["activable", "actived", "borderless", "Cascader", "Popconfirm", "Swiper", "tdesign"]
+  "cSpell.words": [
+    "activable",
+    "actived",
+    "borderless",
+    "Cascader",
+    "Popconfirm",
+    "Swiper",
+    "tdesign"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
