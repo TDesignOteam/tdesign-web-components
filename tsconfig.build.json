@@ -1,5 +1,9 @@
 {
   "extends": "./tsconfig",
+  "compilerOptions": {
+    "allowImportingTsExtensions": false,
+    "noEmit": false,
+  },
   "include": ["./src", "typings.d.ts"],
   "exclude": [
     "**/**/__tests__/*",
