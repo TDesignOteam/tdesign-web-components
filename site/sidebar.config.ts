@@ -80,6 +80,12 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'RangeInput 范围输入框',
+        name: 'range-input',
+        path: '/components/range-input',
+        component: () => import('tdesign-web-components/range-input/README.md'),
+      },
+      {
         title: 'Select 选择器',
         name: 'select',
         path: '/components/select',
