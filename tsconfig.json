@@ -18,6 +18,8 @@
       "@common/*": ["src/_common/*"],
       "@": ["src"]
     },
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
     "jsx": "preserve",
     "jsxFactory": "h",
     "jsxFragmentFactory": "h.f",
