@@ -2,7 +2,7 @@ import isString from 'lodash/isString';
 import raf from 'raf';
 
 import { ScrollContainer, ScrollContainerElement } from '../common';
-import { easeInOutCubic, EasingFunction } from './easing';
+import { EasingFunction, easeInOutCubic } from './easing';
 // 用于判断是否可使用 dom
 export const canUseDocument = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
@@ -194,3 +194,9 @@ export function setStyle(style: CSSStyleDeclaration, key: string, value: string 
     (style as any)[key] = `${value}px`;
   }
 }
+
+// 用于判断节点内容是否溢出
+export const isNodeOverflow = (ele: Element | Element[]): boolean => {
+  const { clientWidth = 0, scrollWidth = 0 } = ele as Element;
+  return scrollWidth > clientWidth;
+};

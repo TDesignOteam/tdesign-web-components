@@ -115,7 +115,7 @@ export default [
         title: 'Breadcrumb 面包屑',
         name: 'breadcrumb',
         path: '/components/breadcrumb',
-        // component: () => import('tdesign-web-components/breadcrumb/README.md'),
+        component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
       {
         title: 'BackTop 回到顶部',
