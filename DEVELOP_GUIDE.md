@@ -1,4 +1,4 @@
-# 开发前准备
+# 开发前准备test
 
 熟悉Web Components 框架：[OMI](https://omi.cdn-go.cn/home/latest/zh/introduction.html)
 
