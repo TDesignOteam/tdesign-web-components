@@ -1,11 +1,14 @@
+# 开发前准备
+
+熟悉Web Components 框架：[OMI](https://omi.cdn-go.cn/home/latest/zh/introduction.html)
+
 # 开发指南
 
 tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdesign-common](https://github.com/Tencent/tdesign-common) 仓库
 
 ## 公共子仓库 tdesign-common
 
-本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 src/\_common 文件夹
-公共仓库中包含
+本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 src/\_common 文件夹，由于Tdesign React/Vue等组件库已相对成熟，我们涉及到开发common部分的比较少，主要是复用其中已经定义过的样式class和方法，包括：
 
 - 一些公共的工具函数
 - 组件库 UI 开发内容，既 html 结构和 css 样式（React/Vue 等多技术栈共用）
@@ -22,31 +25,7 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 - 先进入 common 文件夹，正常将样式修改添加提交
 - 回到主仓库，此时应该会看到 common 文件夹是修改状态，按照正常步骤添加提交即可
 
-### 关于组件库 UI
-
-UI 开发（html & css）是由 React/Vue 等多个实现框架共用的。各个框架组件实现应该要复用 UI 开发的 html 结构，引用其组件 css 与 demo css（本仓库已在入口处引用了），UI 开发一般可由单独的 UI 开发同学认领完成或各框架组件开发同学的其中一名同学完成
-
-- 如果开发前已有某个组件的 UI 开发内容，直接在主仓库使用即可
-- 如果没有，且你也负责 UI 开发：参考 UI 开发规范完成 UI 开发内容、然后再开发主仓库组件
-- 如果没有，且 UI 开发工作已有其他同学负责或认领：可以先在主仓库开发组件功能，待 UI 开发输出之后对齐即可
-
-如果 UI 内容和样式（其他同学负责开发）还未完成，而你开发组件功能时需要写一些样式，可以直接在组件文件夹先写一个临时的 less 文件，在 js 中引入即可，如：
-
-```
-├── button.less
-├── button.tsx
-```
-
-```js
-// button.tsx
-
-// 先引入临时的样式文件用于开发功能，待 UI 开发完成之后需要与 UI 样式对齐并删除 less 文件
-import './button.less';
-```
-
 ## 开发规范
-
-UI 开发规范参考子仓库 README [子仓库 README](https://github.com/Tencent/tdesign-common/tree/develop/style/web)
 
 ### API 规范
 
@@ -70,9 +49,9 @@ UI 开发规范参考子仓库 README [子仓库 README](https://github.com/Tenc
 
 #### 分支
 
-主仓库遵循使用 git flow 规范，新组件分支从 develop checkout：[https://nvie.com/posts/a-successful-git-branching-model/](https://nvie.com/posts/a-successful-git-branching-model/)
+主仓库遵循使用 git flow 规范，从 main checkout分支：[https://nvie.com/posts/a-successful-git-branching-model/](https://nvie.com/posts/a-successful-git-branching-model/)
 
-如果是贡献组件，则从 develop checkout 分支如：feature/button，记得如果同时要在子仓库开发 UI，子仓库也要 checkout 同名分支
+如果是贡献新组件，分支名如：feat/button，如果是已有组件新增功能分支名如：feat/button_supporttext，如果是已有组件修复bug分支名如：fix/button_border，记得如果同时要在子仓库开发 UI，子仓库也要 checkout 同名分支
 
 #### 提交说明
 
@@ -121,17 +100,12 @@ npm run start
 
 ### 新增开发组件
 
-npm run init component-name
+暂不支持命令行方式，需要参考button的组件结构手动复制一份目录结构，再改成自己的组件名
 
-```bash
-npm run init button
-```
-
-其中，button 为组件名称。删除组件使用 `npm run init button del` 。
 
 ### 组件页路由配置
 
-每一个组件页，都是一个 md 文件，参考 `/site/site.config.js` 已有定义，直接按照模板添加即可
+每一个组件页，都是一个 md 文件，参考 `/site/sidebar.config.js` 已有定义，直接按照模板添加即可
 
 ```javascript
 {
@@ -139,16 +113,10 @@ npm run init button
   type: 'component', // 组件文档
   children: [
     {
-      title: 'Button 按钮',
-      name: 'button',
-      path: '/react/components/button',
-      component: () => import('tdesign-react/button/README.md'),
-    },
-    {
-      title: 'Divider 分割线',
-      name: 'divider',
-      path: '/react/components/divider',
-      component: () => import('tdesign-react/divider/README.md'),
+        title: 'Button 按钮',
+        name: 'button',
+        path: '/components/button',
+        component: () => import('tdesign-web-components/button/README.md'),
     },
     ...
   ],
@@ -203,7 +171,7 @@ npm run site
 npm run site:preview
 # 编译组件库
 npm run build
-# 快速创建组件及其相关文件
+# 快速创建组件及其相关文件（暂不支持）
 npm run init
 
 # 运行全部单元测试用例(包括所有example的ssr测试)
