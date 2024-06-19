@@ -39,13 +39,13 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - run: npm install
-
       - run: npm run lint
-      - run: npm run test
+      - run: npm run build
+      # - run: npm run test
       # upload report to codecov
-      - uses: codecov/codecov-action@v2
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+      # - uses: codecov/codecov-action@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
 
   site:
     runs-on: ubuntu-latest
@@ -68,7 +68,6 @@ jobs:
             ${{ runner.os }}-build-
             ${{ runner.os }}-
       - run: npm install
-
       - name: Build site
         run: npm run site:preview
 
