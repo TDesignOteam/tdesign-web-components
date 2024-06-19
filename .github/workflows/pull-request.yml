@@ -11,7 +11,7 @@ on:
 
 jobs:
   call-test-build:
-    uses: .github/workflows/test-build.yml
+    uses: ./.github/workflows/test-build.yml
   # modify-services:
   #   runs-on: ubuntu-latest
   #   outputs:
