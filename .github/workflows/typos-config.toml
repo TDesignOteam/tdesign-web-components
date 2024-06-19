@@ -1,0 +1,8 @@
+[default.extend-words]
+vertx = "vertx"
+actived = "actived"
+formated = "formated"
+colum = "colum"
+
+[files]
+extend-exclude = ["**/lib/**","**/spline/**","contributor.html","README.md","README_zh-CN.md","docsearch.min.js","*.svg"]

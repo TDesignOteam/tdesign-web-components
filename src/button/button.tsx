@@ -1,6 +1,7 @@
-import { Component, tag, VNode } from 'omi';
+import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { TNode } from '../common';
 
 type Theme = 'default' | 'primary' | 'danger' | 'warning' | 'success';
 type Variant = 'base' | 'outline' | 'dashed' | 'text';
@@ -11,7 +12,7 @@ export interface ButtonProps {
   block?: boolean;
   disabled?: boolean;
   ghost?: boolean;
-  icon?: VNode;
+  icon?: TNode;
   loading?: boolean;
   shape?: 'rectangle' | 'square' | 'round' | 'circle';
   size?: 'small' | 'medium' | 'large';

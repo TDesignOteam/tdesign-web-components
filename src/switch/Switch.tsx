@@ -1,4 +1,4 @@
-import { Component, signal, tag } from 'omi';
+import { bind, Component, signal, tag } from 'omi';
 
 import log from '../_common/js/log';
 import classname, { classPrefix, getCommonClassName } from '../_util/classname';
@@ -30,7 +30,7 @@ export default class Switch extends Component<SwitchProps> {
     const { value, label } = this.props;
     if (Array.isArray(label)) {
       const [activeContent = '', inactiveContent = ''] = label;
-      const content = this.innerChecked ? activeContent : inactiveContent;
+      const content = this.innerChecked.value ? activeContent : inactiveContent;
       return parseTNode(content, { value });
     }
     return parseTNode(label, { value });
@@ -41,15 +41,16 @@ export default class Switch extends Component<SwitchProps> {
     return typeof value !== 'undefined';
   }
 
+  @bind
   onInternalClick(e: MouseEvent) {
-    if (this.props.disabled) {
+    if (this.props?.disabled) {
       return;
     }
-    const [activeValue = true, inactiveValue = false] = this.props.customValue || [];
-    const changedValue = !this.innerChecked ? activeValue : inactiveValue;
+    const [activeValue = true, inactiveValue = false] = this.props?.customValue || [];
+    const changedValue = !this.innerChecked.value ? activeValue : inactiveValue;
 
     if (!this.isControlled) {
-      this.innerChecked.value = !this.innerChecked;
+      this.innerChecked.value = !this.innerChecked.value;
     }
 
     this.props?.onChange?.(changedValue, { e });
@@ -77,7 +78,7 @@ export default class Switch extends Component<SwitchProps> {
       `${classPrefix}-switch`,
       className,
       {
-        [STATUS.checked]: this.innerChecked,
+        [STATUS.checked]: this.innerChecked.value,
         [STATUS.disabled]: disabled,
         [STATUS.loading]: loading,
       },
@@ -92,7 +93,7 @@ export default class Switch extends Component<SwitchProps> {
         className={switchClassName}
         onClick={this.onInternalClick}
       >
-        {/* <span className={`${classPrefix}-switch__handle`}>{loading && <Loading loading size="small" />}</span> */}
+        <span className={`${classPrefix}-switch__handle`}></span>
         <div className={`${classPrefix}-switch__content`}>{this.contentNode}</div>
       </button>
     );

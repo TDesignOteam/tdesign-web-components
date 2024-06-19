@@ -18,13 +18,14 @@ export default [
         path: '/quick-start',
         component: () => import('@docs/starter.md'),
       },
-      {
-        title: '更新日志',
-        titleEn: 'CHANGELOG',
-        name: 'changelog',
-        path: '/changelog',
-        component: () => import('@/CHANGELOG.md'),
-      },
+      // 暂时注释
+      // {
+      //   title: '更新日志',
+      //   titleEn: 'CHANGELOG',
+      //   name: 'changelog',
+      //   path: '/changelog',
+      //   component: () => import('@/CHANGELOG.md'),
+      // },
       {
         title: '组件概览',
         titleEn: 'Overview',
@@ -88,7 +89,7 @@ export default [
         title: 'Switch 开关',
         name: 'switch',
         path: '/components/switch',
-        // component: () => import('tdesign-web-components/switch/README.md'),
+        component: () => import('tdesign-web-components/switch/README.md'),
       },
     ],
   },
