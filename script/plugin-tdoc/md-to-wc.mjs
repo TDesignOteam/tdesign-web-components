@@ -31,15 +31,16 @@ function getGitTimestamp(file) {
 
 export default async function mdToReact(options) {
   const mdSegment = await customRender(options);
-  const { demoDefsStr, demoCodesDefsStr } = options;
+  const { demoDefsStr, demoCodesDefsStr, components } = options;
 
   const reactSource = `
-    import { h } from 'omi';
+    import { h, define } from 'omi';
     import { signal, effect } from 'reactive-signal'
     import Prismjs from 'prismjs';
     import 'prismjs/components/prism-bash.js';
     ${demoDefsStr}
     ${demoCodesDefsStr}
+    ${components}
 
     export default function TdDoc() {
       const isComponent  = ${mdSegment.isComponent};
