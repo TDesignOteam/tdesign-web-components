@@ -1,6 +1,6 @@
 # 开发前准备
 
-熟悉Web Components 框架[OMI](https://omi.cdn-go.cn/home/latest/zh/introduction.html)
+熟悉Web Components 框架：[OMI](https://omi.cdn-go.cn/home/latest/zh/introduction.html)
 
 # 开发指南
 
@@ -51,7 +51,7 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 
 主仓库遵循使用 git flow 规范，从 main checkout分支：[https://nvie.com/posts/a-successful-git-branching-model/](https://nvie.com/posts/a-successful-git-branching-model/)
 
-如果是贡献新组件，分支名如：feature/button，如果是已有组件新增功能分支名如：feature/button_supporttext，如果是已有组件修复bug分支名如：hotfix/button_fixborder，记得如果同时要在子仓库开发 UI，子仓库也要 checkout 同名分支
+如果是贡献新组件，分支名如：feat/button，如果是已有组件新增功能分支名如：feat/button_supporttext，如果是已有组件修复bug分支名如：fix/button_border，记得如果同时要在子仓库开发 UI，子仓库也要 checkout 同名分支
 
 #### 提交说明
 
