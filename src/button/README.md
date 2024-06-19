@@ -8,7 +8,7 @@ spline: base
 
 ### 基础使用
 
-{{ base-omi }}
+{{ base }}
 
 ### 图标按钮
 
