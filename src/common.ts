@@ -1,7 +1,7 @@
 import { VNode, WeElement } from 'omi';
 
 export type TElement<T = undefined> = T extends undefined ? WeElement : (props: T) => WeElement;
-export type TNode<T = undefined> = T extends undefined ? VNode : VNode | ((props: T) => VNode);
+export type TNode<T = undefined> = string | (T extends undefined ? VNode : VNode | ((props: T) => VNode));
 
 export type AttachNodeReturnValue = HTMLElement | Element | Document;
 export type AttachNode = CSSSelector | ((triggerNode?: HTMLElement) => AttachNodeReturnValue);

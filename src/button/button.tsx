@@ -1,6 +1,6 @@
 import { Component, tag, VNode } from 'omi';
 
-import { classname, getClassPrefix } from '../utils';
+import classname, { getClassPrefix } from '../_util/classname';
 
 type Theme = 'default' | 'primary' | 'danger' | 'warning' | 'success';
 type Variant = 'base' | 'outline' | 'dashed' | 'text';
@@ -73,7 +73,7 @@ export default class Button extends Component<ButtonProps> {
       loading,
       shape,
       onClick,
-      ...props
+      ...rest
     } = this.props;
 
     const classPrefix = getClassPrefix();
@@ -101,7 +101,7 @@ export default class Button extends Component<ButtonProps> {
           },
         )}
         onClick={!disabled && !loading ? onClick : undefined}
-        {...props}
+        {...rest}
       >
         {iconNode ? iconNode : null}
         <span className={`${classPrefix}-button__text`}>
