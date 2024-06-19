@@ -100,13 +100,8 @@ npm run start
 
 ### 新增开发组件
 
-npm run init component-name
+暂不支持命令行方式，需要参考button的组件结构手动复制一份目录结构，再改成自己的组件名
 
-```bash
-npm run init button
-```
-
-其中，button 为组件名称。删除组件使用 `npm run init button del` 。
 
 ### 组件页路由配置
 
