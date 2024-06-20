@@ -123,11 +123,15 @@ npm run start
 },
 ```
 
+### Demo 格式
+
+目前支持 omi class 组件和 function 组件demo，前者适用于有状态的demo，后者适用于静态的demo展示，具体可参考`switch`组件
+
 ### 组件 Demo 演示配置
 
 为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `src/_common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
 
-例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.jsx`、 `noArrow.jsx` 文件
+例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.tsx`、 `noArrow.tsx` 文件
 
 ```md
 # Tooltip 文字提示

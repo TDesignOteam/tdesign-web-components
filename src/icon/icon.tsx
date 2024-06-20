@@ -1,6 +1,6 @@
 import { Component, signal, tag } from 'omi';
 
-import { classname, getClassPrefix } from '../utils';
+import classname, { getClassPrefix } from '../_util/classname';
 import { loadLink } from './utils';
 
 export interface IconProps {
