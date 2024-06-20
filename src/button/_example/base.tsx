@@ -1,11 +1,12 @@
 import 'tdesign-web-components/button';
+import 'tdesign-web-components/space';
 
 import { Component } from 'omi';
 
 export default class Button extends Component {
   render() {
     return (
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+      <t-space>
         <t-button theme="default" variant="base">
           填充按钮
         </t-button>
@@ -18,7 +19,7 @@ export default class Button extends Component {
         <t-button theme="default" variant="text">
           文字按钮
         </t-button>
-      </div>
+      </t-space>
     );
   }
 }

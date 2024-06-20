@@ -1,22 +1,24 @@
 import 'tdesign-web-components/switch';
+import 'tdesign-web-components/space';
 
-import { Component, signal } from 'omi';
+import { bind, Component, signal } from 'omi';
 
 export default class Switch extends Component {
-  checked = signal(false);
+  checked = signal(true);
 
-  onChange = (value) => {
+  @bind
+  onChange(value) {
     console.log('value', value);
     this.checked.value = value;
     this.update();
-  };
+  }
 
   render() {
     return (
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+      <t-space>
         <t-switch size="large" />
         <t-switch size="large" value={this.checked.value} onChange={this.onChange} />
-      </div>
+      </t-space>
     );
   }
 }

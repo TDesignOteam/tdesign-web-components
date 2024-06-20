@@ -21,5 +21,3 @@ const code = components.reduce((pre, next) => `${pre}export * from './${next}';\
 fs.writeFileSync(path.resolve(componentsPath, 'index.ts'), code, {
   encoding: 'utf-8',
 });
-
-console.log(code);

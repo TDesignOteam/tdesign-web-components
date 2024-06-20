@@ -1,10 +1,11 @@
 import 'tdesign-web-components/button';
+import 'tdesign-web-components/space';
 
 export default function Button() {
   return (
-    <div style={{ gap: 16, display: 'inline-flex' }}>
+    <t-space>
       <t-button disabled>填充按钮</t-button>
       <t-button loading>加载中</t-button>
-    </div>
+    </t-space>
   );
 }

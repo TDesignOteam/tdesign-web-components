@@ -1,9 +1,10 @@
 import 'tdesign-web-components/button';
+import 'tdesign-web-components/space';
 
 export default function Button() {
   return (
-    <div style={{ gap: 16, display: 'inline-flex', flexDirection: 'column' }}>
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+    <t-space direction="vertical">
+      <t-space>
         <t-button variant="outline" ghost>
           幽灵按钮
         </t-button>
@@ -13,8 +14,8 @@ export default function Button() {
         <t-button variant="text" ghost>
           幽灵按钮
         </t-button>
-      </div>
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+      </t-space>
+      <t-space>
         <t-button variant="outline" theme="primary" ghost>
           幽灵按钮
         </t-button>
@@ -24,8 +25,8 @@ export default function Button() {
         <t-button variant="text" theme="primary" ghost>
           幽灵按钮
         </t-button>
-      </div>
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+      </t-space>
+      <t-space>
         <t-button variant="outline" theme="success" ghost>
           幽灵按钮
         </t-button>
@@ -35,8 +36,8 @@ export default function Button() {
         <t-button variant="text" theme="success" ghost>
           幽灵按钮
         </t-button>
-      </div>
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+      </t-space>
+      <t-space>
         <t-button variant="outline" theme="warning" ghost>
           幽灵按钮
         </t-button>
@@ -46,8 +47,8 @@ export default function Button() {
         <t-button variant="text" theme="warning" ghost>
           幽灵按钮
         </t-button>
-      </div>
-      <div style={{ gap: 16, display: 'inline-flex' }}>
+      </t-space>
+      <t-space>
         <t-button variant="outline" theme="danger" ghost>
           幽灵按钮
         </t-button>
@@ -57,7 +58,7 @@ export default function Button() {
         <t-button variant="text" theme="danger" ghost>
           幽灵按钮
         </t-button>
-      </div>
-    </div>
+      </t-space>
+    </t-space>
   );
 }
