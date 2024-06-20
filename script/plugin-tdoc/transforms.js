@@ -48,7 +48,7 @@ export default {
       .map(
         (key) => `
       let ${key}Component = null;
-      if('${key}'.endsWith('omi')){
+      if(${key}.toString().startsWith('class')){
         define('t-${key.toLocaleLowerCase()}', ${key});
         ${key}Component = <t-${key.toLocaleLowerCase()} />;
       } else {

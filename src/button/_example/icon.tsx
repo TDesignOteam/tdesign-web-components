@@ -1,9 +1,10 @@
 import 'tdesign-web-components/button';
 import 'tdesign-web-components/icon';
+import 'tdesign-web-components/space';
 
 export default function Button() {
   return (
-    <div style={{ gap: 16, display: 'inline-flex' }}>
+    <t-space>
       <t-button icon={<t-icon name={'add'} className="mb-[2px]" />}>新建</t-button>
       <t-button variant="outline" icon={<t-icon name={'upload'} className="mb-[2px]" />}>
         上传文件
@@ -13,6 +14,6 @@ export default function Button() {
       <t-button theme="default" variant="outline" icon={<t-icon name={'search'} className="mb-[2px]" />}>
         Function Icon
       </t-button>
-    </div>
+    </t-space>
   );
 }
