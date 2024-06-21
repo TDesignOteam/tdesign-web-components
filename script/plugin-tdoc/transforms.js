@@ -44,12 +44,27 @@ export default {
       .map((key) => demoCodesImports[key])
       .join('\n');
 
+    const components = Object.keys(demoImports)
+      .map(
+        (key) => `
+      let ${key}Component = null;
+      if(${key}.toString().startsWith('class')){
+        define('t-${key.toLocaleLowerCase()}', ${key});
+        ${key}Component = <t-${key.toLocaleLowerCase()} />;
+      } else {
+        ${key}Component = <${key} />;
+      };
+      `,
+      )
+      .join('\n');
+
     const sfc = mdToWc({
       md,
       file,
       source,
       demoDefsStr,
       demoCodesDefsStr,
+      components,
     });
     return sfc;
   },
