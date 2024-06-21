@@ -1,8 +1,8 @@
-import { classNames, Component, createRef, OmiProps, tag } from 'omi';
+import { bind, classNames, Component, createRef, tag } from 'omi';
 
 import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
 import { getCharacterLength, limitUnicodeMaxLength } from '../_common/js/utils/helper';
-import { getClassPrefix } from '../utils';
+import { getClassPrefix } from '../_util/classname';
 import { TdTextareaProps } from './type';
 
 export type TextareaProps = TdTextareaProps;
@@ -34,20 +34,7 @@ export default class Textarea extends Component<TdTextareaProps> {
   classPrefix = getClassPrefix();
 
   installed() {
-    const {
-      value,
-      disabled,
-      maxlength,
-      maxcharacter,
-      readonly,
-      autofocus,
-      style,
-      autosize,
-      status,
-      tips,
-      allowInputOverMax,
-      ...otherProps
-    } = this.props;
+    const { value, disabled, ...otherProps } = this.props;
     this.value = value;
     this.eventPropsNames = Object.keys(otherProps).filter((key) => /^on[A-Z]/.test(key));
     this.eventProps = this.eventPropsNames.reduce((eventProps, key) => {
@@ -73,39 +60,7 @@ export default class Textarea extends Component<TdTextareaProps> {
 
     const node = this.textArea.current;
     this.value = node.value;
-
-    if (autosize === true) {
-      node.addEventListener('input', () => {
-        const heightObj = calcTextareaHeight(node);
-        const clacMinHeight = heightObj.minHeight;
-        const clacHeight = heightObj.height;
-        node.style.minHeight = clacMinHeight;
-        node.style.height = clacHeight;
-      });
-    } else if (typeof autosize === 'object') {
-      node.addEventListener('input', () => {
-        const heightObj = calcTextareaHeight(node, autosize?.minRows, autosize?.maxRows);
-        const clacMinHeight = heightObj.minHeight;
-        const clacHeight = heightObj.height;
-        node.style.minHeight = clacMinHeight;
-        node.style.height = clacHeight;
-      });
-    }
-
-    const maxLength = maxcharacter;
-    if (maxLength) {
-      node.addEventListener('input', () => {
-        const text = node.value;
-        const length = this.countCharacters(text);
-        if (length > maxLength) {
-          if (text[text.length - 1].match('/[\u4e00-\u9fa5]/g')) {
-            node.value = text.slice(0, maxLength - 1);
-          } else {
-            node.value = text.slice(0, maxLength);
-          }
-        }
-      });
-    }
+    this.onInput();
   }
 
   countCharacters(text: string) {
@@ -141,23 +96,56 @@ export default class Textarea extends Component<TdTextareaProps> {
     });
   }
 
-  inputValueChangeHandle = (e: Event) => {
-    console.log('inputValueChangeHandle', e);
+  setHeight(heightObj) {
+    const node = this.textArea.current;
+    const clacMinHeight = heightObj.minHeight;
+    const clacHeight = heightObj.height;
+    node.style.minHeight = clacMinHeight;
+    node.style.height = clacHeight;
+  }
+
+  @bind
+  onInput() {
+    const node = this.textArea.current;
+    const { autosize, maxcharacter } = this.props;
+    if (autosize === true) {
+      const heightObj = calcTextareaHeight(node);
+      this.setHeight(heightObj);
+    } else if (typeof autosize === 'object') {
+      const heightObj = calcTextareaHeight(node, autosize?.minRows, autosize?.maxRows);
+      this.setHeight(heightObj);
+    }
+    if (maxcharacter) {
+      const text = node.value;
+      const length = this.countCharacters(text);
+      if (length > maxcharacter) {
+        if (text[text.length - 1].match('/[\u4e00-\u9fa5]/g')) {
+          node.value = text.slice(0, maxcharacter - 1);
+        } else {
+          node.value = text.slice(0, maxcharacter);
+        }
+      }
+    }
+  }
+
+  onChange(e) {
     const { target } = e;
     let val = (target as HTMLInputElement).value;
-    if (!this.props.allowInputOverMax && !this.textArea.current) {
-      val = limitUnicodeMaxLength(val, this.props.maxlength);
-      if (this.props.maxcharacter && this.props.maxcharacter >= 0) {
-        const stringInfo = getCharacterLength(val, this.props.maxcharacter);
+    if (!this.props?.allowInputOverMax && !this.textArea.current) {
+      val = limitUnicodeMaxLength(val, this.props?.maxlength);
+      if (this.props?.maxcharacter && this.props?.maxcharacter >= 0) {
+        const stringInfo = getCharacterLength(val, this.props?.maxcharacter);
         val = typeof stringInfo === 'object' && stringInfo.characters;
       }
     }
     // setValue(val, { e });
     this.value = val;
-    this.update();
-  };
 
-  render(props: OmiProps<TextareaProps, any>) {
+    this.props?.onChange(val, { e });
+    this.update();
+  }
+
+  render(props: TextareaProps) {
     const { autofocus, placeholder, readonly, status, disabled, tips, maxlength, maxcharacter } = props;
 
     return (
@@ -173,9 +161,8 @@ export default class Textarea extends Component<TdTextareaProps> {
             autofocus={autofocus}
             maxlength={maxlength}
             maxcharacter={maxcharacter}
-            onChange={(e) => {
-              this.inputValueChangeHandle(e);
-            }}
+            onChange={(e) => this.onChange(e)}
+            onInput={this.onInput}
             ref={this.textArea}
           ></textarea>
           {tips && <div class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}>{tips}</div>}

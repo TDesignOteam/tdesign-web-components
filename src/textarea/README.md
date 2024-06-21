@@ -8,6 +8,8 @@ spline: base
 
 ### 基础使用
 
+高度自适应
+
 {{ base }}
 
 ### 自定义事件
@@ -16,9 +18,13 @@ spline: base
 
 ### 字数限制
 
+支持中文和英文字符数限制
+
 {{ limit }}
 
 ### 自定义状态
+
+支持禁用、只读，和default/success/warning/error四种status状态
 
 {{ status }}
 
@@ -50,3 +56,4 @@ onFocus | Function |  | TS 类型：`(value: string, context: FocusEvent) => voi
 onKeydown | Function |  | TS 类型：`(value: string, context: KeyboardEvent) => void`<br/>键盘按下时触发 | N
 onKeypress | Function |  | TS 类型：`(value: string, context: KeyboardEvent) => void`<br/>按下字符键时触发 | N
 onKeyup | Function |  | TS 类型：`(value: string, context: KeyboardEvent) => void`<br/>释放键盘时触发 | N
+onChange | Function |  | TS 类型：`(value: string, context: Event) => void`<br/>输入内容变化时触发 | N
