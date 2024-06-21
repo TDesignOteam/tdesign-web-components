@@ -31,15 +31,16 @@ function getGitTimestamp(file) {
 
 export default async function mdToReact(options) {
   const mdSegment = await customRender(options);
-  const { demoDefsStr, demoCodesDefsStr } = options;
+  const { demoDefsStr, demoCodesDefsStr, components } = options;
 
   const reactSource = `
-    import { h } from 'omi';
+    import { h, define } from 'omi';
     import { signal, effect } from 'reactive-signal'
     import Prismjs from 'prismjs';
     import 'prismjs/components/prism-bash.js';
     ${demoDefsStr}
     ${demoCodesDefsStr}
+    ${components}
 
     export default function TdDoc() {
       const isComponent  = ${mdSegment.isComponent};
@@ -125,7 +126,7 @@ export default async function mdToReact(options) {
     sourcemap: true,
   });
 
-  return { code: result.code, map: result.map };
+  return { code: result.code.replace(/&#123;/g, '{').replace(/&#125;/g, '}'), map: result.map };
 }
 
 const DEFAULT_TABS = [
@@ -198,7 +199,10 @@ async function customRender({ source, file, md }) {
     ).html;
     mdSegment.apiMd = md.render.call(
       md,
-      `${pageData.toc ? '[toc]\n' : ''}${apiMd.replace(/<!--[\s\S]+?-->/g, '')}`,
+      `${pageData.toc ? '[toc]\n' : ''}${apiMd
+        .replace(/<!--[\s\S]+?-->/g, '')
+        .replace(/\{/g, '&#123;')
+        .replace(/\}/g, '&#125;')}`, // 防止esbuild编译报错
     ).html;
   } else {
     mdSegment.docMd = md.render.call(
@@ -206,6 +210,5 @@ async function customRender({ source, file, md }) {
       `${pageData.toc ? '[toc]\n' : ''}${content.replace(/<!--[\s\S]+?-->/g, '')}`,
     ).html;
   }
-
   return mdSegment;
 }
