@@ -77,8 +77,6 @@ export class tdWcContent extends Component<{ componentImport: () => Promise<any>
   // 优化锚点滚动体验
   @bind
   proxyTitleAnchor(e: MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
     const { target } = e as MouseEvent & { target: HTMLAnchorElement };
     if (target?.tagName !== 'A') return;
     const href = decodeURIComponent(target?.href);

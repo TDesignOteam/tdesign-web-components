@@ -89,7 +89,7 @@ export default [
         title: 'Switch 开关',
         name: 'switch',
         path: '/components/switch',
-        // component: () => import('tdesign-web-components/switch/README.md'),
+        component: () => import('tdesign-web-components/switch/README.md'),
       },
       {
         title: 'Textarea 文本框',

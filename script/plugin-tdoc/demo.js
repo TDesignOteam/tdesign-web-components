@@ -25,7 +25,7 @@ export default function renderDemo(md, container) {
         const [, demoPath, componentName = ''] = match;
         const demoPathOnlyLetters = demoPath.replace(/[^a-zA-Z\d]/g, '');
         const demoName = path.basename(demoPath).trim();
-        const demoDefName = `Demo${demoPathOnlyLetters}`;
+        const demoDefName = `Demo${demoPathOnlyLetters}Component`;
         const demoCodeDefName = `Demo${demoPathOnlyLetters}Code`;
 
         const tpl = `
@@ -34,7 +34,7 @@ export default function renderDemo(md, container) {
 
               </div>
               <div className="tdesign-demo-item__body">
-                <div style={{width: '100%'}}><${demoDefName} /></div>
+                <div style={{width: '100%'}}>{${demoDefName}}</div>
               </div>
             </td-doc-demo>
           `;
