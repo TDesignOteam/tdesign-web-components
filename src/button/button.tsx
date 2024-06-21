@@ -1,48 +1,25 @@
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
-import { TNode } from '../common';
+import { StyledProps } from '../common';
+import { TdButtonProps } from './type';
 
-type Theme = 'default' | 'primary' | 'danger' | 'warning' | 'success';
-type Variant = 'base' | 'outline' | 'dashed' | 'text';
-
-export interface ButtonProps {
-  tag: string;
-  className?: string;
-  block?: boolean;
-  disabled?: boolean;
-  ghost?: boolean;
-  icon?: TNode;
-  loading?: boolean;
-  shape?: 'rectangle' | 'square' | 'round' | 'circle';
-  size?: 'small' | 'medium' | 'large';
-  type?: 'submit' | 'reset' | 'button';
-  variant?: Variant;
-  theme?: Theme;
-  href?: string;
-  onClick?: (e: MouseEvent) => void;
-}
+export interface ButtonProps extends TdButtonProps, StyledProps {}
 
 @tag('t-button')
 export default class Button extends Component<ButtonProps> {
   static css = [];
 
-  constructor() {
-    super();
-    this.props = {
-      variant: 'base',
-      size: 'medium',
-      shape: 'rectangle',
-      loading: false,
-      ghost: false,
-      disabled: false,
-      block: false,
-      ...this.props,
-    };
-  }
-
   static defaultProps = {
     tag: 'button',
+    variant: 'base',
+    size: 'medium',
+    shape: 'rectangle',
+    loading: false,
+    ghost: false,
+    disabled: false,
+    block: false,
+    ignoreAttributes: [],
   };
 
   get tag() {
@@ -61,9 +38,8 @@ export default class Button extends Component<ButtonProps> {
     return theme;
   }
 
-  render() {
+  render(props: ButtonProps) {
     const {
-      tag: Tag,
       icon,
       className,
       variant,
@@ -73,15 +49,23 @@ export default class Button extends Component<ButtonProps> {
       ghost,
       loading,
       shape,
+      ignoreAttributes,
       onClick,
       ...rest
-    } = this.props;
+    } = props;
 
     const classPrefix = getClassPrefix();
+
+    if (ignoreAttributes?.length > 0) {
+      ignoreAttributes.forEach((attr) => {
+        this.removeAttribute(attr);
+      });
+    }
 
     let iconNode = icon;
     if (loading) iconNode = <t-icon className="mb-[2px]" name={'loading'} />;
 
+    const Tag = this.tag;
     return (
       <Tag
         className={classname(

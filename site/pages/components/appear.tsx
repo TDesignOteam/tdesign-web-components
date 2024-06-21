@@ -18,7 +18,6 @@ export class Appear extends Component {
         this.classList.add(item);
         this.classList.remove(item);
       });
-      window.refreshDark();
     }, 10);
   }
 

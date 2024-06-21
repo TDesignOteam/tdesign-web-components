@@ -129,6 +129,12 @@ export default [
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
       },
+      {
+        title: 'Popup 弹出层',
+        name: 'popup',
+        path: '/components/popup',
+        component: () => import('tdesign-web-components/popup/README.md'),
+      },
     ],
   },
 ];
