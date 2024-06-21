@@ -1,7 +1,7 @@
 import { Component, tag } from 'omi';
 
+import classname, { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
-import { classname, getClassPrefix } from '../utils';
 import { TdMenuItemProps } from './type';
 
 export interface MenuItemProps extends TdMenuItemProps, StyledProps {}

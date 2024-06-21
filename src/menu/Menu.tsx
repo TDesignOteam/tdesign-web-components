@@ -1,44 +1,13 @@
-import { Component, ComponentChildren, OmiDOMAttributes, tag } from 'omi';
+import { Component, OmiDOMAttributes, tag } from 'omi';
 
+import classname, { getClassPrefix } from '../_util/classname';
+import { getChildrenArray, hasSlot } from '../_util/component';
 import { StyledProps } from '../common';
-import { classname, getClassPrefix } from '../utils';
 import { DEFAULT_MENU_WIDTH } from './_util/constant';
 import { menuDefaultProps } from './defaultProps';
 import { TdMenuProps } from './type';
 
 export interface MenuProps extends TdMenuProps, StyledProps, OmiDOMAttributes {}
-
-/**
- * 将Component的children转换为数组
- * @param children ComponentChildren | undefined
- * @returns ComponentChildren[]
- */
-export function getChildrenArray(children?: ComponentChildren) {
-  if (!children) {
-    return [];
-  }
-  if (Array.isArray(children)) {
-    return children;
-  }
-  return [children];
-}
-
-/**
- * 判断是否某个name的slot
- * @param name string
- * @param children ComponentChildren | undefined
- * @returns boolean
- */
-export function hasSlot(name: string, children?: ComponentChildren) {
-  const childrenArray = getChildrenArray(children);
-
-  return childrenArray.some((child) => {
-    if (typeof child === 'object' && 'attributes' in child) {
-      return child.attributes?.slot === name;
-    }
-    return false;
-  });
-}
 
 @tag('t-menu')
 export default class Menu extends Component<MenuProps> {
