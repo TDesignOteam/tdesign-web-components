@@ -91,6 +91,12 @@ export default [
         path: '/components/switch',
         component: () => import('tdesign-web-components/switch/README.md'),
       },
+      {
+        title: 'Textarea 文本框',
+        name: 'textarea',
+        path: '/components/textarea',
+        component: () => import('tdesign-web-components/textarea/README.md'),
+      },
     ],
   },
   {
