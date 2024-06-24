@@ -58,12 +58,14 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
+    "@omiu/transition": "^0.0.17",
     "@popperjs/core": "^2.11.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
     "lodash": "~4.17.15",
     "omi": "7.6.7",
+    "omi-transition": "^0.1.7",
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
