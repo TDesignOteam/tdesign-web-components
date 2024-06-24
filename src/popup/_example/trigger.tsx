@@ -1,6 +1,7 @@
 import 'tdesign-web-components/button';
 import 'tdesign-web-components/popup';
 import 'tdesign-web-components/input';
+import 'tdesign-web-components/space';
 
 export default function Triggers() {
   return (

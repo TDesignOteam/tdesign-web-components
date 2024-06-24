@@ -74,6 +74,6 @@ tag | String | - | 渲染按钮的 HTML 标签，默认使用标签 `<button>` �
 theme | String | - | 组件风格，依次为默认色、品牌色、危险色、警告色、成功色。可选项：default/primary/danger/warning/success | N
 type | String | button | 按钮类型。可选项：submit/reset/button | N
 variant | String | base | 按钮形式，基础、线框、虚线、文字。可选项：base/outline/dashed/text | N
-ignoreAttrs | Array<string> | [] | 在host标签上忽略的属性，例如`['style']`就不会生成style属性 | N
+ignoreAttrs | `Array<string>` | [] | 在host标签上忽略的属性，例如`['style']`就不会生成style属性 | N
 onClick | Function |  | TS 类型：`(e: MouseEvent) => void`<br/>点击时触发 | N
 

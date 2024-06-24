@@ -1,5 +1,6 @@
 import 'omi-transition';
 
+// import '@omiu/transition';
 import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
 import { Component, createRef, OmiProps, tag } from 'omi';
@@ -75,7 +76,6 @@ export default class Popup extends Component<PopupProps> {
 
   handlePopVisible = (visible: boolean, context: PopupVisibleChangeContext) => {
     if (this.props.disabled || visible === !!this.visible) return;
-    console.log('===', visible, this.visible);
     this.visible = visible;
     this.handleDocumentEvent(visible);
     if (typeof this.props.onVisibleChange === 'function') {
@@ -233,40 +233,35 @@ export default class Popup extends Component<PopupProps> {
     );
 
     return (
-      <div>
+      <t-trigger-root>
         <t-trigger ref={this.triggerRef} part="trigger">
-          {props.triggerElement ? props.triggerElement : props.children}
+          {props.triggerElement ? props.triggerElement : <slot />}
         </t-trigger>
-        <div
-          show={true}
-          o-transition={{
-            // appear: true,
-            name: props.expandAnimation ? `${componentName}--animation-expand` : `${componentName}--animation`,
-            onBeforeEnter: this.handleBeforeEnter,
-          }}
-        >
-          {true ? (
-            <div
-              class={popperClasses}
-              style={{ zIndex: props.zIndex, ...this.getOverlayStyle(props.overlayStyle) }}
-              ref={this.popperRef}
-              onMouseDown={() => (this.contentClicked = true)}
-            >
-              {/*  || this.popperRef.current */}
-              {(this.getVisible() || this.popperRef.current) && (
-                <div
-                  class={overlayClasses}
-                  style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
-                  onScroll={this.handleScroll}
-                >
-                  {props.content}
-                  {props.showArrow ? <div class={`${componentName}__arrow`} /> : null}
-                </div>
-              )}
-            </div>
-          ) : null}
-        </div>
-      </div>
+        {this.getVisible() || !props.destroyOnClose ? (
+          <div
+            show={this.getVisible()}
+            o-transition={{
+              name: props.expandAnimation ? `${componentName}--animation-expand` : `${componentName}--animation`,
+              beforeEnter: this.handleBeforeEnter,
+            }}
+            class={popperClasses}
+            style={{ zIndex: props.zIndex, ...this.getOverlayStyle(props.overlayStyle) }}
+            ref={this.popperRef}
+            onMouseDown={() => (this.contentClicked = true)}
+          >
+            {(this.getVisible() || this.popperRef.current) && (
+              <div
+                class={overlayClasses}
+                style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
+                onScroll={this.handleScroll}
+              >
+                {props.content}
+                {props.showArrow ? <div class={`${componentName}__arrow`} /> : null}
+              </div>
+            )}
+          </div>
+        ) : null}
+      </t-trigger-root>
     );
   }
 }
