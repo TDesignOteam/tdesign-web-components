@@ -2,7 +2,7 @@
 // import 'tdesign-icons-omi/image-1';
 import '../space';
 
-import { classNames,Component, createRef, OmiProps, tag } from 'omi';
+import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 
 import observe from '../_common/js/utils/observe';
 import { getClassPrefix } from '../_util/classname';
@@ -154,7 +154,7 @@ export default class Image extends Component<ImageProps> {
       ...rest
     } = props;
 
-    console.log('===src', src, onLoad, onError, lazy, overlayTrigger);
+    console.log('src', src, onLoad, onError, lazy, overlayTrigger);
     const renderOverlay = () => {
       if (!overlayContent) {
         return null;

@@ -56,6 +56,20 @@ export default [
     tag: '',
   },
   {
+    title: '布局',
+    name: 'layout',
+    type: 'component', // 组件文档
+    children: [
+      {
+        title: 'Space 间距',
+        name: 'space',
+        path: '/components/space',
+        component: () => import('tdesign-web-components/space/README.md'),
+      },
+    ],
+    tag: '',
+  },
+  {
     title: '导航',
     name: 'navigation',
     type: 'component', // 组件文档
