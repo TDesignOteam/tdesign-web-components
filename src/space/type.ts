@@ -24,6 +24,10 @@ export interface TdSpaceProps {
    * @default 'medium'
    */
   size?: SpaceSize | SpaceSize[];
+  /**
+   * 内容
+   */
+  children?: TNode;
 }
 
 export type SpaceSize = number | string | SizeEnum;

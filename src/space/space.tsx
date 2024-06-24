@@ -55,23 +55,23 @@ export default class Space extends Component<SpaceProps> {
     };
   }
 
+  get contentNode() {
+    const { children, separator } = this.props;
+    const childrenArr = toArray(children);
+    return childrenArr.map((child, index) => {
+      const showSeparator = index + 1 !== childrenArr.length && separator;
+      return (
+        <div>
+          <div key={index} className={`${this.componentName}-item`}>
+            {child}
+          </div>
+          {showSeparator && <div className={`${this.componentName}-item-separator`}>{separator}</div>}
+        </div>
+      );
+    });
+  }
+
   render(props: OmiProps<SpaceProps>) {
-    function renderChildren() {
-      const children = toArray(props.children);
-      const childCount = children.length;
-      return children.map((child, index) => {
-        // const separatorNode = renderTNodeJSX(this, 'separator') check 效果
-        const showSeparator = index + 1 !== childCount && props.separator;
-        return (
-          <>
-            <div key={index} className={`${this.componentName}-item`}>
-              {child}
-            </div>
-            {showSeparator && <div className={`${this.componentName}-item-separator`}>{props.separator}</div>}
-          </>
-        );
-      });
-    }
     return (
       <div
         style={this.renderStyle}
@@ -80,7 +80,7 @@ export default class Space extends Component<SpaceProps> {
           [`${this.componentName}-${props.direction}`]: props.direction,
         })}
       >
-        {renderChildren()}
+        {this.contentNode}
       </div>
     );
   }
