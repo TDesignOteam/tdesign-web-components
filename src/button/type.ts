@@ -1,4 +1,4 @@
-import { SizeEnum, TElement, TNode } from '../common';
+import { SizeEnum, TNode } from '../common';
 
 export interface TdButtonProps {
   /**
@@ -32,7 +32,7 @@ export interface TdButtonProps {
   /**
    * 按钮内部图标，可完全自定义
    */
-  icon?: TElement;
+  icon?: TNode;
   /**
    * 是否显示为加载状态
    * @default false
@@ -66,6 +66,11 @@ export interface TdButtonProps {
    * @default base
    */
   variant?: 'base' | 'outline' | 'dashed' | 'text';
+  /**
+   * 在host标签上忽略的属性
+   * @default []
+   */
+  ignoreAttributes?: string[];
   /**
    * 点击时触发
    */
