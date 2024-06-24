@@ -3,7 +3,6 @@ import 'tdesign-web-components/space';
 import 'tdesign-web-components/button';
 
 import { Component } from 'omi';
-// import 'tdesign-icons-omi/refresh';
 
 export default class ImageLazyList extends Component {
   loadCount = 0;

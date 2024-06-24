@@ -3,8 +3,6 @@ import 'tdesign-web-components/space';
 import 'tdesign-web-components/button';
 
 import { Component } from 'omi';
-// import 'tdesign-icons-omi/refresh';
-// import 'tdesign-icons-omi/image-error';
 
 export default class ImagePlaceholder extends Component {
   loadingCount = 0;
@@ -22,30 +20,7 @@ export default class ImagePlaceholder extends Component {
   };
 
   render() {
-    // const loading = (
-    //   <div
-    //     style={{
-    //       display: 'flex',
-    //       alignItems: 'center',
-    //       justifyContent: 'center',
-    //       width: '100%',
-    //       height: '100%',
-    //       background: 'rgba(255,255,255,.4)',
-    //       backdropFilter: 'blur(10px)',
-    //     }}
-    //   >
-    //     <t-loading
-    //       delay={0}
-    //       fullscreen={false}
-    //       indicator
-    //       inheritColor={false}
-    //       loading
-    //       preventScrollThrough
-    //       showOverlay
-    //       size="small"
-    //     />
-    //   </div>
-    // );
+    // todo: loading
 
     return (
       <t-space size={24} direction="vertical">
