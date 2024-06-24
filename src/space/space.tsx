@@ -61,12 +61,12 @@ export default class Space extends Component<SpaceProps> {
     return childrenArr.map((child, index) => {
       const showSeparator = index + 1 !== childrenArr.length && separator;
       return (
-        <div>
+        <>
           <div key={index} className={`${this.componentName}-item`}>
             {child}
           </div>
           {showSeparator && <div className={`${this.componentName}-item-separator`}>{separator}</div>}
-        </div>
+        </>
       );
     });
   }
@@ -80,7 +80,7 @@ export default class Space extends Component<SpaceProps> {
           [`${this.componentName}-${props.direction}`]: props.direction,
         })}
       >
-        {this.contentNode}
+        {this.contentNode.flat()}
       </div>
     );
   }

@@ -61,6 +61,12 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Divider 分割线',
+        name: 'divider',
+        path: '/components/divider',
+        component: () => import('tdesign-web-components/divider/README.md'),
+      },
+      {
         title: 'Space 间距',
         name: 'space',
         path: '/components/space',
