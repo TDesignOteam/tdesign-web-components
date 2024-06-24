@@ -56,6 +56,26 @@ export default [
     tag: '',
   },
   {
+    title: '布局',
+    name: 'layout',
+    type: 'component', // 组件文档
+    children: [
+      {
+        title: 'Divider 分割线',
+        name: 'divider',
+        path: '/components/divider',
+        component: () => import('tdesign-web-components/divider/README.md'),
+      },
+      {
+        title: 'Space 间距',
+        name: 'space',
+        path: '/components/space',
+        component: () => import('tdesign-web-components/space/README.md'),
+      },
+    ],
+    tag: '',
+  },
+  {
     title: '导航',
     name: 'navigation',
     type: 'component', // 组件文档
@@ -121,6 +141,12 @@ export default [
         name: 'tag',
         path: '/components/tag',
         // component: () => import('tdesign-web-components/tag/README.md'),
+      },
+      {
+        title: 'Image 图片',
+        name: 'image',
+        path: '/components/image',
+        component: () => import('tdesign-web-components/image/README.md'),
       },
     ],
   },
