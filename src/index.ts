@@ -1,5 +1,6 @@
 export * from './button';
 export * from './icon';
-export * from './textarea';
+export * from './image';
 export * from './space';
 export * from './switch';
+export * from './textarea';
