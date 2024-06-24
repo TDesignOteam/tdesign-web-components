@@ -122,6 +122,12 @@ export default [
         path: '/components/tag',
         // component: () => import('tdesign-web-components/tag/README.md'),
       },
+      {
+        title: 'Image 图片',
+        name: 'image',
+        path: '/components/image',
+        component: () => import('tdesign-web-components/image/README.md'),
+      },
     ],
   },
   {
