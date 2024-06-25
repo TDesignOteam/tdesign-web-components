@@ -148,6 +148,12 @@ export default [
         path: '/components/image',
         component: () => import('tdesign-web-components/image/README.md'),
       },
+      {
+        title: 'Tooltip 文字提示',
+        name: 'tooltip',
+        path: '/components/tooltip',
+        component: () => import('tdesign-web-components/tooltip/README.md'),
+      },
     ],
   },
   {
