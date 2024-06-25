@@ -4,6 +4,7 @@ export * from './icon';
 export * from './image';
 export * from './input';
 export * from './popup';
-export * from './textarea';
 export * from './space';
 export * from './switch';
+export * from './textarea';
+export * from './tooltip';
