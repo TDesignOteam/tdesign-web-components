@@ -1,6 +1,7 @@
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
 import { TdMenuItemProps } from './type';
 
@@ -21,9 +22,12 @@ export default class Menu extends Component<MenuItemProps> {
       [`${classPrefix}-menu__item--plain`]: !icon,
     });
 
+    const lightIcon = convertToLightDomNode(icon);
+
     return (
       <>
         {icon}
+        {lightIcon}
         {href ? (
           <a href={href} target={target} className={classname(`${classPrefix}-menu__item-link`)}>
             <span className={`${classPrefix}-menu__content`}>{label}</span>

@@ -44,7 +44,9 @@ export default class Menu extends Component<MenuProps> {
               </span>
             </div>
           )}
+
           <ul className={classname(`${classPrefix}-menu`, `${classPrefix}-menu--scroll`)}>{children}</ul>
+
           {hasOperations && (
             <div className={`${classPrefix}-menu__operations`}>
               <slot name="operations" />

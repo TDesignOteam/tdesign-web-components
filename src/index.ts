@@ -3,6 +3,7 @@ export * from './divider';
 export * from './icon';
 export * from './image';
 export * from './input';
+export * from './menu';
 export * from './popup';
 export * from './space';
 export * from './switch';
