@@ -154,6 +154,12 @@ export default [
         path: '/components/tooltip',
         component: () => import('tdesign-web-components/tooltip/README.md'),
       },
+      {
+        title: 'Loading 加载',
+        name: 'loading',
+        path: '/components/loading',
+        component: () => import('tdesign-web-components/loading/README.md'),
+      },
     ],
   },
   {
