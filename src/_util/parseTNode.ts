@@ -1,5 +1,5 @@
 import isFunction from 'lodash/isFunction';
-import { cloneElement } from 'omi';
+import { cloneElement, VNode } from 'omi';
 
 import log from '../_common/js/log';
 import { TNode } from '../common';
@@ -30,7 +30,7 @@ export function parseContentTNode<T>(tnode: TNode<T>, props: T) {
   if (isFunction(tnode)) return tnode(props) as TNode;
   if (!tnode || ['string', 'number', 'boolean'].includes(typeof tnode)) return tnode as TNode;
   try {
-    return cloneElement(tnode, { ...props });
+    return cloneElement(tnode as VNode, { ...props });
   } catch (e) {
     log.warn('parseContentTNode', `${tnode} is not a valid ReactNode`);
     return null;

@@ -56,6 +56,26 @@ export default [
     tag: '',
   },
   {
+    title: '布局',
+    name: 'layout',
+    type: 'component', // 组件文档
+    children: [
+      {
+        title: 'Divider 分割线',
+        name: 'divider',
+        path: '/components/divider',
+        component: () => import('tdesign-web-components/divider/README.md'),
+      },
+      {
+        title: 'Space 间距',
+        name: 'space',
+        path: '/components/space',
+        component: () => import('tdesign-web-components/space/README.md'),
+      },
+    ],
+    tag: '',
+  },
+  {
     title: '导航',
     name: 'navigation',
     type: 'component', // 组件文档
@@ -91,6 +111,12 @@ export default [
         path: '/components/switch',
         component: () => import('tdesign-web-components/switch/README.md'),
       },
+      {
+        title: 'Textarea 文本框',
+        name: 'textarea',
+        path: '/components/textarea',
+        component: () => import('tdesign-web-components/textarea/README.md'),
+      },
     ],
   },
   {
@@ -122,6 +148,24 @@ export default [
         path: '/components/tag',
         // component: () => import('tdesign-web-components/tag/README.md'),
       },
+      {
+        title: 'Image 图片',
+        name: 'image',
+        path: '/components/image',
+        component: () => import('tdesign-web-components/image/README.md'),
+      },
+      {
+        title: 'Tooltip 文字提示',
+        name: 'tooltip',
+        path: '/components/tooltip',
+        component: () => import('tdesign-web-components/tooltip/README.md'),
+      },
+      {
+        title: 'Loading 加载',
+        name: 'loading',
+        path: '/components/loading',
+        component: () => import('tdesign-web-components/loading/README.md'),
+      },
     ],
   },
   {
@@ -134,6 +178,12 @@ export default [
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Popup 弹出层',
+        name: 'popup',
+        path: '/components/popup',
+        component: () => import('tdesign-web-components/popup/README.md'),
       },
     ],
   },
