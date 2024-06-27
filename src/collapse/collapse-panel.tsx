@@ -1,4 +1,4 @@
-import './fake-arrow';
+import '../common/fake-arrow';
 
 import { bind, Component, computed, signal, tag } from 'omi';
 
@@ -34,16 +34,9 @@ const styleString = `
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   static css?: string | CSSStyleSheet | (string | CSSStyleSheet)[] | undefined = [styleString];
 
-  constructor() {
-    super();
-    this.props = {
-      ...this.props,
-    };
-  }
-
   innerValue = signal(0);
 
-  componentName = `${classPrefix}-collapse-panel`;
+  className = `${classPrefix}-collapse-panel`;
 
   isDisabled = signal(false);
 
@@ -91,44 +84,36 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
 
     return (
       <div
-        className={classname(
-          `${this.componentName}__icon`,
-          [`${this.componentName}__icon--${expandIconPlacement.value}`],
-          {
-            [`${this.componentName}__icon--active`]: isActive,
-          },
-        )}
+        className={classname(`${this.className}__icon`, [`${this.className}__icon--${expandIconPlacement.value}`], {
+          [`${this.className}__icon--active`]: isActive,
+        })}
       >
         <slot name="expandIcon">
-          <fake-arrow isActive={isActive} disabled={this.isDisabled} onClick={this.handleClick} />
+          <t-fake-arrow isActive={isActive} disabled={this.isDisabled} onClick={this.handleClick} />
         </slot>
       </div>
     );
   }
 
   renderHeader() {
-    const { header } = this.props;
     const { expandIconPlacement, expandOnRowClick } = this.injection;
     return (
       <div
-        className={classname(`${this.componentName}__header`, {
+        className={classname(`${this.className}__header`, {
           [`${classPrefix}-is-clickable`]: expandOnRowClick.value && !this.isDisabled.value,
         })}
         onClick={(e) => this.handleClick(e, true)}
       >
-        <div className={`${this.componentName}__header-left`}>
+        <div className={`${this.className}__header-left`}>
           {expandIconPlacement.value === 'left' && this.renderIcon()}
         </div>
 
-        <div className={`${this.componentName}__header-content`}>
-          <slot name="header">{header}</slot>
+        <div className={`${this.className}__header-content`}>
+          <slot name="header"></slot>
         </div>
-        <div className={`${this.componentName}__header--blank`}></div>
-        <div className={`${this.componentName}__header-right`}>
-          <div
-            className={`${this.componentName}__header-right-content`}
-            onClick={(e: MouseEvent) => e.stopPropagation()}
-          >
+        <div className={`${this.className}__header--blank`}></div>
+        <div className={`${this.className}__header-right`}>
+          <div className={`${this.className}__header-right-content`} onClick={(e: MouseEvent) => e.stopPropagation()}>
             <slot name="headerRightContent"></slot>
           </div>
           {expandIconPlacement.value === 'right' && this.renderIcon()}
@@ -143,33 +128,26 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     const { destroyOnCollapse } = this.props;
 
     return destroyOnCollapse && !isActive ? null : (
-      <div style={!destroyOnCollapse && !isActive ? 'display: none;' : ''} className={`${this.componentName}__body`}>
-        <div className={`${this.componentName}__content`}>
+      <div style={!destroyOnCollapse && !isActive ? 'display: none;' : ''} className={`${this.className}__body`}>
+        <div className={`${this.className}__content`}>
           <slot></slot>
         </div>
       </div>
     );
   }
 
-  render(props): TNode {
+  render(props: TdCollapsePanelProps): TNode {
     const { className } = props;
-    console.log(
-      'collapseProps',
-      this.isDisabled.value,
-      this.injection.collapseProps.value,
-      this.injection.disabled,
-      this.injection.disabled.value,
-    );
 
     return (
       <div
-        className={classname(`${this.componentName}`, className, {
+        className={classname(`${this.className}`, className, {
           [`${classPrefix}-is-disabled`]: this.isDisabled.value,
         })}
       >
         <div
-          className={classname(`${this.componentName}__wrapper`, {
-            [`${this.componentName}__wrapper--border-less`]: this.injection.borderless.value,
+          className={classname(`${this.className}__wrapper`, {
+            [`${this.className}__wrapper--border-less`]: this.injection.borderless.value,
           })}
         >
           {this.renderHeader()}

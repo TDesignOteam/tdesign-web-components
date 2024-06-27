@@ -9,13 +9,6 @@ export type SwitchClickEventHandler = SwitchChangeEventHandler;
 
 @tag('t-collapse')
 export default class Collapse extends Component<TdCollapseProps> {
-  constructor() {
-    super();
-    this.props = {
-      ...this.props,
-    };
-  }
-
   collapseValue = signal([]);
 
   innerBorderless = signal(false);
@@ -83,7 +76,7 @@ export default class Collapse extends Component<TdCollapseProps> {
     return true;
   }
 
-  render(props): TNode {
+  render(props: TdCollapseProps): TNode {
     const { className, borderless } = props;
 
     const classes = classname(`${classPrefix}-collapse`, className, {

@@ -2,8 +2,20 @@ import { Component, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
 
-@tag('fake-arrow')
-export default class FakeArrow extends Component {
+export interface FakeArrowProps {
+  /**
+   * 是否为激活态
+   */
+  isActive?: boolean;
+
+  /**
+   * 是否禁用
+   */
+  disabled?: boolean;
+}
+
+@tag('t-fake-arrow')
+export default class FakeArrow extends Component<FakeArrowProps> {
   componentName = `${classPrefix}-fake-arrow`;
 
   static css = `

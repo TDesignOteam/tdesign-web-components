@@ -8,6 +8,10 @@ import { TNode } from '../common';
 
 export interface TdCollapseProps {
   /**
+   * 类名
+   */
+  className?: string;
+  /**
    * 是否为无边框模式
    * @default false
    */
@@ -21,11 +25,6 @@ export interface TdCollapseProps {
    * 是否禁用面板展开/收起操作
    */
   disabled?: boolean;
-  /**
-   * 展开图标。值为 undefined 或 false 则不显示展开图标；值为 true 显示默认图标；值类型为函数，则表示完全自定义展开图标
-   * @default true
-   */
-  expandIcon?: boolean | TNode;
   /**
    * 展开图标的位置，左侧或右侧
    * @default left
@@ -46,10 +45,6 @@ export interface TdCollapseProps {
    */
   value?: CollapseValue;
   /**
-   * 展开的面板集合，非受控属性
-   */
-  defaultValue?: CollapseValue;
-  /**
    * 切换面板时触发，返回变化的值
    */
   onChange?: (value: CollapseValue) => void;
@@ -57,13 +52,9 @@ export interface TdCollapseProps {
 
 export interface TdCollapsePanelProps {
   /**
-   * 折叠面板内容
+   * 类名
    */
-  content?: string | TNode;
-  /**
-   * 折叠面板内容，同 content
-   */
-  default?: string | TNode;
+  className?: string;
   /**
    * 当前面板处理折叠状态时，是否销毁面板内容
    * @default false
@@ -73,18 +64,6 @@ export interface TdCollapsePanelProps {
    * 禁止当前面板展开，优先级大于 Collapse 的同名属性
    */
   disabled?: boolean;
-  /**
-   * 当前折叠面板展开图标，优先级大于 Collapse 的同名属性
-   */
-  expandIcon?: boolean | TNode;
-  /**
-   * 面板头内容
-   */
-  header?: string | TNode;
-  /**
-   * 面板头的右侧区域，一般用于呈现面板操作
-   */
-  headerRightContent?: string | TNode;
   /**
    * 当前面板唯一标识，如果值为空则取当前面下标兜底作为唯一标识
    */
