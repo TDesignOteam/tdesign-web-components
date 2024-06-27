@@ -1,3 +1,6 @@
+/* eslint-disable max-classes-per-file */
+import './button-icon';
+
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
@@ -63,7 +66,7 @@ export default class Button extends Component<ButtonProps> {
     }
 
     let iconNode = icon;
-    if (loading) iconNode = <t-icon className="mr-[2px]" name={'loading'} />;
+    if (loading) iconNode = <t-button-icon className="mr-[2px]" name={'loading'} />;
 
     const Tag = this.tag as string;
     return (

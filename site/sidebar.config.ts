@@ -47,7 +47,7 @@ export default [
         component: () => import('tdesign-web-components/button/README.md'),
       },
       {
-        title: 'Icon 图表',
+        title: 'Icon 图标',
         name: 'icon',
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),

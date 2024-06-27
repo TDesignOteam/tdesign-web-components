@@ -1,4 +1,4 @@
-import { Component, signal, tag } from 'omi';
+import { Component, signal } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { loadLink } from './utils';
@@ -57,9 +57,8 @@ i.t-size-l {
 }
 `;
 
-@tag('t-icon')
 export default class Icon extends Component<IconProps> {
-  static css?: string | CSSStyleSheet | (string | CSSStyleSheet)[] | undefined = [iconStyleString];
+  static isLightDOM = false;
 
   install(): void {
     const classPrefix = getClassPrefix();
@@ -82,6 +81,7 @@ export default class Icon extends Component<IconProps> {
     return (
       <>
         <style>{styles.value}</style>
+        <style>{iconStyleString}</style>
         <i
           class={classname(
             className,
