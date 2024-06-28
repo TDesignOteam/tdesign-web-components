@@ -3,8 +3,10 @@ import '../common/fake-arrow';
 import { bind, Component, computed, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
-import { TNode } from '../common';
+import { StyledProps, TNode } from '../common';
 import type { TdCollapsePanelProps } from './type';
+
+export interface CollapsePanelProps extends TdCollapsePanelProps, StyledProps {}
 
 @tag('t-collapse-panel')
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {

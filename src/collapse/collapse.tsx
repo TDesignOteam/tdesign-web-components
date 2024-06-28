@@ -1,11 +1,10 @@
 import { bind, Component, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
-import { TNode } from '../common';
+import { StyledProps, TNode } from '../common';
 import { TdCollapseProps } from './type';
 
-export type SwitchChangeEventHandler = (value: boolean, event: MouseEvent) => void;
-export type SwitchClickEventHandler = SwitchChangeEventHandler;
+export interface CollapseProps extends TdCollapseProps, StyledProps {}
 
 @tag('t-collapse')
 export default class Collapse extends Component<TdCollapseProps> {
