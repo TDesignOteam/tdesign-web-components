@@ -48,6 +48,10 @@ export interface TdCollapseProps {
    * 切换面板时触发，返回变化的值
    */
   onChange?: (value: CollapseValue) => void;
+  /**
+   * 内容
+   */
+  children?: TNode;
 }
 
 export interface TdCollapsePanelProps {
@@ -68,6 +72,10 @@ export interface TdCollapsePanelProps {
    * 当前面板唯一标识，如果值为空则取当前面下标兜底作为唯一标识
    */
   value?: string | number;
+  /**
+   * 内容
+   */
+  children?: TNode;
 }
 
 export type CollapseValue = Array<string | number>;
