@@ -137,6 +137,12 @@ export default [
         // component: () => import('tdesign-web-components/calendar/README.md'),
       },
       {
+        title: 'Collapse 折叠面板',
+        name: 'Collapse',
+        path: '/components/collapse',
+        component: () => import('tdesign-web-components/collapse/README.md'),
+      },
+      {
         title: 'Table 表格',
         name: 'table',
         path: '/components/table',

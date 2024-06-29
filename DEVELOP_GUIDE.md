@@ -105,7 +105,7 @@ npm run start
 
 ### 组件页路由配置
 
-每一个组件页，都是一个 md 文件，参考 `/site/sidebar.config.js` 已有定义，直接按照模板添加即可
+每一个组件页，都是一个 md 文件，参考 `/site/sidebar.config.ts` 已有定义，直接按照模板添加即可
 
 ```javascript
 {
