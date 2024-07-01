@@ -256,9 +256,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
   @bind
   getTooltipProps() {
     if (this.props.tooltipProps instanceof Object) {
-      return {
-        ...this.props.tooltipProps,
-      };
+      return this.props.tooltipProps;
     }
     return {};
   }
