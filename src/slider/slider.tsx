@@ -225,7 +225,13 @@ export default class Slider extends Component<SliderProps> {
       }
     }
     const fixValue: SliderValue = this.setValues(changeValue);
-    this.props?.onChange(fixValue);
+    this.props?.onChange?.(fixValue);
+  }
+
+  @bind
+  emitChangeEnd() {
+    const changeEndValue = this.props.range ? [this.firstValue.value, this.secondValue.value] : this.firstValue.value;
+    this.props?.onChangeEnd?.(changeEndValue);
   }
 
   @bind
@@ -250,6 +256,18 @@ export default class Slider extends Component<SliderProps> {
     if (prevValue > max) prevValue = max;
     this.prevValue.value = prevValue;
     return prevValue;
+  }
+
+  @bind
+  onFirstButtonInput(v: number) {
+    this.props.range ? (this.firstValue.value = v) : (this.prevValue.value = v);
+    this.emitChange(this.props.range ? [v, this.secondValue.value] : v);
+  }
+
+  @bind
+  onSecondButtonInput(v: number) {
+    this.secondValue.value = v;
+    this.emitChange([this.firstValue.value, v]);
   }
 
   @bind
@@ -379,9 +397,8 @@ export default class Slider extends Component<SliderProps> {
               value={props.range ? this.firstValue.value : this.prevValue.value}
               sliderSize={this.sliderSize.value}
               resetSize={this.resetSize}
-              onInput={(v: number) => {
-                props.range ? (this.firstValue.value = v) : (this.prevValue.value = v);
-              }}
+              onInput={this.onFirstButtonInput}
+              onButtonMouseup={this.emitChangeEnd}
             />
             {this.props.range && (
               <t-slider-button
@@ -396,9 +413,8 @@ export default class Slider extends Component<SliderProps> {
                 value={this.secondValue.value}
                 sliderSize={this.sliderSize.value}
                 resetSize={this.resetSize}
-                onInput={(v: number) => {
-                  this.secondValue.value = v;
-                }}
+                onInput={this.onSecondButtonInput}
+                onButtonMouseup={this.emitChangeEnd}
               />
             )}
 

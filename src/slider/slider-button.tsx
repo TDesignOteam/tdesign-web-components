@@ -14,7 +14,7 @@ interface SliderButtonProps {
   vertical: boolean;
   min: TdSliderProps['min'];
   rangeDiff: number;
-  onMouseup?: Function;
+  onButtonMouseup?: Function;
   resetSize?: Function;
   sliderSize?: number;
   step: number;
@@ -148,7 +148,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
       window.removeEventListener('mouseup', this.onDragEnd);
       window.removeEventListener('touchend', this.onDragEnd);
       window.removeEventListener('contextmenu', this.onDragEnd);
-      this.props?.onMouseup?.();
+      this.props?.onButtonMouseup?.();
     }
   }
 
