@@ -60,7 +60,7 @@ spline: form
 
 {{ min-and-max }}
 
-
+## API
 ### Slider Props
 
 | 名称             | 类型                               | 默认值     | 说明                                                                                                                                                                                                                                                                                                                                                                    | 必传 |
@@ -77,6 +77,5 @@ spline: form
 | step             | Number                             | 1          | 步长                                                                                                                                                                                                                                                                                                                                                                    | N    |
 | tooltipProps     | Object                             | -          | 透传提示组件属性。TS 类型：`TooltipProps`，[Tooltip API Documents](./tooltip?tab=api)。                                                                                                                                                                                                                                                                                 | N    |
 | value            | Number / Array                     | -          | 滑块值。支持语法糖 `v-model`。TS 类型：`SliderValue` `type SliderValue = number \| Array<number>`。                                                                                                                                                                                                                                                                     | N    |
-| defaultValue     | Number / Array                     | -          | 滑块值。非受控属性。TS 类型：`SliderValue` `type SliderValue = number \| Array<number>`。                                                                                                                                                                                                                                                                               | N    |
 | onChange         | Function                           |            | TS 类型：`(value: SliderValue) => void`<br/>滑块值变化时触发                                                                                                                                                                                                                                                                                                            | N    |
 | onChangeEnd      | Function                           |            | TS 类型：`(value: SliderValue) => void`<br/>松开拖动`mouseup` 或点击滑块条时触发，适合不希望在拖动滑块过程频繁触发回调的场景实用                                                                                                                                                                                                                                        | N    |
