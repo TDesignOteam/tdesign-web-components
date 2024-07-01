@@ -67,7 +67,7 @@ export default class Slider extends Component<SliderProps> {
 
   prevValue = signal(0);
 
-  dragging = signal(false);
+  dragging = false;
 
   get isVertical() {
     return this.props.layout === 'vertical';
@@ -164,7 +164,7 @@ export default class Slider extends Component<SliderProps> {
 
   @bind
   onSliderClick(event) {
-    if (this.props.disabled || this.dragging.value) {
+    if (this.props.disabled || this.dragging) {
       return;
     }
     this.resetSize();
@@ -189,7 +189,7 @@ export default class Slider extends Component<SliderProps> {
 
   @bind
   watchValue(newVal: SliderValue) {
-    if (this.dragging.value) return;
+    if (this.dragging) return;
     if (Array.isArray(newVal) && this.props.range) {
       [this.firstValue.value, this.secondValue.value] = newVal;
     } else {
@@ -204,7 +204,7 @@ export default class Slider extends Component<SliderProps> {
 
   @bind
   changeValue(point: number) {
-    if (this.props.disabled || this.dragging.value) {
+    if (this.props.disabled || this.dragging) {
       return;
     }
     this.resetSize();

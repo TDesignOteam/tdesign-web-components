@@ -8,7 +8,7 @@ import { TdSliderProps } from './type';
 
 interface SliderButtonProps {
   label: TdSliderProps['label'];
-  value: Omi.SignalValue<TdSliderProps['value']>;
+  value: number;
   tooltipProps: TdSliderProps['tooltipProps'];
   disabled: TdSliderProps['disabled'];
   vertical: boolean;
@@ -54,29 +54,29 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   visible = signal(false);
 
-  hovering = signal(false);
+  hovering = false;
 
-  dragging = signal(false);
+  dragging = false;
 
-  isClick = signal(false);
+  isClick = false;
 
-  startY = signal(0);
+  startY = 0;
 
-  startX = signal(0);
+  startX = 0;
 
-  currentX = signal(0);
+  currentX = 0;
 
-  currentY = signal(0);
+  currentY = 0;
 
-  clientY = signal(0);
+  clientY = 0;
 
-  clientX = signal(0);
+  clientX = 0;
 
-  startPos = signal(0);
+  startPos = 0;
 
-  newPos = signal(0);
+  newPos = 0;
 
-  prevValue = signal<any>([]);
+  prevValue = 0;
 
   tooltipRef = createRef();
 
@@ -106,15 +106,15 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   @bind
   handleMouseEnter() {
-    this.hovering.value = true;
+    this.hovering = true;
     this.showTooltipComponent();
     (this.buttonRef.current as HTMLElement)?.focus();
   }
 
   @bind
   handleMouseLeave() {
-    this.hovering.value = false;
-    if (!this.dragging.value) {
+    this.hovering = false;
+    if (!this.dragging) {
       this.hideTooltipComponent();
     }
   }
@@ -135,8 +135,8 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   @bind
   onDragStart(event) {
-    this.dragging.value = true;
-    this.isClick.value = true;
+    this.dragging = true;
+    this.isClick = true;
     const { type } = event;
     let { clientY, clientX } = event as MouseEvent;
     if (type === 'touchstart') {
@@ -144,19 +144,19 @@ export default class SliderButton extends Component<SliderButtonProps> {
       [clientY, clientX] = [touch[0].clientY, touch[0].clientX];
     }
     if (this.props.vertical) {
-      this.startY.value = clientY;
+      this.startY = clientY;
     } else {
-      this.startX.value = clientX;
+      this.startX = clientX;
     }
-    this.startPos.value = parseFloat(this.currentPos);
-    this.newPos.value = this.startPos.value;
+    this.startPos = parseFloat(this.currentPos);
+    this.newPos = this.startPos;
   }
 
   @bind
   onDragEnd() {
-    if (this.dragging.value) {
+    if (this.dragging) {
       setTimeout(() => {
-        this.dragging.value = false;
+        this.dragging = false;
         this.hideTooltipComponent();
       }, 0);
       window.removeEventListener('mousemove', this.onDragging);
@@ -180,34 +180,34 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   @bind
   onDragging(event) {
-    if (!this.dragging.value) {
+    if (!this.dragging) {
       return;
     }
 
-    this.isClick.value = false;
+    this.isClick = false;
     this.showTooltipComponent();
     this.props?.resetSize?.();
     let diff = 0;
 
     const parentSliderSize = this.props.sliderSize;
     if (this.props.vertical) {
-      this.currentY.value = (event as MouseEvent).clientY;
-      diff = this.startY.value - this.currentY.value;
+      this.currentY = (event as MouseEvent).clientY;
+      diff = this.startY - this.currentY;
     } else {
-      this.currentX.value = (event as MouseEvent).clientX;
-      diff = this.currentX.value - this.startX.value;
+      this.currentX = (event as MouseEvent).clientX;
+      diff = this.currentX - this.startX;
     }
 
     if (event.type === 'touchmove') {
       const touch = (event as TouchEvent).touches;
       const [clientY, clientX] = [touch[0].clientY, touch[0].clientX];
-      this.clientY.value = clientY;
-      this.clientX.value = clientX;
+      this.clientY = clientY;
+      this.clientX = clientX;
     }
 
     diff = (diff / parentSliderSize) * 100;
-    this.newPos.value = this.startPos.value + diff;
-    this.setPosition(this.newPos.value);
+    this.newPos = this.startPos + diff;
+    this.setPosition(this.newPos);
   }
 
   @bind
@@ -229,8 +229,8 @@ export default class SliderButton extends Component<SliderButtonProps> {
     value = Number(parseFloat(`${value}`).toFixed(this.props.precision));
     this.props?.onInput?.(value);
 
-    if (!this.dragging && this.props.value !== this.prevValue.value) {
-      this.prevValue.value = this.props.value;
+    if (!this.dragging && this.props.value !== this.prevValue) {
+      this.prevValue = this.props.value;
     }
   }
 
@@ -265,8 +265,8 @@ export default class SliderButton extends Component<SliderButtonProps> {
     if (state === 'sub') {
       stepLength = -stepLength;
     }
-    this.newPos.value = parseFloat(this.currentPos) + stepLength;
-    this.setPosition(this.newPos.value);
+    this.newPos = parseFloat(this.currentPos) + stepLength;
+    this.setPosition(this.newPos);
   }
 
   @bind
@@ -278,7 +278,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
   }
 
   install() {
-    this.prevValue.value = this.props.value;
+    this.prevValue = this.props.value;
   }
 
   render(props) {
