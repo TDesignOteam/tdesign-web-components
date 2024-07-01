@@ -101,6 +101,11 @@ export interface TdPopupProps {
    * 当浮层隐藏或显示时触发，`trigger=document` 表示点击非浮层元素触发；`trigger=context-menu` 表示右击触发
    */
   onVisibleChange?: (visible: boolean, context: PopupVisibleChangeContext) => void;
+  /**
+   * 对应 popoverjs/core 中的 strategy
+   * @default fixed
+   */
+  strategy?: 'fixed' | 'absolute';
 }
 
 export type PopupPlacement =

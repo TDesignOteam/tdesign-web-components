@@ -33,6 +33,7 @@ export default class Popup extends Component<PopupProps> {
     placement: 'top',
     showArrow: true,
     trigger: 'hover',
+    strategy: 'fixed',
   };
 
   triggerRef = createRef();
@@ -192,7 +193,7 @@ export default class Popup extends Component<PopupProps> {
   updatePopper = () => {
     this.popper = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
       placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-      strategy: 'fixed',
+      strategy: this.props.strategy,
     });
   };
 
