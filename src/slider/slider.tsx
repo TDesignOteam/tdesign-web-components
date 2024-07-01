@@ -31,17 +31,33 @@ export default class Slider extends Component<SliderProps> {
     step: 1,
   };
 
+  static propTypes = {
+    disabled: Boolean,
+    inputNumberProps: Object,
+    label: String || Boolean || Object,
+    layout: String,
+    marks: Array || Object,
+    max: Number,
+    min: Number,
+    range: Boolean,
+    step: Number,
+    tooltipProps: Object,
+    value: Number || Array,
+    onChange: Function,
+    onChangeEnd: Function,
+  };
+
   className = `${classPrefix}-slider`;
 
   sliderRef = createRef();
 
-  button1Ref = createRef();
+  leftButtonRef = createRef();
 
-  button2Ref = createRef();
+  rightButtonRef = createRef();
 
-  inputRef = createRef();
+  leftInputRef = createRef();
 
-  inputRef2 = createRef();
+  rightInputRef = createRef();
 
   sliderSize = signal(1);
 
@@ -202,14 +218,14 @@ export default class Slider extends Component<SliderProps> {
     let targetValue = (percent * this.rangeDiff) / 100;
     targetValue = this.props.min + targetValue;
     if (!this.props.range) {
-      (this.button1Ref.current as SliderButtonType).setPosition(percent);
+      (this.leftButtonRef.current as SliderButtonType).setPosition(percent);
       return;
     }
     let button;
     if (Math.abs(this.minValue - targetValue) < Math.abs(this.maxValue - targetValue)) {
-      button = this.firstValue.value < this.secondValue.value ? 'button1Ref' : 'button2Ref';
+      button = this.firstValue.value < this.secondValue.value ? 'leftButtonRef' : 'rightButtonRef';
     } else {
-      button = this.firstValue.value > this.secondValue.value ? 'button1Ref' : 'button2Ref';
+      button = this.firstValue.value > this.secondValue.value ? 'leftButtonRef' : 'rightButtonRef';
     }
     (this[button].current as SliderButtonType).setPosition(percent);
   }
@@ -292,7 +308,7 @@ export default class Slider extends Component<SliderProps> {
           <t-input-number
             class={sliderNumberClass}
             value={range ? this.firstValue : this.prevValue}
-            ref={this.inputRef}
+            ref={this.leftInputRef}
             step={this.props.step}
             onChange={(v: number) => {
               this.props.range ? (this.firstValue.value = v) : (this.prevValue.value = v);
@@ -308,7 +324,7 @@ export default class Slider extends Component<SliderProps> {
           <t-input-number
             className={sliderNumberClass}
             value={this.secondValue}
-            ref={this.inputRef2}
+            ref={this.rightInputRef}
             step={this.props.step}
             disabled={this.props.disabled}
             min={min}
@@ -386,7 +402,7 @@ export default class Slider extends Component<SliderProps> {
           <div className={railClass} style={runwayStyle} onClick={this.onSliderClick} ref={this.sliderRef}>
             <div class={`${this.className}__track`} style={this.barStyle}></div>
             <t-slider-button
-              ref={this.button1Ref}
+              ref={this.leftButtonRef}
               disabled={props.disabled}
               step={props.step}
               min={props.min}
@@ -402,7 +418,7 @@ export default class Slider extends Component<SliderProps> {
             />
             {this.props.range && (
               <t-slider-button
-                ref={this.button2Ref}
+                ref={this.rightButtonRef}
                 disabled={props.disabled}
                 step={props.step}
                 min={props.min}

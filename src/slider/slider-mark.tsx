@@ -1,5 +1,6 @@
 import { bind, Component, tag } from 'omi';
 
+import { classPrefix } from '../_util/classname';
 import { TdSliderProps } from './type';
 
 interface SliderMarkProps {
@@ -12,6 +13,13 @@ interface SliderMarkProps {
 export default class SliderMark extends Component<SliderMarkProps> {
   static isLightDOM = true;
 
+  static propTypes = {
+    mark: String,
+    point: Number,
+    onChangeValue: Function,
+    style: Object,
+  };
+
   @bind
   onClick(event: MouseEvent) {
     event.stopPropagation();
@@ -20,7 +28,7 @@ export default class SliderMark extends Component<SliderMarkProps> {
 
   render(props) {
     return (
-      <div className="t-slider__mark-text" onClick={this.onClick} style={props.style}>
+      <div className={`${classPrefix}-slider__mark-text`} onClick={this.onClick} style={props.style}>
         {props.mark}
       </div>
     );

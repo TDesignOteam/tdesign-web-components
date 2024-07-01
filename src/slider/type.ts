@@ -56,10 +56,6 @@ export interface TdSliderProps {
    */
   value?: SliderValue;
   /**
-   * 滑块值，非受控属性
-   */
-  defaultValue?: SliderValue;
-  /**
    * 滑块值变化时触发
    */
   onChange?: (value: SliderValue) => void;

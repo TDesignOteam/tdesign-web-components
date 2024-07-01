@@ -34,6 +34,22 @@ export default class SliderButton extends Component<SliderButtonProps> {
     sliderSize: 1,
   };
 
+  static propTypes = {
+    label: String || Boolean || Object,
+    value: Number || Array,
+    max: Number,
+    min: Number,
+    rangeDiff: Number,
+    sliderSize: Number,
+    tooltipProps: Object,
+    step: Number,
+    disabled: Boolean,
+    vertical: Boolean,
+    resetSize: Function,
+    onInput: Function,
+    onButtonMouseup: Function,
+  };
+
   className = `${classPrefix}-slider__button`;
 
   visible = signal(false);
