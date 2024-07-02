@@ -246,7 +246,7 @@ export default class Slider extends Component<SliderProps> {
 
   @bind
   emitChangeEnd() {
-    const changeEndValue = this.props.range ? [this.firstValue.value, this.secondValue.value] : this.firstValue.value;
+    const changeEndValue = this.props.range ? [this.firstValue.value, this.secondValue.value] : this.prevValue.value;
     this.props?.onChangeEnd?.(changeEndValue);
   }
 
@@ -276,7 +276,17 @@ export default class Slider extends Component<SliderProps> {
 
   @bind
   onFirstButtonInput(v: number) {
-    this.props.range ? (this.firstValue.value = v) : (this.prevValue.value = v);
+    if (this.props.range) {
+      if (this.firstValue.value === v) {
+        return;
+      }
+      this.firstValue.value = v;
+    } else {
+      if (this.prevValue.value === v) {
+        return;
+      }
+      this.prevValue.value = v;
+    }
     this.emitChange(this.props.range ? [v, this.secondValue.value] : v);
   }
 
