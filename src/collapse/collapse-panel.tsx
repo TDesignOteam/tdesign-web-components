@@ -38,7 +38,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
 
   isDisabled = signal(false);
 
-  afterLeaved = signal(false);
+  afterLeaved: Omi.SignalValue<null | boolean> = signal(null);
 
   install(): void {
     const { getUniqId, updateCollapseValue, defaultExpandAll } = this.injection;
@@ -100,12 +100,14 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
 
   @bind
   afterLeave(dom) {
+    if (this.afterLeaved.value) return;
     afterLeave(dom);
     this.afterLeaved.value = true;
   }
 
   @bind
   beforeEnter(dom) {
+    if (this.afterLeaved.value === false) return;
     beforeEnter(dom);
     this.afterLeaved.value = false;
   }
