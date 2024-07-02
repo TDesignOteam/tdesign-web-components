@@ -14,23 +14,11 @@ const { beforeEnter, enter, afterEnter, beforeLeave, leave, afterLeave } = getCo
 
 @tag('t-collapse-panel')
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {
-  static isLightDom = true;
+  static isLightDOM = true;
 
-  // static css = `
-  //   .t-slide-down-leave-to,
-  //   .t-slide-down-enter-from {
-  //     height: 0;
-  //   }
-
-  //   .t-slide-down-leave-from,
-  //   .t-slide-down-enter-to {
-  //     height: 100%;
-  //   }
-
-  //   .t-slide-down-leave-active,
-  //   .t-slide-down-enter-active {
-  //     // transition: all 500ms ease-in;
-  //   }`
+  static defaultProps = {
+    expandIcon: true,
+  };
 
   innerValue = signal(0);
 
@@ -67,26 +55,6 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   ];
 
   @bind
-  getChild(name) {
-    const children = this.props.children || [];
-
-    if (!Array.isArray(children)) {
-      return;
-    }
-    const child = children.find((item) => item?.attributes?.slot === name);
-    return child;
-  }
-
-  @bind
-  getDefaultSlot() {
-    const children = this.props.children || [];
-    if (!Array.isArray(children)) {
-      return children;
-    }
-    return children.find((item) => !item?.attributes?.slot);
-  }
-
-  @bind
   handleClick(event, fromHeader = false) {
     if (this.isDisabled.value) {
       return;
@@ -115,7 +83,9 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   renderIcon() {
     const { expandIconPlacement, collapseValue } = this.injection;
     const isActive = collapseValue.value.includes(this.innerValue.value);
-
+    if (this.props.expandIcon === false) {
+      return null;
+    }
     return (
       <div
         className={classname(`${this.className}__icon`, [`${this.className}__icon--${expandIconPlacement.value}`], {
@@ -123,7 +93,11 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         })}
         onClick={this.handleClick}
       >
-        {this.getChild('expandIcon') || <t-fake-arrow isActive={isActive} disabled={this.isDisabled.value} />}
+        {typeof this.props.expandIcon !== 'boolean' ? (
+          this.props.expandIcon
+        ) : (
+          <t-fake-arrow isActive={isActive} disabled={this.isDisabled.value} />
+        )}
       </div>
     );
   }
@@ -141,11 +115,11 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
           {expandIconPlacement.value === 'left' && this.renderIcon()}
         </div>
 
-        <div className={`${this.className}__header-content`}>{this.getChild('header')}</div>
+        <div className={`${this.className}__header-content`}>{this.props.header}</div>
         <div className={`${this.className}__header--blank`}></div>
         <div className={`${this.className}__header-right`}>
           <div className={`${this.className}__header-right-content`} onClick={(e: MouseEvent) => e.stopPropagation()}>
-            {this.getChild('headerRightContent')}
+            {this.props.headerRightContent}
           </div>
           {expandIconPlacement.value === 'right' && this.renderIcon()}
         </div>
@@ -171,7 +145,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         className={`${this.className}__body`}
         show={isActive}
       >
-        <div className={`${this.className}__content`}>{this.getDefaultSlot()}</div>
+        <div className={`${this.className}__content`}>{this.props.content}</div>
       </div>
     );
   }
