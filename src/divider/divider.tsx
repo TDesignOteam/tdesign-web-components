@@ -1,4 +1,4 @@
-import { classNames,Component, OmiProps, tag } from 'omi';
+import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { type StyledProps } from '../common';
