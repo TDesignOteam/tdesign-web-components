@@ -14,7 +14,7 @@ export default class Demo extends Component {
 
   render() {
     return (
-      <t-space direction={'vertical'}>
+      <t-space direction={'vertical'} style={{ width: '100%' }}>
         <t-collapse expand-mutex onChange={this.onChange}>
           <t-collapse-panel>
             <div slot="header">这是一个折叠标题</div>

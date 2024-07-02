@@ -119,10 +119,9 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         className={classname(`${this.className}__icon`, [`${this.className}__icon--${expandIconPlacement.value}`], {
           [`${this.className}__icon--active`]: isActive,
         })}
+        onClick={this.handleClick}
       >
-        {this.getChild('expandIcon') || (
-          <t-fake-arrow isActive={isActive} disabled={this.isDisabled} onClick={this.handleClick} />
-        )}
+        {this.getChild('expandIcon') || <t-fake-arrow isActive={isActive} disabled={this.isDisabled.value} />}
       </div>
     );
   }

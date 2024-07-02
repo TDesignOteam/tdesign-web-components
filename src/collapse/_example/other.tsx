@@ -27,7 +27,7 @@ export default class Demo extends Component {
   render() {
     const { borderless, expandIcon, disabled } = this;
     return (
-      <t-space direction={'vertical'}>
+      <t-space direction={'vertical'} style={{ width: '100%' }}>
         <t-collapse borderless={borderless.value} expandIcon={expandIcon.value} disabled={disabled.value}>
           <t-collapse-panel>
             <div slot="header">这是一个折叠标题</div>
