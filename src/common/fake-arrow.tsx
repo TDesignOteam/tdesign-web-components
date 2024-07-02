@@ -39,7 +39,10 @@ export default class FakeArrow extends Component<FakeArrowProps> {
         viewBox="0 0 16 16"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        style={props.isActive ? 'transform: rotate(0deg);' : 'transform: rotate(-90deg);'}
+        style={{
+          transition: 'all 0.2s cubic-bezier(0.38, 0, 0.24, 1)',
+          transform: props.isActive ? 'rotate(-180deg)' : 'rotate(-90deg)',
+        }}
       >
         <path d="M3.75 5.7998L7.99274 10.0425L12.2361 5.79921" stroke="black" stroke-opacity="0.9" stroke-width="1.3" />
       </svg>
