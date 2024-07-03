@@ -92,6 +92,12 @@ export default [
         path: '/components/breadcrumb',
         // component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
+      {
+        title: 'BackTop 回到顶部',
+        name: 'backTop',
+        path: '/components/backTop',
+        component: () => import('tdesign-web-components/back-top/README.md'),
+      },
     ],
   },
   {
