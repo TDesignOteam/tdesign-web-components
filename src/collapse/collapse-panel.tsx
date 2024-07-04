@@ -14,6 +14,16 @@ const { beforeEnter, enter, afterEnter, beforeLeave, leave, afterLeave } = getCo
 
 @tag('t-collapse-panel')
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {
+  static css = [
+    `.t-collapse-panel__wrapper--border-less .t-collapse-panel__header {
+  border-bottom: none;
+}
+.t-collapse-panel__wrapper--border-less .t-collapse-panel__body {
+  background: var(--td-bg-color-container);
+  border: none;
+}`,
+  ];
+
   static defaultProps = {
     expandIcon: true,
   };
