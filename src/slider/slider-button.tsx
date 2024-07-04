@@ -24,7 +24,23 @@ interface SliderButtonProps {
 
 @tag('t-slider-button')
 export default class SliderButton extends Component<SliderButtonProps> {
-  static isLightDOM = true;
+  static css = [
+    `.t-slider__button-wrapper--vertical {
+  top: auto;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  background-color: transparent;
+  text-align: center;
+  user-select: none;
+  line-height: normal;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}`,
+  ];
 
   static defaultProps = {
     label: true,
@@ -56,7 +72,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   hovering = false;
 
-  dragging = false;
+  dragging = signal(false);
 
   isClick = false;
 
@@ -114,7 +130,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
   @bind
   handleMouseLeave() {
     this.hovering = false;
-    if (!this.dragging) {
+    if (!this.dragging.value) {
       this.hideTooltipComponent();
     }
   }
@@ -135,7 +151,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   @bind
   onDragStart(event) {
-    this.dragging = true;
+    this.dragging.value = true;
     this.isClick = true;
     const { type } = event;
     let { clientY, clientX } = event as MouseEvent;
@@ -156,7 +172,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
   onDragEnd() {
     if (this.dragging) {
       setTimeout(() => {
-        this.dragging = false;
+        this.dragging.value = false;
         this.hideTooltipComponent();
       }, 0);
       window.removeEventListener('mousemove', this.onDragging);
@@ -180,7 +196,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
 
   @bind
   onDragging(event) {
-    if (!this.dragging) {
+    if (!this.dragging.value) {
       return;
     }
 
@@ -229,7 +245,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
     value = Number(parseFloat(`${value}`).toFixed(this.props.precision));
     this.props?.onInput?.(value);
 
-    if (!this.dragging && this.props.value !== this.prevValue) {
+    if (!this.dragging.value && this.props.value !== this.prevValue) {
       this.prevValue = this.props.value;
     }
   }
@@ -285,7 +301,10 @@ export default class SliderButton extends Component<SliderButtonProps> {
     return (
       <div
         ref={this.buttonRef}
-        className={`${this.className}-wrapper`}
+        className={classname(`${this.className}-wrapper`, {
+          [`${classPrefix}-is-disabled`]: props.disabled,
+          [`${this.className}-wrapper--vertical`]: props.vertical,
+        })}
         style={this.wrapperStyle}
         tabindex="0"
         onmouseenter={this.handleMouseEnter}
@@ -302,11 +321,12 @@ export default class SliderButton extends Component<SliderButtonProps> {
           hideEmptyPopup
           {...this.getTooltipProps()}
           overlayInnerStyle={{ whiteSpace: 'nowrap' }}
+          arrowStyle={{ marginLeft: '-8px' }}
           strategy="absolute"
           content={this.getTooltipContent()}
           visible={props.label && this.visible.value}
         >
-          <div className={classname(`${this.className}`, { [`${this.className}--dragging`]: this.draggable })} />
+          <div className={classname(`${this.className}`, { [`${this.className}--dragging`]: this.dragging.value })} />
         </t-tooltip>
       </div>
     );

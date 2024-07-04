@@ -256,7 +256,9 @@ export default class Popup extends Component<PopupProps> {
                 onScroll={this.handleScroll}
               >
                 {props.content}
-                {props.showArrow ? <div class={`${componentName}__arrow`} /> : null}
+                {props.showArrow ? (
+                  <div class={`${componentName}__arrow`} style={{ ...this.getOverlayStyle(props.arrowStyle) }} />
+                ) : null}
               </div>
             )}
           </div>

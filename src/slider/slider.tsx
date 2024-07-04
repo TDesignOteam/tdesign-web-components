@@ -230,6 +230,14 @@ export default class Slider extends Component<SliderProps> {
     (this[button].current as SliderButtonType).setPosition(percent);
   }
 
+  get precision() {
+    const precisions = [this.props.min, this.props.max, this.props.step].map((item) => {
+      const decimalArr = `${item}`.split('.');
+      return decimalArr[1] ? decimalArr[1].length : 0;
+    });
+    return Math.max.apply(null, precisions);
+  }
+
   @bind
   emitChange(value: SliderValue) {
     let changeValue = value;
@@ -420,6 +428,7 @@ export default class Slider extends Component<SliderProps> {
               tooltipProps={props.tooltipProps}
               vertical={this.isVertical}
               rangeDiff={this.rangeDiff}
+              precision={this.precision}
               value={props.range ? this.firstValue.value : this.prevValue.value}
               sliderSize={this.sliderSize.value}
               resetSize={this.resetSize}
@@ -436,6 +445,7 @@ export default class Slider extends Component<SliderProps> {
                 tooltipProps={props.tooltipProps}
                 vertical={this.isVertical}
                 rangeDiff={this.rangeDiff}
+                precision={this.precision}
                 value={this.secondValue.value}
                 sliderSize={this.sliderSize.value}
                 resetSize={this.resetSize}
