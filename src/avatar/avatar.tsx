@@ -3,14 +3,13 @@ import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 import { getClassPrefix, getCommonClassName } from '../_util/classname';
 import { StyledProps } from '../common';
 import { ImageProps } from '../image';
-import { styleSheet } from './style/index.ts';
 import { TdAvatarProps } from './type';
 
 export interface AvatarProps extends TdAvatarProps, StyledProps {}
 
 @tag('t-avatar')
 export default class Avatar extends Component<AvatarProps> {
-  static css = styleSheet;
+  static css = [];
 
   static defaultProps = { hideOnLoadFailed: false, shape: 'circle' };
 

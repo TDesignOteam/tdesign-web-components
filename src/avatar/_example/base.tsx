@@ -12,7 +12,7 @@ export default class Avatar extends Component {
   render() {
     return (
       <t-space>
-        <t-avatar icon={<t-icon name="user-1"></t-icon>} style={{ marginRight: '40px' }} />
+        <t-avatar icon={<t-icon name="user-1" className="mb-[2px]"></t-icon>} style={{ marginRight: '40px' }} />
         <t-avatar
           image="https://tdesign.gtimg.com/site/avatar.jpg"
           hideOnLoadFailed={false}

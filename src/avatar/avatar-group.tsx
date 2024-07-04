@@ -4,21 +4,16 @@ import { toArray } from 'lodash';
 import { classNames, cloneElement, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
-import { styleSheet } from './style/index.ts';
 import { TdAvatarGroupProps } from './type';
-
-import borderCss from './style/border.less';
-import offsetLeftCss from './style/offset_left.less';
-import offsetLeftZIndexCss from './style/offset_left_zIndex.less';
-import offsetRightCss from './style/offset_right.less';
 
 export interface AvatarGroupProps extends TdAvatarGroupProps, StyledProps {}
 
 @tag('t-avatar-group')
 export default class AvatarGroup extends Component<AvatarGroupProps> {
-  static css = styleSheet;
+  static css = [];
 
   static defaultProps = { cascading: 'right-up' };
 
@@ -32,8 +27,6 @@ export default class AvatarGroup extends Component<AvatarGroupProps> {
 
   preClass = `${getClassPrefix()}-avatar`;
 
-  allChildrenList: any;
-
   provide = { groupSize: undefined as any };
 
   install() {
@@ -44,21 +37,13 @@ export default class AvatarGroup extends Component<AvatarGroupProps> {
     const { preClass } = this;
     const { children, max, cascading, collapseAvatar } = props;
     const childrenList = toArray(children);
+    let allChildrenList = [];
     if (childrenList.length > 0) {
-      this.allChildrenList = childrenList.map((child, index) => {
-        let childrenCss = borderCss;
-        if (cascading === 'right-up' && index !== childrenList.length - 1) {
-          childrenCss += offsetRightCss;
-        } else if (cascading === 'left-up' && index !== 0) {
-          childrenCss += offsetLeftCss + offsetLeftZIndexCss;
-        } else if (cascading === 'left-up') {
-          childrenCss += offsetLeftZIndexCss;
-        }
-
-        return cloneElement(child, {
+      allChildrenList = childrenList.map((child, index) => {
+        const childNode = cloneElement(child, {
           key: `avatar-group-item-${index}`,
-          css: childrenCss,
         });
+        return convertToLightDomNode(childNode);
       });
     }
     const groupClass = classNames(`${preClass}-group`, this.className, {
@@ -68,17 +53,13 @@ export default class AvatarGroup extends Component<AvatarGroupProps> {
 
     const childrenCount = childrenList.length;
     if (props.max && childrenCount > max) {
-      const showList = this.allChildrenList.slice(0, max);
-      let childrenCss = borderCss;
-      if (cascading === 'left-up') {
-        childrenCss += offsetLeftCss + offsetLeftZIndexCss;
-      }
+      const showList = allChildrenList.slice(0, max);
       const ellipsisAvatar = (
-        <t-avatar css={childrenCss}>{parseTNode(collapseAvatar) || `+${childrenCount - max}`} </t-avatar>
+        <t-avatar key={`${preClass}__collapse`}>{parseTNode(collapseAvatar) || `+${childrenCount - max}`} </t-avatar>
       );
-      showList.push(<div key="t-avatar__collapse">{ellipsisAvatar}</div>);
+      showList.push(convertToLightDomNode(ellipsisAvatar));
       return <div class={groupClass}>{showList}</div>;
     }
-    return <div class={groupClass}>{this.allChildrenList}</div>;
+    return <div class={groupClass}>{allChildrenList}</div>;
   }
 }
