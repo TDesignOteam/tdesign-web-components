@@ -14,8 +14,6 @@ const { beforeEnter, enter, afterEnter, beforeLeave, leave, afterLeave } = getCo
 
 @tag('t-collapse-panel')
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {
-  static isLightDOM = true;
-
   static defaultProps = {
     expandIcon: true,
   };
