@@ -363,7 +363,7 @@ export default class Slider extends Component<SliderProps> {
   }
 
   @bind
-  renderMasks() {
+  renderMarks() {
     if (this.markList.length) {
       return (
         <div>
@@ -454,7 +454,7 @@ export default class Slider extends Component<SliderProps> {
               />
             )}
 
-            {this.renderMasks()}
+            {this.renderMarks()}
           </div>
         </div>
         {buttonGroup}
