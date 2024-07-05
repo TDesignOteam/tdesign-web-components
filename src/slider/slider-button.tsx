@@ -24,24 +24,6 @@ interface SliderButtonProps {
 
 @tag('t-slider-button')
 export default class SliderButton extends Component<SliderButtonProps> {
-  static css = [
-    `.t-slider__button-wrapper--vertical {
-  top: auto;
-  position: absolute;
-  z-index: 2;
-  left: 50%;
-  transform: translate(-50%, 50%);
-  background-color: transparent;
-  text-align: center;
-  user-select: none;
-  line-height: normal;
-  outline: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-}`,
-  ];
-
   static defaultProps = {
     label: true,
     value: 0,
