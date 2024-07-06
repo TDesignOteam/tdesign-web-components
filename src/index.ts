@@ -1,3 +1,4 @@
+export * from './affix';
 export * from './avatar';
 export * from './button';
 export * from './collapse';
