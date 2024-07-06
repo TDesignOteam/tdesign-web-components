@@ -3,33 +3,24 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { getScrollContainer } from '../_util/dom';
-import { ScrollContainer, ScrollContainerElement, StyledProps, TNode } from '../common';
+import { ScrollContainerElement, StyledProps } from '../common';
+import { AffixRef, TdAffixProps } from './type';
 
-export interface TdAffixProps {
-  children?: TNode;
-  container?: ScrollContainer;
-  content?: TNode;
-  offsetBottom?: number;
-  offsetTop?: number;
-  zIndex?: number;
-  onFixedChange?: (affixed: boolean, context: { top: number }) => void;
-}
-export interface AffixRef {
-  handleScroll: () => void;
-}
 export interface AffixProps extends TdAffixProps, StyledProps, AffixRef {}
 
 @tag('t-affix')
 export default class Affix extends Component<AffixProps> {
-  constructor() {
-    super();
-    this.props = {
-      container: () => window,
-      offsetBottom: 0,
-      offsetTop: 0,
-      ...this.props,
-    };
-  }
+  static defaultProps = { container: () => window, offsetBottom: 0, offsetTop: 0 };
+
+  static propsType = {
+    children: Object,
+    container: Object,
+    content: Object,
+    offsetBottom: Number,
+    offsetTop: Number,
+    zIndex: Number,
+    onFixedChange: Function,
+  };
 
   innerOffsetTop = signal(0);
 

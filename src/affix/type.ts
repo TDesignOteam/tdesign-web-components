@@ -33,3 +33,7 @@ export interface TdAffixProps {
    */
   onFixedChange?: (affixed: boolean, context: { top: number }) => void;
 }
+
+export interface AffixRef {
+  handleScroll: () => void;
+}
