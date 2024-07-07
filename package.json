@@ -13,7 +13,7 @@
     "dev": "npm run generate:entry && cd site && vite",
     "site": "cd site && vite build",
     "site:intranet": "cd site && vite build --mode intranet",
-    "site:preview": "cd site && vite build --mode preview",
+    "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
     "prebuild": "rimraf es/* lib/* dist/* esm/*",
     "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc",
     "build:tsc": "run-p build:tsc-*",
@@ -64,6 +64,7 @@
     "copy-to-clipboard": "^3.3.3",
     "lodash": "~4.17.15",
     "omi": "7.6.7",
+    "omi-transition": "^0.1.7",
     "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {

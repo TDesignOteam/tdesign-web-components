@@ -2,6 +2,7 @@ import esbuild from 'esbuild';
 import fs from 'fs';
 import matter from 'gray-matter';
 import { spawn } from 'node:child_process';
+import path from 'path';
 // import camelCase from 'camelcase';
 // import { compileUsage } from '../../src/_common/docs/compile';
 
@@ -31,15 +32,16 @@ function getGitTimestamp(file) {
 
 export default async function mdToReact(options) {
   const mdSegment = await customRender(options);
-  const { demoDefsStr, demoCodesDefsStr } = options;
+  const { demoDefsStr, demoCodesDefsStr, components } = options;
 
   const reactSource = `
-    import { h } from 'omi';
+    import { h, define } from 'omi';
     import { signal, effect } from 'reactive-signal'
     import Prismjs from 'prismjs';
     import 'prismjs/components/prism-bash.js';
     ${demoDefsStr}
     ${demoCodesDefsStr}
+    ${components}
 
     export default function TdDoc() {
       const isComponent  = ${mdSegment.isComponent};
@@ -79,6 +81,8 @@ export default async function mdToReact(options) {
       const tab = signal(query.get('tab') || 'demo');
       const tabRef = signal({});
 
+      const lastUpdated = tab === 'design' ? ${mdSegment.designDocLastUpdated} : ${mdSegment.lastUpdated};
+
       effect(() => {
         tabRef.value?.addEventListener?.('change', (event) => {
           tab.value = event.detail;
@@ -107,11 +111,14 @@ export default async function mdToReact(options) {
               <div style={isShow('api')} name="API">
                 ${mdSegment.apiMd}
               </div>
+              <div style={isShow('design')} name="DESIGN">
+                ${mdSegment.designMd}
+              </div>
             </>
           ) : <div name="DOC" className="${mdSegment.docClass}">${mdSegment.docMd}</div>
         }
         <div style={{ marginTop: 48 }}>
-          <td-doc-history time={${mdSegment.lastUpdated}} key={${mdSegment.lastUpdated}}></td-doc-history>
+          <td-doc-history time={lastUpdated} key={lastUpdated}></td-doc-history>
         </div>
         </>
       )
@@ -125,7 +132,7 @@ export default async function mdToReact(options) {
     sourcemap: true,
   });
 
-  return { code: result.code, map: result.map };
+  return { code: result.code.replace(/&#123;/g, '{').replace(/&#125;/g, '}'), map: result.map };
 }
 
 const DEFAULT_TABS = [
@@ -151,6 +158,7 @@ async function customRender({ source, file, md }) {
     apiFlag: /#+\s*API/,
     docClass: '',
     lastUpdated,
+    designDocLastUpdated: lastUpdated,
     ...data,
   };
 
@@ -198,13 +206,32 @@ async function customRender({ source, file, md }) {
     ).html;
     mdSegment.apiMd = md.render.call(
       md,
-      `${pageData.toc ? '[toc]\n' : ''}${apiMd.replace(/<!--[\s\S]+?-->/g, '')}`,
+      `${pageData.toc ? '[toc]\n' : ''}${apiMd
+        .replace(/<!--[\s\S]+?-->/g, '')
+        .replace(/\{/g, '&#123;')
+        .replace(/\}/g, '&#125;')}`, // 防止esbuild编译报错
     ).html;
   } else {
     mdSegment.docMd = md.render.call(
       md,
       `${pageData.toc ? '[toc]\n' : ''}${content.replace(/<!--[\s\S]+?-->/g, '')}`,
     ).html;
+  }
+
+  // 设计指南内容 不展示 design Tab 则不解析
+  if (pageData.isComponent && pageData.tdDocTabs.some((item) => item.tab === 'design')) {
+    const designDocPath = path.resolve(__dirname, `../../src/_common/docs/web/design/${componentName}.md`);
+
+    if (fs.existsSync(designDocPath)) {
+      const designDocLastUpdated =
+        (await getGitTimestamp(designDocPath)) || Math.round(fs.statSync(designDocPath).mtimeMs);
+      mdSegment.designDocLastUpdated = designDocLastUpdated;
+
+      const designMd = fs.readFileSync(designDocPath, 'utf-8');
+      mdSegment.designMd = md.render.call(md, `${pageData.toc ? '[toc]\n' : ''}${designMd}`).html;
+    } else {
+      console.log(`[vite-plugin-tdoc]: 未找到 ${designDocPath} 文件`);
+    }
   }
 
   return mdSegment;

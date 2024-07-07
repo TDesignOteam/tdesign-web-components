@@ -45,6 +45,7 @@ export default ({ mode }) => {
     build: {
       outDir: '../_site',
       rollupOptions: {
+        treeshake: false, // 防止不是具名的export，会被tree-shaking
         input: {
           index: 'index.html',
         },
