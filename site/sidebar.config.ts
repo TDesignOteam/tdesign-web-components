@@ -125,10 +125,22 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Avatar 头像',
+        name: 'avatar',
+        path: '/components/avatar',
+        component: () => import('tdesign-web-components/avatar/README.md'),
+      },
+      {
         title: 'Calendar 日历',
         name: 'calendar',
         path: '/components/calendar',
         // component: () => import('tdesign-web-components/calendar/README.md'),
+      },
+      {
+        title: 'Collapse 折叠面板',
+        name: 'Collapse',
+        path: '/components/collapse',
+        component: () => import('tdesign-web-components/collapse/README.md'),
       },
       {
         title: 'Table 表格',
@@ -153,6 +165,12 @@ export default [
         name: 'tooltip',
         path: '/components/tooltip',
         component: () => import('tdesign-web-components/tooltip/README.md'),
+      },
+      {
+        title: 'Loading 加载',
+        name: 'loading',
+        path: '/components/loading',
+        component: () => import('tdesign-web-components/loading/README.md'),
       },
     ],
   },
