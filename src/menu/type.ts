@@ -7,11 +7,6 @@ export interface TdMenuProps {
    */
   collapsed?: boolean;
   /**
-   * 同级别互斥展开
-   * @default false
-   */
-  expandMutex?: boolean;
-  /**
    * 激活菜单项
    */
   value?: MenuValue;
@@ -23,11 +18,7 @@ export interface TdMenuProps {
   /**
    * 激活菜单项发生变化时触发
    */
-  onChange?: (value: MenuValue) => void;
-  /**
-   * 展开的菜单项发生变化时触发
-   */
-  onExpand?: (value: Array<MenuValue>) => void;
+  onChange?: (value: CustomEvent<MenuValue>) => void;
 }
 
 export interface TdMenuItemProps {
@@ -59,7 +50,7 @@ export interface TdMenuItemProps {
   /**
    * 点击时触发
    */
-  onClick?: (context: { e: HTMLElement; value: MenuValue }) => void;
+  onClick?: (event: CustomEvent<{ e: HTMLElement; value: MenuValue }>) => void;
 }
 
 export type MenuValue = string | number;

@@ -1,11 +1,11 @@
-import { Component, OmiDOMAttributes, tag } from 'omi';
+import { bind, Component, OmiDOMAttributes, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { getChildrenArray, hasSlot } from '../_util/component';
 import { StyledProps } from '../common';
 import { DEFAULT_MENU_WIDTH } from './_util/constant';
 import { menuDefaultProps } from './defaultProps';
-import { TdMenuProps } from './type';
+import { MenuValue, TdMenuProps } from './type';
 
 export interface MenuProps extends TdMenuProps, StyledProps, OmiDOMAttributes {}
 
@@ -15,11 +15,25 @@ export default class Menu extends Component<MenuProps> {
 
   static defaultProps = {};
 
+  active = signal<MenuValue>('');
+
+  provide = {
+    active: this.active,
+    onChange: this.handleChange,
+  };
+
+  @bind
+  handleChange(value: MenuValue) {
+    this.fire('change', value);
+  }
+
   render() {
-    const { className, style, width, collapsed } = {
+    const { className, style, width, collapsed, value } = {
       ...menuDefaultProps,
       ...this.props,
     };
+
+    this.active.value = value;
 
     const classPrefix = getClassPrefix();
     const menuWidthArr = Array.isArray(width) ? width : [width, DEFAULT_MENU_WIDTH[1]];
