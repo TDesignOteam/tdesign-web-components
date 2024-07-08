@@ -18,9 +18,14 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     expandIcon: true,
   };
 
-  static propsType = {
-    destroyOnCollapse: false,
-    disabled: false,
+  static propTypes = {
+    destroyOnCollapse: Boolean,
+    disabled: Boolean,
+    value: [String, Number],
+    expandIcon: Boolean,
+    header: String,
+    content: String,
+    headerRightContent: String,
   };
 
   innerValue = signal(0);
