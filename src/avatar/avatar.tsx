@@ -13,7 +13,7 @@ export default class Avatar extends Component<AvatarProps> {
 
   static defaultProps = { hideOnLoadFailed: false, shape: 'circle' };
 
-  static propsType = {
+  static propTypes = {
     alt: String,
     hideOnLoadFailed: Boolean,
     icon: Object,
