@@ -1,14 +1,6 @@
-import { AttachNode, Styles, TNode } from '../common';
+import { AttachNode, TNode } from '../common';
 
 export interface TdBackTopProps {
-  /**
-   * 类名
-   */
-  className?: string;
-  /**
-   * 样式
-   */
-  style?: Styles;
   /**
    * 回到顶部的内容
    */
