@@ -2,6 +2,7 @@ import { bind, Component, OmiDOMAttributes, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { getChildrenArray, hasSlot } from '../_util/component';
+import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
 import { DEFAULT_MENU_WIDTH } from './_util/constant';
 import { menuDefaultProps } from './defaultProps';
@@ -41,7 +42,9 @@ export default class Menu extends Component<MenuProps> {
     const hasLogo = hasSlot('logo', this.props.children);
     const hasOperations = hasSlot('operations', this.props.children);
 
-    const children = getChildrenArray(this.props.children).filter((item) => item.nodeName === 't-menu-item');
+    const children = getChildrenArray(this.props.children)
+      .filter((item) => item.nodeName === 't-menu-item')
+      .map(convertToLightDomNode);
 
     return (
       <div

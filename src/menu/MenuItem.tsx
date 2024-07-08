@@ -9,7 +9,12 @@ export interface MenuItemProps extends TdMenuItemProps, StyledProps {}
 
 @tag('t-menu-item')
 export default class MenuItem extends Component<MenuItemProps> {
-  static isLightDOM = true;
+  static css = `
+    .${getClassPrefix()}-menu__item--has-icon .${getClassPrefix()}-menu__content,
+    .${getClassPrefix()}-menu__item--has-icon .${getClassPrefix()}-menu__item-link {
+      margin-left: var(--td-comp-margin-s);
+    }
+  `;
 
   inject = ['active', 'onChange'];
 
@@ -51,6 +56,7 @@ export default class MenuItem extends Component<MenuItemProps> {
       [`${classPrefix}-is-disabled`]: disabled,
       [`${classPrefix}-is-active`]: value === this.injection.active.value,
       [`${classPrefix}-menu__item--plain`]: !icon,
+      [`${classPrefix}-menu__item--has-icon`]: !!lightIcon,
     });
 
     return (
