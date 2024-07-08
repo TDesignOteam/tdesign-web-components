@@ -5,7 +5,6 @@ import { getChildrenArray, hasSlot } from '../_util/component';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
 import { DEFAULT_MENU_WIDTH } from './_util/constant';
-import { menuDefaultProps } from './defaultProps';
 import { MenuValue, TdMenuProps } from './type';
 
 export interface MenuProps extends TdMenuProps, StyledProps, OmiDOMAttributes {}
@@ -14,7 +13,17 @@ export interface MenuProps extends TdMenuProps, StyledProps, OmiDOMAttributes {}
 export default class Menu extends Component<MenuProps> {
   static css = [];
 
-  static defaultProps = {};
+  static defaultProps: TdMenuProps = {
+    collapsed: false,
+    width: '232px',
+  };
+
+  static propTypes = {
+    collapsed: Boolean,
+    value: [String, Number],
+    width: [String, Number, Array],
+    onChange: Function,
+  };
 
   active = signal<MenuValue>('');
 
@@ -29,10 +38,7 @@ export default class Menu extends Component<MenuProps> {
   }
 
   render() {
-    const { className, style, width, collapsed, value } = {
-      ...menuDefaultProps,
-      ...this.props,
-    };
+    const { className, style, width, collapsed, value } = this.props;
 
     this.active.value = value;
 

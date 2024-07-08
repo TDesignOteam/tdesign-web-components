@@ -16,6 +16,16 @@ export default class MenuItem extends Component<MenuItemProps> {
     }
   `;
 
+  static propTypes = {
+    label: Object,
+    disabled: Boolean,
+    href: String,
+    icon: Object,
+    target: String,
+    value: [String, Number],
+    onClick: Function,
+  };
+
   inject = ['active', 'onChange'];
 
   constructor() {
