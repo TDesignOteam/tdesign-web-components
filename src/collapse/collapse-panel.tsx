@@ -18,6 +18,11 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     expandIcon: true,
   };
 
+  static propsType = {
+    destroyOnCollapse: false,
+    disabled: false,
+  };
+
   innerValue = signal(0);
 
   className = `${classPrefix}-collapse-panel`;
