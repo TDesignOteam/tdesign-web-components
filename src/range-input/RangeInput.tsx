@@ -1,3 +1,4 @@
+import 'tdesign-web-components/icon';
 import 'tdesign-web-components/input';
 
 import { bind, classNames, Component, signal, tag } from 'omi';
@@ -9,8 +10,19 @@ import { TdRangeInputProps } from './type';
 
 export interface RangeInputProps extends TdRangeInputProps, StyledProps {}
 
+function calcArrayValue<T>(value: T | T[]) {
+  return Array.isArray(value) ? value : [value, value];
+}
+
 @tag('t-range-input')
 export default class RangeInput extends Component<RangeInputProps> {
+  static css = `
+    .${getClassPrefix()}-range-input__inner-left,
+    .${getClassPrefix()}-range-input__inner-right {
+      width: 100%;
+    }
+  `;
+
   static defaultProps: TdRangeInputProps = {
     clearable: false,
     readonly: false,
@@ -22,21 +34,42 @@ export default class RangeInput extends Component<RangeInputProps> {
 
   isFocused = signal(false);
 
+  isHover = signal(false);
+
   activeIndex = signal(0);
 
   @bind
   handleFocus() {}
 
   render() {
-    const { className, disabled, status, size, separator, activeIndex } = {
-      ...{
-        activeIndex: this.activeIndex.value,
-      },
-      ...this.props,
-    };
-
     const classPrefix = getClassPrefix();
     const name = `${classPrefix}-range-input`;
+
+    const {
+      className,
+      disabled,
+      status,
+      size,
+      separator,
+      activeIndex = this.activeIndex.value,
+      placeholder,
+      readonly,
+      format,
+      clearable,
+      value = this.props.defaultValue,
+    } = this.props;
+
+    const [firstPlaceholder = '请输入内容', secondPlaceholder = '请输入内容'] = calcArrayValue(placeholder);
+    const [firstFormat, secondFormat] = calcArrayValue(format);
+
+    const showClearIcon = clearable && value?.length && !disabled && this.isHover.value;
+    const suffixIconContent = showClearIcon ? (
+      <span className={`${classPrefix}-range-input__suffix ${classPrefix}-range-input__suffix-icon`}>
+        {convertToLightDomNode(
+          <t-icon name="close-circle-filled" className={`${name}__suffix-clear ${classPrefix}-icon`} />,
+        )}
+      </span>
+    ) : null;
 
     return (
       <div
@@ -46,6 +79,7 @@ export default class RangeInput extends Component<RangeInputProps> {
           [`${classPrefix}-is-${status}`]: status,
           [`${classPrefix}-size-l`]: size === 'large',
           [`${classPrefix}-size-s`]: size === 'small',
+          [`${name}--suffix`]: suffixIconContent,
         })}
       >
         <div className={`${name}__inner`}>
@@ -55,6 +89,10 @@ export default class RangeInput extends Component<RangeInputProps> {
               inputClass={classNames({
                 [`${classPrefix}-is-focused`]: activeIndex === 0,
               })}
+              placeholder={firstPlaceholder}
+              disabled={disabled}
+              readonly={readonly}
+              format={firstFormat}
               onFocus={(e) => {
                 console.log('----onFocus', e);
               }}
@@ -69,11 +107,17 @@ export default class RangeInput extends Component<RangeInputProps> {
               inputClass={classNames({
                 [`${classPrefix}-is-focused`]: activeIndex === 1,
               })}
+              placeholder={secondPlaceholder}
+              disabled={disabled}
+              readonly={readonly}
+              format={secondFormat}
               onFocus={(e) => {
                 console.log('----onFocus', e);
               }}
             />,
           )}
+
+          {suffixIconContent}
         </div>
       </div>
     );
