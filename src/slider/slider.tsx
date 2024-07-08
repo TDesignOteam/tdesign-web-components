@@ -300,6 +300,8 @@ export default class Slider extends Component<SliderProps> {
 
   @bind
   onSecondButtonInput(v: number) {
+    if (this.secondValue.value === v) return;
+
     this.secondValue.value = v;
     this.emitChange([this.firstValue.value, v]);
   }
