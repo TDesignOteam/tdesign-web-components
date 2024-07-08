@@ -73,9 +73,21 @@ export interface TdCollapsePanelProps {
    */
   value?: string | number;
   /**
-   * 内容
+   * 当前折叠面板展开图标
    */
-  children?: TNode;
+  expandIcon?: boolean | TNode;
+  /**
+   * 面板头内容
+   */
+  header?: string | TNode;
+  /**
+   * 折叠面板内容
+   */
+  content?: string | TNode;
+  /**
+   * 面板头的右侧区域，一般用于呈现面板操作
+   */
+  headerRightContent?: string | TNode;
 }
 
 export type CollapseValue = Array<string | number>;

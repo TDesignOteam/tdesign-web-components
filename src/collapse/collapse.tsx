@@ -1,4 +1,4 @@
-import { bind, Component, signal, tag } from 'omi';
+import { bind, Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
 import { StyledProps, TNode } from '../common';
@@ -8,6 +8,15 @@ export interface CollapseProps extends TdCollapseProps, StyledProps {}
 
 @tag('t-collapse')
 export default class Collapse extends Component<TdCollapseProps> {
+  static propsType = {
+    borderless: false,
+    defaultExpandAll: false,
+    disabled: false,
+    expandIconPlacement: 'left',
+    expandMutex: false,
+    expandOnRowClick: true,
+  };
+
   collapseValue = signal([]);
 
   innerBorderless = signal(false);
@@ -75,17 +84,13 @@ export default class Collapse extends Component<TdCollapseProps> {
     return true;
   }
 
-  render(props: TdCollapseProps): TNode {
-    const { className, borderless } = props;
+  render(props: OmiProps<TdCollapseProps>): TNode {
+    const { className, borderless, children } = props;
 
     const classes = classname(`${classPrefix}-collapse`, className, {
       [`${classPrefix}--border-less`]: !!borderless,
     });
 
-    return (
-      <div className={classes}>
-        <slot></slot>
-      </div>
-    );
+    return <div className={classes}>{children}</div>;
   }
 }
