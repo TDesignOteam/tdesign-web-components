@@ -1,14 +1,12 @@
 import 'tdesign-web-components/icon';
 
-import { Component, computed, createRef, effect, OmiProps, signal, SignalValue, tag } from 'omi';
+import { Component, createRef, OmiProps, signal, SignalValue, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { scrollTo } from '../_util/dom.ts';
-import { StyledProps } from '../common';
+import { AttachNode, StyledProps } from '../common';
 import { styleSheet } from './style';
 import { TdBackTopProps } from './type.ts';
-
-type Element = HTMLElement | Window | Document;
 
 export interface BackTopProps extends TdBackTopProps, StyledProps {}
 
@@ -24,17 +22,43 @@ const getContainer = (container: string | Function) => {
   return null;
 };
 
+interface ClickEventProps {
+  target?: AttachNode;
+  container?: AttachNode;
+  duration?: number;
+  onClick?: OmiProps<BackTopProps>['onClick'];
+  e: MouseEvent;
+}
+
 @tag('t-back-top')
 export default class BackTop extends Component<BackTopProps> {
   static css = styleSheet;
 
-  buttonRef: Partial<Record<'current', Element>> = createRef();
+  buttonRef = createRef<any>();
 
-  containerRef: Partial<Record<'current', Element>> = createRef();
+  containerRef = createRef<any>();
 
   visible: SignalValue<boolean> = signal(false);
 
   needUninstall: Set<Function> = new Set<Function>();
+
+  cls: SignalValue<string> = signal('');
+
+  static propTypes = {
+    children: Object,
+    container: Object,
+    content: Object,
+    default: Object,
+    duration: Number,
+    offset: Object,
+    shape: Object,
+    size: String,
+    target: Object,
+    theme: String,
+    visibleHeight: Object,
+    onClick: Function,
+    ignoreAttributes: Object,
+  };
 
   static defaultProps = {
     container: 'body',
@@ -47,6 +71,22 @@ export default class BackTop extends Component<BackTopProps> {
     visibleHeight: '200px',
   };
 
+  getBackTo(target: AttachNode, container: AttachNode): number {
+    if (target === container) return 0;
+    if (target === 'body') return 0;
+    if (!target) return 0;
+    const targetElement = getContainer(target);
+    if (!targetElement) return 0;
+    return (targetElement as HTMLElement).getBoundingClientRect().y;
+  }
+
+  handleClick(clickEventProps: ClickEventProps) {
+    const { target, container, duration, onClick, e } = { ...clickEventProps };
+    const y = this.getBackTo(target, container);
+    scrollTo(y, { container: this.containerRef.current, duration });
+    onClick?.({ e });
+  }
+
   ready() {
     const { container, visibleHeight } = this.props;
     const scrollTop = signal(0);
@@ -56,9 +96,10 @@ export default class BackTop extends Component<BackTopProps> {
       if (scrollContainer === document) {
         scrollTop.value = scrollContainer.documentElement.scrollTop;
       } else {
-        scrollTop.value = scrollContainer.scrollTop;
+        scrollTop.value = (scrollContainer as HTMLElement).scrollTop;
       }
     };
+
     const updateVisible = () => {
       if (typeof visibleHeight === 'string') {
         this.visible.value = scrollTop.value >= Number(visibleHeight.replace('px', ''));
@@ -66,14 +107,18 @@ export default class BackTop extends Component<BackTopProps> {
       }
       this.visible.value = scrollTop.value >= visibleHeight;
     };
-    scrollContainer.addEventListener('scroll', updateScrollTop);
-    const scrollListenerUninstall = () => {
-      scrollContainer.removeEventListener('scroll', updateScrollTop);
+
+    const updateEachScroll = () => {
+      updateScrollTop();
+      updateVisible();
     };
-    const visibleUninstall: Function = effect(updateVisible);
+    scrollContainer.addEventListener('scroll', updateEachScroll);
+
+    const scrollListenerUninstall = () => {
+      scrollContainer.removeEventListener('scroll', updateEachScroll);
+    };
 
     this.needUninstall.add(scrollListenerUninstall);
-    this.needUninstall.add(visibleUninstall);
   }
 
   uninstall(): void {
@@ -85,16 +130,16 @@ export default class BackTop extends Component<BackTopProps> {
   render(props: OmiProps<BackTopProps>) {
     const {
       theme,
-      size,
-      shape,
       target,
+      shape,
+      size,
+      className,
       container,
       duration,
       content,
       offset,
       children,
       default: cusContent,
-      className,
       style,
       onClick,
       ignoreAttributes,
@@ -104,47 +149,39 @@ export default class BackTop extends Component<BackTopProps> {
         this.removeAttribute(attr);
       });
     }
-    const backTopStyle: SignalValue<Object> = computed(() => ({
+    const backTopStyle = {
       insetInlineEnd: offset[0],
       insetBlockEnd: offset[1],
       ...style,
-    }));
+    };
     const classPrefix = getClassPrefix();
-    const cls = computed(() =>
-      classname(
-        `${classPrefix}-back-top`,
-        `${classPrefix}-back-top--theme-${theme}`,
-        `${classPrefix}-back-top--${shape}`,
-        {
-          [`${classPrefix}-back-top--show`]: this.visible.value,
-          [`${classPrefix}-size-s`]: size === 'small',
-          [`${classPrefix}-size-m`]: size === 'medium',
-        },
-        className,
-      ),
-    );
     const defaultContent = (
       <>
         <t-icon name="align-top" className={`${classPrefix}-back-top__icon`} />
         <span className={`${classPrefix}-back-top__text`}>TOP</span>
       </>
     );
+    this.cls.value = classname(
+      `${classPrefix}-back-top`,
+      `${classPrefix}-back-top--theme-${theme}`,
+      `${classPrefix}-back-top--${shape}`,
+      {
+        [`${classPrefix}-back-top--show`]: this.visible.value,
+        [`${classPrefix}-size-s`]: size === 'small',
+        [`${classPrefix}-size-m`]: size === 'medium',
+      },
+      className,
+    );
     const renderChildren = children || content || cusContent || defaultContent;
-    const getBackTo = (): number => {
-      if (target === container) return 0;
-      if (target === 'body') return 0;
-      if (!target) return 0;
-      const targetElement = getContainer(target);
-      if (!targetElement) return 0;
-      return (targetElement as HTMLElement).getBoundingClientRect().y;
-    };
-    const handleClick = (e: MouseEvent) => {
-      const y = getBackTo();
-      scrollTo(y, { container: this.containerRef.current, duration });
-      onClick?.({ e });
-    };
+    const clickEventProps = { target, container, duration, onClick } as ClickEventProps;
     return (
-      <button ref={this.buttonRef} type="button" className={cls.value} style={backTopStyle.value} onClick={handleClick}>
+      <button
+        ref={this.buttonRef}
+        type="button"
+        className={this.cls.value}
+        style={backTopStyle}
+        onClick={(e) => this.handleClick({ e, ...clickEventProps })}
+      >
         {renderChildren}
       </button>
     );

@@ -9,7 +9,7 @@ export interface TdBackTopProps {
    * 监听滚动的容器。数据类型为 String 时，会被当作选择器处理，进行节点查询。示例：'body' 或 () => document.body
    * @default 'body'
    */
-  container?: string | Function;
+  container?: AttachNode;
   /**
    * 回到顶部内容
    */
