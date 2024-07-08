@@ -59,22 +59,40 @@ export interface TdRangeInputProps {
   /**
    * 范围输入框失去焦点时触发
    */
-  onBlur?: (value: RangeInputValue, context?: { e?: HTMLInputElement; position?: RangeInputPosition }) => void;
+  onBlur?: (
+    evt: CustomEvent<{
+      value: RangeInputValue;
+      context?: {
+        e?: HTMLInputElement;
+        position?: RangeInputPosition;
+      };
+    }>,
+  ) => void;
   /**
    * 范围输入框值发生变化时触发
    */
   onChange?: (
-    value: RangeInputValue,
-    context?: {
-      e?: HTMLElement;
-      position?: RangeInputPosition;
-      trigger?: 'input' | 'initial' | 'clear';
-    },
+    evt: CustomEvent<{
+      value: RangeInputValue;
+      context?: {
+        e?: HTMLElement;
+        position?: RangeInputPosition;
+        trigger?: 'input' | 'initial' | 'clear';
+      };
+    }>,
   ) => void;
   /**
    * 范围输入框获得焦点时触发
    */
-  onFocus?: (value: RangeInputValue, context?: { e?: HTMLInputElement; position?: RangeInputPosition }) => void;
+  onFocus?: (
+    evt: CustomEvent<{
+      value: RangeInputValue;
+      context?: {
+        e?: HTMLInputElement;
+        position?: RangeInputPosition;
+      };
+    }>,
+  ) => void;
 }
 
 export type RangeInputValue = Array<InputValue>;

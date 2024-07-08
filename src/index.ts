@@ -9,6 +9,7 @@ export * from './input';
 export * from './input-number';
 export * from './loading';
 export * from './popup';
+export * from './range-input';
 export * from './slider';
 export * from './space';
 export * from './switch';
