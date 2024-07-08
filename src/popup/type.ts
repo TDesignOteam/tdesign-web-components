@@ -55,6 +55,10 @@ export interface TdPopupProps {
    */
   overlayStyle?: Styles | ((triggerElement: HTMLElement, popupElement: HTMLElement) => Styles);
   /**
+   * 箭头样式，第一个参数 `triggerElement` 表示触发元素 DOM 节点，第二个参数 `popupElement` 表示浮层元素 DOM 节点
+   */
+  arrowStyle?: Styles | ((triggerElement: HTMLElement, popupElement: HTMLElement) => Styles);
+  /**
    * 浮层出现位置
    * @default top
    */
@@ -101,6 +105,11 @@ export interface TdPopupProps {
    * 当浮层隐藏或显示时触发，`trigger=document` 表示点击非浮层元素触发；`trigger=context-menu` 表示右击触发
    */
   onVisibleChange?: (visible: boolean, context: PopupVisibleChangeContext) => void;
+  /**
+   * 对应 popoverjs/core 中的 strategy
+   * @default fixed
+   */
+  strategy?: 'fixed' | 'absolute';
 }
 
 export type PopupPlacement =
