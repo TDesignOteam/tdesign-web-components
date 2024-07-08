@@ -100,6 +100,12 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Input 输入框',
+        name: 'input',
+        path: '/components/input',
+        component: () => import('tdesign-web-components/input/README.md'),
+      },
+      {
         title: 'Select 选择器',
         name: 'select',
         path: '/components/select',
