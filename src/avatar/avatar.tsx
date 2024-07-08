@@ -120,9 +120,10 @@ export default class Avatar extends Component<AvatarProps> {
       const childrenStyle = {
         transform: `scale(${this.scale})`,
       };
+      const renderChildrenContent = children && children[0] ? children : content;
       renderChildren = (
         <span ref={avatarChildrenRef} style={childrenStyle}>
-          {children || content}
+          {renderChildrenContent}
         </span>
       );
     }

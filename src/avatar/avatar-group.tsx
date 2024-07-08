@@ -55,7 +55,10 @@ export default class AvatarGroup extends Component<AvatarGroupProps> {
     if (props.max && childrenCount > max) {
       const showList = allChildrenList.slice(0, max);
       const ellipsisAvatar = (
-        <t-avatar key={`${preClass}__collapse`}>{parseTNode(collapseAvatar) || `+${childrenCount - max}`} </t-avatar>
+        <t-avatar
+          key={`${preClass}__collapse`}
+          content={parseTNode(collapseAvatar) || `+${childrenCount - max}`}
+        ></t-avatar>
       );
       showList.push(convertToLightDomNode(ellipsisAvatar));
       return <div class={groupClass}>{showList}</div>;
