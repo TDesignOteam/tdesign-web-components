@@ -1,3 +1,5 @@
+import 'tdesign-web-components/tooltip';
+
 import { bind, Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
@@ -14,6 +16,18 @@ export default class MenuItem extends Component<MenuItemProps> {
     .${getClassPrefix()}-menu__item--has-icon .${getClassPrefix()}-menu__item-link {
       margin-left: var(--td-comp-margin-s);
     }
+
+    .${getClassPrefix()}-menu__item > ${getClassPrefix()}-tooltip {
+      position: absolute;
+      inset: 0;
+    }
+    .${getClassPrefix()}-menu__item .${getClassPrefix()}-menu__item-tooltip-inner {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    } 
   `;
 
   static propTypes = {
@@ -26,7 +40,7 @@ export default class MenuItem extends Component<MenuItemProps> {
     onClick: Function,
   };
 
-  inject = ['active', 'onChange'];
+  inject = ['active', 'onChange', 'collapsed'];
 
   constructor() {
     super();
@@ -69,7 +83,7 @@ export default class MenuItem extends Component<MenuItemProps> {
       [`${classPrefix}-menu__item--has-icon`]: !!lightIcon,
     });
 
-    return (
+    const content = (
       <>
         {lightIcon}
         {href ? (
@@ -81,5 +95,15 @@ export default class MenuItem extends Component<MenuItemProps> {
         )}
       </>
     );
+
+    if (this.injection.collapsed.value && !this.props.disabled) {
+      return (
+        <t-tooltip content={label} placement="right">
+          <div className={`${classPrefix}-menu__item-tooltip-inner`}>{content}</div>
+        </t-tooltip>
+      );
+    }
+
+    return content;
   }
 }

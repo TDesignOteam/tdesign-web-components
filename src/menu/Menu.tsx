@@ -25,9 +25,13 @@ export default class Menu extends Component<MenuProps> {
     onChange: Function,
   };
 
-  active = signal<MenuValue>('');
+  private active = signal<MenuValue>('');
+
+  // 这里不能声明 collapsed 会被外部覆盖
+  private menuCollapsed = signal(true);
 
   provide = {
+    collapsed: this.menuCollapsed,
     active: this.active,
     onChange: this.handleChange,
   };
@@ -38,9 +42,10 @@ export default class Menu extends Component<MenuProps> {
   }
 
   render() {
-    const { className, style, width, collapsed, value } = this.props;
+    const { className, style, width, value, collapsed } = this.props;
 
     this.active.value = value;
+    this.menuCollapsed.value = collapsed;
 
     const classPrefix = getClassPrefix();
     const menuWidthArr = Array.isArray(width) ? width : [width, DEFAULT_MENU_WIDTH[1]];
