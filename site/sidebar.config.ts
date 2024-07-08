@@ -112,6 +112,12 @@ export default [
         // component: () => import('tdesign-web-components/select/README.md'),
       },
       {
+        title: 'Slider 滑块',
+        name: 'slider',
+        path: '/components/slider',
+        component: () => import('tdesign-web-components/slider/README.md'),
+      },
+      {
         title: 'Switch 开关',
         name: 'switch',
         path: '/components/switch',
