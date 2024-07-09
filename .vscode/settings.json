@@ -30,6 +30,8 @@
     "actived",
     "borderless",
     "Cascader",
+    "classname",
+    "clsx",
     "Popconfirm",
     "Swiper",
     "tdesign"
