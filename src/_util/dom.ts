@@ -1,6 +1,6 @@
+import isString from 'lodash/isString';
 import raf from 'raf';
 
-import { AttachNode, AttachNodeReturnValue } from '../common';
 import { easeInOutCubic, EasingFunction } from './easing';
 // 用于判断是否可使用 dom
 export const canUseDocument = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
@@ -70,27 +70,19 @@ export const scrollTo = (target: number, opt: ScrollTopOptions) => {
   });
 };
 
-export function getAttach(attach: AttachNode, triggerNode?: HTMLElement): AttachNodeReturnValue {
-  if (!canUseDocument) return null;
-
-  let el: AttachNodeReturnValue;
-  if (typeof attach === 'string') {
-    el = document.querySelector(attach);
+export const getAttach = (node: any): HTMLElement => {
+  const attachNode = typeof node === 'function' ? node() : node;
+  if (!attachNode) {
+    return document.body;
   }
-  if (typeof attach === 'function') {
-    el = attach(triggerNode);
+  if (isString(attachNode)) {
+    return document.querySelector(attachNode);
   }
-  if (typeof attach === 'object') {
-    if ((attach as any) instanceof window.HTMLElement) {
-      el = attach;
-    }
+  if (attachNode instanceof HTMLElement) {
+    return attachNode;
   }
-
-  // fix el in iframe
-  if (el && el.nodeType === 1) return el;
-
   return document.body;
-}
+};
 
 export const addClass = function (el: Element, cls: string) {
   if (!el) return;
