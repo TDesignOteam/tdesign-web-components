@@ -73,7 +73,6 @@ export default class Input extends Component<InputProps> {
   //     }
   //     `
 
-  // static css = inputSyle + Input.tagStyle + Input.labelStyle
   // static css = style + Input.tagStyle
 
   static defaultProps = {
