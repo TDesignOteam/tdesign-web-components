@@ -63,7 +63,7 @@ export interface TdRangeInputProps {
     evt: CustomEvent<{
       value: RangeInputValue;
       context?: {
-        e?: HTMLInputElement;
+        e?: FocusEvent;
         position?: RangeInputPosition;
       };
     }>,
@@ -88,7 +88,7 @@ export interface TdRangeInputProps {
     evt: CustomEvent<{
       value: RangeInputValue;
       context?: {
-        e?: HTMLInputElement;
+        e?: FocusEvent;
         position?: RangeInputPosition;
       };
     }>,

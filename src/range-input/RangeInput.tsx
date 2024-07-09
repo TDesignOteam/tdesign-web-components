@@ -2,11 +2,11 @@ import 'tdesign-web-components/icon';
 import 'tdesign-web-components/input';
 
 import { bind, classNames, Component, signal, tag } from 'omi';
+import { convertToLightDomNode } from 'tdesign-web-components/_util/lightDom';
 
 import { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
-import { TdRangeInputProps } from './type';
+import { RangeInputPosition, RangeInputValue, TdRangeInputProps } from './type';
 
 export interface RangeInputProps extends TdRangeInputProps, StyledProps {}
 
@@ -32,14 +32,35 @@ export default class RangeInput extends Component<RangeInputProps> {
     defaultValue: [],
   };
 
-  isFocused = signal(false);
+  private isFocused = signal(false);
 
-  isHover = signal(false);
+  private isHover = signal(false);
 
-  activeIndex = signal(0);
+  private innerActiveIndex = signal(0);
+
+  private innerValue = signal<RangeInputValue>([]);
+
+  install(): void {
+    this.innerValue.value = this.props.defaultValue || [];
+  }
 
   @bind
-  handleFocus() {}
+  handleFocus(rangeValue: RangeInputValue, context: { e?: FocusEvent; position?: RangeInputPosition }) {
+    this.fire('focus', {
+      value: rangeValue,
+      context,
+    });
+    this.isFocused.value = true;
+  }
+
+  @bind
+  handleBlur(rangeValue: RangeInputValue, context: { e?: FocusEvent; position?: RangeInputPosition }) {
+    this.fire('blur', {
+      value: rangeValue,
+      context,
+    });
+    this.isFocused.value = false;
+  }
 
   render() {
     const classPrefix = getClassPrefix();
@@ -51,13 +72,15 @@ export default class RangeInput extends Component<RangeInputProps> {
       status,
       size,
       separator,
-      activeIndex = this.activeIndex.value,
+      activeIndex = this.innerActiveIndex.value,
       placeholder,
       readonly,
       format,
       clearable,
-      value = this.props.defaultValue,
+      value = this.innerValue.value,
     } = this.props;
+
+    const [firstValue, secondValue] = value;
 
     const [firstPlaceholder = '请输入内容', secondPlaceholder = '请输入内容'] = calcArrayValue(placeholder);
     const [firstFormat, secondFormat] = calcArrayValue(format);
@@ -83,39 +106,45 @@ export default class RangeInput extends Component<RangeInputProps> {
         })}
       >
         <div className={`${name}__inner`}>
-          {convertToLightDomNode(
-            <t-input
-              className={`${name}__inner-left`}
-              inputClass={classNames({
-                [`${classPrefix}-is-focused`]: activeIndex === 0,
-              })}
-              placeholder={firstPlaceholder}
-              disabled={disabled}
-              readonly={readonly}
-              format={firstFormat}
-              onFocus={(e) => {
-                console.log('----onFocus', e);
-              }}
-            />,
-          )}
+          <t-input
+            className={`${name}__inner-left`}
+            inputClass={classNames({
+              [`${classPrefix}-is-focused`]: activeIndex === 0,
+            })}
+            value={firstValue}
+            placeholder={firstPlaceholder}
+            disabled={disabled}
+            readonly={readonly}
+            format={firstFormat}
+            onFocus={(e) => {
+              this.handleFocus([firstValue, secondValue], { e, position: 'first' });
+            }}
+            onBlur={(e) => {
+              this.handleBlur([firstValue, secondValue], { e, position: 'first' });
+            }}
+            onChange={() => {}}
+          />
 
           <div className={`${name}__inner-separator`}>{separator}</div>
 
-          {convertToLightDomNode(
-            <t-input
-              className={`${name}__inner-right`}
-              inputClass={classNames({
-                [`${classPrefix}-is-focused`]: activeIndex === 1,
-              })}
-              placeholder={secondPlaceholder}
-              disabled={disabled}
-              readonly={readonly}
-              format={secondFormat}
-              onFocus={(e) => {
-                console.log('----onFocus', e);
-              }}
-            />,
-          )}
+          <t-input
+            className={`${name}__inner-right`}
+            inputClass={classNames({
+              [`${classPrefix}-is-focused`]: activeIndex === 1,
+            })}
+            value={secondValue}
+            placeholder={secondPlaceholder}
+            disabled={disabled}
+            readonly={readonly}
+            format={secondFormat}
+            onFocus={(e) => {
+              this.handleFocus([firstValue, secondValue], { e, position: 'second' });
+            }}
+            onBlur={(e) => {
+              this.handleBlur([firstValue, secondValue], { e, position: 'second' });
+            }}
+            onChange={() => {}}
+          />
 
           {suffixIconContent}
         </div>
