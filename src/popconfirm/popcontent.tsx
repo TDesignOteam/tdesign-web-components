@@ -1,3 +1,5 @@
+import '../icon';
+
 import isString from 'lodash/isString';
 import { cloneElement, Component, OmiProps, tag } from 'omi';
 
@@ -53,17 +55,17 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
   }
 
   renderCancel() {
+    if (this.hideCancel) {
+      return null;
+    }
+
     const parseNode = parseContentTNode(this.props.cancelBtn, {
       onClick: (e) => {
         this.props.onClose({ e, trigger: 'cancel' });
       },
     });
-    if (parseNode) {
+    if (parseNode && typeof parseNode === 'object') {
       return parseNode;
-    }
-
-    if (this.hideCancel) {
-      return null;
     }
 
     return (
@@ -73,7 +75,7 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
         variant="base"
         onClick={(e) => {
           this.props.onClose({ e, trigger: 'cancel' });
-          this.props.onCancel({ e });
+          this.props.onCancel?.({ e });
         }}
         {...(typeof this.props.cancelBtn === 'object' ? { ...(this.props.cancelBtn as ButtonProps) } : {})}
       >
@@ -83,17 +85,17 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
   }
 
   renderConfirm() {
+    if (this.hideConfirm) {
+      return null;
+    }
+
     const parseNode = parseContentTNode(this.props.confirmBtn, {
       onClick: (e) => {
         this.props.onClose({ e, trigger: 'confirm' });
       },
     });
-    if (parseNode) {
+    if (parseNode && typeof parseNode === 'object') {
       return parseNode;
-    }
-
-    if (this.hideConfirm) {
-      return null;
     }
 
     return (
@@ -102,7 +104,7 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
         theme="primary"
         onClick={(e) => {
           this.props.onClose({ e, trigger: 'confirm' });
-          this.props.onConfirm({ e });
+          this.props.onConfirm?.({ e });
         }}
         {...(typeof this.props.confirmBtn === 'object' ? { ...(this.props.confirmBtn as ButtonProps) } : {})}
       >
@@ -113,7 +115,6 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
 
   render(props: (PopcontentProps & TdPopconfirmProps) | OmiProps<PopcontentProps & TdPopconfirmProps, any>) {
     const { className, style, content } = props;
-
     return (
       <div class={classname(`${this.componentName}__content`, className)} style={style}>
         <div class={`${this.componentName}__body`}>
