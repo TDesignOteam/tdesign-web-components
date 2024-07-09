@@ -14,6 +14,17 @@ export interface SwitchProps<T extends SwitchValue = SwitchValue> extends TdSwit
 
 @tag('t-switch')
 export default class Switch extends Component<SwitchProps> {
+  static propTypes = {
+    value: [String, Number, Boolean],
+    defaultValue: [String, Number, Boolean],
+    label: [Array, Function],
+    disabled: Boolean,
+    loading: Boolean,
+    size: String,
+    customValue: Array,
+    onChange: Function,
+  };
+
   constructor() {
     super();
     this.props = {

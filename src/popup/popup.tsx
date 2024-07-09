@@ -15,6 +15,34 @@ export interface PopupProps extends TdPopupProps, StyledProps {
   updateScrollTop?: (content: HTMLElement) => void;
 }
 
+export const PopupTypes = {
+  attach: [String, Function],
+  content: [String, Number, Object, Function],
+  delay: [Number, Array],
+  destroyOnClose: Boolean,
+  disabled: Boolean,
+  hideEmptyPopup: Boolean,
+  overlayClassName: String,
+  overlayInnerClassName: String,
+  overlayInnerStyle: [Object, Function],
+  overlayStyle: [Object, Function],
+  arrowStyle: [Object, Function],
+  placement: String,
+  popperOptions: Object,
+  showArrow: Boolean,
+  trigger: String,
+  triggerElement: [String, Number, Object, Function],
+  visible: Boolean,
+  defaultVisible: Boolean,
+  zIndex: Number,
+  onScroll: Function,
+  onScrollToBottom: Function,
+  onVisibleChange: Function,
+  strategy: String,
+  expandAnimation: Boolean,
+  updateScrollTop: Function,
+};
+
 @tag('t-popup')
 export default class Popup extends Component<PopupProps> {
   static css = `
@@ -25,6 +53,8 @@ export default class Popup extends Component<PopupProps> {
       margin: 3px var(--td-comp-margin-xs) 3px 0;
     }
   `;
+
+  static propTypes = PopupTypes;
 
   static defaultProps = {
     attach: 'body',
