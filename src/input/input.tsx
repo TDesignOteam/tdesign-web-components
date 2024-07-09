@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-this-alias */
 import 'tdesign-web-components/icon';
 
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
@@ -5,7 +6,6 @@ import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 import { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
-// import style from './style'
 import { InputValue, TdInputProps } from './type';
 import useLengthLimit from './useLengthLimit';
 
@@ -27,8 +27,6 @@ export interface InputRef {
   blur: () => void;
   select: () => void;
 }
-
-// type InputContextTrigger = 'input' | 'clear' | 'initial';
 
 const renderIcon = (classPrefix: string, type: 'prefix' | 'suffix', icon: TNode | TElement) => {
   const result = parseTNode(icon);
@@ -55,25 +53,6 @@ export default class Input extends Component<InputProps> {
       margin: 1px var(--td-comp-margin-xs) 1px 0;
     }
   `;
-
-  //   static labelStyle = `
-  //     .t-tag-input--break-line:not(.t-is-empty) .t-tag-input__prefix {
-  //       vertical-align: middle;
-  //     }
-
-  //     .t-tag-input .t-tag-input__prefix {
-  //       margin-left: var(--td-comp-margin-xs);
-  //       line-height: 1;
-  //     }
-
-  //     .t-tag-input .t-tag-input__prefix {
-  //       width: max-content;
-  //       display: inline-block;
-  //       margin-right: 8px;
-  //     }
-  //     `
-
-  // static css = style + Input.tagStyle
 
   static defaultProps = {
     align: 'left',
@@ -133,14 +112,11 @@ export default class Input extends Component<InputProps> {
   isKeyUpEvent = false;
 
   install() {
-    // this.props.autoWidth = true
     this.value = this.props.defaultValue || this.props.value;
     this.status = this.props.status;
-    // console.log(this.props)
   }
 
   installed() {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const that = this;
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
@@ -189,20 +165,15 @@ export default class Input extends Component<InputProps> {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  render(props: OmiProps<InputProps>, store: any) {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
+  render(props: OmiProps<InputProps>) {
     const that = this;
     const {
-      // type,
       autoWidth,
       placeholder,
       disabled,
       status,
       size,
       class: className,
-      // inputClass,
-      // style,
       prefixIcon,
       suffixIcon,
       clearable,
@@ -221,20 +192,14 @@ export default class Input extends Component<InputProps> {
       keepWrapperWidth,
       showLimitNumber,
       allowInputOverMax,
-      // name,
       format,
-      // onClick,
       onClear,
       onEnter,
-      // onKeydown,
-      // onKeyup,
       onKeypress,
       onFocus,
       onBlur,
-      // onPaste,
       onMouseenter,
       onMouseleave,
-      // onWheel,
       onCompositionstart,
       onCompositionend,
       onValidate,
@@ -242,8 +207,7 @@ export default class Input extends Component<InputProps> {
       ...restProps
     } = props;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { limitNumber, getValueByLimitNumber, tStatus, onValidateChange } = useLengthLimit({
+    const { limitNumber, getValueByLimitNumber, tStatus } = useLengthLimit({
       value: this.value === undefined ? undefined : String(this.value),
       status,
       maxlength,
@@ -262,6 +226,9 @@ export default class Input extends Component<InputProps> {
           name={'close-circle-filled'}
           class={classNames(InputClassNamePrefix(`__suffix-clear`))}
           onClick={handleClear}
+          onFocus={() => {
+            console.log('focus-clear');
+          }}
         />
       ) as any;
     }
@@ -280,8 +247,6 @@ export default class Input extends Component<InputProps> {
           {limitNumber()}
         </div>
       ) : null;
-
-    // const curStatus = status || 'default'
 
     const innerValue = this.composingRef.current ? this.composingValue : this.value ?? '';
     const formatDisplayValue = format && !this.isFocused ? format(innerValue) : innerValue;
@@ -305,9 +270,6 @@ export default class Input extends Component<InputProps> {
         onCompositionEnd={handleCompositionEnd}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        // onPaste={handlePaste}
-        // name={name}
-        // style="width: 0px;"
       />
     );
     const renderInputNode = (
@@ -327,14 +289,8 @@ export default class Input extends Component<InputProps> {
         })}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        // onWheel={(e) => onWheel?.({ e })}
-        // onClick={(e) => {
-        //   inputRef.current?.focus();
-        //   onClick?.({ e });
-        // }}
       >
         {prefixIconContent}
-        {/* {null} */}
         {labelContent ? <div class={classNames(InputClassNamePrefix(`__prefix`))}>{labelContent}</div> : null}
         {showInput && renderInput}
 
@@ -381,16 +337,12 @@ export default class Input extends Component<InputProps> {
     }
 
     function handleClear(e: MouseEvent) {
-      // let inputNode = (e.currentTarget as HTMLInputElement).parentNode.previousSibling as HTMLElement
-      // console.log('inputNode', inputNode)
+      console.log('clear');
       that.composingValue = '';
       that.value = '';
       that.update();
       onChange?.('', { e });
       onClear?.({ e });
-      console.log('that', that);
-      // inputNode.focus()
-      // that.update()
     }
 
     function handleKeyDown(e: KeyboardEvent) {
@@ -406,6 +358,7 @@ export default class Input extends Component<InputProps> {
     }
 
     function handleFocus(e: FocusEvent) {
+      console.log('focus');
       if (readonly) return;
       const { currentTarget }: { currentTarget: any } = e;
       onFocus?.(currentTarget.value, { e });
@@ -428,13 +381,13 @@ export default class Input extends Component<InputProps> {
       const { currentTarget }: { currentTarget: any } = e;
       if (that.composingRef.current) {
         that.composingRef.current = false;
-        // onValidateChange()
         handleChange(e);
       }
       onCompositionend?.(currentTarget.value, { e });
     }
 
     function handleBlur(e: FocusEvent) {
+      console.log('handleBlur');
       if (readonly) return;
       const { currentTarget }: { currentTarget: any } = e;
       onBlur?.(currentTarget.value, { e });
@@ -463,7 +416,6 @@ export default class Input extends Component<InputProps> {
           },
           className,
         )}
-        // style={renderStyle}
         ref={this.wrapperRef}
         part="wrap"
         {...restProps}
