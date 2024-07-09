@@ -63,7 +63,7 @@ export default class Button extends Component<ButtonProps> {
     }
 
     let iconNode = icon;
-    if (loading) iconNode = <t-icon className="mb-[2px]" name={'loading'} />;
+    if (loading) iconNode = <t-icon className="mr-[2px]" name={'loading'} />;
 
     const Tag = this.tag as string;
     return (

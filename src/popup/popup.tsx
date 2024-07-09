@@ -1,6 +1,5 @@
 import 'omi-transition';
 
-// import '@omiu/transition';
 import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
 import { Component, createRef, OmiProps, tag } from 'omi';
