@@ -82,6 +82,7 @@ export default class BackTop extends Component<BackTopProps> {
 
   handleClick(clickEventProps: ClickEventProps) {
     const { target, container, duration, onClick, e } = { ...clickEventProps };
+    e.stopPropagation();
     const y = this.getBackTo(target, container);
     scrollTo(y, { container: this.containerRef.current, duration });
     onClick?.({ e });
