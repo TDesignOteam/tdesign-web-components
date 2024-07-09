@@ -1,3 +1,6 @@
+import '../popup';
+import './popcontent';
+
 import { Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
@@ -30,18 +33,12 @@ export default class Popconfirm extends Component<PopconfirmProps> {
     this.update();
   };
 
-  handleToggle = (context: PopconfirmVisibleChangeContext) => {
-    const visible = !this.visible;
-    if (!visible) return;
-    this.handlePopVisible(visible, context);
-  };
-
   installed(): void {
     this.visible = this.props.visible;
   }
 
   render(props: OmiProps<PopconfirmProps>) {
-    const { cancelBtn, confirmBtn } = props;
+    const { cancelBtn = '取消', confirmBtn = '确定' } = props;
 
     return (
       <t-popup
