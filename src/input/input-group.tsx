@@ -1,7 +1,6 @@
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
-// import inputSyle from './style'
 import { TdInputGroupProps } from './type';
 
 const classPrefix = getClassPrefix();
@@ -9,7 +8,7 @@ const classPrefix = getClassPrefix();
 export type InputGroupProps = TdInputGroupProps;
 
 @tag('t-input-group')
-export default class InputGruop extends Component<InputGroupProps> {
+export default class InputGroup extends Component<InputGroupProps> {
   S;
 
   static addStyle = `.t-input-group--separate t-input{
@@ -17,8 +16,6 @@ export default class InputGruop extends Component<InputGroupProps> {
   }`;
 
   divRef = createRef();
-
-  // static css = inputSyle + InputGruop.addStyle
 
   install(): void {
     console.log(this.props);
