@@ -13,6 +13,24 @@ export interface ButtonProps extends TdButtonProps, StyledProps {}
 export default class Button extends Component<ButtonProps> {
   static css = [];
 
+  static propTypes = {
+    theme: String,
+    type: String,
+    variant: String,
+    size: String,
+    shape: String,
+    icon: Object,
+    loading: Boolean,
+    ghost: Boolean,
+    block: Boolean,
+    disabled: Boolean,
+    href: String,
+    tag: String,
+    content: [String, Object],
+    onClick: Function,
+    ignoreAttributes: Array,
+  };
+
   static defaultProps = {
     tag: 'button',
     variant: 'base',

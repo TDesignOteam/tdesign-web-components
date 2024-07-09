@@ -32,7 +32,7 @@ spline: base
 您也可以以 IconFont 的形式使用图标，通过如下来使用图标。
 
 ```js
-import 'tdesign-icons-web-components/esm/iconfont/index.css';// 极少的字体定义代码`
+import 'tdesign-icons-web-components/esm/iconfont/index.css';// 极少的字体定义代码
 
 import 'tdesign-icons-web-components/esm/iconfont';
 ```
