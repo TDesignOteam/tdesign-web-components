@@ -8,13 +8,15 @@ export interface CollapseProps extends TdCollapseProps, StyledProps {}
 
 @tag('t-collapse')
 export default class Collapse extends Component<TdCollapseProps> {
-  static propsType = {
-    borderless: false,
-    defaultExpandAll: false,
-    disabled: false,
-    expandIconPlacement: 'left',
-    expandMutex: false,
-    expandOnRowClick: true,
+  static propTypes = {
+    borderless: Boolean,
+    defaultExpandAll: Boolean,
+    disabled: Boolean,
+    expandIconPlacement: String,
+    expandMutex: Boolean,
+    expandOnRowClick: Boolean,
+    value: Array,
+    onChange: Function,
   };
 
   collapseValue = signal([]);

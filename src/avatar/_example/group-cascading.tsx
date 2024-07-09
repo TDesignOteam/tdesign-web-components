@@ -11,16 +11,16 @@ export default class AvatarGroupCascading extends Component {
   render() {
     return (
       <t-space direction="vertical">
-        <t-avatar-group>
-          <t-avatar image="https://tdesign.gtimg.com/site/avatar.jpg"></t-avatar>
-          <t-avatar>W</t-avatar>
-          <t-avatar icon={<t-icon name="user-1"></t-icon>}></t-avatar>
-        </t-avatar-group>
-
         <t-avatar-group cascading="left-up">
           <t-avatar image="https://tdesign.gtimg.com/site/avatar.jpg"></t-avatar>
-          <t-avatar>W</t-avatar>
-          <t-avatar icon={<t-icon name="user-1"></t-icon>}></t-avatar>
+          <t-avatar content="W"></t-avatar>
+          <t-avatar icon={<t-icon name="user-1" className="mb-[2px]"></t-icon>}></t-avatar>
+        </t-avatar-group>
+
+        <t-avatar-group cascading="right-up">
+          <t-avatar image="https://tdesign.gtimg.com/site/avatar.jpg"></t-avatar>
+          <t-avatar content="W"></t-avatar>
+          <t-avatar icon={<t-icon name="user-1" className="mb-[2px]"></t-icon>}></t-avatar>
         </t-avatar-group>
       </t-space>
     );

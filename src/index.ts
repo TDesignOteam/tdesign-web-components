@@ -7,6 +7,7 @@ export * from './image';
 export * from './input';
 export * from './input-number';
 export * from './loading';
+export * from './menu';
 export * from './popup';
 export * from './slider';
 export * from './space';
