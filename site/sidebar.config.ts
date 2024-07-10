@@ -192,6 +192,12 @@ export default [
         // component: () => import('tdesign-web-components/message/README.md'),
       },
       {
+        title: 'Popconfirm 气泡确认框',
+        name: 'popconfirm',
+        path: '/components/popconfirm',
+        component: () => import('tdesign-web-components/popconfirm/README.md'),
+      },
+      {
         title: 'Popup 弹出层',
         name: 'popup',
         path: '/components/popup',
