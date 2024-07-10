@@ -53,8 +53,12 @@ spline: data
 
 ### CollapsePanel Props
 
-| 名称              | 类型            | 默认值    | 说明                                                             | 必传 |
-| ----------------- | --------------- | --------- | ---------------------------------------------------------------- | ---- |
-| destroyOnCollapse | Boolean         | false     | 当前面板处理折叠状态时，是否销毁面板内容                         | N    |
-| disabled          | Boolean         | undefined | 禁止当前面板展开，优先级大于 Collapse 的同名属性                 | N    |
-| value             | String / Number | -         | 必需。当前面板唯一标识，如果值为空则取当前面下标兜底作为唯一标识 | Y    |
+| 名称               | 类型                      | 默认值    | 说明                                                                 | 必传 |
+| ------------------ | ------------------------- | --------- | -------------------------------------------------------------------- | ---- |
+| destroyOnCollapse  | Boolean                   | false     | 当前面板处理折叠状态时，是否销毁面板内容                             | N    |
+| disabled           | Boolean                   | undefined | 禁止当前面板展开，优先级大于 Collapse 的同名属性                     | N    |
+| value              | String / Number           | -         | 必需。当前面板唯一标识，如果值为空则取当前面下标兜底作为唯一标识     | Y    |
+| expandIcon         | Boolean / Slot / Function | undefined | 当前折叠面板展开图标。TS 类型：`boolean \| TNode`。                  | N    |
+| header             | String / Slot / Function  | -         | 面板头内容。TS 类型：`string \| TNode`。                             | N    |
+| headerRightContent | String / Slot / Function  | -         | 面板头的右侧区域，一般用于呈现面板操作。TS 类型：`string \| TNode`。 | N    |
+| content            | String / Slot / Function  | -         | 折叠面板内容。TS 类型：`string \| TNode`。                           | N    |

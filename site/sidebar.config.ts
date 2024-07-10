@@ -47,7 +47,7 @@ export default [
         component: () => import('tdesign-web-components/button/README.md'),
       },
       {
-        title: 'Icon 图表',
+        title: 'Icon 图标',
         name: 'icon',
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
@@ -90,7 +90,7 @@ export default [
         title: 'Menu 导航菜单',
         name: 'menu',
         path: '/components/menu',
-        // component: () => import('tdesign-web-components/menu/README.md'),
+        component: () => import('tdesign-web-components/menu/README.md'),
       },
       {
         title: 'Breadcrumb 面包屑',
@@ -110,6 +110,12 @@ export default [
         name: 'select',
         path: '/components/select',
         // component: () => import('tdesign-web-components/select/README.md'),
+      },
+      {
+        title: 'Slider 滑块',
+        name: 'slider',
+        path: '/components/slider',
+        component: () => import('tdesign-web-components/slider/README.md'),
       },
       {
         title: 'Switch 开关',

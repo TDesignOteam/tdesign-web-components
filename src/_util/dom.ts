@@ -1,7 +1,7 @@
-import { isString } from 'lodash';
+import isString from 'lodash/isString';
 import raf from 'raf';
 
-import { AttachNode, AttachNodeReturnValue, ScrollContainer, ScrollContainerElement } from '../common';
+import { ScrollContainer, ScrollContainerElement } from '../common';
 import { easeInOutCubic, EasingFunction } from './easing';
 // 用于判断是否可使用 dom
 export const canUseDocument = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
@@ -88,27 +88,19 @@ export const scrollTo = (target: number, opt: ScrollTopOptions) => {
   });
 };
 
-export function getAttach(attach: AttachNode, triggerNode?: HTMLElement): AttachNodeReturnValue {
-  if (!canUseDocument) return null;
-
-  let el: AttachNodeReturnValue;
-  if (typeof attach === 'string') {
-    el = document.querySelector(attach);
+export const getAttach = (node: any): HTMLElement => {
+  const attachNode = typeof node === 'function' ? node() : node;
+  if (!attachNode) {
+    return document.body;
   }
-  if (typeof attach === 'function') {
-    el = attach(triggerNode);
+  if (isString(attachNode)) {
+    return document.querySelector(attachNode);
   }
-  if (typeof attach === 'object') {
-    if ((attach as any) instanceof window.HTMLElement) {
-      el = attach;
-    }
+  if (attachNode instanceof HTMLElement) {
+    return attachNode;
   }
-
-  // fix el in iframe
-  if (el && el.nodeType === 1) return el;
-
   return document.body;
-}
+};
 
 export const addClass = function (el: Element, cls: string) {
   if (!el) return;
@@ -161,4 +153,25 @@ export function hasClass(el: Element, cls: string) {
     return el.classList.contains(cls);
   }
   return ` ${el.className} `.indexOf(` ${cls} `) > -1;
+}
+
+// 判断一个元素是否包含另一个元素
+export function domContains(parent: HTMLElement, child: HTMLElement) {
+  if (parent.contains(child)) {
+    return true;
+  }
+
+  let matched = false;
+  if (parent.shadowRoot) {
+    const children = Array.from(parent.shadowRoot.children);
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].isSameNode(child) || children[i].contains(child)) {
+        matched = true;
+      } else if (children[i].shadowRoot) {
+        matched = domContains(children[i] as any, child);
+      }
+      if (matched) break;
+    }
+  }
+  return matched;
 }

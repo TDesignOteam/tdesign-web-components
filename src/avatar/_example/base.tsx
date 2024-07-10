@@ -1,9 +1,8 @@
 import 'tdesign-web-components/image';
 import 'tdesign-web-components/avatar';
 import 'tdesign-web-components/space';
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 
-// import 'tdesign-icons-omi/user'
 import { Component } from 'omi';
 
 export default class Avatar extends Component {
@@ -12,7 +11,7 @@ export default class Avatar extends Component {
   render() {
     return (
       <t-space>
-        <t-avatar icon={<t-icon name="user-1"></t-icon>} style={{ marginRight: '40px' }} />
+        <t-avatar icon={<t-icon name="user-1" className="mb-[2px]"></t-icon>} style={{ marginRight: '40px' }} />
         <t-avatar
           image="https://tdesign.gtimg.com/site/avatar.jpg"
           hideOnLoadFailed={false}
