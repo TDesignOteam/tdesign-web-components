@@ -1,4 +1,5 @@
 export * from './avatar';
+export * from './back-top';
 export * from './button';
 export * from './collapse';
 export * from './common';
