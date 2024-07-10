@@ -6,7 +6,7 @@ import { TNode } from '../common';
 @tag('t-trigger')
 export default class Trigger extends Component {
   render(props) {
-    const childs = toArray(props.children).map((child: TNode) => {
+    const children = toArray(props.children).map((child: TNode) => {
       // 对 t-button 做特殊处理
       if (typeof child === 'object' && (child as any).nodeName === 't-button') {
         const oldClick = (child as VNode).attributes?.onClick;
@@ -19,6 +19,6 @@ export default class Trigger extends Component {
       }
       return child;
     });
-    return childs;
+    return children;
   }
 }
