@@ -1,5 +1,5 @@
 import 'tdesign-web-components/button';
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 import 'tdesign-web-components/space';
 
 export default function Button() {
