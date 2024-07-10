@@ -46,5 +46,9 @@ export interface TdAlertProps {
   /**
    * 告警提示框关闭动画结束后触发
    */
-  onClick?: (context: { e: TransitionEvent }) => void;
+  onClosed?: (context: { e: TransitionEvent }) => void;
+  /**
+   * 忽略的属性列表，忽略后，将不会传递给父元素
+   */
+  ignoreAttributes?: string[];
 }
