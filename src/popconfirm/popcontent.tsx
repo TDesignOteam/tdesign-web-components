@@ -1,7 +1,7 @@
-import '../icon';
+import 'tdesign-icons-web-components';
 
 import isString from 'lodash/isString';
-import { cloneElement, Component, OmiProps, tag } from 'omi';
+import { cloneElement, Component, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { parseContentTNode } from '../_util/parseTNode';
@@ -62,6 +62,9 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
     const parseNode = parseContentTNode(this.props.cancelBtn, {
       onClick: (e) => {
         this.props.onClose({ e, trigger: 'cancel' });
+        if (typeof this.props.cancelBtn === 'object') {
+          (this.props.cancelBtn as VNode).attributes?.onClick?.(e);
+        }
       },
     });
     if (parseNode && typeof parseNode === 'object') {
@@ -92,6 +95,9 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
     const parseNode = parseContentTNode(this.props.confirmBtn, {
       onClick: (e) => {
         this.props.onClose({ e, trigger: 'confirm' });
+        if (typeof this.props.confirmBtn === 'object') {
+          (this.props.confirmBtn as VNode).attributes?.onClick?.(e);
+        }
       },
     });
     if (parseNode && typeof parseNode === 'object') {

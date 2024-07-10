@@ -1,4 +1,4 @@
-import '../popup';
+import 'tdesign-web-components/popup';
 import './popcontent';
 
 import { Component, OmiProps, tag } from 'omi';
@@ -19,13 +19,18 @@ export default class Popconfirm extends Component<PopconfirmProps> {
     theme: 'default',
   };
 
+  private pVisible = false;
+
   componentName = `${getClassPrefix()}-popconfirm`;
 
-  visible = false;
+  get visible() {
+    // controlled
+    if (this.props.visible !== undefined) return this.props.visible;
+    return this.pVisible;
+  }
 
   handlePopVisible = (visible: boolean, context?: PopconfirmVisibleChangeContext) => {
-    if (visible === !!this.visible) return;
-    this.visible = visible;
+    this.pVisible = visible;
 
     if (typeof this.props.onVisibleChange === 'function') {
       this.props.onVisibleChange(visible, context);
@@ -34,7 +39,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
   };
 
   installed(): void {
-    this.visible = this.props.visible;
+    this.pVisible = this.props.visible;
   }
 
   render(props: OmiProps<PopconfirmProps>) {

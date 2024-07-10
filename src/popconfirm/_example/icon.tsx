@@ -1,7 +1,7 @@
 import 'tdesign-web-components/popconfirm';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/button';
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 
 import { Component } from 'omi';
 
