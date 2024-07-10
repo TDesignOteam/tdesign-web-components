@@ -46,7 +46,7 @@ export default class BackTop extends Component<BackTopProps> {
 
   static propTypes = {
     container: Object,
-    content: Object,
+    content: [String, Number, Object, Function],
     default: Object,
     duration: Number,
     offset: Object,
