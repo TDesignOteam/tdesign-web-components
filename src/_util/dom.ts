@@ -136,3 +136,24 @@ export function hasClass(el: Element, cls: string) {
   }
   return ` ${el.className} `.indexOf(` ${cls} `) > -1;
 }
+
+// 判断一个元素是否包含另一个元素
+export function domContains(parent: HTMLElement, child: HTMLElement) {
+  if (parent.contains(child)) {
+    return true;
+  }
+
+  let matched = false;
+  if (parent.shadowRoot) {
+    const children = Array.from(parent.shadowRoot.children);
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].isSameNode(child) || children[i].contains(child)) {
+        matched = true;
+      } else if (children[i].shadowRoot) {
+        matched = domContains(children[i] as any, child);
+      }
+      if (matched) break;
+    }
+  }
+  return matched;
+}
