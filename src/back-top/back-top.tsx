@@ -1,4 +1,4 @@
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components/esm/components/align-top';
 
 import { Component, createRef, OmiProps, signal, SignalValue, tag } from 'omi';
 
@@ -157,7 +157,7 @@ export default class BackTop extends Component<BackTopProps> {
     const classPrefix = getClassPrefix();
     const defaultContent = (
       <>
-        <t-icon name="align-top" className={`${classPrefix}-back-top__icon`} />
+        <t-icon-align-top className={`${classPrefix}-back-top__icon`} />
         <span className={`${classPrefix}-back-top__text`}>TOP</span>
       </>
     );
