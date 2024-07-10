@@ -1,4 +1,4 @@
-import '../popup';
+import 'tdesign-web-components/popup';
 import './popcontent';
 
 import { Component, OmiProps, tag } from 'omi';

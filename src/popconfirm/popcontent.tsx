@@ -1,4 +1,4 @@
-import '../icon';
+import 'tdesign-icons-web-components';
 
 import isString from 'lodash/isString';
 import { cloneElement, Component, OmiProps, tag } from 'omi';
