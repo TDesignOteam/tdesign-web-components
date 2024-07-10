@@ -10,7 +10,23 @@ export type PopconfirmProps = TdPopconfirmProps;
 
 @tag('t-popconfirm')
 export default class Popconfirm extends Component<PopconfirmProps> {
-  static css = ``;
+  static propTypes = {
+    cancelBtn: [String, Number, Object, Function],
+    confirmBtn: [String, Number, Object, Function],
+    content: [String, Number, Object, Function],
+    destroyOnClose: Boolean,
+    icon: Object,
+    placement: Object,
+    popupProps: Object,
+    showArrow: Boolean,
+    theme: String,
+    triggerElement: [String, Number, Object, Function],
+    visible: Boolean,
+    defaultVisible: Boolean,
+    onCancel: Function,
+    onConfirm: Function,
+    onVisibleChange: Function,
+  };
 
   static defaultProps: TdPopconfirmProps = {
     destroyOnClose: true,
@@ -21,7 +37,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
 
   private pVisible = false;
 
-  componentName = `${getClassPrefix()}-popconfirm`;
+  className = `${getClassPrefix()}-popconfirm`;
 
   get visible() {
     // controlled
@@ -32,9 +48,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
   handlePopVisible = (visible: boolean, context?: PopconfirmVisibleChangeContext) => {
     this.pVisible = visible;
 
-    if (typeof this.props.onVisibleChange === 'function') {
-      this.props.onVisibleChange(visible, context);
-    }
+    this.props?.onVisibleChange?.(visible, context);
     this.update();
   };
 
@@ -51,7 +65,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
         visible={this.visible}
         trigger="click"
         onVisibleChange={(visible) => this.handlePopVisible(visible)}
-        overlayClassName={this.componentName}
+        overlayClassName={this.className}
         content={
           <t-popcontent
             cancelBtn={cancelBtn}

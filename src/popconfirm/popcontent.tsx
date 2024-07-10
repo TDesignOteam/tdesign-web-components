@@ -15,7 +15,26 @@ interface PopcontentProps {
 
 @tag('t-popcontent')
 export default class Popconfirm extends Component<PopcontentProps & PopconfirmProps> {
-  componentName = `${getClassPrefix()}-popconfirm`;
+  static propTypes = {
+    onClose: Function,
+    cancelBtn: [String, Number, Object, Function],
+    confirmBtn: [String, Number, Object, Function],
+    content: [String, Number, Object, Function],
+    destroyOnClose: Boolean,
+    icon: Object,
+    placement: Object,
+    popupProps: Object,
+    showArrow: Boolean,
+    theme: String,
+    triggerElement: [String, Number, Object, Function],
+    visible: Boolean,
+    defaultVisible: Boolean,
+    onCancel: Function,
+    onConfirm: Function,
+    onVisibleChange: Function,
+  };
+
+  className = `${getClassPrefix()}-popconfirm`;
 
   get hideCancel() {
     return this.props.cancelBtn === null || this.props.cancelBtn === undefined;
@@ -38,20 +57,20 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
         break;
     }
 
-    let iconComponent = null;
     const parseNode = parseContentTNode(this.props.icon, {
       style: { color },
     });
 
     // icon 是自定义组件实例，优先级最高
     if (parseNode) {
-      iconComponent = parseNode;
-    } else if (defaultIcon) {
-      iconComponent = cloneElement(defaultIcon, {
+      return parseNode;
+    }
+    if (defaultIcon) {
+      return cloneElement(defaultIcon, {
         style: { color },
       });
     }
-    return iconComponent;
+    return null;
   }
 
   renderCancel() {
@@ -122,14 +141,14 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
   render(props: (PopcontentProps & TdPopconfirmProps) | OmiProps<PopcontentProps & TdPopconfirmProps, any>) {
     const { className, style, content } = props;
     return (
-      <div class={classname(`${this.componentName}__content`, className)} style={style}>
-        <div class={`${this.componentName}__body`}>
+      <div class={classname(`${this.className}__content`, className)} style={style}>
+        <div class={`${this.className}__body`}>
           {this.renderIcon()}
-          <div class={`${this.componentName}__inner`}>{content}</div>
+          <div class={`${this.className}__inner`}>{content}</div>
         </div>
-        <div className={`${this.componentName}__buttons`}>
-          <span className={`${this.componentName}__cancel`}>{this.renderCancel()}</span>
-          <span className={`${this.componentName}__confirm`}>{this.renderConfirm()}</span>
+        <div className={`${this.className}__buttons`}>
+          <span className={`${this.className}__cancel`}>{this.renderCancel()}</span>
+          <span className={`${this.className}__confirm`}>{this.renderConfirm()}</span>
         </div>
       </div>
     );
