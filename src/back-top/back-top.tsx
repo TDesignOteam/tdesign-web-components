@@ -45,7 +45,6 @@ export default class BackTop extends Component<BackTopProps> {
   cls: SignalValue<string> = signal('');
 
   static propTypes = {
-    children: Object,
     container: Object,
     content: Object,
     default: Object,
