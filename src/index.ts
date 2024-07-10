@@ -7,7 +7,6 @@ export * from './image';
 export * from './input';
 export * from './input-number';
 export * from './loading';
-export * from './popconfirm';
 export * from './menu';
 export * from './popconfirm';
 export * from './popup';
