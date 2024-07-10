@@ -1,4 +1,5 @@
 import 'omi-transition';
+import './popupTrigger';
 
 import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
@@ -6,6 +7,7 @@ import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getIEVersion } from '../_common/js/utils/helper';
 import classname from '../_util/classname';
+import { domContains } from '../_util/dom';
 import { StyledProps } from '../common';
 import { PopupVisibleChangeContext, TdPopupProps } from './type';
 import { attachListeners, getPopperPlacement, triggers } from './utils';
@@ -14,6 +16,34 @@ export interface PopupProps extends TdPopupProps, StyledProps {
   expandAnimation?: boolean;
   updateScrollTop?: (content: HTMLElement) => void;
 }
+
+export const PopupTypes = {
+  attach: [String, Function],
+  content: [String, Number, Object, Function],
+  delay: [Number, Array],
+  destroyOnClose: Boolean,
+  disabled: Boolean,
+  hideEmptyPopup: Boolean,
+  overlayClassName: String,
+  overlayInnerClassName: String,
+  overlayInnerStyle: [Object, Function],
+  overlayStyle: [Object, Function],
+  arrowStyle: [Object, Function],
+  placement: String,
+  popperOptions: Object,
+  showArrow: Boolean,
+  trigger: String,
+  triggerElement: [String, Number, Object, Function],
+  visible: Boolean,
+  defaultVisible: Boolean,
+  zIndex: Number,
+  onScroll: Function,
+  onScrollToBottom: Function,
+  onVisibleChange: Function,
+  strategy: String,
+  expandAnimation: Boolean,
+  updateScrollTop: Function,
+};
 
 @tag('t-popup')
 export default class Popup extends Component<PopupProps> {
@@ -25,6 +55,8 @@ export default class Popup extends Component<PopupProps> {
       margin: 3px var(--td-comp-margin-xs) 3px 0;
     }
   `;
+
+  static propTypes = PopupTypes;
 
   static defaultProps = {
     attach: 'body',
@@ -105,6 +137,7 @@ export default class Popup extends Component<PopupProps> {
   };
 
   handleDocumentClick = (ev?: MouseEvent) => {
+    const target = ev.composedPath()[0];
     setTimeout(() => {
       if (this.contentClicked) {
         setTimeout(() => {
@@ -112,10 +145,11 @@ export default class Popup extends Component<PopupProps> {
         });
         return;
       }
+
       const triggerEl = this.triggerRef.current as HTMLElement;
-      if (triggerEl.contains(ev.target as Node)) return;
+      if (domContains(triggerEl, target as HTMLElement)) return;
       const popperEl = this.popperRef.current as HTMLElement;
-      if (popperEl?.contains(ev.target as Node)) return;
+      if (domContains(popperEl, target as HTMLElement)) return;
       this.handlePopVisible(false, { trigger: 'document', e: ev });
     });
   };
@@ -130,6 +164,22 @@ export default class Popup extends Component<PopupProps> {
     } else {
       document.removeEventListener('mousedown', this.handleDocumentClick, true);
       this.hasDocumentEvent = false;
+    }
+  };
+
+  clickHandle = (e: MouseEvent) => {
+    if (this.visible === true) {
+      const triggerEl = this.triggerRef.current as HTMLElement;
+      const target = e.composedPath()[0];
+      if (domContains(triggerEl, target as HTMLElement)) {
+        this.handlePopVisible(false, { trigger: 'trigger-element-click', e });
+        return;
+      }
+    }
+
+    this.handleOpen({ trigger: 'trigger-element-click' });
+    if (getIEVersion() < 11) {
+      this.handleDocumentClick(e);
     }
   };
 
@@ -149,10 +199,7 @@ export default class Popup extends Component<PopupProps> {
       trigger.add('focusout', () => this.handleClose({ trigger: 'trigger-element-blur' }));
     } else if (hasTrigger.click) {
       trigger.add('click', (e: MouseEvent) => {
-        this.handleOpen({ trigger: 'trigger-element-click' });
-        if (getIEVersion() < 11) {
-          this.handleDocumentClick(e);
-        }
+        this.clickHandle(e);
       });
     } else if (hasTrigger['context-menu']) {
       trigger.add('contextmenu', (e: MouseEvent) => {
@@ -232,10 +279,20 @@ export default class Popup extends Component<PopupProps> {
       props.overlayInnerClassName,
     );
 
+    const trigger = props.triggerElement ? props.triggerElement : this.props.children;
+
     return (
       <t-trigger-root>
-        <t-trigger ref={this.triggerRef} part="trigger">
-          {props.triggerElement ? props.triggerElement : <slot />}
+        <t-trigger
+          ref={this.triggerRef}
+          part="trigger"
+          onClick={(e) => {
+            if (e?.detail?.context?.nodeName === 'T-BUTTON') {
+              this.clickHandle(e.detail.e);
+            }
+          }}
+        >
+          {trigger}
         </t-trigger>
         {this.getVisible() || !props.destroyOnClose ? (
           <div

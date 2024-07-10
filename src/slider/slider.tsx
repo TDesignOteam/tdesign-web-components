@@ -34,15 +34,15 @@ export default class Slider extends Component<SliderProps> {
   static propTypes = {
     disabled: Boolean,
     inputNumberProps: Object,
-    label: String || Boolean || Object,
+    label: [String, Boolean, Object],
     layout: String,
-    marks: Array || Object,
+    marks: [Array, Object],
     max: Number,
     min: Number,
     range: Boolean,
     step: Number,
     tooltipProps: Object,
-    value: Number || Array,
+    value: [Number, Array],
     onChange: Function,
     onChangeEnd: Function,
   };

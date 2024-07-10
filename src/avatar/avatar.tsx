@@ -3,18 +3,17 @@ import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 import { getClassPrefix, getCommonClassName } from '../_util/classname';
 import { StyledProps } from '../common';
 import { ImageProps } from '../image';
-import { styleSheet } from './style/index.ts';
 import { TdAvatarProps } from './type';
 
 export interface AvatarProps extends TdAvatarProps, StyledProps {}
 
 @tag('t-avatar')
 export default class Avatar extends Component<AvatarProps> {
-  static css = styleSheet;
+  static css = [];
 
   static defaultProps = { hideOnLoadFailed: false, shape: 'circle' };
 
-  static propsType = {
+  static propTypes = {
     alt: String,
     hideOnLoadFailed: Boolean,
     icon: Object,
@@ -121,9 +120,10 @@ export default class Avatar extends Component<AvatarProps> {
       const childrenStyle = {
         transform: `scale(${this.scale})`,
       };
+      const renderChildrenContent = children && children[0] ? children : content;
       renderChildren = (
         <span ref={avatarChildrenRef} style={childrenStyle}>
-          {children || content}
+          {renderChildrenContent}
         </span>
       );
     }

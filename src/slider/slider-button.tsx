@@ -33,8 +33,8 @@ export default class SliderButton extends Component<SliderButtonProps> {
   };
 
   static propTypes = {
-    label: String || Boolean || Object,
-    value: Number || Array,
+    label: [String, Boolean, Object],
+    value: [Number, Array],
     max: Number,
     min: Number,
     rangeDiff: Number,
