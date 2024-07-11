@@ -3,6 +3,7 @@ import 'tdesign-theme-generator';
 import 'tdesign-site-components/lib/styles/style.css';
 import './tailwind/index.ts';
 import 'tdesign-web-components/style/index.js';
+import 'tdesign-icons-view';
 
 import { Router } from 'omi-router';
 

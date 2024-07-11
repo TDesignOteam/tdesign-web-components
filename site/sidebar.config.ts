@@ -47,7 +47,7 @@ export default [
         component: () => import('tdesign-web-components/button/README.md'),
       },
       {
-        title: 'Icon 图表',
+        title: 'Icon 图标',
         name: 'icon',
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
@@ -92,6 +92,12 @@ export default [
         path: '/components/breadcrumb',
         // component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
+      {
+        title: 'BackTop 回到顶部',
+        name: 'backTop',
+        path: '/components/backTop',
+        component: () => import('tdesign-web-components/back-top/README.md'),
+      },
     ],
   },
   {
@@ -104,6 +110,12 @@ export default [
         name: 'select',
         path: '/components/select',
         // component: () => import('tdesign-web-components/select/README.md'),
+      },
+      {
+        title: 'Slider 滑块',
+        name: 'slider',
+        path: '/components/slider',
+        component: () => import('tdesign-web-components/slider/README.md'),
       },
       {
         title: 'Switch 开关',
@@ -184,6 +196,12 @@ export default [
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Popconfirm 气泡确认框',
+        name: 'popconfirm',
+        path: '/components/popconfirm',
+        component: () => import('tdesign-web-components/popconfirm/README.md'),
       },
       {
         title: 'Popup 弹出层',
