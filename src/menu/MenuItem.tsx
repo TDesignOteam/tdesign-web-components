@@ -12,6 +12,11 @@ export interface MenuItemProps extends TdMenuItemProps, StyledProps {}
 @tag('t-menu-item')
 export default class MenuItem extends Component<MenuItemProps> {
   static css = `
+    .${getClassPrefix()}-menu__item--inner {
+      width: 100%;
+      height: 100%;
+    }
+
     .${getClassPrefix()}-menu__item--has-icon .${getClassPrefix()}-menu__content,
     .${getClassPrefix()}-menu__item--has-icon .${getClassPrefix()}-menu__item-link {
       margin-left: var(--td-comp-margin-s);
@@ -21,6 +26,7 @@ export default class MenuItem extends Component<MenuItemProps> {
       position: absolute;
       inset: 0;
     }
+      
     .${getClassPrefix()}-menu__item .${getClassPrefix()}-menu__item-tooltip-inner {
       width: 100%;
       height: 100%;
@@ -84,7 +90,7 @@ export default class MenuItem extends Component<MenuItemProps> {
     });
 
     const content = (
-      <>
+      <div>
         {lightIcon}
         {href ? (
           <a href={href} target={target} className={classname(`${classPrefix}-menu__item-link`)}>
@@ -93,7 +99,7 @@ export default class MenuItem extends Component<MenuItemProps> {
         ) : (
           <span className={`${classPrefix}-menu__content`}>{label}</span>
         )}
-      </>
+      </div>
     );
 
     if (this.injection.collapsed.value && !this.props.disabled) {
