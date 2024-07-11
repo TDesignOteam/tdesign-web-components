@@ -90,7 +90,7 @@ export default class MenuItem extends Component<MenuItemProps> {
     });
 
     const content = (
-      <div>
+      <>
         {lightIcon}
         {href ? (
           <a href={href} target={target} className={classname(`${classPrefix}-menu__item-link`)}>
@@ -99,7 +99,7 @@ export default class MenuItem extends Component<MenuItemProps> {
         ) : (
           <span className={`${classPrefix}-menu__content`}>{label}</span>
         )}
-      </div>
+      </>
     );
 
     if (this.injection.collapsed.value && !this.props.disabled) {
@@ -110,6 +110,6 @@ export default class MenuItem extends Component<MenuItemProps> {
       );
     }
 
-    return content;
+    return <div className={`${classPrefix}-menu__item--inner`}>{content}</div>;
   }
 }
