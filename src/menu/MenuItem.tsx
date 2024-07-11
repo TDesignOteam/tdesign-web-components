@@ -15,6 +15,12 @@ export default class MenuItem extends Component<MenuItemProps> {
     .${getClassPrefix()}-menu__item--inner {
       width: 100%;
       height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    .${getClassPrefix()}-menu__item t-icon-light-dom {
+      display: flex;
     }
 
     .${getClassPrefix()}-menu__item--has-icon .${getClassPrefix()}-menu__content,
