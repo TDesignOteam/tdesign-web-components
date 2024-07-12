@@ -135,7 +135,6 @@ export default class Image extends Component<ImageProps> {
     } = this;
     const {
       class: className,
-      src,
       style,
       alt,
       fit,
@@ -144,17 +143,18 @@ export default class Image extends Component<ImageProps> {
       placeholder,
       loading,
       error,
-      overlayTrigger,
-      lazy,
       gallery,
       overlayContent,
       srcset,
-      onLoad,
-      onError,
       ...rest
     } = props;
 
-    console.log('src', src, onLoad, onError, lazy, overlayTrigger);
+    delete rest.onLoad;
+    delete rest.onError;
+    delete rest.lazy;
+    delete rest.overlayTrigger;
+    delete rest.src;
+
     const renderOverlay = () => {
       if (!overlayContent) {
         return null;

@@ -157,3 +157,21 @@ export function domContains(parent: HTMLElement, child: HTMLElement) {
   }
   return matched;
 }
+
+// DOM properties that should NOT have "px" added when numeric
+export const IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+
+export function setStyle(style: CSSStyleDeclaration, key: string, value: string | number | null) {
+  if (key[0] === '-') {
+    style.setProperty(key, value == null ? '' : value.toString());
+  } else if (value == null) {
+    // eslint-disable-next-line no-param-reassign
+    (style as any)[key] = '';
+  } else if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(key)) {
+    // eslint-disable-next-line no-param-reassign
+    (style as any)[key] = value.toString();
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    (style as any)[key] = `${value}px`;
+  }
+}

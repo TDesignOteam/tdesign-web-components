@@ -1,0 +1,19 @@
+t-col-light-dom > div {
+  min-height: 40px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  background: var(--td-brand-color-6);
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+}
+
+t-col-light-dom:nth-of-type(2n) > div {
+  min-height: 40px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  color: #fff;
+  text-align: center;
+  line-height: 40px;
+  background: var(--td-brand-color-4);
+}
