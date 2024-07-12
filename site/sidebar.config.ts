@@ -98,6 +98,12 @@ export default [
         path: '/components/breadcrumb',
         // component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
+      {
+        title: 'BackTop 回到顶部',
+        name: 'backTop',
+        path: '/components/backTop',
+        component: () => import('tdesign-web-components/back-top/README.md'),
+      },
     ],
   },
   {
@@ -196,6 +202,12 @@ export default [
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Popconfirm 气泡确认框',
+        name: 'popconfirm',
+        path: '/components/popconfirm',
+        component: () => import('tdesign-web-components/popconfirm/README.md'),
       },
       {
         title: 'Popup 弹出层',
