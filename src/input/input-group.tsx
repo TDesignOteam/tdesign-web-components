@@ -9,11 +9,13 @@ export type InputGroupProps = TdInputGroupProps;
 
 @tag('t-input-group')
 export default class InputGroup extends Component<InputGroupProps> {
-  S;
+  static propTypes = {
+    separate: Boolean,
+  };
 
-  static addStyle = `.t-input-group--separate t-input{
-    margin-left: var(--td-comp-margin-xxxl);
-  }`;
+  static defaultProps = {
+    separate: false,
+  };
 
   divRef = createRef();
 

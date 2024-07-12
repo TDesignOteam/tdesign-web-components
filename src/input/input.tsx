@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import 'tdesign-web-components/icon';
 
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
@@ -43,17 +42,6 @@ const isFunction = (arg: unknown) => typeof arg === 'function';
 
 @tag('t-input')
 export default class Input extends Component<InputProps> {
-  static tagStyle = `.t-tag-input t-tag::part(my-part) {
-    vertical-align: middle;
-    -webkit-animation: t-fade-in .2s ease-in-out;
-    animation: t-fade-in .2s ease-in-out;
-    margin: 3px var(--td-comp-margin-xs) 3px 0;
-    }
-    .t-tag-input t-tag[size="small"]::part(my-part) {
-      margin: 1px var(--td-comp-margin-xs) 1px 0;
-    }
-  `;
-
   static defaultProps = {
     align: 'left',
     allowInputOverMax: false,
@@ -78,7 +66,6 @@ export default class Input extends Component<InputProps> {
     autofocus: Boolean,
     clearable: Boolean,
     disabled: Boolean,
-
     align: String,
     borderless: Boolean,
     autocomplete: String,
@@ -109,7 +96,120 @@ export default class Input extends Component<InputProps> {
 
   eventProps;
 
-  isKeyUpEvent = false;
+  private handleChange = (e) => {
+    const { maxlength, maxcharacter, allowInputOverMax, status, onValidate, onChange } = this.props;
+
+    const { getValueByLimitNumber } = useLengthLimit({
+      value: this.value === undefined ? undefined : String(this.value),
+      status,
+      maxlength,
+      maxcharacter,
+      allowInputOverMax,
+      onValidate,
+    });
+
+    let { value: newStr } = e.currentTarget;
+    if (this.composingRef.current) {
+      this.composingValue = newStr;
+    } else {
+      if (this.props.type !== 'number') {
+        newStr = getValueByLimitNumber(newStr);
+      }
+      // 完成中文输入时同步一次 composingValue
+      this.composingValue = newStr;
+      // 防止输入中文后移开光标触发mouseleave时value没更新
+      this.value = newStr;
+      const { onValidateChange } = useLengthLimit({
+        value: newStr === undefined ? undefined : String(newStr),
+        status: this.status,
+        maxlength,
+        maxcharacter,
+        allowInputOverMax,
+        onValidate,
+      });
+      onValidateChange();
+      onChange?.(newStr);
+    }
+  };
+
+  private handleFocus = (e: FocusEvent) => {
+    console.log('focus');
+    const { readonly, onFocus } = this.props;
+    if (readonly) return;
+    const { currentTarget }: { currentTarget: any } = e;
+    onFocus?.(currentTarget.value, { e });
+    this.isFocused = true;
+    this.update();
+  };
+
+  private handleBlur = (e: FocusEvent) => {
+    console.log('blur', this.props);
+    const { readonly, onBlur } = this.props;
+    if (readonly) return;
+    const { currentTarget }: { currentTarget: any } = e;
+    onBlur?.(currentTarget.value, { e });
+    this.isFocused = false;
+    this.update();
+  };
+
+  private handleMouseEnter = (e: MouseEvent) => {
+    const { onMouseenter } = this.props;
+    this.isHover = true;
+    this.update();
+    onMouseenter?.({ e });
+  };
+
+  private handleMouseLeave = (e: MouseEvent) => {
+    const { onMouseleave } = this.props;
+    this.isHover = false;
+    this.update();
+    onMouseleave?.({ e });
+  };
+
+  private handleClear = (e: MouseEvent) => {
+    const { onChange, onClear } = this.props;
+    this.composingValue = '';
+    this.value = '';
+    this.update();
+    onChange?.('', { e });
+    onClear?.({ e });
+  };
+
+  private handleKeyDown = (e: KeyboardEvent) => {
+    const { onEnter } = this.props;
+    const { key, currentTarget }: { key: string; currentTarget: any } = e;
+    this.value = '';
+    key === 'Enter' && onEnter?.(currentTarget.value, { e });
+    this.props.onMyKeydown?.(currentTarget.value, { e });
+  };
+
+  private handleKeyUp = (e: KeyboardEvent) => {
+    const { currentTarget }: { currentTarget: any } = e;
+    this.props.onMyKeyup?.(currentTarget.value, { e });
+  };
+
+  private handleKeyPress = (e: KeyboardEvent) => {
+    const { onKeypress } = this.props;
+    const { currentTarget }: { currentTarget: any } = e;
+    onKeypress?.(currentTarget.value, { e });
+  };
+
+  private handleCompositionStart = (e: CompositionEvent) => {
+    const { onCompositionstart } = this.props;
+    this.composingRef.current = true;
+    const { currentTarget }: { currentTarget: any } = e;
+    onCompositionstart?.(currentTarget.value, { e });
+  };
+
+  private handleCompositionEnd = (e: CompositionEvent) => {
+    const { onCompositionend } = this.props;
+    const { currentTarget }: { currentTarget: any } = e;
+    if (this.composingRef.current) {
+      this.composingRef.current = false;
+      this.handleChange(e);
+    }
+    onCompositionend?.(currentTarget.value, { e });
+  };
 
   install() {
     this.value = this.props.defaultValue || this.props.value;
@@ -117,7 +217,6 @@ export default class Input extends Component<InputProps> {
   }
 
   installed() {
-    const that = this;
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
     const updateInputWidth = () => {
@@ -129,34 +228,34 @@ export default class Input extends Component<InputProps> {
       this.inputRef.current.style.width = `${calcWidth}px`;
     };
 
-    if (that.props.autoWidth) {
+    if (this.props.autoWidth) {
       requestAnimationFrame(() => {
         updateInputWidth();
       });
     }
 
     inputNode.addEventListener('input', (e) => {
-      if (that.composingRef.current) {
+      if (this.composingRef.current) {
         return;
       }
       const target = e.currentTarget as any;
-      that.value = target.value;
+      this.value = target.value;
       const { getValueByLimitNumber, onValidateChange } = useLengthLimit({
-        value: that.value === undefined ? undefined : String(that.value),
-        status: that.status,
-        maxlength: that.props.maxlength,
-        maxcharacter: that.props.maxcharacter,
-        allowInputOverMax: that.props.allowInputOverMax,
-        onValidate: that.props.onValidate,
+        value: this.value === undefined ? undefined : String(this.value),
+        status: this.status,
+        maxlength: this.props.maxlength,
+        maxcharacter: this.props.maxcharacter,
+        allowInputOverMax: this.props.allowInputOverMax,
+        onValidate: this.props.onValidate,
       });
       const limitedValue = getValueByLimitNumber(target.value);
-      that.value = limitedValue;
-      that.composingValue = limitedValue;
-      that.props.onChange?.(limitedValue);
-      if (!that.props.allowInputOverMax) {
-        that.update();
+      this.value = limitedValue;
+      this.composingValue = limitedValue;
+      this.props.onChange?.(limitedValue);
+      if (!this.props.allowInputOverMax) {
+        this.update();
       }
-      if (that.props.autoWidth) {
+      if (this.props.autoWidth) {
         requestAnimationFrame(() => {
           updateInputWidth();
         });
@@ -166,7 +265,6 @@ export default class Input extends Component<InputProps> {
   }
 
   render(props: OmiProps<InputProps>) {
-    const that = this;
     const {
       autoWidth,
       placeholder,
@@ -193,21 +291,11 @@ export default class Input extends Component<InputProps> {
       showLimitNumber,
       allowInputOverMax,
       format,
-      onClear,
-      onEnter,
-      onKeypress,
-      onFocus,
-      onBlur,
-      onMouseenter,
-      onMouseleave,
-      onCompositionstart,
-      onCompositionend,
       onValidate,
-      onChange,
       ...restProps
     } = props;
 
-    const { limitNumber, getValueByLimitNumber, tStatus } = useLengthLimit({
+    const { limitNumber, tStatus } = useLengthLimit({
       value: this.value === undefined ? undefined : String(this.value),
       status,
       maxlength,
@@ -225,10 +313,7 @@ export default class Input extends Component<InputProps> {
         <t-icon
           name={'close-circle-filled'}
           class={classNames(InputClassNamePrefix(`__suffix-clear`))}
-          onClick={handleClear}
-          onFocus={() => {
-            console.log('focus-clear');
-          }}
+          onClick={this.handleClear}
         />
       ) as any;
     }
@@ -262,14 +347,14 @@ export default class Input extends Component<InputProps> {
         disabled={disabled}
         autoComplete={autocomplete ?? (autocomplete || undefined)}
         autoFocus={autofocus}
-        onChange={handleChange}
-        onKeyDown={handleKeyDown}
-        onKeyUp={handleKeyUp}
-        onKeyPress={handleKeyPress}
-        onCompositionStart={handleCompositionStart}
-        onCompositionEnd={handleCompositionEnd}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
+        onChange={this.handleChange}
+        onKeyDown={this.handleKeyDown}
+        onKeyUp={this.handleKeyUp}
+        onKeyPress={this.handleKeyPress}
+        onCompositionStart={this.handleCompositionStart}
+        onCompositionEnd={this.handleCompositionEnd}
+        onFocus={this.handleFocus}
+        onBlur={this.handleBlur}
       />
     );
     const renderInputNode = (
@@ -287,8 +372,8 @@ export default class Input extends Component<InputProps> {
           [InputClassNamePrefix(`--borderless`)]: borderless,
           [InputClassNamePrefix(`--focused`)]: this.isFocused,
         })}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
+        onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
       >
         {prefixIconContent}
         {labelContent ? <div class={classNames(InputClassNamePrefix(`__prefix`))}>{labelContent}</div> : null}
@@ -309,103 +394,6 @@ export default class Input extends Component<InputProps> {
         {suffixIconContent}
       </div>
     );
-
-    function handleChange(e) {
-      let { value: newStr } = e.currentTarget;
-      if (that.composingRef.current) {
-        that.composingValue = newStr;
-        console.log('composing');
-      } else {
-        if (props.type !== 'number') {
-          newStr = getValueByLimitNumber(newStr);
-        }
-        // 完成中文输入时同步一次 composingValue
-        that.composingValue = newStr;
-        // 防止输入中文后移开光标触发mouseleave时value没更新
-        that.value = newStr;
-        const { onValidateChange } = useLengthLimit({
-          value: newStr === undefined ? undefined : String(newStr),
-          status: that.status,
-          maxlength,
-          maxcharacter,
-          allowInputOverMax,
-          onValidate,
-        });
-        onValidateChange();
-        onChange?.(newStr);
-      }
-    }
-
-    function handleClear(e: MouseEvent) {
-      console.log('clear');
-      that.composingValue = '';
-      that.value = '';
-      that.update();
-      onChange?.('', { e });
-      onClear?.({ e });
-    }
-
-    function handleKeyDown(e: KeyboardEvent) {
-      const { key, currentTarget }: { key: string; currentTarget: any } = e;
-      that.value = '';
-      key === 'Enter' && onEnter?.(currentTarget.value, { e });
-      props.onMyKeydown?.(currentTarget.value, { e });
-    }
-
-    function handleKeyUp(e: KeyboardEvent) {
-      const { currentTarget }: { currentTarget: any } = e;
-      props.onMyKeyup?.(currentTarget.value, { e });
-    }
-
-    function handleFocus(e: FocusEvent) {
-      console.log('focus');
-      if (readonly) return;
-      const { currentTarget }: { currentTarget: any } = e;
-      onFocus?.(currentTarget.value, { e });
-      that.isFocused = true;
-      that.update();
-    }
-
-    function handleKeyPress(e: KeyboardEvent) {
-      const { currentTarget }: { currentTarget: any } = e;
-      onKeypress?.(currentTarget.value, { e });
-    }
-
-    function handleCompositionStart(e: CompositionEvent) {
-      that.composingRef.current = true;
-      const { currentTarget }: { currentTarget: any } = e;
-      onCompositionstart?.(currentTarget.value, { e });
-    }
-
-    function handleCompositionEnd(e: CompositionEvent) {
-      const { currentTarget }: { currentTarget: any } = e;
-      if (that.composingRef.current) {
-        that.composingRef.current = false;
-        handleChange(e);
-      }
-      onCompositionend?.(currentTarget.value, { e });
-    }
-
-    function handleBlur(e: FocusEvent) {
-      console.log('handleBlur');
-      if (readonly) return;
-      const { currentTarget }: { currentTarget: any } = e;
-      onBlur?.(currentTarget.value, { e });
-      that.isFocused = false;
-      that.update();
-    }
-
-    function handleMouseEnter(e: MouseEvent) {
-      that.isHover = true;
-      that.update();
-      onMouseenter?.({ e });
-    }
-
-    function handleMouseLeave(e: MouseEvent) {
-      that.isHover = false;
-      that.update();
-      onMouseleave?.({ e });
-    }
 
     return (
       <div
