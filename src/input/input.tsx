@@ -10,8 +10,6 @@ import useLengthLimit from './useLengthLimit';
 
 const classPrefix = getClassPrefix();
 
-const InputClassNamePrefix = (name: string) => `${classPrefix}-input${name}`;
-
 export interface InputProps extends TdInputProps, StyledProps {
   showInput?: boolean; // 控制透传readonly同时是否展示input 默认保留 因为正常Input需要撑开宽度
   keepWrapperWidth?: boolean; // 控制透传autoWidth之后是否容器宽度也自适应 多选等组件需要用到自适应但也需要保留宽度
@@ -32,7 +30,7 @@ const renderIcon = (classPrefix: string, type: 'prefix' | 'suffix', icon: TNode 
   const iconClassName = icon ? `${classPrefix}-input__${type}-icon` : '';
 
   return result ? (
-    <span class={classNames(InputClassNamePrefix(`__${type} ${iconClassName}`))}>{result}</span>
+    <span class={classNames(`${classPrefix}-input__${type} ${iconClassName}`)}>{result}</span>
   ) : (
     <span></span>
   );
@@ -312,7 +310,7 @@ export default class Input extends Component<InputProps> {
       suffixIconNew = (
         <t-icon
           name={'close-circle-filled'}
-          class={classNames(InputClassNamePrefix(`__suffix-clear`))}
+          class={classNames(`${classPrefix}-input__suffix-clear`)}
           onClick={this.handleClear}
         />
       ) as any;
@@ -325,7 +323,7 @@ export default class Input extends Component<InputProps> {
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
         <div
-          class={classNames(InputClassNamePrefix(`__limit-number`), {
+          class={classNames(`${classPrefix}-input__limit-number`, {
             [`${classPrefix}-is-disabled`]: disabled,
           })}
         >
@@ -341,7 +339,7 @@ export default class Input extends Component<InputProps> {
         ref={this.inputRef}
         placeholder={placeholder}
         type={this.renderType}
-        class={'t-input__inner'}
+        class={`${classPrefix}-input__inner`}
         value={formatDisplayValue}
         readOnly={readonly}
         disabled={disabled}
@@ -367,26 +365,26 @@ export default class Input extends Component<InputProps> {
           [`${classPrefix}-size-l`]: size === 'large',
           [`${classPrefix}-align-${align}`]: align,
           [`${classPrefix}-is-${tStatus}`]: tStatus && tStatus !== 'default',
-          [InputClassNamePrefix(`--prefix`)]: prefixIcon || labelContent,
-          [InputClassNamePrefix(`--suffix`)]: suffixIconContent || suffixContent,
-          [InputClassNamePrefix(`--borderless`)]: borderless,
-          [InputClassNamePrefix(`--focused`)]: this.isFocused,
+          [`${classPrefix}-input--prefix`]: prefixIcon || labelContent,
+          [`${classPrefix}-input--suffix`]: suffixIconContent || suffixContent,
+          [`${classPrefix}-input--borderless`]: borderless,
+          [`${classPrefix}-input--focused`]: this.isFocused,
         })}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
       >
         {prefixIconContent}
-        {labelContent ? <div class={classNames(InputClassNamePrefix(`__prefix`))}>{labelContent}</div> : null}
+        {labelContent ? <div class={classNames(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
         {showInput && renderInput}
 
         {autoWidth && (
-          <span ref={this.inputPreRef} class={classNames(InputClassNamePrefix(`__input-pre`))}>
+          <span ref={this.inputPreRef} class={classNames(`${classPrefix}-input__input-pre`)}>
             {innerValue || placeholder}
           </span>
         )}
 
         {suffixContent || limitNumberNode ? (
-          <div class={classNames(InputClassNamePrefix(`__suffix`))}>
+          <div class={classNames(`${classPrefix}-input__suffix`)}>
             {suffixContent}
             {limitNumberNode}
           </div>
@@ -398,9 +396,9 @@ export default class Input extends Component<InputProps> {
     return (
       <div
         class={classNames(
-          InputClassNamePrefix('__wrap'),
+          `${classPrefix}-input__wrap`,
           {
-            [InputClassNamePrefix('--auto-width')]: autoWidth && !keepWrapperWidth,
+            [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
           },
           className,
         )}
@@ -409,7 +407,9 @@ export default class Input extends Component<InputProps> {
         {...restProps}
       >
         {renderInputNode}
-        <div class={classNames('t-input__tips', InputClassNamePrefix(`__tips--${tStatus || 'default'}`))}>{tips}</div>
+        <div class={classNames(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
+          {tips}
+        </div>
       </div>
     );
   }
