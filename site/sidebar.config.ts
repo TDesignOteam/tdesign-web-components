@@ -72,6 +72,12 @@ export default [
         path: '/components/space',
         component: () => import('tdesign-web-components/space/README.md'),
       },
+      {
+        title: 'Grid 栅格',
+        name: 'grid',
+        path: '/components/grid',
+        component: () => import('tdesign-web-components/grid/README.md'),
+      },
     ],
     tag: '',
   },

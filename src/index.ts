@@ -3,6 +3,7 @@ export * from './button';
 export * from './collapse';
 export * from './common';
 export * from './divider';
+export * from './grid';
 export * from './image';
 export * from './input';
 export * from './input-number';
