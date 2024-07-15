@@ -101,6 +101,7 @@ export default class Input extends Component<InputProps> {
   eventProps;
 
   private handleChange = (e) => {
+    e.stopImmediatePropagation();
     const { maxlength, maxcharacter, allowInputOverMax, status, onValidate, onChange } = this.props;
 
     const { getValueByLimitNumber } = useLengthLimit({
@@ -137,6 +138,7 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
+    e.stopImmediatePropagation();
     const { readonly, onFocus } = this.props;
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
@@ -146,6 +148,7 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleBlur = (e: FocusEvent) => {
+    e.stopImmediatePropagation();
     const { readonly, onBlur } = this.props;
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
