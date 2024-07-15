@@ -15,7 +15,13 @@ export default class InputBase extends Component {
           placeholder="请输入内容（无默认值）"
           onChange={(value) => {
             this.value1 = value;
-            console.log(value);
+            console.log('change', value);
+          }}
+          onFocus={() => {
+            console.log('focus');
+          }}
+          onBlur={() => {
+            console.log('blur');
           }}
         />
         <t-input
