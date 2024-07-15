@@ -1,8 +1,8 @@
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
-import { classNames, Component, createRef, OmiProps, tag } from 'omi';
+import { Component, createRef, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
+import classname, { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
 import { InputValue, TdInputProps } from './type';
@@ -30,7 +30,7 @@ const renderIcon = (classPrefix: string, type: 'prefix' | 'suffix', icon: TNode 
   const iconClassName = icon ? `${classPrefix}-input__${type}-icon` : '';
 
   return result ? (
-    <span class={classNames(`${classPrefix}-input__${type} ${iconClassName}`)}>{result}</span>
+    <span class={classname(`${classPrefix}-input__${type} ${iconClassName}`)}>{result}</span>
   ) : (
     <span></span>
   );
@@ -59,15 +59,21 @@ export default class Input extends Component<InputProps> {
   };
 
   static propTypes = {
+    align: String,
     allowInputOverMax: Boolean,
     autoWidth: Boolean,
+    autocomplete: String,
     autofocus: Boolean,
     clearable: Boolean,
-    disabled: Boolean,
-    align: String,
+    placeholder: String,
+    readonly: Boolean,
+    showClearIconOnEmpty: Boolean,
+    showLimitNumber: Boolean,
+    size: String,
+    status: String,
+    type: String,
+    defaultValue: String,
     borderless: Boolean,
-    autocomplete: String,
-    value: String,
   };
 
   inputRef = createRef<HTMLElement>();
@@ -131,7 +137,6 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
-    console.log('focus');
     const { readonly, onFocus } = this.props;
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
@@ -141,7 +146,6 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleBlur = (e: FocusEvent) => {
-    console.log('blur', this.props);
     const { readonly, onBlur } = this.props;
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
@@ -269,7 +273,7 @@ export default class Input extends Component<InputProps> {
       disabled,
       status,
       size,
-      class: className,
+      className,
       prefixIcon,
       suffixIcon,
       clearable,
@@ -308,9 +312,9 @@ export default class Input extends Component<InputProps> {
 
     if (isShowClearIcon) {
       suffixIconNew = (
-        <t-icon
+        <t-icon-close-circle-filled
           name={'close-circle-filled'}
-          class={classNames(`${classPrefix}-input__suffix-clear`)}
+          class={classname(`${classPrefix}-input__suffix-clear`)}
           onClick={this.handleClear}
         />
       ) as any;
@@ -323,7 +327,7 @@ export default class Input extends Component<InputProps> {
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
         <div
-          class={classNames(`${classPrefix}-input__limit-number`, {
+          class={classname(`${classPrefix}-input__limit-number`, {
             [`${classPrefix}-is-disabled`]: disabled,
           })}
         >
@@ -357,7 +361,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        class={classNames(`${classPrefix}-input`, {
+        class={classname(`${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -374,17 +378,17 @@ export default class Input extends Component<InputProps> {
         onMouseLeave={this.handleMouseLeave}
       >
         {prefixIconContent}
-        {labelContent ? <div class={classNames(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
+        {labelContent ? <div class={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
         {showInput && renderInput}
 
         {autoWidth && (
-          <span ref={this.inputPreRef} class={classNames(`${classPrefix}-input__input-pre`)}>
+          <span ref={this.inputPreRef} class={classname(`${classPrefix}-input__input-pre`)}>
             {innerValue || placeholder}
           </span>
         )}
 
         {suffixContent || limitNumberNode ? (
-          <div class={classNames(`${classPrefix}-input__suffix`)}>
+          <div class={classname(`${classPrefix}-input__suffix`)}>
             {suffixContent}
             {limitNumberNode}
           </div>
@@ -395,7 +399,7 @@ export default class Input extends Component<InputProps> {
 
     return (
       <div
-        class={classNames(
+        class={classname(
           `${classPrefix}-input__wrap`,
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
@@ -407,7 +411,7 @@ export default class Input extends Component<InputProps> {
         {...restProps}
       >
         {renderInputNode}
-        <div class={classNames(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
+        <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
           {tips}
         </div>
       </div>

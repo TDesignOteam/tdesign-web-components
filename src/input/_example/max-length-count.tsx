@@ -42,7 +42,6 @@ export default class InputLenlimit extends Component {
         <t-input
           value={this.value3}
           onChange={(value) => {
-            // console.log(value)
             this.value3 = value;
             this.update();
           }}
