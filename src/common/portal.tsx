@@ -40,6 +40,11 @@ export function getAttach(attach: PortalProps['attach'], triggerNode?: HTMLEleme
 export default class Portal extends Component<PortalProps> {
   static css = [];
 
+  static propTypes = {
+    attach: [Object, Function, String, Boolean],
+    triggerNode: Object,
+  };
+
   static defaultProps = {
     attach: false,
   };

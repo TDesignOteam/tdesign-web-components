@@ -47,7 +47,7 @@ export default [
         component: () => import('tdesign-web-components/button/README.md'),
       },
       {
-        title: 'Icon 图表',
+        title: 'Icon 图标',
         name: 'icon',
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
@@ -72,6 +72,12 @@ export default [
         path: '/components/space',
         component: () => import('tdesign-web-components/space/README.md'),
       },
+      {
+        title: 'Grid 栅格',
+        name: 'grid',
+        path: '/components/grid',
+        component: () => import('tdesign-web-components/grid/README.md'),
+      },
     ],
     tag: '',
   },
@@ -84,13 +90,19 @@ export default [
         title: 'Menu 导航菜单',
         name: 'menu',
         path: '/components/menu',
-        // component: () => import('tdesign-web-components/menu/README.md'),
+        component: () => import('tdesign-web-components/menu/README.md'),
       },
       {
         title: 'Breadcrumb 面包屑',
         name: 'breadcrumb',
         path: '/components/breadcrumb',
         // component: () => import('tdesign-web-components/breadcrumb/README.md'),
+      },
+      {
+        title: 'BackTop 回到顶部',
+        name: 'backTop',
+        path: '/components/backTop',
+        component: () => import('tdesign-web-components/back-top/README.md'),
       },
     ],
   },
@@ -110,6 +122,12 @@ export default [
         name: 'select',
         path: '/components/select',
         // component: () => import('tdesign-web-components/select/README.md'),
+      },
+      {
+        title: 'Slider 滑块',
+        name: 'slider',
+        path: '/components/slider',
+        component: () => import('tdesign-web-components/slider/README.md'),
       },
       {
         title: 'Switch 开关',
@@ -158,7 +176,7 @@ export default [
         title: 'Tag 标签',
         name: 'tag',
         path: '/components/tag',
-        // component: () => import('tdesign-web-components/tag/README.md'),
+        component: () => import('tdesign-web-components/tag/README.md'),
       },
       {
         title: 'Image 图片',
@@ -190,6 +208,12 @@ export default [
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Popconfirm 气泡确认框',
+        name: 'popconfirm',
+        path: '/components/popconfirm',
+        component: () => import('tdesign-web-components/popconfirm/README.md'),
       },
       {
         title: 'Popup 弹出层',

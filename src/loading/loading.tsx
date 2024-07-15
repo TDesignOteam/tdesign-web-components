@@ -25,6 +25,18 @@ const loadingDefaultProps: TdLoadingProps = {
 export default class Loading extends Component<LoadingProps> {
   static defaultProps = loadingDefaultProps;
 
+  static propTypes = {
+    delay: Number,
+    fullscreen: Boolean,
+    indicator: Object,
+    inheritColor: Boolean,
+    loading: Boolean,
+    preventScrollThrough: Boolean,
+    showOverlay: Boolean,
+    size: String,
+    zIndex: Number,
+  };
+
   showLoading = false;
 
   showLoadingFlag = false;

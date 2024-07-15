@@ -4,6 +4,7 @@ import { Component, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { type PopupVisibleChangeContext } from '../popup';
+import { PopupTypes } from '../popup/popup';
 import { TdTooltipProps } from './type';
 
 export type TooltipProps = TdTooltipProps;
@@ -19,6 +20,17 @@ export const tooltipDefaultProps: TooltipProps = {
 @tag('t-tooltip')
 export default class Tooltip extends Component<TooltipProps> {
   static defaultProps = tooltipDefaultProps;
+
+  static propTypes = {
+    ...PopupTypes,
+    delay: Number,
+    destroyOnClose: Boolean,
+    duration: Number,
+    placement: String,
+    showArrow: Boolean,
+    theme: String,
+    ignoreAttributes: Array,
+  };
 
   popupRef = createRef();
 
