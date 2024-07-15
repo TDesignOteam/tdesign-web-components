@@ -13,9 +13,9 @@ export default class Affix extends Component<AffixProps> {
   static defaultProps = { container: () => window, offsetBottom: 0, offsetTop: 0 };
 
   static propsType = {
-    children: Function || Object || String || Number,
-    container: Function || Object || String || Number,
-    content: Function || Object || String || Number,
+    children: [Function, Object, String, Number],
+    container: [Function, Object, String, Number],
+    content: [Function, Object, String, Number],
     offsetBottom: Number,
     offsetTop: Number,
     zIndex: Number,
