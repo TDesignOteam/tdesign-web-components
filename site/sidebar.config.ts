@@ -118,6 +118,12 @@ export default [
         component: () => import('tdesign-web-components/input/README.md'),
       },
       {
+        title: 'Checkbox 多选框',
+        name: 'checkbox',
+        path: '/components/checkbox',
+        component: () => import('tdesign-web-components/checkbox/README.md'),
+      },
+      {
         title: 'Select 选择器',
         name: 'select',
         path: '/components/select',
