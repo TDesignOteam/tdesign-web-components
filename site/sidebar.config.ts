@@ -170,7 +170,7 @@ export default [
         title: 'Tag 标签',
         name: 'tag',
         path: '/components/tag',
-        // component: () => import('tdesign-web-components/tag/README.md'),
+        component: () => import('tdesign-web-components/tag/README.md'),
       },
       {
         title: 'Image 图片',
