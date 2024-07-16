@@ -1,9 +1,27 @@
 import isString from 'lodash/isString';
 import raf from 'raf';
 
+import { ScrollContainer, ScrollContainerElement } from '../common';
 import { easeInOutCubic, EasingFunction } from './easing';
 // 用于判断是否可使用 dom
 export const canUseDocument = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+/**
+ * 获取滚动容器
+ * 因为 document 不存在 scroll 等属性, 因此排除 document
+ * window | HTMLElement
+ * @param {ScrollContainerElement} [container='body']
+ * @returns {ScrollContainer}
+ */
+export const getScrollContainer = (container: ScrollContainer = 'body'): ScrollContainerElement => {
+  if (isString(container)) {
+    return container ? (document.querySelector(container) as HTMLElement) : window;
+  }
+  if (typeof container === 'function') {
+    return container();
+  }
+  return container || window;
+};
 
 // 获取 css vars
 export const getCssVarsValue = (name: string, element?: HTMLElement) => {

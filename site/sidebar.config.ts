@@ -87,6 +87,12 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Affix 固钉',
+        name: 'menu',
+        path: '/components/affix',
+        component: () => import('tdesign-web-components/affix/README.md'),
+      },
+      {
         title: 'Menu 导航菜单',
         name: 'menu',
         path: '/components/menu',
