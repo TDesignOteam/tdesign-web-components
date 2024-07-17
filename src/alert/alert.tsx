@@ -51,18 +51,20 @@ export default class Alert extends Component<AlertProps> {
 
   collapsed: SignalValue<boolean> = signal(true);
 
+  needUninstall: Set<Function> = new Set<Function>();
+
   nodeRef = createRef<HTMLElement>();
 
   classPrefix = getClassPrefix();
 
   handleClose(e?: MouseEvent) {
-    const { onClose } = { ...this.props };
+    const { onClose } = this.props;
     this.nodeRef.current?.classList.add(`${this.classPrefix}-alert--closing`);
     onClose?.({ e });
   }
 
   handleCloseEnd(e?: TransitionEvent) {
-    const { onClosed } = { ...this.props };
+    const { onClosed } = this.props;
     const isTransitionTarget = e?.target === this.nodeRef.current;
     // 防止子元素冒泡触发
     if (e?.propertyName === 'opacity' && isTransitionTarget) {
@@ -76,13 +78,12 @@ export default class Alert extends Component<AlertProps> {
   }
 
   renderTitle() {
-    const { title } = { ...this.props };
+    const { title } = this.props;
     return title ? <div className={`${this.classPrefix}-alert__title`}>{title}</div> : null;
   }
 
   renderMessage() {
-    const { maxLine, message } = { ...this.props };
-    const handleCollapse = this.handleCollapse.bind(this);
+    const { maxLine, message } = this.props;
     if (maxLine > 0 && Array.isArray(message)) {
       return (
         <div className={`${this.classPrefix}-alert__description`}>
@@ -95,7 +96,7 @@ export default class Alert extends Component<AlertProps> {
             }
             return <div key={index}>{item}</div>;
           })}
-          <div className={`${this.classPrefix}-alert__collapse`} onClick={handleCollapse}>
+          <div className={`${this.classPrefix}-alert__collapse`} onClick={() => this.handleCollapse()}>
             {this.collapsed.value ? expandText : collapseText}
           </div>
         </div>
@@ -105,26 +106,26 @@ export default class Alert extends Component<AlertProps> {
   }
 
   renderIcon() {
-    const { icon, theme } = { ...this.props };
+    const { icon, theme } = this.props;
     if (isObject(icon)) return icon;
     return <div class={`${this.classPrefix}-alert__icon`}>{this.iconMap[theme] || this.iconMap.info}</div>;
   }
 
   renderClose() {
-    const { close } = { ...this.props };
-    const handleClose = this.handleClose.bind(this);
+    const { close } = this.props;
     return (
-      <div className={`${this.classPrefix}-alert__close`} onClick={handleClose}>
+      <div className={`${this.classPrefix}-alert__close`} onClick={(e) => this.handleClose(e)}>
         {typeof close === 'boolean' && close ? <t-icon-close /> : parseTNode(close)}
       </div>
     );
   }
 
   renderOperation() {
-    const { operation } = { ...this.props };
+    const { operation } = this.props;
     if (operation) {
       return <div className={`${this.classPrefix}-alert__operation`}>{parseTNode(operation)}</div>;
     }
+    return null;
   }
 
   renderContext() {
@@ -140,8 +141,15 @@ export default class Alert extends Component<AlertProps> {
   }
 
   ready() {
-    const handleCloseEnd = this.handleCloseEnd.bind(this);
+    const handleCloseEnd = (e) => {
+      this.handleCloseEnd(e);
+    };
     this.nodeRef.current?.addEventListener('transitionend', handleCloseEnd);
+    this.needUninstall.add(() => this.nodeRef.current?.removeEventListener('transitionend', handleCloseEnd));
+  }
+
+  uninstall() {
+    this.needUninstall.forEach((uninstall) => uninstall());
   }
 
   render(props: AlertProps) {
