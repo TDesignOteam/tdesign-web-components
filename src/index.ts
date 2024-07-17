@@ -12,3 +12,4 @@ export * from './space';
 export * from './switch';
 export * from './textarea';
 export * from './tooltip';
+export * from './watermark';
