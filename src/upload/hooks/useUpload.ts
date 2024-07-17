@@ -1,4 +1,4 @@
-import { computed, signal } from 'omi';
+import { computed, createRef, signal } from 'omi';
 
 import {
   formatToUploadFile,
@@ -18,7 +18,7 @@ import { t, toSignal } from '../utils';
 export type ValidateParams = Parameters<TdUploadProps['onValidate']>[0];
 
 export default function useUpload(props: TdUploadProps) {
-  const inputRef = signal<HTMLInputElement | undefined>(undefined);
+  const inputRef = createRef<HTMLInputElement>();
   // TODO: Form 表单控制上传组件是否禁用
   const { disabled, autoUpload, files } = toSignal(props);
   const [uploadValue, setUploadValue] = [
@@ -207,7 +207,7 @@ export default function useUpload(props: TdUploadProps) {
     });
 
     // 清空 <input type="file"> 元素的文件，避免出现重复文件无法选择的情况
-    inputRef.value.value = null;
+    inputRef.current.value = null;
   };
 
   const onNormalFileChange = (e: InputEvent) => {
@@ -333,9 +333,9 @@ export default function useUpload(props: TdUploadProps) {
   }
 
   const triggerUpload = (e?: MouseEvent) => {
-    if (disabled.value || !inputRef.value) return;
+    if (disabled.value || !inputRef.current) return;
     e?.stopPropagation?.();
-    (inputRef.value as HTMLInputElement).click();
+    inputRef.current.click();
   };
 
   const cancelUpload = (context?: { file?: UploadFile; e?: MouseEvent }) => {

@@ -1,11 +1,15 @@
 import '../popup';
 
-import { classNames, Component, createRef, OmiProps, tag } from 'omi';
+import { classNames, Component, computed, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { type PopupVisibleChangeContext } from '../popup';
+import 'tdesign-icons-web-components';
+import { Button } from '../button';
+import NormalFile from './themes/NormalFile';
 import useUpload from './hooks/useUpload';
-import { TdUploadProps } from './type';
+import { TdUploadProps, UploadFile } from './type';
+import { CommonDisplayFileProps } from './interface';
+import ImageCard from './themes/ImageCard';
+import CustomFile from './themes/CustomFile';
 
 export type UploadProps = TdUploadProps;
 
@@ -16,6 +20,8 @@ export const uploadDefaultProps: TdUploadProps = {
 
 @tag('t-upload')
 export default class Upload extends Component<UploadProps> {
+  uploadFiles: undefined | ((files: UploadFile[]) => void) = undefined;
+
   static defaultProps = uploadDefaultProps;
 
   static propTypes = {
@@ -39,53 +45,9 @@ export default class Upload extends Component<UploadProps> {
     onValidate: Function,
   };
 
-  popupRef = createRef();
-
-  timerRef = createRef();
-
-  timeUp = false;
-
-  popupVisible = undefined;
-
-  handleVisibleChange(visible: boolean, { e, trigger }: PopupVisibleChangeContext) {
-    this.props?.onVisibleChange?.(visible, { e, trigger });
-  }
-
-  countDown(props: TooltipProps) {
-    if (props.duration !== 0 && !this.timeUp) {
-      this.timeUp = true;
-      this.popupVisible = true;
-      this.update();
-      clearTimeout(this.timerRef.current as number);
-      this.timerRef.current = window.setTimeout(() => {
-        this.popupVisible = undefined;
-        this.timeUp = false;
-        this.update();
-      }, props.duration);
-    }
-  }
-
-  receiveProps(props: TooltipProps, old: TooltipProps) {
-    if (props.duration !== old.duration) {
-      this.countDown(props);
-    }
-
-    return true;
-  }
-
-  installed(): void {
-    this.countDown(this.props);
-  }
-
-  uninstall(): void {
-    if (this.timerRef.current) {
-      clearTimeout(this.timerRef.current as number);
-    }
-  }
-
   render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
+    const { theme } = props;
     const {
-      locale,
       classPrefix,
       triggerUploadText,
       toUploadFiles,
@@ -97,36 +59,66 @@ export default class Upload extends Component<UploadProps> {
       errorClasses,
       placeholderClass,
       inputRef,
-      onInnerRemove,
       uploadFiles,
       onNormalFileChange,
-      onDragFileChange,
-      onPasteFileChange,
       triggerUpload,
       cancelUpload,
-      uploadFilePercent,
     } = useUpload(props);
-    const { destroyOnClose, showArrow, theme, placement, overlayClassName, ignoreAttributes, ...restProps } = props;
-    const classPrefix = getClassPrefix();
-    const toolTipClass = classname(
-      `${classPrefix}-tooltip`,
+
+    this.uploadFiles = uploadFiles;
+
+    const commonDisplayFileProps: CommonDisplayFileProps = {
+      accept: props.accept,
+      files: uploadValue,
+      toUploadFiles,
+      displayFiles,
+      theme,
+      abridgeName: props.abridgeName,
+      placeholder: props.placeholder,
+      disabled: props.disabled,
+      tips: props.tips,
+      sizeOverLimitMessage,
+      uploading,
+      classPrefix,
+      tipsClasses,
+      errorClasses,
+      placeholderClass,
+      // locale,
+      autoUpload: props.autoUpload,
+      // showUploadProgress: props.showUploadProgress,
+      // fileListDisplay: props.fileListDisplay,
+      // imageViewerProps: props.imageViewerProps,
+      // onRemove,
+    };
+
+    const uploadClasses = computed(() => [
+      // props.className,
+      `${classPrefix}-upload`,
       {
-        [`${classPrefix}-tooltip--${theme}`]: theme,
+        [`${classPrefix}-upload--theme-${props.theme}`]: props.theme === 'file-input',
       },
-      overlayClassName,
-    );
+    ]);
 
-    delete restProps.onVisibleChange;
-    delete restProps.duration;
-    delete restProps.children;
+    const renderTrigger = () => {
+      const getDefaultTrigger = () => {
+        if (theme === 'file-input') {
+          return <Button variant="outline">{triggerUploadText}</Button>;
+        }
+        return (
+          <Button variant="outline" icon={<t-icon name="upload" />}>
+            {triggerUploadText}
+          </Button>
+        );
+      };
+      return (
+        // props.children || getDefaultTrigger()
+        getDefaultTrigger()
+      );
+    };
 
-    if (ignoreAttributes?.length > 0) {
-      ignoreAttributes.forEach((attr) => {
-        this.removeAttribute(attr);
-      });
-    }
+    const triggerElement = renderTrigger();
 
-    getNormalFileNode = () => (
+    const getNormalFileNode = () => (
       <NormalFile {...commonDisplayFileProps} multiple={false}>
         <div className={`${classPrefix}-upload__trigger`} onClick={triggerUpload}>
           {triggerElement}
@@ -134,17 +126,34 @@ export default class Upload extends Component<UploadProps> {
       </NormalFile>
     );
 
+    const getImageCardUploadNode = () => (
+      <ImageCard
+        {...commonDisplayFileProps}
+        // showUploadProgress={props.showUploadProgress}
+        triggerUpload={triggerUpload}
+        uploadFiles={uploadFiles}
+        cancelUpload={cancelUpload}
+        onPreview={props.onPreview}
+        // showImageFileName={props.showImageFileName}
+      />
+    );
+
+    const getCustomFile = () => (
+      <CustomFile {...commonDisplayFileProps} triggerUpload={triggerUpload}>
+        {triggerElement}
+      </CustomFile>
+    );
+
     return (
-      <div class={uploadClasses.value} onPaste={props.uploadPastedFiles ? onPasteFileChange : undefined}>
+      <div class={classNames(uploadClasses.value)}>
         <input
           ref={inputRef}
           type="file"
-          disabled={disabled.value}
+          disabled={false}
           onChange={onNormalFileChange}
-          multiple={props.multiple}
+          multiple={false}
           accept={props.accept}
           hidden
-          {...(props.inputAttributes ? { ...props.inputAttributes } : {})}
         />
         {['file', 'file-input'].includes(props.theme) && getNormalFileNode()}
         {/* {['file', 'image'].includes(props.theme) && props.draggable && getSingleFileDraggerUploadNode()} */}
