@@ -41,11 +41,9 @@ export default class CheckboxExample extends Component {
       <t-space direction="vertical">
         <div>选中值: {this.city.value.join('、')}</div>
         <div>
-          <t-checkbox
-            label="禁用全部"
-            checked={this.disabled.value}
-            onChange={(value) => this.setDisabled(value)}
-          ></t-checkbox>
+          <t-checkbox checked={this.disabled.value} onChange={(value) => this.setDisabled(value)}>
+            禁用全部
+          </t-checkbox>
         </div>
 
         <t-checkbox-group

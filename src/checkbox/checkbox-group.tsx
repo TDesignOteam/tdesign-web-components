@@ -1,10 +1,12 @@
-import './checkbox';
+import 'tdesign-web-components/checkbox';
 
-import { intersection, isObject, isUndefined } from 'lodash';
-import { bind, Component, signal, tag } from 'omi';
-import { getClassPrefix } from 'tdesign-web-components/_util/classname.ts';
-import { StyledProps } from 'tdesign-web-components/common.ts';
+import { intersection, isObject, isUndefined, toArray } from 'lodash';
+import isString from 'lodash/isString';
+import { bind, Component, signal, tag, VNode } from 'omi';
 
+import { getClassPrefix } from '../_util/classname.ts';
+import { StyledProps, TNode } from '../common';
+import { CheckboxContextKey } from './checkbox';
 import {
   CheckboxGroupChangeContext,
   CheckboxGroupValue,
@@ -15,13 +17,25 @@ import {
 
 export interface CheckboxGroupProps<T extends CheckboxGroupValue = CheckboxGroupValue>
   extends TdCheckboxGroupProps<T>,
-    StyledProps {}
+    StyledProps {
+  children?: TNode;
+}
 
 @tag('t-checkbox-group')
 export default class CheckboxGroup extends Component<CheckboxGroupProps> {
+  static propTypes = {
+    disabled: Boolean,
+    max: Number,
+    options: Array,
+    value: Array,
+    defaultValue: Array,
+    readonly: Boolean,
+    onChange: Function,
+  };
+
   innerValue = signal<CheckboxGroupValue>([]);
 
-  innerDisabled = signal(false);
+  innerOptionList = signal<CheckboxOptionObj[]>([]);
 
   get tChecked() {
     return this.props.value ?? this.innerValue.value;
@@ -33,7 +47,7 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
   }
 
   get optionList(): CheckboxOptionObj[] {
-    if (!this.props.options) return [];
+    if (!this.props.options) return this.innerOptionList.value;
     return this.props.options.map((item) => (isObject(item) ? item : { label: String(item), value: item }));
   }
 
@@ -132,16 +146,30 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
     }
   }
 
+  getOptionListBySlots() {
+    // eslint-disable-next-line array-callback-return
+    const nodes: VNode[] = toArray(this.props.children).filter((node: VNode) => {
+      isString(node.nodeName) && node.nodeName.endsWith('checkbox');
+    });
+    const arr: Array<CheckboxOptionObj> = [];
+    nodes?.forEach((node) => {
+      const option = node.attributes as CheckboxOptionObj;
+      arr.push(option);
+    });
+    return arr;
+  }
+
   provide = {
-    name: this.props.name,
-    isCheckAll: this.isCheckAll,
-    checkedValues: this.tChecked || [],
-    maxExceeded: this.maxExceeded,
-    disabled: this.innerDisabled,
-    readonly: this.props.readonly,
-    indeterminate: this.indeterminate,
-    handleCheckboxChange: this.handleCheckboxChange,
-    onCheckedChange: this.onCheckedChange,
+    [CheckboxContextKey]: () => ({
+      isCheckAll: this.isCheckAll,
+      checkedValues: this.tChecked || [],
+      maxExceeded: this.maxExceeded,
+      disabled: this.props.disabled,
+      readonly: this.props.readonly,
+      indeterminate: this.indeterminate,
+      handleCheckboxChange: this.handleCheckboxChange,
+      onCheckedChange: this.onCheckedChange,
+    }),
   };
 
   install() {
@@ -151,27 +179,25 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
     } else if (typeof defaultValue !== 'undefined') {
       this.innerValue.value = defaultValue;
     }
-    this.innerDisabled.value = this.props.disabled;
-  }
-
-  receiveProps(newProps) {
-    this.innerDisabled.value = newProps.disabled;
   }
 
   render() {
-    console.log(this.props.disabled);
-
     const classPrefix = getClassPrefix();
-
-    const children = this.optionList?.map((option, index) => (
-      <t-checkbox
-        key={`${option.value || ''}${index}`}
-        {...option}
-        index={index}
-        checked={this.tChecked?.includes(option.value)}
-        data={option}
-      ></t-checkbox>
-    ));
+    let children = null;
+    if (this.props.options?.length) {
+      children = this.optionList?.map((option, index) => (
+        <t-checkbox
+          key={`${option.value || ''}${index}`}
+          {...option}
+          index={index}
+          checked={this.tChecked?.includes(option.value)}
+          data={option}
+        ></t-checkbox>
+      ));
+    } else {
+      this.innerOptionList.value = this.getOptionListBySlots();
+      children = this.props.children;
+    }
 
     return (
       <div class={`${classPrefix}-checkbox-group`} role="group" aria-label="checkbox-group">

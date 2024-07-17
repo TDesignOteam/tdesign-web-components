@@ -14,13 +14,14 @@ export default class CheckboxExample extends Component {
     return (
       <t-space>
         <t-checkbox
-          label="受控属性"
           checked={this.value1.value}
           onChange={(v) => {
             this.onChange1(v);
           }}
-        ></t-checkbox>
-        <t-checkbox label="非受控属性" defaultChecked={true}></t-checkbox>
+        >
+          受控属性
+        </t-checkbox>
+        <t-checkbox defaultChecked={true}>非受控属性</t-checkbox>
       </t-space>
     );
   }

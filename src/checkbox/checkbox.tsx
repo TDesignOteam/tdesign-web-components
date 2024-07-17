@@ -5,10 +5,25 @@ import { StyledProps } from 'tdesign-web-components/common.ts';
 import { getClassPrefix } from '../_util/classname';
 import { TdCheckboxProps } from './type';
 
+export const CheckboxContextKey = 'CheckboxContextKey';
+
 export interface CheckboxProps extends TdCheckboxProps, StyledProps {}
 
 @tag('t-checkbox')
 export default class Checkbox extends Component<CheckboxProps> {
+  static propTypes = {
+    checkAll: Boolean,
+    checked: Boolean,
+    defaultChecked: Boolean,
+    disabled: Boolean,
+    indeterminate: Boolean,
+    label: [String, Number, Object, Function],
+    children: [String, Number, Object, Function],
+    readonly: Boolean,
+    value: [String, Number, Boolean],
+    onChange: Function,
+  };
+
   static defaultProps = {
     defaultChecked: undefined,
     checked: undefined,
@@ -17,21 +32,15 @@ export default class Checkbox extends Component<CheckboxProps> {
     readonly: undefined,
   };
 
-  inject = [
-    'name',
-    'isCheckAll',
-    'checkedValues',
-    'maxExceeded',
-    'disabled',
-    'readonly',
-    'indeterminate',
-    'handleCheckboxChange',
-    'onCheckedChange',
-  ];
+  inject = [CheckboxContextKey];
 
   labelRef = createRef<HTMLElement>();
 
   innerChecked = signal(false);
+
+  get injectionProps() {
+    return this.injection[CheckboxContextKey]?.();
+  }
 
   get isControlled() {
     const { value } = this.props;
@@ -39,22 +48,23 @@ export default class Checkbox extends Component<CheckboxProps> {
   }
 
   get tChecked() {
+    if (this.props.checkAll) return this.injectionProps?.isCheckAll;
+    if (this.injectionProps?.checkedValues) return this.injectionProps?.checkedValues?.includes(this.props.value);
     return this.props.checked ?? this.innerChecked.value;
   }
 
   get tIndeterminate() {
-    return this.props.checkAll ? this.injection.indeterminate : this.props.indeterminate;
+    return this.props.checkAll ? this.injectionProps?.indeterminate : this.props.indeterminate;
   }
 
   get isDisabled() {
-    if (!this.props.checkAll && !this.tChecked && this.injection.maxExceeded) {
+    if (!this.props.checkAll && !this.tChecked && this.injectionProps?.maxExceeded) {
       return true;
     }
     if (this.props.disabled) {
       return true;
     }
-    if (this.injection.disabled?.value) {
-      console.log(this.injection.disabled);
+    if (this.injectionProps?.disabled) {
       return true;
     }
     return false;
@@ -64,10 +74,14 @@ export default class Checkbox extends Component<CheckboxProps> {
     if (this.props.readonly) {
       return true;
     }
-    if (this.injection.readonly) {
+    if (this.injectionProps?.readonly) {
       return true;
     }
     return false;
+  }
+
+  get showLabel() {
+    return this.props.children || this.props.label;
   }
 
   setInnerChecked = (value: boolean, context: { e: Event }) => {
@@ -79,8 +93,8 @@ export default class Checkbox extends Component<CheckboxProps> {
     if (this.isReadonly) return;
     const checked = !this.tChecked;
     this.setInnerChecked(checked, { e });
-    if (this.injection.handleCheckboxChange) {
-      this.injection.handleCheckboxChange({ checked, checkAll: this.props.checkAll, e, option: this.props });
+    if (this.injectionProps?.handleCheckboxChange) {
+      this.injectionProps?.onCheckedChange({ checked, checkAll: this.props.checkAll, e, option: this.props });
     }
   };
 
@@ -94,7 +108,7 @@ export default class Checkbox extends Component<CheckboxProps> {
   }
 
   render() {
-    const { className, value, label } = this.props;
+    const { className, value, label, children } = this.props;
     const classPrefix = getClassPrefix();
 
     const labelClassName = clsx(`${classPrefix}-checkbox`, className, {
@@ -115,9 +129,9 @@ export default class Checkbox extends Component<CheckboxProps> {
           onChange={this.handleChange}
         />
         <span className={`${classPrefix}-checkbox__input`} />
-        {label && (
+        {this.showLabel && (
           <span key="label" className={`${classPrefix}-checkbox__label`}>
-            {label}
+            {children || label}
           </span>
         )}
       </label>

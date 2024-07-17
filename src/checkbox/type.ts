@@ -17,15 +17,6 @@ export interface TdCheckboxProps {
    */
   defaultChecked?: boolean;
   /**
-   * 是否选中
-   * @default false
-   */
-  modelValue?: boolean;
-  /**
-   * 多选框内容，同 label
-   */
-  default?: string | TNode;
-  /**
    * 是否禁用组件。如果父组件存在 CheckboxGroup，默认值由 CheckboxGroup.disabled 控制。优先级：Checkbox.disabled > CheckboxGroup.disabled > Form.disabled
    */
   disabled?: boolean;
@@ -37,17 +28,11 @@ export interface TdCheckboxProps {
   /**
    * 主文案
    */
-  label?: string | TNode;
+  label?: TNode;
   /**
-   * 是否启用懒加载。数据量大时建议开启；加载复杂内容或大量图片时建议开启
-   * @default false
+   * 多选框内容，同 label
    */
-  lazyLoad?: boolean;
-  /**
-   * HTML 元素原生属性
-   * @default ''
-   */
-  name?: string;
+  children?: TNode;
   /**
    * 只读状态
    * @default false
@@ -57,7 +42,6 @@ export interface TdCheckboxProps {
    * 多选框的值
    */
   value?: string | number | boolean;
-  title?: string;
   /**
    * 值变化时触发
    */
@@ -70,19 +54,9 @@ export interface TdCheckboxGroupProps<T = CheckboxGroupValue> {
    */
   disabled?: boolean;
   /**
-   * 是否启用懒加载。子组件 Checkbox 数据量大时建议开启；加载复杂内容或大量图片时建议开启
-   * @default false
-   */
-  lazyLoad?: boolean;
-  /**
    * 支持最多选中的数量
    */
   max?: number;
-  /**
-   * 统一设置内部复选框 HTML 属性
-   * @default ''
-   */
-  name?: string;
   /**
    * 以配置形式设置子元素。示例1：`['北京', '上海']` ，示例2: `[{ label: '全选', checkAll: true }, { label: '上海', value: 'shanghai' }]`。checkAll 值为 true 表示当前选项为「全选选项」
    */
@@ -97,11 +71,6 @@ export interface TdCheckboxGroupProps<T = CheckboxGroupValue> {
    * @default []
    */
   defaultValue?: T;
-  /**
-   * 选中值
-   * @default []
-   */
-  modelValue?: T;
   /**
    * 只读状态
    * @default false
