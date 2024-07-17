@@ -9,7 +9,6 @@ import { Component, createRef, signal, SignalValue, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname.ts';
 import parseTNode from '../_util/parseTNode.ts';
 import { StyledProps } from '../common';
-import { styleSheet } from './style';
 import { TdAlertProps } from './type.ts';
 
 export interface AlertProps extends TdAlertProps, StyledProps {}
@@ -20,7 +19,7 @@ const collapseText = '收起';
 
 @tag('t-alert')
 export default class Alert extends Component<AlertProps> {
-  static css = styleSheet;
+  static css = [];
 
   static defaultProps = {
     close: false,
@@ -29,13 +28,13 @@ export default class Alert extends Component<AlertProps> {
   };
 
   static propTypes = {
-    close: Object,
-    icon: Object,
+    close: [String, Number, Object, Function],
+    icon: [String, Number, Object, Function],
     maxLine: Number,
-    message: Object,
-    operation: Object,
+    message: [String, Number, Object, Function],
+    operation: [String, Number, Object, Function],
     theme: String,
-    title: Object,
+    title: [String, Number, Object, Function],
     onClose: Function,
     onClick: Function,
     ignoreAttributes: Object,
