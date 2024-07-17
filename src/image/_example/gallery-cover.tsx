@@ -1,15 +1,13 @@
 import 'tdesign-web-components/image';
+import 'tdesign-web-components/tag';
 
 export default function ImageGalleryCover() {
   const label = (
     <t-tag
-      shape="mark"
-      theme="warning"
+      theme="primary"
+      variant="light-outline"
       style={{
         margin: 8,
-        borderRadius: 3,
-        background: 'rgba(236,242,254,1)',
-        color: 'rgba(0,82,217,1)',
       }}
     >
       标签一

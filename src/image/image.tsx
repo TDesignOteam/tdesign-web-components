@@ -1,6 +1,8 @@
 // import 'tdesign-icons-omi/image-error';
 // import 'tdesign-icons-omi/image-1';
 import '../space';
+import 'tdesign-icons-web-components/esm/components/image-error';
+import 'tdesign-icons-web-components/esm/components/image-1';
 
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 
@@ -135,7 +137,6 @@ export default class Image extends Component<ImageProps> {
     } = this;
     const {
       class: className,
-      src,
       style,
       alt,
       fit,
@@ -144,17 +145,18 @@ export default class Image extends Component<ImageProps> {
       placeholder,
       loading,
       error,
-      overlayTrigger,
-      lazy,
       gallery,
       overlayContent,
       srcset,
-      onLoad,
-      onError,
       ...rest
     } = props;
 
-    console.log('src', src, onLoad, onError, lazy, overlayTrigger);
+    delete rest.onLoad;
+    delete rest.onError;
+    delete rest.lazy;
+    delete rest.overlayTrigger;
+    delete rest.src;
+
     const renderOverlay = () => {
       if (!overlayContent) {
         return null;
@@ -232,7 +234,7 @@ export default class Image extends Component<ImageProps> {
               <div class={`${componentName}__loading`}>
                 {loading || (
                   <t-space direction="vertical" size={8} align="center">
-                    <t-icon className="mb-[2px]" size={24} name={'image-1'} />
+                    <t-icon-image-1 className="mb-[2px]" size={24} />
                     图片加载中
                   </t-space>
                 )}
@@ -244,7 +246,7 @@ export default class Image extends Component<ImageProps> {
           <div class={`${componentName}__error`}>
             {error || (
               <t-space direction="vertical" size={8} align="center">
-                <t-icon className="mb-[2px]" size={24} name={'image-error'} />
+                <t-icon-image-error className="mb-[2px]" size={24} />
                 图片无法显示
               </t-space>
             )}

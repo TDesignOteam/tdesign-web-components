@@ -83,7 +83,6 @@ export default class Avatar extends Component<AvatarProps> {
     const { SIZE } = getCommonClassName();
     const { componentName, isImgExist, groupSize, avatarRef, avatarChildrenRef, handleImgLoadError } = this;
     const { alt, icon, image, shape, size: avatarSize, children, content, style, imageProps, ...avatarProps } = props;
-    // console.log('this.injection.groupSize: ', this.injection.groupSize)
     const size = avatarSize === undefined ? groupSize : avatarSize;
 
     const numSizeStyle =
@@ -128,7 +127,7 @@ export default class Avatar extends Component<AvatarProps> {
       );
     }
     return (
-      <div ref={avatarRef} class={avatarClass} style={{ ...numSizeStyle, ...style }} {...avatarProps}>
+      <div class={avatarClass} style={{ ...numSizeStyle, ...style }} {...avatarProps} ref={avatarRef}>
         {renderChildren}
       </div>
     );

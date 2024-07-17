@@ -72,6 +72,12 @@ export default [
         path: '/components/space',
         component: () => import('tdesign-web-components/space/README.md'),
       },
+      {
+        title: 'Grid 栅格',
+        name: 'grid',
+        path: '/components/grid',
+        component: () => import('tdesign-web-components/grid/README.md'),
+      },
     ],
     tag: '',
   },
@@ -80,6 +86,12 @@ export default [
     name: 'navigation',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Affix 固钉',
+        name: 'menu',
+        path: '/components/affix',
+        component: () => import('tdesign-web-components/affix/README.md'),
+      },
       {
         title: 'Menu 导航菜单',
         name: 'menu',
@@ -105,6 +117,12 @@ export default [
     name: 'Forms',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Input 输入框',
+        name: 'input',
+        path: '/components/input',
+        component: () => import('tdesign-web-components/input/README.md'),
+      },
       {
         title: 'Select 选择器',
         name: 'select',
@@ -164,7 +182,7 @@ export default [
         title: 'Tag 标签',
         name: 'tag',
         path: '/components/tag',
-        // component: () => import('tdesign-web-components/tag/README.md'),
+        component: () => import('tdesign-web-components/tag/README.md'),
       },
       {
         title: 'Image 图片',
