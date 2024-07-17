@@ -153,7 +153,7 @@ export default class Alert extends Component<AlertProps> {
   }
 
   render(props: AlertProps) {
-    const { className, style, theme, ignoreAttributes } = { ...props };
+    const { className, style, theme, ignoreAttributes } = props;
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {
         this.removeAttribute(attr);
