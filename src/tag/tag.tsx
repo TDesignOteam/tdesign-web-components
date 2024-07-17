@@ -1,12 +1,12 @@
 import 'tdesign-icons-web-components/esm/components/close';
 
-import { classNames, Component, createRef,tag } from 'omi';
+import { classNames, Component, createRef, tag } from 'omi';
 
 import { classPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { TagProps } from './type';
 
-const TagClassNamePrefix = (className: string) => `${classPrefix}-tag${  className}`;
+const TagClassNamePrefix = (className: string) => `${classPrefix}-tag${className}`;
 
 @tag('t-tag')
 export default class Tag extends Component<TagProps> {

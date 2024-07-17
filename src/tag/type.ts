@@ -1,4 +1,4 @@
-import { SizeEnum, StyledProps,TElement, TNode } from '../common';
+import { SizeEnum, StyledProps, TElement, TNode } from '../common';
 
 export interface TagProps extends StyledProps {
   /**
