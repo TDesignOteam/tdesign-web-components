@@ -57,13 +57,13 @@ export default class Alert extends Component<AlertProps> {
 
   classPrefix = getClassPrefix();
 
-  handleClose(e?: MouseEvent) {
+  handleClose = (e?: MouseEvent) => {
     const { onClose } = this.props;
     this.nodeRef.current?.classList.add(`${this.classPrefix}-alert--closing`);
     onClose?.({ e });
-  }
+  };
 
-  handleCloseEnd(e?: TransitionEvent) {
+  handleCloseEnd = (e?: TransitionEvent) => {
     const { onClosed } = this.props;
     const isTransitionTarget = e?.target === this.nodeRef.current;
     // 防止子元素冒泡触发
@@ -71,11 +71,11 @@ export default class Alert extends Component<AlertProps> {
       this.closed.value = true;
       onClosed?.({ e });
     }
-  }
+  };
 
-  handleCollapse() {
+  handleCollapse = () => {
     this.collapsed.value = !this.collapsed.value;
-  }
+  };
 
   renderTitle() {
     const { title } = this.props;
@@ -96,7 +96,7 @@ export default class Alert extends Component<AlertProps> {
             }
             return <div key={index}>{item}</div>;
           })}
-          <div className={`${this.classPrefix}-alert__collapse`} onClick={() => this.handleCollapse()}>
+          <div className={`${this.classPrefix}-alert__collapse`} onClick={this.handleCollapse}>
             {this.collapsed.value ? expandText : collapseText}
           </div>
         </div>
@@ -114,7 +114,7 @@ export default class Alert extends Component<AlertProps> {
   renderClose() {
     const { close } = this.props;
     return (
-      <div className={`${this.classPrefix}-alert__close`} onClick={(e) => this.handleClose(e)}>
+      <div className={`${this.classPrefix}-alert__close`} onClick={this.handleClose}>
         {typeof close === 'boolean' && close ? <t-icon-close /> : parseTNode(close)}
       </div>
     );
@@ -141,11 +141,8 @@ export default class Alert extends Component<AlertProps> {
   }
 
   ready() {
-    const handleCloseEnd = (e) => {
-      this.handleCloseEnd(e);
-    };
-    this.nodeRef.current?.addEventListener('transitionend', handleCloseEnd);
-    this.needUninstall.add(() => this.nodeRef.current?.removeEventListener('transitionend', handleCloseEnd));
+    this.nodeRef.current?.addEventListener('transitionend', this.handleCloseEnd);
+    this.needUninstall.add(() => this.nodeRef.current?.removeEventListener('transitionend', this.handleCloseEnd));
   }
 
   uninstall() {
