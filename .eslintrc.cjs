@@ -5,7 +5,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
   ],
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint', 'simple-import-sort'],
+  plugins: ['@typescript-eslint'],
   env: {
     browser: true,
     node: true,
@@ -31,24 +31,6 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['error', { functions: false }],
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': 'error', // codecc
-    'simple-import-sort/imports': [
-      'error',
-      {
-        groups: [
-          // Side effect imports.
-          ['^\\u0000'],
-          // Packages. `react` related packages come first.
-          ['^react', '^@?\\w'],
-          ['^(echarts)(/.*|$)'],
-          // Internal packages.
-          ['^(@|hooks|utils)(/.*|$)'],
-          // Parent and other relative imports. Put `.` last.
-          ['^\\.\\.(?!/?$)', '^\\.\\./?$', '^\\./(?=.*/)(?!/?$)', '^\\.(?!/?$)', '^\\./?$'],
-          // Style imports.
-          ['^.+\\.less$'],
-        ],
-      },
-    ],
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
     'import/prefer-default-export': 'off',
