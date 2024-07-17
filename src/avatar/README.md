@@ -50,6 +50,7 @@ spline: base
 className | String | - | 类名 | N
 style | Object | - | 样式，TS 类型：`React.CSSProperties` | N
 alt | String | - | 头像替换文本，仅当图片加载失败时有效 | N
+children | TNode | - | 子元素内容，同 content。TS 类型：`string \| TNode`。[通用类型定义](https://github.com/TDesignOteam/tdesign-web-components/tree/main/src/common.ts) | N
 content | TNode | - | 子元素内容。TS 类型：`string \| TNode`。[通用类型定义](https://github.com/TDesignOteam/tdesign-web-components/tree/main/src/common.ts) | N
 hideOnLoadFailed | Boolean | false | 加载失败时隐藏图片 | N
 icon | TElement | - | 图标。TS 类型：`TNode`。[通用类型定义](https://github.com/TDesignOteam/tdesign-web-components/tree/main/src/common.ts) | N
