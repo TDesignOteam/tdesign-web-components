@@ -142,11 +142,10 @@ export default class Alert extends Component<AlertProps> {
 
   ready() {
     this.nodeRef.current?.addEventListener('transitionend', this.handleCloseEnd);
-    this.needUninstall.add(() => this.nodeRef.current?.removeEventListener('transitionend', this.handleCloseEnd));
   }
 
   uninstall() {
-    this.needUninstall.forEach((uninstall) => uninstall());
+    this.nodeRef.current?.removeEventListener('transitionend', this.handleCloseEnd);
   }
 
   render(props: AlertProps) {
