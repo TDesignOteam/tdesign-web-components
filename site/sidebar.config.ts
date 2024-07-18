@@ -124,6 +124,12 @@ export default [
         component: () => import('tdesign-web-components/input/README.md'),
       },
       {
+        title: 'Radio 单选框',
+        name: 'radio',
+        path: '/components/radio',
+        component: () => import('tdesign-web-components/radio/README.md'),
+      },
+      {
         title: 'Select 选择器',
         name: 'select',
         path: '/components/select',
