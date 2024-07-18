@@ -72,6 +72,12 @@ export default [
         path: '/components/space',
         component: () => import('tdesign-web-components/space/README.md'),
       },
+      {
+        title: 'Grid 栅格',
+        name: 'grid',
+        path: '/components/grid',
+        component: () => import('tdesign-web-components/grid/README.md'),
+      },
     ],
     tag: '',
   },
@@ -80,6 +86,12 @@ export default [
     name: 'navigation',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Affix 固钉',
+        name: 'menu',
+        path: '/components/affix',
+        component: () => import('tdesign-web-components/affix/README.md'),
+      },
       {
         title: 'Menu 导航菜单',
         name: 'menu',
@@ -92,6 +104,12 @@ export default [
         path: '/components/breadcrumb',
         // component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
+      {
+        title: 'BackTop 回到顶部',
+        name: 'backTop',
+        path: '/components/backTop',
+        component: () => import('tdesign-web-components/back-top/README.md'),
+      },
     ],
   },
   {
@@ -99,6 +117,12 @@ export default [
     name: 'Forms',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Input 输入框',
+        name: 'input',
+        path: '/components/input',
+        component: () => import('tdesign-web-components/input/README.md'),
+      },
       {
         title: 'RangeInput 范围输入框',
         name: 'range-input',
@@ -164,7 +188,7 @@ export default [
         title: 'Tag 标签',
         name: 'tag',
         path: '/components/tag',
-        // component: () => import('tdesign-web-components/tag/README.md'),
+        component: () => import('tdesign-web-components/tag/README.md'),
       },
       {
         title: 'Image 图片',
@@ -192,10 +216,22 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Alert 警告提示',
+        name: 'alert',
+        path: '/components/alert',
+        component: () => import('tdesign-web-components/alert/README.md'),
+      },
+      {
         title: 'Message 全局提示',
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Popconfirm 气泡确认框',
+        name: 'popconfirm',
+        path: '/components/popconfirm',
+        component: () => import('tdesign-web-components/popconfirm/README.md'),
       },
       {
         title: 'Popup 弹出层',

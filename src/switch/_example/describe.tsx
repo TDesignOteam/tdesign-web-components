@@ -1,5 +1,5 @@
 import 'tdesign-web-components/switch';
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 import 'tdesign-web-components/space';
 
 export default function SwitchBasic() {

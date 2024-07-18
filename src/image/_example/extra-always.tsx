@@ -1,5 +1,6 @@
 import 'tdesign-web-components/image';
 import 'tdesign-web-components/space';
+import 'tdesign-web-components/tag';
 
 export default function ImageExtraAlways() {
   const mask = (
@@ -30,8 +31,6 @@ export default function ImageExtraAlways() {
 
   const button = (
     <t-tag
-      shape="mark"
-      theme="warning"
       style={{
         position: 'absolute',
         right: 8,

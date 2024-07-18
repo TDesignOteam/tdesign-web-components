@@ -1,9 +1,8 @@
 import 'tdesign-web-components/image';
 import 'tdesign-web-components/avatar';
 import 'tdesign-web-components/space';
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 
-// import 'tdesign-icons-omi/user'
 import { Component } from 'omi';
 
 export default class Avatar extends Component {

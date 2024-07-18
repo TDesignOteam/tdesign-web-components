@@ -3,6 +3,7 @@ import 'tdesign-icons-web-components/esm/components/loading';
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import eventDispose from '../_util/eventDispose';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
 import { TdButtonProps } from './type';
@@ -59,6 +60,14 @@ export default class Button extends Component<ButtonProps> {
     return theme;
   }
 
+  clickHandle = (e: MouseEvent) => {
+    eventDispose.call(this, 'click', e, () => {
+      const { disabled, loading } = this.props;
+      if (disabled || loading) return false;
+      return true;
+    });
+  };
+
   render(props: ButtonProps) {
     const {
       icon,
@@ -71,9 +80,11 @@ export default class Button extends Component<ButtonProps> {
       loading,
       shape,
       ignoreAttributes,
-      onClick,
+      children,
       ...rest
     } = props;
+
+    delete rest.onClick;
 
     const classPrefix = getClassPrefix();
 
@@ -106,13 +117,11 @@ export default class Button extends Component<ButtonProps> {
             [`${classPrefix}-size-full-width`]: block,
           },
         )}
-        onClick={!disabled && !loading ? onClick : undefined}
+        onClick={this.clickHandle}
         {...rest}
       >
         {iconNode ? iconNode : null}
-        <span className={`${classPrefix}-button__text`}>
-          <slot></slot>
-        </span>
+        <span className={`${classPrefix}-button__text`}>{children}</span>
       </Tag>
     );
   }
