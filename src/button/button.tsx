@@ -1,6 +1,9 @@
+import 'tdesign-icons-web-components/esm/components/loading';
+
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
 import { TdButtonProps } from './type';
 
@@ -9,6 +12,24 @@ export interface ButtonProps extends TdButtonProps, StyledProps {}
 @tag('t-button')
 export default class Button extends Component<ButtonProps> {
   static css = [];
+
+  static propTypes = {
+    theme: String,
+    type: String,
+    variant: String,
+    size: String,
+    shape: String,
+    icon: Object,
+    loading: Boolean,
+    ghost: Boolean,
+    block: Boolean,
+    disabled: Boolean,
+    href: String,
+    tag: String,
+    content: [String, Object],
+    onClick: Function,
+    ignoreAttributes: Array,
+  };
 
   static defaultProps = {
     tag: 'button',
@@ -62,8 +83,8 @@ export default class Button extends Component<ButtonProps> {
       });
     }
 
-    let iconNode = icon;
-    if (loading) iconNode = <t-icon className="mr-[2px]" name={'loading'} />;
+    let iconNode = convertToLightDomNode(icon);
+    if (loading) iconNode = convertToLightDomNode(<t-icon-loading className="mr-[2px]" />);
 
     const Tag = this.tag as string;
     return (

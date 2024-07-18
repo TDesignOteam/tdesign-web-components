@@ -18,8 +18,13 @@ export interface FakeArrowProps {
 export default class FakeArrow extends Component<FakeArrowProps> {
   componentName = `${classPrefix}-fake-arrow`;
 
+  static propTypes = {
+    isActive: Boolean,
+    disabled: Boolean,
+  };
+
   static css = `
-.t-fake-arrow.t-is-disabled  {
+.${classPrefix}-fake-arrow.${classPrefix}-is-disabled  {
   cursor: not-allowed;
   color: var(--td-text-color-disabled, var(--td-font-gray-4));
 }
