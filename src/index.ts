@@ -18,3 +18,4 @@ export * from './switch';
 export * from './tag';
 export * from './textarea';
 export * from './tooltip';
+export * from './upload';

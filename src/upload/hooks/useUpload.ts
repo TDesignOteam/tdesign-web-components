@@ -333,6 +333,7 @@ export default function useUpload(props: TdUploadProps) {
   }
 
   const triggerUpload = (e?: MouseEvent) => {
+    console.log('trigger upload', inputRef.current);
     if (disabled.value || !inputRef.current) return;
     e?.stopPropagation?.();
     inputRef.current.click();

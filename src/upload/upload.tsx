@@ -1,15 +1,13 @@
-import '../popup';
-
 import { classNames, Component, computed, OmiProps, tag } from 'omi';
 
 import 'tdesign-icons-web-components';
 import { Button } from '../button';
-import NormalFile from './themes/NormalFile';
+import NormalFile from './NormalFile';
 import useUpload from './hooks/useUpload';
 import { TdUploadProps, UploadFile } from './type';
 import { CommonDisplayFileProps } from './interface';
-import ImageCard from './themes/ImageCard';
-import CustomFile from './themes/CustomFile';
+import ImageCard from './ImageCard';
+import CustomFile from './CustomFile';
 
 export type UploadProps = TdUploadProps;
 

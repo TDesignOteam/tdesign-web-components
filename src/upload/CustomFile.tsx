@@ -1,5 +1,5 @@
 import { VNode } from 'omi';
-import { CommonDisplayFileProps } from '../interface';
+import { CommonDisplayFileProps } from './interface';
 
 export interface CustomFileProps extends CommonDisplayFileProps {
   // dragEvents: UploadDragEvents;

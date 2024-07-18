@@ -1,13 +1,13 @@
 import 'tdesign-icons-web-components';
 import classNames from 'classnames';
 import { computed } from 'omi';
-import Loading from '../../loading';
+import Loading from '../loading';
 // import ImageViewer from '../../image-viewer';
-import { CommonDisplayFileProps } from '../interface';
-import { TdUploadProps, UploadFile } from '../type';
-import { abridgeName } from '../../_common/js/upload/utils';
-import Image from '../../image';
-import zhCN from '../../locale/zh_CN';
+import { CommonDisplayFileProps } from './interface';
+import { TdUploadProps, UploadFile } from './type';
+import { abridgeName } from '../_common/js/upload/utils';
+import Image from '../image';
+import zhCN from '../locale/zh_CN';
 
 export interface ImageCardUploadProps extends CommonDisplayFileProps {
   // multiple: TdUploadProps['multiple'];

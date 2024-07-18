@@ -1,12 +1,10 @@
-import '../popup';
-
 import { Component, OmiProps, tag } from 'omi';
-import classNames from '../../_util/classname';
+import classNames from '../_util/classname';
 import 'tdesign-icons-web-components';
 
-import { abridgeName } from '../../_common/js/upload/utils';
-import '../../loading';
-import { CommonDisplayFileProps } from '../interface';
+import { abridgeName } from '../_common/js/upload/utils';
+import Loading from '../loading';
+import { CommonDisplayFileProps } from './interface';
 
 export type NormalFileProps = CommonDisplayFileProps;
 @tag('t-upload-normalfile')
@@ -24,7 +22,7 @@ export default class NormalFile extends Component<NormalFileProps> {
 
     const renderProgress = (percent: number) => (
       <div className={`${uploadPrefix}__single-progress`}>
-        <t-loading />
+        <Loading />
         <span className={`${uploadPrefix}__single-percent`}>{percent || 0}%</span>
       </div>
     );

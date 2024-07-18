@@ -1,5 +1,3 @@
-import './style/index.js';
-
 import _Upload from './upload';
 
 export type { UploadProps } from './upload';
