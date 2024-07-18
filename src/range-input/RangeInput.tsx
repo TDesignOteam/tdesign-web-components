@@ -1,8 +1,8 @@
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 import 'tdesign-web-components/input';
+import './RangeInputInner';
 
 import { bind, classNames, Component, signal, tag } from 'omi';
-import { convertToLightDomNode } from 'tdesign-web-components/_util/lightDom';
 
 import { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
@@ -20,6 +20,12 @@ export default class RangeInput extends Component<RangeInputProps> {
     .${getClassPrefix()}-range-input__inner-left,
     .${getClassPrefix()}-range-input__inner-right {
       width: 100%;
+      height: 100%;
+      border-radius: var(--td-radius-small);
+    }
+
+    .${getClassPrefix()}-range-input__suffix-clear.${getClassPrefix()}-icon {
+      display: flex;
     }
   `;
 
@@ -32,16 +38,41 @@ export default class RangeInput extends Component<RangeInputProps> {
     defaultValue: [],
   };
 
+  static propTypes = {
+    activeIndex: Number,
+    clearable: Boolean,
+    disabled: Boolean,
+    format: [Function, Array],
+    placeholder: [String, Array],
+    readonly: Boolean,
+    separator: Object,
+    size: String,
+    status: String,
+    value: Array,
+    defaultValue: Array,
+    onBlur: Function,
+    onChange: Function,
+    onFocus: Function,
+    onMouseenter: Function,
+    onMouseleave: Function,
+  };
+
   private isFocused = signal(false);
 
   private isHover = signal(false);
-
-  private innerActiveIndex = signal(0);
 
   private innerValue = signal<RangeInputValue>([]);
 
   install(): void {
     this.innerValue.value = this.props.defaultValue || [];
+
+    this.addEventListener('mouseenter', this.handleMouseEnter);
+    this.addEventListener('mouseleave', this.handleMouseLeave);
+  }
+
+  uninstalled() {
+    this.removeEventListener('mouseenter', this.handleMouseEnter);
+    this.removeEventListener('mouseleave', this.handleMouseLeave);
   }
 
   @bind
@@ -62,6 +93,47 @@ export default class RangeInput extends Component<RangeInputProps> {
     this.isFocused.value = false;
   }
 
+  @bind
+  handleMouseEnter(e: MouseEvent) {
+    if (!(e instanceof MouseEvent)) {
+      // 防止死循环 下面还会 fire('mouseenter') 又触发了当前函数的执行
+      return;
+    }
+    e.stopImmediatePropagation();
+    this.isHover.value = true;
+    this.fire('mouseenter', { context: { e } });
+  }
+
+  @bind
+  handleMouseLeave(e: MouseEvent) {
+    if (!(e instanceof MouseEvent)) {
+      // 防止死循环 下面还会 fire('mouseleave') 又触发了当前函数的执行
+      return;
+    }
+    e.stopImmediatePropagation();
+    this.isHover.value = false;
+    this.fire('mouseleave', { context: { e } });
+  }
+
+  @bind
+  handleChange(position: 'first' | 'second' | undefined, trigger: 'input' | 'clear', value: string) {
+    if (position === 'first') {
+      this.innerValue.value = [value, this.innerValue.value[1]];
+    } else if (position === 'second') {
+      this.innerValue.value = [this.innerValue.value[0], value];
+    } else {
+      this.innerValue.value = ['', ''];
+    }
+
+    this.fire('change', {
+      value: this.innerValue.value,
+      context: {
+        position,
+        trigger,
+      },
+    });
+  }
+
   render() {
     const classPrefix = getClassPrefix();
     const name = `${classPrefix}-range-input`;
@@ -72,7 +144,7 @@ export default class RangeInput extends Component<RangeInputProps> {
       status,
       size,
       separator,
-      activeIndex = this.innerActiveIndex.value,
+      activeIndex,
       placeholder,
       readonly,
       format,
@@ -87,10 +159,13 @@ export default class RangeInput extends Component<RangeInputProps> {
 
     const showClearIcon = clearable && value?.length && !disabled && this.isHover.value;
     const suffixIconContent = showClearIcon ? (
-      <span className={`${classPrefix}-range-input__suffix ${classPrefix}-range-input__suffix-icon`}>
-        {convertToLightDomNode(
-          <t-icon name="close-circle-filled" className={`${name}__suffix-clear ${classPrefix}-icon`} />,
-        )}
+      <span
+        className={`${classPrefix}-range-input__suffix ${classPrefix}-range-input__suffix-icon`}
+        onClick={() => {
+          this.handleChange(undefined, 'clear', '');
+        }}
+      >
+        <t-icon name="close-circle-filled" className={`${name}__suffix-clear ${classPrefix}-icon`} />
       </span>
     ) : null;
 
@@ -106,11 +181,12 @@ export default class RangeInput extends Component<RangeInputProps> {
         })}
       >
         <div className={`${name}__inner`}>
-          <t-input
-            className={`${name}__inner-left`}
-            inputClass={classNames({
+          <t-range-input-inner
+            className={classNames(`${name}__inner-left`, {
+              [`${classPrefix}-size-l`]: size === 'large',
               [`${classPrefix}-is-focused`]: activeIndex === 0,
             })}
+            focus={activeIndex === 0}
             value={firstValue}
             placeholder={firstPlaceholder}
             disabled={disabled}
@@ -122,16 +198,17 @@ export default class RangeInput extends Component<RangeInputProps> {
             onBlur={(e) => {
               this.handleBlur([firstValue, secondValue], { e, position: 'first' });
             }}
-            onChange={() => {}}
+            onChange={this.handleChange.bind(this, 'first', 'input')}
           />
 
           <div className={`${name}__inner-separator`}>{separator}</div>
 
-          <t-input
-            className={`${name}__inner-right`}
-            inputClass={classNames({
+          <t-range-input-inner
+            className={classNames(`${name}__inner-right`, {
+              [`${classPrefix}-size-l`]: size === 'large',
               [`${classPrefix}-is-focused`]: activeIndex === 1,
             })}
+            focus={activeIndex === 1}
             value={secondValue}
             placeholder={secondPlaceholder}
             disabled={disabled}
@@ -143,7 +220,7 @@ export default class RangeInput extends Component<RangeInputProps> {
             onBlur={(e) => {
               this.handleBlur([firstValue, secondValue], { e, position: 'second' });
             }}
-            onChange={() => {}}
+            onChange={this.handleChange.bind(this, 'second', 'input')}
           />
 
           {suffixIconContent}

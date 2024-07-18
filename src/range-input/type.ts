@@ -1,8 +1,6 @@
-import { TNode } from '../common';
+import { InputFormatType, InputValue } from 'tdesign-web-components/input';
 
-// TODO InputValue InputFormatType 从 Input 组件中引入
-type InputValue = string;
-type InputFormatType = (value: InputValue) => string;
+import { TNode } from '../common';
 
 export interface TdRangeInputProps {
   /**
@@ -90,6 +88,26 @@ export interface TdRangeInputProps {
       context?: {
         e?: FocusEvent;
         position?: RangeInputPosition;
+      };
+    }>,
+  ) => void;
+  /**
+   * 进入输入框时触发
+   */
+  onMouseenter?: (
+    evt: CustomEvent<{
+      context: {
+        e: MouseEvent;
+      };
+    }>,
+  ) => void;
+  /**
+   * 离开输入框时触发
+   */
+  onMouseleave?: (
+    evt: CustomEvent<{
+      context: {
+        e: MouseEvent;
       };
     }>,
   ) => void;
