@@ -16,6 +16,47 @@ export interface RadioGroupProps<T> extends TdRadioGroupProps<T>, StyledProps {
 
 @tag('t-radio-group')
 export default class RadioGroup<T = string | number> extends Component<RadioGroupProps<T>> {
+  static css = `
+    ${getClassPrefix()}-radio-button, ${getClassPrefix()}-check {
+      display: inline-flex;
+    }
+
+    .${getClassPrefix()}-radio-group.${getClassPrefix()}-radio-group__outline .${getClassPrefix()}-radio-button:only-child {
+      border-radius: 0;
+    }
+
+    .${getClassPrefix()}-radio-group.${getClassPrefix()}-radio-group__outline ${getClassPrefix()}-radio-button:first-child .${getClassPrefix()}-radio-button {
+      border-radius: var(--td-radius-default) 0 0 var(--td-radius-default);
+    }
+
+    .${getClassPrefix()}-radio-group.${getClassPrefix()}-radio-group__outline ${getClassPrefix()}-radio-button:last-child .${getClassPrefix()}-radio-button {
+      border-radius: 0 var(--td-radius-default) var(--td-radius-default) 0;
+    }
+
+    .${getClassPrefix()}-radio-group.${getClassPrefix()}-radio-group__outline ${getClassPrefix()}-radio-button:only-child .${getClassPrefix()}-radio-button {
+      border-radius: var(--td-radius-default);
+    }
+
+    .${getClassPrefix()}-radio-group .${getClassPrefix()}-radio-button:last-child {
+      border-right: 0;
+    }
+
+    .${getClassPrefix()}-radio-group ${getClassPrefix()}-radio-button:last-child .${getClassPrefix()}-radio-button {
+      border-right: 1px solid;
+      border-right-color: var(--td-border-level-2-color);
+      border-radius: 0 var(--td-radius-small) var(--td-radius-small) 0;
+    }
+      
+    .${getClassPrefix()}-radio-group ${getClassPrefix()}-radio-button .${getClassPrefix()}-radio-button.${getClassPrefix()}-is-checked {
+      border-right: 1px solid;
+      border-color: var(--td-brand-color);
+    }
+
+    .${getClassPrefix()}-radio-group ${getClassPrefix()}-radio-button:has(.${getClassPrefix()}-radio-button.${getClassPrefix()}-is-checked)+${getClassPrefix()}-radio-button .${getClassPrefix()}-radio-button {
+      border-left: 0;
+    }
+  `;
+
   static propTypes = {
     allowUncheck: Boolean,
     checked: Boolean,

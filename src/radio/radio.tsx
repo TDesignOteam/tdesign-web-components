@@ -2,7 +2,6 @@ import '../common/check';
 
 import { Component, OmiProps, tag } from 'omi';
 
-import { convertToLightDomNode } from '../_util/lightDom';
 import { CheckProps } from '../common/index';
 import { TdRadioProps } from './type';
 
@@ -31,10 +30,8 @@ export default class Radio extends Component<RadioProps> {
   };
 
   render(props: OmiProps<RadioProps>) {
-    // 如果Radio本身是lightDom了，要让Check组件也变为lightDom，否则外层样式调整无法穿透生效
-    if ((this.constructor as any).isLightDOM) {
-      return convertToLightDomNode(<t-check type="radio" {...props} />);
-    }
-    return <t-check type="radio" {...props} />;
+    const { children, ...rest } = props;
+
+    return <t-check type="radio" content={children} {...rest} />;
   }
 }

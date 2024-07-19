@@ -2,12 +2,13 @@ import '../common/check';
 
 import { OmiProps, tag } from 'omi';
 
-import { convertToLightDomNode } from '../_util/lightDom';
 import Radio, { RadioProps } from './radio';
 import { TdRadioProps } from './type';
 
 @tag('t-radio-button')
 export default class RadioButton extends Radio {
+  static isLightDOM = true;
+
   static propTypes = {
     allowUncheck: Boolean,
     checked: Boolean,
@@ -29,10 +30,8 @@ export default class RadioButton extends Radio {
   };
 
   render(props: OmiProps<RadioProps>) {
-    // 如果Radio本身是lightDom了，要让Check组件也变为lightDom，否则外层样式调整无法穿透生效
-    if ((this.constructor as any).isLightDOM) {
-      return convertToLightDomNode(<t-check type="radio-button" {...props} />);
-    }
-    return <t-check type="radio-button" {...props} />;
+    const { children, ...rest } = props;
+
+    return <t-check type="radio-button" content={children} {...rest} />;
   }
 }

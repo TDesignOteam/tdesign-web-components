@@ -19,6 +19,8 @@ export type CheckContextInjection = (props: CheckProps) => CheckProps;
 
 @tag('t-check')
 export default class Check extends Component<CheckProps> {
+  static isLightDOM = true;
+
   static propTypes = {
     type: String,
     allowUncheck: Boolean,
