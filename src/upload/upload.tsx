@@ -20,6 +20,8 @@ export const uploadDefaultProps: TdUploadProps = {
 export default class Upload extends Component<UploadProps> {
   uploadFiles: undefined | ((files: UploadFile[]) => void) = undefined;
 
+  static css = [];
+
   static defaultProps = uploadDefaultProps;
 
   static propTypes = {

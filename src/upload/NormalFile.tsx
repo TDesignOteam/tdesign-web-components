@@ -78,7 +78,6 @@ export default class NormalFile extends Component<NormalFileProps> {
     return (
       <div className={classNames(classes)}>
         {theme === 'file-input' && renderFilePreviewAsInput()}
-
         {props.children}
 
         {theme === 'file' && props.placeholder && !displayFiles[0] && (
