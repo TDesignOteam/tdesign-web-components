@@ -9,6 +9,7 @@ import classNames, { getClassPrefix } from '../_util/classname';
 import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext } from '../popup';
 import { dropdownDefaultProps } from './defaultProps';
+import { propTypes } from './dropdownMenu';
 import getDropdownOptions from './getDropdownOptions';
 import { DropdownOption, TdDropdownProps } from './type';
 
@@ -27,6 +28,8 @@ export default class Dropdown extends Component<DropdownProps> {
   ];
 
   static defaultProps = dropdownDefaultProps;
+
+  static propTypes = propTypes;
 
   isPopupVisible = false;
 

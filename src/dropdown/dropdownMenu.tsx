@@ -11,8 +11,26 @@ import { TNode } from '../common';
 import { DropdownProps } from './dropdown';
 import { DropdownOption } from './type';
 
+export const propTypes = {
+  direction: String,
+  disabled: Boolean,
+  hideAfterItemClick: Boolean,
+  maxColumnWidth: [String, Number],
+  maxHeight: Number,
+  minColumnWidth: [String, Number],
+  options: Array,
+  panelBottomContent: [String, Number, Object, Function],
+  panelTopContent: [String, Number, Object, Function],
+  placement: String,
+  popupProps: Object,
+  trigger: String,
+  popupCss: String,
+  onClick: Function,
+};
 @tag('t-dropdown-menu')
 export default class DropdownMenu extends Component<DropdownProps> {
+  static propTypes = propTypes;
+
   classPrefix = getClassPrefix();
 
   dropdownClass = `${this.classPrefix}-dropdown`;

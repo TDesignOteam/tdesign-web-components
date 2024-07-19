@@ -26,6 +26,19 @@ export default class DropdownItem extends Component<DropdownItemProps> {
 
   static defaultProps = dropdownItemDefaultProps;
 
+  static propTypes = {
+    active: Boolean,
+    content: [String, Number, Object, Function],
+    disabled: Boolean,
+    divider: Boolean,
+    prefixIcon: [String, Number, Object, Function],
+    theme: String,
+    value: [String, Number, Object],
+    maxColumnWidth: [String, Number],
+    minColumnWidth: [String, Number],
+    isSubmenu: Boolean,
+  };
+
   classPrefix = getClassPrefix();
 
   handleItemClick = (e: MouseEvent) => {

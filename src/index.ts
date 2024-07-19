@@ -12,6 +12,7 @@ export * from './input';
 export * from './input-number';
 export * from './loading';
 export * from './menu';
+export * from './message';
 export * from './popconfirm';
 export * from './popup';
 export * from './slider';
