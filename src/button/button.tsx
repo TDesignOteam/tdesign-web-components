@@ -69,7 +69,20 @@ export default class Button extends Component<ButtonProps> {
   };
 
   render(props: ButtonProps) {
-    const { icon, className, variant, size, block, disabled, ghost, loading, shape, ignoreAttributes, ...rest } = props;
+    const {
+      icon,
+      className,
+      variant,
+      size,
+      block,
+      disabled,
+      ghost,
+      loading,
+      shape,
+      ignoreAttributes,
+      children,
+      ...rest
+    } = props;
 
     delete rest.onClick;
 
@@ -108,9 +121,7 @@ export default class Button extends Component<ButtonProps> {
         {...rest}
       >
         {iconNode ? iconNode : null}
-        <span className={`${classPrefix}-button__text`}>
-          <slot></slot>
-        </span>
+        <span className={`${classPrefix}-button__text`}>{children}</span>
       </Tag>
     );
   }

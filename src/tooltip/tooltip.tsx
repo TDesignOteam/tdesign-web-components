@@ -77,7 +77,8 @@ export default class Tooltip extends Component<TooltipProps> {
   }
 
   render(props: TooltipProps | OmiProps<TooltipProps, any>): JSX.Element {
-    const { destroyOnClose, showArrow, theme, placement, overlayClassName, ignoreAttributes, ...restProps } = props;
+    const { destroyOnClose, showArrow, theme, placement, overlayClassName, ignoreAttributes, children, ...restProps } =
+      props;
     const classPrefix = getClassPrefix();
     const toolTipClass = classname(
       `${classPrefix}-tooltip`,
@@ -89,7 +90,6 @@ export default class Tooltip extends Component<TooltipProps> {
 
     delete restProps.onVisibleChange;
     delete restProps.duration;
-    delete restProps.children;
 
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {
@@ -99,7 +99,6 @@ export default class Tooltip extends Component<TooltipProps> {
 
     return (
       <t-popup
-        ref={this.popupRef}
         visible={this.popupVisible}
         destroyOnClose={destroyOnClose}
         showArrow={showArrow}
@@ -107,8 +106,9 @@ export default class Tooltip extends Component<TooltipProps> {
         onVisibleChange={this.handleVisibleChange}
         placement={placement}
         {...restProps}
+        ref={this.popupRef}
       >
-        <slot></slot>
+        {children}
       </t-popup>
     );
   }
