@@ -131,6 +131,12 @@ export default [
         component: () => import('tdesign-web-components/input/README.md'),
       },
       {
+        title: 'RangeInput 范围输入框',
+        name: 'range-input',
+        path: '/components/range-input',
+        component: () => import('tdesign-web-components/range-input/README.md'),
+      },
+      {
         title: 'Select 选择器',
         name: 'select',
         path: '/components/select',
@@ -216,6 +222,12 @@ export default [
     name: 'Notifications',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Alert 警告提示',
+        name: 'alert',
+        path: '/components/alert',
+        component: () => import('tdesign-web-components/alert/README.md'),
+      },
       {
         title: 'Message 全局提示',
         name: 'message',

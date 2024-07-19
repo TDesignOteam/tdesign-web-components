@@ -1,4 +1,5 @@
 export * from './affix';
+export * from './alert';
 export * from './avatar';
 export * from './back-top';
 export * from './button';
@@ -15,6 +16,7 @@ export * from './menu';
 export * from './message';
 export * from './popconfirm';
 export * from './popup';
+export * from './range-input';
 export * from './slider';
 export * from './space';
 export * from './switch';
