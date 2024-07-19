@@ -1,17 +1,17 @@
 import { isBoolean, omit } from 'lodash';
 import { classNames, Component, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { TdCheckboxProps } from '../checkbox/type';
-import { StyledProps, TNode } from '../common';
+import { getClassPrefix } from '../../_util/classname';
+import { StyledProps, TNode } from '../../common';
+import { TdCheckProps } from './types';
 
-export interface CheckProps extends TdCheckboxProps, StyledProps {
-  type: 'radio' | 'radio-button' | 'checkbox';
+export interface CheckProps extends TdCheckProps, StyledProps {
+  type: 'radio' | 'radio-button';
   allowUncheck?: boolean;
   title?: string;
   content?: TNode;
   children?: TNode;
-  stopLabelTrigger?: Boolean;
+  stopLabelTrigger?: boolean;
 }
 
 export const CheckContextKey = '_check';
