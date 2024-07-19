@@ -93,6 +93,13 @@ export default [
         component: () => import('tdesign-web-components/affix/README.md'),
       },
       {
+        title: 'Dropdown 下拉菜单',
+        titleEn: 'Dropdown',
+        name: 'dropdown',
+        path: '/components/dropdown',
+        component: () => import('tdesign-web-components/dropdown/README.md'),
+      },
+      {
         title: 'Menu 导航菜单',
         name: 'menu',
         path: '/components/menu',

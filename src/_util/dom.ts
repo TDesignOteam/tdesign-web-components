@@ -157,6 +157,7 @@ export function hasClass(el: Element, cls: string) {
 
 // 判断一个元素是否包含另一个元素
 export function domContains(parent: HTMLElement, child: HTMLElement) {
+  if (!parent || !child) return false;
   if (parent.contains(child)) {
     return true;
   }
