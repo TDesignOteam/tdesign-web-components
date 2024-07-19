@@ -61,10 +61,10 @@ export default class RangeInput extends Component<RangeInputProps> {
 
   private isHover = signal(false);
 
-  private innerValue = signal<RangeInputValue>([]);
+  private innerValue: RangeInputValue = [];
 
   install(): void {
-    this.innerValue.value = this.props.defaultValue || [];
+    this.innerValue = this.props.defaultValue || [];
 
     this.addEventListener('mouseenter', this.handleMouseEnter);
     this.addEventListener('mouseleave', this.handleMouseLeave);
@@ -118,15 +118,17 @@ export default class RangeInput extends Component<RangeInputProps> {
   @bind
   handleChange(position: 'first' | 'second' | undefined, trigger: 'input' | 'clear', value: string) {
     if (position === 'first') {
-      this.innerValue.value = [value, this.innerValue.value[1]];
+      this.innerValue = [value, this.innerValue[1]];
     } else if (position === 'second') {
-      this.innerValue.value = [this.innerValue.value[0], value];
+      this.innerValue = [this.innerValue[0], value];
     } else {
-      this.innerValue.value = ['', ''];
+      this.innerValue = ['', ''];
     }
 
+    this.update();
+
     this.fire('change', {
-      value: this.innerValue.value,
+      value: this.innerValue,
       context: {
         position,
         trigger,
@@ -149,7 +151,7 @@ export default class RangeInput extends Component<RangeInputProps> {
       readonly,
       format,
       clearable,
-      value = this.innerValue.value,
+      value = this.innerValue,
     } = this.props;
 
     const [firstValue, secondValue] = value;
