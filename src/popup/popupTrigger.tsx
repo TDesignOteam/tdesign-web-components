@@ -5,6 +5,14 @@ import { TNode } from '../common';
 
 @tag('t-trigger')
 export default class Trigger extends Component {
+  static css = [
+    `
+    :host {
+      display: inline-flex;
+    }
+    `,
+  ];
+
   render(props) {
     const children = toArray(props.children).map((child: TNode) => {
       // 对 t-button 做特殊处理
