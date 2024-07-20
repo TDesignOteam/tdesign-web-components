@@ -1,8 +1,7 @@
-import { clsx } from 'clsx';
 import { Component, createRef, signal, tag } from 'omi';
-import { StyledProps } from 'tdesign-web-components/common.ts';
 
-import { getClassPrefix } from '../_util/classname';
+import clsx, { getClassPrefix } from '../_util/classname';
+import { StyledProps } from '../common.ts';
 import { TdCheckboxProps } from './type';
 
 export const CheckboxContextKey = 'CheckboxContextKey';
@@ -25,11 +24,7 @@ export default class Checkbox extends Component<CheckboxProps> {
   };
 
   static defaultProps = {
-    defaultChecked: undefined,
-    checked: undefined,
-    disabled: undefined,
     indeterminate: false,
-    readonly: undefined,
   };
 
   inject = [CheckboxContextKey];

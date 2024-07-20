@@ -1,7 +1,4 @@
-import 'tdesign-web-components/checkbox';
-
-import { intersection, isObject, isUndefined, toArray } from 'lodash';
-import isString from 'lodash/isString';
+import { intersection, isObject, isString, isUndefined, toArray } from 'lodash';
 import { bind, Component, signal, tag, VNode } from 'omi';
 
 import { getClassPrefix } from '../_util/classname.ts';
