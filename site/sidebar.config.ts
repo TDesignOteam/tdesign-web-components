@@ -186,6 +186,12 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Dialog 对话框',
+        name: 'dialog',
+        path: '/components/dialog',
+        component: () => import('tdesign-web-components/dialog/README.md'),
+      },
+      {
         title: 'Message 全局提示',
         name: 'message',
         path: '/components/message',
