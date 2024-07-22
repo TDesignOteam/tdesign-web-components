@@ -35,6 +35,7 @@ export default class Dialog extends Component<DialogProps> {
     closeBtn: true,
     draggable: false,
     destroyOnClose: false,
+    visible: false,
   };
 
   static propTypes = {
@@ -451,6 +452,7 @@ export default class Dialog extends Component<DialogProps> {
     const maskView = (this.isModal || this.isFullScreen) && <div key="mask" className={this.maskClass}></div>;
     const dialogView = this.renderDialog();
     const view = [maskView, dialogView];
+
     return (
       <div
         className={this.ctxClass}
