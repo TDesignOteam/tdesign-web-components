@@ -1,4 +1,4 @@
-import 'tdesign-web-components/radio';
+import './radio';
 
 import { toArray } from 'lodash';
 import { classNames, cloneElement, Component, OmiProps, tag } from 'omi';
