@@ -16,6 +16,7 @@ export * from './menu';
 export * from './message';
 export * from './popconfirm';
 export * from './popup';
+export * from './radio';
 export * from './range-input';
 export * from './slider';
 export * from './space';
