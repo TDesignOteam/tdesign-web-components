@@ -1,7 +1,7 @@
 import 'tdesign-web-components/avatar';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/avatar/avatar-group';
-import 'tdesign-web-components/icon';
+import 'tdesign-icons-web-components';
 
 import { Component } from 'omi';
 

@@ -1,9 +1,10 @@
 import 'tdesign-web-components/image';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/button';
+import 'tdesign-web-components/loading';
+import 'tdesign-icons-web-components/esm/components/refresh';
 
 import { Component } from 'omi';
-// import 'tdesign-icons-omi/refresh';
 
 export default class ImageLazySingle extends Component {
   loadCount = 0;
