@@ -19,6 +19,20 @@ export interface DialogProps extends TdDialogProps, StyledProps {}
 function getCSSValue(v: string | number) {
   return isNaN(Number(v)) ? v : `${Number(v)}px`;
 }
+let mousePosition: { x: number; y: number } | null;
+const getClickPosition = (e: MouseEvent) => {
+  mousePosition = {
+    x: e.clientX,
+    y: e.clientY,
+  };
+  setTimeout(() => {
+    mousePosition = null;
+  }, 100);
+};
+
+if (typeof window !== 'undefined' && window.document && window.document.documentElement) {
+  document.documentElement.addEventListener('click', getClickPosition, true);
+}
 
 @tag('t-dialog')
 export default class Dialog extends Component<DialogProps> {
@@ -367,6 +381,15 @@ export default class Dialog extends Component<DialogProps> {
   }
 
   @bind
+  beforeEnter() {
+    const target = this.dialogRef.current as HTMLElement;
+    if (!target || !mousePosition) {
+      return;
+    }
+    target.style.transformOrigin = `${mousePosition.x - target.offsetLeft}px ${mousePosition.y - target.offsetTop}px`;
+  }
+
+  @bind
   renderDialog() {
     // const { CloseIcon } = this.useGlobalIcon({
     //   CloseIcon: TdCloseIcon,
@@ -462,6 +485,7 @@ export default class Dialog extends Component<DialogProps> {
           name: `${this.className}-zoom__vue`,
           afterEnter: this.afterEnter,
           afterLeave: this.afterLeave,
+          beforeEnter: this.beforeEnter,
         }}
       >
         {view}
