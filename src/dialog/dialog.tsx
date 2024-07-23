@@ -106,6 +106,8 @@ export default class Dialog extends Component<DialogProps> {
 
   animationEnd = signal(false);
 
+  init = signal(false);
+
   uid = 0;
 
   // 是否模态形式的对话框
@@ -530,6 +532,11 @@ export default class Dialog extends Component<DialogProps> {
     if (props.visible !== oldProps.visible) {
       this.storeUid(props.visible);
     }
+
+    if (props.visible) {
+      this.init.value = true;
+      this.animationEnd.value = true;
+    }
   }
 
   render(props: DialogProps) {
@@ -540,6 +547,9 @@ export default class Dialog extends Component<DialogProps> {
     const maskView = (this.isModal || this.isFullScreen) && <div key="mask" className={this.maskClass}></div>;
     const dialogView = this.renderDialog();
     const view = [maskView, dialogView];
+
+    if (!this.props.visible && !this.init.value) return null;
+    if (this.props.destroyOnClose && !this.props.visible && this.animationEnd.value) return null;
 
     const content = (
       <div
