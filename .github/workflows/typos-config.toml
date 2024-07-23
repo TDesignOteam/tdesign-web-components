@@ -3,6 +3,7 @@ vertx = "vertx"
 actived = "actived"
 formated = "formated"
 colum = "colum"
+test= "test"
 
 [files]
 extend-exclude = ["**/lib/**","**/spline/**","contributor.html","README.md","README_zh-CN.md","docsearch.min.js","*.svg","src/_util/dom.ts"]
