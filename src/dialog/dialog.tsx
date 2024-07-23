@@ -84,18 +84,6 @@ export default class Dialog extends Component<DialogProps> {
     closeOnEscKeydown: Boolean,
   };
 
-  static css = [
-    `
-.${classPrefix}-dialog-zoom__vue-enter-from .${classPrefix}-dialog {
-  transform: scale(0);
-  opacity: 0;
-}
-.${classPrefix}-dialog-zoom__vue-enter-from .${classPrefix}-dialog__mask {
-  opacity: 0;
-}
-`,
-  ];
-
   className = `${classPrefix}-dialog`;
 
   dialogRef = createRef();
@@ -104,7 +92,7 @@ export default class Dialog extends Component<DialogProps> {
 
   instanceGlobal: Record<string, any> = {};
 
-  animationEnd = signal(false);
+  animationEnd = signal(true);
 
   init = signal(false);
 
@@ -222,10 +210,46 @@ export default class Dialog extends Component<DialogProps> {
     this.props.onConfirm?.({ e });
   }
 
+  @bind
+  prepareToShow() {
+    if ((this.isModal || this.isFullScreen) && !this.props.showInAttachedElement) {
+      bodyOverflow = document.body.style.overflow;
+      setTimeout(() => {
+        document.body.style.overflow = 'hidden';
+      });
+    }
+  }
+
+  @bind
+  beforeEnter() {
+    const target = this.dialogRef.current as HTMLElement;
+
+    const needChangeOrigin = (this.isModal && !this.props.showInAttachedElement) || this.isFullScreen;
+    if (needChangeOrigin && target && mousePosition && !this.props.confirmLoading) {
+      target.style.transformOrigin = `${mousePosition.x - target.offsetLeft}px ${mousePosition.y - target.offsetTop}px`;
+    }
+  }
+
   // 打开弹窗动画结束时事件
   @bind
   afterEnter() {
     this.props.onOpened?.();
+  }
+
+  // 关闭弹窗动画结束时事件
+  @bind
+  afterLeave() {
+    if (this.isModeLess && this.draggable) {
+      const target = this.dialogRef as HTMLElement;
+      if (!target) return;
+      // 关闭弹窗 清空拖拽设置的相关css
+      target.style.position = 'relative';
+      target.style.left = 'unset';
+      target.style.top = 'unset';
+    }
+    this.props.onClosed?.();
+    this.animationEnd.value = true;
+    document.body.style.overflow = bodyOverflow;
   }
 
   @bind
@@ -266,22 +290,6 @@ export default class Dialog extends Component<DialogProps> {
     if ((code === 'Enter' || code === 'NumpadEnter') && stack.top === this.uid) {
       this.props.onConfirm?.({ e });
     }
-  }
-
-  // 关闭弹窗动画结束时事件
-  @bind
-  afterLeave() {
-    if (this.isModeLess && this.draggable) {
-      const target = this.dialogRef as HTMLElement;
-      if (!target) return;
-      // 关闭弹窗 清空拖拽设置的相关css
-      target.style.position = 'relative';
-      target.style.left = 'unset';
-      target.style.top = 'unset';
-    }
-    this.props.onClosed?.();
-    this.animationEnd.value = true;
-    document.body.style.overflow = bodyOverflow;
   }
 
   @bind
@@ -438,22 +446,6 @@ export default class Dialog extends Component<DialogProps> {
   }
 
   @bind
-  beforeEnter() {
-    const target = this.dialogRef.current as HTMLElement;
-
-    if (target && mousePosition) {
-      target.style.transformOrigin = `${mousePosition.x - target.offsetLeft}px ${mousePosition.y - target.offsetTop}px`;
-    }
-
-    if ((this.isModal || this.isFullScreen) && !this.props.showInAttachedElement) {
-      bodyOverflow = document.body.style.overflow;
-      setTimeout(() => {
-        document.body.style.overflow = 'hidden';
-      });
-    }
-  }
-
-  @bind
   renderDialog() {
     const defaultHeader = <h5 className="title"></h5>;
     const headerClassName = this.isFullScreen
@@ -494,7 +486,19 @@ export default class Dialog extends Component<DialogProps> {
           onClick={this.overlayAction}
           ref={this.dialogPositionRef}
         >
-          <div key="dialog" ref={this.dialogRef} className={this.dialogClass} style={this.dialogStyle}>
+          <div
+            key="dialog"
+            ref={this.dialogRef}
+            className={this.dialogClass}
+            style={this.dialogStyle}
+            show={this.props.visible}
+            o-transition={{
+              name: `${this.className}-web-zoom`,
+              afterEnter: this.afterEnter,
+              afterLeave: this.afterLeave,
+              beforeEnter: this.beforeEnter,
+            }}
+          >
             <div className={classname(headerClassName)} onmousedown={this.onStopDown}>
               <div className={`${this.className}__header-content`}>
                 {this.getIcon()}
@@ -531,41 +535,38 @@ export default class Dialog extends Component<DialogProps> {
   receiveProps(props: DialogProps | OmiProps<DialogProps, any>, oldProps: DialogProps | OmiProps<DialogProps, any>) {
     if (props.visible !== oldProps.visible) {
       this.storeUid(props.visible);
+      if (props.visible) {
+        this.prepareToShow();
+        this.animationEnd.value = false;
+      }
     }
 
     if (props.visible) {
       this.init.value = true;
-      this.animationEnd.value = true;
     }
   }
 
   render(props: DialogProps) {
     const ctxStyle = {
       zIndex: props.zIndex,
+      display: !props.visible && this.animationEnd.value ? 'none' : 'block',
     };
 
-    const maskView = (this.isModal || this.isFullScreen) && <div key="mask" className={this.maskClass}></div>;
+    const maskView = (this.isModal || this.isFullScreen) && (
+      <div
+        key="mask"
+        className={this.maskClass}
+        show={this.props.visible}
+        o-transition={{
+          name: `${this.className}__mask-web-zoom`,
+        }}
+      ></div>
+    );
     const dialogView = this.renderDialog();
     const view = [maskView, dialogView];
 
-    if (!this.props.visible && !this.init.value) return null;
+    // if (!this.props.visible && !this.init.value) return null;
     if (this.props.destroyOnClose && !this.props.visible && this.animationEnd.value) return null;
-
-    const content = (
-      <div
-        className={this.ctxClass}
-        show={this.props.visible}
-        style={ctxStyle}
-        o-transition={{
-          name: `${this.className}-zoom__vue`,
-          afterEnter: this.afterEnter,
-          afterLeave: this.afterLeave,
-          beforeEnter: this.beforeEnter,
-        }}
-      >
-        {view}
-      </div>
-    );
 
     if (props.attach) {
       let innerAttach;
@@ -574,9 +575,19 @@ export default class Dialog extends Component<DialogProps> {
       } else {
         innerAttach = props.attach;
       }
-      return <t-portal attach={innerAttach}>{content}</t-portal>;
+      return (
+        <t-portal attach={innerAttach}>
+          <div className={this.ctxClass} style={ctxStyle}>
+            {view}
+          </div>
+        </t-portal>
+      );
     }
 
-    return content;
+    return (
+      <div className={this.ctxClass} style={ctxStyle}>
+        {view}
+      </div>
+    );
   }
 }
