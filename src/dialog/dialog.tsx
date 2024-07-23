@@ -3,6 +3,7 @@ import 'tdesign-icons-web-components/esm/components/info-circle';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/error-circle';
 import 'omi-transition';
+import '../common/portal';
 
 import isNumber from 'lodash/isNumber';
 import isObject from 'lodash/isObject';
@@ -266,7 +267,6 @@ export default class Dialog extends Component<DialogProps> {
     if (confirmLoading !== undefined) {
       newOptions.loading = confirmLoading;
     }
-    console.log('className', className);
     return (
       <t-button className={className} {...newOptions}>
         {newOptions.content}
@@ -470,13 +470,11 @@ export default class Dialog extends Component<DialogProps> {
       zIndex: props.zIndex,
     };
 
-    console.log('visible', this.props.visible);
-
     const maskView = (this.isModal || this.isFullScreen) && <div key="mask" className={this.maskClass}></div>;
     const dialogView = this.renderDialog();
     const view = [maskView, dialogView];
 
-    return (
+    const content = (
       <div
         className={this.ctxClass}
         show={this.props.visible}
@@ -491,5 +489,17 @@ export default class Dialog extends Component<DialogProps> {
         {view}
       </div>
     );
+
+    if (props.attach) {
+      let innerAttach;
+      if (typeof props.attach === 'function') {
+        innerAttach = props.attach();
+      } else {
+        innerAttach = props.attach;
+      }
+      return <t-portal attach={innerAttach}>{content}</t-portal>;
+    }
+
+    return content;
   }
 }
