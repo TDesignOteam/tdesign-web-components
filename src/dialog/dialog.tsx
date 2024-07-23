@@ -51,6 +51,7 @@ export default class Dialog extends Component<DialogProps> {
     draggable: false,
     destroyOnClose: false,
     visible: false,
+    closeOnOverlayClick: true,
   };
 
   static propTypes = {
@@ -74,6 +75,7 @@ export default class Dialog extends Component<DialogProps> {
     onEscKeydown: Function,
     onOpened: Function,
     onOverlayClick: Function,
+    closeOnOverlayClick: Boolean,
   };
 
   className = `${classPrefix}-dialog`;
@@ -166,12 +168,10 @@ export default class Dialog extends Component<DialogProps> {
 
   @bind
   overlayAction(e: MouseEvent) {
-    if (e.target !== this.dialogPositionRef) {
+    if (e.target !== this.dialogPositionRef.current) {
       return;
     }
     this.props.onOverlayClick?.({ e });
-    // 根据closeOnClickOverlay判断点击蒙层时是否触发close事件
-    //  this.global.closeOnOverlayClick
     if (this.props.showOverlay && this.props.closeOnOverlayClick) {
       this.emitCloseEvent({ e, trigger: 'overlay' });
     }
@@ -186,10 +186,8 @@ export default class Dialog extends Component<DialogProps> {
     });
   }
 
-  // used in mixins of ActionMixin
   @bind
   cancelBtnAction(e: MouseEvent) {
-    // emitEvent<Parameters<TdDialogProps['onCancel']>>(this, 'cancel', { e });
     this.props.onCancel?.({ e });
     this.emitCloseEvent({
       trigger: 'cancel',
@@ -197,7 +195,6 @@ export default class Dialog extends Component<DialogProps> {
     });
   }
 
-  // used in mixins of ActionMixin
   @bind
   confirmBtnAction(e: MouseEvent) {
     this.props.onConfirm?.({ e });
@@ -227,9 +224,6 @@ export default class Dialog extends Component<DialogProps> {
   @bind
   emitCloseEvent(context) {
     this.props.onClose?.(context);
-    // emitEvent<Parameters<TdDialogProps['onClose']>>(this, 'close', context);
-    // // 默认关闭弹窗
-    // this.$emit('update:visible', false);
   }
 
   @bind
@@ -391,16 +385,7 @@ export default class Dialog extends Component<DialogProps> {
 
   @bind
   renderDialog() {
-    // const { CloseIcon } = this.useGlobalIcon({
-    //   CloseIcon: TdCloseIcon,
-    // });
-    // header 值为 true 显示空白头部
     const defaultHeader = <h5 className="title"></h5>;
-    // const defaultCloseBtn = <CloseIcon />;
-    // const body = renderContent(this, 'default', 'body');
-    // this.getConfirmBtn is a function of ActionMixin
-    // this.getCancelBtn is a function of ActionMixin
-
     const headerClassName = this.isFullScreen
       ? [`${this.className}__header`, `${this.className}__header--fullscreen`]
       : `${this.className}__header`;
@@ -412,7 +397,7 @@ export default class Dialog extends Component<DialogProps> {
         ? [`${this.className}__body`]
         : [`${this.className}__body`, `${this.className}__body__icon`];
 
-    const footerContent = this.getFooterContent(); // renderTNodeJSX(this, 'footer', defaultFooter);
+    const footerContent = this.getFooterContent();
 
     if (this.isFullScreen && footerContent) {
       bodyClassName.push(`${this.className}__body--fullscreen`);
@@ -443,7 +428,6 @@ export default class Dialog extends Component<DialogProps> {
             <div className={classname(headerClassName)} onmousedown={this.onStopDown}>
               <div className={`${this.className}__header-content`}>
                 {this.getIcon()}
-                {/* {renderTNodeJSX(this, 'header', defaultHeader)} */}
                 {this.props.header || defaultHeader}
               </div>
               {this.props.closeBtn ? (
@@ -456,7 +440,6 @@ export default class Dialog extends Component<DialogProps> {
 
             <div className={classname(bodyClassName)} onmousedown={this.onStopDown}>
               <slot></slot>
-              {/* {this.props.body} */}
             </div>
             {footer}
           </div>

@@ -17,8 +17,7 @@ export default class Demo extends Component {
   visibleHideHeader = signal(false);
 
   @bind
-  handleClose(context) {
-    console.log('close', context);
+  handleClose() {
     this.visibleConfirm.value = false;
     this.visibleFooter.value = false;
     this.visibleButtonContent.value = false;

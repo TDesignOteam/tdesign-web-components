@@ -17,8 +17,7 @@ export default class Demo extends Component {
   visibleDanger = signal(false);
 
   @bind
-  handleClose(context) {
-    console.log('close', context);
+  handleClose() {
     this.visibleConfirm.value = false;
     this.visibleWarning.value = false;
     this.visibleSuccess.value = false;
