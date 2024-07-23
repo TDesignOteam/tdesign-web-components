@@ -56,7 +56,6 @@ export default class Demo extends Component {
         <t-dialog
           header="Basic Modal"
           visible={this.visible.value}
-          confirmOnEnter
           onClose={this.handleClose}
           onConfirm={this.onConfirm}
           onCancel={this.onCancel}

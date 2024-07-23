@@ -8,14 +8,16 @@ import '../common/portal';
 import isNumber from 'lodash/isNumber';
 import isObject from 'lodash/isObject';
 import isString from 'lodash/isString';
-import { bind, Component, createRef, signal, tag } from 'omi';
+import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
 import type { ButtonProps } from '../button';
 import { ClassName, StyledProps, Styles } from '../common';
+import stack from './stack';
 import type { TdDialogProps } from './type';
 
 export interface DialogProps extends TdDialogProps, StyledProps {}
+let uid = 0;
 
 function getCSSValue(v: string | number) {
   return isNaN(Number(v)) ? v : `${Number(v)}px`;
@@ -54,6 +56,7 @@ export default class Dialog extends Component<DialogProps> {
     destroyOnClose: false,
     visible: false,
     closeOnOverlayClick: true,
+    closeOnEscKeydown: true,
   };
 
   static propTypes = {
@@ -78,7 +81,20 @@ export default class Dialog extends Component<DialogProps> {
     onOpened: Function,
     onOverlayClick: Function,
     closeOnOverlayClick: Boolean,
+    closeOnEscKeydown: Boolean,
   };
+
+  static css = [
+    `
+.${classPrefix}-dialog-zoom__vue-enter-from .${classPrefix}-dialog {
+  transform: scale(0);
+  opacity: 0;
+}
+.${classPrefix}-dialog-zoom__vue-enter-from .${classPrefix}-dialog__mask {
+  opacity: 0;
+}
+`,
+  ];
 
   className = `${classPrefix}-dialog`;
 
@@ -89,6 +105,8 @@ export default class Dialog extends Component<DialogProps> {
   instanceGlobal: Record<string, any> = {};
 
   animationEnd = signal(false);
+
+  uid = 0;
 
   // 是否模态形式的对话框
   get isModal() {
@@ -206,6 +224,46 @@ export default class Dialog extends Component<DialogProps> {
   @bind
   afterEnter() {
     this.props.onOpened?.();
+  }
+
+  @bind
+  addKeyboardEvent(status: boolean) {
+    if (status) {
+      document.addEventListener('keydown', this.keyboardEvent);
+      this.props.confirmOnEnter && document.addEventListener('keydown', this.keyboardEnterEvent);
+    } else {
+      document.removeEventListener('keydown', this.keyboardEvent);
+      this.props.confirmOnEnter && document.removeEventListener('keydown', this.keyboardEnterEvent);
+    }
+  }
+
+  @bind
+  storeUid(flag: boolean) {
+    if (flag) {
+      stack.push(this.uid);
+    } else {
+      stack.pop(this.uid);
+    }
+  }
+
+  @bind
+  keyboardEvent(e: KeyboardEvent) {
+    if (e.code === 'Escape' && stack.top === this.uid) {
+      this.props.onEscKeydown?.({ e });
+      // 根据 closeOnEscKeydown 判断按下ESC时是否触发close事件
+      if (this.props.closeOnEscKeydown) {
+        this.emitCloseEvent({ e, trigger: 'esc' });
+      }
+    }
+  }
+
+  // 回车触发确认事件
+  @bind
+  keyboardEnterEvent(e: KeyboardEvent) {
+    const { code } = e;
+    if ((code === 'Enter' || code === 'NumpadEnter') && stack.top === this.uid) {
+      this.props.onConfirm?.({ e });
+    }
   }
 
   // 关闭弹窗动画结束时事件
@@ -456,6 +514,22 @@ export default class Dialog extends Component<DialogProps> {
         </div>
       </div>
     );
+  }
+
+  install() {
+    uid += 1;
+    this.uid = uid;
+    this.addKeyboardEvent(true);
+  }
+
+  uninstall(): void {
+    this.addKeyboardEvent(false);
+  }
+
+  receiveProps(props: DialogProps | OmiProps<DialogProps, any>, oldProps: DialogProps | OmiProps<DialogProps, any>) {
+    if (props.visible !== oldProps.visible) {
+      this.storeUid(props.visible);
+    }
   }
 
   render(props: DialogProps) {
