@@ -21,6 +21,8 @@ function getCSSValue(v: string | number) {
   return isNaN(Number(v)) ? v : `${Number(v)}px`;
 }
 let mousePosition: { x: number; y: number } | null;
+let bodyOverflow = '';
+
 const getClickPosition = (e: MouseEvent) => {
   mousePosition = {
     x: e.clientX,
@@ -219,6 +221,7 @@ export default class Dialog extends Component<DialogProps> {
     }
     this.props.onClosed?.();
     this.animationEnd.value = true;
+    document.body.style.overflow = bodyOverflow;
   }
 
   @bind
@@ -377,10 +380,17 @@ export default class Dialog extends Component<DialogProps> {
   @bind
   beforeEnter() {
     const target = this.dialogRef.current as HTMLElement;
-    if (!target || !mousePosition) {
-      return;
+
+    if (target && mousePosition) {
+      target.style.transformOrigin = `${mousePosition.x - target.offsetLeft}px ${mousePosition.y - target.offsetTop}px`;
     }
-    target.style.transformOrigin = `${mousePosition.x - target.offsetLeft}px ${mousePosition.y - target.offsetTop}px`;
+
+    if ((this.isModal || this.isFullScreen) && !this.props.showInAttachedElement) {
+      bodyOverflow = document.body.style.overflow;
+      setTimeout(() => {
+        document.body.style.overflow = 'hidden';
+      });
+    }
   }
 
   @bind
