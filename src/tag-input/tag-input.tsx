@@ -409,7 +409,7 @@ export default class TagInput extends Component<TagInputProps> {
                 {...props.tagProps}
                 // 因为生成的 html 代码中，style 会应用在 <t-tag> 和 内部的 span 中，所以需要一个元素设置一半的 padding
                 style={{ marginLeft: 0, marginRight: 0, padding: '0px calc(var(--td-comp-paddingLR-s)/2)' }}
-                className={classNames(`${classPrefix}-tag`)}
+                class={classNames(`${classPrefix}-tag`)}
               >
                 {tagContent ?? item}
               </t-tag>
@@ -517,7 +517,7 @@ export default class TagInput extends Component<TagInputProps> {
         readonly={readonly}
         disabled={disabled}
         label={renderLabel({ displayNode, label })}
-        className={classes}
+        class={classes}
         style={props.style}
         tips={tips}
         status={status}
