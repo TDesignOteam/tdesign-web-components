@@ -93,6 +93,13 @@ export default [
         component: () => import('tdesign-web-components/affix/README.md'),
       },
       {
+        title: 'Dropdown 下拉菜单',
+        titleEn: 'Dropdown',
+        name: 'dropdown',
+        path: '/components/dropdown',
+        component: () => import('tdesign-web-components/dropdown/README.md'),
+      },
+      {
         title: 'Menu 导航菜单',
         name: 'menu',
         path: '/components/menu',
@@ -122,6 +129,18 @@ export default [
         name: 'input',
         path: '/components/input',
         component: () => import('tdesign-web-components/input/README.md'),
+      },
+      {
+        title: 'RangeInput 范围输入框',
+        name: 'range-input',
+        path: '/components/range-input',
+        component: () => import('tdesign-web-components/range-input/README.md'),
+      },
+      {
+        title: 'Radio 单选框',
+        name: 'radio',
+        path: '/components/radio',
+        component: () => import('tdesign-web-components/radio/README.md'),
       },
       {
         title: 'Select 选择器',
