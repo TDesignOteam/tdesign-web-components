@@ -125,6 +125,12 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Checkbox 多选框',
+        name: 'checkbox',
+        path: '/components/checkbox',
+        component: () => import('tdesign-web-components/checkbox/README.md'),
+      },
+      {
         title: 'Input 输入框',
         name: 'input',
         path: '/components/input',
