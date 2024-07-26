@@ -114,15 +114,15 @@ export default class NormalFile extends Component<NormalFileProps> {
         {theme === 'file-input' && renderFilePreviewAsInput()}
         <slot></slot>
 
-        {theme === 'file' && props.placeholder && !displayFiles.value?.[0] && (
+        {theme === 'file' && props.placeholder && !displayFiles[0] && (
           <small className={classNames([props.tipsClasses, props.placeholderClass])}>{props.placeholder}</small>
         )}
 
-        {renderFilePreviewAsText(displayFiles.value)}
+        {renderFilePreviewAsText(displayFiles)}
 
         {/* 单文件上传失败要显示失败的原因 */}
-        {displayFiles.value?.[0]?.status === 'fail' && theme === 'file' ? (
-          <small className={classNames(props.errorClasses)}>{displayFiles.value?.[0].response?.error}</small>
+        {displayFiles[0]?.status === 'fail' && theme === 'file' ? (
+          <small className={classNames(props.errorClasses)}>{displayFiles[0].response?.error}</small>
         ) : null}
       </div>
     );

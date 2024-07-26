@@ -9,6 +9,7 @@ export * from './image';
 export * from './input';
 export * from './input-number';
 export * from './loading';
+export * from './locale';
 export * from './menu';
 export * from './popconfirm';
 export * from './popup';

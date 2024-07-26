@@ -85,7 +85,7 @@ const ImageCard = (props: ImageCardUploadProps) => {
   return (
     <div>
       <ul className={`${classPrefix}-upload__card`}>
-        {displayFiles?.value.map((file: UploadFile, index: number) => {
+        {displayFiles.map((file: UploadFile, index: number) => {
           const loadCard = `${classPrefix}-upload__card-container ${classPrefix}-upload__card-box`;
           const fileName = props.abridgeName ? abridgeName(file.name, ...props.abridgeName) : file.name;
           const fileNameClassName = `${classPrefix}-upload__card-name`;

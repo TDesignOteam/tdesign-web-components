@@ -1,23 +1,23 @@
-import { SignalValue, VNode } from 'omi';
+import { VNode } from 'omi';
 
 import { StyledProps } from '../common';
 import { TdUploadProps, UploadFile, UploadInstanceFunctions, UploadRemoveContext } from './type';
 
 export interface CommonDisplayFileProps {
   accept: string;
-  files: SignalValue<TdUploadProps['files']>;
-  toUploadFiles: SignalValue<TdUploadProps['files']>;
-  displayFiles: SignalValue<TdUploadProps['files']>;
+  files: TdUploadProps['files'];
+  toUploadFiles: TdUploadProps['files'];
+  displayFiles: TdUploadProps['files'];
   theme: TdUploadProps['theme'];
   abridgeName: TdUploadProps['abridgeName'];
   placeholder: TdUploadProps['placeholder'];
   classPrefix: string;
   tips?: TdUploadProps['tips'];
   // locale?: GlobalConfigProvider['upload'];
-  sizeOverLimitMessage?: SignalValue<string>;
+  sizeOverLimitMessage?: string;
   autoUpload?: boolean;
   disabled?: boolean;
-  uploading?: SignalValue<boolean>;
+  uploading?: boolean;
   tipsClasses?: string;
   errorClasses?: string[];
   placeholderClass?: string;
