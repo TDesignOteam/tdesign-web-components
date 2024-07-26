@@ -387,6 +387,7 @@ export default class Swiper extends Component<SwiperProps> {
     }
     if (!isEqual(this.propsToUpdateSetTimer, this.lastPropsToUpdateSetTimer)) {
       this.setTimer();
+      this.lastPropsToUpdateSetTimer = this.propsToUpdateSetTimer;
     }
   }
 

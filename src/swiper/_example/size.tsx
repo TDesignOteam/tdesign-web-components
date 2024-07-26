@@ -1,5 +1,4 @@
 import 'tdesign-web-components/swiper';
-import 'tdesign-web-components/space';
 
 import { Component } from 'omi';
 
