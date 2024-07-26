@@ -6,7 +6,7 @@ import { Component } from 'omi';
 export default class TagInputDrag extends Component {
   tags1 = ['Vue', 'React', 'Omi'];
 
-  tags2 = ['Vue', 'React', 'Omi', 'Miniprogram'];
+  tags2 = ['Vue', 'React', 'Omi', 'Angular'];
 
   render() {
     const onTagInputEnter = (val, context) => {
@@ -21,11 +21,11 @@ export default class TagInputDrag extends Component {
       console.log(val, context);
     };
 
-    const onChange2 = (val, context) => {
-      this.tags2 = val;
-      this.update();
-      console.log(val, context);
-    };
+    // const onChange2 = (val, context) => {
+    //   this.tags2 = val;
+    //   this.update();
+    //   console.log(val, context);
+    // };
 
     const onDragSort = ({ currentIndex, targetIndex }) => {
       console.log(currentIndex, targetIndex, '测试');
@@ -48,7 +48,6 @@ export default class TagInputDrag extends Component {
         <t-tag-input
           value={this.tags1}
           onChange={onChange}
-          clearable
           dragSort
           onEnter={onTagInputEnter}
           onDragSort={onDragSort}
@@ -57,10 +56,9 @@ export default class TagInputDrag extends Component {
         <t-tag-input
           value={this.tags2}
           dragSort
-          clearable
           excessTagsDisplayType="break-line"
           label="Controlled: "
-          onChange={onChange2}
+          // onChange={onChange2}
           onDragSort={onDragSort2}
           placeholder="请输入"
         />

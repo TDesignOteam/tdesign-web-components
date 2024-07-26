@@ -63,7 +63,7 @@ export default class TagInputStatus extends Component {
         </t-space>
 
         <t-space>
-          <label>成功状态：</label>
+          <label>告警状态：</label>
           <t-tag-input
             style={style}
             value={this.tags4}
@@ -75,7 +75,7 @@ export default class TagInputStatus extends Component {
         </t-space>
 
         <t-space>
-          <label>成功状态：</label>
+          <label>错误状态：</label>
           <t-tag-input
             style={style}
             value={this.tags5}

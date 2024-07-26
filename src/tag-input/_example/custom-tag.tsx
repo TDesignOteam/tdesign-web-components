@@ -35,7 +35,12 @@ export default class TagInputDiy extends Component {
           onChange={setTags}
           valueDisplay={({ value, onClose }) =>
             value.map((item, index) => (
-              <t-tag key={item} closable style={{ marginRight: '4px' }} onClose={() => onClose(index)}>
+              <t-tag
+                key={item}
+                closable
+                style={{ marginRight: '3px', marginTop: '3px' }}
+                onClose={() => onClose(index)}
+              >
                 <div style={{ display: 'flex' }}>
                   <img
                     src="https://tdesign.gtimg.com/site/avatar.jpg"

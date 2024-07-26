@@ -49,6 +49,27 @@ const isFunction = (arg: unknown) => typeof arg === 'function';
 
 @tag('t-tag-input')
 export default class TagInput extends Component<TagInputProps> {
+  static css = `
+    t-input::part(input-tag) {
+      padding: 0;
+      vertical-align: middle;
+      -webkit-animation: t-fade-in .2s ease-in-out;
+      animation: t-fade-in .2s ease-in-out;
+      margin: 3px var(--td-comp-margin-xs) 3px 0;
+    }
+
+    t-input::part(input-tag-l) {
+      height: var(--td-comp-size-m);
+      font: var(--td-font-body-medium);
+    }
+
+    t-input::part(input-tag-s) {
+      height: var(--td-comp-size-xxs);
+      font: var(--td-font-body-small);
+      margin: 1px var(--td-comp-margin-xs) 1px 0;
+    }
+  `;
+
   static defaultProps = {
     autoWidth: false,
     clearable: false,
@@ -206,6 +227,7 @@ export default class TagInput extends Component<TagInputProps> {
       status,
       suffixIcon,
       suffix,
+      style,
       onClick,
       onPaste,
       onFocus,
@@ -400,6 +422,7 @@ export default class TagInput extends Component<TagInputProps> {
             const tagContent = isFunction(props.tag) ? props.tag({ value: item }) : props.tag;
             return (
               <t-tag
+                part={`input-tag ${size === 'large' && 'input-tag-l'} ${size === 'small' && 'input-tag-s'}`}
                 key={index}
                 size={size}
                 disabled={disabled}
@@ -407,8 +430,7 @@ export default class TagInput extends Component<TagInputProps> {
                 closable={!readonly && !disabled}
                 {...getDragProps?.(index, item)}
                 {...props.tagProps}
-                // 因为生成的 html 代码中，style 会应用在 <t-tag> 和 内部的 span 中，所以需要一个元素设置一半的 padding
-                style={{ marginLeft: 0, marginRight: 0, padding: '0px calc(var(--td-comp-paddingLR-s)/2)' }}
+                style={{ margin: `` }}
                 class={classNames(`${classPrefix}-tag`)}
               >
                 {tagContent ?? item}
@@ -417,7 +439,7 @@ export default class TagInput extends Component<TagInputProps> {
           });
       if (label) {
         list?.unshift(
-          <div class={`${classPrefix}-tag-input__prefix`} key="label">
+          <div class={`${classPrefix}-tag-input ${classPrefix}-tag-input__prefix`} key="label">
             {label}
           </div>,
         );
@@ -447,7 +469,11 @@ export default class TagInput extends Component<TagInputProps> {
 
     const suffixIconNode = showClearIcon ? (
       <t-icon-close-circle-filled
-        class={classNames(TagInputClassNamePrefix(`__suffix-clear`))}
+        class={classNames([
+          `${classPrefix}-icon`,
+          `${classPrefix}-icon-close-circle-filled `,
+          TagInputClassNamePrefix(`__suffix-clear`),
+        ])}
         onClick={onClearClick}
       />
     ) : (
@@ -463,6 +489,8 @@ export default class TagInput extends Component<TagInputProps> {
         [TagInputClassNamePrefix(`__with-suffix-icon`)]: !!suffixIconNode,
         [`${classPrefix}-is-empty`]: isEmpty,
         [TagInputClassNamePrefix(`--with-tag`)]: !isEmpty,
+        [`${classPrefix}-input--auto-width`]: !!autoWidth,
+        [`${classPrefix}-input__warp`]: !autoWidth,
       },
       props.className,
     ];
@@ -517,8 +545,8 @@ export default class TagInput extends Component<TagInputProps> {
         readonly={readonly}
         disabled={disabled}
         label={renderLabel({ displayNode, label })}
-        class={classes}
-        style={props.style}
+        class={classNames(classes)}
+        style={style}
         tips={tips}
         status={status}
         placeholder={tagInputPlaceholder}
