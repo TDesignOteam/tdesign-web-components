@@ -1,23 +1,49 @@
 import 'tdesign-web-components/card';
-import 'tdesign-web-components/icon';
 import 'tdesign-web-components/button';
 import 'tdesign-web-components/divider';
-import 'tdesign-web-components/row';
-import 'tdesign-web-components/col';
+import 'tdesign-web-components/grid';
 import 'tdesign-web-components/avatar';
+import 'tdesign-icons-web-components/esm/components/thumb-up-1';
+import 'tdesign-icons-web-components/esm/components/chat';
+import 'tdesign-icons-web-components/esm/components/share';
+import 'tdesign-icons-web-components/esm/components/more';
 
 import { Component } from 'omi';
 
+interface Option {
+  content: string;
+  value: number;
+}
+type ClickHandler = (data: Option) => void;
+
 export default class Button extends Component {
+  options: Option[] = [
+    {
+      content: '操作一',
+      value: 1,
+    },
+    {
+      content: '操作二',
+      value: 2,
+    },
+  ];
+
+  clickHandler: ClickHandler = (data) => {
+    alert(`选中【${data.value}】`);
+  };
+
   render() {
     return (
       <t-card
         title="标题"
         description="卡片内容"
         actions={
-          <t-col flex="auto">
-            {/* 此处由于缺少dropdown组件，暂时用button替代，不影响aciton测试 */}
-            <t-button>action按钮</t-button>
+          <t-col flex="auto" align="middle">
+            <t-dropdown options={this.options} onClick={this.clickHandler}>
+              <t-button variant="text" shape="square">
+                <t-icon-more />
+              </t-button>
+            </t-dropdown>
           </t-col>
         }
         bordered
@@ -25,23 +51,22 @@ export default class Button extends Component {
         style={{ width: '400px' }}
         avatar={<t-avatar size="40px" image="https://tdesign.gtimg.com/site/avatar-boy.jpg"></t-avatar>}
         footer={
-          // 缺少row、col 组件，暂用临时组件替代
-          <t-row style={{ display: 'flex', justifyContent: 'space-around' }} ignoreAttributes={['style']}>
+          <t-row style={{ display: 'flex', justifyContent: 'space-around', width: '100%' }}>
             <t-col>
               <t-button theme="default" variant="text">
-                <t-icon name="thumb-up-1"></t-icon>
+                <t-icon-thumb-up-1 />
               </t-button>
             </t-col>
             <t-divider layout="vertical"></t-divider>
             <t-col>
               <t-button theme="default" variant="text">
-                <t-icon name="chat"></t-icon>
+                <t-icon-chat />
               </t-button>
             </t-col>
             <t-divider layout="vertical"></t-divider>
             <t-col>
               <t-button theme="default" variant="text">
-                <t-icon name="share"></t-icon>
+                <t-icon-share />
               </t-button>
             </t-col>
           </t-row>
