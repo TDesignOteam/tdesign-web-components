@@ -3,6 +3,7 @@ export * from './alert';
 export * from './avatar';
 export * from './back-top';
 export * from './button';
+export * from './checkbox';
 export * from './collapse';
 export * from './common';
 export * from './divider';
