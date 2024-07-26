@@ -2,9 +2,8 @@ import 'tdesign-icons-web-components';
 import { computed, createRef, signal } from 'omi';
 import Button from 'tdesign-web-components/button';
 import Space from 'tdesign-web-components/space';
-import Upload from '../upload';
-import type { UploadProps } from '../upload';
-import { UploadFile } from '../type';
+import Upload from 'tdesign-web-components/upload';
+import type { UploadProps, UploadFile } from 'tdesign-web-components/upload';
 
 export default function UploadExample() {
   const uploadRef1 = createRef<InstanceType<typeof Upload>>();
@@ -95,7 +94,6 @@ export default function UploadExample() {
     files3.value = files3.value.splice(index, 1);
   };
 
-  // eslint-disable-next-line
   const fileListDisplay = () => (
     <div>
       {files3.value.map((file, index) => (
@@ -130,7 +128,6 @@ export default function UploadExample() {
   //   console.error(`文件不满足条件`);
   //   return false;
   // };
-
   const Checkbox = ({ checked, onChange, children }) => {
     const handleChange = (event) => {
       if (onChange) {
@@ -145,14 +142,13 @@ export default function UploadExample() {
       </label>
     );
   };
-
   return (
     <Space direction="vertical">
       <Space>
-        <Checkbox checked={disabled.value} onChange={(disabled.value = !disabled.value)}>
+        <Checkbox checked={disabled.value} onChange={() => (disabled.value = !disabled.value)}>
           禁用状态
         </Checkbox>
-        <Checkbox checked={autoUpload.value} onChange={(autoUpload.value = !autoUpload.value)}>
+        <Checkbox checked={autoUpload.value} onChange={() => (autoUpload.value = !autoUpload.value)}>
           自动上传
         </Checkbox>
         {!autoUpload && (
@@ -162,10 +158,8 @@ export default function UploadExample() {
         )}
       </Space>
 
-      <br />
-
       {/* <!-- 1. formatRequest 用于修改或新增上传请求数据，示例：:formatRequest="(obj) => ({ ...obj, other: 123 })" --> */}
-      <Space>
+      <Space style={{ width: '112px' }}>
         <Upload
           ref={uploadRef1}
           files={files1.value}
@@ -183,6 +177,7 @@ export default function UploadExample() {
           max={5}
           disabled={disabled.value}
           allowUploadDuplicateFile={true}
+          fileListDisplay={fileListDisplay}
           // formatRequest={(obj) => ({ ...obj, other: 123 })}
           onSelectChange={handleSelectChange}
           onFail={handleFail}

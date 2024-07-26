@@ -102,11 +102,20 @@ export default class Upload extends Component<UploadProps> {
     const renderTrigger = () => {
       const getDefaultTrigger = () => {
         if (theme === 'file-input') {
-          return <Button variant="outline">{triggerUploadText}</Button>;
+          return (
+            <Button variant="outline" onClick={triggerUpload} {...props.triggerButtonProps}>
+              {triggerUploadText.value}
+            </Button>
+          );
         }
         return (
-          <Button variant="outline" icon={<t-icon name="upload" />}>
-            {triggerUploadText}
+          <Button
+            variant="outline"
+            icon={<t-icon name="upload" />}
+            onClick={triggerUpload}
+            {...props.triggerButtonProps}
+          >
+            {triggerUploadText.value}
           </Button>
         );
       };
@@ -120,9 +129,7 @@ export default class Upload extends Component<UploadProps> {
 
     const getNormalFileNode = () => (
       <NormalFile {...commonDisplayFileProps} multiple={false}>
-        <div className={`${classPrefix}-upload__trigger`} onClick={triggerUpload}>
-          {triggerElement}
-        </div>
+        <div className={`${classPrefix}-upload__trigger`}>{triggerElement}</div>
       </NormalFile>
     );
 

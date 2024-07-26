@@ -5,6 +5,7 @@ import 'tdesign-icons-web-components';
 import { abridgeName } from '../_common/js/upload/utils';
 import Loading from '../loading';
 import { CommonDisplayFileProps } from './interface';
+import { UploadFile } from './type';
 
 export type NormalFileProps = CommonDisplayFileProps;
 @tag('t-upload-normalfile')
@@ -72,21 +73,56 @@ export default class NormalFile extends Component<NormalFileProps> {
       );
     };
 
+    const renderFilePreviewAsText = (files: UploadFile[]) => {
+      if (theme !== 'file') return null;
+      return files.map((file, index) => {
+        const fileName = props.abridgeName && file.name ? abridgeName(file.name, ...props.abridgeName) : file.name;
+        return (
+          <div
+            className={`${uploadPrefix}__single-display-text ${uploadPrefix}__display-text--margin`}
+            key={file.name + index + file.percent + file.status}
+          >
+            <span className={`${uploadPrefix}__single-name`}>{fileName}</span>
+            {file.status === 'fail' && (
+              <div className={`${uploadPrefix}__flow-status ${uploadPrefix}__file-fail`}>
+                <t-icon name="check-circle-filled" />
+              </div>
+            )}
+            {file.status === 'waiting' && (
+              <div className={`${uploadPrefix}__flow-status ${uploadPrefix}__file-waiting`}>
+                <t-icon name="time-filled" />
+              </div>
+            )}
+            {file.status === 'progress' && renderProgress(file.percent)}
+            {!disabled && file.status !== 'progress' && (
+              <t-icon
+                name="close"
+                className={`${uploadPrefix}__icon-delete`}
+                onClick={(e) => props.onRemove({ e, file, index })}
+              />
+            )}
+          </div>
+        );
+      });
+    };
+
     const { displayFiles } = props;
 
     const classes = [`${uploadPrefix}__single`, `${uploadPrefix}__single-${theme}`];
     return (
       <div className={classNames(classes)}>
         {theme === 'file-input' && renderFilePreviewAsInput()}
-        {props.children}
+        <slot></slot>
 
-        {theme === 'file' && props.placeholder && !displayFiles[0] && (
+        {theme === 'file' && props.placeholder && !displayFiles.value?.[0] && (
           <small className={classNames([props.tipsClasses, props.placeholderClass])}>{props.placeholder}</small>
         )}
 
+        {renderFilePreviewAsText(displayFiles.value)}
+
         {/* 单文件上传失败要显示失败的原因 */}
-        {displayFiles[0]?.status === 'fail' && theme === 'file' ? (
-          <small className={classNames(props.errorClasses)}>{displayFiles[0].response?.error}</small>
+        {displayFiles.value?.[0]?.status === 'fail' && theme === 'file' ? (
+          <small className={classNames(props.errorClasses)}>{displayFiles.value?.[0].response?.error}</small>
         ) : null}
       </div>
     );

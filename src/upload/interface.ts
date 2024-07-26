@@ -23,7 +23,7 @@ export interface CommonDisplayFileProps {
   placeholderClass?: string;
   showUploadProgress?: boolean;
   children?: VNode;
-  // fileListDisplay?: TdUploadProps['fileListDisplay'];
+  fileListDisplay?: VNode<{ files: UploadFile[] }>;
   // imageViewerProps?: Record<string, any>;
   onRemove?: (p: UploadRemoveContext) => void;
 }

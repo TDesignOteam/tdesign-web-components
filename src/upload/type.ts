@@ -1,5 +1,6 @@
 import { FormatResponseContext, ResponseType, SizeLimitObj } from '../_common/js/upload/types';
-import { PlainObject } from '../common';
+import { ButtonProps } from '../button';
+import { PlainObject, TNode } from '../common';
 
 export interface TdUploadProps<T extends UploadFile = UploadFile> {
   /**
@@ -48,6 +49,10 @@ export interface TdUploadProps<T extends UploadFile = UploadFile> {
    */
   sizeLimit?: number | SizeLimitObj;
   /**
+   * 透传选择按钮全部属性
+   */
+  triggerButtonProps?: ButtonProps;
+  /**
    * 组件风格。custom 表示完全自定义风格；file 表示默认文件上传风格；file-input 表示输入框形式的文件上传；file-flow 表示文件批量上传；image 表示默认图片上传风格；image-flow 表示图片批量上传
    * @default file
    */
@@ -56,6 +61,10 @@ export interface TdUploadProps<T extends UploadFile = UploadFile> {
    * 组件下方文本提示，可以使用 `status` 定义文本
    */
   tips?: string; // TODO
+  /**
+   * 用于完全自定义文件列表界面内容(UI)，单文件和多文件均有效
+   */
+  fileListDisplay?: TNode<{ files: UploadFile[] }>;
   /**
    * 已上传文件列表发生变化时触发，`trigger` 表示触发本次的来源
    */
