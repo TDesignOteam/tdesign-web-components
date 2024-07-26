@@ -18,6 +18,7 @@ export * from './popconfirm';
 export * from './popup';
 export * from './slider';
 export * from './space';
+export * from './swiper';
 export * from './switch';
 export * from './tag';
 export * from './textarea';
