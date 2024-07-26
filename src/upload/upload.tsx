@@ -147,7 +147,6 @@ export default class Upload extends Component<UploadProps> {
   }
 
   render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
-    console.log('rerender');
     const uploadClasses = computed(() => [
       // props.className,
       `${classPrefix}-upload`,

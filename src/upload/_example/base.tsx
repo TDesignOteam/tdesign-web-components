@@ -126,7 +126,6 @@ export default class Base extends Component {
 
     // 非自动上传文件，需要在父组件单独执行上传请求
     const uploadFiles = () => {
-      console.log('test');
       this.uploadRef1.current.uploadFiles([]);
       this.uploadRef2.current.uploadFiles([]);
       this.uploadRef3.current.uploadFiles([]);
@@ -172,8 +171,9 @@ export default class Base extends Component {
           )}
         </Space>
 
+        <br></br>
         {/* <!-- 1. formatRequest 用于修改或新增上传请求数据，示例：:formatRequest="(obj) => ({ ...obj, other: 123 })" --> */}
-        <Space style={{ width: '112px' }}>
+        <Space>
           <Upload
             ref={this.uploadRef1}
             files={this.files1.value}
@@ -213,7 +213,7 @@ export default class Base extends Component {
             triggerButtonProps={{ theme: 'primary', variant: 'base' }}
             placeholder="这是一段没有文件时的占位文本"
             action="//service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
-            style={{ marginLeft: '40px' }}
+            style={{ marginLeft: '40px', display: 'block' }}
             onFail={this.handleFail}
           ></Upload>
 
@@ -230,7 +230,7 @@ export default class Base extends Component {
             formatResponse={formatResponse}
             placeholder="文件上传失败示例"
             action="//service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
-            style={{ marginLeft: '60px' }}
+            style={{ marginLeft: '60px', display: 'block' }}
             // fileListDisplay={fileListDisplay}
             onFail={this.handleFail}
           />

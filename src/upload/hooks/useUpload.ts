@@ -98,7 +98,17 @@ export default function useUpload(props: SignalValue<TdUploadProps>) {
     });
     // }
   };
-
+  const handleNotAutoUpload = (toFiles: UploadFile[]) => {
+    const tmpFiles = toFiles;
+    if (!tmpFiles.length) return;
+    setUploadValue(tmpFiles, {
+      trigger: 'add',
+      index: uploadValue.value.length,
+      file: toFiles[0],
+      files: toFiles,
+    });
+    toUploadFiles.value = [];
+  };
   // 多文件上传场景，单个文件进度
   const onResponseProgress = () => {
     updateFilesProgress();
@@ -165,7 +175,7 @@ export default function useUpload(props: SignalValue<TdUploadProps>) {
         if (autoUpload.value) {
           uploadFiles(tmpWaitingFiles);
         } else {
-          // handleNotAutoUpload(tmpWaitingFiles);
+          handleNotAutoUpload(tmpWaitingFiles);
         }
       }
     });
