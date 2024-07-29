@@ -1,6 +1,6 @@
 import '../../src/loading';
 
-import { Component, createRef, OmiProps,tag } from 'omi';
+import { Component, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix, getCommonClassName } from '../_util/classname';
 import { StyledProps } from '../common';
@@ -24,23 +24,26 @@ export default class Card extends Component<CardProps> {
   };
 
   static propTypes = {
-    action: Object,
-    avatar: Object,
+    actions: [String, Number, Object, Function],
+    avatar: [String, Number, Object, Function],
     bordered: Boolean,
-    content: Object,
-    cover: [Object, String],
-    description: Object,
-    footer: Object,
-    header: Object,
+    children: [String, Number, Object, Function],
+    content: [String, Number, Object, Function],
+    cover: [String, Number, Object, Function],
+    description: [String, Number, Object, Function],
+    footer: [String, Number, Object, Function],
+    header: [String, Number, Object, Function],
     headerBordered: Boolean,
     hoverShadow: Boolean,
-    loading: [Boolean, Object],
+    loading: [String, Number, Object, Function],
+    loadingProps: Object,
     shadow: Boolean,
     size: String,
     status: String,
-    subtitle: Object,
+    subtitle: [String, Number, Object, Function],
     theme: String,
-    title: Object,
+    title: [String, Number, Object, Function],
+    ignoreAttributes: Object,
   };
 
   cardRef = createRef();
@@ -61,13 +64,13 @@ export default class Card extends Component<CardProps> {
       loading,
       shadow,
       size,
-      style, // 新增
+      style,
       subtitle,
       title,
       theme,
       status,
-      loadingProps, // 新增
-      ignoreAttributes, // 新增
+      loadingProps,
+      ignoreAttributes,
     } = props;
 
     if (ignoreAttributes?.length > 0) {
@@ -82,43 +85,96 @@ export default class Card extends Component<CardProps> {
 
     const classPrefix = getClassPrefix();
 
-    const titleClass = classname({
-      [`${classPrefix}-card__title`]: title,
-    });
-    const renderTitle = title ? <div className={titleClass}>{title}</div> : null;
+    const renderTitle = title ? (
+      <div
+        className={classname({
+          [`${classPrefix}-card__title`]: title,
+        })}
+      >
+        {title}
+      </div>
+    ) : null;
 
-    const subtitleClass = classname({
-      [`${classPrefix}-card__subtitle`]: subtitle,
-    });
-    const renderSubtitle = subtitle ? <div className={subtitleClass}>{subtitle}</div> : null;
+    const renderSubtitle = subtitle ? (
+      <div
+        className={classname({
+          [`${classPrefix}-card__subtitle`]: subtitle,
+        })}
+      >
+        {subtitle}
+      </div>
+    ) : null;
 
-    const descriptionClass = classname({
-      [`${classPrefix}-card__description`]: description,
-    });
-    const renderDescription = description ? <p className={descriptionClass}>{description}</p> : null;
+    const renderDescription = description ? (
+      <p
+        className={classname({
+          [`${classPrefix}-card__description`]: description,
+        })}
+      >
+        {description}
+      </p>
+    ) : null;
 
-    const avatarClass = classname({
-      [`${classPrefix}-card__avatar`]: avatar,
-    });
-    const renderAvatar = avatar && <div className={avatarClass}>{avatar}</div>;
+    const renderAvatar = avatar && (
+      <div
+        className={classname({
+          [`${classPrefix}-card__avatar`]: avatar,
+        })}
+      >
+        {avatar}
+      </div>
+    );
 
-    const actionClass = classname({
-      [`${classPrefix}-card__actions`]: actions,
-    });
-    const renderHeaderActions = actions && !isPoster2 && <div className={actionClass}>{actions}</div>;
-    const renderFooterActions = actions && isPoster2 && <div className={actionClass}>{actions}</div>;
-    const renderStatus = status && isPoster2 && <div className={actionClass}>{status}</div>;
+    const renderHeaderActions = actions && !isPoster2 && (
+      <div
+        className={classname({
+          [`${classPrefix}-card__actions`]: actions,
+        })}
+      >
+        {actions}
+      </div>
+    );
 
-    const headerClass = classname({
-      [`${classPrefix}-card__header`]: showHeader,
-      [`${classPrefix}-card__title--bordered`]: headerBordered,
-    });
+    const renderFooterActions = actions && isPoster2 && (
+      <div
+        className={classname({
+          [`${classPrefix}-card__actions`]: actions,
+        })}
+      >
+        {actions}
+      </div>
+    );
+
+    const renderStatus = status && isPoster2 && (
+      <div
+        className={classname({
+          [`${classPrefix}-card__actions`]: actions,
+        })}
+      >
+        {status}
+      </div>
+    );
+
     const renderHeader = () => {
       if (header) {
-        return <div className={headerClass}>{header}</div>;
+        return (
+          <div
+            className={classname({
+              [`${classPrefix}-card__header`]: showHeader,
+              [`${classPrefix}-card__title--bordered`]: headerBordered,
+            })}
+          >
+            {header}
+          </div>
+        );
       }
       return (
-        <div className={headerClass}>
+        <div
+          className={classname({
+            [`${classPrefix}-card__header`]: showHeader,
+            [`${classPrefix}-card__title--bordered`]: headerBordered,
+          })}
+        >
           <div className={`${classPrefix}-card__header-wrapper`}>
             {renderAvatar}
             <div>
@@ -133,37 +189,49 @@ export default class Card extends Component<CardProps> {
       );
     };
 
-    const coverClass = classname({
-      [`${classPrefix}-card__cover`]: cover,
-    });
     const renderCover = cover ? (
-      <div className={coverClass}>{typeof cover === 'string' ? <img src={cover} alt=""></img> : cover}</div>
+      <div
+        className={classname({
+          [`${classPrefix}-card__cover`]: cover,
+        })}
+      >
+        {typeof cover === 'string' ? <img src={cover} alt=""></img> : cover}
+      </div>
     ) : null;
 
-    const bodyClass = classname({
-      [`${classPrefix}-card__body`]: children,
-    });
-    const renderChildren = children && <div className={bodyClass}>{children}</div>;
+    const renderChildren = children && (
+      <div
+        className={classname({
+          [`${classPrefix}-card__body`]: children,
+        })}
+      >
+        {children}
+      </div>
+    );
 
-    const footerClass = classname({
-      [`${classPrefix}-card__footer`]: footer,
-    });
     const renderFooter = footer && (
-      <div className={footerClass}>
+      <div
+        className={classname({
+          [`${classPrefix}-card__footer`]: footer,
+        })}
+      >
         <div className={`${classPrefix}-card__footer-wrapper`}>{footer}</div>
         {renderFooterActions}
       </div>
     );
 
     const commonClassNames = getCommonClassName();
-    const cardClass = classname(`${classPrefix}-card`, className, {
-      [commonClassNames.SIZE.small]: size === 'small',
-      [`${classPrefix}-card--bordered`]: bordered,
-      [`${classPrefix}-card--shadow`]: shadow,
-      [`${classPrefix}-card--shadow-hover`]: hoverShadow,
-    });
     const card = (
-      <div ref={this.cardRef} className={cardClass} style={style}>
+      <div
+        ref={this.cardRef}
+        className={classname(`${classPrefix}-card`, className, {
+          [commonClassNames.SIZE.small]: size === 'small',
+          [`${classPrefix}-card--bordered`]: bordered,
+          [`${classPrefix}-card--shadow`]: shadow,
+          [`${classPrefix}-card--shadow-hover`]: hoverShadow,
+        })}
+        style={style}
+      >
         {showHeader ? renderHeader() : null}
         {renderCover}
         {renderChildren}
