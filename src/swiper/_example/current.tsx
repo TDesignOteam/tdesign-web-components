@@ -18,22 +18,22 @@ export default class Demo extends Component {
       <div className="flex flex-col gap-4">
         <t-swiper current={this.current} navigation={{ showSlideBtn: 'never' }}>
           <t-swiper-item>
-            <div className={`${SwiperDemoCss} w-[782px]`}>1</div>
+            <div className={SwiperDemoCss}>1</div>
           </t-swiper-item>
           <t-swiper-item>
-            <div className={`${SwiperDemoCss} w-[782px]`}>2</div>
+            <div className={SwiperDemoCss}>2</div>
           </t-swiper-item>
           <t-swiper-item>
-            <div className={`${SwiperDemoCss} w-[782px]`}>3</div>
+            <div className={SwiperDemoCss}>3</div>
           </t-swiper-item>
           <t-swiper-item>
-            <div className={`${SwiperDemoCss} w-[782px]`}>4</div>
+            <div className={SwiperDemoCss}>4</div>
           </t-swiper-item>
           <t-swiper-item>
-            <div className={`${SwiperDemoCss} w-[782px]`}>5</div>
+            <div className={SwiperDemoCss}>5</div>
           </t-swiper-item>
           <t-swiper-item>
-            <div className={`${SwiperDemoCss} w-[782px]`}>6</div>
+            <div className={SwiperDemoCss}>6</div>
           </t-swiper-item>
         </t-swiper>
         <button class="t-button t-button--variant-outline t-button--theme-default" onClick={this.click}>

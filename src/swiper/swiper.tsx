@@ -41,6 +41,8 @@ export default class Swiper extends Component<SwiperProps> {
 
   className = `${classPrefix}-swiper`;
 
+  itemStyle = 'width: 100%; display: flex; flex: 0 0 auto;';
+
   swiperWrapRef = createRef<HTMLElement>();
 
   currentIndex = signal(this.props.current);
@@ -338,6 +340,7 @@ export default class Swiper extends Component<SwiperProps> {
           isSwitching={this.isSwitching.value}
           getWrapAttribute={this.getWrapAttribute}
           swiperItemLength={this.swiperItemLength.value}
+          style={this.itemStyle}
           {...p}
         >
           {swiperItem.children}
