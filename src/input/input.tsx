@@ -1,6 +1,8 @@
-import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components/esm/components/close-circle';
+import 'tdesign-icons-web-components/esm/components/browse';
+import 'tdesign-icons-web-components/esm/components/browse-off';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
@@ -90,7 +92,7 @@ export default class Input extends Component<InputProps> {
 
   status: TdInputProps['status'] = 'default';
 
-  renderType = '';
+  renderType = signal('');
 
   isFocused = false;
 
@@ -99,6 +101,13 @@ export default class Input extends Component<InputProps> {
   eventPropsNames;
 
   eventProps;
+
+  private handlePasswordVisible = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (this.props.disabled) return;
+    const toggleType = this.renderType.value === 'password' ? 'text' : 'password';
+    this.renderType.value = toggleType;
+  };
 
   private handleChange = (e) => {
     e.stopImmediatePropagation();
@@ -158,13 +167,15 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseEnter = (e: MouseEvent) => {
+    e.stopPropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
-    this.update();
+    // this.update(); 此处update会导致点击后大量触发更新事件的问题
     onMouseenter?.({ e });
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
+    e.stopPropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
     this.update();
@@ -222,7 +233,7 @@ export default class Input extends Component<InputProps> {
   }
 
   installed() {
-    this.renderType = this.props.type;
+    this.renderType.value = this.props.type;
     const inputNode = this.inputRef.current;
     const updateInputWidth = () => {
       if (!this.props.autoWidth || !this.inputRef.current) return;
@@ -315,14 +326,32 @@ export default class Input extends Component<InputProps> {
 
     if (isShowClearIcon) {
       suffixIconNew = (
-        <t-icon-close-circle-filled
+        <t-icon-close-circle
           name={'close-circle-filled'}
-          class={classname(`${classPrefix}-input__suffix-clear`)}
+          className={`${classPrefix}-input__suffix-clear`}
           onClick={this.handleClear}
         />
       ) as any;
     }
-
+    if (props.type === 'password' && typeof suffixIcon === 'undefined') {
+      if (this.renderType.value === 'password') {
+        suffixIconNew = (
+          <t-icon-browse
+            onClick={this.handlePasswordVisible}
+            className={`${classPrefix}-input__suffix-clear`}
+            name="browse"
+          />
+        ) as any;
+      } else if (this.renderType.value === 'text') {
+        suffixIconNew = (
+          <t-icon-browse-off
+            className={`${classPrefix}-input__suffix-clear`}
+            onClick={this.handlePasswordVisible}
+            name="browse-off"
+          />
+        ) as any;
+      }
+    }
     const suffixIconContent = renderIcon('t', 'suffix', parseTNode(suffixIconNew));
     const labelContent = isFunction(label) ? label() : label;
     const suffixContent = isFunction(suffix) ? suffix() : suffix;
@@ -330,7 +359,7 @@ export default class Input extends Component<InputProps> {
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
         <div
-          class={classname(`${classPrefix}-input__limit-number`, {
+          className={classname(`${classPrefix}-input__limit-number`, {
             [`${classPrefix}-is-disabled`]: disabled,
           })}
         >
@@ -345,7 +374,7 @@ export default class Input extends Component<InputProps> {
         {...this.eventProps}
         ref={this.inputRef}
         placeholder={placeholder}
-        type={this.renderType}
+        type={this.renderType.value}
         class={`${classPrefix}-input__inner`}
         value={formatDisplayValue}
         readOnly={readonly}
@@ -364,7 +393,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        class={classname(`${classPrefix}-input`, {
+        className={classname(`${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -381,17 +410,17 @@ export default class Input extends Component<InputProps> {
         onMouseLeave={this.handleMouseLeave}
       >
         {prefixIconContent}
-        {labelContent ? <div class={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
+        {labelContent ? <div className={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
         {showInput && renderInput}
 
         {autoWidth && (
-          <span ref={this.inputPreRef} class={classname(`${classPrefix}-input__input-pre`)}>
+          <span ref={this.inputPreRef} className={classname(`${classPrefix}-input__input-pre`)}>
             {innerValue || placeholder}
           </span>
         )}
 
         {suffixContent || limitNumberNode ? (
-          <div class={classname(`${classPrefix}-input__suffix`)}>
+          <div className={classname(`${classPrefix}-input__suffix`)}>
             {suffixContent}
             {limitNumberNode}
           </div>
@@ -402,7 +431,7 @@ export default class Input extends Component<InputProps> {
 
     return (
       <div
-        class={classname(
+        className={classname(
           `${classPrefix}-input__wrap`,
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
@@ -414,7 +443,7 @@ export default class Input extends Component<InputProps> {
         {...restProps}
       >
         {renderInputNode}
-        <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
+        <div className={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
           {tips}
         </div>
       </div>
