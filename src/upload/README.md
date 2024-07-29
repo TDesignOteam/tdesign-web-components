@@ -8,7 +8,34 @@ spline: data
 
 ### 基础用法
 
+基础文件上传风格，设置 `theme=file` 即可，这种风格不支持拖拽上传，文档下方有拖拽上传和批量上传示例。
+
+- `action` 表示上传接口地址。
+- `formatRequest` 用于格式化上传接口请求参数，可以新增或修改参数。
+- `formatResponse` 用于格式化接口响应值，如果响应值中的 `error` 字段存在，则会判定本次上传失败。
+- `sizeLimit` 用于设置文件大小限制，如果超出限制不会触发上传请求。
+- `allowUploadDuplicateFile` 是否允许上传相同文件名的文件。
+- `onSelectChange` 会在文件选择之后，上传请求发起之前触发。
+- `onSuccess` 会在上传成功后触发。
+- `onFail` 会在上传失败后触发。
+
 {{ base }}
+
+### 输入框单文件上传
+
+设置 `theme="single-input"` 即可，这种风格不支持拖拽上传，文档下方有拖拽上传和批量上传示例。
+
+{{ single-input }}
+
+### 基础图片上传
+
+图片上传成功后，显示预览图片；图片上传失败后，不显示预览图片。
+
+- 设置属性 `theme="image"` 即可，这种风格不支持拖拽上传，如果需要拖拽上传请移步文档下方有拖拽上传的示例。
+- 上传组件中的全部文本，均可通过 `locale` 进行修改，也支持全局配置，<a href='../global-configuration?tab=api#uploadconfig'>查看文档</a>。
+- 图片预览地址，默认会读取上传接口返回的 `url` 字段。如果接口没有返回 `url` 字段，可以使用 `formatResponse` 格式化返回值，在返回值中增加 `url` 字段。
+
+{{ image }}
 
 ## API
 ### Upload Props

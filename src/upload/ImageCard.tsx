@@ -1,6 +1,5 @@
 import 'tdesign-icons-web-components';
 import classNames from 'classnames';
-import { computed } from 'omi';
 import Loading from '../loading';
 // import ImageViewer from '../../image-viewer';
 import { CommonDisplayFileProps } from './interface';
@@ -21,31 +20,17 @@ export interface ImageCardUploadProps extends CommonDisplayFileProps {
   showImageFileName?: boolean;
 }
 
-const ImageCard = (props: ImageCardUploadProps) => {
+const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
   const locale = zhCN.upload;
   const { displayFiles, classPrefix, onRemove, disabled } = props;
 
-  const showTrigger = computed(() => !displayFiles?.[0]);
+  const showTrigger = !displayFiles?.[0];
 
   const renderMainContent = (file: UploadFile, index: number) => (
     <div className={`${classPrefix}-upload__card-content ${classPrefix}-upload__card-box`}>
       <Image className={`${classPrefix}-upload__card-image`} src={file.url || file.raw} error="" loading="" />
       <div className={`${classPrefix}-upload__card-mask`}>
-        <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
-          {/* <ImageViewer
-            trigger={({ open }) => (
-              <BrowseIcon
-                onClick={(e) => {
-                  props.onPreview?.({ file, index, e });
-                  open();
-                }}
-              />
-            )}
-            images={displayFiles.map((t) => t.url || t.raw)}
-            defaultIndex={index}
-            {...props.imageViewerProps}
-          /> */}
-        </span>
+        <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}></span>
         {!disabled && (
           <>
             <span className={`${classPrefix}-upload__card-mask-item-divider`} />

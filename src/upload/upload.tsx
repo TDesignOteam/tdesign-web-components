@@ -16,6 +16,8 @@ export type UploadProps = TdUploadProps;
 export const uploadDefaultProps: TdUploadProps = {
   autoUpload: true,
   theme: 'file',
+  showUploadProgress: true,
+  showImageFileName: true,
 };
 
 @tag('t-upload')
@@ -123,6 +125,7 @@ export default class Upload extends Component<UploadProps> {
       tips: props.value.tips,
       sizeOverLimitMessage: sizeOverLimitMessage.value,
       uploading: uploading.value,
+      showUploadProgress: props.value.showUploadProgress,
       classPrefix,
       tipsClasses,
       errorClasses,
@@ -189,7 +192,7 @@ export default class Upload extends Component<UploadProps> {
     const triggerElement = renderTrigger();
 
     const getNormalFileNode = () => (
-      <NormalFile {...this.commonDisplayFileProps.value} multiple={false}>
+      <NormalFile {...this.commonDisplayFileProps.value}>
         <div className={`${classPrefix}-upload__trigger`}>{triggerElement}</div>
       </NormalFile>
     );
@@ -197,12 +200,12 @@ export default class Upload extends Component<UploadProps> {
     const getImageCardUploadNode = () => (
       <ImageCard
         {...this.commonDisplayFileProps.value}
-        // showUploadProgress={props.showUploadProgress}
+        showUploadProgress={props.showUploadProgress}
         triggerUpload={this.triggerUpload}
         uploadFiles={this.uploadFiles}
         cancelUpload={this.cancelUpload}
         onPreview={this.onPreview.value}
-        // showImageFileName={props.showImageFileName}
+        showImageFileName={props.showImageFileName}
       />
     );
 

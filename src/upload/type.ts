@@ -49,6 +49,16 @@ export interface TdUploadProps<T extends UploadFile = UploadFile> {
    */
   sizeLimit?: number | SizeLimitObj;
   /**
+   * 是否显示上传进度
+   * @default true
+   */
+  showUploadProgress?: boolean;
+  /**
+   * 是否显示图片的文件名称
+   * @default true
+   */
+  showImageFileName?: boolean;
+  /**
    * 透传选择按钮全部属性
    */
   triggerButtonProps?: ButtonProps;
