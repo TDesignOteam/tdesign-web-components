@@ -68,7 +68,6 @@ export default class UploadExample extends Component {
   uploadFiles = () => {
     this.uploadRef1.current.uploadFiles([]);
     this.uploadRef2.current.uploadFiles([]);
-    this.uploadRef3.current.uploadFiles([]);
   };
 
   onPreview: UploadProps['onPreview'] = (params) => {

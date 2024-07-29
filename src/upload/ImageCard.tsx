@@ -29,17 +29,13 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
   const renderMainContent = (file: UploadFile, index: number) => (
     <div className={`${classPrefix}-upload__card-content ${classPrefix}-upload__card-box`}>
       <Image className={`${classPrefix}-upload__card-image`} src={file.url || file.raw} error="" loading="" />
-      <div className={`${classPrefix}-upload__card-mask`}>
-        <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}></span>
-        {!disabled && (
-          <>
-            <span className={`${classPrefix}-upload__card-mask-item-divider`} />
-            <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
-              <t-icon name="delete" onClick={(e) => onRemove?.({ e, file, index })} />
-            </span>
-          </>
-        )}
-      </div>
+      {!disabled && (
+        <div className={`${classPrefix}-upload__card-mask`}>
+          <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
+            <t-icon name="delete" onClick={(e) => onRemove?.({ e, file, index })} />
+          </span>
+        </div>
+      )}
     </div>
   );
 
