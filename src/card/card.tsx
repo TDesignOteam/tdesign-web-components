@@ -109,39 +109,34 @@ export default class Card extends Component<CardProps> {
       </div>
     );
 
-    const renderHeader = () => {
-      if (header) {
-        return (
-          <div
-            className={classname({
-              [`${classPrefix}-card__header`]: showHeader,
-              [`${classPrefix}-card__title--bordered`]: headerBordered,
-            })}
-          >
-            {header}
+    const renderHeader = header ? (
+      <div
+        className={classname({
+          [`${classPrefix}-card__header`]: showHeader,
+          [`${classPrefix}-card__title--bordered`]: headerBordered,
+        })}
+      >
+        {header}
+      </div>
+    ) : (
+      <div
+        className={classname({
+          [`${classPrefix}-card__header`]: showHeader,
+          [`${classPrefix}-card__title--bordered`]: headerBordered,
+        })}
+      >
+        <div className={`${classPrefix}-card__header-wrapper`}>
+          {renderAvatar}
+          <div>
+            {renderTitle}
+            {renderSubtitle}
+            {renderDescription}
           </div>
-        );
-      }
-      return (
-        <div
-          className={classname({
-            [`${classPrefix}-card__header`]: showHeader,
-            [`${classPrefix}-card__title--bordered`]: headerBordered,
-          })}
-        >
-          <div className={`${classPrefix}-card__header-wrapper`}>
-            {renderAvatar}
-            <div>
-              {renderTitle}
-              {renderSubtitle}
-              {renderDescription}
-            </div>
-          </div>
-          {renderHeaderActions}
-          {renderStatus}
         </div>
-      );
-    };
+        {renderHeaderActions}
+        {renderStatus}
+      </div>
+    );
 
     const renderCover = cover ? (
       <div className={`${classPrefix}-card__cover`}>
@@ -171,7 +166,7 @@ export default class Card extends Component<CardProps> {
         })}
         style={style}
       >
-        {showHeader ? renderHeader() : null}
+        {showHeader ? renderHeader : null}
         {renderCover}
         {renderChildren}
         {renderFooter}
