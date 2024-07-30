@@ -54,7 +54,7 @@ export default class Card extends Component<CardProps> {
       avatar,
       bordered,
       children,
-      className, // 新增
+      className,
       cover,
       description,
       footer,
@@ -85,65 +85,19 @@ export default class Card extends Component<CardProps> {
 
     const classPrefix = getClassPrefix();
 
-    const renderTitle = title ? (
-      <div
-        className={classname({
-          [`${classPrefix}-card__title`]: title,
-        })}
-      >
-        {title}
-      </div>
-    ) : null;
+    const renderTitle = title ? <div className={`${classPrefix}-card__title`}>{title}</div> : null;
 
-    const renderSubtitle = subtitle ? (
-      <div
-        className={classname({
-          [`${classPrefix}-card__subtitle`]: subtitle,
-        })}
-      >
-        {subtitle}
-      </div>
-    ) : null;
+    const renderSubtitle = subtitle ? <div className={`${classPrefix}-card__subtitle`}>{subtitle}</div> : null;
 
-    const renderDescription = description ? (
-      <p
-        className={classname({
-          [`${classPrefix}-card__description`]: description,
-        })}
-      >
-        {description}
-      </p>
-    ) : null;
+    const renderDescription = description ? <p className={`${classPrefix}-card__description`}>{description}</p> : null;
 
-    const renderAvatar = avatar && (
-      <div
-        className={classname({
-          [`${classPrefix}-card__avatar`]: avatar,
-        })}
-      >
-        {avatar}
-      </div>
-    );
+    const renderAvatar = avatar && <div className={`${classPrefix}-card__avatar`}>{avatar}</div>;
 
     const renderHeaderActions = actions && !isPoster2 && (
-      <div
-        className={classname({
-          [`${classPrefix}-card__actions`]: actions,
-        })}
-      >
-        {actions}
-      </div>
+      <div className={`${classPrefix}-card__actions`}>{actions}</div>
     );
 
-    const renderFooterActions = actions && isPoster2 && (
-      <div
-        className={classname({
-          [`${classPrefix}-card__actions`]: actions,
-        })}
-      >
-        {actions}
-      </div>
-    );
+    const renderFooterActions = actions && isPoster2 && <div className={`${classPrefix}-card__actions`}>{actions}</div>;
 
     const renderStatus = status && isPoster2 && (
       <div
@@ -190,37 +144,22 @@ export default class Card extends Component<CardProps> {
     };
 
     const renderCover = cover ? (
-      <div
-        className={classname({
-          [`${classPrefix}-card__cover`]: cover,
-        })}
-      >
+      <div className={`${classPrefix}-card__cover`}>
         {typeof cover === 'string' ? <img src={cover} alt=""></img> : cover}
       </div>
     ) : null;
 
-    const renderChildren = children && (
-      <div
-        className={classname({
-          [`${classPrefix}-card__body`]: children,
-        })}
-      >
-        {children}
-      </div>
-    );
+    const renderChildren = children && <div className={`${classPrefix}-card__body`}>{children}</div>;
 
     const renderFooter = footer && (
-      <div
-        className={classname({
-          [`${classPrefix}-card__footer`]: footer,
-        })}
-      >
+      <div className={`${classPrefix}-card__footer`}>
         <div className={`${classPrefix}-card__footer-wrapper`}>{footer}</div>
         {renderFooterActions}
       </div>
     );
 
     const commonClassNames = getCommonClassName();
+
     const card = (
       <div
         ref={this.cardRef}
