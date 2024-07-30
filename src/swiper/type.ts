@@ -1,6 +1,6 @@
 import { TNode } from '../common';
 
-export interface SwiperProps {
+export interface TdSwiperProps {
   /**
    * 轮播切换动画效果类型：滑动、淡入淡出等
    * @default slide

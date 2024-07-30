@@ -7,10 +7,10 @@ import { bind, cloneElement, Component, createRef, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
-import { TNode } from '../common';
-import { SwiperChangeSource, SwiperNavigation, SwiperProps as TSwiperProps } from './type';
+import { StyledProps, TNode } from '../common';
+import { SwiperChangeSource, SwiperNavigation, TdSwiperProps } from './type';
 
-interface SwiperProps extends TSwiperProps {
+export interface SwiperProps extends TdSwiperProps, StyledProps {
   children?: TNode[];
 }
 
@@ -39,6 +39,24 @@ export default class Swiper extends Component<SwiperProps> {
     navigation: Swiper.defaultNavigation,
   };
 
+  static propTypes = {
+    animation: String,
+    autoplay: Boolean,
+    current: Number,
+    direction: String,
+    duration: Number,
+
+    height: Number,
+    interval: Number,
+    loop: Boolean,
+    stopOnHover: Boolean,
+    trigger: String,
+    type: String,
+    navigation: [String, Number, Object, Function],
+
+    onChange: Function,
+  };
+
   className = `${classPrefix}-swiper`;
 
   itemStyle = 'width: 100%; display: flex; flex: 0 0 auto;';
@@ -49,7 +67,7 @@ export default class Swiper extends Component<SwiperProps> {
 
   navActiveIndex = signal(this.props.current);
 
-  showArrow = signal(false);
+  showArrow = false;
 
   isSwitching = signal(false);
 
@@ -125,6 +143,7 @@ export default class Swiper extends Component<SwiperProps> {
         style.height = offsetHeight;
         style.transform = `translate3d(0, -${active * 100}%, 0px)`;
       } else {
+        console.log(active);
         style.transform = `translate3d(-${active * 100}%, 0px, 0px)`;
       }
       ['msTransform', 'WebkitTransform'].forEach((key) => {
@@ -136,7 +155,8 @@ export default class Swiper extends Component<SwiperProps> {
     return {};
   }
 
-  @bind swiperTo(index: number, context: { source: SwiperChangeSource }) {
+  @bind
+  swiperTo(index: number, context: { source: SwiperChangeSource }) {
     let targetIndex = index % this.swiperItemLength.value;
     this.navActiveIndex.value = targetIndex;
     this.fire('update:current', targetIndex);
@@ -171,17 +191,19 @@ export default class Swiper extends Component<SwiperProps> {
     }
 
     this.currentIndex.value = targetIndex;
-    this.update();
+    console.log(this.currentIndex.value);
   }
 
-  @bind clearTimer() {
+  @bind
+  clearTimer() {
     if (this.swiperTimer) {
       clearTimeout(this.swiperTimer);
       this.swiperTimer = null;
     }
   }
 
-  @bind setTimer() {
+  @bind
+  setTimer() {
     if (this.props.autoplay && this.props.interval > 0) {
       this.clearTimer();
       this.swiperTimer = setTimeout(
@@ -200,7 +222,8 @@ export default class Swiper extends Component<SwiperProps> {
       this.clearTimer();
     }
     if (this.navigationConfig.showSlideBtn === 'hover') {
-      this.showArrow.value = true;
+      this.showArrow = true;
+      this.update();
     }
   }
 
@@ -211,23 +234,27 @@ export default class Swiper extends Component<SwiperProps> {
       this.setTimer();
     }
     if (this.navigationConfig.showSlideBtn === 'hover') {
-      this.showArrow.value = false;
+      this.showArrow = false;
+      this.update();
     }
   }
 
-  @bind onMouseEnterNavigationItem(i: number) {
+  @bind
+  onMouseEnterNavigationItem(i: number) {
     if (this.props.trigger === 'hover') {
       this.swiperTo(i, { source: 'hover' });
     }
   }
 
-  @bind onClickNavigationItem(i: number) {
+  @bind
+  onClickNavigationItem(i: number) {
     if (this.props.trigger === 'hover') {
       this.swiperTo(i, { source: 'hover' });
     }
   }
 
-  @bind goNext(context: { source: SwiperChangeSource }) {
+  @bind
+  goNext(context: { source: SwiperChangeSource }) {
     if (this.isSwitching.value) return;
     if (this.props.type === 'card') {
       return this.swiperTo(
@@ -238,7 +265,8 @@ export default class Swiper extends Component<SwiperProps> {
     return this.swiperTo(this.currentIndex.value + 1, context);
   }
 
-  @bind goPrevious(context: { source: SwiperChangeSource }) {
+  @bind
+  goPrevious(context: { source: SwiperChangeSource }) {
     if (this.isSwitching.value) return;
     if (this.currentIndex.value - 1 < 0) {
       if (this.props.animation === 'slide' && this.swiperItemLength.value === 2) {
@@ -254,8 +282,9 @@ export default class Swiper extends Component<SwiperProps> {
     return this.swiperWrapRef.current?.[attr];
   }
 
-  @bind renderArrow() {
-    if (!this.showArrow.value) return null;
+  @bind
+  renderArrow() {
+    if (!this.showArrow) return null;
     return (
       <div className={classname([`${classPrefix}-swiper__arrow`, `${classPrefix}-swiper__arrow--default`])}>
         <div className={`${classPrefix}-swiper__arrow-left`} onClick={() => this.goPrevious({ source: 'click' })}>
@@ -268,7 +297,8 @@ export default class Swiper extends Component<SwiperProps> {
     );
   }
 
-  @bind renderPagination() {
+  @bind
+  renderPagination() {
     const fractionIndex = this.currentIndex.value + 1 > this.swiperItemLength.value ? 1 : this.currentIndex.value + 1;
     return (
       <div class={`${classPrefix}-swiper__arrow`}>
@@ -285,7 +315,8 @@ export default class Swiper extends Component<SwiperProps> {
     );
   }
 
-  @bind renderNavigation() {
+  @bind
+  renderNavigation() {
     if (isTNode(this.props.navigation)) return this.props.navigation;
 
     if (this.navigationConfig.type === 'fraction') {
@@ -328,7 +359,8 @@ export default class Swiper extends Component<SwiperProps> {
     );
   }
 
-  @bind renderSwiperItems() {
+  @bind
+  renderSwiperItems() {
     const swiperItemList = getChildrenArray(this.props.children).filter((child) => child.nodeName === 't-swiper-item');
     this.swiperItemLength.value = swiperItemList.length;
     const items = swiperItemList.map((swiperItem: any, index) => {
@@ -363,7 +395,7 @@ export default class Swiper extends Component<SwiperProps> {
   @bind
   init() {
     this.setTimer();
-    this.showArrow.value = this.navigationConfig.showSlideBtn === 'always';
+    this.showArrow = this.navigationConfig.showSlideBtn === 'always';
   }
 
   install(): void {

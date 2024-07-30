@@ -9,13 +9,22 @@ export default class Demo extends Component {
     return (
       <t-swiper duration={300} interval={2000}>
         <t-swiper-item>
-          <div className={`${SwiperDemoCss}`}>1</div>
+          <div className={SwiperDemoCss}>1</div>
         </t-swiper-item>
         <t-swiper-item>
-          <div className={`${SwiperDemoCss}`}>2</div>
+          <div className={SwiperDemoCss}>2</div>
         </t-swiper-item>
         <t-swiper-item>
-          <div className={`${SwiperDemoCss}`}>3</div>
+          <div className={SwiperDemoCss}>3</div>
+        </t-swiper-item>
+        <t-swiper-item>
+          <div className={SwiperDemoCss}>4</div>
+        </t-swiper-item>
+        <t-swiper-item>
+          <div className={SwiperDemoCss}>5</div>
+        </t-swiper-item>
+        <t-swiper-item>
+          <div className={SwiperDemoCss}>6</div>
         </t-swiper-item>
       </t-swiper>
     );

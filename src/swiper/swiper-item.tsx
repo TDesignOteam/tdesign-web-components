@@ -2,9 +2,9 @@ import { Component, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
 import { TNode } from '../common';
-import { SwiperProps } from './type';
+import { TdSwiperProps } from './type';
 
-export interface SwiperItemProps extends SwiperProps {
+export interface SwiperItemProps extends TdSwiperProps {
   index?: number;
   children?: TNode;
   currentIndex?: number;

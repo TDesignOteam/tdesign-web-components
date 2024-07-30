@@ -18,6 +18,15 @@ export default class Demo extends Component {
           <t-swiper-item>
             <div className={SwiperDemoCss}>3</div>
           </t-swiper-item>
+          <t-swiper-item>
+            <div className={SwiperDemoCss}>4</div>
+          </t-swiper-item>
+          <t-swiper-item>
+            <div className={SwiperDemoCss}>5</div>
+          </t-swiper-item>
+          <t-swiper-item>
+            <div className={SwiperDemoCss}>6</div>
+          </t-swiper-item>
         </t-swiper>
       </t-space>
     );
