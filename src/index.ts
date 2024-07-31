@@ -8,6 +8,7 @@ export * from './grid';
 export * from './image';
 export * from './input';
 export * from './input-number';
+export * from './link';
 export * from './loading';
 export * from './menu';
 export * from './popconfirm';

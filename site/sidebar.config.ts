@@ -52,6 +52,12 @@ export default [
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
       },
+      {
+        title: 'Link 链接',
+        name: 'link',
+        path: '/components/link',
+        component: () => import('tdesign-web-components/link/README.md'),
+      },
     ],
     tag: '',
   },
