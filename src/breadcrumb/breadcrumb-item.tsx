@@ -22,8 +22,6 @@ const localTBreadcrumbOrigin: LocalTBreadcrumb = {
 export default class BreadcrumbItem extends Component<TdBreadcrumbItemProps> {
   static css = [];
 
-  static isLightDOM = true;
-
   componentName = `${getClassPrefix()}-breadcrumb__item`;
 
   static defaultProps = {
@@ -54,10 +52,6 @@ export default class BreadcrumbItem extends Component<TdBreadcrumbItemProps> {
     if (this.breadcrumbText.current) {
       this.isCutOff.value = isNodeOverflow(this.breadcrumbText.current);
     }
-  }
-
-  beforeRender(): void {
-    this.firstChild && this.removeChild(this.firstChild);
   }
 
   @bind
