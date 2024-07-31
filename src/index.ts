@@ -8,6 +8,7 @@ export * from './checkbox';
 export * from './collapse';
 export * from './comment';
 export * from './common';
+export * from './dialog';
 export * from './divider';
 export * from './dropdown';
 export * from './grid';
