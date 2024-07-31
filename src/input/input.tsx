@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/browse';
 import 'tdesign-icons-web-components/esm/components/browse-off';
 
-import { Component, createRef, OmiProps, signal, tag } from 'omi';
+import { Component, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
@@ -92,7 +92,7 @@ export default class Input extends Component<InputProps> {
 
   status: TdInputProps['status'] = 'default';
 
-  renderType = signal('');
+  renderType = 'password';
 
   isFocused = false;
 
@@ -105,8 +105,8 @@ export default class Input extends Component<InputProps> {
   private handlePasswordVisible = (e: MouseEvent) => {
     e.stopPropagation();
     if (this.props.disabled) return;
-    const toggleType = this.renderType.value === 'password' ? 'text' : 'password';
-    this.renderType.value = toggleType;
+    const toggleType = this.renderType === 'password' ? 'text' : 'password';
+    this.renderType = toggleType;
   };
 
   private handleChange = (e) => {
@@ -233,7 +233,7 @@ export default class Input extends Component<InputProps> {
   }
 
   installed() {
-    this.renderType.value = this.props.type;
+    this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
     const updateInputWidth = () => {
       if (!this.props.autoWidth || !this.inputRef.current) return;
@@ -334,21 +334,13 @@ export default class Input extends Component<InputProps> {
       ) as any;
     }
     if (props.type === 'password' && typeof suffixIcon === 'undefined') {
-      if (this.renderType.value === 'password') {
+      if (this.renderType === 'password') {
         suffixIconNew = (
-          <t-icon-browse
-            onClick={this.handlePasswordVisible}
-            className={`${classPrefix}-input__suffix-clear`}
-            name="browse"
-          />
+          <t-icon-browse-off onClick={this.handlePasswordVisible} className={`${classPrefix}-input__suffix-clear`} />
         ) as any;
-      } else if (this.renderType.value === 'text') {
+      } else if (this.renderType === 'text') {
         suffixIconNew = (
-          <t-icon-browse-off
-            className={`${classPrefix}-input__suffix-clear`}
-            onClick={this.handlePasswordVisible}
-            name="browse-off"
-          />
+          <t-icon-browse className={`${classPrefix}-input__suffix-clear`} onClick={this.handlePasswordVisible} />
         ) as any;
       }
     }
@@ -374,7 +366,7 @@ export default class Input extends Component<InputProps> {
         {...this.eventProps}
         ref={this.inputRef}
         placeholder={placeholder}
-        type={this.renderType.value}
+        type={this.renderType}
         class={`${classPrefix}-input__inner`}
         value={formatDisplayValue}
         readOnly={readonly}
