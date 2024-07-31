@@ -186,6 +186,12 @@ export default [
         component: () => import('tdesign-web-components/avatar/README.md'),
       },
       {
+        title: 'Badge 徽标',
+        name: 'badge',
+        path: '/components/badge',
+        component: () => import('tdesign-web-components/badge/README.md'),
+      },
+      {
         title: 'Calendar 日历',
         name: 'calendar',
         path: '/components/calendar',
@@ -241,7 +247,7 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
-        title: 'Alert 警告提示',
+        title: 'Badge 警告提示',
         name: 'alert',
         path: '/components/alert',
         component: () => import('tdesign-web-components/alert/README.md'),
