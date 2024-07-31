@@ -247,7 +247,7 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
-        title: 'Badge 警告提示',
+        title: 'Alert 警告提示',
         name: 'alert',
         path: '/components/alert',
         component: () => import('tdesign-web-components/alert/README.md'),
