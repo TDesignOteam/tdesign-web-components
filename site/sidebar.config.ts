@@ -192,6 +192,12 @@ export default [
         // component: () => import('tdesign-web-components/calendar/README.md'),
       },
       {
+        title: 'Card 卡片',
+        name: 'card',
+        path: '/components/card',
+        component: () => import('tdesign-web-components/card/README.md'),
+      },
+      {
         title: 'Collapse 折叠面板',
         name: 'Collapse',
         path: '/components/collapse',

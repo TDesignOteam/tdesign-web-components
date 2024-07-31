@@ -25,7 +25,7 @@
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "generate:entry": "node ./script/generate-entry.js",
     "prepare": "husky",
-    "test":"echo 'test to do'"
+    "test": "echo 'test to do'"
   },
   "files": [
     "esm",
@@ -64,7 +64,7 @@
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
     "lodash": "~4.17.15",
-    "omi": "7.6.15",
+    "omi": "^7.6.17",
     "omi-transition": "^0.1.8",
     "tailwind-merge": "^2.2.1",
     "tdesign-icons-web-components": "^0.0.1-alpha.3"
