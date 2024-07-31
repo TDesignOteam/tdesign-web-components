@@ -50,13 +50,4 @@ export interface TdBreadcrumbItemProps {
    * 点击时触发
    */
   onClick?: (e: MouseEvent) => void;
-  /**
-   * 内容
-   */
-  children?: TNode;
-  /**
-   * 是否最后一个
-   * @default false
-   */
-  isLast?: boolean;
 }

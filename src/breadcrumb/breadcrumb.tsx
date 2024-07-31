@@ -1,23 +1,22 @@
 import './breadcrumb-item';
 
-import { Component, OmiDOMAttributes, signal, tag } from 'omi';
-import { getChildrenArray } from 'tdesign-web-components/_util/component';
-import { convertToLightDomNode } from 'tdesign-web-components/_util/lightDom';
+import { Component, OmiDOMAttributes, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
-import { TNode } from '../common';
+import { getChildrenArray } from '../_util/component';
+import { convertToLightDomNode } from '../_util/lightDom';
 import { TdBreadcrumbProps } from './type';
 
 interface BreadcrumbProps extends TdBreadcrumbProps, OmiDOMAttributes {}
 
 @tag('t-breadcrumb')
 export default class Breadcrumb extends Component<BreadcrumbProps> {
-  componentName = `${getClassPrefix()}-breadcrumb`;
+  className = `${getClassPrefix()}-breadcrumb`;
 
   static propTypes = {
     maxItemWidth: String,
     options: Object,
-    separator: [String, Object],
+    separator: [String, Number, Object, Function],
   };
 
   get contentNodes() {
@@ -33,23 +32,22 @@ export default class Breadcrumb extends Component<BreadcrumbProps> {
     return content;
   }
 
-  tBreacrumb = signal({
-    separator: '' as string | TNode,
-    maxItemWidth: '',
-  });
-
   provide = {
-    tBreadcrumb: this.tBreacrumb,
+    tBreadcrumb: {
+      separator: '',
+      maxItemWidth: '',
+    },
   };
+
+  beforeRender(): void {
+    const { separator, maxItemWidth, children } = this.props;
+    const separatorSlot = getChildrenArray(children).find((child) => child.attributes?.slot === 'separator');
+    this.provide.tBreadcrumb.separator = separator || separatorSlot;
+    this.provide.tBreadcrumb.maxItemWidth = maxItemWidth;
+  }
 
   render() {
     const { className } = this.props;
-    const { separator, maxItemWidth, children } = this.props;
-    const separatorSlot = getChildrenArray(children).find((child) => child.attributes?.slot === 'separator');
-    this.tBreacrumb.value = {
-      separator: separator || separatorSlot,
-      maxItemWidth,
-    };
-    return <div class={classname(this.componentName, className)}>{this.contentNodes}</div>;
+    return <div class={classname(this.className, className)}>{this.contentNodes}</div>;
   }
 }

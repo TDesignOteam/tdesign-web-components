@@ -1,12 +1,14 @@
 import 'tdesign-icons-web-components/esm/components/chevron-right';
 import '../tooltip';
 
-import { bind, Component, createRef, effect, signal, tag } from 'omi';
+import { bind, Component, createRef, OmiDOMAttributes, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { isNodeOverflow } from '../_util/dom';
 import { TNode } from '../common';
 import { TdBreadcrumbItemProps } from './type';
+
+interface BreadcrumbItemProps extends TdBreadcrumbItemProps, OmiDOMAttributes {}
 
 interface LocalTBreadcrumb {
   separator: TNode | string;
@@ -19,10 +21,10 @@ const localTBreadcrumbOrigin: LocalTBreadcrumb = {
 };
 
 @tag('t-breadcrumb-item')
-export default class BreadcrumbItem extends Component<TdBreadcrumbItemProps> {
+export default class BreadcrumbItem extends Component<BreadcrumbItemProps> {
   static css = [];
 
-  componentName = `${getClassPrefix()}-breadcrumb__item`;
+  className = `${getClassPrefix()}-breadcrumb__item`;
 
   static defaultProps = {
     href: '',
@@ -30,33 +32,44 @@ export default class BreadcrumbItem extends Component<TdBreadcrumbItemProps> {
     isLast: false,
   };
 
+  static propsType = {
+    content: [String, Number, Object, Function],
+    disabled: Boolean,
+    href: String,
+    maxWidth: String,
+    target: String,
+    onClick: Function,
+  };
+
   inject = ['tBreadcrumb'];
 
-  localTBreadcrumb = signal<LocalTBreadcrumb>(localTBreadcrumbOrigin);
+  localTBreadcrumb = localTBreadcrumbOrigin;
 
-  isCutOff = signal(false);
+  isCutOff = false;
 
   breadcrumbText = createRef<HTMLElement>();
 
   install() {
-    effect(() => {
-      this.injection.tBreadcrumb && (this.localTBreadcrumb.value = this.injection.tBreadcrumb.value);
-    });
+    this.injection.tBreadcrumb && (this.localTBreadcrumb = this.injection.tBreadcrumb);
+  }
+
+  adjustCutOff() {
+    if (this.breadcrumbText.current) {
+      this.isCutOff = isNodeOverflow(this.breadcrumbText.current);
+    }
   }
 
   installed(): void {
-    this.isCutOff.value = isNodeOverflow(this.breadcrumbText.current);
+    this.adjustCutOff();
   }
 
   beforeUpdate(): void {
-    if (this.breadcrumbText.current) {
-      this.isCutOff.value = isNodeOverflow(this.breadcrumbText.current);
-    }
+    this.adjustCutOff();
   }
 
   @bind
   handleClick(event: MouseEvent): void {
-    event.stopPropagation();
+    event.stopImmediatePropagation();
     if (!this.props.disabled) {
       this.props.onClick?.(event);
     }
@@ -64,7 +77,7 @@ export default class BreadcrumbItem extends Component<TdBreadcrumbItemProps> {
 
   render() {
     const { children, className, disabled, href, target, content, maxWidth } = this.props;
-    const { separator, maxItemWidth } = this.localTBreadcrumb.value;
+    const { separator, maxItemWidth } = this.localTBreadcrumb;
     const classPrefix = getClassPrefix();
     const textClass = [`${classPrefix}-breadcrumb--text-overflow`];
     if (disabled) {
@@ -93,8 +106,8 @@ export default class BreadcrumbItem extends Component<TdBreadcrumbItemProps> {
     }
 
     return (
-      <div className={classname(this.componentName, className)} onClick={this.handleClick}>
-        {this.isCutOff.value ? <t-tooltip content={children || content}>{itemContent}</t-tooltip> : itemContent}
+      <div className={classname(this.className, className)} onClick={this.handleClick}>
+        {this.isCutOff ? <t-tooltip content={children || content}>{itemContent}</t-tooltip> : itemContent}
         <span class={`${classPrefix}-breadcrumb__separator`}>{separatorContent}</span>
       </div>
     );
