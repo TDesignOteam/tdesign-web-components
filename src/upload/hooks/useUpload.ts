@@ -33,6 +33,9 @@ export default function useUpload(props: SignalValue<TdUploadProps>) {
     onSuccess,
     onFail,
   } = toRef(props);
+  if (!files.value) {
+    files.value = [];
+  }
   const [uploadValue, setUploadValue] = [
     files,
     (value: typeof files.value, context: UploadChangeContext) => {
@@ -98,9 +101,27 @@ export default function useUpload(props: SignalValue<TdUploadProps>) {
     });
     // }
   };
-  const handleNotAutoUpload = (toFiles: UploadFile[]) => {
-    const tmpFiles = toFiles;
-    if (!tmpFiles.length) return;
+  const handleNotAutoUpload = async (toFiles: UploadFile[]) => {
+    if (!toFiles.length) return;
+    const tmpFiles = await Promise.all(
+      toFiles.map(async (file) => {
+        if (file.url || !file.raw.type.startsWith('image')) {
+          return file;
+        }
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            resolve({
+              ...file,
+              url: (e.target as FileReader).result as string,
+            });
+          };
+          reader.readAsDataURL(file.raw);
+        });
+      }),
+    );
+    console.log(tmpFiles);
+
     setUploadValue(tmpFiles, {
       trigger: 'add',
       index: uploadValue.value.length,
