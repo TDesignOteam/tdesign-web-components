@@ -23,6 +23,16 @@ export default class Badge extends Component<BadgeProps> {
   };
 
   static propTypes = {
+    children: [String, Number, Object, Function],
+    color: String,
+    content: [String, Number, Object, Function],
+    count: [String, Number, Object, Function],
+    dot: Boolean,
+    maxCount: Number,
+    offset: Object,
+    shape: String,
+    showZero: Boolean,
+    size: String,
     ignoreAttributes: Object,
   };
 
@@ -31,6 +41,7 @@ export default class Badge extends Component<BadgeProps> {
   classPrefix = getClassPrefix();
 
   getDisplayCount = () => {
+    // 数量展示逻辑
     const { count, maxCount } = this.props;
     if (typeof count === 'number' && count > maxCount) {
       return `${maxCount}+`;
@@ -39,6 +50,7 @@ export default class Badge extends Component<BadgeProps> {
   };
 
   getStyle = () => {
+    // 红点偏移逻辑
     const { style, color, offset } = this.props;
     const mergedStyle = { ...style };
     if (color) {
@@ -46,7 +58,7 @@ export default class Badge extends Component<BadgeProps> {
     }
     if (offset) {
       if (offset[0]) {
-        mergedStyle.right = +offset[0];
+        mergedStyle.marginRight = +offset[0];
       }
       if (offset[1]) {
         mergedStyle.marginTop = +offset[1];
@@ -57,14 +69,14 @@ export default class Badge extends Component<BadgeProps> {
 
   render(props: BadgeProps) {
     const { children, content, count, dot, shape, showZero, size, className, ignoreAttributes, ...restProps } = props;
+    // 去除父元素属性
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {
         this.removeAttribute(attr);
       });
     }
-
+    // 初始化变量-所需要展示的childNode、获取样式所需的类名badgeClassName
     const childNode = content || children;
-
     const badgeClassName = classNames(
       !childNode && `${this.classPrefix}-badge--static`,
       dot ? `${this.classPrefix}-badge--dot` : `${this.classPrefix}-badge--${shape}`,
@@ -72,11 +84,11 @@ export default class Badge extends Component<BadgeProps> {
       !childNode && className,
     );
 
+    // 隐藏逻辑
     let isHidden = !count;
     if (typeof count === 'number') {
       isHidden = count < MIN_COUNT && !showZero;
     }
-
     const badge = !isHidden ? (
       <span {...(childNode ? {} : restProps)} className={badgeClassName} style={this.getStyle()}>
         {!dot ? this.getDisplayCount() : null}
@@ -86,7 +98,6 @@ export default class Badge extends Component<BadgeProps> {
     if (!childNode) {
       return badge;
     }
-
     return (
       <span {...restProps} className={classNames(`${this.classPrefix}-badge`, className)} ref={this.nodeRef}>
         {childNode}
