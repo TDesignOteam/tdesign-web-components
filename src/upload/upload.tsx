@@ -1,4 +1,4 @@
-import { classNames, Component, computed, createRef, OmiProps, signal, SignalValue, tag } from 'omi';
+import { classNames, Component, computed, OmiProps, signal, SignalValue, tag } from 'omi';
 
 import 'tdesign-icons-web-components';
 import { Button } from '../button';
@@ -22,8 +22,6 @@ export const uploadDefaultProps: TdUploadProps = {
 
 @tag('t-upload')
 export default class Upload extends Component<UploadProps> {
-  uploadFiles: undefined | ((files: UploadFile[]) => void) = undefined;
-
   static css = [];
 
   static defaultProps = uploadDefaultProps;
@@ -49,93 +47,52 @@ export default class Upload extends Component<UploadProps> {
     onValidate: Function,
   };
 
-  triggerUploadText = signal('');
-
-  inputRef = createRef<HTMLInputElement>();
+  uploadState: ReturnType<typeof useUpload>;
 
   commonDisplayFileProps: SignalValue<CommonDisplayFileProps>;
 
-  onNormalFileChange: (e: InputEvent) => void;
-
-  triggerUpload: (e?: MouseEvent) => void;
-
-  cancelUpload: (context?: { file?: UploadFile; e?: MouseEvent }) => void;
-
-  theme: SignalValue<string>;
+  theme = signal<string>('file');
 
   onPreview: SignalValue<(options: { file: UploadFile; index: number; e: MouseEvent }) => void>;
 
-  tipsClasses: string;
-
-  sizeOverLimitMessage: SignalValue<string>;
-
-  errorClasses: string[];
-
   triggerButtonProps: SignalValue<import('/Users/wings/repos/tdesign-web-components/src/button/button').ButtonProps>;
-
-  disabled: SignalValue<boolean>;
 
   propsRef: SignalValue<UploadProps>;
 
+  uploadFiles: (toFiles?: UploadFile[]) => void;
+
   init(props: SignalValue<UploadProps | OmiProps<UploadProps, any>>) {
     const { theme, onPreview, triggerButtonProps } = toRef(props);
-    this.theme = theme;
-    const {
-      classPrefix,
-      triggerUploadText,
-      toUploadFiles,
-      displayFiles,
-      uploadValue,
-      sizeOverLimitMessage,
-      uploading,
-      tipsClasses,
-      errorClasses,
-      placeholderClass,
-      inputRef,
-      disabled,
-      uploadFiles,
-      onRemove,
-      onNormalFileChange,
-      triggerUpload,
-      cancelUpload,
-    } = useUpload(props);
 
-    this.triggerUploadText = triggerUploadText;
-    this.uploadFiles = uploadFiles;
-    this.inputRef = inputRef;
-    this.onNormalFileChange = onNormalFileChange;
-    this.triggerUpload = triggerUpload;
-    this.cancelUpload = cancelUpload;
+    this.uploadState = useUpload(props);
+    this.uploadFiles = this.uploadState.uploadFiles;
+    this.theme = theme;
     this.onPreview = onPreview;
-    this.tipsClasses = tipsClasses;
-    this.errorClasses = errorClasses;
-    this.sizeOverLimitMessage = sizeOverLimitMessage;
     this.triggerButtonProps = triggerButtonProps;
-    this.disabled = disabled;
 
     const commonDisplayFileProps: SignalValue<CommonDisplayFileProps> = computed(() => ({
       accept: props.value.accept,
-      files: uploadValue.value,
-      toUploadFiles: toUploadFiles.value,
-      displayFiles: displayFiles.value,
+      files: this.uploadState.uploadValue.value,
+      toUploadFiles: this.uploadState.toUploadFiles.value,
+      displayFiles: this.uploadState.displayFiles.value,
       theme: props.value.theme,
       abridgeName: props.value.abridgeName,
       placeholder: props.value.placeholder,
       disabled: props.value.disabled,
       tips: props.value.tips,
-      sizeOverLimitMessage: sizeOverLimitMessage.value,
-      uploading: uploading.value,
+      sizeOverLimitMessage: this.uploadState.sizeOverLimitMessage.value,
+      uploading: this.uploadState.uploading.value,
       showUploadProgress: props.value.showUploadProgress,
       classPrefix,
-      tipsClasses,
-      errorClasses,
-      placeholderClass,
+      tipsClasses: this.uploadState.tipsClasses,
+      errorClasses: this.uploadState.errorClasses,
+      placeholderClass: this.uploadState.placeholderClass,
       // locale,
       autoUpload: props.value.autoUpload,
       // showUploadProgress: props.showUploadProgress,
       // fileListDisplay: props.fileListDisplay,
       // imageViewerProps: props.imageViewerProps,
-      onRemove,
+      onRemove: this.uploadState.onRemove,
     }));
     this.commonDisplayFileProps = commonDisplayFileProps;
   }
@@ -163,11 +120,11 @@ export default class Upload extends Component<UploadProps> {
           return (
             <Button
               variant="outline"
-              onClick={this.triggerUpload}
+              onClick={this.uploadState.triggerUpload}
               {...this.triggerButtonProps.value}
-              disabled={this.disabled.value}
+              disabled={this.uploadState.disabled.value}
             >
-              {this.triggerUploadText.value}
+              {this.uploadState.triggerUploadText.value}
             </Button>
           );
         }
@@ -175,11 +132,11 @@ export default class Upload extends Component<UploadProps> {
           <Button
             variant="outline"
             icon={<t-icon name="upload" />}
-            onClick={this.triggerUpload}
+            onClick={this.uploadState.triggerUpload}
             {...this.triggerButtonProps.value}
-            disabled={this.disabled.value}
+            disabled={this.uploadState.disabled.value}
           >
-            {this.triggerUploadText.value}
+            {this.uploadState.triggerUploadText.value}
           </Button>
         );
       };
@@ -188,7 +145,6 @@ export default class Upload extends Component<UploadProps> {
         getDefaultTrigger()
       );
     };
-
     const triggerElement = renderTrigger();
 
     const getNormalFileNode = () => (
@@ -201,26 +157,26 @@ export default class Upload extends Component<UploadProps> {
       <ImageCard
         {...this.commonDisplayFileProps.value}
         showUploadProgress={props.showUploadProgress}
-        triggerUpload={this.triggerUpload}
-        uploadFiles={this.uploadFiles}
-        cancelUpload={this.cancelUpload}
+        triggerUpload={this.uploadState.triggerUpload}
+        uploadFiles={this.uploadState.uploadFiles}
+        cancelUpload={this.uploadState.cancelUpload}
         onPreview={this.onPreview.value}
         showImageFileName={props.showImageFileName}
       />
     );
 
     const getCustomFile = () => (
-      <CustomFile {...this.commonDisplayFileProps.value} triggerUpload={this.triggerUpload}>
+      <CustomFile {...this.commonDisplayFileProps.value} triggerUpload={this.uploadState.triggerUpload}>
         {triggerElement}
       </CustomFile>
     );
     return (
       <div class={classNames(uploadClasses.value)}>
         <input
-          ref={this.inputRef}
+          ref={this.uploadState.inputRef}
           type="file"
           disabled={false}
-          onChange={this.onNormalFileChange}
+          onChange={this.uploadState.onNormalFileChange}
           multiple={false}
           accept={props.accept}
           hidden
@@ -232,10 +188,12 @@ export default class Upload extends Component<UploadProps> {
         {props.theme === 'custom' && getCustomFile()}
 
         {Boolean(props.tips) && (
-          <small class={classNames([this.tipsClasses, `${classPrefix.value}-upload__tips`])}>{props.tips}</small>
+          <small class={classNames([this.uploadState.tipsClasses, `${classPrefix.value}-upload__tips`])}>
+            {props.tips}
+          </small>
         )}
-        {this.sizeOverLimitMessage.value && (
-          <small class={classNames(this.errorClasses)}>{this.sizeOverLimitMessage.value}</small>
+        {this.uploadState.sizeOverLimitMessage.value && (
+          <small class={classNames(this.uploadState.errorClasses)}>{this.uploadState.sizeOverLimitMessage.value}</small>
         )}
       </div>
     );
