@@ -54,6 +54,7 @@ export default class BreadcrumbItem extends Component<BreadcrumbItemProps> {
   }
 
   adjustCutOff() {
+    // TODO light dom 中，在除了 installed 的其他生命周期中，ref.current.clientWidth 等属性为 0，无法在更新时判断是否溢出
     if (this.breadcrumbText.current) {
       this.isCutOff = isNodeOverflow(this.breadcrumbText.current);
     }
