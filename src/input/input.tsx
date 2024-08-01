@@ -2,9 +2,10 @@ import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/browse';
 import 'tdesign-icons-web-components/esm/components/browse-off';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
 import { InputValue, TdInputProps } from './type';
@@ -103,10 +104,12 @@ export default class Input extends Component<InputProps> {
   eventProps;
 
   private handlePasswordVisible = (e: MouseEvent) => {
-    e.stopPropagation();
+    console.log('handlePasswordVisible');
+    e.stopImmediatePropagation();
     if (this.props.disabled) return;
     const toggleType = this.renderType === 'password' ? 'text' : 'password';
     this.renderType = toggleType;
+    this.update();
   };
 
   private handleChange = (e) => {
@@ -147,6 +150,7 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
+    console.log('handleFocus');
     e.stopImmediatePropagation();
     const { readonly, onFocus } = this.props;
     if (readonly) return;
@@ -167,15 +171,17 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseEnter = (e: MouseEvent) => {
-    e.stopPropagation();
+    console.log('handleMouseEnter');
+    e.stopImmediatePropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
-    // this.update(); 此处update会导致点击后大量触发更新事件的问题
     onMouseenter?.({ e });
+    // this.update();
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
-    e.stopPropagation();
+    console.log('handleMouseLeave');
+    e.stopImmediatePropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
     this.update();
@@ -321,14 +327,27 @@ export default class Input extends Component<InputProps> {
     });
 
     const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
-    const prefixIconContent = renderIcon('t', 'prefix', parseTNode(prefixIcon));
-    let suffixIconNew = suffixIcon;
 
+    const prefixIconContent = renderIcon(
+      't',
+      'prefix',
+      cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
+        className: `${classPrefix}-input__prefix`,
+        style: { marginRight: '0px' },
+      }),
+    );
+    let suffixIconNew = suffixIcon;
+    const cleanMargin = { marginLeft: '0px' };
     if (isShowClearIcon) {
       suffixIconNew = (
         <t-icon-close-circle
           name={'close-circle-filled'}
-          className={`${classPrefix}-input__suffix-clear`}
+          className={classname(
+            `${classPrefix}-input__suffix-clear`,
+            `${classPrefix}-input__suffix`,
+            `${classPrefix}-input__suffix-icon`,
+          )}
+          style={cleanMargin}
           onClick={this.handleClear}
         />
       ) as any;
@@ -336,15 +355,32 @@ export default class Input extends Component<InputProps> {
     if (props.type === 'password' && typeof suffixIcon === 'undefined') {
       if (this.renderType === 'password') {
         suffixIconNew = (
-          <t-icon-browse-off onClick={this.handlePasswordVisible} className={`${classPrefix}-input__suffix-clear`} />
+          <t-icon-browse-off
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
         ) as any;
       } else if (this.renderType === 'text') {
         suffixIconNew = (
-          <t-icon-browse className={`${classPrefix}-input__suffix-clear`} onClick={this.handlePasswordVisible} />
+          <t-icon-browse
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
         ) as any;
       }
     }
-    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(suffixIconNew));
+
+    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
     const labelContent = isFunction(label) ? label() : label;
     const suffixContent = isFunction(suffix) ? suffix() : suffix;
 
