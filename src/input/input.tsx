@@ -102,13 +102,6 @@ export default class Input extends Component<InputProps> {
 
   eventProps;
 
-  private handlePasswordVisible = (e: MouseEvent) => {
-    e.stopPropagation();
-    if (this.props.disabled) return;
-    const toggleType = this.renderType.value === 'password' ? 'text' : 'password';
-    this.renderType.value = toggleType;
-  };
-
   private handleChange = (e) => {
     e.stopImmediatePropagation();
     const { maxlength, maxcharacter, allowInputOverMax, status, onValidate, onChange } = this.props;
@@ -170,7 +163,8 @@ export default class Input extends Component<InputProps> {
     e.stopPropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
-    // this.update(); 此处update会导致点击后大量触发更新事件的问题
+    // 此处update会导致点击后大量触发更新事件的问题
+    this.update();
     onMouseenter?.({ e });
   };
 
@@ -332,25 +326,6 @@ export default class Input extends Component<InputProps> {
           onClick={this.handleClear}
         />
       ) as any;
-    }
-    if (props.type === 'password' && typeof suffixIcon === 'undefined') {
-      if (this.renderType.value === 'password') {
-        suffixIconNew = (
-          <t-icon-browse
-            onClick={this.handlePasswordVisible}
-            className={`${classPrefix}-input__suffix-clear`}
-            name="browse"
-          />
-        ) as any;
-      } else if (this.renderType.value === 'text') {
-        suffixIconNew = (
-          <t-icon-browse-off
-            className={`${classPrefix}-input__suffix-clear`}
-            onClick={this.handlePasswordVisible}
-            name="browse-off"
-          />
-        ) as any;
-      }
     }
     const suffixIconContent = renderIcon('t', 'suffix', parseTNode(suffixIconNew));
     const labelContent = isFunction(label) ? label() : label;
