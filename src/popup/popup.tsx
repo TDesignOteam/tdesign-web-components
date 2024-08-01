@@ -267,6 +267,14 @@ export default class Popup extends Component<PopupProps> {
     this.updatePopper();
   };
 
+  install(): void {
+    window.addEventListener('resize', this.updatePopper);
+  }
+
+  uninstall(): void {
+    window.removeEventListener('resize', this.updatePopper);
+  }
+
   render(props: OmiProps<PopupProps>) {
     const componentName = 't-popup';
     const popperClasses = classname(componentName, props.overlayClassName);

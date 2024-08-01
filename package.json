@@ -15,7 +15,7 @@
     "site:intranet": "cd site && vite build --mode intranet",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
     "prebuild": "rimraf es/* lib/* dist/* esm/*",
-    "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc",
+    "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js",
     "build:tsc": "run-p build:tsc-*",
     "build:tsc-lib": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir lib/",
     "build:tsc-esm": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir esm/",
@@ -24,7 +24,8 @@
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "generate:entry": "node ./script/generate-entry.js",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test":"echo 'test to do'"
   },
   "files": [
     "esm",
@@ -63,7 +64,7 @@
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
     "lodash": "~4.17.15",
-    "omi": "7.6.11",
+    "omi": "7.6.15",
     "omi-transition": "^0.1.8",
     "tailwind-merge": "^2.2.1",
     "tdesign-icons-web-components": "^0.0.1-alpha.3"

@@ -5,7 +5,6 @@ import { Component, createRef, OmiProps, signal, SignalValue, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import { scrollTo } from '../_util/dom.ts';
 import { AttachNode, StyledProps } from '../common';
-import { styleSheet } from './style';
 import { TdBackTopProps } from './type.ts';
 
 export interface BackTopProps extends TdBackTopProps, StyledProps {}
@@ -32,7 +31,7 @@ interface ClickEventProps {
 
 @tag('t-back-top')
 export default class BackTop extends Component<BackTopProps> {
-  static css = styleSheet;
+  static css = [];
 
   buttonRef = createRef<any>();
 

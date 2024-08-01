@@ -81,5 +81,6 @@ module.exports = {
     'no-script-url': 'warn',
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^html'] }],
     'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '__TDESIGN_THEME_PREFIX__'] }],
+    'import/no-duplicates': 'off',
   },
 };
