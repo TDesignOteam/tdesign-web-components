@@ -5,6 +5,7 @@ import { Component, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import eventDispose from '../_util/eventDispose';
 import { convertToLightDomNode } from '../_util/lightDom';
+import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
 import { TdButtonProps } from './type';
 
@@ -81,6 +82,7 @@ export default class Button extends Component<ButtonProps> {
       shape,
       ignoreAttributes,
       children,
+      suffix,
       ...rest
     } = props;
 
@@ -122,6 +124,7 @@ export default class Button extends Component<ButtonProps> {
       >
         {iconNode ? iconNode : null}
         <span className={`${classPrefix}-button__text`}>{children}</span>
+        {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
   }
