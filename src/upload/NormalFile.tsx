@@ -2,6 +2,7 @@ import 'tdesign-icons-web-components';
 
 import { abridgeName } from '../_common/js/upload/utils';
 import classNames from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import Loading from '../loading';
 import { CommonDisplayFileProps } from './interface';
 import { UploadFile } from './type';
@@ -14,7 +15,7 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
 
   const renderProgress = (percent: number) => (
     <div className={`${uploadPrefix}__single-progress`}>
-      <Loading loading={true} size="medium" />
+      {convertToLightDomNode(<Loading loading={true} size="medium" />)}
       <span className={`${uploadPrefix}__single-percent`}>{percent || 0}%</span>
     </div>
   );
@@ -40,22 +41,29 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
             {file?.name ? fileName : props.placeholder}
           </span>
           {file?.status === 'progress' && renderProgress(file.percent)}
-          {file?.status === 'waiting' && (
-            <t-icon name="time-filled" className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-waiting`} />
-          )}
-          {file?.name && file.status === 'success' && (
-            <t-icon name="check-circle-filled" className={`${uploadPrefix}__status-icon`} />
-          )}
-          {file?.name && file.status === 'fail' && (
-            <t-icon name="error-circle-filled" className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-fail`} />
-          )}
-          {Boolean(!disabled && file?.name) && (
-            <t-icon
-              name="close-circle-filled"
-              className={`${uploadPrefix}__single-input-clear`}
-              onClick={(e) => props.onRemove({ e, file, index: 0 })}
-            />
-          )}
+          {file?.status === 'waiting' &&
+            convertToLightDomNode(
+              <t-icon name="time-filled" className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-waiting`} />,
+            )}
+          {file?.name &&
+            file.status === 'success' &&
+            convertToLightDomNode(<t-icon name="check-circle-filled" className={`${uploadPrefix}__status-icon`} />)}
+          {file?.name &&
+            file.status === 'fail' &&
+            convertToLightDomNode(
+              <t-icon
+                name="error-circle-filled"
+                className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-fail`}
+              />,
+            )}
+          {Boolean(!disabled && file?.name) &&
+            convertToLightDomNode(
+              <t-icon
+                name="close-circle-filled"
+                className={`${uploadPrefix}__single-input-clear`}
+                onClick={(e) => props.onRemove({ e, file, index: 0 })}
+              />,
+            )}
         </div>
       </div>
     );
@@ -63,6 +71,9 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
 
   const renderFilePreviewAsText = (files: UploadFile[]) => {
     if (theme !== 'file') return null;
+    if (files[0]?.status === 'fail' && props.autoUpload) {
+      return null;
+    }
     return files.map((file, index) => {
       const fileName = props.abridgeName && file.name ? abridgeName(file.name, ...props.abridgeName) : file.name;
       return (
@@ -73,22 +84,24 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
           <span className={`${uploadPrefix}__single-name`}>{fileName}</span>
           {file.status === 'fail' && (
             <div className={`${uploadPrefix}__flow-status ${uploadPrefix}__file-fail`}>
-              <t-icon name="check-circle-filled" />
+              {convertToLightDomNode(<t-icon name="error-circle-filled" />)}
             </div>
           )}
           {file.status === 'waiting' && (
             <div className={`${uploadPrefix}__flow-status ${uploadPrefix}__file-waiting`}>
-              <t-icon name="time-filled" />
+              {convertToLightDomNode(<t-icon name="time-filled" />)}
             </div>
           )}
           {file.status === 'progress' && renderProgress(file.percent)}
-          {!disabled && file.status !== 'progress' && (
-            <t-icon
-              name="close"
-              className={`${uploadPrefix}__icon-delete`}
-              onClick={(e) => props.onRemove({ e, file, index })}
-            />
-          )}
+          {!disabled &&
+            file.status !== 'progress' &&
+            convertToLightDomNode(
+              <t-icon
+                name="close"
+                className={`${uploadPrefix}__icon-delete`}
+                onClick={(e) => props.onRemove({ e, file, index })}
+              />,
+            )}
         </div>
       );
     });

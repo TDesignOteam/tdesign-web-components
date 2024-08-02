@@ -1,6 +1,6 @@
 import 'tdesign-icons-web-components';
 
-import { classNames, Component, computed, OmiProps, signal, SignalValue, tag } from 'omi';
+import { classNames, Component, computed, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
 import { classPrefix } from '../_util/classname';
 import { Button } from '../button';
@@ -23,7 +23,15 @@ export const uploadDefaultProps: TdUploadProps = {
 
 @tag('t-upload')
 export default class Upload extends Component<UploadProps> {
-  static css = [];
+  static css = css`
+    .t-upload__single-input-clear {
+      display: none;
+    }
+
+    .t-upload__single-progress .t-loading {
+      line-height: calc(var(--td-font-size-body-medium) + 2px);
+    }
+  `;
 
   static defaultProps = uploadDefaultProps;
 
