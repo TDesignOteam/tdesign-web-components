@@ -107,6 +107,18 @@ export default class Upload extends Component<UploadProps> {
   }
 
   render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
+    const {
+      disabled,
+      sizeOverLimitMessage,
+      triggerUploadText,
+      inputRef,
+      tipsClasses,
+      errorClasses,
+      onNormalFileChange,
+      uploadFiles,
+      triggerUpload,
+      cancelUpload,
+    } = this.uploadState;
     const uploadClasses = computed(() => [
       // props.className,
       `${classPrefix}-upload`,
@@ -120,11 +132,11 @@ export default class Upload extends Component<UploadProps> {
           return (
             <Button
               variant="outline"
-              onClick={this.uploadState.triggerUpload}
+              onClick={triggerUpload}
               {...this.triggerButtonProps.value}
-              disabled={this.uploadState.disabled.value}
+              disabled={disabled.value}
             >
-              {this.uploadState.triggerUploadText.value}
+              {triggerUploadText.value}
             </Button>
           );
         }
@@ -132,11 +144,11 @@ export default class Upload extends Component<UploadProps> {
           <Button
             variant="outline"
             icon={<t-icon name="upload" />}
-            onClick={this.uploadState.triggerUpload}
+            onClick={triggerUpload}
             {...this.triggerButtonProps.value}
-            disabled={this.uploadState.disabled.value}
+            disabled={disabled.value}
           >
-            {this.uploadState.triggerUploadText.value}
+            {triggerUploadText.value}
           </Button>
         );
       };
@@ -157,26 +169,26 @@ export default class Upload extends Component<UploadProps> {
       <ImageCard
         {...this.commonDisplayFileProps.value}
         showUploadProgress={props.showUploadProgress}
-        triggerUpload={this.uploadState.triggerUpload}
-        uploadFiles={this.uploadState.uploadFiles}
-        cancelUpload={this.uploadState.cancelUpload}
+        triggerUpload={triggerUpload}
+        uploadFiles={uploadFiles}
+        cancelUpload={cancelUpload}
         onPreview={this.onPreview.value}
         showImageFileName={props.showImageFileName}
       />
     );
 
     const getCustomFile = () => (
-      <CustomFile {...this.commonDisplayFileProps.value} triggerUpload={this.uploadState.triggerUpload}>
+      <CustomFile {...this.commonDisplayFileProps.value} triggerUpload={triggerUpload}>
         {triggerElement}
       </CustomFile>
     );
     return (
       <div class={classNames(uploadClasses.value)}>
         <input
-          ref={this.uploadState.inputRef}
+          ref={inputRef}
           type="file"
           disabled={false}
-          onChange={this.uploadState.onNormalFileChange}
+          onChange={onNormalFileChange}
           multiple={false}
           accept={props.accept}
           hidden
@@ -188,13 +200,9 @@ export default class Upload extends Component<UploadProps> {
         {props.theme === 'custom' && getCustomFile()}
 
         {Boolean(props.tips) && (
-          <small class={classNames([this.uploadState.tipsClasses, `${classPrefix.value}-upload__tips`])}>
-            {props.tips}
-          </small>
+          <small class={classNames([tipsClasses, `${classPrefix.value}-upload__tips`])}>{props.tips}</small>
         )}
-        {this.uploadState.sizeOverLimitMessage.value && (
-          <small class={classNames(this.uploadState.errorClasses)}>{this.uploadState.sizeOverLimitMessage.value}</small>
-        )}
+        {sizeOverLimitMessage.value && <small class={classNames(errorClasses)}>{sizeOverLimitMessage.value}</small>}
       </div>
     );
   }

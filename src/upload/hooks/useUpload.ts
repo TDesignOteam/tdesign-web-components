@@ -302,7 +302,6 @@ export default function useUpload(props: SignalValue<TdUploadProps>) {
       index: p.index,
       file: p.file,
     };
-    console.log('onRemove', uploadValue.value);
     setUploadValue([], changePrams);
     toUploadFiles.value = [];
     xhrReq.value = [];
