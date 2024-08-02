@@ -3,7 +3,7 @@ import 'tdesign-icons-web-components';
 import { classNames, Component, computed, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
 import { classPrefix } from '../_util/classname';
-import { Button } from '../button';
+import { Button, ButtonProps } from '../button';
 import useUpload from './hooks/useUpload';
 import CustomFile from './CustomFile';
 import ImageCard from './ImageCard';
@@ -64,7 +64,7 @@ export default class Upload extends Component<UploadProps> {
 
   onPreview: SignalValue<(options: { file: UploadFile; index: number; e: MouseEvent }) => void>;
 
-  triggerButtonProps: SignalValue<import('/Users/wings/repos/tdesign-web-components/src/button/button').ButtonProps>;
+  triggerButtonProps: SignalValue<ButtonProps>;
 
   propsRef: SignalValue<UploadProps>;
 
@@ -79,7 +79,7 @@ export default class Upload extends Component<UploadProps> {
     this.onPreview = onPreview;
     this.triggerButtonProps = triggerButtonProps;
 
-    const commonDisplayFileProps: SignalValue<CommonDisplayFileProps> = computed(() => ({
+    this.commonDisplayFileProps = computed(() => ({
       accept: props.value.accept,
       files: this.uploadState.uploadValue.value,
       toUploadFiles: this.uploadState.toUploadFiles.value,
@@ -103,7 +103,6 @@ export default class Upload extends Component<UploadProps> {
       // imageViewerProps: props.imageViewerProps,
       onRemove: this.uploadState.onRemove,
     }));
-    this.commonDisplayFileProps = commonDisplayFileProps;
   }
 
   install(): void {
@@ -115,44 +114,14 @@ export default class Upload extends Component<UploadProps> {
     this.propsRef.value = props;
   }
 
-  render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
-    const {
-      disabled,
-      sizeOverLimitMessage,
-      triggerUploadText,
-      inputRef,
-      tipsClasses,
-      errorClasses,
-      onNormalFileChange,
-      uploadFiles,
-      triggerUpload,
-      cancelUpload,
-    } = this.uploadState;
-    const uploadClasses = computed(() => [
-      // props.className,
-      `${classPrefix}-upload`,
-      {
-        [`${classPrefix}-upload--theme-${props.theme}`]: props.theme === 'file-input',
-      },
-    ]);
-    const renderTrigger = (): JSX.Element => {
-      const getDefaultTrigger = () => {
-        if (this.theme.value === 'file-input') {
-          return (
-            <Button
-              variant="outline"
-              onClick={triggerUpload}
-              {...this.triggerButtonProps.value}
-              disabled={disabled.value}
-            >
-              {triggerUploadText.value}
-            </Button>
-          );
-        }
+  renderTrigger = (): JSX.Element => {
+    const { disabled, triggerUploadText, triggerUpload } = this.uploadState;
+
+    const getDefaultTrigger = () => {
+      if (this.theme.value === 'file-input') {
         return (
           <Button
             variant="outline"
-            icon={<t-icon name="upload" />}
             onClick={triggerUpload}
             {...this.triggerButtonProps.value}
             disabled={disabled.value}
@@ -160,21 +129,34 @@ export default class Upload extends Component<UploadProps> {
             {triggerUploadText.value}
           </Button>
         );
-      };
+      }
       return (
-        // props.children || getDefaultTrigger()
-        getDefaultTrigger()
+        <Button
+          variant="outline"
+          icon={<t-icon name="upload" />}
+          onClick={triggerUpload}
+          {...this.triggerButtonProps.value}
+          disabled={disabled.value}
+        >
+          {triggerUploadText.value}
+        </Button>
       );
     };
-    const triggerElement = renderTrigger();
-
-    const getNormalFileNode = () => (
-      <NormalFile {...this.commonDisplayFileProps.value}>
-        <div className={`${classPrefix}-upload__trigger`}>{triggerElement}</div>
-      </NormalFile>
+    return (
+      // props.children || getDefaultTrigger()
+      getDefaultTrigger()
     );
+  };
 
-    const getImageCardUploadNode = () => (
+  getNormalFileNode = () => (
+    <NormalFile {...this.commonDisplayFileProps.value}>
+      <div className={`${classPrefix}-upload__trigger`}>{this.renderTrigger()}</div>
+    </NormalFile>
+  );
+
+  getImageCardUploadNode = (props: UploadProps) => {
+    const { uploadFiles, triggerUpload, cancelUpload } = this.uploadState;
+    return (
       <ImageCard
         {...this.commonDisplayFileProps.value}
         showUploadProgress={props.showUploadProgress}
@@ -185,14 +167,29 @@ export default class Upload extends Component<UploadProps> {
         showImageFileName={props.showImageFileName}
       />
     );
+  };
 
-    const getCustomFile = () => (
+  getCustomFile = () => {
+    const { triggerUpload } = this.uploadState;
+    return (
       <CustomFile {...this.commonDisplayFileProps.value} triggerUpload={triggerUpload}>
-        {triggerElement}
+        {this.renderTrigger()}
       </CustomFile>
     );
+  };
+
+  render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
+    const { sizeOverLimitMessage, inputRef, tipsClasses, errorClasses, onNormalFileChange } = this.uploadState;
+    const uploadClasses = [
+      // props.className,
+      `${classPrefix}-upload`,
+      {
+        [`${classPrefix}-upload--theme-${props.theme}`]: props.theme === 'file-input',
+      },
+    ];
+
     return (
-      <div class={classNames(uploadClasses.value)}>
+      <div class={classNames(uploadClasses)}>
         <input
           ref={inputRef}
           type="file"
@@ -202,11 +199,11 @@ export default class Upload extends Component<UploadProps> {
           accept={props.accept}
           hidden
         />
-        {['file', 'file-input'].includes(props.theme) && getNormalFileNode()}
+        {['file', 'file-input'].includes(props.theme) && this.getNormalFileNode()}
         {/* {['file', 'image'].includes(props.theme) && props.draggable && getSingleFileDraggerUploadNode()} */}
-        {props.theme === 'image' && getImageCardUploadNode()}
+        {props.theme === 'image' && this.getImageCardUploadNode(props)}
         {/* {['image-flow', 'file-flow'].includes(props.theme) && getFlowListNode()} */}
-        {props.theme === 'custom' && getCustomFile()}
+        {props.theme === 'custom' && this.getCustomFile()}
 
         {Boolean(props.tips) && (
           <small class={classNames([tipsClasses, `${classPrefix.value}-upload__tips`])}>{props.tips}</small>
