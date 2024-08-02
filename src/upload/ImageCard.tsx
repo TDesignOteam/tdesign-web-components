@@ -2,10 +2,10 @@ import 'tdesign-icons-web-components';
 
 import classNames from 'classnames';
 
+import zhCn from '../_common/js/global-config/locale/zh_CN';
 import { abridgeName } from '../_common/js/upload/utils';
 import Image from '../image';
 import Loading from '../loading';
-import zhCN from '../locale/zh_CN';
 // import ImageViewer from '../../image-viewer';
 import { CommonDisplayFileProps } from './interface';
 import { TdUploadProps, UploadFile } from './type';
@@ -23,7 +23,7 @@ export interface ImageCardUploadProps extends CommonDisplayFileProps {
 }
 
 const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
-  const locale = zhCN.upload;
+  const locale = zhCn.upload;
   const { displayFiles, classPrefix, onRemove, disabled } = props;
 
   const showTrigger = !displayFiles?.[0];

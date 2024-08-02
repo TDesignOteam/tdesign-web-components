@@ -1,5 +1,6 @@
 import { computed, createRef, signal, SignalValue } from 'omi';
 
+import zhCn from '../../_common/js/global-config/locale/zh_CN';
 import {
   formatToUploadFile,
   getDisplayFiles,
@@ -11,7 +12,6 @@ import {
 import { OnResponseErrorContext, SizeLimitObj } from '../../_common/js/upload/types';
 import { getFileList } from '../../_common/js/upload/utils';
 import { classPrefix } from '../../_util/classname';
-import zhCn from '../../locale/zh_CN';
 import { TdUploadProps, UploadChangeContext, UploadFile, UploadRemoveContext } from '../type';
 import { t, toRef } from '../utils';
 
