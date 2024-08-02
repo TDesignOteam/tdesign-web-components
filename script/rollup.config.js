@@ -135,40 +135,18 @@ const umdCssConfig = {
   },
 };
 
-// conditionalIntroPlugin.js
-function conditionalIntroPlugin(introCode) {
-  return {
-    name: 'conditional-intro',
-    renderChunk(code, chunk) {
-      // 这里根据具体的条件判断是否添加 intro 代码
-      if (shouldAddIntro(chunk)) {
-        return {
-          code: `${introCode}\n${code}`,
-          map: null, // 如果需要支持 source map，可以生成相应的映射
-        };
-      }
-      return null;
-    },
-  };
-}
-
-function shouldAddIntro(chunk) {
-  // 示例条件：如果文件名不包含 "common" 则添加 intro 代码
-  // 你可以根据实际需求调整这个条件
-  return !chunk.fileName.includes('dep');
-}
-
 // 按需加载组件
 const libConfig = {
   input: inputList.concat('!src/index-lib.ts'),
   external: externalDeps.concat(externalPeerDeps),
-  plugins: [multiInput(), conditionalIntroPlugin("import { h } from 'omi';")].concat(getPlugins()),
+  plugins: [multiInput()].concat(getPlugins()),
   output: {
     banner,
     dir: 'lib/',
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '_chunks/dep-[hash].js',
+    intro: `import { h } from 'omi';`,
   },
 };
 
@@ -178,13 +156,14 @@ const esmConfig = {
   treeshake: false,
   // preserveModules: true,
   external: externalDeps.concat(externalPeerDeps),
-  plugins: [multiInput(), conditionalIntroPlugin("import { h } from 'omi';")].concat(getPlugins({ ignoreLess: true })),
+  plugins: [multiInput()].concat(getPlugins({ ignoreLess: true })),
   output: {
     banner,
     dir: 'esm/',
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '_chunks/dep-[hash].js',
+    intro: `import { h } from 'omi';`,
   },
 };
 

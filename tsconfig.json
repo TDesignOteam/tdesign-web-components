@@ -7,7 +7,7 @@
     "outDir": "lib",
     "declaration": true,
     "sourceMap": true,
-    "lib": ["esnext", "dom", "dom.iterable"],
+    "lib": ["esnext", "dom"],
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
@@ -29,18 +29,10 @@
     "esModuleInterop": true
   },
   "include": ["src", "site", "typings.d.ts"],
-  "exclude": [
-    "**/*.jsx",
-    "**/**/_usage/*",
-    "**/**/__tests__/*",
-    "node_modules",
-    "src/_common",
-    "dist",
-    "lib",
-    "esm",
-    "cjs",
-    "es"
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"],
+  "types": [
+    "node",
+    "vitest/globals",
   ],
-  "types": ["node", "vitest/globals"],
   "compileOnSave": false
 }
