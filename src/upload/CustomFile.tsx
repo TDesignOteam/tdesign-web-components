@@ -1,4 +1,5 @@
 import { VNode } from 'omi';
+
 import { CommonDisplayFileProps } from './interface';
 
 export interface CustomFileProps extends CommonDisplayFileProps {

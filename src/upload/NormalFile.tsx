@@ -1,7 +1,7 @@
-import classNames from '../_util/classname';
 import 'tdesign-icons-web-components';
 
 import { abridgeName } from '../_common/js/upload/utils';
+import classNames from '../_util/classname';
 import Loading from '../loading';
 import { CommonDisplayFileProps } from './interface';
 import { UploadFile } from './type';

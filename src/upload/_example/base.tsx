@@ -1,9 +1,10 @@
 import 'tdesign-icons-web-components';
+
 import { Component, computed, createRef, signal } from 'omi';
 import Button from 'tdesign-web-components/button';
 import Space from 'tdesign-web-components/space';
+import type { UploadFile, UploadProps } from 'tdesign-web-components/upload';
 import Upload from 'tdesign-web-components/upload';
-import type { UploadProps, UploadFile } from 'tdesign-web-components/upload';
 
 export default class Base extends Component {
   uploadRef1 = createRef<InstanceType<typeof Upload>>();

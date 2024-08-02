@@ -1,7 +1,6 @@
-import { Upload, Space, Button } from 'tdesign-web-components';
-import type { UploadProps } from 'tdesign-web-components/upload';
-
 import { Component, createRef, signal } from 'omi';
+import { Button, Space, Upload } from 'tdesign-web-components';
+import type { UploadProps } from 'tdesign-web-components/upload';
 
 export default class UploadSingleInput extends Component {
   uploadRef = createRef<InstanceType<typeof Upload>>();

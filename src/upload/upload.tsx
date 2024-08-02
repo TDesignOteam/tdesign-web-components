@@ -1,14 +1,15 @@
+import 'tdesign-icons-web-components';
+
 import { classNames, Component, computed, OmiProps, signal, SignalValue, tag } from 'omi';
 
-import 'tdesign-icons-web-components';
-import { Button } from '../button';
-import NormalFile from './NormalFile';
-import useUpload from './hooks/useUpload';
-import { TdUploadProps, UploadFile } from './type';
-import { CommonDisplayFileProps } from './interface';
-import ImageCard from './ImageCard';
-import CustomFile from './CustomFile';
 import { classPrefix } from '../_util/classname';
+import { Button } from '../button';
+import useUpload from './hooks/useUpload';
+import CustomFile from './CustomFile';
+import ImageCard from './ImageCard';
+import { CommonDisplayFileProps } from './interface';
+import NormalFile from './NormalFile';
+import { TdUploadProps, UploadFile } from './type';
 import { toRef } from './utils';
 
 export type UploadProps = TdUploadProps;
