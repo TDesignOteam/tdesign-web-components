@@ -4,7 +4,6 @@ import { Component, OmiDOMAttributes, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
-import { convertToLightDomNode } from '../_util/lightDom';
 import { TdBreadcrumbProps } from './type';
 
 interface BreadcrumbProps extends TdBreadcrumbProps, OmiDOMAttributes {}
@@ -23,11 +22,11 @@ export default class Breadcrumb extends Component<BreadcrumbProps> {
     const { children, options } = this.props;
     const childrenArray = getChildrenArray(children);
     let content = childrenArray
-      .filter((child) => child.attributes?.slot !== 'separator')
-      .map((item) => convertToLightDomNode(item));
+      .filter((child) => child.attributes?.slot !== 'separator' && child.nodeName === 't-breadcrumb-item')
+      .map((item) => item);
 
     if (options && options.length) {
-      content = options.map((option) => convertToLightDomNode(<t-breadcrumb-item {...option}></t-breadcrumb-item>));
+      content = options.map((option) => <t-breadcrumb-item {...option}></t-breadcrumb-item>);
     }
     return content;
   }

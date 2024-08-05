@@ -1,7 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/chevron-right';
 import '../tooltip';
 
-import { bind, Component, createRef, OmiDOMAttributes, tag } from 'omi';
+import { bind, Component, OmiDOMAttributes, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { isNodeOverflow } from '../_util/dom';
@@ -23,6 +23,8 @@ const localTBreadcrumbOrigin: LocalTBreadcrumb = {
 @tag('t-breadcrumb-item')
 export default class BreadcrumbItem extends Component<BreadcrumbItemProps> {
   static css = [];
+
+  static isLightDOM = true;
 
   className = `${getClassPrefix()}-breadcrumb__item`;
 
@@ -47,24 +49,29 @@ export default class BreadcrumbItem extends Component<BreadcrumbItemProps> {
 
   isCutOff = false;
 
-  breadcrumbText = createRef<HTMLElement>();
-
   install() {
     this.injection.tBreadcrumb && (this.localTBreadcrumb = this.injection.tBreadcrumb);
   }
 
   adjustCutOff() {
-    // TODO light dom 中，在除了 installed 的其他生命周期中，ref.current.clientWidth 等属性为 0，无法在更新时判断是否溢出
-    if (this.breadcrumbText.current) {
-      this.isCutOff = isNodeOverflow(this.breadcrumbText.current);
-    }
+    setTimeout(() => {
+      const breadcrumbText = this.querySelector(`.${getClassPrefix()}-breadcrumb__inner-text`);
+
+      if (breadcrumbText?.clientWidth) {
+        const isCutOff = isNodeOverflow(breadcrumbText);
+        if (this.isCutOff !== isCutOff) {
+          this.isCutOff = isCutOff;
+          this.update();
+        }
+      }
+    });
   }
 
-  installed(): void {
+  ready(): void {
     this.adjustCutOff();
   }
 
-  beforeUpdate(): void {
+  updated(): void {
     this.adjustCutOff();
   }
 
@@ -90,13 +97,11 @@ export default class BreadcrumbItem extends Component<BreadcrumbItemProps> {
 
     const textContent = (
       <span class={`${classPrefix}-breadcrumb__inner`} style={maxWithStyle}>
-        <span ref={this.breadcrumbText} class={`${classPrefix}-breadcrumb__inner-text`}>
-          {children || content}
-        </span>
+        <span class={`${classPrefix}-breadcrumb__inner-text`}>{children || content}</span>
       </span>
     );
 
-    let itemContent = <span class={classname(textClass)}>{textContent}</span>;
+    let itemContent;
     if (href && !disabled) {
       textClass.push(`${classPrefix}-link`);
       itemContent = (
@@ -104,6 +109,8 @@ export default class BreadcrumbItem extends Component<BreadcrumbItemProps> {
           {textContent}
         </a>
       );
+    } else {
+      itemContent = <span class={classname(textClass)}>{textContent}</span>;
     }
 
     return (
