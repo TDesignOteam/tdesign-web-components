@@ -149,6 +149,12 @@ export default [
         component: () => import('tdesign-web-components/range-input/README.md'),
       },
       {
+        title: 'TagInput 标签输入框',
+        name: ' tag-input',
+        path: '/components/tag-input',
+        component: () => import('tdesign-web-components/tag-input/README.md'),
+      },
+      {
         title: 'Radio 单选框',
         name: 'radio',
         path: '/components/radio',
