@@ -1,8 +1,11 @@
-import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components/esm/components/close-circle';
+import 'tdesign-icons-web-components/esm/components/browse';
+import 'tdesign-icons-web-components/esm/components/browse-off';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
 import { InputValue, TdInputProps } from './type';
@@ -90,7 +93,7 @@ export default class Input extends Component<InputProps> {
 
   status: TdInputProps['status'] = 'default';
 
-  renderType = '';
+  renderType = 'password';
 
   isFocused = false;
 
@@ -99,6 +102,15 @@ export default class Input extends Component<InputProps> {
   eventPropsNames;
 
   eventProps;
+
+  private handlePasswordVisible = (e: MouseEvent) => {
+    console.log('handlePasswordVisible');
+    e.stopImmediatePropagation();
+    if (this.props.disabled) return;
+    const toggleType = this.renderType === 'password' ? 'text' : 'password';
+    this.renderType = toggleType;
+    this.update();
+  };
 
   private handleChange = (e) => {
     e.stopImmediatePropagation();
@@ -138,6 +150,7 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
+    console.log('handleFocus');
     e.stopImmediatePropagation();
     const { readonly, onFocus } = this.props;
     if (readonly) return;
@@ -158,13 +171,17 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseEnter = (e: MouseEvent) => {
+    console.log('handleMouseEnter');
+    e.stopImmediatePropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
-    this.update();
     onMouseenter?.({ e });
+    // this.update();
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
+    console.log('handleMouseLeave');
+    e.stopImmediatePropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
     this.update();
@@ -310,27 +327,67 @@ export default class Input extends Component<InputProps> {
     });
 
     const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
-    const prefixIconContent = renderIcon('t', 'prefix', parseTNode(prefixIcon));
-    let suffixIconNew = suffixIcon;
 
+    const prefixIconContent = renderIcon(
+      't',
+      'prefix',
+      cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
+        className: `${classPrefix}-input__prefix`,
+        style: { marginRight: '0px' },
+      }),
+    );
+    let suffixIconNew = suffixIcon;
+    const cleanMargin = { marginLeft: '0px' };
     if (isShowClearIcon) {
       suffixIconNew = (
-        <t-icon-close-circle-filled
+        <t-icon-close-circle
           name={'close-circle-filled'}
-          class={classname(`${classPrefix}-input__suffix-clear`)}
+          className={classname(
+            `${classPrefix}-input__suffix-clear`,
+            `${classPrefix}-input__suffix`,
+            `${classPrefix}-input__suffix-icon`,
+          )}
+          style={cleanMargin}
           onClick={this.handleClear}
         />
       ) as any;
     }
+    if (props.type === 'password' && typeof suffixIcon === 'undefined') {
+      if (this.renderType === 'password') {
+        suffixIconNew = (
+          <t-icon-browse-off
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
+        ) as any;
+      } else if (this.renderType === 'text') {
+        suffixIconNew = (
+          <t-icon-browse
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
+        ) as any;
+      }
+    }
 
-    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(suffixIconNew));
+    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
     const labelContent = isFunction(label) ? label() : label;
     const suffixContent = isFunction(suffix) ? suffix() : suffix;
 
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
         <div
-          class={classname(`${classPrefix}-input__limit-number`, {
+          className={classname(`${classPrefix}-input__limit-number`, {
             [`${classPrefix}-is-disabled`]: disabled,
           })}
         >
@@ -364,7 +421,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        class={classname(`${classPrefix}-input`, {
+        className={classname(`${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -381,17 +438,17 @@ export default class Input extends Component<InputProps> {
         onMouseLeave={this.handleMouseLeave}
       >
         {prefixIconContent}
-        {labelContent ? <div class={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
+        {labelContent ? <div className={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
         {showInput && renderInput}
 
         {autoWidth && (
-          <span ref={this.inputPreRef} class={classname(`${classPrefix}-input__input-pre`)}>
+          <span ref={this.inputPreRef} className={classname(`${classPrefix}-input__input-pre`)}>
             {innerValue || placeholder}
           </span>
         )}
 
         {suffixContent || limitNumberNode ? (
-          <div class={classname(`${classPrefix}-input__suffix`)}>
+          <div className={classname(`${classPrefix}-input__suffix`)}>
             {suffixContent}
             {limitNumberNode}
           </div>
@@ -402,7 +459,7 @@ export default class Input extends Component<InputProps> {
 
     return (
       <div
-        class={classname(
+        className={classname(
           `${classPrefix}-input__wrap`,
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
@@ -414,7 +471,7 @@ export default class Input extends Component<InputProps> {
         {...restProps}
       >
         {renderInputNode}
-        <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
+        <div className={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
           {tips}
         </div>
       </div>
