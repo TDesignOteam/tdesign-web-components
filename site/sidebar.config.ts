@@ -123,6 +123,12 @@ export default [
         path: '/components/backTop',
         component: () => import('tdesign-web-components/back-top/README.md'),
       },
+      {
+        title: 'Tabs 选项卡',
+        name: 'tabs',
+        path: '/components/tabs',
+        component: () => import('tdesign-web-components/tabs/README.md'),
+      },
     ],
   },
   {
