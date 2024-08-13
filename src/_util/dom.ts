@@ -194,3 +194,9 @@ export function setStyle(style: CSSStyleDeclaration, key: string, value: string 
     (style as any)[key] = `${value}px`;
   }
 }
+
+// 用于判断节点内容是否溢出
+export const isNodeOverflow = (ele: Element | Element[]): boolean => {
+  const { clientWidth = 0, scrollWidth = 0 } = ele as Element;
+  return scrollWidth > clientWidth;
+};
