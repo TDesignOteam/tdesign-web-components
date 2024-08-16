@@ -87,8 +87,6 @@ export default class Tag extends Component<TagProps> {
       icon.attributes.style.marginRight = 4;
     }
 
-    console.log('===deleteIcon', this.deleteIcon);
-
     return (
       <span
         class={this.cls()}
