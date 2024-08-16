@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run generate:entry && cd site && vite",
+    "dev": "npm run generate:entry && cd site && vite --force",
     "site": "cd site && vite build",
     "site:intranet": "cd site && vite build --mode intranet",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
@@ -67,7 +67,7 @@
     "omi": "^7.6.17",
     "omi-transition": "^0.1.8",
     "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.1.1"
+    "tdesign-icons-web-components": "^0.1.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",

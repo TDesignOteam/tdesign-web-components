@@ -4,6 +4,7 @@ import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import eventDispose from '../_util/eventDispose';
+import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
@@ -96,8 +97,8 @@ export default class Button extends Component<ButtonProps> {
       });
     }
 
-    let iconNode = convertToLightDomNode(icon);
-    if (loading) iconNode = convertToLightDomNode(<t-icon-loading className="mr-[2px]" />);
+    let iconNode = convertToLightDomNode(flexIcon(icon));
+    if (loading) iconNode = convertToLightDomNode(flexIcon(<t-icon-loading className="mr-[2px]" />));
 
     const Tag = this.tag as string;
     return (
