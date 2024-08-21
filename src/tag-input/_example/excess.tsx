@@ -16,6 +16,7 @@ export default class TagInputExcess extends Component {
     return (
       <t-space direction="vertical" style={{ width: '80%' }}>
         <t-tag-input
+          label={'scorll: '}
           value={this.tags1}
           onChange={onChange}
           clearable
@@ -23,6 +24,7 @@ export default class TagInputExcess extends Component {
           placeholder="请输入"
         />
         <t-tag-input
+          label={'Break-Line: '}
           value={this.tags1}
           onChange={onChange}
           clearable

@@ -1,7 +1,7 @@
 import 'tdesign-web-components/tag-input';
-import 'tdesign-web-components/alert';
 
 import { Component } from 'omi';
+import { MessagePlugin } from 'tdesign-web-components/message';
 
 export default class TagInputLimit extends Component {
   tags = [];
@@ -13,10 +13,7 @@ export default class TagInputLimit extends Component {
       this.tags = value;
       if (value.length >= 3 && { inputValue }) {
         // 待message组件作者完善MessagePlugin
-        // MessagePlugin.warning('最多只能输入 3 个标签!');
-        this.isLimitExceeded = true;
-      } else {
-        this.isLimitExceeded = false;
+        MessagePlugin.warning('最多只能输入 3 个标签!');
       }
       this.update();
     };
