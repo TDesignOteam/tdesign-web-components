@@ -26,6 +26,7 @@ export * from './radio';
 export * from './range-input';
 export * from './slider';
 export * from './space';
+export * from './swiper';
 export * from './switch';
 export * from './tag';
 export * from './textarea';
