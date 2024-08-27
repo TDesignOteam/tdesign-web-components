@@ -1,6 +1,12 @@
+import 'tdesign-icons-web-components/esm/components/loading';
+
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import eventDispose from '../_util/eventDispose';
+import { flexIcon } from '../_util/icon';
+import { convertToLightDomNode } from '../_util/lightDom';
+import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
 import { TdButtonProps } from './type';
 
@@ -9,6 +15,24 @@ export interface ButtonProps extends TdButtonProps, StyledProps {}
 @tag('t-button')
 export default class Button extends Component<ButtonProps> {
   static css = [];
+
+  static propTypes = {
+    theme: String,
+    type: String,
+    variant: String,
+    size: String,
+    shape: String,
+    icon: Object,
+    loading: Boolean,
+    ghost: Boolean,
+    block: Boolean,
+    disabled: Boolean,
+    href: String,
+    tag: String,
+    content: [String, Object],
+    onClick: Function,
+    ignoreAttributes: Array,
+  };
 
   static defaultProps = {
     tag: 'button',
@@ -38,6 +62,14 @@ export default class Button extends Component<ButtonProps> {
     return theme;
   }
 
+  clickHandle = (e: MouseEvent) => {
+    eventDispose.call(this, 'click', e, () => {
+      const { disabled, loading } = this.props;
+      if (disabled || loading) return false;
+      return true;
+    });
+  };
+
   render(props: ButtonProps) {
     const {
       icon,
@@ -50,9 +82,12 @@ export default class Button extends Component<ButtonProps> {
       loading,
       shape,
       ignoreAttributes,
-      onClick,
+      children,
+      suffix,
       ...rest
     } = props;
+
+    delete rest.onClick;
 
     const classPrefix = getClassPrefix();
 
@@ -62,8 +97,8 @@ export default class Button extends Component<ButtonProps> {
       });
     }
 
-    let iconNode = icon;
-    if (loading) iconNode = <t-icon className="mr-[2px]" name={'loading'} />;
+    let iconNode = convertToLightDomNode(flexIcon(icon));
+    if (loading) iconNode = convertToLightDomNode(flexIcon(<t-icon-loading className="mr-[2px]" />));
 
     const Tag = this.tag as string;
     return (
@@ -85,13 +120,12 @@ export default class Button extends Component<ButtonProps> {
             [`${classPrefix}-size-full-width`]: block,
           },
         )}
-        onClick={!disabled && !loading ? onClick : undefined}
+        onClick={this.clickHandle}
         {...rest}
       >
         {iconNode ? iconNode : null}
-        <span className={`${classPrefix}-button__text`}>
-          <slot></slot>
-        </span>
+        <span className={`${classPrefix}-button__text`}>{children}</span>
+        {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
   }

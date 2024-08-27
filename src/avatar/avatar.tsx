@@ -3,18 +3,17 @@ import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 import { getClassPrefix, getCommonClassName } from '../_util/classname';
 import { StyledProps } from '../common';
 import { ImageProps } from '../image';
-import { styleSheet } from './style/index.ts';
 import { TdAvatarProps } from './type';
 
 export interface AvatarProps extends TdAvatarProps, StyledProps {}
 
 @tag('t-avatar')
 export default class Avatar extends Component<AvatarProps> {
-  static css = styleSheet;
+  static css = [];
 
   static defaultProps = { hideOnLoadFailed: false, shape: 'circle' };
 
-  static propsType = {
+  static propTypes = {
     alt: String,
     hideOnLoadFailed: Boolean,
     icon: Object,
@@ -84,7 +83,6 @@ export default class Avatar extends Component<AvatarProps> {
     const { SIZE } = getCommonClassName();
     const { componentName, isImgExist, groupSize, avatarRef, avatarChildrenRef, handleImgLoadError } = this;
     const { alt, icon, image, shape, size: avatarSize, children, content, style, imageProps, ...avatarProps } = props;
-    // console.log('this.injection.groupSize: ', this.injection.groupSize)
     const size = avatarSize === undefined ? groupSize : avatarSize;
 
     const numSizeStyle =
@@ -121,14 +119,15 @@ export default class Avatar extends Component<AvatarProps> {
       const childrenStyle = {
         transform: `scale(${this.scale})`,
       };
+      const renderChildrenContent = children && children[0] ? children : content;
       renderChildren = (
         <span ref={avatarChildrenRef} style={childrenStyle}>
-          {children || content}
+          {renderChildrenContent}
         </span>
       );
     }
     return (
-      <div ref={avatarRef} class={avatarClass} style={{ ...numSizeStyle, ...style }} {...avatarProps}>
+      <div class={avatarClass} style={{ ...numSizeStyle, ...style }} {...avatarProps} ref={avatarRef}>
         {renderChildren}
       </div>
     );

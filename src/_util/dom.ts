@@ -1,9 +1,27 @@
+import isString from 'lodash/isString';
 import raf from 'raf';
 
-import { AttachNode, AttachNodeReturnValue } from '../common';
+import { ScrollContainer, ScrollContainerElement } from '../common';
 import { easeInOutCubic, EasingFunction } from './easing';
 // 用于判断是否可使用 dom
 export const canUseDocument = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+/**
+ * 获取滚动容器
+ * 因为 document 不存在 scroll 等属性, 因此排除 document
+ * window | HTMLElement
+ * @param {ScrollContainerElement} [container='body']
+ * @returns {ScrollContainer}
+ */
+export const getScrollContainer = (container: ScrollContainer = 'body'): ScrollContainerElement => {
+  if (isString(container)) {
+    return container ? (document.querySelector(container) as HTMLElement) : window;
+  }
+  if (typeof container === 'function') {
+    return container();
+  }
+  return container || window;
+};
 
 // 获取 css vars
 export const getCssVarsValue = (name: string, element?: HTMLElement) => {
@@ -70,27 +88,19 @@ export const scrollTo = (target: number, opt: ScrollTopOptions) => {
   });
 };
 
-export function getAttach(attach: AttachNode, triggerNode?: HTMLElement): AttachNodeReturnValue {
-  if (!canUseDocument) return null;
-
-  let el: AttachNodeReturnValue;
-  if (typeof attach === 'string') {
-    el = document.querySelector(attach);
+export const getAttach = (node: any): HTMLElement => {
+  const attachNode = typeof node === 'function' ? node() : node;
+  if (!attachNode) {
+    return document.body;
   }
-  if (typeof attach === 'function') {
-    el = attach(triggerNode);
+  if (isString(attachNode)) {
+    return document.querySelector(attachNode);
   }
-  if (typeof attach === 'object') {
-    if ((attach as any) instanceof window.HTMLElement) {
-      el = attach;
-    }
+  if (attachNode instanceof HTMLElement) {
+    return attachNode;
   }
-
-  // fix el in iframe
-  if (el && el.nodeType === 1) return el;
-
   return document.body;
-}
+};
 
 export const addClass = function (el: Element, cls: string) {
   if (!el) return;
@@ -144,3 +154,49 @@ export function hasClass(el: Element, cls: string) {
   }
   return ` ${el.className} `.indexOf(` ${cls} `) > -1;
 }
+
+// 判断一个元素是否包含另一个元素
+export function domContains(parent: HTMLElement, child: HTMLElement) {
+  if (!parent || !child) return false;
+  if (parent.contains(child)) {
+    return true;
+  }
+
+  let matched = false;
+  if (parent.shadowRoot) {
+    const children = Array.from(parent.shadowRoot.children);
+    for (let i = 0; i < children.length; i++) {
+      if (children[i].isSameNode(child) || children[i].contains(child)) {
+        matched = true;
+      } else if (children[i].shadowRoot) {
+        matched = domContains(children[i] as any, child);
+      }
+      if (matched) break;
+    }
+  }
+  return matched;
+}
+
+// DOM properties that should NOT have "px" added when numeric
+export const IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
+
+export function setStyle(style: CSSStyleDeclaration, key: string, value: string | number | null) {
+  if (key[0] === '-') {
+    style.setProperty(key, value == null ? '' : value.toString());
+  } else if (value == null) {
+    // eslint-disable-next-line no-param-reassign
+    (style as any)[key] = '';
+  } else if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(key)) {
+    // eslint-disable-next-line no-param-reassign
+    (style as any)[key] = value.toString();
+  } else {
+    // eslint-disable-next-line no-param-reassign
+    (style as any)[key] = `${value}px`;
+  }
+}
+
+// 用于判断节点内容是否溢出
+export const isNodeOverflow = (ele: Element | Element[]): boolean => {
+  const { clientWidth = 0, scrollWidth = 0 } = ele as Element;
+  return scrollWidth > clientWidth;
+};

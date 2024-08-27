@@ -38,15 +38,7 @@ const getCssList = (css: ComponentConstructor['css']): string[] => {
   return [];
 };
 
-const findParentRenderRoot = (ele): Document | ShadowRoot => {
-  if (ele.shadowRoot && ele.renderRoot && ele.renderRoot.adoptedStyleSheets) {
-    return ele.renderRoot;
-  }
-  if (ele.parentElement) {
-    return findParentRenderRoot(ele.parentElement);
-  }
-  return document;
-};
+const findParentRenderRoot = (ele): Document | ShadowRoot => ele.getRootNode() || document;
 
 const lightDomCtorCache: Map<ComponentConstructor, ComponentConstructor> = new Map();
 
@@ -81,6 +73,8 @@ const buildLightDomCtor = (nodeCtor: ComponentConstructor) => {
         const styleSheet = createStyleSheet(style);
         parentElement.adoptedStyleSheets = [...parentElement.adoptedStyleSheets, styleSheet];
       });
+
+      super.beforeRender();
     }
   }
 

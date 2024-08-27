@@ -5,4 +5,4 @@ formated = "formated"
 colum = "colum"
 
 [files]
-extend-exclude = ["**/lib/**","**/spline/**","contributor.html","README.md","README_zh-CN.md","docsearch.min.js","*.svg"]
+extend-exclude = ["**/lib/**","**/spline/**","contributor.html","README.md","README_zh-CN.md","docsearch.min.js","*.svg","src/_util/dom.ts"]
