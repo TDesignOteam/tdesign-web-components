@@ -547,10 +547,14 @@ export default class Dialog extends Component<DialogProps> {
   }
 
   render(props: DialogProps) {
-    const ctxStyle = {
+    const ctxStyle: Styles = {
       zIndex: props.zIndex,
       display: !props.visible && this.animationEnd.value ? 'none' : 'block',
     };
+
+    if (this.isNormal) {
+      ctxStyle.position = 'relative';
+    }
 
     const maskView = (this.isModal || this.isFullScreen) && (
       <div
