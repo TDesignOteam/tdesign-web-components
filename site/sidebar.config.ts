@@ -52,6 +52,12 @@ export default [
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
       },
+      {
+        title: 'Link 链接',
+        name: 'link',
+        path: '/components/link',
+        component: () => import('tdesign-web-components/link/README.md'),
+      },
     ],
     tag: '',
   },
@@ -109,7 +115,7 @@ export default [
         title: 'Breadcrumb 面包屑',
         name: 'breadcrumb',
         path: '/components/breadcrumb',
-        // component: () => import('tdesign-web-components/breadcrumb/README.md'),
+        component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
       {
         title: 'BackTop 回到顶部',
@@ -124,6 +130,12 @@ export default [
     name: 'Forms',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Checkbox 多选框',
+        name: 'checkbox',
+        path: '/components/checkbox',
+        component: () => import('tdesign-web-components/checkbox/README.md'),
+      },
       {
         title: 'Input 输入框',
         name: 'input',
@@ -180,10 +192,22 @@ export default [
         component: () => import('tdesign-web-components/avatar/README.md'),
       },
       {
+        title: 'Badge 徽标',
+        name: 'badge',
+        path: '/components/badge',
+        component: () => import('tdesign-web-components/badge/README.md'),
+      },
+      {
         title: 'Calendar 日历',
         name: 'calendar',
         path: '/components/calendar',
         // component: () => import('tdesign-web-components/calendar/README.md'),
+      },
+      {
+        title: 'Card 卡片',
+        name: 'card',
+        path: '/components/card',
+        component: () => import('tdesign-web-components/card/README.md'),
       },
       {
         title: 'Collapse 折叠面板',
@@ -220,6 +244,18 @@ export default [
         name: 'loading',
         path: '/components/loading',
         component: () => import('tdesign-web-components/loading/README.md'),
+      },
+      {
+        title: 'Watermark 水印',
+        name: 'watermark',
+        path: '/components/watermark',
+        component: () => import('tdesign-web-components/watermark/README.md'),
+      },
+      {
+        title: 'Swiper 轮播框',
+        name: 'swiper',
+        path: '/components/swiper',
+        component: () => import('tdesign-web-components/swiper/README.md'),
       },
     ],
   },

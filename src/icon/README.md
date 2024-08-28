@@ -60,7 +60,8 @@ import 'tdesign-icons-web-components/esm/iconfont';
 
 名称 | 类型 | 默认值 | 说明 | 必传
 -- | -- | -- | -- | --
-className | String | - | 类名 | N
+className | String | - | 最外层标签类名 | N
+cls | String | - | 内部子标签（svg或者i标签）类名 | N
 style | Object | - | 样式，TS 类型：`React.CSSProperties` | N
 loadDefaultIcons | Boolean | true | 是否加载组件库内置图标 | N
 name | String | - | 必需。图标名称 | Y
@@ -72,7 +73,8 @@ onClick | Function |  | TS 类型：`(context: { e: MouseEvent }) => void`<br/>�
 
 名称 | 类型 | 默认值 | 说明 | 必传
 -- | -- | -- | -- | --
-className | String | - | 类名 | N
+className | String | - | 最外层标签类名 | N
+cls | String | - | 内部子标签（svg或者i标签）类名 | N
 style | Object | - | 样式，TS 类型：`React.CSSProperties` | N
 loadDefaultIcons | Boolean | true | 是否加载组件库内置图标 | N
 name | String | - | 必需。图标名称 | Y
