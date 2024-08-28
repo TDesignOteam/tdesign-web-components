@@ -251,6 +251,18 @@ export default [
         path: '/components/loading',
         component: () => import('tdesign-web-components/loading/README.md'),
       },
+      {
+        title: 'Watermark 水印',
+        name: 'watermark',
+        path: '/components/watermark',
+        component: () => import('tdesign-web-components/watermark/README.md'),
+      },
+      {
+        title: 'Swiper 轮播框',
+        name: 'swiper',
+        path: '/components/swiper',
+        component: () => import('tdesign-web-components/swiper/README.md'),
+      },
     ],
   },
   {
