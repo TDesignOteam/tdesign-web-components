@@ -10,7 +10,7 @@ export default class TagInputExcess extends Component {
     const onChange = (val, context) => {
       this.tags1 = val;
       this.update();
-      console.log(val, context);
+      console.log('onChange', val, context);
     };
 
     return (

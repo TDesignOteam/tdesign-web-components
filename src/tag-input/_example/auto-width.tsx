@@ -6,9 +6,10 @@ export default class TagInputAuto extends Component {
   tags = ['Vue', 'React'];
 
   render() {
-    const onChange = (val) => {
+    const onChange = (val, context) => {
       this.tags = val;
       this.update();
+      console.log('onChange', val, context);
     };
 
     return (

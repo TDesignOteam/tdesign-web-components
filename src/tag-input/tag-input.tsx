@@ -129,6 +129,8 @@ export default class TagInput extends Component<TagInputProps> {
 
   tInputValue = '';
 
+  oldInputValue = '';
+
   isHover;
 
   tagValue = [];
@@ -371,25 +373,6 @@ export default class TagInput extends Component<TagInputProps> {
         })
       : valueDisplay;
 
-    const onInnerEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
-      const valueStr = value ? String(value).trim() : '';
-      let newValue: TagInputValue = tagValue;
-      const isLimitExceeded = props.max && tagValue?.length >= props.max;
-      if (valueStr && !isLimitExceeded) {
-        newValue = tagValue instanceof Array ? tagValue.concat(String(valueStr)) : [valueStr];
-      }
-      this.tInputValue = '';
-      if (!props.onEnter) {
-        props.onChange?.(newValue, {
-          ...context,
-          trigger: 'enter',
-        });
-        this.tagValue = newValue;
-      }
-      props?.onEnter?.(newValue, { ...context, inputValue: value });
-      this.update();
-    };
-
     // 按下回退键，删除标签
     const onInputBackspaceKeyDown = (value: InputValue, context: { e: KeyboardEvent }) => {
       if (!context) return;
@@ -410,8 +393,7 @@ export default class TagInput extends Component<TagInputProps> {
 
     const onInputBackspaceKeyUp = (value: InputValue) => {
       if (!tagValue || !tagValue.length) return;
-      this.tInputValue = value;
-      this.update();
+      this.oldInputValue = value;
     };
 
     const renderLabel = ({ displayNode, label }) => {
@@ -510,6 +492,23 @@ export default class TagInput extends Component<TagInputProps> {
         (this.tagInputRef.current as any).inputElement?.focus?.();
       }
       onClick?.(context);
+    };
+
+    const onInnerEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
+      const valueStr = value ? String(value).trim() : '';
+      let newValue: TagInputValue = tagValue;
+      const isLimitExceeded = props.max && tagValue?.length >= props.max;
+      if (valueStr && !isLimitExceeded) {
+        newValue = tagValue instanceof Array ? tagValue.concat(String(valueStr)) : [valueStr];
+      }
+      this.tInputValue = '';
+      props.onChange?.(newValue, {
+        ...context,
+        trigger: 'enter',
+      });
+      this.tagValue = newValue;
+      props?.onEnter?.(newValue, { ...context, inputValue: value });
+      this.update();
     };
 
     const onInputEnter = (value: InputValue, context: { e: KeyboardEvent }) => {

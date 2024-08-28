@@ -12,15 +12,13 @@ export default class TagInputBase extends Component {
 
   render() {
     const onTagInputEnter = (val, context) => {
-      this.tags1 = val;
-      this.update();
-      console.log(val, context);
+      console.log('TagEnter', val, context);
     };
 
     const onChange = (val, context) => {
       this.tags1 = val;
       this.update();
-      console.log(val, context);
+      console.log('onChange', val, context);
     };
 
     return (

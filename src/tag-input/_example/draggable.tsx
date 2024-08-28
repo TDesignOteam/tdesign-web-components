@@ -21,12 +21,6 @@ export default class TagInputDrag extends Component {
       console.log(val, context);
     };
 
-    // const onChange2 = (val, context) => {
-    //   this.tags2 = val;
-    //   this.update();
-    //   console.log(val, context);
-    // };
-
     const onDragSort = ({ currentIndex, targetIndex }) => {
       console.log(currentIndex, targetIndex, '测试');
       const temp = this.tags1[currentIndex];
@@ -58,7 +52,6 @@ export default class TagInputDrag extends Component {
           dragSort
           excessTagsDisplayType="break-line"
           label="Controlled: "
-          // onChange={onChange2}
           onDragSort={onDragSort2}
           placeholder="请输入"
         />

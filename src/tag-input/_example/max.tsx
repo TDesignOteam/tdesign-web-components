@@ -10,9 +10,7 @@ export default class TagInputLimit extends Component {
 
   render() {
     const onEnter = (value, { inputValue }) => {
-      this.tags = value;
       if (value.length >= 3 && { inputValue }) {
-        // 待message组件作者完善MessagePlugin
         MessagePlugin.warning('最多只能输入 3 个标签!');
       }
       this.update();
