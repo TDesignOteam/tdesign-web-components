@@ -147,6 +147,10 @@ export interface TdDialogProps {
    * 如果蒙层存在，点击蒙层时触发
    */
   onOverlayClick?: (context: { e: MouseEvent }) => void;
+  /**
+   * 内容
+   */
+  children?: TNode;
 }
 
 export interface TdDialogCardProps

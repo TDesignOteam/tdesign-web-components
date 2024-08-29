@@ -5,7 +5,6 @@ import injectStyle from '../_common/js/utils/injectStyle';
 import generateBase64Url from '../_common/js/watermark/generateBase64Url';
 import randomMovingStyle from '../_common/js/watermark/randomMovingStyle';
 import { getClassPrefix } from '../_util/classname';
-import { styleSheet } from './style';
 import { TdWatermarkProps } from './type';
 import { createMutationObservable, getStyleStr } from './utils';
 
@@ -13,8 +12,6 @@ export interface WatermarkProps extends TdWatermarkProps, StyledProps {}
 
 @tag('t-watermark')
 export default class Watermark extends Component<WatermarkProps> {
-  static css = styleSheet;
-
   static propsType = {
     alpha: Number,
     content: [String, Number, Object, Function],

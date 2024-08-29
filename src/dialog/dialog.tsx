@@ -82,6 +82,7 @@ export default class Dialog extends Component<DialogProps> {
     onOverlayClick: Function,
     closeOnOverlayClick: Boolean,
     closeOnEscKeydown: Boolean,
+    body: String,
   };
 
   className = `${classPrefix}-dialog`;
@@ -96,37 +97,41 @@ export default class Dialog extends Component<DialogProps> {
 
   init = signal(false);
 
+  state = signal<TdDialogProps>({
+    ...this.props,
+  });
+
   uid = 0;
 
   // 是否模态形式的对话框
   get isModal() {
-    return this.props.mode === 'modal';
+    return this.state.value.mode === 'modal';
   }
 
   // 是否非模态对话框
   get isModeLess() {
-    return this.props.mode === 'modeless';
+    return this.state.value.mode === 'modeless';
   }
 
   // 是否普通对话框，没有脱离文档流的对话框
   get isNormal() {
-    return this.props.mode === 'normal';
+    return this.state.value.mode === 'normal';
   }
 
   get isFullScreen() {
-    return this.props.mode === 'full-screen';
+    return this.state.value.mode === 'full-screen';
   }
 
   get ctxClass() {
     return classname(`${this.className}__ctx`, {
       [`${this.className}__ctx--fixed`]: this.isModal || this.isFullScreen,
-      [`${this.className}__ctx--absolute`]: this.isModal && this.props.showInAttachedElement,
+      [`${this.className}__ctx--absolute`]: this.isModal && this.state.value.showInAttachedElement,
       [`${this.className}__ctx--modeless`]: this.isModeLess,
     });
   }
 
   get maskClass() {
-    return classname(`${this.className}__mask`, !this.props.showOverlay && `${classPrefix}-is-hidden`);
+    return classname(`${this.className}__mask`, !this.state.value.showOverlay && `${classPrefix}-is-hidden`);
   }
 
   get wrapClass() {
@@ -136,7 +141,7 @@ export default class Dialog extends Component<DialogProps> {
   get dialogClass() {
     const dialogClass = [
       `${this.className}`,
-      `${this.className}__modal-${this.props.theme}`,
+      `${this.className}__modal-${this.state.value.theme}`,
       this.isModeLess && this.draggable && `${this.className}--draggable`,
     ];
     if (this.isFullScreen) {
@@ -152,8 +157,10 @@ export default class Dialog extends Component<DialogProps> {
     if (this.isFullScreen) return classname([`${this.className}__position_fullscreen`]);
     const dialogClass = [
       `${this.className}__position`,
-      !!this.props.top && `${this.className}--top`,
-      `${this.props.placement && !this.props.top ? `${this.className}--${this.props.placement}` : ''}`,
+      !!this.state.value.top && `${this.className}--top`,
+      `${
+        this.state.value.placement && !this.state.value.top ? `${this.className}--${this.state.value.placement}` : ''
+      }`,
     ];
     return classname(dialogClass);
   }
@@ -161,19 +168,31 @@ export default class Dialog extends Component<DialogProps> {
   get positionStyle(): Styles {
     if (this.isFullScreen) return {}; // 全屏模式，top属性不生效
     const topStyle = {} as Styles;
-    if (this.props.top !== undefined) {
+    if (this.state.value.top !== undefined) {
       // 判断是否时数字
-      if (isNumber(this.props.top) && this.props.top < 0) {
-        topStyle.paddingTop = `${this.props.top}px`;
+      if (isNumber(this.state.value.top) && this.state.value.top < 0) {
+        topStyle.paddingTop = `${this.state.value.top}px`;
       } else {
-        topStyle.paddingTop = this.props.top;
+        topStyle.paddingTop = this.state.value.top;
       }
     }
     return topStyle;
   }
 
   get dialogStyle(): Styles {
-    return !this.isFullScreen ? { width: getCSSValue(this.props.width) } : {}; // width全屏模式不生效;
+    return !this.isFullScreen ? { width: getCSSValue(this.state.value.width) } : {}; // width全屏模式不生效;
+  }
+
+  @bind
+  updateState(options, shouldUpdate = false) {
+    for (const key in options) {
+      if (Object.hasOwn(options, key)) {
+        this.state.value[key] = options[key];
+        if (shouldUpdate) {
+          this.update();
+        }
+      }
+    }
   }
 
   @bind
@@ -181,15 +200,15 @@ export default class Dialog extends Component<DialogProps> {
     if (e.target !== this.dialogPositionRef.current) {
       return;
     }
-    this.props.onOverlayClick?.({ e });
-    if (this.props.showOverlay && this.props.closeOnOverlayClick) {
+    this.state.value.onOverlayClick?.({ e });
+    if (this.state.value.showOverlay && this.state.value.closeOnOverlayClick) {
       this.emitCloseEvent({ e, trigger: 'overlay' });
     }
   }
 
   @bind
   closeBtnAction(e: MouseEvent) {
-    this.props.onCloseBtnClick?.({ e });
+    this.state.value.onCloseBtnClick?.({ e });
     this.emitCloseEvent({
       trigger: 'close-btn',
       e,
@@ -198,7 +217,7 @@ export default class Dialog extends Component<DialogProps> {
 
   @bind
   cancelBtnAction(e: MouseEvent) {
-    this.props.onCancel?.({ e });
+    this.state.value.onCancel?.({ e });
     this.emitCloseEvent({
       trigger: 'cancel',
       e,
@@ -207,12 +226,12 @@ export default class Dialog extends Component<DialogProps> {
 
   @bind
   confirmBtnAction(e: MouseEvent) {
-    this.props.onConfirm?.({ e });
+    this.state.value.onConfirm?.({ e });
   }
 
   @bind
   prepareToShow() {
-    if ((this.isModal || this.isFullScreen) && !this.props.showInAttachedElement) {
+    if ((this.isModal || this.isFullScreen) && !this.state.value.showInAttachedElement) {
       bodyOverflow = document.body.style.overflow;
       setTimeout(() => {
         document.body.style.overflow = 'hidden';
@@ -224,8 +243,8 @@ export default class Dialog extends Component<DialogProps> {
   beforeEnter() {
     const target = this.dialogRef.current as HTMLElement;
 
-    const needChangeOrigin = (this.isModal && !this.props.showInAttachedElement) || this.isFullScreen;
-    if (needChangeOrigin && target && mousePosition && !this.props.confirmLoading) {
+    const needChangeOrigin = (this.isModal && !this.state.value.showInAttachedElement) || this.isFullScreen;
+    if (needChangeOrigin && target && mousePosition && !this.state.value.confirmLoading) {
       target.style.transformOrigin = `${mousePosition.x - target.offsetLeft}px ${mousePosition.y - target.offsetTop}px`;
     }
   }
@@ -233,7 +252,7 @@ export default class Dialog extends Component<DialogProps> {
   // 打开弹窗动画结束时事件
   @bind
   afterEnter() {
-    this.props.onOpened?.();
+    this.state.value.onOpened?.();
   }
 
   // 关闭弹窗动画结束时事件
@@ -247,7 +266,7 @@ export default class Dialog extends Component<DialogProps> {
       target.style.left = 'unset';
       target.style.top = 'unset';
     }
-    this.props.onClosed?.();
+    this.state.value.onClosed?.();
     this.animationEnd.value = true;
     document.body.style.overflow = bodyOverflow;
   }
@@ -256,10 +275,10 @@ export default class Dialog extends Component<DialogProps> {
   addKeyboardEvent(status: boolean) {
     if (status) {
       document.addEventListener('keydown', this.keyboardEvent);
-      this.props.confirmOnEnter && document.addEventListener('keydown', this.keyboardEnterEvent);
+      this.state.value.confirmOnEnter && document.addEventListener('keydown', this.keyboardEnterEvent);
     } else {
       document.removeEventListener('keydown', this.keyboardEvent);
-      this.props.confirmOnEnter && document.removeEventListener('keydown', this.keyboardEnterEvent);
+      this.state.value.confirmOnEnter && document.removeEventListener('keydown', this.keyboardEnterEvent);
     }
   }
 
@@ -275,9 +294,9 @@ export default class Dialog extends Component<DialogProps> {
   @bind
   keyboardEvent(e: KeyboardEvent) {
     if (e.code === 'Escape' && stack.top === this.uid) {
-      this.props.onEscKeydown?.({ e });
+      this.state.value.onEscKeydown?.({ e });
       // 根据 closeOnEscKeydown 判断按下ESC时是否触发close事件
-      if (this.props.closeOnEscKeydown) {
+      if (this.state.value.closeOnEscKeydown) {
         this.emitCloseEvent({ e, trigger: 'esc' });
       }
     }
@@ -288,13 +307,13 @@ export default class Dialog extends Component<DialogProps> {
   keyboardEnterEvent(e: KeyboardEvent) {
     const { code } = e;
     if ((code === 'Enter' || code === 'NumpadEnter') && stack.top === this.uid) {
-      this.props.onConfirm?.({ e });
+      this.state.value.onConfirm?.({ e });
     }
   }
 
   @bind
   emitCloseEvent(context) {
-    this.props.onClose?.(context);
+    this.state.value.onClose?.(context);
   }
 
   @bind
@@ -310,7 +329,7 @@ export default class Dialog extends Component<DialogProps> {
       danger: <t-icon-error-circle class={`${classPrefix}-is-error`} />,
       success: <t-icon-check-circle class={`${classPrefix}-is-success`} />,
     };
-    return icon[this.props.theme];
+    return icon[this.state.value.theme];
   }
 
   @bind
@@ -414,7 +433,7 @@ export default class Dialog extends Component<DialogProps> {
       <t-button
         className={confirmClassName}
         theme="primary"
-        loading={this.props.confirmLoading}
+        loading={this.state.value.confirmLoading}
         onClick={this.confirmBtnAction}
       >
         确定
@@ -424,8 +443,8 @@ export default class Dialog extends Component<DialogProps> {
 
   @bind
   getFooterContent() {
-    if (this.props.footer === false) return null;
-    if (this.props.footer === true) {
+    if (this.state.value.footer === false) return null;
+    if (this.state.value.footer === true) {
       return (
         <div>
           {this.getCancelBtn()}
@@ -434,15 +453,15 @@ export default class Dialog extends Component<DialogProps> {
       );
     }
 
-    return this.props.footer;
+    return this.state.value.footer;
   }
 
   @bind
   getCloseBtn() {
-    if (this.props.closeBtn === true) {
+    if (this.state.value.closeBtn === true) {
       return <t-icon-close />;
     }
-    return this.props.closeBtn;
+    return this.state.value.closeBtn;
   }
 
   @bind
@@ -455,7 +474,7 @@ export default class Dialog extends Component<DialogProps> {
       ? [`${this.className}__close`, `${this.className}__close--fullscreen`]
       : `${this.className}__close`;
     const bodyClassName =
-      this.props.theme === 'default'
+      this.state.value.theme === 'default'
         ? [`${this.className}__body`]
         : [`${this.className}__body`, `${this.className}__body__icon`];
 
@@ -470,7 +489,7 @@ export default class Dialog extends Component<DialogProps> {
       ? [`${this.className}__footer`, `${this.className}__footer--fullscreen`]
       : `${this.className}__footer`;
 
-    const footer = this.props.footer ? (
+    const footer = this.state.value.footer ? (
       <div className={classname(footerClassName)} onmousedown={this.onStopDown}>
         {footerContent}
       </div>
@@ -491,7 +510,7 @@ export default class Dialog extends Component<DialogProps> {
             ref={this.dialogRef}
             className={this.dialogClass}
             style={this.dialogStyle}
-            show={this.props.visible}
+            show={this.state.value.visible}
             o-transition={{
               name: `${this.className}-web-zoom`,
               afterEnter: this.afterEnter,
@@ -502,9 +521,9 @@ export default class Dialog extends Component<DialogProps> {
             <div className={classname(headerClassName)} onmousedown={this.onStopDown}>
               <div className={`${this.className}__header-content`}>
                 {this.getIcon()}
-                {this.props.header || defaultHeader}
+                {this.state.value.header || defaultHeader}
               </div>
-              {this.props.closeBtn ? (
+              {this.state.value.closeBtn ? (
                 <span className={classname(closeClassName)} onClick={this.closeBtnAction}>
                   {/* {renderTNodeJSX(this, 'closeBtn', defaultCloseBtn)} */}
                   {this.getCloseBtn()}
@@ -513,7 +532,7 @@ export default class Dialog extends Component<DialogProps> {
             </div>
 
             <div className={classname(bodyClassName)} onmousedown={this.onStopDown}>
-              <slot></slot>
+              {this.state.value.children || this.state.value.body}
             </div>
             {footer}
           </div>
@@ -526,6 +545,7 @@ export default class Dialog extends Component<DialogProps> {
     uid += 1;
     this.uid = uid;
     this.addKeyboardEvent(true);
+    this.updateState(this.props);
   }
 
   uninstall(): void {
@@ -544,12 +564,13 @@ export default class Dialog extends Component<DialogProps> {
     if (props.visible) {
       this.init.value = true;
     }
+    this.updateState(props);
   }
 
-  render(props: DialogProps) {
+  render() {
     const ctxStyle: Styles = {
-      zIndex: props.zIndex,
-      display: !props.visible && this.animationEnd.value ? 'none' : 'block',
+      zIndex: this.state.value.zIndex,
+      display: !this.state.value.visible && this.animationEnd.value ? 'none' : 'block',
     };
 
     if (this.isNormal) {
@@ -560,7 +581,7 @@ export default class Dialog extends Component<DialogProps> {
       <div
         key="mask"
         className={this.maskClass}
-        show={this.props.visible}
+        show={this.state.value.visible}
         o-transition={{
           name: `${this.className}__mask-web-zoom`,
         }}
@@ -569,15 +590,14 @@ export default class Dialog extends Component<DialogProps> {
     const dialogView = this.renderDialog();
     const view = [maskView, dialogView];
 
-    // if (!this.props.visible && !this.init.value) return null;
-    if (this.props.destroyOnClose && !this.props.visible && this.animationEnd.value) return null;
+    if (this.state.value.destroyOnClose && !this.state.value.visible && this.animationEnd.value) return null;
 
-    if (props.attach) {
+    if (this.state.value.attach) {
       let innerAttach;
-      if (typeof props.attach === 'function') {
-        innerAttach = props.attach();
+      if (typeof this.state.value.attach === 'function') {
+        innerAttach = this.state.value.attach();
       } else {
-        innerAttach = props.attach;
+        innerAttach = this.state.value.attach;
       }
       return (
         <t-portal attach={innerAttach}>

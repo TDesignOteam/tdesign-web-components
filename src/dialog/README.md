@@ -48,6 +48,28 @@ spline: message
 
 {{ attach }}
 
+### 函数式调用
+
+函数调用方式一：`DialogPlugin(options)`
+
+函数调用方式二：`DialogPlugin.confirm(options)`
+
+函数调用方式三：`DialogPlugin.alert(options)`
+
+<br />
+
+组件实例：`DialogInstance = DialogPlugin(options)`
+
+组件实例方法-销毁弹框：`DialogInstance.destroy()`
+
+组件实例方法-隐藏弹框：`DialogInstance.hide()`
+
+组件实例方法-显示弹窗：`DialogInstance.show()`
+
+组件实例方法-更新弹框：`DialogInstance.update()`
+
+{{ plugin }}
+
 ## API
 
 
@@ -91,3 +113,41 @@ spline: message
 | onEscKeydown          | Function          |           | TS 类型：`(context: { e: KeyboardEvent }) => void`<br/>按下 ESC 时触发事件                                                                                                                                                                                                                                              | N    |
 | onOpened              | Function          |           | TS 类型：`() => void`<br/>对话框弹出动画效果结束后触发                                                                                                                                                                                                                                                                  | N    |
 | onOverlayClick        | Function          |           | TS 类型：`(context: { e: MouseEvent }) => void`<br/>如果蒙层存在，点击蒙层时触发                                                                                                                                                                                                                                        | N    |
+### DialogOptions
+
+| 名称                          | 类型              | 默认值 | 描述                                                                                                                                                                                                                                      | 必传 |
+| ----------------------------- | ----------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---- |
+| attach                        | String / Function | 'body' | 对话框挂载的节点。数据类型为 String 时，会被当作选择器处理，进行节点查询。示例：'body' 或 () => document.body。TS 类型：`AttachNode`。[通用类型定义](https://github.com/Tencent/tdesign-react/blob/develop/src/common.ts)                 | N    |
+| className                     | String            | -      | 弹框类名，示例：'t-class-dialog-first t-class-dialog-second'                                                                                                                                                                              | N    |
+| style                         | Object            | -      | 弹框 style 属性，输入 [CSSStyleDeclaration.cssText](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration/cssText)。TS 类型：`Styles`。[通用类型定义](https://github.com/Tencent/tdesign-react/blob/develop/src/common.ts) | N    |
+| `Omit<DialogProps, 'attach'>` | \-                | -      | 继承 `Omit<DialogProps, 'attach'>` 中的全部属性                                                                                                                                                                                           | N    |
+
+### DialogInstance
+
+| 名称              | 参数                     | 返回值 | 描述                       |
+| ----------------- | ------------------------ | ------ | -------------------------- |
+| destroy           | \-                       | \-     | 必需。销毁弹框             |
+| hide              | \-                       | \-     | 必需。隐藏弹框             |
+| setConfirmLoading | `(loading: boolean)`     | \-     | 必需。设置确认按钮加载状态 |
+| show              | \-                       | \-     | 必需。显示弹框             |
+| update            | `(props: DialogOptions)` | \-     | 必需。更新弹框内容         |
+
+### dialog 或 DialogPlugin
+
+| 参数名称 | 参数类型 | 参数默认值 | 参数描述                 |
+| -------- | -------- | ---------- | ------------------------ |
+| options  | \-       | -          | TS 类型：`DialogOptions` |
+
+插件返回值：`DialogInstance`
+
+### dialog.confirm 或 DialogPlugin.confirm
+
+| 参数名称 | 参数类型 | 参数默认值 | 参数描述                 |
+| -------- | -------- | ---------- | ------------------------ |
+| options  | \-       | -          | TS 类型：`DialogOptions` |
+
+### dialog.alert 或 DialogPlugin.alert
+
+| 参数名称 | 参数类型 | 参数默认值 | 参数描述                                    |
+| -------- | -------- | ---------- | ------------------------------------------- |
+| options  | Object   | -          | TS 类型：`Omit<DialogOptions, 'cancelBtn'>` |
