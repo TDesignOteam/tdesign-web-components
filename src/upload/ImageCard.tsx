@@ -1,9 +1,8 @@
 import 'tdesign-icons-web-components';
 
-import classNames from 'classnames';
-
 import zhCn from '../_common/js/global-config/locale/zh_CN';
 import { abridgeName } from '../_common/js/upload/utils';
+import classNames from '../_util/classname';
 import Image from '../image';
 import Loading from '../loading';
 // import ImageViewer from '../../image-viewer';
