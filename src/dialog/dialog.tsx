@@ -185,6 +185,10 @@ export default class Dialog extends Component<DialogProps> {
 
   @bind
   updateState(options, shouldUpdate = false) {
+    if (!this.state.value.visible && options.visible) {
+      this.animationEnd.value = false;
+    }
+
     for (const key in options) {
       if (Object.hasOwn(options, key)) {
         this.state.value[key] = options[key];
@@ -557,7 +561,6 @@ export default class Dialog extends Component<DialogProps> {
       this.storeUid(props.visible);
       if (props.visible) {
         this.prepareToShow();
-        this.animationEnd.value = false;
       }
     }
 

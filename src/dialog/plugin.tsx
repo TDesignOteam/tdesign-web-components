@@ -67,7 +67,15 @@ export const DialogPlugin: DialogPluginMethod = (options) => {
       );
     },
     destroy: () => {
-      div.remove();
+      dialogRef.current.updateState(
+        {
+          visible: false,
+        },
+        true,
+      );
+      setTimeout(() => {
+        div.remove();
+      }, 300);
     },
   };
 };

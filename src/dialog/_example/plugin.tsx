@@ -37,13 +37,12 @@ export default class LoadingService extends Component {
       onConfirm: ({ e }) => {
         console.log('confirm button has been clicked!');
         console.log('e: ', e);
-        dialogNode.hide();
         dialogNode.destroy();
       },
       onClose: ({ e, trigger }) => {
         console.log('e: ', e);
         console.log('trigger: ', trigger);
-        dialogNode.hide();
+        dialogNode.destroy();
       },
     });
   };
