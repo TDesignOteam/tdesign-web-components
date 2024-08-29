@@ -1,11 +1,10 @@
 import { classNames, Component, createRef, signal, tag } from 'omi';
 import { StyledProps } from 'tdesign-web-components/common';
 
-import injectStyle from '../_common/js/utils/injectStyle';
 import generateBase64Url from '../_common/js/watermark/generateBase64Url';
 import randomMovingStyle from '../_common/js/watermark/randomMovingStyle';
 import { getClassPrefix } from '../_util/classname';
-import { styleSheet } from './style';
+import { createStyleSheet } from '../_util/lightDom';
 import { TdWatermarkProps } from './type';
 import { createMutationObservable, getStyleStr } from './utils';
 
@@ -13,8 +12,6 @@ export interface WatermarkProps extends TdWatermarkProps, StyledProps {}
 
 @tag('t-watermark')
 export default class Watermark extends Component<WatermarkProps> {
-  static css = styleSheet;
-
   static propsType = {
     alpha: Number,
     content: [String, Number, Object, Function],
@@ -41,6 +38,8 @@ export default class Watermark extends Component<WatermarkProps> {
     moveInterval: 3000,
     removable: false,
     rotate: -22,
+    width: 120,
+    height: 60,
     offset: [],
   };
 
@@ -50,12 +49,12 @@ export default class Watermark extends Component<WatermarkProps> {
 
   styleStr = '';
 
-  base64Url = signal('');
-
   stopObservation = signal(false);
 
-  ready(): void {
-    const { x, y, rotate: tempRotate, removable, movable, offset } = this.props;
+  selfDisconnect;
+
+  async ready() {
+    const { x, y, rotate: tempRotate, movable, offset } = this.props;
 
     let gapX = x;
     let gapY = y;
@@ -71,10 +70,8 @@ export default class Watermark extends Component<WatermarkProps> {
 
     this.generateBase64Url(this.props, { gapX, gapY, rotate, offsetLeft, offsetTop });
 
-    this.generateStyleStr(this.props, { gapX });
-
     // 水印节点 - 变化时重新渲染
-    createMutationObservable(this.watermarkRef.current, (mutations) => {
+    this.selfDisconnect = createMutationObservable(this.watermarkRef.current, (mutations) => {
       if (this.stopObservation.value) return;
       if (movable) return;
       mutations.forEach((mutation) => {
@@ -96,31 +93,12 @@ export default class Watermark extends Component<WatermarkProps> {
     });
 
     // 组件父节点 - 增加 keyframes
-    const parent = createRef<HTMLElement>();
-    parent.current = this.watermarkRef.current.parentElement;
     const keyframesStyle = randomMovingStyle();
-    injectStyle(keyframesStyle);
 
-    // 水印节点的父节点 - 防删除
-    createMutationObservable(typeof document !== 'undefined' ? document.body : null, (mutations) => {
-      if (removable) return;
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'childList') {
-          const removeNodes = mutation.removedNodes;
-          removeNodes.forEach((node) => {
-            const element = node as HTMLElement;
-            if (element === this.watermarkRef.current) {
-              parent.current?.appendChild(element);
-            }
-          });
-        }
-      });
-    });
-
-    this.renderWatermark();
+    this.shadowRoot.adoptedStyleSheets.push(createStyleSheet(keyframesStyle));
   }
 
-  receiveProps(newProps) {
+  async receiveProps(newProps) {
     const { x, y, rotate: tempRotate, movable, offset } = newProps;
 
     let gapX = x;
@@ -134,15 +112,12 @@ export default class Watermark extends Component<WatermarkProps> {
 
     const offsetLeft = offset[0] || gapX / 2;
     const offsetTop = offset[1] || gapY / 2;
-    this.generateBase64Url(newProps, { gapX, gapY, rotate, offsetLeft, offsetTop });
-    this.generateStyleStr(newProps, { gapX });
 
-    this.renderWatermark();
+    this.generateBase64Url(newProps, { gapX, gapY, rotate, offsetLeft, offsetTop });
   }
 
   generateBase64Url(props, { rotate, gapX, gapY, offsetLeft, offsetTop }) {
     const { width, height, lineSpace, alpha, watermarkContent } = props;
-
     generateBase64Url(
       {
         width,
@@ -157,12 +132,13 @@ export default class Watermark extends Component<WatermarkProps> {
         offsetTop,
       },
       (url) => {
-        this.base64Url.value = url;
+        this.generateStyleStr(url, props, { gapX });
+        this.renderWatermark();
       },
     );
   }
 
-  generateStyleStr(props, { gapX }) {
+  async generateStyleStr(url, props, { gapX }) {
     const { zIndex, isRepeat, moveInterval, movable, width, style } = props;
 
     let backgroundRepeat = '';
@@ -183,7 +159,7 @@ export default class Watermark extends Component<WatermarkProps> {
       backgroundSize: `${gapX + width}px`,
       pointerEvents: 'none',
       backgroundRepeat,
-      backgroundImage: `url('${this.base64Url.value}')`,
+      backgroundImage: `url('${url}')`,
       animation: movable ? `watermark infinite ${(moveInterval * 4) / 60}s` : 'none',
       ...style,
     });
@@ -203,6 +179,10 @@ export default class Watermark extends Component<WatermarkProps> {
     setTimeout(() => {
       this.stopObservation.value = false;
     });
+  }
+
+  uninstall(): void {
+    this.selfDisconnect();
   }
 
   render(props: WatermarkProps) {

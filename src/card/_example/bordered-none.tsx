@@ -5,7 +5,7 @@ import { bind, Component } from 'omi';
 export default class Button extends Component {
   @bind
   clickHandler() {
-    window.alert('操作');
+    console.log('操作');
   }
 
   render() {

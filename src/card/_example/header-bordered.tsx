@@ -6,7 +6,7 @@ export default class Button extends Component {
   @bind
   clickHandler() {
     // 缺少Message全局提示组件，暂用alert代替
-    window.alert('操作');
+    console.log('操作');
   }
 
   render() {
