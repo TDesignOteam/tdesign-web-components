@@ -29,7 +29,7 @@ export default class Button extends Component {
   ];
 
   clickHandler: ClickHandler = (data) => {
-    alert(`选中【${data.value}】`);
+    console.log(`选中【${data.value}】`);
   };
 
   render() {

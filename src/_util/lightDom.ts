@@ -3,7 +3,7 @@ import { Component, define } from 'omi';
 import { TNode } from '../common';
 import parseTNode from './parseTNode';
 
-const createStyleSheet = (style: string) => {
+export const createStyleSheet = (style: string) => {
   const styleSheet = new CSSStyleSheet();
   styleSheet.replaceSync(style);
 
