@@ -34,6 +34,10 @@ export interface TdButtonProps {
    */
   icon?: TNode;
   /**
+   * 按钮后置图标，可完全自定义
+   */
+  suffix?: TNode;
+  /**
    * 是否显示为加载状态
    * @default false
    */

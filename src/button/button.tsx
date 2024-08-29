@@ -4,7 +4,9 @@ import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import eventDispose from '../_util/eventDispose';
+import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
+import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
 import { TdButtonProps } from './type';
 
@@ -69,7 +71,21 @@ export default class Button extends Component<ButtonProps> {
   };
 
   render(props: ButtonProps) {
-    const { icon, className, variant, size, block, disabled, ghost, loading, shape, ignoreAttributes, ...rest } = props;
+    const {
+      icon,
+      className,
+      variant,
+      size,
+      block,
+      disabled,
+      ghost,
+      loading,
+      shape,
+      ignoreAttributes,
+      children,
+      suffix,
+      ...rest
+    } = props;
 
     delete rest.onClick;
 
@@ -81,8 +97,8 @@ export default class Button extends Component<ButtonProps> {
       });
     }
 
-    let iconNode = convertToLightDomNode(icon);
-    if (loading) iconNode = convertToLightDomNode(<t-icon-loading className="mr-[2px]" />);
+    let iconNode = convertToLightDomNode(flexIcon(icon));
+    if (loading) iconNode = convertToLightDomNode(flexIcon(<t-icon-loading className="mr-[2px]" />));
 
     const Tag = this.tag as string;
     return (
@@ -108,9 +124,8 @@ export default class Button extends Component<ButtonProps> {
         {...rest}
       >
         {iconNode ? iconNode : null}
-        <span className={`${classPrefix}-button__text`}>
-          <slot></slot>
-        </span>
+        <span className={`${classPrefix}-button__text`}>{children}</span>
+        {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
   }

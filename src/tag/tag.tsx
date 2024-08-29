@@ -1,12 +1,13 @@
 import 'tdesign-icons-web-components/esm/components/close';
 
-import { classNames, Component, createRef,tag } from 'omi';
+import { classNames, Component, createRef, tag } from 'omi';
 
 import { classPrefix } from '../_util/classname';
+import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { TagProps } from './type';
 
-const TagClassNamePrefix = (className: string) => `${classPrefix}-tag${  className}`;
+const TagClassNamePrefix = (className: string) => `${classPrefix}-tag${className}`;
 
 @tag('t-tag')
 export default class Tag extends Component<TagProps> {
@@ -65,7 +66,7 @@ export default class Tag extends Component<TagProps> {
         e.stopImmediatePropagation();
         this.props.onClose(e);
       }}
-      class={classNames(TagClassNamePrefix(`__icon-close`))}
+      cls={classNames(TagClassNamePrefix(`__icon-close`))}
     />
   );
 
@@ -99,7 +100,7 @@ export default class Tag extends Component<TagProps> {
           <span class={maxWidth ? TagClassNamePrefix(`--text`) : undefined} {...this.getTitle(children)}>
             {children ?? content}
           </span>
-          {closable && !disabled && convertToLightDomNode(this.deleteIcon)}
+          {closable && !disabled && convertToLightDomNode(flexIcon(this.deleteIcon))}
         </>
       </span>
     );

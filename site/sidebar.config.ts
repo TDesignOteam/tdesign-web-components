@@ -52,6 +52,12 @@ export default [
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
       },
+      {
+        title: 'Link 链接',
+        name: 'link',
+        path: '/components/link',
+        component: () => import('tdesign-web-components/link/README.md'),
+      },
     ],
     tag: '',
   },
@@ -87,6 +93,19 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
+        title: 'Affix 固钉',
+        name: 'menu',
+        path: '/components/affix',
+        component: () => import('tdesign-web-components/affix/README.md'),
+      },
+      {
+        title: 'Dropdown 下拉菜单',
+        titleEn: 'Dropdown',
+        name: 'dropdown',
+        path: '/components/dropdown',
+        component: () => import('tdesign-web-components/dropdown/README.md'),
+      },
+      {
         title: 'Menu 导航菜单',
         name: 'menu',
         path: '/components/menu',
@@ -96,7 +115,7 @@ export default [
         title: 'Breadcrumb 面包屑',
         name: 'breadcrumb',
         path: '/components/breadcrumb',
-        // component: () => import('tdesign-web-components/breadcrumb/README.md'),
+        component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
       {
         title: 'BackTop 回到顶部',
@@ -111,6 +130,30 @@ export default [
     name: 'Forms',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Checkbox 多选框',
+        name: 'checkbox',
+        path: '/components/checkbox',
+        component: () => import('tdesign-web-components/checkbox/README.md'),
+      },
+      {
+        title: 'Input 输入框',
+        name: 'input',
+        path: '/components/input',
+        component: () => import('tdesign-web-components/input/README.md'),
+      },
+      {
+        title: 'RangeInput 范围输入框',
+        name: 'range-input',
+        path: '/components/range-input',
+        component: () => import('tdesign-web-components/range-input/README.md'),
+      },
+      {
+        title: 'Radio 单选框',
+        name: 'radio',
+        path: '/components/radio',
+        component: () => import('tdesign-web-components/radio/README.md'),
+      },
       {
         title: 'Select 选择器',
         name: 'select',
@@ -155,10 +198,22 @@ export default [
         component: () => import('tdesign-web-components/avatar/README.md'),
       },
       {
+        title: 'Badge 徽标',
+        name: 'badge',
+        path: '/components/badge',
+        component: () => import('tdesign-web-components/badge/README.md'),
+      },
+      {
         title: 'Calendar 日历',
         name: 'calendar',
         path: '/components/calendar',
         // component: () => import('tdesign-web-components/calendar/README.md'),
+      },
+      {
+        title: 'Card 卡片',
+        name: 'card',
+        path: '/components/card',
+        component: () => import('tdesign-web-components/card/README.md'),
       },
       {
         title: 'Collapse 折叠面板',
@@ -196,6 +251,18 @@ export default [
         path: '/components/loading',
         component: () => import('tdesign-web-components/loading/README.md'),
       },
+      {
+        title: 'Watermark 水印',
+        name: 'watermark',
+        path: '/components/watermark',
+        component: () => import('tdesign-web-components/watermark/README.md'),
+      },
+      {
+        title: 'Swiper 轮播框',
+        name: 'swiper',
+        path: '/components/swiper',
+        component: () => import('tdesign-web-components/swiper/README.md'),
+      },
     ],
   },
   {
@@ -203,6 +270,12 @@ export default [
     name: 'Notifications',
     type: 'component', // 组件文档
     children: [
+      {
+        title: 'Alert 警告提示',
+        name: 'alert',
+        path: '/components/alert',
+        component: () => import('tdesign-web-components/alert/README.md'),
+      },
       {
         title: 'Message 全局提示',
         name: 'message',
