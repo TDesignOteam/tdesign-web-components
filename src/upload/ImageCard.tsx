@@ -1,8 +1,11 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/delete';
+import 'tdesign-icons-web-components/esm/components/error-circle-filled';
+import 'tdesign-icons-web-components/esm/components/add';
 
 import zhCn from '../_common/js/global-config/locale/zh_CN';
 import { abridgeName } from '../_common/js/upload/utils';
 import classNames from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import Image from '../image';
 import Loading from '../loading';
 // import ImageViewer from '../../image-viewer';
@@ -33,13 +36,12 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
       {!disabled && (
         <div className={`${classPrefix}-upload__card-mask`}>
           <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
-            <t-icon name="delete" onClick={(e) => onRemove?.({ e, file, index })} />
+            {convertToLightDomNode(<t-icon-delete onClick={(e) => onRemove?.({ e, file, index })} />)}
           </span>
         </div>
       )}
     </div>
   );
-
   const renderProgressFile = (file: UploadFile, loadCard: string) => (
     <div className={classNames([loadCard, `${classPrefix}-upload__${props.theme}-${file.status}`])}>
       <Loading loading={true} size="medium" />
@@ -52,11 +54,11 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
 
   const renderFailFile = (file: UploadFile, index: number, loadCard: string) => (
     <div className={loadCard}>
-      <t-icon name="error-circle-filled" />
+      {convertToLightDomNode(<t-icon-error-circle-filled />)}
       <p>{file.response?.error || locale?.progress?.failText}</p>
       <div className={`${classPrefix}-upload__card-mask`}>
         <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
-          <t-icon name="delete" onClick={(e) => props.onRemove?.({ e, file, index })} />
+          {convertToLightDomNode(<t-icon-delete onClick={(e) => props.onRemove?.({ e, file, index })} />)}
         </span>
       </div>
     </div>
@@ -102,7 +104,7 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
                 },
               ])}
             >
-              <t-icon name="add" />
+              {convertToLightDomNode(<t-icon-add />)}
               <p className={classNames([`${classPrefix}-size-s`, `${classPrefix}-upload__add-text`])}>
                 {locale?.triggerUploadText?.image}
               </p>

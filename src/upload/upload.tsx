@@ -1,4 +1,4 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/upload';
 
 import { classNames, Component, computed, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
@@ -133,7 +133,7 @@ export default class Upload extends Component<UploadProps> {
       return (
         <Button
           variant="outline"
-          icon={<t-icon name="upload" />}
+          icon={<t-icon-upload />}
           onClick={triggerUpload}
           {...this.triggerButtonProps.value}
           disabled={disabled.value}

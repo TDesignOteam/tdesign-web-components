@@ -1,4 +1,8 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/time-filled';
+import 'tdesign-icons-web-components/esm/components/check-circle-filled';
+import 'tdesign-icons-web-components/esm/components/error-circle-filled';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components/esm/components/close';
 
 import { abridgeName } from '../_common/js/upload/utils';
 import classNames from '../_util/classname';
@@ -43,23 +47,19 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
           {file?.status === 'progress' && renderProgress(file.percent)}
           {file?.status === 'waiting' &&
             convertToLightDomNode(
-              <t-icon name="time-filled" className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-waiting`} />,
+              <t-icon-time-filled className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-waiting`} />,
             )}
           {file?.name &&
             file.status === 'success' &&
-            convertToLightDomNode(<t-icon name="check-circle-filled" className={`${uploadPrefix}__status-icon`} />)}
+            convertToLightDomNode(<t-icon-check-circle-filled className={`${uploadPrefix}__status-icon`} />)}
           {file?.name &&
             file.status === 'fail' &&
             convertToLightDomNode(
-              <t-icon
-                name="error-circle-filled"
-                className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-fail`}
-              />,
+              <t-icon-error-circle-filled className={`${uploadPrefix}__status-icon ${uploadPrefix}__file-fail`} />,
             )}
           {Boolean(!disabled && file?.name) &&
             convertToLightDomNode(
-              <t-icon
-                name="close-circle-filled"
+              <t-icon-close-circle-filled
                 className={`${uploadPrefix}__single-input-clear`}
                 onClick={(e) => props.onRemove({ e, file, index: 0 })}
               />,
@@ -84,20 +84,19 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
           <span className={`${uploadPrefix}__single-name`}>{fileName}</span>
           {file.status === 'fail' && (
             <div className={`${uploadPrefix}__flow-status ${uploadPrefix}__file-fail`}>
-              {convertToLightDomNode(<t-icon name="error-circle-filled" />)}
+              {convertToLightDomNode(<t-icon-error-circle-filled />)}
             </div>
           )}
           {file.status === 'waiting' && (
             <div className={`${uploadPrefix}__flow-status ${uploadPrefix}__file-waiting`}>
-              {convertToLightDomNode(<t-icon name="time-filled" />)}
+              {convertToLightDomNode(<t-icon-time-filled />)}
             </div>
           )}
           {file.status === 'progress' && renderProgress(file.percent)}
           {!disabled &&
             file.status !== 'progress' &&
             convertToLightDomNode(
-              <t-icon
-                name="close"
+              <t-icon-close
                 className={`${uploadPrefix}__icon-delete`}
                 onClick={(e) => props.onRemove({ e, file, index })}
               />,

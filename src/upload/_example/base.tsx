@@ -1,4 +1,4 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/close';
 
 import { Component, computed, createRef, signal } from 'omi';
 import Button from 'tdesign-web-components/button';
@@ -119,7 +119,7 @@ export default class Base extends Component {
         {this.files3.value.map((file, index) => (
           <div key={file.name} className="t-upload__single-display-text t-upload__display-text--margin">
             {file.name}（{file.size} B）
-            <t-icon name="close" className="t-upload__icon-delete" onClick={() => this.outsideRemove(index)} />
+            <t-icon-close className="t-upload__icon-delete" onClick={() => this.outsideRemove(index)} />
           </div>
         ))}
       </div>
