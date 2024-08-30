@@ -450,10 +450,10 @@ export default class Dialog extends Component<DialogProps> {
     if (this.state.value.footer === false) return null;
     if (this.state.value.footer === true) {
       return (
-        <div>
+        <>
           {this.getCancelBtn()}
           {this.getConfirmBtn()}
-        </div>
+        </>
       );
     }
 
