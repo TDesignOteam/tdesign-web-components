@@ -111,45 +111,39 @@ export default class TagInput extends Component<TagInputProps> {
     onRemove: Function,
   };
 
-  install() {
-    this.tagInputRef = createRef();
-    this.isCompositionRef = createRef();
-    this.tagValue = this.props?.defaultValue || [];
-    this.draggingIndex = -1;
-    this.dragStartData = null;
-    this.isDropped = null;
-    this.startInfo = { nodeX: 0, nodeWidth: 0, mouseX: 0 };
-  }
-
-  installed() {
-    this.initScroll(this.tagInputRef);
-  }
-
-  tagInputRef;
+  tagInputRef = createRef();
 
   tInputValue = '';
 
   oldInputValue = '';
 
-  isHover;
+  isHover = false;
 
   tagValue = [];
 
   mouseEnterTimer = null;
 
-  scrollDistance;
+  scrollDistance = 0;
 
   scrollElement;
 
-  draggingIndex;
+  draggingIndex = -1;
 
-  dragStartData;
+  dragStartData = null;
 
-  isDropped;
+  isDropped = null;
 
-  startInfo;
+  startInfo = { nodeX: 0, nodeWidth: 0, mouseX: 0 };
 
-  isCompositionRef;
+  isCompositionRef = createRef();
+
+  install() {
+    this.tagValue = this.props?.defaultValue || [];
+  }
+
+  installed() {
+    this.initScroll(this.tagInputRef);
+  }
 
   updateScrollElement = (element) => {
     [this.scrollElement] = element.current.children;
@@ -213,6 +207,205 @@ export default class TagInput extends Component<TagInputProps> {
     this.updateScrollElement(element);
   };
 
+  private useDragSorter = <T,>(props: DragSortProps<T>): DragSortInnerProps => {
+    const { sortOnDraggable, onDragSort, onDragOverCheck } = props;
+
+    const onDragOver = (e, index, record) => {
+      e.preventDefault();
+      if (this.draggingIndex === index || this.draggingIndex === -1) return;
+      if (onDragOverCheck?.targetClassNameRegExp && !onDragOverCheck?.targetClassNameRegExp.test(e.target?.className)) {
+        return;
+      }
+      if (onDragOverCheck?.x) {
+        if (!this.startInfo.nodeWidth) return;
+
+        const { x, width } = e.target.getBoundingClientRect();
+        const targetNodeMiddleX = x + width / 2;
+        const clientX = e.clientX || 0;
+        const draggingNodeLeft = clientX - (this.startInfo.mouseX - this.startInfo.nodeX);
+        const draggingNodeRight = draggingNodeLeft + this.startInfo.nodeWidth;
+
+        let overlap = false;
+        if (draggingNodeLeft > x && draggingNodeLeft < x + width) {
+          overlap = draggingNodeLeft < targetNodeMiddleX;
+        } else {
+          overlap = draggingNodeRight > targetNodeMiddleX;
+        }
+        if (!overlap) return;
+      }
+      onDragSort?.({
+        currentIndex: this.draggingIndex,
+        current: this.dragStartData,
+        target: record,
+        targetIndex: index,
+      });
+      this.draggingIndex = index;
+    };
+
+    if (!sortOnDraggable) {
+      return {};
+    }
+
+    const onDragStart = (e, index, record: T) => {
+      this.draggingIndex = index;
+      this.dragStartData = record;
+      if (onDragOverCheck) {
+        const { x, width } = e.target.getBoundingClientRect();
+        this.startInfo = {
+          nodeX: x,
+          nodeWidth: width,
+          mouseX: e.clientX || 0,
+        };
+      }
+    };
+
+    const onDrop = () => {
+      this.isDropped = true;
+    };
+
+    const onDragEnd = () => {
+      if (!this.isDropped) {
+        // 取消排序，待扩展 api，输出 dragStartData
+      }
+      this.isDropped = false;
+      this.draggingIndex = -1;
+      this.dragStartData = null;
+    };
+
+    const getDragProps = (index, record: T) => {
+      if (sortOnDraggable) {
+        return {
+          draggable: true,
+          onDragStart: (e) => {
+            onDragStart(e, index, record);
+          },
+          onDragOver: (e) => {
+            onDragOver(e, index, record);
+          },
+          onDrop: () => {
+            onDrop();
+          },
+          onDragEnd: () => {
+            onDragEnd();
+          },
+        };
+      }
+      return {};
+    };
+
+    return { onDragStart, onDragOver, onDrop, onDragEnd, getDragProps, dragging: this.draggingIndex !== -1 };
+  };
+
+  private onClose = (p: { e?: MouseEvent; index: number; item: string | number }) => {
+    const { props, tagValue } = this;
+    const arr = [...tagValue];
+    arr.splice(p.index, 1);
+    this.tagValue = arr;
+    props?.onChange &&
+      props?.onChange?.(arr, {
+        ...p,
+        trigger: 'tag-remove',
+      });
+    props?.onRemove && props?.onRemove?.({ e: p?.e, index: p.index, item: p.item, trigger: 'tag-remove', value: arr });
+    this.update();
+  };
+
+  // 按下回退键，删除标签
+  private onInputBackspaceKeyDown = (value: InputValue, context: { e: KeyboardEvent }) => {
+    const { tagValue, props, tInputValue, isCompositionRef } = this;
+    if (!context) return;
+    const { e } = context;
+    if (!tagValue || !tagValue.length) return;
+    // 回车键删除，输入框值为空时，才允许 Backspace 删除标签
+    // 当输入中文拼音时，如果输入的拼音内容未转换为中文时，tInputValue 的内容为空，此时按Backspace键会触发删除标签的情况，而不是只删除输入框内的中文拼音
+    if (!tInputValue && !isCompositionRef.current && ['Backspace', 'NumpadDelete'].includes(e.key)) {
+      const index = tagValue.length - 1;
+      const item = tagValue[index];
+      const trigger = 'backspace';
+      const newValue = tagValue.slice(0, -1);
+      this.tagValue = newValue;
+      props?.onChange && props?.onChange(newValue, { e, index, item, trigger });
+      props?.onRemove && props?.onRemove?.({ e, index, item, trigger, value: newValue });
+      this.update();
+    }
+  };
+
+  private clearAll = (e) => {
+    const { props } = this;
+    this.tagValue = [];
+    this.tInputValue = '';
+    props?.onChange && props.onChange([], { e, trigger: 'clear' });
+    this.update();
+  };
+
+  private onClearClick = (e: MouseEvent) => {
+    this.clearAll(e);
+    this.props.onClear?.({ e });
+  };
+
+  private onInnerClick = (context: { e: MouseEvent }) => {
+    console.log('innerClick');
+    const { props, tagInputRef } = this;
+    if (!props.disabled && !props.readonly) {
+      (tagInputRef.current as any).inputElement?.focus?.();
+    }
+    props.onClick?.(context);
+  };
+
+  private onInnerEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
+    const { tagValue, props } = this;
+    const valueStr = value ? String(value).trim() : '';
+    let newValue: TagInputValue = tagValue;
+    const isLimitExceeded = props.max && tagValue?.length >= props.max;
+    if (valueStr && !isLimitExceeded) {
+      newValue = tagValue instanceof Array ? tagValue.concat(String(valueStr)) : [valueStr];
+    }
+    this.tInputValue = '';
+    props.onChange?.(newValue, {
+      ...context,
+      trigger: 'enter',
+    });
+    this.tagValue = newValue;
+    props?.onEnter?.(newValue, { ...context, inputValue: value });
+    this.update();
+  };
+
+  private onInputEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
+    !this.isCompositionRef.current && this.onInnerEnter(value, context);
+    this.scrollToRight();
+  };
+
+  private addHover = (context) => {
+    const { props } = this;
+    if (props.readonly || props.disabled) return;
+    this.isHover = true;
+    this.update();
+    props.onMouseenter?.(context);
+  };
+
+  private cancelHover = (context) => {
+    const { props } = this;
+    if (props.readonly || props.disabled) return;
+    this.isHover = false;
+    this.update();
+    props.onMouseleave?.(context);
+  };
+
+  private onInputCompositionstart = (value: string, context: { e: CompositionEvent }) => {
+    this.isCompositionRef.current = true;
+    this.props.inputProps?.onCompositionstart?.(value, context);
+  };
+
+  private onInputCompositionend = (value: string, context: { e: CompositionEvent }) => {
+    this.isCompositionRef.current = false;
+    this.props.inputProps?.onCompositionend?.(value, context);
+  };
+
+  // 将对 tag-input 组件的 value 值进行受控处理提取到 render 之前
+  beforeRender(): void {
+    this.tagValue = this.props?.value ? this.props.value : this.tagValue;
+  }
+
   render(props: OmiProps<TagInputProps>) {
     const {
       excessTagsDisplayType,
@@ -230,106 +423,14 @@ export default class TagInput extends Component<TagInputProps> {
       suffixIcon,
       suffix,
       style,
-      onClick,
       onPaste,
       onFocus,
       onBlur,
-      onMouseenter,
-      onMouseleave,
     } = props;
 
-    const useDragSorter = <T,>(props: DragSortProps<T>): DragSortInnerProps => {
-      const { sortOnDraggable, onDragSort, onDragOverCheck } = props;
+    const { tagValue } = this;
 
-      const onDragOver = (e, index, record) => {
-        e.preventDefault();
-        if (this.draggingIndex === index || this.draggingIndex === -1) return;
-        if (
-          onDragOverCheck?.targetClassNameRegExp &&
-          !onDragOverCheck?.targetClassNameRegExp.test(e.target?.className)
-        ) {
-          return;
-        }
-        if (onDragOverCheck?.x) {
-          if (!this.startInfo.nodeWidth) return;
-
-          const { x, width } = e.target.getBoundingClientRect();
-          const targetNodeMiddleX = x + width / 2;
-          const clientX = e.clientX || 0;
-          const draggingNodeLeft = clientX - (this.startInfo.mouseX - this.startInfo.nodeX);
-          const draggingNodeRight = draggingNodeLeft + this.startInfo.nodeWidth;
-
-          let overlap = false;
-          if (draggingNodeLeft > x && draggingNodeLeft < x + width) {
-            overlap = draggingNodeLeft < targetNodeMiddleX;
-          } else {
-            overlap = draggingNodeRight > targetNodeMiddleX;
-          }
-          if (!overlap) return;
-        }
-        onDragSort?.({
-          currentIndex: this.draggingIndex,
-          current: this.dragStartData,
-          target: record,
-          targetIndex: index,
-        });
-        this.draggingIndex = index;
-      };
-
-      if (!sortOnDraggable) {
-        return {};
-      }
-
-      const onDragStart = (e, index, record: T) => {
-        this.draggingIndex = index;
-        this.dragStartData = record;
-        if (onDragOverCheck) {
-          const { x, width } = e.target.getBoundingClientRect();
-          this.startInfo = {
-            nodeX: x,
-            nodeWidth: width,
-            mouseX: e.clientX || 0,
-          };
-        }
-      };
-
-      const onDrop = () => {
-        this.isDropped = true;
-        // setIsDropped(true);
-      };
-      const onDragEnd = () => {
-        if (!this.isDropped) {
-          // 取消排序，待扩展 api，输出 dragStartData
-        }
-        this.isDropped = false;
-        this.draggingIndex = -1;
-        this.dragStartData = null;
-      };
-      const getDragProps = (index, record: T) => {
-        if (sortOnDraggable) {
-          return {
-            draggable: true,
-            onDragStart: (e) => {
-              onDragStart(e, index, record);
-            },
-            onDragOver: (e) => {
-              onDragOver(e, index, record);
-            },
-            onDrop: () => {
-              onDrop();
-            },
-            onDragEnd: () => {
-              onDragEnd();
-            },
-          };
-        }
-        return {};
-      };
-
-      return { onDragStart, onDragOver, onDrop, onDragEnd, getDragProps, dragging: this.draggingIndex !== -1 };
-    };
-
-    const { getDragProps } = useDragSorter({
+    const { getDragProps } = this.useDragSorter({
       ...props,
       sortOnDraggable: props.dragSort,
       onDragOverCheck: {
@@ -338,58 +439,13 @@ export default class TagInput extends Component<TagInputProps> {
       },
     });
 
-    const clearAll = (e) => {
-      this.tagValue = [];
-      this.tInputValue = '';
-      props?.onChange && props.onChange([], { e, trigger: 'clear' });
-      this.update();
-    };
-
-    const onClearClick = (e: MouseEvent) => {
-      clearAll(e);
-      props.onClear?.({ e });
-    };
-
-    const tagValue = props?.value ? props.value : this.tagValue;
-
-    const onClose = (p: { e?: MouseEvent; index: number; item: string | number }) => {
-      const arr = [...tagValue];
-      arr.splice(p.index, 1);
-      this.tagValue.splice(p.index, 1);
-      props?.onChange?.(arr, {
-        ...p,
-        trigger: 'tag-remove',
-      });
-      props?.onRemove &&
-        props?.onRemove?.({ e: p?.e, index: p.index, item: p.item, trigger: 'tag-remove', value: arr });
-      this.update();
-    };
-
     // 自定义 Tag 节点
     const displayNode = isFunction(valueDisplay)
       ? valueDisplay({
           value: tagValue,
-          onClose: (index, item) => onClose({ index, item }),
+          onClose: (index, item) => this.onClose({ index, item }),
         })
       : valueDisplay;
-
-    // 按下回退键，删除标签
-    const onInputBackspaceKeyDown = (value: InputValue, context: { e: KeyboardEvent }) => {
-      if (!context) return;
-      const { e } = context;
-      if (!tagValue || !tagValue.length) return;
-      // 回车键删除，输入框值为空时，才允许 Backspace 删除标签
-      if (!this.tInputValue && ['Backspace', 'NumpadDelete'].includes(e.key)) {
-        const index = tagValue.length - 1;
-        const item = tagValue[index];
-        const trigger = 'backspace';
-        const newValue = tagValue.slice(0, -1);
-        this.tagValue = newValue;
-        props?.onChange && props?.onChange(newValue, { e, index, item, trigger });
-        props?.onRemove && props?.onRemove?.({ e, index, item, trigger, value: newValue });
-        this.update();
-      }
-    };
 
     const onInputBackspaceKeyUp = (value: InputValue) => {
       if (!tagValue || !tagValue.length) return;
@@ -408,7 +464,7 @@ export default class TagInput extends Component<TagInputProps> {
                 key={index}
                 size={size}
                 disabled={disabled}
-                onClose={(context) => onClose({ e: context.e, item, index })}
+                onClose={(context) => this.onClose({ e: context.e, item, index })}
                 closable={!readonly && !disabled}
                 {...getDragProps?.(index, item)}
                 {...props.tagProps}
@@ -433,7 +489,7 @@ export default class TagInput extends Component<TagInputProps> {
           count: tagValue.length - props.minCollapsedNum,
           collapsedTags: tagValue.slice(props.minCollapsedNum, tagValue.length),
           collapsedSelectedItems: tagValue.slice(props.minCollapsedNum, tagValue.length),
-          onClose,
+          onClose: this.onClose,
         };
         const more = isFunction(props.collapsedItems) ? props.collapsedItems(params) : props.collapsedItems;
         if (more) {
@@ -456,7 +512,7 @@ export default class TagInput extends Component<TagInputProps> {
           `${classPrefix}-icon-close-circle-filled `,
           TagInputClassNamePrefix(`__suffix-clear`),
         ])}
-        onClick={onClearClick}
+        onClick={this.onClearClick}
       />
     ) : (
       suffixIcon
@@ -476,59 +532,6 @@ export default class TagInput extends Component<TagInputProps> {
       },
       props.className,
     ];
-
-    const onInputCompositionstart = (value: string, context: { e: CompositionEvent }) => {
-      this.isCompositionRef.current = true;
-      inputProps?.onCompositionstart?.(value, context);
-    };
-
-    const onInputCompositionend = (value: string, context: { e: CompositionEvent }) => {
-      this.isCompositionRef.current = false;
-      inputProps?.onCompositionend?.(value, context);
-    };
-
-    const onInnerClick = (context: { e: MouseEvent }) => {
-      if (!props.disabled && !props.readonly) {
-        (this.tagInputRef.current as any).inputElement?.focus?.();
-      }
-      onClick?.(context);
-    };
-
-    const onInnerEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
-      const valueStr = value ? String(value).trim() : '';
-      let newValue: TagInputValue = tagValue;
-      const isLimitExceeded = props.max && tagValue?.length >= props.max;
-      if (valueStr && !isLimitExceeded) {
-        newValue = tagValue instanceof Array ? tagValue.concat(String(valueStr)) : [valueStr];
-      }
-      this.tInputValue = '';
-      props.onChange?.(newValue, {
-        ...context,
-        trigger: 'enter',
-      });
-      this.tagValue = newValue;
-      props?.onEnter?.(newValue, { ...context, inputValue: value });
-      this.update();
-    };
-
-    const onInputEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
-      onInnerEnter(value, context);
-      this.scrollToRight();
-    };
-
-    const addHover = (context) => {
-      if (readonly || disabled) return;
-      this.isHover = true;
-      this.update();
-      onMouseenter?.(context);
-    };
-
-    const cancelHover = (context) => {
-      if (readonly || disabled) return;
-      this.isHover = false;
-      this.update();
-      onMouseleave?.(context);
-    };
 
     return (
       <t-input
@@ -554,16 +557,15 @@ export default class TagInput extends Component<TagInputProps> {
         showInput={!inputProps?.readonly || !tagValue || !tagValue?.length}
         keepWrapperWidth={!autoWidth}
         onPaste={onPaste}
-        onClick={onInnerClick}
-        onEnter={onInputEnter}
-        onMyKeydown={onInputBackspaceKeyDown}
+        onEnter={this.onInputEnter}
+        onMyKeydown={this.onInputBackspaceKeyDown}
         onMyKeyup={onInputBackspaceKeyUp}
         onMouseenter={(context) => {
-          addHover(context);
+          this.addHover(context);
           this.scrollToRightOnEnter();
         }}
         onMouseleave={(context) => {
-          cancelHover(context);
+          this.cancelHover(context);
           this.scrollToLeftOnLeave();
         }}
         onFocus={(inputValue, context) => {
@@ -576,8 +578,8 @@ export default class TagInput extends Component<TagInputProps> {
           }
           onBlur?.(tagValue, { e: context.e, inputValue: '' });
         }}
-        onCompositionstart={onInputCompositionstart}
-        onCompositionend={onInputCompositionend}
+        onCompositionstart={this.onInputCompositionstart}
+        onCompositionend={this.onInputCompositionend}
         {...inputProps}
       />
     );
