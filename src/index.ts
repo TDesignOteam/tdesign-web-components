@@ -29,6 +29,7 @@ export * from './space';
 export * from './swiper';
 export * from './switch';
 export * from './tag';
+export * from './tag-input';
 export * from './textarea';
 export * from './tooltip';
 export * from './upload';
