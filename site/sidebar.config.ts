@@ -184,6 +184,12 @@ export default [
         path: '/components/textarea',
         component: () => import('tdesign-web-components/textarea/README.md'),
       },
+      {
+        title: 'Upload 上传',
+        name: 'upload',
+        path: '/components/upload',
+        component: () => import('tdesign-web-components/upload/README.md'),
+      },
     ],
   },
   {
