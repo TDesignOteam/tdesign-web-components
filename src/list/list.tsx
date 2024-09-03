@@ -36,51 +36,6 @@ export default class BackTop extends Component<ListProps> {
     onScroll: Function,
   };
 
-  childrenlist;
-
-  // install() {
-  //   const { children, split, size } = this.props;
-  //   if (this.props.stripe) {
-  //     children.map((item, index) => {
-  //       if ((index + 1) % 2 == 0) {
-  //         if (!item.attributes.css) {
-  //           item.attributes.css = '';
-  //         }
-  //         item.attributes.css += this.stripeCss;
-  //       }
-  //     })
-  //   }
-
-  //   if (split) {
-  //     children.map((item, index) => {
-  //       if (index + 1 != children.length) {
-  //         if (!item.attributes.css) {
-  //           item.attributes.css = '';
-  //         }
-  //         item.attributes.css += this.splitCss;
-  //       }
-  //     });
-  //   }
-  //   if (size) {
-  //     if (size == 'small') {
-  //       this.childrenlist.map((item) => {
-  //         if (!item.attributes.css) {
-  //           item.attributes.css = '';
-  //         }
-  //         item.attributes.css += this.smallSizeCss;
-  //       })
-  //     }
-  //     if (size == 'large') {
-  //       this.childrenlist.map((item) => {
-  //         if (!item.attributes.css) {
-  //           item.attributes.css = '';
-  //         }
-  //         item.attributes.css += this.largeSizeCss;
-  //       })
-  //     }
-  //   }
-  // }
-
   getClasses(split: Boolean, stripe: Boolean) {
     const cls: string[] = [];
     if (split) {
