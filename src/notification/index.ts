@@ -1,8 +1,9 @@
 import './style/index.js';
 
-import _Notification from './alert';
+import _Notification from './Notification';
 
-export type { AlertProps } from './alert';
+export * from './type';
 
 export const Notification = _Notification;
+
 export default Notification;

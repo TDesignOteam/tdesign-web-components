@@ -21,6 +21,7 @@ export * from './list';
 export * from './loading';
 export * from './menu';
 export * from './message';
+export * from './notification';
 export * from './popconfirm';
 export * from './popup';
 export * from './progress';
