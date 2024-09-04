@@ -258,6 +258,12 @@ export default [
         component: () => import('tdesign-web-components/loading/README.md'),
       },
       {
+        title: 'Progress 进度条',
+        name: 'progress',
+        path: '/components/progress',
+        component: () => import('tdesign-web-components/progress/README.md'),
+      },
+      {
         title: 'Watermark 水印',
         name: 'watermark',
         path: '/components/watermark',
