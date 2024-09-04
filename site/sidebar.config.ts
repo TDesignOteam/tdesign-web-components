@@ -258,6 +258,12 @@ export default [
         component: () => import('tdesign-web-components/loading/README.md'),
       },
       {
+        title: 'Skeleton 骨架屏',
+        name: 'skeleton',
+        path: '/components/skeleton',
+        component: () => import('tdesign-web-components/skeleton/README.md'),
+      },
+      {
         title: 'Watermark 水印',
         name: 'watermark',
         path: '/components/watermark',
