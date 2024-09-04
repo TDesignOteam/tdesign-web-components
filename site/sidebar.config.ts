@@ -246,6 +246,12 @@ export default [
         component: () => import('tdesign-web-components/image/README.md'),
       },
       {
+        title: 'List 列表',
+        name: 'list',
+        path: '/components/list',
+        component: () => import('tdesign-web-components/list/README.md'),
+      },
+      {
         title: 'Tooltip 文字提示',
         name: 'tooltip',
         path: '/components/tooltip',
@@ -256,6 +262,12 @@ export default [
         name: 'loading',
         path: '/components/loading',
         component: () => import('tdesign-web-components/loading/README.md'),
+      },
+      {
+        title: 'Progress 进度条',
+        name: 'progress',
+        path: '/components/progress',
+        component: () => import('tdesign-web-components/progress/README.md'),
       },
       {
         title: 'Skeleton 骨架屏',
