@@ -23,6 +23,7 @@ export * from './menu';
 export * from './message';
 export * from './popconfirm';
 export * from './popup';
+export * from './progress';
 export * from './radio';
 export * from './range-input';
 export * from './slider';
