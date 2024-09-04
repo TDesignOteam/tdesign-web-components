@@ -18,11 +18,6 @@ spline: data
 
 {{ circle }}
 
-### 环形进度条plump
-
-以线形表示进度的组件，环内可选择性地配有文字或图标补充显示进度和状态。多用于需要强调进度百分比的情况。
-
-{{ plump }}
 
 ## API
 ### Progress Props
