@@ -301,6 +301,12 @@ export default [
         // component: () => import('tdesign-web-components/message/README.md'),
       },
       {
+        title: 'Notification 消息通知',
+        name: 'notification',
+        path: '/components/notification',
+        component: () => import('tdesign-web-components/notification/README.md'),
+      },
+      {
         title: 'Popconfirm 气泡确认框',
         name: 'popconfirm',
         path: '/components/popconfirm',
