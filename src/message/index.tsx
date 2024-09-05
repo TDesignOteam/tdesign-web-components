@@ -1,11 +1,10 @@
-function messageMethod(...v) {
-  console.log(...v);
-}
+import './style/index.js';
 
-export const MessagePlugin = (theme, message, duration) => messageMethod(theme, message, duration);
-MessagePlugin.info = (content, duration?) => messageMethod('info', content, duration);
-MessagePlugin.error = (content, duration?) => messageMethod('error', content, duration);
-MessagePlugin.warning = (content, duration?) => messageMethod('warning', content, duration);
-MessagePlugin.success = (content, duration?) => messageMethod('success', content, duration);
-MessagePlugin.question = (content, duration?) => messageMethod('question', content, duration);
-MessagePlugin.loading = (content, duration?) => messageMethod('loading', content, duration);
+import _Message, { MessagePlugin as _MessagePlugin } from './message';
+
+export * from './type';
+export const Message = _Message;
+export const message = _MessagePlugin;
+export const MessagePlugin = _MessagePlugin;
+
+export default Message;

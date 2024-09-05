@@ -298,7 +298,7 @@ export default [
         title: 'Message 全局提示',
         name: 'message',
         path: '/components/message',
-        // component: () => import('tdesign-web-components/message/README.md'),
+        component: () => import('tdesign-web-components/message/README.md'),
       },
       {
         title: 'Notification 消息通知',
