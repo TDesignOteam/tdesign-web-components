@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/close';
 import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 import 'tdesign-icons-web-components/esm/components/check-circle-filled';
 
-import { Component, OmiProps, tag } from 'omi';
+import { Component, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
@@ -37,7 +37,27 @@ export default class Notification extends Component<NotificationProps> {
 
   className = `${getClassPrefix()}-notification`;
 
+  inject = ['remove'];
+
+  notificationRef = createRef();
+
   timer: NodeJS.Timeout;
+
+  ready(): void {
+    const { id, className, theme } = this.props;
+    this.notificationRef.current = {
+      close: () => this.injection.remove(id),
+    };
+    // lightDOM下由root携带类名
+    if ((this.constructor as any).isLightDOM) {
+      this.setAttribute(
+        'class',
+        classname(className, this.className, {
+          [`${this.className}-is-${theme}`]: theme,
+        }),
+      );
+    }
+  }
 
   installed(): void {
     if (this.props.duration > 0) {
@@ -56,7 +76,6 @@ export default class Notification extends Component<NotificationProps> {
 
   renderIcon = () => {
     const { icon, theme } = this.props;
-    console.log('当前主题', theme);
 
     if (typeof icon === 'boolean' && !icon) {
       return null;
@@ -92,13 +111,14 @@ export default class Notification extends Component<NotificationProps> {
   renderCloseBtn = () => {
     if (typeof this.props.closeBtn === 'boolean') {
       return (
-        this.props.closeBtn && (
+        this.props.closeBtn &&
+        convertToLightDomNode(
           <t-icon-close
-            className={`${this.className}-icon-close`}
+            cls={`${this.className}-icon-close`}
             onClick={(e) => {
               this.props.onCloseBtnClick?.({ e });
             }}
-          />
+          />,
         )
       );
     }
@@ -109,21 +129,16 @@ export default class Notification extends Component<NotificationProps> {
           this.props.onCloseBtnClick?.({ e });
         }}
       >
-        {parseTNode(this.props.closeBtn)}
+        {convertToLightDomNode(parseTNode(this.props.closeBtn))}
       </div>
     );
   };
 
-  render(props: OmiProps<NotificationProps>) {
-    const { className, theme, style, title, content, footer } = props;
+  renderContent() {
+    const { title, content, footer } = this.props;
 
     return (
-      <div
-        className={classname(className, this.className, {
-          [`${this.className}-is-${theme}`]: theme,
-        })}
-        style={style}
-      >
+      <>
         {this.renderIcon()}
         <div className={`${this.className}__main`}>
           <div className={`${this.className}__title__wrap`}>
@@ -133,6 +148,25 @@ export default class Notification extends Component<NotificationProps> {
           {content && <div className={`${this.className}__content`}>{parseTNode(content)}</div>}
           {footer && <div className={`${this.className}__detail`}>{parseTNode(footer)}</div>}
         </div>
+      </>
+    );
+  }
+
+  render(props: OmiProps<NotificationProps>) {
+    const { className, theme, style } = props;
+
+    if ((this.constructor as any).isLightDOM) {
+      return this.renderContent();
+    }
+    // shadowDOM下额外渲染一层container用于渲染样式
+    return (
+      <div
+        className={classname(className, this.className, {
+          [`${this.className}-is-${theme}`]: theme,
+        })}
+        style={style}
+      >
+        {this.renderContent()}
       </div>
     );
   }
