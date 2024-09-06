@@ -2,6 +2,8 @@ import 'tdesign-icons-web-components';
 import 'tdesign-web-components/dropdown';
 import 'tdesign-web-components/button';
 
+import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+
 export default function BasicDropdown() {
   const getContent = () => <div>操作四</div>;
   const options = [
@@ -23,7 +25,7 @@ export default function BasicDropdown() {
     },
   ];
   const clickHandler = (data) => {
-    console.log(`选中【${data.value}】`);
+    MessagePlugin.info(`选中【${data.value}】`);
   };
   return (
     <t-dropdown options={options} onClick={clickHandler}>

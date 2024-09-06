@@ -53,10 +53,3 @@ export const setGlobalConfig = (options: MessageOptions) => {
     ...getMessageConfig(options),
   };
 };
-
-/**
- * @name: getMessageDefaultConfig
- * @description: 获取默认的消息配置，不允许更改
- * @return: MessageOptions
- * */
-export const getMessageDefaultConfig = (): MessageOptions => ({ ...messageDefaultConfig });
