@@ -1,4 +1,4 @@
-import { classNames,Component, OmiProps, tag } from 'omi';
+import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { ListItemMetaProps } from './types';
@@ -18,10 +18,10 @@ export default class ListItemMeta extends Component<ListItemMetaProps> {
   };
 
   renderImage = (image: any) => (
-      <div class={classNames(ListItemMetaClassNamePefix('-avatar'))}>
-        <img src={image} alt="" />
-      </div>
-    );
+    <div class={classNames(ListItemMetaClassNamePefix('-avatar'))}>
+      <img src={image} alt="" />
+    </div>
+  );
 
   render(props: OmiProps<ListItemMetaProps>) {
     const { description, image, title } = props;

@@ -1,6 +1,6 @@
 import 'tdesign-icons-web-components';
 
-import { classNames,Component, OmiProps, tag } from 'omi';
+import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import getBackgroundColor from '../_util/linearGradient';
