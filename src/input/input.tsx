@@ -1,6 +1,4 @@
-import 'tdesign-icons-web-components/esm/components/close-circle';
-import 'tdesign-icons-web-components/esm/components/browse';
-import 'tdesign-icons-web-components/esm/components/browse-off';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
@@ -104,7 +102,6 @@ export default class Input extends Component<InputProps> {
   eventProps;
 
   private handlePasswordVisible = (e: MouseEvent) => {
-    console.log('handlePasswordVisible');
     e.stopImmediatePropagation();
     if (this.props.disabled) return;
     const toggleType = this.renderType === 'password' ? 'text' : 'password';
@@ -150,7 +147,6 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
-    console.log('handleFocus');
     e.stopImmediatePropagation();
     const { readonly, onFocus } = this.props;
     if (readonly) return;
@@ -171,7 +167,6 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseEnter = (e: MouseEvent) => {
-    console.log('handleMouseEnter');
     e.stopImmediatePropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
@@ -180,7 +175,6 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
-    console.log('handleMouseLeave');
     e.stopImmediatePropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
@@ -239,6 +233,7 @@ export default class Input extends Component<InputProps> {
   }
 
   installed() {
+    this.renderType = this.props.type;
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
     const updateInputWidth = () => {
@@ -340,7 +335,7 @@ export default class Input extends Component<InputProps> {
     const cleanMargin = { marginLeft: '0px' };
     if (isShowClearIcon) {
       suffixIconNew = (
-        <t-icon-close-circle
+        <t-icon-close-circle-filled
           name={'close-circle-filled'}
           className={classname(
             `${classPrefix}-input__suffix-clear`,
@@ -387,7 +382,7 @@ export default class Input extends Component<InputProps> {
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
         <div
-          className={classname(`${classPrefix}-input__limit-number`, {
+          class={classname(`${classPrefix}-input__limit-number`, {
             [`${classPrefix}-is-disabled`]: disabled,
           })}
         >
@@ -402,6 +397,7 @@ export default class Input extends Component<InputProps> {
         {...this.eventProps}
         ref={this.inputRef}
         placeholder={placeholder}
+        type={this.renderType}
         type={this.renderType}
         class={`${classPrefix}-input__inner`}
         value={formatDisplayValue}
@@ -421,7 +417,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        className={classname(`${classPrefix}-input`, {
+        class={classname(`${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -438,17 +434,17 @@ export default class Input extends Component<InputProps> {
         onMouseLeave={this.handleMouseLeave}
       >
         {prefixIconContent}
-        {labelContent ? <div className={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
+        {labelContent ? <div class={classname(`${classPrefix}-input__prefix`)}>{labelContent}</div> : null}
         {showInput && renderInput}
 
         {autoWidth && (
-          <span ref={this.inputPreRef} className={classname(`${classPrefix}-input__input-pre`)}>
+          <span ref={this.inputPreRef} class={classname(`${classPrefix}-input__input-pre`)}>
             {innerValue || placeholder}
           </span>
         )}
 
         {suffixContent || limitNumberNode ? (
-          <div className={classname(`${classPrefix}-input__suffix`)}>
+          <div class={classname(`${classPrefix}-input__suffix`)}>
             {suffixContent}
             {limitNumberNode}
           </div>
@@ -459,7 +455,7 @@ export default class Input extends Component<InputProps> {
 
     return (
       <div
-        className={classname(
+        class={classname(
           `${classPrefix}-input__wrap`,
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
@@ -471,7 +467,7 @@ export default class Input extends Component<InputProps> {
         {...restProps}
       >
         {renderInputNode}
-        <div className={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
+        <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>
           {tips}
         </div>
       </div>

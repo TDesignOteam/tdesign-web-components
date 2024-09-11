@@ -52,6 +52,12 @@ export default [
         path: '/components/icon',
         component: () => import('tdesign-web-components/icon/README.md'),
       },
+      {
+        title: 'Link 链接',
+        name: 'link',
+        path: '/components/link',
+        component: () => import('tdesign-web-components/link/README.md'),
+      },
     ],
     tag: '',
   },
@@ -109,7 +115,7 @@ export default [
         title: 'Breadcrumb 面包屑',
         name: 'breadcrumb',
         path: '/components/breadcrumb',
-        // component: () => import('tdesign-web-components/breadcrumb/README.md'),
+        component: () => import('tdesign-web-components/breadcrumb/README.md'),
       },
       {
         title: 'BackTop 回到顶部',
@@ -143,6 +149,12 @@ export default [
         component: () => import('tdesign-web-components/range-input/README.md'),
       },
       {
+        title: 'TagInput 标签输入框',
+        name: ' tag-input',
+        path: '/components/tag-input',
+        component: () => import('tdesign-web-components/tag-input/README.md'),
+      },
+      {
         title: 'Radio 单选框',
         name: 'radio',
         path: '/components/radio',
@@ -172,6 +184,12 @@ export default [
         path: '/components/textarea',
         component: () => import('tdesign-web-components/textarea/README.md'),
       },
+      {
+        title: 'Upload 上传',
+        name: 'upload',
+        path: '/components/upload',
+        component: () => import('tdesign-web-components/upload/README.md'),
+      },
     ],
   },
   {
@@ -184,6 +202,12 @@ export default [
         name: 'avatar',
         path: '/components/avatar',
         component: () => import('tdesign-web-components/avatar/README.md'),
+      },
+      {
+        title: 'Badge 徽标',
+        name: 'badge',
+        path: '/components/badge',
+        component: () => import('tdesign-web-components/badge/README.md'),
       },
       {
         title: 'Calendar 日历',
@@ -222,6 +246,12 @@ export default [
         component: () => import('tdesign-web-components/image/README.md'),
       },
       {
+        title: 'List 列表',
+        name: 'list',
+        path: '/components/list',
+        component: () => import('tdesign-web-components/list/README.md'),
+      },
+      {
         title: 'Tooltip 文字提示',
         name: 'tooltip',
         path: '/components/tooltip',
@@ -232,6 +262,30 @@ export default [
         name: 'loading',
         path: '/components/loading',
         component: () => import('tdesign-web-components/loading/README.md'),
+      },
+      {
+        title: 'Progress 进度条',
+        name: 'progress',
+        path: '/components/progress',
+        component: () => import('tdesign-web-components/progress/README.md'),
+      },
+      {
+        title: 'Skeleton 骨架屏',
+        name: 'skeleton',
+        path: '/components/skeleton',
+        component: () => import('tdesign-web-components/skeleton/README.md'),
+      },
+      {
+        title: 'Watermark 水印',
+        name: 'watermark',
+        path: '/components/watermark',
+        component: () => import('tdesign-web-components/watermark/README.md'),
+      },
+      {
+        title: 'Swiper 轮播框',
+        name: 'swiper',
+        path: '/components/swiper',
+        component: () => import('tdesign-web-components/swiper/README.md'),
       },
     ],
   },
@@ -251,6 +305,12 @@ export default [
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Notification 消息通知',
+        name: 'notification',
+        path: '/components/notification',
+        component: () => import('tdesign-web-components/notification/README.md'),
       },
       {
         title: 'Popconfirm 气泡确认框',
