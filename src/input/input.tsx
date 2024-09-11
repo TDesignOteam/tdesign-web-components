@@ -1,4 +1,6 @@
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components/esm/components/browse';
+import 'tdesign-icons-web-components/esm/components/browse-off';
 
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
@@ -91,7 +93,7 @@ export default class Input extends Component<InputProps> {
 
   status: TdInputProps['status'] = 'default';
 
-  renderType = 'password';
+  renderType = 'text';
 
   isFocused = false;
 
@@ -171,7 +173,7 @@ export default class Input extends Component<InputProps> {
     const { onMouseenter } = this.props;
     this.isHover = true;
     onMouseenter?.({ e });
-    // this.update();
+    this.update();
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
@@ -233,7 +235,6 @@ export default class Input extends Component<InputProps> {
   }
 
   installed() {
-    this.renderType = this.props.type;
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
     const updateInputWidth = () => {
@@ -323,14 +324,16 @@ export default class Input extends Component<InputProps> {
 
     const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
 
-    const prefixIconContent = renderIcon(
-      't',
-      'prefix',
-      cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
-        className: `${classPrefix}-input__prefix`,
-        style: { marginRight: '0px' },
-      }),
-    );
+    const prefixIconContent = prefixIcon
+      ? renderIcon(
+          't',
+          'prefix',
+          cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
+            className: `${classPrefix}-input__prefix`,
+            style: { marginRight: '0px' },
+          }),
+        )
+      : renderIcon('t', 'prefix', parseTNode(convertToLightDomNode(prefixIcon)));
     let suffixIconNew = suffixIcon;
     const cleanMargin = { marginLeft: '0px' };
     if (isShowClearIcon) {
@@ -397,7 +400,6 @@ export default class Input extends Component<InputProps> {
         {...this.eventProps}
         ref={this.inputRef}
         placeholder={placeholder}
-        type={this.renderType}
         type={this.renderType}
         class={`${classPrefix}-input__inner`}
         value={formatDisplayValue}
