@@ -1,8 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components/esm/components/browse';
+import 'tdesign-icons-web-components/esm/components/browse-off';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
 import { InputValue, TdInputProps } from './type';
@@ -90,7 +93,7 @@ export default class Input extends Component<InputProps> {
 
   status: TdInputProps['status'] = 'default';
 
-  renderType = '';
+  renderType = 'text';
 
   isFocused = false;
 
@@ -99,6 +102,14 @@ export default class Input extends Component<InputProps> {
   eventPropsNames;
 
   eventProps;
+
+  private handlePasswordVisible = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
+    if (this.props.disabled) return;
+    const toggleType = this.renderType === 'password' ? 'text' : 'password';
+    this.renderType = toggleType;
+    this.update();
+  };
 
   private handleChange = (e) => {
     e.stopImmediatePropagation();
@@ -158,13 +169,15 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseEnter = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
-    this.update();
     onMouseenter?.({ e });
+    this.update();
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
     this.update();
@@ -310,20 +323,62 @@ export default class Input extends Component<InputProps> {
     });
 
     const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
-    const prefixIconContent = renderIcon('t', 'prefix', parseTNode(prefixIcon));
-    let suffixIconNew = suffixIcon;
 
+    const prefixIconContent = prefixIcon
+      ? renderIcon(
+          't',
+          'prefix',
+          cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
+            className: `${classPrefix}-input__prefix`,
+            style: { marginRight: '0px' },
+          }),
+        )
+      : renderIcon('t', 'prefix', parseTNode(convertToLightDomNode(prefixIcon)));
+    let suffixIconNew = suffixIcon;
+    const cleanMargin = { marginLeft: '0px' };
     if (isShowClearIcon) {
       suffixIconNew = (
         <t-icon-close-circle-filled
           name={'close-circle-filled'}
-          class={classname(`${classPrefix}-input__suffix-clear`)}
+          className={classname(
+            `${classPrefix}-input__suffix-clear`,
+            `${classPrefix}-input__suffix`,
+            `${classPrefix}-input__suffix-icon`,
+          )}
+          style={cleanMargin}
           onClick={this.handleClear}
         />
       ) as any;
     }
+    if (props.type === 'password' && typeof suffixIcon === 'undefined') {
+      if (this.renderType === 'password') {
+        suffixIconNew = (
+          <t-icon-browse-off
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
+        ) as any;
+      } else if (this.renderType === 'text') {
+        suffixIconNew = (
+          <t-icon-browse
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
+        ) as any;
+      }
+    }
 
-    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(suffixIconNew));
+    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
     const labelContent = isFunction(label) ? label() : label;
     const suffixContent = isFunction(suffix) ? suffix() : suffix;
 

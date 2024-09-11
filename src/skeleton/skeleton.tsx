@@ -1,11 +1,11 @@
 import isNumber from 'lodash/isNumber';
-import { classNames, Component, createRef,tag } from 'omi';
+import { classNames, Component, createRef, tag } from 'omi';
 
 import { pxCompat } from '../_common/js/utils/helper';
 import { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, Styles, TNode } from '../common';
-import { SkeletonRowCol, SkeletonRowColObj,TdSkeletonProps } from './type';
+import { SkeletonRowCol, SkeletonRowColObj, TdSkeletonProps } from './type';
 
 export type SkeletonProps = TdSkeletonProps & StyledProps & { children: TNode };
 type SkeletonInjection = (props: SkeletonProps) => SkeletonProps;
