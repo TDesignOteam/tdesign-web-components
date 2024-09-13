@@ -123,6 +123,12 @@ export default [
         path: '/components/backTop',
         component: () => import('tdesign-web-components/back-top/README.md'),
       },
+      {
+        title: 'Tabs 选项卡',
+        name: 'tabs',
+        path: '/components/tabs',
+        component: () => import('tdesign-web-components/tabs/README.md'),
+      },
     ],
   },
   {
@@ -253,6 +259,12 @@ export default [
         component: () => import('tdesign-web-components/image/README.md'),
       },
       {
+        title: 'List 列表',
+        name: 'list',
+        path: '/components/list',
+        component: () => import('tdesign-web-components/list/README.md'),
+      },
+      {
         title: 'Tooltip 文字提示',
         name: 'tooltip',
         path: '/components/tooltip',
@@ -263,6 +275,18 @@ export default [
         name: 'loading',
         path: '/components/loading',
         component: () => import('tdesign-web-components/loading/README.md'),
+      },
+      {
+        title: 'Progress 进度条',
+        name: 'progress',
+        path: '/components/progress',
+        component: () => import('tdesign-web-components/progress/README.md'),
+      },
+      {
+        title: 'Skeleton 骨架屏',
+        name: 'skeleton',
+        path: '/components/skeleton',
+        component: () => import('tdesign-web-components/skeleton/README.md'),
       },
       {
         title: 'Watermark 水印',
@@ -294,6 +318,12 @@ export default [
         name: 'message',
         path: '/components/message',
         // component: () => import('tdesign-web-components/message/README.md'),
+      },
+      {
+        title: 'Notification 消息通知',
+        name: 'notification',
+        path: '/components/notification',
+        component: () => import('tdesign-web-components/notification/README.md'),
       },
       {
         title: 'Popconfirm 气泡确认框',

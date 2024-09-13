@@ -4,6 +4,7 @@ import isString from 'lodash/isString';
 import { cloneElement, Component, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import { parseContentTNode } from '../_util/parseTNode';
 import { ButtonProps } from '../button';
 import { PopconfirmProps } from './popconfirm';
@@ -15,6 +16,13 @@ interface PopcontentProps {
 
 @tag('t-popcontent')
 export default class Popconfirm extends Component<PopcontentProps & PopconfirmProps> {
+  static css = `
+    .${getClassPrefix()}-popconfirm__body .${getClassPrefix()}-icon {
+      margin-right: var(--td-comp-margin-s);
+      font-size: calc(var(--td-font-size-body-medium) + 6px);
+    }
+  `;
+
   static propTypes = {
     onClose: Function,
     cancelBtn: [String, Number, Object, Function],
@@ -47,7 +55,7 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
   renderIcon() {
     let color = '#0052D9';
     // theme 为 default 时不展示图标，否则根据 theme 的值设置图标颜色样式
-    const defaultIcon = <t-icon-info-circle-filled className="mr-[2px]" />;
+    const defaultIcon = <t-icon-info-circle-filled />;
     switch (this.props.theme) {
       case 'warning': // 黄色
         color = '#FFAA00';
@@ -63,12 +71,14 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
 
     // icon 是自定义组件实例，优先级最高
     if (parseNode) {
-      return parseNode;
+      return convertToLightDomNode(parseNode);
     }
     if (defaultIcon) {
-      return cloneElement(defaultIcon, {
-        style: { color },
-      });
+      return convertToLightDomNode(
+        cloneElement(defaultIcon, {
+          style: { color },
+        }),
+      );
     }
     return null;
   }
