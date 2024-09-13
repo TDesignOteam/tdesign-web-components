@@ -36,7 +36,7 @@ export default class TagInputDiy extends Component {
           valueDisplay={({ value, onClose }) =>
             value.map((item, index) => (
               <t-tag
-                key={item}
+                key={index}
                 closable
                 style={{ marginRight: '3px', marginTop: '3px' }}
                 onClose={() => onClose(index)}

@@ -21,6 +21,14 @@ export default class TagInputBase extends Component {
       console.log('onChange', val, context);
     };
 
+    const onClick = (val) => {
+      console.log('Click', val);
+    };
+
+    const onRemove = (val) => {
+      console.log('Remove', val);
+    };
+
     return (
       <t-space direction="vertical" style={{ width: '80%' }}>
         <t-tag-input
@@ -28,6 +36,8 @@ export default class TagInputBase extends Component {
           onChange={onChange}
           clearable
           onEnter={onTagInputEnter}
+          onClick={onClick}
+          onRemove={onRemove}
           placeholder="请输入"
         ></t-tag-input>
         <t-tag-input value={this.tags2} label="Controlled: " placeholder="请输入" clearable />

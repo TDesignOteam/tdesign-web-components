@@ -18,8 +18,8 @@ export default class TagInputCollapse extends Component {
       return (
         <t-popup
           key={'tags'}
-          content={collapsedTags.map((item) => (
-            <t-tag key={item} style={{ marginRight: '4px' }}>
+          content={collapsedTags.map((item, index) => (
+            <t-tag key={index} style={{ marginRight: '4px' }}>
               {item}
             </t-tag>
           ))}

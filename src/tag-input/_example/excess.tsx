@@ -16,7 +16,7 @@ export default class TagInputExcess extends Component {
     return (
       <t-space direction="vertical" style={{ width: '80%' }}>
         <t-tag-input
-          label={'scorll: '}
+          label={'scroll: '}
           value={this.tags1}
           onChange={onChange}
           clearable
