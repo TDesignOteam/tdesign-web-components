@@ -24,6 +24,7 @@ export * from './popconfirm';
 export * from './popup';
 export * from './radio';
 export * from './range-input';
+export * from './select-input';
 export * from './slider';
 export * from './space';
 export * from './swiper';

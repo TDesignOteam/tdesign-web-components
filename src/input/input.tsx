@@ -138,13 +138,14 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
+    console.log('===e', e.composedPath());
     e.stopImmediatePropagation();
     const { readonly, onFocus } = this.props;
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
     onFocus?.(currentTarget.value, { e });
     this.isFocused = true;
-    this.update();
+    // (this as any).queuedUpdate();
   };
 
   private handleBlur = (e: FocusEvent) => {
@@ -172,6 +173,7 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleClear = (e: MouseEvent) => {
+    console.log('---clear');
     const { onChange, onClear } = this.props;
     this.composingValue = '';
     this.value = '';
@@ -309,7 +311,7 @@ export default class Input extends Component<InputProps> {
       onValidate,
     });
 
-    const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
+    const isShowClearIcon = (clearable && this.value && !disabled) || showClearIconOnEmpty;
     const prefixIconContent = renderIcon('t', 'prefix', parseTNode(prefixIcon));
     let suffixIconNew = suffixIcon;
 

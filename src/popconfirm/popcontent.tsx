@@ -1,4 +1,4 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 
 import isString from 'lodash/isString';
 import { cloneElement, Component, OmiProps, tag, VNode } from 'omi';
@@ -47,7 +47,7 @@ export default class Popconfirm extends Component<PopcontentProps & PopconfirmPr
   renderIcon() {
     let color = '#0052D9';
     // theme 为 default 时不展示图标，否则根据 theme 的值设置图标颜色样式
-    const defaultIcon = <t-icon name="info-circle-filled" className="mr-[2px]" />;
+    const defaultIcon = <t-icon-info-circle-filled className="mr-[2px]" />;
     switch (this.props.theme) {
       case 'warning': // 黄色
         color = '#FFAA00';
