@@ -1,6 +1,5 @@
 /* eslint-disable */
-import { InputProps } from '../input';
-import { InputValue } from '../input';
+import { InputProps, InputValue } from '../input';
 import { TagProps } from '../tag';
 import { TNode, TElement } from '../common';
 
