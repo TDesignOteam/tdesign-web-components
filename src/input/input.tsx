@@ -149,14 +149,13 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleFocus = (e: FocusEvent) => {
-    console.log('===e', e.composedPath());
     e.stopImmediatePropagation();
     const { readonly, onFocus } = this.props;
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
     onFocus?.(currentTarget.value, { e });
     this.isFocused = true;
-    // (this as any).queuedUpdate();
+    this.update();
   };
 
   private handleBlur = (e: FocusEvent) => {
@@ -186,7 +185,6 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleClear = (e: MouseEvent) => {
-    console.log('---clear');
     const { onChange, onClear } = this.props;
     this.composingValue = '';
     this.value = '';
@@ -331,7 +329,7 @@ export default class Input extends Component<InputProps> {
           't',
           'prefix',
           cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
-            className: `${classPrefix}-input__prefix`,
+            cls: `${classPrefix}-input__prefix`,
             style: { marginRight: '0px' },
           }),
         )
@@ -342,7 +340,7 @@ export default class Input extends Component<InputProps> {
       suffixIconNew = (
         <t-icon-close-circle-filled
           name={'close-circle-filled'}
-          className={classname(
+          cls={classname(
             `${classPrefix}-input__suffix-clear`,
             `${classPrefix}-input__suffix`,
             `${classPrefix}-input__suffix-icon`,
@@ -357,7 +355,7 @@ export default class Input extends Component<InputProps> {
         suffixIconNew = (
           <t-icon-browse-off
             onClick={this.handlePasswordVisible}
-            className={classname(
+            cls={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
@@ -369,7 +367,7 @@ export default class Input extends Component<InputProps> {
         suffixIconNew = (
           <t-icon-browse
             onClick={this.handlePasswordVisible}
-            className={classname(
+            cls={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
