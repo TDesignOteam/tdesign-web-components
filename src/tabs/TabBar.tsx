@@ -1,7 +1,7 @@
 import { toArray } from 'lodash';
 import { Component, createRef, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
+import classname, { getClassPrefix } from '../_util/classname';
 import { StyledProps, Styles } from '../common';
 import { TabValue } from './type';
 
@@ -28,9 +28,7 @@ export default class TabBar extends Component<TabBarProps> {
 
   barStyle: Styles;
 
-  tabsClassPrefix = `${classPrefix}-tabs`;
-
-  tabPosition: string;
+  tabsClassPrefix = `${getClassPrefix()}-tabs`;
 
   containerRef = createRef<HTMLDivElement>();
 
@@ -42,7 +40,9 @@ export default class TabBar extends Component<TabBarProps> {
 
     let offset = 0;
     if (this.containerRef.current) {
-      const itemsRef = toArray(this.containerRef.current.querySelectorAll<HTMLElement>('t-tab-nav-item'));
+      const itemsRef = toArray(
+        this.containerRef.current.querySelectorAll<HTMLElement>(`.${this.tabsClassPrefix}__nav-item`),
+      );
       if (itemsRef.length - 1 >= Number(this.currentActiveIdRef.current)) {
         itemsRef.forEach((item, itemIndex) => {
           if (itemIndex < Number(this.currentActiveIdRef.current)) {
@@ -65,8 +65,7 @@ export default class TabBar extends Component<TabBarProps> {
   }
 
   receiveProps(newProps: TabBarProps) {
-    const { tabPosition, activeId, containerRef } = newProps;
-    this.tabPosition = tabPosition;
+    const { activeId, containerRef } = newProps;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
     return true;
@@ -74,7 +73,6 @@ export default class TabBar extends Component<TabBarProps> {
 
   render() {
     const { tabPosition, activeId, containerRef } = this.props;
-    this.tabPosition = tabPosition;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
     this.computeStyle();
@@ -82,7 +80,7 @@ export default class TabBar extends Component<TabBarProps> {
       <div
         className={classname({
           [`${this.tabsClassPrefix}__bar`]: true,
-          [`${classPrefix}-is-${this.tabPosition}`]: true,
+          [`${getClassPrefix()}-is-${tabPosition}`]: true,
         })}
         style={this.barStyle}
       ></div>

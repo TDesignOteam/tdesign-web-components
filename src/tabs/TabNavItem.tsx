@@ -1,18 +1,25 @@
+import 'tdesign-icons-web-components/esm/components/close';
+
 import { Component, createRef, tag } from 'omi';
 
 import classname from '../_util/classname';
 import noop from '../_util/noop';
 import { StyledProps } from '../common';
-import type { TdTabPanelProps } from './type';
+import type { TdTabPanelProps, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 
 export interface TabNavItemProps extends TdTabPanelProps, StyledProps {
+  // 当前 item 是否处于激活态
   isActive: boolean;
+  // 点击事件
   onClick: (e: MouseEvent) => void;
-  placement: string;
   theme: 'normal' | 'card';
+  placement: string;
   size?: 'medium' | 'large';
+  index: number;
   innerRef(ref: HTMLElement): void;
+  onTabRemove: TdTabsProps['onRemove'];
+  // dragProps?: DragSortInnerProps;
 }
 
 @tag('t-tab-nav-item')
@@ -43,9 +50,10 @@ export default class TabNavItem extends Component<TabNavItemProps> {
 
   // 渲染组件
   render() {
-    const { label, isActive, placement, size, theme, disabled } = this.props;
+    const { value, label, index, isActive, placement, size, theme, disabled, removable, onRemove, onTabRemove } =
+      this.props;
     const isCard = theme === 'card';
-    const { tdTabsClassGenerator, tdClassGenerator, tdSizeClassGenerator } = useTabClass(); // 假设 useTabClass 已经定义好
+    const { tdTabsClassGenerator, tdClassGenerator, tdSizeClassGenerator } = useTabClass();
     return (
       <div
         ref={this.containerRef}
@@ -67,6 +75,19 @@ export default class TabNavItem extends Component<TabNavItemProps> {
             <span className={classname(tdTabsClassGenerator('nav-item-text-wrapper'))}>{label}</span>
           </div>
         )}
+        {removable ? (
+          <t-icon-close
+            className={classname('remove-btn')}
+            onClick={(e) => {
+              if (disabled) {
+                return;
+              }
+              e.stopPropagation();
+              onRemove({ value, e });
+              onTabRemove({ value, e, index });
+            }}
+          />
+        ) : null}
       </div>
     );
   }

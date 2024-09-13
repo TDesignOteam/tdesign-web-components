@@ -1,19 +1,29 @@
+import './TabNav';
+import './tabPanel';
+
 import { toArray } from 'lodash';
-import { Component, createRef, tag, VNode } from 'omi';
+import { Component, tag, VNode } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
-import TabNav from './TabNav';
-import TabPanel from './tabPanel';
+import classname from '../_util/classname';
+import { StyledProps, TNode } from '../common';
 import { TabValue, TdTabsProps } from './type';
+import { useTabClass } from './useTabClass';
 
-export interface TabsProps extends TdTabsProps, StyledProps {}
+export interface TabsProps extends TdTabsProps, StyledProps {
+  children?: TNode;
+  ref: Partial<Record<'current', TabsProps>>;
+}
 
 @tag('t-tabs')
 export default class Tabs extends Component<TabsProps> {
   static defaultProps = {
+    addable: false,
+    disabled: false,
+    dragSort: false,
     placement: 'top',
+    scrollPosition: 'auto',
     size: 'medium',
+    theme: 'normal',
   };
 
   static propsType = {
@@ -26,14 +36,16 @@ export default class Tabs extends Component<TabsProps> {
     onChange: Function,
   };
 
-  ref = createRef();
+  tabClasses = useTabClass();
+
+  targetClassNameRegExpStr = `^${this.tabClasses.tdTabsClassPrefix}(__nav-item|__nav-item-wrapper|__nav-item-text-wrapper)`;
 
   memoChildren = () => {
     const { list, children } = this.props;
     if (!list || list.length === 0) {
       return children;
     }
-    return list.map((panelProps) => <TabPanel key={panelProps.value} {...panelProps} />);
+    return list.map((panelProps) => <t-tab-panel key={panelProps.value} {...panelProps} />);
   };
 
   itemList = () =>
@@ -72,10 +84,17 @@ export default class Tabs extends Component<TabsProps> {
   };
 
   headerNode = () => (
-    <div className={classname(`${getClassPrefix()}-tabs__header`, `${getClassPrefix()}-is-${this.props.placement}`)}>
-      <TabNav
+    <div
+      className={classname(
+        this.tabClasses.tdTabsClassGenerator('header'),
+        this.tabClasses.tdClassGenerator(`is-${this.props.placement}`),
+      )}
+    >
+      <t-tab-nav
         {...this.props}
+        // getDragProps={this.props.getDragProps}
         activeValue={this.value}
+        onRemove={this.props.onRemove}
         itemList={this.itemList()}
         tabClick={this.handleClickTab}
         onChange={this.handleChange}
@@ -92,11 +111,15 @@ export default class Tabs extends Component<TabsProps> {
 
   render(props: TabsProps) {
     const { className, style } = props;
+    console.log('tabClasses', this.tabClasses);
     return (
-      <div ref={this.ref} className={classname(`${getClassPrefix()}-tabs`, className)} style={style}>
+      <div ref={this.props.ref} className={classname(this.tabClasses.tdTabsClassPrefix, className)} style={style}>
         {this.props.placement !== 'bottom' ? this.headerNode() : null}
         <div
-          className={classname(`${getClassPrefix()}-tabs__content`, `${getClassPrefix()}-is-${this.props.placement}`)}
+          className={classname(
+            this.tabClasses.tdTabsClassGenerator('content'),
+            this.tabClasses.tdClassGenerator(`is-${this.props.placement}`),
+          )}
         >
           {toArray(this.memoChildren()).map((child: any) => {
             if (child && child.nodeName === 't-tab-panel') {
@@ -104,7 +127,7 @@ export default class Tabs extends Component<TabsProps> {
                 return child;
               }
               if (child.attributes.destroyOnHide === false) {
-                return <TabPanel {...child.attributes} style={{ display: 'none' }}></TabPanel>;
+                return <t-tab-panel {...child.attributes} style={{ display: 'none' }}></t-tab-panel>;
               }
             }
             return null;
