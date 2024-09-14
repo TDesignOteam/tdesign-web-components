@@ -507,7 +507,7 @@ export default class TagInput extends Component<TagInputProps> {
 
     const suffixIconNode = showClearIcon ? (
       <t-icon-close-circle-filled
-        class={classNames([
+        cls={classNames([
           `${classPrefix}-icon`,
           `${classPrefix}-icon-close-circle-filled `,
           TagInputClassNamePrefix(`__suffix-clear`),

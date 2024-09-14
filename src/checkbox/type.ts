@@ -43,6 +43,10 @@ export interface TdCheckboxProps {
    */
   value?: string | number | boolean;
   /**
+   * 是否去除 t-checkbox 的shadowdom，只在group中生效
+   */
+  isLightDom?: boolean;
+  /**
    * 值变化时触发
    */
   onChange?: (checked: boolean, context: { e: Event }) => void;

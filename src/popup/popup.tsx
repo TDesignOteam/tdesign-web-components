@@ -3,12 +3,13 @@ import './popupTrigger';
 
 import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import { getIEVersion } from '../_common/js/utils/helper';
 import classname from '../_util/classname';
+import { getChildrenArray } from '../_util/component';
 import { domContains } from '../_util/dom';
-import { StyledProps } from '../common';
+import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext, TdPopupProps } from './type';
 import { attachListeners, getPopperPlacement, triggers } from './utils';
 
@@ -40,7 +41,6 @@ export const PopupTypes = {
   onScroll: Function,
   onScrollToBottom: Function,
   onVisibleChange: Function,
-  strategy: String,
   expandAnimation: Boolean,
   updateScrollTop: Function,
 };
@@ -65,7 +65,6 @@ export default class Popup extends Component<PopupProps> {
     placement: 'top',
     showArrow: true,
     trigger: 'hover',
-    strategy: 'fixed',
   };
 
   triggerRef = createRef();
@@ -81,9 +80,11 @@ export default class Popup extends Component<PopupProps> {
   hasDocumentEvent = false;
 
   visible = false;
-  //   watch visible TODO:
 
-  hasTrigger = () =>
+  // 防止多次触发显隐
+  leaveFlag = false;
+
+  triggerType = () =>
     triggers.reduce(
       (map, trigger) => ({
         ...map,
@@ -122,7 +123,7 @@ export default class Popup extends Component<PopupProps> {
       () => {
         this.handlePopVisible(true, context);
       },
-      this.hasTrigger().click ? 0 : this.normalizedDelay().open,
+      this.triggerType().click ? 0 : this.normalizedDelay().open,
     );
   };
 
@@ -132,7 +133,7 @@ export default class Popup extends Component<PopupProps> {
       () => {
         this.handlePopVisible(false, context);
       },
-      this.hasTrigger().click ? 0 : this.normalizedDelay().close,
+      this.triggerType().click ? 0 : this.normalizedDelay().close,
     );
   };
 
@@ -183,25 +184,31 @@ export default class Popup extends Component<PopupProps> {
     }
   };
 
-  updateTrigger = () => {
-    const trigger = attachListeners(this.rootElement);
+  addTriggerEvent = () => {
+    const triggerRef = this.triggerRef.current as HTMLElement;
+
+    if (!triggerRef) return;
+
+    const trigger = attachListeners(triggerRef);
     trigger.clean();
-    const hasTrigger = this.hasTrigger();
-    if (hasTrigger.hover) {
+    const triggerType = this.triggerType();
+    if (triggerType.hover) {
       trigger.add('mouseenter', () => {
+        this.leaveFlag = false;
         this.handleOpen({ trigger: 'trigger-element-hover' });
       });
       trigger.add('mouseleave', () => {
+        this.leaveFlag = false;
         this.handleClose({ trigger: 'trigger-element-hover' });
       });
-    } else if (hasTrigger.focus) {
+    } else if (triggerType.focus) {
       trigger.add('focusin', () => this.handleOpen({ trigger: 'trigger-element-focus' }));
       trigger.add('focusout', () => this.handleClose({ trigger: 'trigger-element-blur' }));
-    } else if (hasTrigger.click) {
+    } else if (triggerType.click) {
       trigger.add('click', (e: MouseEvent) => {
         this.clickHandle(e);
       });
-    } else if (hasTrigger['context-menu']) {
+    } else if (triggerType['context-menu']) {
       trigger.add('contextmenu', (e: MouseEvent) => {
         e.preventDefault();
         e.button === 2 && this.handleToggle({ trigger: 'context-menu' });
@@ -209,9 +216,35 @@ export default class Popup extends Component<PopupProps> {
     }
   };
 
+  addPopContentEvent() {
+    const popperEl = this.popperRef.current as HTMLElement;
+    if (!popperEl) return;
+    const popper = attachListeners(popperEl);
+    popper.clean();
+
+    const triggerType = this.triggerType();
+    if (triggerType.hover) {
+      popper.add('mouseenter', () => {
+        console.log('====mouseenter');
+        if (!this.leaveFlag) {
+          clearTimeout(this.timeout);
+          this.handleOpen({ trigger: 'trigger-element-hover' });
+        }
+      });
+
+      popper.add('mouseleave', () => {
+        this.leaveFlag = true;
+        clearTimeout(this.timeout);
+        this.handleClose({ trigger: 'trigger-element-hover' });
+      });
+    }
+  }
+
   installed() {
     this.updatePopper();
-    this.updateTrigger();
+    this.addTriggerEvent();
+    this.addPopContentEvent();
+
     this.visible = this.props.visible;
   }
 
@@ -240,7 +273,7 @@ export default class Popup extends Component<PopupProps> {
   updatePopper = () => {
     this.popper = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
       placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-      strategy: this.props.strategy,
+      ...this.props?.popperOptions,
     });
   };
 
@@ -287,21 +320,33 @@ export default class Popup extends Component<PopupProps> {
       props.overlayInnerClassName,
     );
 
-    const trigger = props.triggerElement ? props.triggerElement : this.props.children;
+    const trigger = getChildrenArray(props.triggerElement ? props.triggerElement : this.props.children);
+
+    const children = trigger.map((child: TNode) => {
+      // 对 t-button 做特殊处理
+      if (typeof child === 'object' && (child as any).nodeName === 't-button') {
+        const oldClick = (child as VNode).attributes?.onClick;
+        return cloneElement(child as VNode, {
+          onClick: (e) => {
+            if (oldClick) oldClick(e);
+            this.clickHandle(e.detail.e);
+          },
+        });
+      }
+      return child;
+    });
+
+    console.log('===children', children);
 
     return (
-      <t-trigger-root>
-        <t-trigger
-          ref={this.triggerRef}
-          part="trigger"
-          onClick={(e) => {
-            if (e?.detail?.context?.nodeName === 'T-BUTTON') {
-              this.clickHandle(e.detail.e);
-            }
-          }}
-        >
-          {trigger}
-        </t-trigger>
+      <>
+        {children.length > 1 ? (
+          <span className="t-trigger" ref={this.triggerRef}>
+            {children}
+          </span>
+        ) : (
+          cloneElement(children[0] as VNode, { ref: this.triggerRef })
+        )}
         {this.getVisible() || !props.destroyOnClose ? (
           <div
             show={this.getVisible()}
@@ -328,7 +373,7 @@ export default class Popup extends Component<PopupProps> {
             )}
           </div>
         ) : null}
-      </t-trigger-root>
+      </>
     );
   }
 }

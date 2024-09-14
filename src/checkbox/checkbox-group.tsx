@@ -1,7 +1,8 @@
 import { intersection, isObject, isString, isUndefined, toArray } from 'lodash';
 import { bind, Component, signal, tag, VNode } from 'omi';
 
-import { getClassPrefix } from '../_util/classname.ts';
+import classname, { getClassPrefix } from '../_util/classname.ts';
+import { convertToLightDomNode } from '../_util/lightDom.ts';
 import { StyledProps, TNode } from '../common';
 import { CheckboxContextKey } from './checkbox';
 import {
@@ -182,22 +183,33 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
     const classPrefix = getClassPrefix();
     let children = null;
     if (this.props.options?.length) {
-      children = this.optionList?.map((option, index) => (
-        <t-checkbox
-          key={`${option.value || ''}${index}`}
-          {...option}
-          index={index}
-          checked={this.tChecked?.includes(option.value)}
-          data={option}
-        ></t-checkbox>
-      ));
+      children = this.optionList?.map((option, index) => {
+        const { isLightDom, ...rest } = option;
+        const checkbox = (
+          <t-checkbox
+            key={`${option.value || ''}${index}`}
+            {...rest}
+            index={index}
+            checked={this.tChecked?.includes(option.value)}
+            data={option}
+          ></t-checkbox>
+        );
+        if (isLightDom) {
+          return convertToLightDomNode(checkbox);
+        }
+        return checkbox;
+      });
     } else {
       this.innerOptionList.value = this.getOptionListBySlots();
       children = this.props.children;
     }
 
     return (
-      <div class={`${classPrefix}-checkbox-group`} role="group" aria-label="checkbox-group">
+      <div
+        class={classname(`${classPrefix}-checkbox-group`, this.props.className)}
+        role="group"
+        aria-label="checkbox-group"
+      >
         {children}
       </div>
     );
