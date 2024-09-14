@@ -6,6 +6,7 @@ import { Component, tag, VNode } from 'omi';
 
 import classname from '../_util/classname';
 import { StyledProps, TNode } from '../common';
+import UseDragSorter from '../hooks/useDragSorter';
 import { TabValue, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 
@@ -40,6 +41,15 @@ export default class Tabs extends Component<TabsProps> {
 
   targetClassNameRegExpStr = `^${this.tabClasses.tdTabsClassPrefix}(__nav-item|__nav-item-wrapper|__nav-item-text-wrapper)`;
 
+  dragSorter = new UseDragSorter({
+    ...this.props,
+    sortOnDraggable: this.props.dragSort,
+    onDragOverCheck: {
+      x: true,
+      targetClassNameRegExp: new RegExp(this.targetClassNameRegExpStr),
+    },
+  });
+
   memoChildren = () => {
     const { list, children } = this.props;
     if (!list || list.length === 0) {
@@ -51,7 +61,6 @@ export default class Tabs extends Component<TabsProps> {
   itemList = () =>
     toArray(this.memoChildren())
       .map((child: VNode) => {
-        console.log(child);
         if (child && child.nodeName === 't-tab-panel') {
           return child.attributes;
         }
@@ -83,24 +92,26 @@ export default class Tabs extends Component<TabsProps> {
     }
   };
 
-  headerNode = () => (
-    <div
-      className={classname(
-        this.tabClasses.tdTabsClassGenerator('header'),
-        this.tabClasses.tdClassGenerator(`is-${this.props.placement}`),
-      )}
-    >
-      <t-tab-nav
-        {...this.props}
-        // getDragProps={this.props.getDragProps}
-        activeValue={this.value}
-        onRemove={this.props.onRemove}
-        itemList={this.itemList()}
-        tabClick={this.handleClickTab}
-        onChange={this.handleChange}
-      />
-    </div>
-  );
+  get headerNode() {
+    return (
+      <div
+        className={classname(
+          this.tabClasses.tdTabsClassGenerator('header'),
+          this.tabClasses.tdClassGenerator(`is-${this.props.placement}`),
+        )}
+      >
+        <t-tab-nav
+          {...this.props}
+          getDragProps={this.dragSorter.getDragProps}
+          activeValue={this.value}
+          onRemove={this.props.onRemove}
+          itemList={this.itemList()}
+          tabClick={this.handleClickTab}
+          onChange={this.handleChange}
+        />
+      </div>
+    );
+  }
 
   install() {
     this.value =
@@ -111,10 +122,9 @@ export default class Tabs extends Component<TabsProps> {
 
   render(props: TabsProps) {
     const { className, style } = props;
-    console.log('tabClasses', this.tabClasses);
     return (
       <div ref={this.props.ref} className={classname(this.tabClasses.tdTabsClassPrefix, className)} style={style}>
-        {this.props.placement !== 'bottom' ? this.headerNode() : null}
+        {this.props.placement !== 'bottom' ? this.headerNode : null}
         <div
           className={classname(
             this.tabClasses.tdTabsClassGenerator('content'),
@@ -133,7 +143,7 @@ export default class Tabs extends Component<TabsProps> {
             return null;
           })}
         </div>
-        {this.props.placement === 'bottom' ? this.headerNode() : null}
+        {this.props.placement === 'bottom' ? this.headerNode : null}
       </div>
     );
   }

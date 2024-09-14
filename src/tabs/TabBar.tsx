@@ -1,4 +1,3 @@
-import { toArray } from 'lodash';
 import { Component, createRef, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
@@ -26,7 +25,7 @@ export default class TabBar extends Component<TabBarProps> {
 
   currentActiveIdRef = createRef<TabValue>();
 
-  barStyle: Styles;
+  barStyle: Styles = {};
 
   tabsClassPrefix = `${getClassPrefix()}-tabs`;
 
@@ -39,43 +38,49 @@ export default class TabBar extends Component<TabBarProps> {
     const barBorderProp = isHorizontal ? 'width' : 'height';
 
     let offset = 0;
+
     if (this.containerRef.current) {
-      const itemsRef = toArray(
-        this.containerRef.current.querySelectorAll<HTMLElement>(`.${this.tabsClassPrefix}__nav-item`),
-      );
-      if (itemsRef.length - 1 >= Number(this.currentActiveIdRef.current)) {
+      const itemsRef = this.containerRef.current.querySelectorAll<HTMLElement>('t-tab-nav-item');
+      if (itemsRef.length - 1 >= (this.currentActiveIdRef.current as number)) {
         itemsRef.forEach((item, itemIndex) => {
-          if (itemIndex < Number(this.currentActiveIdRef.current)) {
+          if (itemIndex < (this.currentActiveIdRef.current as number)) {
             offset += Number(getComputedStyle(item)[itemProp].replace('px', ''));
           }
         });
-        const computedItem = itemsRef[Number(this.currentActiveIdRef.current)];
+        const computedItem = itemsRef[this.currentActiveIdRef.current];
         if (!computedItem) {
-          this.setBarStyle({ transform: `${transformPosition}(${0}px)`, [barBorderProp]: 0 });
+          this.barStyle = { transform: `${transformPosition}(${0}px)`, [barBorderProp]: 0 };
           return;
         }
         const itemPropValue = getComputedStyle(computedItem)[itemProp];
-        this.setBarStyle({ transform: `${transformPosition}(${offset}px)`, [barBorderProp]: itemPropValue || 0 });
+        this.barStyle = { transform: `${transformPosition}(${offset}px)`, [barBorderProp]: itemPropValue || 0 };
       }
     }
   }
 
-  setBarStyle(barStyle: Styles) {
-    this.barStyle = barStyle;
-  }
-
-  receiveProps(newProps: TabBarProps) {
-    const { activeId, containerRef } = newProps;
+  install(): void {
+    const { activeId, containerRef } = this.props;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
-    return true;
   }
 
-  render() {
-    const { tabPosition, activeId, containerRef } = this.props;
+  installed(): void {
+    setTimeout(() => {
+      this.computeStyle();
+      this.update();
+    }, 0);
+  }
+
+  updated(): void {
+    const { activeId, containerRef } = this.props;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
     this.computeStyle();
+  }
+
+  render() {
+    const { tabPosition } = this.props;
+
     return (
       <div
         className={classname({

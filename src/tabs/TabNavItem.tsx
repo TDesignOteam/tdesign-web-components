@@ -5,6 +5,7 @@ import { Component, createRef, tag } from 'omi';
 import classname from '../_util/classname';
 import noop from '../_util/noop';
 import { StyledProps } from '../common';
+import { DragSortInnerProps } from '../hooks/useDragSorter';
 import type { TdTabPanelProps, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 
@@ -19,7 +20,7 @@ export interface TabNavItemProps extends TdTabPanelProps, StyledProps {
   index: number;
   innerRef(ref: HTMLElement): void;
   onTabRemove: TdTabsProps['onRemove'];
-  // dragProps?: DragSortInnerProps;
+  dragProps?: DragSortInnerProps;
 }
 
 @tag('t-tab-nav-item')
@@ -44,18 +45,31 @@ export default class TabNavItem extends Component<TabNavItemProps> {
   navItemDom = createRef<HTMLDivElement>();
 
   // 在组件挂载后设置引用
-  componentDidMount() {
+  installed() {
     this.props.innerRef(this.containerRef.current);
   }
 
   // 渲染组件
   render() {
-    const { value, label, index, isActive, placement, size, theme, disabled, removable, onRemove, onTabRemove } =
-      this.props;
+    const {
+      dragProps,
+      value,
+      label,
+      index,
+      isActive,
+      placement,
+      size,
+      theme,
+      disabled,
+      removable,
+      onRemove,
+      onTabRemove,
+    } = this.props;
     const isCard = theme === 'card';
     const { tdTabsClassGenerator, tdClassGenerator, tdSizeClassGenerator } = useTabClass();
     return (
       <div
+        {...dragProps}
         ref={this.containerRef}
         onClick={disabled ? noop : this.props.onClick}
         className={classname(
@@ -68,6 +82,7 @@ export default class TabNavItem extends Component<TabNavItemProps> {
           this.props.className,
         )}
       >
+        {/* 根据新的 dom 结构和样式进行改动，卡片类型情况下不需要 nav-item-wrapper 这个 div */}
         {isCard ? (
           <span className={classname(tdTabsClassGenerator('nav-item-text-wrapper'))}>{label}</span>
         ) : (
@@ -77,7 +92,7 @@ export default class TabNavItem extends Component<TabNavItemProps> {
         )}
         {removable ? (
           <t-icon-close
-            className={classname('remove-btn')}
+            cls={classname('remove-btn')}
             onClick={(e) => {
               if (disabled) {
                 return;
