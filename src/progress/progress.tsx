@@ -1,4 +1,9 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/check-circle-filled';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components/esm/components/error-circle-filled';
+import 'tdesign-icons-web-components/esm/components/check';
+import 'tdesign-icons-web-components/esm/components/close';
+import 'tdesign-icons-web-components/esm/components/error';
 
 import { classNames, Component, OmiProps, tag } from 'omi';
 
@@ -66,20 +71,17 @@ export default class Progress extends Component<ProgressProps> {
 
   iconLineMap = {
     success: (
-      <t-icon
-        name="check-circle-filled"
+      <t-icon-check-circle-filled
         className={classNames(`${this.componentName}--status--success`, `${this.componentName}__icon`)}
       />
     ),
     error: (
-      <t-icon
-        name="close-circle-filled"
+      <t-icon-close-circle-filled
         class={classNames(`${this.componentName}--status--warning`, `${this.componentName}__icon`)}
       />
     ),
     warning: (
-      <t-icon
-        name="error-circle-filled"
+      <t-icon-error-circle-filled
         class={classNames(`${this.componentName}--status--error`, `${this.componentName}__icon`)}
       />
     ),
@@ -87,8 +89,7 @@ export default class Progress extends Component<ProgressProps> {
 
   iconCircleMap = {
     success: (
-      <t-icon
-        name="check"
+      <t-icon-check
         className={classNames(
           `${this.componentName}--status--success`,
           `${this.componentName}--circle`,
@@ -97,8 +98,7 @@ export default class Progress extends Component<ProgressProps> {
       />
     ),
     error: (
-      <t-icon
-        name="close"
+      <t-icon-close
         class={classNames(
           `${this.componentName}--status--warning`,
           `${this.componentName}--circle`,
@@ -107,8 +107,7 @@ export default class Progress extends Component<ProgressProps> {
       />
     ),
     warning: (
-      <t-icon
-        name="error"
+      <t-icon-error
         class={classNames(
           `${this.componentName}--status--error`,
           `${this.componentName}--circle`,
