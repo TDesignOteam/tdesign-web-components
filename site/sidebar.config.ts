@@ -123,6 +123,12 @@ export default [
         path: '/components/backTop',
         component: () => import('tdesign-web-components/back-top/README.md'),
       },
+      {
+        title: 'Tabs 选项卡',
+        name: 'tabs',
+        path: '/components/tabs',
+        component: () => import('tdesign-web-components/tabs/README.md'),
+      },
     ],
   },
   {
@@ -268,6 +274,12 @@ export default [
         name: 'progress',
         path: '/components/progress',
         component: () => import('tdesign-web-components/progress/README.md'),
+      },
+      {
+        title: 'Skeleton 骨架屏',
+        name: 'skeleton',
+        path: '/components/skeleton',
+        component: () => import('tdesign-web-components/skeleton/README.md'),
       },
       {
         title: 'Watermark 水印',

@@ -1,7 +1,7 @@
 // import './list-item-meta'
 import '../loading/loading';
 
-import { classNames,Component, OmiProps, tag } from 'omi';
+import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { ListItemProps } from './types';
