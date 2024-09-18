@@ -23,6 +23,17 @@ export default class MessageComponent extends Component<MessageComponentProps> {
     icon: true,
   };
 
+  static propTypes = {
+    closeBtn: [String, Number, Object, Function],
+    content: [String, Number, Object, Function],
+    duration: Number,
+    icon: [String, Number, Object, Function],
+    theme: String,
+    onClose: Function,
+    onCloseBtnClick: Function,
+    onDurationEnd: Function,
+  };
+
   isHovering = signal(false);
 
   timer = createRef<any>();

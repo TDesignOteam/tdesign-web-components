@@ -22,6 +22,19 @@ let keyIndex = 1;
 @tag('t-message-container')
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class MessageContainer extends Component<MessageContainerProps> {
+  static defaultProps = {
+    placement: 'top',
+    zIndex: 5000,
+  };
+
+  static propTypes = {
+    placement: String,
+    zIndex: Number,
+    id: String,
+    children: [String, Number, Object, Function],
+    renderCallback: Function,
+  };
+
   render(props) {
     const { placement, children, zIndex, id, className } = props;
 
