@@ -2,6 +2,7 @@ import 'tdesign-icons-web-components/esm/components/close';
 
 import { Component, computed, createRef, signal } from 'omi';
 import Button from 'tdesign-web-components/button';
+import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
 import Space from 'tdesign-web-components/space';
 import type { UploadFile, UploadProps } from 'tdesign-web-components/upload';
 import Upload from 'tdesign-web-components/upload';
@@ -77,6 +78,7 @@ export default class Base extends Component {
   handleSuccess: UploadProps['onSuccess'] = (params) => {
     console.log(params);
     console.log('上传成功');
+    MessagePlugin.info('上传成功');
   };
 
   // 多文件上传，一个文件一个请求场景，每个文件也会单独触发上传成功的事件

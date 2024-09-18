@@ -13,6 +13,7 @@ import 'tdesign-icons-web-components/esm/components/heart';
 import 'tdesign-icons-web-components/esm/components/more';
 
 import { Component } from 'omi';
+import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
 
 interface Option {
   content: string;
@@ -33,7 +34,7 @@ export default class Button extends Component {
   ];
 
   clickHandler: ClickHandler = (data) => {
-    console.log(`选中【${data.value}】`);
+    MessagePlugin.info(`选中【${data.value}】`);
   };
 
   render() {
