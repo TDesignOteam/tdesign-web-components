@@ -13,7 +13,6 @@ export * from './common';
 export * from './divider';
 export * from './dropdown';
 export * from './grid';
-export * from './hooks';
 export * from './image';
 export * from './input';
 export * from './input-number';
