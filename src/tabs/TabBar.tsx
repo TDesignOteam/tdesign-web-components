@@ -71,15 +71,11 @@ export default class TabBar extends Component<TabBarProps> {
     }, 0);
   }
 
-  updated(): void {
-    const { activeId, containerRef } = this.props;
+  render() {
+    const { tabPosition, activeId, containerRef } = this.props;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
     this.computeStyle();
-  }
-
-  render() {
-    const { tabPosition } = this.props;
 
     return (
       <div

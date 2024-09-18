@@ -6,7 +6,7 @@ import './TabBar';
 
 import { debounce, toArray } from 'lodash';
 import omit from 'lodash/omit';
-import { Component, createRef, tag, VNode } from 'omi';
+import { Component, createRef, signal, tag, VNode } from 'omi';
 
 import { calcMaxOffset, calcPrevOrNextOffset, calculateOffset, calcValidOffset } from '../_common/js/tabs/base';
 import classname from '../_util/classname';
@@ -58,9 +58,9 @@ export default class TabNav extends Component<TabNavProps> {
   };
 
   // 判断滚动条是否需要展示
-  canToLeft = false;
+  canToLeft = signal(false);
 
-  canToRight = false;
+  canToRight = signal(false);
 
   // 滚动条 ref 定义
   scrollBarRef = createRef<HTMLElement>();
@@ -73,7 +73,7 @@ export default class TabNav extends Component<TabNavProps> {
 
   toRightBtnRef = createRef<HTMLElement>();
 
-  scrollLeft = 0;
+  scrollLeftSignal = signal(0);
 
   maxScrollLeft = 0;
 
@@ -82,7 +82,7 @@ export default class TabNav extends Component<TabNavProps> {
   timeout: NodeJS.Timeout;
 
   setOffset = (offset: number) => {
-    this.scrollLeft = calcValidOffset(offset, this.maxScrollLeft);
+    this.scrollLeftSignal.value = calcValidOffset(offset, this.maxScrollLeft);
   };
 
   getMaxScrollLeft = () => {
@@ -105,7 +105,7 @@ export default class TabNav extends Component<TabNavProps> {
         leftOperations: this.leftOperationsRef.current,
         rightOperations: this.rightOperationsRef.current,
       },
-      this.scrollLeft,
+      this.scrollLeftSignal.value,
       this.props.scrollPosition,
     );
     this.setOffset(offset);
@@ -117,51 +117,63 @@ export default class TabNav extends Component<TabNavProps> {
         activeTab: this.activeTab,
         navsContainer: this.navsContainerRef.current,
       },
-      this.scrollLeft,
+      this.scrollLeftSignal.value,
       action,
     );
     this.setOffset(offset);
   };
 
+  // FIXME: 滚动有延迟回弹
   private handleWheel = (e: WheelEvent) => {
-    if (!this.canToLeft && !this.canToRight) return;
+    if (!this.canToLeft.value && !this.canToRight.value) return;
     e.preventDefault();
 
     const { deltaX, deltaY } = e;
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-      this.setOffset(this.scrollLeft + deltaX);
+      this.setOffset(this.scrollLeftSignal.value + deltaX);
     } else {
-      this.setOffset(this.scrollLeft + deltaY);
+      this.setOffset(this.scrollLeftSignal.value + deltaY);
     }
   };
 
   private onResize = debounce(this.getMaxScrollLeft, 300);
 
-  installed(): void {
+  // FIXME: 非卡片状态下激活tab滚动调整有问题
+  private onChangeActiveTab = () => {
+    window.clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       this.moveActiveTabIntoView();
     }, 100);
+  };
 
-    if (['top', 'bottom'].includes(this.props.placement.toLowerCase())) {
-      // 这里的 1 是小数像素不精确误差修正
-      const canToLeft = this.scrollLeft > 1;
-      const canToRight = this.scrollLeft < this.maxScrollLeft - 1;
+  effect = () => {
+    setTimeout(() => {
+      this.getMaxScrollLeft();
+    }, 0);
 
-      this.canToLeft = canToLeft;
-      this.canToRight = canToRight;
-    }
+    setTimeout(() => {
+      if (['top', 'bottom'].includes(this.props.placement.toLowerCase())) {
+        // 这里的 1 是小数像素不精确误差修正
+        const canToLeft = this.scrollLeftSignal.value > 1;
+        const canToRight = this.scrollLeftSignal.value < this.maxScrollLeft - 1;
 
-    // 滚轮和触摸板
+        this.canToLeft.value = canToLeft;
+        this.canToRight.value = canToRight;
+      }
+    }, 0);
+  };
+
+  installed(): void {
+    this.effect();
+
     const scrollBar = this.scrollBarRef.current;
     scrollBar?.addEventListener('wheel', this.handleWheel, { passive: false });
 
     // handle window resize
     window.addEventListener('resize', this.onResize);
-
-    this.getMaxScrollLeft();
   }
 
-  uninstalled(): void {
+  uninstall(): void {
     clearTimeout(this.timeout);
 
     this.scrollBarRef.current?.removeEventListener('wheel', this.handleWheel);
@@ -176,20 +188,24 @@ export default class TabNav extends Component<TabNavProps> {
       this.props.onChange(
         removeIndex === 0 ? this.props.itemList[removeIndex + 1]?.value : this.props.itemList[removeIndex - 1].value,
       );
+      this.onChangeActiveTab();
     }
     this.props.onRemove(removeItem);
   };
 
   handleTabItemClick(clickItem) {
+    if (clickItem.disabled) return;
     this.props.tabClick(clickItem.value);
     if (this.props.activeValue !== clickItem.value) {
       this.props.onChange(clickItem.value);
     }
     clickItem?.onClick?.(clickItem.value);
+    this.onChangeActiveTab();
   }
 
   handleTabAdd = (e) => {
     this.props.onAdd({ e });
+    this.onChangeActiveTab();
   };
 
   render(props: TabNavProps) {
@@ -206,6 +222,7 @@ export default class TabNav extends Component<TabNavProps> {
     const activeIndex = this.getIndex(activeValue);
     const { tdTabsClassGenerator, tdClassGenerator, tdSizeClassGenerator } = useTabClass();
     const isCard = this.props.theme === 'card';
+    this.effect();
 
     const TabBarCom = isCard ? null : (
       <t-tab-bar tabPosition={placement} activeId={activeIndex} containerRef={this.navsWrapRef} />
@@ -217,7 +234,7 @@ export default class TabNav extends Component<TabNavProps> {
           ref={this.leftOperationsRef}
           className={classname(tdTabsClassGenerator('operations'), tdTabsClassGenerator('operations--left'))}
         >
-          {this.canToLeft ? (
+          {this.canToLeft.value ? (
             <div
               onClick={() => {
                 this.handleScroll('prev');
@@ -237,7 +254,7 @@ export default class TabNav extends Component<TabNavProps> {
           ref={this.rightOperationsRef}
           className={classname(tdTabsClassGenerator('operations'), tdTabsClassGenerator('operations--right'))}
         >
-          {this.canToRight ? (
+          {this.canToRight.value ? (
             <div
               onClick={() => {
                 this.handleScroll('next');
@@ -287,7 +304,7 @@ export default class TabNav extends Component<TabNavProps> {
           <div
             className={classname(
               tdTabsClassGenerator('nav-scroll'),
-              this.canToLeft || this.canToRight ? tdClassGenerator('is-scrollable') : '',
+              this.canToLeft.value || this.canToRight.value ? tdClassGenerator('is-scrollable') : '',
             )}
             ref={this.scrollBarRef}
           >
@@ -297,7 +314,7 @@ export default class TabNav extends Component<TabNavProps> {
                 ['left', 'right'].includes(placement) ? tdClassGenerator('is-vertical') : '',
                 tdClassGenerator('is-smooth'),
               )}
-              style={{ transform: `translate(${-this.scrollLeft}px, 0)` }}
+              style={{ transform: `translate(${-this.scrollLeftSignal.value}px, 0)` }}
               ref={this.navsWrapRef}
             >
               {placement !== 'bottom' ? TabBarCom : null}

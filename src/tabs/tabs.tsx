@@ -122,6 +122,16 @@ export default class Tabs extends Component<TabsProps> {
 
   render(props: TabsProps) {
     const { className, style } = props;
+
+    this.dragSorter = new UseDragSorter({
+      ...this.props,
+      sortOnDraggable: this.props.dragSort,
+      onDragOverCheck: {
+        x: true,
+        targetClassNameRegExp: new RegExp(this.targetClassNameRegExpStr),
+      },
+    });
+
     return (
       <div ref={this.props.ref} className={classname(this.tabClasses.tdTabsClassPrefix, className)} style={style}>
         {this.props.placement !== 'bottom' ? this.headerNode : null}
