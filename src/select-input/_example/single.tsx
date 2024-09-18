@@ -67,7 +67,7 @@ export default class SelectInputSingle extends Component {
         <t-select-input
           value={this.selectValue.value}
           popupVisible={this.popupVisible.value}
-          style={{ width: '300px' }}
+          innerStyle={{ width: '300px' }}
           placeholder="Please Select"
           clearable
           allowInput

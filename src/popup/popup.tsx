@@ -1,5 +1,6 @@
 import 'omi-transition';
 import './popupTrigger';
+import '../common/portal';
 
 import { createPopper } from '@popperjs/core';
 import debounce from 'lodash/debounce';
@@ -84,6 +85,8 @@ export default class Popup extends Component<PopupProps> {
   // 防止多次触发显隐
   leaveFlag = false;
 
+  isPopoverInDomTree = false;
+
   triggerType = () =>
     triggers.reduce(
       (map, trigger) => ({
@@ -114,7 +117,15 @@ export default class Popup extends Component<PopupProps> {
     if (typeof this.props.onVisibleChange === 'function') {
       this.props.onVisibleChange(visible, context);
     }
+    if (this.visible) {
+      this.isPopoverInDomTree = true;
+    } else if (this.props.destroyOnClose) {
+      this.isPopoverInDomTree = false;
+    }
     this.update();
+    if (this.visible) {
+      this.addPopContentEvent();
+    }
   };
 
   handleOpen = (context: Pick<PopupVisibleChangeContext, 'trigger'>) => {
@@ -225,7 +236,6 @@ export default class Popup extends Component<PopupProps> {
     const triggerType = this.triggerType();
     if (triggerType.hover) {
       popper.add('mouseenter', () => {
-        console.log('====mouseenter');
         if (!this.leaveFlag) {
           clearTimeout(this.timeout);
           this.handleOpen({ trigger: 'trigger-element-hover' });
@@ -238,14 +248,6 @@ export default class Popup extends Component<PopupProps> {
         this.handleClose({ trigger: 'trigger-element-hover' });
       });
     }
-  }
-
-  installed() {
-    this.updatePopper();
-    this.addTriggerEvent();
-    this.addPopContentEvent();
-
-    this.visible = this.props.visible;
   }
 
   handleToggle = (context: PopupVisibleChangeContext) => {
@@ -273,13 +275,17 @@ export default class Popup extends Component<PopupProps> {
   updatePopper = () => {
     this.popper = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
       placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-      ...this.props?.popperOptions,
+      ...(this.props?.popperOptions || {}),
     });
   };
 
   setVisible = (visible: boolean) => {
     const { handlePopVisible } = this;
     handlePopVisible(visible, { trigger: 'document' });
+  };
+
+  handleBeforeEnter = () => {
+    this.updatePopper();
   };
 
   beforeUpdate() {
@@ -296,12 +302,21 @@ export default class Popup extends Component<PopupProps> {
     }
   }
 
-  handleBeforeEnter = () => {
-    this.updatePopper();
-  };
-
   install(): void {
     window.addEventListener('resize', this.updatePopper);
+  }
+
+  installed() {
+    this.updatePopper();
+    this.addTriggerEvent();
+
+    this.visible = this.props.visible;
+    // 初始化就显示时
+    if (this.visible) {
+      this.isPopoverInDomTree = true;
+      this.update();
+      this.addPopContentEvent();
+    }
   }
 
   uninstall(): void {
@@ -336,8 +351,6 @@ export default class Popup extends Component<PopupProps> {
       return child;
     });
 
-    console.log('===children', children);
-
     return (
       <>
         {children.length > 1 ? (
@@ -347,31 +360,33 @@ export default class Popup extends Component<PopupProps> {
         ) : (
           cloneElement(children[0] as VNode, { ref: this.triggerRef })
         )}
-        {this.getVisible() || !props.destroyOnClose ? (
-          <div
-            show={this.getVisible()}
-            o-transition={{
-              name: props.expandAnimation ? `${componentName}--animation-expand` : `${componentName}--animation`,
-              beforeEnter: this.handleBeforeEnter,
-            }}
-            class={popperClasses}
-            style={{ zIndex: props.zIndex, ...this.getOverlayStyle(props.overlayStyle) }}
-            ref={this.popperRef}
-            onMouseDown={() => (this.contentClicked = true)}
-          >
-            {(this.getVisible() || this.popperRef.current) && (
-              <div
-                class={overlayClasses}
-                style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
-                onScroll={this.handleScroll}
-              >
-                {props.content}
-                {props.showArrow ? (
-                  <div class={`${componentName}__arrow`} style={{ ...this.getOverlayStyle(props.arrowStyle) }} />
-                ) : null}
-              </div>
-            )}
-          </div>
+        {this.isPopoverInDomTree ? (
+          <t-portal attach={props.attach}>
+            <div
+              show={this.getVisible()}
+              o-transition={{
+                name: props.expandAnimation ? `${componentName}--animation-expand` : `${componentName}--animation`,
+                beforeEnter: this.handleBeforeEnter,
+              }}
+              class={popperClasses}
+              style={{ zIndex: props.zIndex, ...this.getOverlayStyle(props.overlayStyle) }}
+              ref={this.popperRef}
+              onMouseDown={() => (this.contentClicked = true)}
+            >
+              {(this.getVisible() || this.popperRef.current) && (
+                <div
+                  class={overlayClasses}
+                  style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
+                  onScroll={this.handleScroll}
+                >
+                  {props.content}
+                  {props.showArrow ? (
+                    <div class={`${componentName}__arrow`} style={{ ...this.getOverlayStyle(props.arrowStyle) }} />
+                  ) : null}
+                </div>
+              )}
+            </div>
+          </t-portal>
         ) : null}
       </>
     );

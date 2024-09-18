@@ -284,12 +284,13 @@ export default class Input extends Component<InputProps> {
 
   render(props: OmiProps<InputProps>) {
     const {
+      innerClass,
+      innerStyle,
       autoWidth,
       placeholder,
       disabled,
       status,
       size,
-      className,
       prefixIcon,
       suffixIcon,
       clearable,
@@ -308,10 +309,14 @@ export default class Input extends Component<InputProps> {
       keepWrapperWidth,
       showLimitNumber,
       allowInputOverMax,
+      inputClass,
       format,
       onValidate,
       ...restProps
     } = props;
+
+    delete restProps.className;
+    delete restProps.style;
 
     const { limitNumber, tStatus } = useLengthLimit({
       value: this.value === undefined ? undefined : String(this.value),
@@ -419,7 +424,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        class={classname(`${classPrefix}-input`, {
+        class={classname(inputClass, `${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -462,11 +467,12 @@ export default class Input extends Component<InputProps> {
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
           },
-          className,
+          innerClass,
         )}
         ref={this.wrapperRef}
         part="wrap"
         {...restProps}
+        style={innerStyle}
       >
         {renderInputNode}
         <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>

@@ -25,6 +25,16 @@ function getInputValue(value: TdSelectInputProps['value'], keys: TdSelectInputPr
 
 @tag('t-select-input-single')
 export default class SingleSelectInput extends Component<TdSelectInputProps> {
+  static css = [
+    `:host {
+      width: 100%;
+    };
+    t-input {
+      width: 100%;
+    }
+    `,
+  ];
+
   classPrefix = getClassPrefix();
 
   inputRef = createRef();

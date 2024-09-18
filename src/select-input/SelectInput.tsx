@@ -36,15 +36,24 @@ const COMMON_PROPERTIES = [
   'prefixIcon',
 ];
 
+const classPrefix = getClassPrefix();
+
 @tag('t-select-input')
 class SelectInput extends Component<SelectInputProps> {
+  static css = [
+    `.${classPrefix}-select-input > t-popup {
+      display: inline-flex;
+      width: 100%;
+    };`,
+  ];
+
   static defaultProps = selectInputDefaultProps;
 
   selectInputRef = createRef();
 
   selectInputWrapRef = createRef();
 
-  classPrefix = getClassPrefix();
+  classPrefix = classPrefix;
 
   commonInputProps: SelectInputCommonProperties;
 
@@ -93,7 +102,7 @@ class SelectInput extends Component<SelectInputProps> {
     ]);
 
     const mainContent = (
-      <div className={popupClasses} style={props.style} onClick={(e) => console.log('333', e)}>
+      <div className={popupClasses} style={props.innerStyle} onClick={(e) => console.log('333', e)}>
         <t-popup
           trigger={popupProps?.trigger || 'click'}
           placement="bottom-left"
