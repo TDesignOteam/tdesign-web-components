@@ -41,14 +41,7 @@ export default class Tabs extends Component<TabsProps> {
 
   targetClassNameRegExpStr = `^${this.tabClasses.tdTabsClassPrefix}(__nav-item|__nav-item-wrapper|__nav-item-text-wrapper)`;
 
-  dragSorter = new UseDragSorter({
-    ...this.props,
-    sortOnDraggable: this.props.dragSort,
-    onDragOverCheck: {
-      x: true,
-      targetClassNameRegExp: new RegExp(this.targetClassNameRegExpStr),
-    },
-  });
+  dragSorter: UseDragSorter<TabValue> | null = null;
 
   memoChildren = () => {
     const { list, children } = this.props;
@@ -102,7 +95,7 @@ export default class Tabs extends Component<TabsProps> {
       >
         <t-tab-nav
           {...this.props}
-          getDragProps={this.dragSorter.getDragProps}
+          getDragProps={this.dragSorter?.getDragProps}
           activeValue={this.value}
           onRemove={this.props.onRemove}
           itemList={this.itemList()}
@@ -118,10 +111,6 @@ export default class Tabs extends Component<TabsProps> {
       this.props.defaultValue === undefined && Array.isArray(this.itemList) && this.itemList.length !== 0
         ? this.itemList[0].value
         : this.props.defaultValue;
-  }
-
-  render(props: TabsProps) {
-    const { className, style } = props;
 
     this.dragSorter = new UseDragSorter({
       ...this.props,
@@ -131,6 +120,10 @@ export default class Tabs extends Component<TabsProps> {
         targetClassNameRegExp: new RegExp(this.targetClassNameRegExpStr),
       },
     });
+  }
+
+  render(props: TabsProps) {
+    const { className, style } = props;
 
     return (
       <div ref={this.props.ref} className={classname(this.tabClasses.tdTabsClassPrefix, className)} style={style}>
