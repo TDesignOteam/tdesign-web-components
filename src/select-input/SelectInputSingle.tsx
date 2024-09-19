@@ -29,9 +29,6 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
     `:host {
       width: 100%;
     };
-    t-input {
-      width: 100%;
-    }
     `,
   ];
 
@@ -100,6 +97,7 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
         }}
         // onBlur need to triggered by input when popup panel is null
         onBlur={!props.panel ? handleEmptyPanelBlur : null}
+        style={{ width: '100%' }}
         {...props.inputProps}
         inputClass={classNames(props.inputProps?.className, {
           [`${this.classPrefix}-input--focused`]: popupVisible,

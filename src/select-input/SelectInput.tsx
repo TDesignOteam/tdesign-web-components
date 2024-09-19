@@ -102,7 +102,7 @@ class SelectInput extends Component<SelectInputProps> {
     ]);
 
     const mainContent = (
-      <div className={popupClasses} style={props.innerStyle} onClick={(e) => console.log('333', e)}>
+      <div className={popupClasses} style={props.innerStyle}>
         <t-popup
           trigger={popupProps?.trigger || 'click'}
           placement="bottom-left"

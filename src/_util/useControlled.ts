@@ -36,7 +36,6 @@ const useControlled: <P extends any[], R extends object, K extends keyof R>(
   // 无论是否受控，都要维护一个内部变量，默认值由 defaultValue 控制
   const internalValue = signal(defaultValue);
   // 受控模式
-  console.log('===controlled', controlled, valueKey);
   if (controlled) return [value, onChange || (() => {})];
 
   // 非受控模式

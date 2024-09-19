@@ -30,6 +30,7 @@ export default function useOverlayInnerStyle(
   const [innerPopupVisible, setInnerPopupVisible] = useControlled(props, 'popupVisible', onPopupVisibleChange);
 
   const matchWidthFunc = (triggerElement: HTMLElement, popupElement: HTMLElement) => {
+    console.log('ffff');
     if (!triggerElement || !popupElement) return;
 
     // 设置display来可以获取popupElement的宽度
@@ -52,6 +53,7 @@ export default function useOverlayInnerStyle(
         ? popupElement.scrollWidth
         : triggerElement.offsetWidth - overlayScrollWidth;
 
+    console.log('==width', width);
     let otherOverlayInnerStyle = {};
     if (popupProps && typeof popupProps.overlayInnerStyle === 'object' && !popupProps.overlayInnerStyle.width) {
       otherOverlayInnerStyle = popupProps.overlayInnerStyle;
@@ -81,10 +83,13 @@ export default function useOverlayInnerStyle(
     let result: TdPopupProps['overlayInnerStyle'] = {};
     const overlayInnerStyle = popupProps?.overlayInnerStyle || {};
     if (isFunction(overlayInnerStyle) || (isObject(overlayInnerStyle) && overlayInnerStyle.width)) {
+      console.log(1);
       result = overlayInnerStyle;
     } else if (!autoWidth) {
+      console.log(2);
       result = matchWidthFunc;
     }
+    console.log(3);
     return result;
   };
 

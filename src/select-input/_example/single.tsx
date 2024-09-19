@@ -4,6 +4,7 @@ import 'tdesign-icons-web-components/esm/components/chevron-down';
 import { Component, signal } from 'omi';
 
 const classStyles = `
+<style>
 .tdesign-demo__select-input-ul-single {
   display: flex;
   flex-direction: column;
@@ -27,6 +28,7 @@ const classStyles = `
 .tdesign-demo__select-input-ul-single > li:hover {
   background-color: var(--td-bg-color-container-hover);
 }
+</style>
 `;
 
 const OPTIONS = [
@@ -39,8 +41,6 @@ const OPTIONS = [
 ];
 
 export default class SelectInputSingle extends Component {
-  static css = classStyles;
-
   selectValue = signal({ label: 'tdesign-vue', value: 1 });
 
   popupVisible = signal(false);
@@ -61,6 +61,10 @@ export default class SelectInputSingle extends Component {
     this.popupVisible.value = val;
   };
 
+  installed(): void {
+    document.head.insertAdjacentHTML('beforeend', classStyles);
+  }
+
   render() {
     return (
       <div>
@@ -71,7 +75,7 @@ export default class SelectInputSingle extends Component {
           placeholder="Please Select"
           clearable
           allowInput
-          popupProps={{ overlayInnerStyle: { padding: 6 }, css: classStyles }}
+          popupProps={{ overlayInnerStyle: { padding: 6 } }}
           onPopupVisibleChange={this.onPopupVisibleChange}
           onClear={this.onClear}
           panel={

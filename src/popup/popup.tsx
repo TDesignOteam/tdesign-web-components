@@ -266,6 +266,7 @@ export default class Popup extends Component<PopupProps> {
   }
 
   getOverlayStyle(overlayStyle: PopupProps['overlayStyle']) {
+    console.log('==ss', overlayStyle, this.triggerRef.current, this.popperRef.current);
     if (this.triggerRef.current && this.popperRef.current && typeof overlayStyle === 'function') {
       return { ...overlayStyle(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement) };
     }
@@ -350,6 +351,8 @@ export default class Popup extends Component<PopupProps> {
       }
       return child;
     });
+
+    console.log('props.overlayInnerStyle', props.overlayInnerStyle);
 
     return (
       <>
