@@ -5,7 +5,8 @@ import 'tdesign-web-components/tabs';
 import { Component, signal } from 'omi';
 
 export default class Combination extends Component {
-  theme = signal('normal');
+  // 目前常规性滚动存在bug，先固定选择卡片型
+  theme = signal('card');
 
   scrollPosition = signal('auto');
 
@@ -17,7 +18,7 @@ export default class Combination extends Component {
   render() {
     return (
       <t-space direction="vertical" size="large" style={{ width: '100%' }}>
-        <t-radio-group
+        {/* <t-radio-group
           variant="default-filled"
           defaultValue="normal"
           onChange={(val) => {
@@ -26,7 +27,7 @@ export default class Combination extends Component {
         >
           <t-radio-button value="normal" content="常规型" />
           <t-radio-button value="card" content="卡片型" />
-        </t-radio-group>
+        </t-radio-group> */}
         <t-radio-group
           variant="default-filled"
           defaultValue="auto"

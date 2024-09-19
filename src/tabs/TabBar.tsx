@@ -1,4 +1,4 @@
-import { Component, createRef, tag } from 'omi';
+import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { StyledProps, Styles } from '../common';
@@ -25,7 +25,7 @@ export default class TabBar extends Component<TabBarProps> {
 
   currentActiveIdRef = createRef<TabValue>();
 
-  barStyle: Styles = {};
+  barStyle: Omi.SignalValue<Styles> = signal({});
 
   tabsClassPrefix = `${getClassPrefix()}-tabs`;
 
@@ -49,11 +49,11 @@ export default class TabBar extends Component<TabBarProps> {
         });
         const computedItem = itemsRef[this.currentActiveIdRef.current];
         if (!computedItem) {
-          this.barStyle = { transform: `${transformPosition}(${0}px)`, [barBorderProp]: 0 };
+          this.barStyle.value = { transform: `${transformPosition}(${0}px)`, [barBorderProp]: 0 };
           return;
         }
         const itemPropValue = getComputedStyle(computedItem)[itemProp];
-        this.barStyle = { transform: `${transformPosition}(${offset}px)`, [barBorderProp]: itemPropValue || 0 };
+        this.barStyle.value = { transform: `${transformPosition}(${offset}px)`, [barBorderProp]: itemPropValue || 0 };
       }
     }
   }
@@ -65,10 +65,7 @@ export default class TabBar extends Component<TabBarProps> {
   }
 
   installed(): void {
-    setTimeout(() => {
-      this.computeStyle();
-      this.update();
-    }, 0);
+    this.computeStyle();
   }
 
   render() {
@@ -83,7 +80,7 @@ export default class TabBar extends Component<TabBarProps> {
           [`${this.tabsClassPrefix}__bar`]: true,
           [`${getClassPrefix()}-is-${tabPosition}`]: true,
         })}
-        style={this.barStyle}
+        style={this.barStyle.value}
       ></div>
     );
   }
