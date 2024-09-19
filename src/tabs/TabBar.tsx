@@ -1,7 +1,6 @@
-import { toArray } from 'lodash';
-import { Component, createRef, tag } from 'omi';
+import { Component, createRef, signal, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
+import classname, { getClassPrefix } from '../_util/classname';
 import { StyledProps, Styles } from '../common';
 import { TabValue } from './type';
 
@@ -26,11 +25,9 @@ export default class TabBar extends Component<TabBarProps> {
 
   currentActiveIdRef = createRef<TabValue>();
 
-  barStyle: Styles;
+  barStyle: Omi.SignalValue<Styles> = signal({});
 
-  tabsClassPrefix = `${classPrefix}-tabs`;
-
-  tabPosition: string;
+  tabsClassPrefix = `${getClassPrefix()}-tabs`;
 
   containerRef = createRef<HTMLDivElement>();
 
@@ -41,50 +38,49 @@ export default class TabBar extends Component<TabBarProps> {
     const barBorderProp = isHorizontal ? 'width' : 'height';
 
     let offset = 0;
+
     if (this.containerRef.current) {
-      const itemsRef = toArray(this.containerRef.current.querySelectorAll<HTMLElement>('t-tab-nav-item'));
-      if (itemsRef.length - 1 >= Number(this.currentActiveIdRef.current)) {
+      const itemsRef = this.containerRef.current.querySelectorAll<HTMLElement>('t-tab-nav-item');
+      if (itemsRef.length - 1 >= (this.currentActiveIdRef.current as number)) {
         itemsRef.forEach((item, itemIndex) => {
-          if (itemIndex < Number(this.currentActiveIdRef.current)) {
+          if (itemIndex < (this.currentActiveIdRef.current as number)) {
             offset += Number(getComputedStyle(item)[itemProp].replace('px', ''));
           }
         });
-        const computedItem = itemsRef[Number(this.currentActiveIdRef.current)];
+        const computedItem = itemsRef[this.currentActiveIdRef.current];
         if (!computedItem) {
-          this.setBarStyle({ transform: `${transformPosition}(${0}px)`, [barBorderProp]: 0 });
+          this.barStyle.value = { transform: `${transformPosition}(${0}px)`, [barBorderProp]: 0 };
           return;
         }
         const itemPropValue = getComputedStyle(computedItem)[itemProp];
-        this.setBarStyle({ transform: `${transformPosition}(${offset}px)`, [barBorderProp]: itemPropValue || 0 });
+        this.barStyle.value = { transform: `${transformPosition}(${offset}px)`, [barBorderProp]: itemPropValue || 0 };
       }
     }
   }
 
-  setBarStyle(barStyle: Styles) {
-    this.barStyle = barStyle;
-  }
-
-  receiveProps(newProps: TabBarProps) {
-    const { tabPosition, activeId, containerRef } = newProps;
-    this.tabPosition = tabPosition;
+  install(): void {
+    const { activeId, containerRef } = this.props;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
-    return true;
+  }
+
+  installed(): void {
+    this.computeStyle();
   }
 
   render() {
     const { tabPosition, activeId, containerRef } = this.props;
-    this.tabPosition = tabPosition;
     this.currentActiveIdRef.current = activeId;
     this.containerRef = containerRef;
     this.computeStyle();
+
     return (
       <div
         className={classname({
           [`${this.tabsClassPrefix}__bar`]: true,
-          [`${classPrefix}-is-${this.tabPosition}`]: true,
+          [`${getClassPrefix()}-is-${tabPosition}`]: true,
         })}
-        style={this.barStyle}
+        style={this.barStyle.value}
       ></div>
     );
   }

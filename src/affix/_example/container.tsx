@@ -4,6 +4,8 @@ import 'tdesign-web-components/button';
 import { bind, Component, createRef, signal } from 'omi';
 
 export default class Container extends Component {
+  static css = ':host {display: block;}';
+
   container = signal(null);
 
   affixRef = createRef<any>();
