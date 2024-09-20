@@ -67,7 +67,7 @@
     "omi": "^7.6.17",
     "omi-transition": "^0.1.8",
     "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.1.4-alpha.1"
+    "tdesign-icons-web-components": "^0.1.4"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
