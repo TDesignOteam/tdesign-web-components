@@ -22,7 +22,7 @@ spline: data
 
 可使用 `SelectInput` 自由定制任何风格的多选选择器。
 
-<!-- {{ multiple }} -->
+{{ multiple }}
 
 ### 自动填充筛选器
 

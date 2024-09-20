@@ -50,6 +50,7 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
     const { value, keys, commonInputProps, popupVisible } = props;
 
     const onInnerClear = (context: { e: MouseEvent }) => {
+      console.log('===ccc');
       context?.e?.stopPropagation();
       props.onClear?.(context);
       this.setInputValue('', { trigger: 'clear' });

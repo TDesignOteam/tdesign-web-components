@@ -126,6 +126,10 @@ export default class SelectInputMultiple extends Component {
     }
   };
 
+  // install(): void {
+  //   document.head.insertAdjacentHTML('beforeend', classStyles);
+  // }
+
   render() {
     const checkboxValue = this.getCheckboxValue();
     return (
