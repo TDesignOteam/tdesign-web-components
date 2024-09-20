@@ -1,4 +1,5 @@
 import 'tdesign-web-components/back-top';
+import 'tdesign-web-components/list';
 
 import { Component, createRef } from 'omi';
 
@@ -17,11 +18,11 @@ export default class BackTop extends Component {
             border: '1px solid rgb(220, 220, 220)',
           }}
         >
-          <ul>
+          <t-list>
             {Array.from(Array(50), () => '列表内容').map((item, index) => (
-              <li key={index}>{item}</li>
+              <t-list-item key={index} content={item}></t-list-item>
             ))}
-          </ul>
+          </t-list>
         </div>
         <t-back-top
           container={() => container.current}
