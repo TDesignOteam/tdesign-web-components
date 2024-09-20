@@ -90,6 +90,8 @@ class SelectInput extends Component<SelectInputProps> {
     // 浮层显示的受控与非受控
     const visibleProps = { visible: popupVisible ?? this.innerPopupVisible };
 
+    console.log('===visibleProps', visibleProps);
+
     const popupClasses = classNames([
       props.className,
       `${this.classPrefix}-select-input`,
@@ -113,7 +115,7 @@ class SelectInput extends Component<SelectInputProps> {
           {...visibleProps}
           {...popupProps}
           disabled={disabled}
-          overlayInnerStyle={this.tOverlayInnerStyle}
+          overlayInnerStyle={this.tOverlayInnerStyle()}
         >
           {multiple ? (
             <t-select-input-multiple
@@ -137,11 +139,7 @@ class SelectInput extends Component<SelectInputProps> {
     }
 
     return (
-      <div
-        ref={this.selectInputWrapRef}
-        className={`${this.classPrefix}-select-input__wrap`}
-        onClick={(e) => console.log('222', e)}
-      >
+      <div ref={this.selectInputWrapRef} className={`${this.classPrefix}-select-input__wrap`}>
         {mainContent}
         {props.tips && (
           <div

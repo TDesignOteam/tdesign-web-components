@@ -266,7 +266,6 @@ export default class Popup extends Component<PopupProps> {
   }
 
   getOverlayStyle(overlayStyle: PopupProps['overlayStyle']) {
-    console.log('==ss', overlayStyle, this.triggerRef.current, this.popperRef.current);
     if (this.triggerRef.current && this.popperRef.current && typeof overlayStyle === 'function') {
       return { ...overlayStyle(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement) };
     }
@@ -274,7 +273,7 @@ export default class Popup extends Component<PopupProps> {
   }
 
   updatePopper = () => {
-    this.popper = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
+    createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
       placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
       ...(this.props?.popperOptions || {}),
     });
@@ -287,16 +286,15 @@ export default class Popup extends Component<PopupProps> {
 
   handleBeforeEnter = () => {
     this.updatePopper();
+    this.updatePopper();
   };
 
   beforeUpdate() {
-    // deal visible
     if (this.getVisible()) {
       if (this.popperRef.current) {
         const el = this.popperRef.current as HTMLElement;
         el.style.display = 'block';
       }
-      this.updatePopper();
     } else if (this.popperRef.current) {
       const el = this.popperRef.current as HTMLElement;
       el.style.display = 'none';
@@ -352,8 +350,6 @@ export default class Popup extends Component<PopupProps> {
       return child;
     });
 
-    console.log('props.overlayInnerStyle', props.overlayInnerStyle);
-
     return (
       <>
         {children.length > 1 ? (
@@ -376,18 +372,16 @@ export default class Popup extends Component<PopupProps> {
               ref={this.popperRef}
               onMouseDown={() => (this.contentClicked = true)}
             >
-              {(this.getVisible() || this.popperRef.current) && (
-                <div
-                  class={overlayClasses}
-                  style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
-                  onScroll={this.handleScroll}
-                >
-                  {props.content}
-                  {props.showArrow ? (
-                    <div class={`${componentName}__arrow`} style={{ ...this.getOverlayStyle(props.arrowStyle) }} />
-                  ) : null}
-                </div>
-              )}
+              <div
+                class={overlayClasses}
+                style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
+                onScroll={this.handleScroll}
+              >
+                {props.content}
+                {props.showArrow ? (
+                  <div class={`${componentName}__arrow`} style={{ ...this.getOverlayStyle(props.arrowStyle) }} />
+                ) : null}
+              </div>
             </div>
           </t-portal>
         ) : null}

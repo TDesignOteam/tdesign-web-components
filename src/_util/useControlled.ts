@@ -42,7 +42,6 @@ const useControlled: <P extends any[], R extends object, K extends keyof R>(
   return [
     internalValue.value,
     (newValue, ...args) => {
-      console.log('===newValue', newValue);
       internalValue.value = newValue;
       onChange?.(newValue, ...args);
     },

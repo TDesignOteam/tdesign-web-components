@@ -50,7 +50,6 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
     const { value, keys, commonInputProps, popupVisible } = props;
 
     const onInnerClear = (context: { e: MouseEvent }) => {
-      console.log('---fff');
       context?.e?.stopPropagation();
       props.onClear?.(context);
       this.setInputValue('', { trigger: 'clear' });
@@ -87,7 +86,6 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
         onClear={onInnerClear}
         // [Important Info]: SelectInput.blur is not equal to Input, example: click popup panel
         onFocus={(val, context) => {
-          console.log('focus');
           props.onFocus?.(value, { ...context, inputValue: val });
           // focus might not need to change input value. it will caught some curious errors in tree-select
           // !popupVisible && setInputValue(getInputValue(value, keys), { ...context, trigger: 'input' });
