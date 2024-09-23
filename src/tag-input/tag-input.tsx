@@ -422,7 +422,7 @@ export default class TagInput extends Component<TagInputProps> {
       status,
       suffixIcon,
       suffix,
-      style,
+      innerStyle,
       onPaste,
       onFocus,
       onBlur,
@@ -441,7 +441,7 @@ export default class TagInput extends Component<TagInputProps> {
 
     // 自定义 Tag 节点
     const displayNode = isFunction(valueDisplay)
-      ? valueDisplay({
+      ? (valueDisplay as any)({
           value: tagValue,
           onClose: (index, item) => this.onClose({ index, item }),
         })
@@ -457,7 +457,7 @@ export default class TagInput extends Component<TagInputProps> {
       const list = displayNode
         ? displayNode
         : newList?.map((item, index) => {
-            const tagContent = isFunction(props.tag) ? props.tag({ value: item }) : props.tag;
+            const tagContent = isFunction(props.tag) ? (props.tag as any)({ value: item }) : props.tag;
             return (
               <t-tag
                 part={`input-tag ${size === 'large' && 'input-tag-l'} ${size === 'small' && 'input-tag-s'}`}
@@ -491,7 +491,7 @@ export default class TagInput extends Component<TagInputProps> {
           collapsedSelectedItems: tagValue.slice(props.minCollapsedNum, tagValue.length),
           onClose: this.onClose,
         };
-        const more = isFunction(props.collapsedItems) ? props.collapsedItems(params) : props.collapsedItems;
+        const more = isFunction(props.collapsedItems) ? (props.collapsedItems as any)(params) : props.collapsedItems;
         if (more) {
           list.push(more);
         } else {
@@ -530,7 +530,7 @@ export default class TagInput extends Component<TagInputProps> {
         [`${classPrefix}-input--auto-width`]: !!autoWidth,
         [`${classPrefix}-input__warp`]: !autoWidth,
       },
-      props.className,
+      props.innerClass,
     ];
 
     return (
@@ -547,8 +547,8 @@ export default class TagInput extends Component<TagInputProps> {
         readonly={readonly}
         disabled={disabled}
         label={renderLabel({ displayNode, label })}
-        class={classNames(classes)}
-        style={style}
+        innerClass={classNames(classes)}
+        style={innerStyle}
         tips={tips}
         status={status}
         placeholder={tagInputPlaceholder}

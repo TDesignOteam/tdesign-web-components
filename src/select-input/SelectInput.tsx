@@ -70,9 +70,13 @@ class SelectInput extends Component<SelectInputProps> {
       suffixIcon: loading ? <t-loading loading size="small" /> : suffixIcon,
     };
 
-    const { innerPopupVisible, tOverlayInnerStyle, onInnerPopupVisibleChange } = useOverlayInnerStyle(this.props, {
-      // afterHidePopup: this.onInnerBlur,
-    });
+    const { innerPopupVisible, tOverlayInnerStyle, onInnerPopupVisibleChange } = useOverlayInnerStyle(
+      this.props,
+      {
+        // afterHidePopup: this.onInnerBlur,
+      },
+      this,
+    );
     this.tOverlayInnerStyle = tOverlayInnerStyle;
     this.innerPopupVisible = innerPopupVisible;
     this.onInnerPopupVisibleChange = onInnerPopupVisibleChange;
@@ -90,10 +94,8 @@ class SelectInput extends Component<SelectInputProps> {
     // 浮层显示的受控与非受控
     const visibleProps = { visible: popupVisible ?? this.innerPopupVisible };
 
-    console.log('===visibleProps', visibleProps);
-
     const popupClasses = classNames([
-      props.className,
+      props.innerClass,
       `${this.classPrefix}-select-input`,
       {
         [`${this.classPrefix}-select-input--borderless`]: borderless,

@@ -1,5 +1,5 @@
 import upperFirst from 'lodash/upperFirst';
-import { signal, SignalValue } from 'omi';
+import { Component, setActiveComponent, signal, SignalValue } from 'omi';
 
 export interface ChangeHandler<T, P extends any[]> {
   (value: T, ...args: P);
@@ -13,11 +13,9 @@ const useControlled: <P extends any[], R extends object, K extends keyof R>(
   props: R,
   valueKey: K,
   onChange: ChangeHandler<R[K], P>,
-  defaultOptions?:
-    | {
-        [key in Defaultoptions<ToString<K>>]: R[K];
-      }
-    | object,
+  defaultOptions?: {
+    [key in Defaultoptions<ToString<K>>]?: R[K];
+  } & { [key: string]: any; activeComponent?: Component },
 ) => [SignalValue<R[K]> | R[K], ChangeHandler<R[K], P>] = (
   // eslint-disable-next-line default-param-last
   props = {} as any,
@@ -33,10 +31,14 @@ const useControlled: <P extends any[], R extends object, K extends keyof R>(
   const defaultValue =
     defaultOptions[`default${upperFirst(valueKey as string)}`] || props[`default${upperFirst(valueKey as string)}`];
 
-  // 无论是否受控，都要维护一个内部变量，默认值由 defaultValue 控制
-  const internalValue = signal(defaultValue);
   // 受控模式
   if (controlled) return [value, onChange || (() => {})];
+
+  // 无论是否受控，都要维护一个内部变量，默认值由 defaultValue 控制
+  const internalValue = signal(defaultValue);
+  if (defaultOptions.activeComponent) {
+    setActiveComponent(defaultOptions.activeComponent);
+  }
 
   // 非受控模式
   return [

@@ -1,5 +1,6 @@
 import 'tdesign-web-components/select-input';
 import 'tdesign-web-components/checkbox';
+import 'tdesign-web-components/radio';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 
 import { Component, signal } from 'omi';
@@ -125,10 +126,6 @@ export default class SelectInputMultiple extends Component {
       this.inputValue.value = '';
     }
   };
-
-  // install(): void {
-  //   document.head.insertAdjacentHTML('beforeend', classStyles);
-  // }
 
   render() {
     const checkboxValue = this.getCheckboxValue();

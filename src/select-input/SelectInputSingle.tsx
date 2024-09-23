@@ -50,13 +50,13 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
     const { value, keys, commonInputProps, popupVisible } = props;
 
     const onInnerClear = (context: { e: MouseEvent }) => {
-      console.log('===ccc');
       context?.e?.stopPropagation();
       props.onClear?.(context);
       this.setInputValue('', { trigger: 'clear' });
     };
 
     const onInnerInputChange: TdInputProps['onChange'] = (value, context) => {
+      console.log('==change', value, context);
       if (props.allowInput) {
         this.setInputValue(value, { ...context, trigger: 'input' });
       }
@@ -96,7 +96,6 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
         }}
         // onBlur need to triggered by input when popup panel is null
         onBlur={!props.panel ? handleEmptyPanelBlur : null}
-        style={{ width: '100%' }}
         {...props.inputProps}
         inputClass={classNames(props.inputProps?.className, {
           [`${this.classPrefix}-input--focused`]: popupVisible,

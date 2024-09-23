@@ -25,6 +25,13 @@ const DEFAULT_KEYS = {
 
 @tag('t-select-input-multiple')
 export default class SelectInputMultiple extends Component<TdSelectInputProps> {
+  static css = [
+    `:host {
+      width: 100%;
+    };
+    `,
+  ];
+
   classPrefix = getClassPrefix();
 
   tagInputRef = createRef();
@@ -85,6 +92,7 @@ export default class SelectInputMultiple extends Component<TdSelectInputProps> {
           props.onFocus?.(props.value, { ...context, tagInputValue: val });
         }}
         onBlur={!props.panel ? props.onBlur : null}
+        style={{ width: '100%', display: 'inline-flex' }}
         {...props.tagInputProps}
         inputProps={{
           ...props.inputProps,

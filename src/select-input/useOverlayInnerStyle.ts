@@ -1,5 +1,6 @@
 import isFunction from 'lodash/isFunction';
 import isObject from 'lodash/isObject';
+import { Component } from 'omi';
 
 import useControlled from '../_util/useControlled';
 import { PopupVisibleChangeContext, TdPopupProps } from '../popup';
@@ -25,9 +26,12 @@ export default function useOverlayInnerStyle(
   extra?: {
     afterHidePopup?: (ctx: PopupVisibleChangeContext) => void;
   },
+  activeComponent?: Component,
 ) {
   const { popupProps, autoWidth, readonly, disabled, onPopupVisibleChange, allowInput } = props;
-  const [innerPopupVisible, setInnerPopupVisible] = useControlled(props, 'popupVisible', onPopupVisibleChange);
+  const [innerPopupVisible, setInnerPopupVisible] = useControlled(props, 'popupVisible', onPopupVisibleChange, {
+    activeComponent,
+  });
 
   const matchWidthFunc = (triggerElement: HTMLElement, popupElement: HTMLElement) => {
     if (!triggerElement || !popupElement) return;

@@ -43,6 +43,13 @@ const isFunction = (arg: unknown) => typeof arg === 'function';
 
 @tag('t-input')
 export default class Input extends Component<InputProps> {
+  static css = [
+    `:host {
+      width: 100%;
+    };
+    `,
+  ];
+
   static defaultProps = {
     align: 'left',
     allowInputOverMax: false,
@@ -123,7 +130,6 @@ export default class Input extends Component<InputProps> {
       allowInputOverMax,
       onValidate,
     });
-
     let { value: newStr } = e.currentTarget;
     if (this.composingRef.current) {
       this.composingValue = newStr;
