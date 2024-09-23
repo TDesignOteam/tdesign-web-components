@@ -4,8 +4,8 @@ import { Component, createRef, tag } from 'omi';
 
 import classname from '../_util/classname';
 import noop from '../_util/noop';
+import { DragSortInnerProps } from '../_util/useDragSorter';
 import { StyledProps } from '../common';
-import { DragSortInnerProps } from '../hooks/useDragSorter';
 import type { TdTabPanelProps, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 

@@ -12,7 +12,7 @@ import { calcMaxOffset, calcPrevOrNextOffset, calculateOffset, calcValidOffset }
 import classname from '../_util/classname';
 import noop from '../_util/noop';
 import parseTNode from '../_util/parseTNode';
-import { DragSortInnerProps } from '../hooks/useDragSorter';
+import { DragSortInnerProps } from '../_util/useDragSorter';
 import { TabValue, TdTabPanelProps, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 
