@@ -507,11 +507,13 @@ export default class TagInput extends Component<TagInputProps> {
 
     const suffixIconNode = showClearIcon ? (
       <t-icon-close-circle-filled
+        style={{ display: 'flex' }}
         class={classNames([
           `${classPrefix}-icon`,
           `${classPrefix}-icon-close-circle-filled `,
           TagInputClassNamePrefix(`__suffix-clear`),
         ])}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={this.onClearClick}
       />
     ) : (
