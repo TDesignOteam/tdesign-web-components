@@ -5,8 +5,8 @@ import { toArray } from 'lodash';
 import { Component, tag, VNode } from 'omi';
 
 import classname from '../_util/classname';
+import UseDragSorter from '../_util/useDragSorter';
 import { StyledProps, TNode } from '../common';
-import UseDragSorter from '../hooks/useDragSorter';
 import { TabValue, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 
