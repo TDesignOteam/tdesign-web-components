@@ -9,6 +9,7 @@ import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
+import { PopupVisibleChangeContext } from '../popup';
 import { selectInputDefaultProps } from './defaultProps';
 import { SelectInputCommonProperties } from './interface';
 import { TdSelectInputProps } from './type';
@@ -49,6 +50,52 @@ class SelectInput extends Component<SelectInputProps> {
 
   static defaultProps = selectInputDefaultProps;
 
+  static propTypes = {
+    allowInput: Boolean,
+    autoWidth: Boolean,
+    autofocus: Boolean,
+    borderless: Boolean,
+    clearable: Boolean,
+    collapsedItems: [Function, Object, String, Number],
+    disabled: Boolean,
+    inputProps: Object,
+    inputValue: String,
+    defaultInputValue: String,
+    keys: Object,
+    label: [Function, Object, String, Number],
+    loading: Boolean,
+    minCollapsedNum: Number,
+    multiple: Boolean,
+    panel: [Function, Object, String, Number],
+    placeholder: String,
+    popupProps: Object,
+    popupVisible: Boolean,
+    defaultPopupVisible: Boolean,
+    prefixIcon: [Function, Object, String, Number],
+    readonly: Boolean,
+    reserveKeyword: Boolean,
+    size: String,
+    status: String,
+    suffix: [Function, Object, String, Number],
+    suffixIcon: [Function, Object, String, Number],
+    tag: [String, Function, Object, Number],
+    tagInputProps: Object,
+    tagProps: Object,
+    tips: [Function, Object, String, Number],
+    value: [String, Number, Boolean, Object, Array],
+    valueDisplay: [String, Function, Object, Number],
+    onBlur: Function,
+    onClear: Function,
+    onEnter: Function,
+    onFocus: Function,
+    onInputChange: Function,
+    onMouseenter: Function,
+    onMouseleave: Function,
+    onPaste: Function,
+    onPopupVisibleChange: Function,
+    onTagChange: Function,
+  };
+
   selectInputRef = createRef();
 
   selectInputWrapRef = createRef();
@@ -63,8 +110,12 @@ class SelectInput extends Component<SelectInputProps> {
 
   onInnerPopupVisibleChange;
 
+  multipleInputValue;
+
+  singleInputValue;
+
   install(): void {
-    const { loading, suffixIcon } = this.props;
+    const { loading, suffixIcon, multiple } = this.props;
     this.commonInputProps = {
       ...pick(this.props, COMMON_PROPERTIES),
       suffixIcon: loading ? <t-loading loading size="small" /> : suffixIcon,
@@ -73,20 +124,30 @@ class SelectInput extends Component<SelectInputProps> {
     const { innerPopupVisible, tOverlayInnerStyle, onInnerPopupVisibleChange } = useOverlayInnerStyle(
       this.props,
       {
-        // afterHidePopup: this.onInnerBlur,
+        afterHidePopup: this.onInnerBlur.bind(this),
       },
       this,
     );
     this.tOverlayInnerStyle = tOverlayInnerStyle;
     this.innerPopupVisible = innerPopupVisible;
     this.onInnerPopupVisibleChange = onInnerPopupVisibleChange;
+
+    if (multiple) {
+      this.multipleInputValue = this.props.inputValue || this.props.defaultInputValue;
+    } else {
+      this.singleInputValue = this.props.inputValue || this.props.defaultInputValue;
+    }
   }
 
-  // onInnerBlur(ctx: PopupVisibleChangeContext) {
-  //   const inputValue = this.props.multiple ? multipleInputValue : singleInputValue;
-  //   const params: Parameters<TdSelectInputProps['onBlur']>[1] = { e: ctx.e, inputValue };
-  //   this.props.onBlur?.(this.props.value, params);
-  // }
+  updateValue = (val, key: 'multipleInputValue' | 'singleInputValue') => {
+    this[key] = val;
+  };
+
+  onInnerBlur(ctx: PopupVisibleChangeContext) {
+    const inputValue = this.props.multiple ? this.multipleInputValue : this.singleInputValue;
+    const params: Parameters<TdSelectInputProps['onBlur']>[1] = { e: ctx.e, inputValue };
+    this.props.onBlur?.(this.props.value, params);
+  }
 
   render(props: SelectInputProps | OmiProps<SelectInputProps, any>) {
     const { multiple, value, popupVisible, popupProps, borderless, disabled } = props;
@@ -95,7 +156,7 @@ class SelectInput extends Component<SelectInputProps> {
     const visibleProps = { visible: popupVisible ?? this.innerPopupVisible };
 
     const popupClasses = classNames([
-      props.innerClass,
+      !props.tips ? props.innerClass : '',
       `${this.classPrefix}-select-input`,
       {
         [`${this.classPrefix}-select-input--borderless`]: borderless,
@@ -106,7 +167,7 @@ class SelectInput extends Component<SelectInputProps> {
     ]);
 
     const mainContent = (
-      <div className={popupClasses} style={props.innerStyle}>
+      <div className={popupClasses} style={!props.tips ? props.innerStyle : {}}>
         <t-popup
           trigger={popupProps?.trigger || 'click'}
           placement="bottom-left"
@@ -124,12 +185,14 @@ class SelectInput extends Component<SelectInputProps> {
               {...props}
               commonInputProps={this.commonInputProps}
               popupVisible={visibleProps.visible}
+              onUpdateValue={this.updateValue}
             />
           ) : (
             <t-select-input-single
               {...props}
               commonInputProps={this.commonInputProps}
               popupVisible={visibleProps.visible}
+              onUpdateValue={this.updateValue}
             />
           )}
         </t-popup>
@@ -141,7 +204,11 @@ class SelectInput extends Component<SelectInputProps> {
     }
 
     return (
-      <div ref={this.selectInputWrapRef} className={`${this.classPrefix}-select-input__wrap`}>
+      <div
+        ref={this.selectInputWrapRef}
+        className={classNames(`${this.classPrefix}-select-input__wrap`, props.innerClass)}
+        style={props.innerStyle}
+      >
         {mainContent}
         {props.tips && (
           <div

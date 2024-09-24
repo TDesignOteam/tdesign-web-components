@@ -5,7 +5,7 @@ import isObject from 'lodash/isObject';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import useControlled from '../_util/useControlled';
+// import useControlled from '../_util/useControlled';
 import { TdInputProps } from '../input';
 import { TdSelectInputProps } from './type';
 
@@ -24,7 +24,9 @@ function getInputValue(value: TdSelectInputProps['value'], keys: TdSelectInputPr
 }
 
 @tag('t-select-input-single')
-export default class SingleSelectInput extends Component<TdSelectInputProps> {
+export default class SingleSelectInput extends Component<
+  TdSelectInputProps & { onUpdateValue: (val: TdSelectInputProps['inputValue'], key: string) => void }
+> {
   static css = [
     `:host {
       width: 100%;
@@ -41,34 +43,37 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
   setInputValue;
 
   install(): void {
-    const [inputValue, setInputValue] = useControlled(this.props, 'inputValue', this.props.onInputChange);
-    this.inputValue = inputValue;
-    this.setInputValue = setInputValue;
+    this.inputValue = this.props.inputValue || this.props.defaultInputValue;
   }
 
+  onInnerClear = (context: { e: MouseEvent }) => {
+    context?.e?.stopPropagation();
+    this.props.onClear?.(context);
+    this.inputValue = '';
+    this.props?.onInputChange?.('', { trigger: 'clear' });
+    this.props.onUpdateValue('', 'singleInputValue');
+  };
+
+  onInnerInputChange: TdInputProps['onChange'] = (value, context) => {
+    if (this.props.allowInput) {
+      this.inputValue = value;
+      this.props?.onInputChange?.(value, { ...context, trigger: 'input' });
+      this.props.onUpdateValue(value, 'singleInputValue');
+    }
+  };
+
+  handleEmptyPanelBlur = (value: string, { e }: { e: FocusEvent }) => {
+    this.props.onBlur?.(value, { e, inputValue: value });
+  };
+
   render(props) {
-    const { value, keys, commonInputProps, popupVisible } = props;
-
-    const onInnerClear = (context: { e: MouseEvent }) => {
-      context?.e?.stopPropagation();
-      props.onClear?.(context);
-      this.setInputValue('', { trigger: 'clear' });
-    };
-
-    const onInnerInputChange: TdInputProps['onChange'] = (value, context) => {
-      console.log('==change', value, context);
-      if (props.allowInput) {
-        this.setInputValue(value, { ...context, trigger: 'input' });
-      }
-    };
-
-    const handleEmptyPanelBlur = (value: string, { e }: { e: FocusEvent }) => {
-      props.onBlur?.(value, { e, inputValue: value });
-    };
+    const { value, keys, commonInputProps, popupVisible, borderless } = props;
 
     // 单选，值的呈现方式
     const singleValueDisplay = !props.multiple ? props.valueDisplay : null;
+
     const displayedValue = popupVisible && props.allowInput ? this.inputValue : getInputValue(value, keys);
+
     return (
       <t-input
         ref={this.inputRef}
@@ -82,9 +87,9 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
             {singleValueDisplay}
           </>
         }
-        onChange={onInnerInputChange}
+        onChange={this.onInnerInputChange}
         readonly={!props.allowInput}
-        onClear={onInnerClear}
+        onClear={this.onInnerClear}
         // [Important Info]: SelectInput.blur is not equal to Input, example: click popup panel
         onFocus={(val, context) => {
           props.onFocus?.(value, { ...context, inputValue: val });
@@ -95,7 +100,8 @@ export default class SingleSelectInput extends Component<TdSelectInputProps> {
           props.onEnter?.(value, { ...context, inputValue: val });
         }}
         // onBlur need to triggered by input when popup panel is null
-        onBlur={!props.panel ? handleEmptyPanelBlur : null}
+        onBlur={!props.panel ? this.handleEmptyPanelBlur : null}
+        borderless={borderless}
         {...props.inputProps}
         inputClass={classNames(props.inputProps?.className, {
           [`${this.classPrefix}-input--focused`]: popupVisible,

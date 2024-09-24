@@ -42,15 +42,16 @@ export default class SelectInputAutocomplete extends Component {
 
   onOptionClick = (item: string) => {
     this.selectValue = item;
+
+    // this.update();
     this.popupVisible.value = false;
   };
 
   onInputChange = (keyword: string) => {
-    console.log('===keyword', keyword);
     this.selectValue = keyword;
-    // const options = new Array(5).fill(null).map((t, index) => `${keyword} Student ${index}`);
-    // this.options = options;
-    setTimeout(() => this.update(), 1000);
+    const options = new Array(5).fill(null).map((t, index) => `${keyword} Student ${index}`);
+    this.options = options;
+    this.update();
   };
 
   onPopupVisibleChange = (val: boolean) => {

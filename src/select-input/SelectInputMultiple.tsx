@@ -5,7 +5,6 @@ import isObject from 'lodash/isObject';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import useControlled from '../_util/useControlled';
 import { TagInputValue } from '../tag-input';
 import { SelectInputCommonProperties } from './interface';
 import { SelectInputChangeContext, SelectInputKeys, SelectInputValue, TdSelectInputProps } from './type';
@@ -23,8 +22,17 @@ const DEFAULT_KEYS = {
   children: 'children',
 };
 
+const classPrefix = getClassPrefix();
+
+const autoWidthCss = `
+.${classPrefix}-input--auto-width.${classPrefix}-tag-input__with-suffix-icon.${classPrefix}-tag-input--with-tag .${classPrefix}-input {
+  padding-right: var(--td-comp-paddingLR-xl);
+}
+`;
 @tag('t-select-input-multiple')
-export default class SelectInputMultiple extends Component<TdSelectInputProps> {
+export default class SelectInputMultiple extends Component<
+  TdSelectInputProps & { onUpdateValue: (val: TdSelectInputProps['inputValue'], key: string) => void }
+> {
   static css = [
     `:host {
       width: 100%;
@@ -32,13 +40,40 @@ export default class SelectInputMultiple extends Component<TdSelectInputProps> {
     `,
   ];
 
-  classPrefix = getClassPrefix();
+  classPrefix = classPrefix;
 
   tagInputRef = createRef();
 
+  tInputValue;
+
+  install(): void {
+    this.tInputValue = this.props.inputValue || this.props.defaultInputValue;
+  }
+
+  onTagInputChange = (val: TagInputValue, context: SelectInputChangeContext) => {
+    // 避免触发浮层的显示或隐藏
+    if (context.trigger === 'tag-remove') {
+      context.e?.stopPropagation();
+    }
+    this.props.onTagChange?.(val, context);
+  };
+
+  onInnerClear = (context: { e: MouseEvent }) => {
+    context?.e?.stopPropagation();
+    this.props.onClear?.(context);
+    this.tInputValue = '';
+    this.props?.onInputChange?.('', { trigger: 'clear' });
+    this.props.onUpdateValue('', 'multipleInputValue');
+  };
+
+  receiveProps(newProps) {
+    if (newProps.inputValue !== this.tInputValue) {
+      this.tInputValue = newProps.inputValue;
+    }
+  }
+
   render(props) {
-    const { value, popupVisible, commonInputProps, allowInput } = props;
-    const [tInputValue, setTInputValue] = useControlled(props, 'inputValue', props.onInputChange);
+    const { value, popupVisible, commonInputProps, allowInput, borderless, autoWidth } = props;
     const iKeys: SelectInputKeys = { ...DEFAULT_KEYS, ...props.keys };
 
     const getTags = () => {
@@ -51,20 +86,7 @@ export default class SelectInputMultiple extends Component<TdSelectInputProps> {
 
     const tPlaceholder = !tags || !tags.length ? props.placeholder : '';
 
-    const onTagInputChange = (val: TagInputValue, context: SelectInputChangeContext) => {
-      // 避免触发浮层的显示或隐藏
-      if (context.trigger === 'tag-remove') {
-        context.e?.stopPropagation();
-      }
-      props.onTagChange?.(val, context);
-    };
-
-    const onInnerClear = (context: { e: MouseEvent }) => {
-      console.log('====cle');
-      context?.e?.stopPropagation();
-      props.onClear?.(context);
-      setTInputValue('', { trigger: 'clear' });
-    };
+    const inputCss = (props?.inputProps?.css || '') + (autoWidth ? autoWidthCss : '');
 
     return (
       <t-tag-input
@@ -78,21 +100,24 @@ export default class SelectInputMultiple extends Component<TdSelectInputProps> {
         valueDisplay={props.valueDisplay}
         placeholder={tPlaceholder}
         value={tags}
-        inputValue={popupVisible && allowInput ? tInputValue : ''}
-        onChange={onTagInputChange}
+        inputValue={popupVisible && allowInput ? this.tInputValue : ''}
+        onChange={this.onTagInputChange}
         onInputChange={(val, context) => {
           // 筛选器统一特性：筛选器按下回车时不清空输入框
           if (context?.trigger === 'enter' || context?.trigger === 'blur') return;
-          setTInputValue(val, { trigger: context.trigger, e: context.e });
+          this.tInputValue = val;
+          props?.onInputChange?.(val, { trigger: context.trigger, e: context.e });
+          this.props.onUpdateValue(val, 'multipleInputValue');
         }}
         tagProps={props.tagProps}
-        onClear={onInnerClear}
+        onClear={this.onInnerClear}
         // [Important Info]: SelectInput.blur is not equal to TagInput, example: click popup panel
         onFocus={(val, context) => {
           props.onFocus?.(props.value, { ...context, tagInputValue: val });
         }}
         onBlur={!props.panel ? props.onBlur : null}
         style={{ width: '100%', display: 'inline-flex' }}
+        borderless={borderless}
         {...props.tagInputProps}
         inputProps={{
           ...props.inputProps,
@@ -101,6 +126,7 @@ export default class SelectInputMultiple extends Component<TdSelectInputProps> {
             [`${this.classPrefix}-input--focused`]: popupVisible,
             [`${this.classPrefix}-is-focused`]: popupVisible,
           }),
+          css: inputCss,
         }}
       />
     );

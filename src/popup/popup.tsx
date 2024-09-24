@@ -350,7 +350,6 @@ export default class Popup extends Component<PopupProps> {
       return child;
     });
 
-    console.log('===this.getVisible()', this.getVisible());
     return (
       <>
         {children.length > 1 ? (

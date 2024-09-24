@@ -61,6 +61,7 @@ export default class Tag extends Component<TagProps> {
 
   deleteIcon = (
     <t-icon-close
+      onMouseDown={(e) => e.preventDefault()}
       onClick={(e) => {
         if (this.props.disabled) return;
         e.stopImmediatePropagation();

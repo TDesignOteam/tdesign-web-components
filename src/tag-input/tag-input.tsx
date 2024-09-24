@@ -344,7 +344,6 @@ export default class TagInput extends Component<TagInputProps> {
   };
 
   private onInnerClick = (context: { e: MouseEvent }) => {
-    console.log('innerClick');
     const { props, tagInputRef } = this;
     if (!props.disabled && !props.readonly) {
       (tagInputRef.current as any).inputElement?.focus?.();
@@ -423,6 +422,7 @@ export default class TagInput extends Component<TagInputProps> {
       suffixIcon,
       suffix,
       innerStyle,
+      borderless,
       onPaste,
       onFocus,
       onBlur,
@@ -495,7 +495,14 @@ export default class TagInput extends Component<TagInputProps> {
         if (more) {
           list.push(more);
         } else {
-          list.push(<t-tag size={size}>+{len}</t-tag>);
+          list.push(
+            <t-tag
+              part={`input-tag ${size === 'large' && 'input-tag-l'} ${size === 'small' && 'input-tag-s'}`}
+              size={size}
+            >
+              +{len}
+            </t-tag>,
+          );
         }
       }
       return list;
@@ -507,11 +514,13 @@ export default class TagInput extends Component<TagInputProps> {
 
     const suffixIconNode = showClearIcon ? (
       <t-icon-close-circle-filled
+        style={{ display: 'flex' }}
         cls={classNames([
           `${classPrefix}-icon`,
           `${classPrefix}-icon-close-circle-filled `,
           TagInputClassNamePrefix(`__suffix-clear`),
         ])}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={this.onClearClick}
       />
     ) : (
@@ -556,6 +565,7 @@ export default class TagInput extends Component<TagInputProps> {
         suffixIcon={suffixIconNode}
         showInput={!inputProps?.readonly || !tagValue || !tagValue?.length}
         keepWrapperWidth={!autoWidth}
+        borderless={borderless}
         onPaste={onPaste}
         onEnter={this.onInputEnter}
         onMyKeydown={this.onInputBackspaceKeyDown}

@@ -1,6 +1,6 @@
-import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import 'tdesign-icons-web-components/esm/components/browse';
 import 'tdesign-icons-web-components/esm/components/browse-off';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
@@ -152,6 +152,8 @@ export default class Input extends Component<InputProps> {
       onValidateChange();
       onChange?.(newStr);
     }
+
+    this.update();
   };
 
   private handleFocus = (e: FocusEvent) => {
@@ -235,31 +237,44 @@ export default class Input extends Component<InputProps> {
     onCompositionend?.(currentTarget.value, { e });
   };
 
+  private updateInputWidth() {
+    if (!this.props.autoWidth || !this.inputRef.current) {
+      return;
+    }
+    const { offsetWidth } = this.inputPreRef.current;
+    const { width } = this.inputPreRef.current.getBoundingClientRect();
+    // 异步渲染场景下 getBoundingClientRect 宽度为 0，需要使用 offsetWidth
+    const calcWidth = width < offsetWidth ? offsetWidth + 1 : width;
+    this.inputRef.current.style.width = `${calcWidth}px`;
+  }
+
+  private resizeObserver: ResizeObserver | null = null;
+
   install() {
     this.value = this.props.defaultValue || this.props.value;
     this.status = this.props.status;
   }
 
-  installed() {
+  ready() {
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
-    const updateInputWidth = () => {
-      if (!this.props.autoWidth || !this.inputRef.current) return;
-      const { offsetWidth } = this.inputPreRef.current;
-      const { width } = this.inputPreRef.current.getBoundingClientRect();
-      // 异步渲染场景下 getBoundingClientRect 宽度为 0，需要使用 offsetWidth
-      const calcWidth = width < offsetWidth ? offsetWidth + 1 : width;
-      this.inputRef.current.style.width = `${calcWidth}px`;
-    };
 
     if (this.props.autoWidth) {
       requestAnimationFrame(() => {
-        updateInputWidth();
+        this.updateInputWidth();
       });
     }
 
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateInputWidth();
+    });
+
+    if (!inputNode) return;
+
     inputNode.addEventListener('input', (e) => {
       if (this.composingRef.current) {
+        this.composingValue = (e.currentTarget as HTMLInputElement)?.value || '';
+        this.update();
         return;
       }
       const target = e.currentTarget as any;
@@ -278,11 +293,6 @@ export default class Input extends Component<InputProps> {
       this.props.onChange?.(limitedValue);
       if (!this.props.allowInputOverMax) {
         this.update();
-      }
-      if (this.props.autoWidth) {
-        requestAnimationFrame(() => {
-          updateInputWidth();
-        });
       }
       onValidateChange();
     });
@@ -350,6 +360,7 @@ export default class Input extends Component<InputProps> {
     if (isShowClearIcon) {
       suffixIconNew = (
         <t-icon-close-circle-filled
+          onMouseDown={(e) => e.preventDefault()}
           name={'close-circle-filled'}
           cls={classname(
             `${classPrefix}-input__suffix-clear`,
@@ -365,6 +376,7 @@ export default class Input extends Component<InputProps> {
       if (this.renderType === 'password') {
         suffixIconNew = (
           <t-icon-browse-off
+            onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
             cls={classname(
               `${classPrefix}-input__suffix-clear`,
@@ -377,6 +389,7 @@ export default class Input extends Component<InputProps> {
       } else if (this.renderType === 'text') {
         suffixIconNew = (
           <t-icon-browse
+            onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
             cls={classname(
               `${classPrefix}-input__suffix-clear`,
@@ -390,8 +403,8 @@ export default class Input extends Component<InputProps> {
     }
 
     const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
-    const labelContent = isFunction(label) ? label() : label;
-    const suffixContent = isFunction(suffix) ? suffix() : suffix;
+    const labelContent = isFunction(label) ? (label as any)() : label;
+    const suffixContent = isFunction(suffix) ? (suffix as any)() : suffix;
 
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
@@ -477,6 +490,10 @@ export default class Input extends Component<InputProps> {
         )}
         ref={this.wrapperRef}
         part="wrap"
+        onClick={(e) => {
+          this.inputRef.current?.focus();
+          restProps.onClick?.(e);
+        }}
         {...restProps}
         style={innerStyle}
       >
@@ -486,5 +503,12 @@ export default class Input extends Component<InputProps> {
         </div>
       </div>
     );
+  }
+
+  rendered() {
+    this.resizeObserver?.disconnect();
+    if (this.inputPreRef.current) {
+      this.resizeObserver?.observe(this.inputPreRef.current);
+    }
   }
 }

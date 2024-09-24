@@ -2,16 +2,17 @@ import 'tdesign-web-components/select-input';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 
 import { Component, signal } from 'omi';
+import { SelectInputProps } from 'tdesign-web-components/select-input';
 
 const classStyles = `
 <style>
-.tdesign-demo__select-input-ul-single {
+.tdesign-demo__select-input-ul-borderless {
+  padding: 0;
   display: flex;
   flex-direction: column;
-  padding: 0;
   gap: 2px;
 }
-.tdesign-demo__select-input-ul-single > li {
+.tdesign-demo__select-input-ul-borderless > li {
   display: block;
   border-radius: 3px;
   line-height: 22px;
@@ -25,7 +26,7 @@ const classStyles = `
   text-overflow: ellipsis;
 }
 
-.tdesign-demo__select-input-ul-single > li:hover {
+.tdesign-demo__select-input-ul-borderless > li:hover {
   background-color: var(--td-bg-color-container-hover);
 }
 </style>
@@ -45,8 +46,7 @@ export default class SelectInputSingle extends Component {
 
   popupVisible = signal(false);
 
-  onOptionClick = (e: Event, item: { label: string; value: number }) => {
-    // e.stopPropagation();
+  onOptionClick = (item: { label: string; value: number }) => {
     this.selectValue.value = item;
     // 选中后立即关闭浮层
     this.popupVisible.value = false;
@@ -56,38 +56,39 @@ export default class SelectInputSingle extends Component {
     this.selectValue.value = undefined;
   };
 
-  onPopupVisibleChange = (val) => {
+  onPopupVisibleChange: SelectInputProps['onPopupVisibleChange'] = (val, context) => {
+    console.log(context);
     this.popupVisible.value = val;
   };
 
   installed(): void {
+    // 添加示例代码所需样式
     document.head.insertAdjacentHTML('beforeend', classStyles);
   }
 
   render() {
     return (
-      <div>
+      <div style={{ width: '60%' }}>
+        {/* <!-- :popup-props="{ trigger: 'hover' }" --> */}
         <t-select-input
           value={this.selectValue.value}
           popupVisible={this.popupVisible.value}
-          innerStyle={{ width: '300px' }}
           placeholder="Please Select"
+          borderless
           clearable
-          allowInput
-          popupProps={{ overlayInnerStyle: { padding: 6 } }}
           onPopupVisibleChange={this.onPopupVisibleChange}
           onClear={this.onClear}
           panel={
-            <ul className="tdesign-demo__select-input-ul-single">
+            <ul className="tdesign-demo__select-input-ul-borderless">
               {OPTIONS.map((item) => (
-                <li key={item.value} onClick={(e) => this.onOptionClick(e, item)}>
+                <li key={item.value} onClick={() => this.onOptionClick(item)}>
                   {item.label}
                 </li>
               ))}
             </ul>
           }
           suffixIcon={<t-icon-chevron-down />}
-        />
+        ></t-select-input>
       </div>
     );
   }
