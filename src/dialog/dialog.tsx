@@ -5,9 +5,7 @@ import 'tdesign-icons-web-components/esm/components/error-circle';
 import 'omi-transition';
 import '../common/portal';
 
-import isNumber from 'lodash/isNumber';
-import isObject from 'lodash/isObject';
-import isString from 'lodash/isString';
+import { isNumber, isObject, isString } from 'lodash';
 import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';
@@ -554,6 +552,7 @@ export default class Dialog extends Component<DialogProps> {
 
   uninstall(): void {
     this.addKeyboardEvent(false);
+    document.documentElement.removeEventListener('click', getClickPosition);
   }
 
   receiveProps(props: DialogProps | OmiProps<DialogProps, any>, oldProps: DialogProps | OmiProps<DialogProps, any>) {
