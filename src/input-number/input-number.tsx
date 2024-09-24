@@ -6,15 +6,29 @@ import { Component, tag } from 'omi';
 import classname, { classPrefix } from '../_util/classname';
 
 export interface InputNumberProps {
-  align?: 'left' | 'center' | 'right';
+  value: number;
+  onChange: Function;
 }
 
 @tag('t-input-number')
-export default class InputNumber extends Component {
+export default class InputNumber extends Component<InputNumberProps> {
+  static defaultProps = {
+    value: 0,
+  };
+
+  static propTypes = {
+    value: Number,
+    onChange: Function,
+  };
+
+  private handleChange = (value) => {
+    this.props?.onChange?.(value);
+  };
+
   render(props) {
     return (
       <div className={classname(`${classPrefix}-input-number`, props.className)}>
-        <t-input />
+        <t-input value={props.value} onChange={this.handleChange} />
       </div>
     );
   }

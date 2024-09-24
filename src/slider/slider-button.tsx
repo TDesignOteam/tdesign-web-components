@@ -307,6 +307,7 @@ export default class SliderButton extends Component<SliderButtonProps> {
           strategy="absolute"
           content={this.getTooltipContent()}
           visible={props.label && this.visible.value}
+          style={{ height: '100%' }}
         >
           <div className={classname(`${this.className}`, { [`${this.className}--dragging`]: this.dragging.value })} />
         </t-tooltip>
