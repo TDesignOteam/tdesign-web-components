@@ -6,7 +6,7 @@ import { Component, signal } from 'omi';
 
 type AlignType = 'hide' | 'align-left' | 'align-input';
 
-export default class Inpu1tNumberCenterDemo extends Component {
+export default class InputNumberCenterDemo extends Component {
   type = signal<AlignType>('align-input');
 
   render() {
