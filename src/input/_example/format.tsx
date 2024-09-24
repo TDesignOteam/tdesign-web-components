@@ -21,6 +21,7 @@ export default class InputForMat extends Component {
         value={this.inputValue}
         onChange={(value) => {
           this.inputValue = value;
+          this.update();
         }}
         status={inputStatus}
         format={format}
