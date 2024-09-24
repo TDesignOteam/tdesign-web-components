@@ -10,7 +10,7 @@
   "license": "MIT",
   "scripts": {
     "start": "npm run dev",
-    "dev": "npm run generate:entry && cd site && vite --force",
+    "dev": "npm run generate:entry && cd site && vite",
     "site": "cd site && vite build",
     "site:intranet": "cd site && vite build --mode intranet",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
