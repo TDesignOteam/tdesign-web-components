@@ -4,6 +4,7 @@ import 'tdesign-web-components/comment';
 import 'tdesign-web-components/grid';
 
 import { Component } from 'omi';
+import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
 
 interface Option {
   content: string;
@@ -24,7 +25,7 @@ export default class Button extends Component {
   ];
 
   clickHandler: ClickHandler = (data) => {
-    alert(`选中【${data.value}】`);
+    MessagePlugin.info(`选中【${data.value}】`);
   };
 
   render() {

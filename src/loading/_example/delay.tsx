@@ -44,7 +44,7 @@ export default class LoadingDelay extends Component {
           <t-button onClick={loadingData} size="small">
             快速重新加载数据（无loading）
           </t-button>
-          <t-button onClick={() => loadingData(2000000)} size="small">
+          <t-button onClick={() => loadingData(1000)} size="small">
             慢速重新加载数据
           </t-button>
         </t-space>

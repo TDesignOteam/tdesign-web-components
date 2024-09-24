@@ -1,8 +1,11 @@
+import 'tdesign-icons-web-components/esm/components/browse';
+import 'tdesign-icons-web-components/esm/components/browse-off';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
 import { InputValue, TdInputProps } from './type';
@@ -90,7 +93,7 @@ export default class Input extends Component<InputProps> {
 
   status: TdInputProps['status'] = 'default';
 
-  renderType = '';
+  renderType = 'text';
 
   isFocused = false;
 
@@ -99,6 +102,14 @@ export default class Input extends Component<InputProps> {
   eventPropsNames;
 
   eventProps;
+
+  private handlePasswordVisible = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
+    if (this.props.disabled) return;
+    const toggleType = this.renderType === 'password' ? 'text' : 'password';
+    this.renderType = toggleType;
+    this.update();
+  };
 
   private handleChange = (e) => {
     e.stopImmediatePropagation();
@@ -135,6 +146,8 @@ export default class Input extends Component<InputProps> {
       onValidateChange();
       onChange?.(newStr);
     }
+
+    this.update();
   };
 
   private handleFocus = (e: FocusEvent) => {
@@ -158,13 +171,15 @@ export default class Input extends Component<InputProps> {
   };
 
   private handleMouseEnter = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
     const { onMouseenter } = this.props;
     this.isHover = true;
-    this.update();
     onMouseenter?.({ e });
+    this.update();
   };
 
   private handleMouseLeave = (e: MouseEvent) => {
+    e.stopImmediatePropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
     this.update();
@@ -216,6 +231,19 @@ export default class Input extends Component<InputProps> {
     onCompositionend?.(currentTarget.value, { e });
   };
 
+  private updateInputWidth() {
+    if (!this.props.autoWidth || !this.inputRef.current) {
+      return;
+    }
+    const { offsetWidth } = this.inputPreRef.current;
+    const { width } = this.inputPreRef.current.getBoundingClientRect();
+    // 异步渲染场景下 getBoundingClientRect 宽度为 0，需要使用 offsetWidth
+    const calcWidth = width < offsetWidth ? offsetWidth + 1 : width;
+    this.inputRef.current.style.width = `${calcWidth}px`;
+  }
+
+  private resizeObserver: ResizeObserver | null = null;
+
   install() {
     this.value = this.props.defaultValue || this.props.value;
     this.status = this.props.status;
@@ -224,23 +252,21 @@ export default class Input extends Component<InputProps> {
   installed() {
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
-    const updateInputWidth = () => {
-      if (!this.props.autoWidth || !this.inputRef.current) return;
-      const { offsetWidth } = this.inputPreRef.current;
-      const { width } = this.inputPreRef.current.getBoundingClientRect();
-      // 异步渲染场景下 getBoundingClientRect 宽度为 0，需要使用 offsetWidth
-      const calcWidth = width < offsetWidth ? offsetWidth + 1 : width;
-      this.inputRef.current.style.width = `${calcWidth}px`;
-    };
 
     if (this.props.autoWidth) {
       requestAnimationFrame(() => {
-        updateInputWidth();
+        this.updateInputWidth();
       });
     }
 
+    this.resizeObserver = new ResizeObserver(() => {
+      this.updateInputWidth();
+    });
+
     inputNode.addEventListener('input', (e) => {
       if (this.composingRef.current) {
+        this.composingValue = (e.currentTarget as HTMLInputElement)?.value || '';
+        this.update();
         return;
       }
       const target = e.currentTarget as any;
@@ -259,11 +285,6 @@ export default class Input extends Component<InputProps> {
       this.props.onChange?.(limitedValue);
       if (!this.props.allowInputOverMax) {
         this.update();
-      }
-      if (this.props.autoWidth) {
-        requestAnimationFrame(() => {
-          updateInputWidth();
-        });
       }
       onValidateChange();
     });
@@ -310,20 +331,65 @@ export default class Input extends Component<InputProps> {
     });
 
     const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
-    const prefixIconContent = renderIcon('t', 'prefix', parseTNode(prefixIcon));
-    let suffixIconNew = suffixIcon;
 
+    const prefixIconContent = prefixIcon
+      ? renderIcon(
+          't',
+          'prefix',
+          cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
+            className: `${classPrefix}-input__prefix`,
+            style: { marginRight: '0px' },
+          }),
+        )
+      : renderIcon('t', 'prefix', parseTNode(convertToLightDomNode(prefixIcon)));
+    let suffixIconNew = suffixIcon;
+    const cleanMargin = { marginLeft: '0px' };
     if (isShowClearIcon) {
       suffixIconNew = (
         <t-icon-close-circle-filled
+          onMouseDown={(e) => e.preventDefault()}
           name={'close-circle-filled'}
-          class={classname(`${classPrefix}-input__suffix-clear`)}
+          className={classname(
+            `${classPrefix}-input__suffix-clear`,
+            `${classPrefix}-input__suffix`,
+            `${classPrefix}-input__suffix-icon`,
+          )}
+          style={cleanMargin}
           onClick={this.handleClear}
         />
       ) as any;
     }
+    if (props.type === 'password' && typeof suffixIcon === 'undefined') {
+      if (this.renderType === 'password') {
+        suffixIconNew = (
+          <t-icon-browse-off
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
+        ) as any;
+      } else if (this.renderType === 'text') {
+        suffixIconNew = (
+          <t-icon-browse
+            onMouseDown={(e) => e.preventDefault()}
+            onClick={this.handlePasswordVisible}
+            className={classname(
+              `${classPrefix}-input__suffix-clear`,
+              `${classPrefix}-input__suffix`,
+              `${classPrefix}-input__suffix-icon`,
+            )}
+            style={cleanMargin}
+          />
+        ) as any;
+      }
+    }
 
-    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(suffixIconNew));
+    const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
     const labelContent = isFunction(label) ? label() : label;
     const suffixContent = isFunction(suffix) ? suffix() : suffix;
 
@@ -411,6 +477,10 @@ export default class Input extends Component<InputProps> {
         )}
         ref={this.wrapperRef}
         part="wrap"
+        onClick={(e) => {
+          this.inputRef.current?.focus();
+          restProps.onClick?.(e);
+        }}
         {...restProps}
       >
         {renderInputNode}
@@ -419,5 +489,12 @@ export default class Input extends Component<InputProps> {
         </div>
       </div>
     );
+  }
+
+  rendered() {
+    this.resizeObserver?.disconnect();
+    if (this.inputPreRef.current) {
+      this.resizeObserver?.observe(this.inputPreRef.current);
+    }
   }
 }

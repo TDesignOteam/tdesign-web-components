@@ -1,0 +1,14 @@
+
+@import "../../_common/style/web/base.less";
+@import "../../_common/style/web/components/list/_var.less";
+
+// for web-component
+.@{prefix}-list {
+  &--stripe {
+    @{prefix}-list-item:nth-child(even) {
+      .@{prefix}-list-item  {
+        background: @list-bg-color-strip;
+      }
+    }
+  }
+}

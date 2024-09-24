@@ -6,7 +6,7 @@ export default class ImageWatermark extends Component {
   render() {
     return (
       <t-watermark
-        watermarkContent={{ url: 'https://tdesign.gtimg.com/site/log-watermark.svg' }}
+        watermarkContent={{ url: 'https://tdesign.gtimg.com/site/logo-watermark.svg' }}
         width={104}
         height={65.5}
         x={90}

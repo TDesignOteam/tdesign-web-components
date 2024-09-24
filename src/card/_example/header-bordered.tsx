@@ -1,12 +1,13 @@
 import 'tdesign-web-components/card';
 
 import { bind, Component } from 'omi';
+import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
 
 export default class Button extends Component {
   @bind
   clickHandler() {
     // 缺少Message全局提示组件，暂用alert代替
-    window.alert('操作');
+    MessagePlugin.info('操作');
   }
 
   render() {
