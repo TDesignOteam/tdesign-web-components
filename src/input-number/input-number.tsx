@@ -1,4 +1,7 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/add';
+import 'tdesign-icons-web-components/esm/components/chevron-down';
+import 'tdesign-icons-web-components/esm/components/chevron-up';
+import 'tdesign-icons-web-components/esm/components/remove';
 import '../button';
 import '../input';
 
@@ -29,14 +32,14 @@ export interface InputNumberProps extends TdInputNumberProps, StyledProps {}
 @tag('t-input-number')
 export default class InputNumber extends Component<InputNumberProps> {
   static css = `
-    .t-input-number t-button-light-dom.t-input-number__decrease,
-    .t-input-number t-button-light-dom.t-input-number__increase {
+    .${classPrefix}-input-number ${classPrefix}-button-light-dom.${classPrefix}-input-number__decrease,
+    .${classPrefix}-input-number ${classPrefix}-button-light-dom.${classPrefix}-input-number__increase {
       border: none;
       transition: none;
     }
 
-    .t-input-number button.t-input-number__decrease,
-    .t-input-number button.t-input-number__increase {
+    .${classPrefix}-input-number button.${classPrefix}-input-number__decrease,
+    .${classPrefix}-input-number button.${classPrefix}-input-number__increase {
       position: static;
     }
   `;
@@ -56,11 +59,24 @@ export default class InputNumber extends Component<InputNumberProps> {
     theme: 'row',
   };
 
-  static propTypes = {};
+  static propTypes = {
+    allowInputOverLimit: Boolean,
+    autoWidth: Boolean,
+    decimalPlaces: Number,
+    largeNumber: Number,
+    max: Number,
+    min: Number,
+    placeholder: String,
+    readonly: Boolean,
+    size: String,
+    status: String,
+    step: Number,
+    theme: String,
+  };
 
   private inputRef = createRef();
 
-  private usedValue = signal<InputNumberValue>('');
+  private usedValue: InputNumberValue = '';
 
   private error = signal<InputNumberErrorType>(undefined);
 
@@ -72,12 +88,12 @@ export default class InputNumber extends Component<InputNumberProps> {
 
   private get disabledReduce() {
     const { disabled, min, largeNumber } = this.props;
-    return disabled || !canReduceNumber(this.usedValue.value, min, largeNumber);
+    return disabled || !canReduceNumber(this.usedValue, min, largeNumber);
   }
 
   private get disabledAdd() {
     const { disabled, max, largeNumber } = this.props;
-    return disabled || !canAddNumber(this.usedValue.value, max, largeNumber);
+    return disabled || !canAddNumber(this.usedValue, max, largeNumber);
   }
 
   private getUserInput(value: InputNumberValue) {
@@ -102,19 +118,21 @@ export default class InputNumber extends Component<InputNumberProps> {
 
   @bind
   private handleChange(value: InputNumberValue, context: ChangeContext) {
-    const preUsedValue = this.usedValue.value;
+    const preUsedValue = this.usedValue;
 
     if (!this.isControlled) {
-      this.usedValue.value = value;
+      this.usedValue = value;
     }
     this.props.onChange?.(value, context);
 
-    const curUsedValue = this.usedValue.value;
+    const curUsedValue = this.usedValue;
 
     if (curUsedValue !== preUsedValue) {
       this.handleUsedValueChange();
       this.handleValidate();
     }
+
+    this.update();
   }
 
   @bind
@@ -125,7 +143,7 @@ export default class InputNumber extends Component<InputNumberProps> {
       step,
       max,
       min,
-      lastValue: this.usedValue.value,
+      lastValue: this.usedValue,
       largeNumber,
     });
     const overLimit = getMaxOrMinValidateResult({
@@ -181,7 +199,7 @@ export default class InputNumber extends Component<InputNumberProps> {
       return;
     }
 
-    if (canSetValue(String(val), Number(this.usedValue.value))) {
+    if (canSetValue(String(val), Number(this.usedValue))) {
       const newVal = val === '' ? undefined : Number(val);
       this.handleChange(newVal, { type: 'input', e: new InputEvent('input') });
     }
@@ -237,8 +255,8 @@ export default class InputNumber extends Component<InputNumberProps> {
 
   @bind
   private handleFocus(_: string, ctx: { e: FocusEvent }) {
-    this.userInput.value = String(this.usedValue.value || '');
-    this.props.onFocus?.(this.usedValue.value, ctx);
+    this.userInput.value = String(this.usedValue || '');
+    this.props.onFocus?.(this.usedValue, ctx);
   }
 
   @bind
@@ -247,7 +265,7 @@ export default class InputNumber extends Component<InputNumberProps> {
 
     if (!allowInputOverLimit && value !== undefined) {
       const r = getMaxOrMinValidateResult({
-        value: this.usedValue.value,
+        value: this.usedValue,
         largeNumber,
         max,
         min,
@@ -267,7 +285,7 @@ export default class InputNumber extends Component<InputNumberProps> {
     });
 
     this.userInput.value = this.getUserInput(newValue);
-    if (newValue !== this.usedValue.value) {
+    if (newValue !== this.usedValue) {
       this.handleChange(newValue, { type: 'blur', e: ctx.e });
     }
 
@@ -276,12 +294,12 @@ export default class InputNumber extends Component<InputNumberProps> {
 
   @bind
   private handleValidate() {
-    if ([undefined, '', null].includes(this.usedValue.value as any)) {
+    if ([undefined, '', null].includes(this.usedValue as any)) {
       return;
     }
     const { max, min, largeNumber } = this.props;
     const error = getMaxOrMinValidateResult({
-      value: this.usedValue.value,
+      value: this.usedValue,
       max,
       min,
       largeNumber,
@@ -292,20 +310,20 @@ export default class InputNumber extends Component<InputNumberProps> {
 
   @bind
   private handleUsedValueChange() {
-    const inputValue = [undefined, null].includes(this.usedValue.value) ? '' : String(this.usedValue.value);
+    const inputValue = [undefined, null].includes(this.usedValue) ? '' : String(this.usedValue);
 
     const { largeNumber, decimalPlaces } = this.props;
 
     // userInput.value 为非合法数字，则表示用户正在输入，此时无需处理
     if (!largeNumber && !Number.isNaN(this.userInput.value)) {
-      if (parseFloat(this.userInput.value) !== this.usedValue.value) {
+      if (parseFloat(this.userInput.value) !== this.usedValue) {
         this.userInput.value = this.getUserInput(inputValue);
       }
       const fixedNumber = Number(largeNumberToFixed(inputValue, decimalPlaces, largeNumber));
       if (
         decimalPlaces !== undefined &&
-        ![undefined, null].includes(this.usedValue.value) &&
-        Number(fixedNumber) !== Number(this.usedValue.value)
+        ![undefined, null].includes(this.usedValue) &&
+        Number(fixedNumber) !== Number(this.usedValue)
       ) {
         this.handleChange(fixedNumber, { type: 'props', e: undefined });
       }
@@ -315,7 +333,7 @@ export default class InputNumber extends Component<InputNumberProps> {
       this.userInput.value = tmpUserInput;
       if (
         decimalPlaces !== undefined &&
-        largeNumberToFixed(inputValue, decimalPlaces, largeNumber) !== this.usedValue.value
+        largeNumberToFixed(inputValue, decimalPlaces, largeNumber) !== this.usedValue
       ) {
         this.handleChange(tmpUserInput, { type: 'props', e: undefined });
       }
@@ -323,7 +341,7 @@ export default class InputNumber extends Component<InputNumberProps> {
   }
 
   install(): void {
-    this.usedValue.value = this.props.value || this.props.defaultValue;
+    this.usedValue = this.props.value || this.props.defaultValue;
     this.handleUsedValueChange();
     this.handleValidate();
   }
@@ -336,7 +354,7 @@ export default class InputNumber extends Component<InputNumberProps> {
       (this.isControlled && props.value !== oldProps.value) ||
       (Reflect.has(oldProps, 'value') && !this.isControlled)
     ) {
-      this.usedValue.value = props.value;
+      this.usedValue = props.value;
       this.handleUsedValueChange();
       this.handleValidate();
     }
@@ -362,13 +380,13 @@ export default class InputNumber extends Component<InputNumberProps> {
 
     const addIcon =
       props.theme === 'column'
-        ? convertToLightDomNode(<t-icon size={props.size} name="chevron-up" />)
-        : convertToLightDomNode(<t-icon size={props.size} name="add" />);
+        ? convertToLightDomNode(<t-icon-chevron-up size={props.size} />)
+        : convertToLightDomNode(<t-icon-add size={props.size} />);
 
     const reduceIcon =
       props.theme === 'column'
-        ? convertToLightDomNode(<t-icon size={props.size} name="chevron-down" />)
-        : convertToLightDomNode(<t-icon size={props.size} name="remove" />);
+        ? convertToLightDomNode(<t-icon-chevron-down size={props.size} />)
+        : convertToLightDomNode(<t-icon-remove size={props.size} />);
 
     return (
       <div
