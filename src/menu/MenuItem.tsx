@@ -32,14 +32,6 @@ export default class MenuItem extends Component<MenuItemProps> {
       position: absolute;
       inset: 0;
     }
-      
-    .${getClassPrefix()}-menu__item .${getClassPrefix()}-menu__item-tooltip-inner {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    } 
   `;
 
   static propTypes = {
@@ -108,14 +100,15 @@ export default class MenuItem extends Component<MenuItemProps> {
       </>
     );
 
-    if (this.injection.collapsed.value && !this.props.disabled) {
-      return (
-        <t-tooltip content={label} placement="right">
-          <div className={`${classPrefix}-menu__item-tooltip-inner`}>{content}</div>
-        </t-tooltip>
-      );
-    }
-
-    return <div className={`${classPrefix}-menu__item--inner`}>{content}</div>;
+    return (
+      <>
+        <div className={`${classPrefix}-menu__item--inner`}>{content}</div>
+        {this.injection.collapsed.value && !this.props.disabled ? (
+          <t-tooltip content={label} placement="right">
+            <div style={{ position: 'absolute', inset: 0 }} />
+          </t-tooltip>
+        ) : null}
+      </>
+    );
   }
 }
