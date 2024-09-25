@@ -68,6 +68,10 @@ export default class Portal extends Component<PortalProps> {
     this.parentElement?.appendChild?.(this.container);
   }
 
+  uninstall(): void {
+    this.parentElement?.removeChild?.(this.container);
+  }
+
   render() {
     const { children } = this.props;
     return render(children, this.container);

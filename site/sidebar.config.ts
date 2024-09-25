@@ -155,6 +155,13 @@ export default [
         component: () => import('tdesign-web-components/range-input/README.md'),
       },
       {
+        title: 'SelectInput 筛选器输入框',
+        name: 'select-input',
+        docType: 'form',
+        path: '/components/select-input',
+        component: () => import('tdesign-web-components/select-input/README.md'),
+      },
+      {
         title: 'TagInput 标签输入框',
         name: ' tag-input',
         path: '/components/tag-input',

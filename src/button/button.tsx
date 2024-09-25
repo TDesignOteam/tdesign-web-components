@@ -32,6 +32,7 @@ export default class Button extends Component<ButtonProps> {
     content: [String, Object],
     onClick: Function,
     ignoreAttributes: Array,
+    innerStyle: String,
   };
 
   static defaultProps = {
@@ -73,7 +74,6 @@ export default class Button extends Component<ButtonProps> {
   render(props: ButtonProps) {
     const {
       icon,
-      className,
       variant,
       size,
       block,
@@ -84,10 +84,14 @@ export default class Button extends Component<ButtonProps> {
       ignoreAttributes,
       children,
       suffix,
+      innerClass,
+      innerStyle,
       ...rest
     } = props;
 
     delete rest.onClick;
+    delete rest.className;
+    delete rest.style;
 
     const classPrefix = getClassPrefix();
 
@@ -104,7 +108,7 @@ export default class Button extends Component<ButtonProps> {
     return (
       <Tag
         className={classname(
-          className,
+          innerClass,
           [
             `${classPrefix}-button`,
             `${classPrefix}-button--theme-${this.theme}`,
@@ -121,6 +125,7 @@ export default class Button extends Component<ButtonProps> {
           },
         )}
         onClick={this.clickHandle}
+        style={innerStyle}
         {...rest}
       >
         {iconNode ? iconNode : null}

@@ -43,6 +43,13 @@ const isFunction = (arg: unknown) => typeof arg === 'function';
 
 @tag('t-input')
 export default class Input extends Component<InputProps> {
+  static css = [
+    `:host {
+      width: 100%;
+    };
+    `,
+  ];
+
   static defaultProps = {
     align: 'left',
     allowInputOverMax: false,
@@ -127,7 +134,6 @@ export default class Input extends Component<InputProps> {
       allowInputOverMax,
       onValidate,
     });
-
     let { value: newStr } = e.currentTarget;
     if (this.composingRef.current) {
       this.composingValue = newStr;
@@ -261,7 +267,7 @@ export default class Input extends Component<InputProps> {
     this.status = this.props.status;
   }
 
-  installed() {
+  ready() {
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
 
@@ -274,6 +280,8 @@ export default class Input extends Component<InputProps> {
     this.resizeObserver = new ResizeObserver(() => {
       this.updateInputWidth();
     });
+
+    if (!inputNode) return;
 
     inputNode.addEventListener('input', (e) => {
       if (this.composingRef.current) {
@@ -318,12 +326,13 @@ export default class Input extends Component<InputProps> {
 
   render(props: OmiProps<InputProps>) {
     const {
+      innerClass,
+      innerStyle,
       autoWidth,
       placeholder,
       disabled,
       status,
       size,
-      className,
       prefixIcon,
       suffixIcon,
       clearable,
@@ -342,10 +351,14 @@ export default class Input extends Component<InputProps> {
       keepWrapperWidth,
       showLimitNumber,
       allowInputOverMax,
+      inputClass,
       format,
       onValidate,
       ...restProps
     } = props;
+
+    delete restProps.className;
+    delete restProps.style;
 
     const { limitNumber, tStatus } = useLengthLimit({
       value: this.innerValue === undefined ? undefined : String(this.innerValue),
@@ -363,7 +376,7 @@ export default class Input extends Component<InputProps> {
           't',
           'prefix',
           cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
-            className: `${classPrefix}-input__prefix`,
+            cls: `${classPrefix}-input__prefix`,
             style: { marginRight: '0px' },
           }),
         )
@@ -375,7 +388,7 @@ export default class Input extends Component<InputProps> {
         <t-icon-close-circle-filled
           onMouseDown={(e) => e.preventDefault()}
           name={'close-circle-filled'}
-          className={classname(
+          cls={classname(
             `${classPrefix}-input__suffix-clear`,
             `${classPrefix}-input__suffix`,
             `${classPrefix}-input__suffix-icon`,
@@ -391,7 +404,7 @@ export default class Input extends Component<InputProps> {
           <t-icon-browse-off
             onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
-            className={classname(
+            cls={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
@@ -404,7 +417,7 @@ export default class Input extends Component<InputProps> {
           <t-icon-browse
             onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
-            className={classname(
+            cls={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
@@ -456,7 +469,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        class={classname(`${classPrefix}-input`, {
+        class={classname(inputClass, `${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -499,7 +512,7 @@ export default class Input extends Component<InputProps> {
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
           },
-          className,
+          innerClass,
         )}
         ref={this.wrapperRef}
         part="wrap"
@@ -508,6 +521,7 @@ export default class Input extends Component<InputProps> {
           restProps.onClick?.(e);
         }}
         {...restProps}
+        style={innerStyle}
       >
         {renderInputNode}
         <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>

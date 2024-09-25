@@ -3,7 +3,7 @@ import 'tdesign-web-components/popup';
 
 const styles = {
   container: {
-    margin: '0 auto',
+    margin: '20px auto',
     width: '500px',
     height: '260px',
     position: 'relative',
@@ -74,50 +74,26 @@ const styles = {
 export default function Placement() {
   return (
     <div style={styles.container}>
-      <t-popup content="这是Popup内容" placement="top" showArrow destroyOnClose style={styles.placementTop}>
-        <t-button>top</t-button>
+      <t-popup content="这是Popup内容" placement="top" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementTop}>top</t-button>
       </t-popup>
-      <t-popup
-        content="这是Popup内容 top-left"
-        placement="top-left"
-        showArrow
-        destroyOnClose
-        style={styles.placementTopLeft}
-      >
-        <t-button>top-left</t-button>
+      <t-popup content="这是Popup内容 top-left" placement="top-left" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementTopLeft}>top-left</t-button>
       </t-popup>
-      <t-popup
-        content="这是Popup内容top-right"
-        placement="top-right"
-        showArrow
-        destroyOnClose
-        style={styles.placementTopRight}
-      >
-        <t-button>top-right</t-button>
+      <t-popup content="这是Popup内容top-right" placement="top-right" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementTopRight}>top-right</t-button>
       </t-popup>
-      <t-popup content="这是Popup内容" placement="bottom" showArrow destroyOnClose style={styles.placementBottom}>
-        <t-button>bottom</t-button>
+      <t-popup content="这是Popup内容" placement="bottom" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementBottom}>bottom</t-button>
       </t-popup>
-      <t-popup
-        content="这是Popup内容 bottom-left"
-        placement="bottom-left"
-        showArrow
-        destroyOnClose
-        style={styles.placementBottomLeft}
-      >
-        <t-button>bottom-left</t-button>
+      <t-popup content="这是Popup内容 bottom-left" placement="bottom-left" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementBottomLeft}>bottom-left</t-button>
       </t-popup>
-      <t-popup
-        content="这是Popup内容 bottom-right"
-        placement="bottom-right"
-        showArrow
-        destroyOnClose
-        style={styles.placementBottomRight}
-      >
-        <t-button>bottom-right</t-button>
+      <t-popup content="这是Popup内容 bottom-right" placement="bottom-right" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementBottomRight}>bottom-right</t-button>
       </t-popup>
-      <t-popup content="这是Popup内容" placement="left" showArrow destroyOnClose style={styles.placementLeft}>
-        <t-button>left</t-button>
+      <t-popup content="这是Popup内容" placement="left" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementLeft}>left</t-button>
       </t-popup>
       <t-popup
         content="这是Popup内容   left-top"
@@ -125,9 +101,8 @@ export default function Placement() {
         overlayStyle={{ width: '140px' }}
         showArrow
         destroyOnClose
-        style={styles.placementLeftTop}
       >
-        <t-button>left-top</t-button>
+        <t-button innerStyle={styles.placementLeftTop}>left-top</t-button>
       </t-popup>
       <t-popup
         content="这是Popup内容 left-bottom"
@@ -135,12 +110,11 @@ export default function Placement() {
         overlayStyle={{ width: '140px' }}
         showArrow
         destroyOnClose
-        style={styles.placementLeftBottom}
       >
-        <t-button>left-bottom</t-button>
+        <t-button innerStyle={styles.placementLeftBottom}>left-bottom</t-button>
       </t-popup>
-      <t-popup content="这是Popup内容" placement="right" showArrow destroyOnClose style={styles.placementRight}>
-        <t-button>right</t-button>
+      <t-popup content="这是Popup内容" placement="right" showArrow destroyOnClose>
+        <t-button innerStyle={styles.placementRight}>right</t-button>
       </t-popup>
       <t-popup
         content="这是Popup内容 right-top"
@@ -148,9 +122,8 @@ export default function Placement() {
         overlayStyle={{ width: '140px' }}
         showArrow
         destroyOnClose
-        style={styles.placementRightTop}
       >
-        <t-button>right-top</t-button>
+        <t-button innerStyle={styles.placementRightTop}>right-top</t-button>
       </t-popup>
       <t-popup
         content="这是Popup内容 right-bottom"
@@ -158,9 +131,8 @@ export default function Placement() {
         overlayStyle={{ width: '140px' }}
         showArrow
         destroyOnClose
-        style={styles.placementRightBottom}
       >
-        <t-button>right-bottom</t-button>
+        <t-button innerStyle={styles.placementRightBottom}>right-bottom</t-button>
       </t-popup>
     </div>
   );
