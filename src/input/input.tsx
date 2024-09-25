@@ -87,7 +87,7 @@ export default class Input extends Component<InputProps> {
 
   composingRef = createRef();
 
-  value;
+  innerValue;
 
   composingValue = '';
 
@@ -103,6 +103,10 @@ export default class Input extends Component<InputProps> {
 
   eventProps;
 
+  private get isControlled() {
+    return Reflect.has(this.props, 'value');
+  }
+
   private handlePasswordVisible = (e: MouseEvent) => {
     e.stopImmediatePropagation();
     if (this.props.disabled) return;
@@ -116,7 +120,7 @@ export default class Input extends Component<InputProps> {
     const { maxlength, maxcharacter, allowInputOverMax, status, onValidate, onChange } = this.props;
 
     const { getValueByLimitNumber } = useLengthLimit({
-      value: this.value === undefined ? undefined : String(this.value),
+      value: this.innerValue === undefined ? undefined : String(this.innerValue),
       status,
       maxlength,
       maxcharacter,
@@ -134,7 +138,9 @@ export default class Input extends Component<InputProps> {
       // 完成中文输入时同步一次 composingValue
       this.composingValue = newStr;
       // 防止输入中文后移开光标触发mouseleave时value没更新
-      this.value = newStr;
+      if (!this.isControlled) {
+        this.innerValue = newStr;
+      }
       const { onValidateChange } = useLengthLimit({
         value: newStr === undefined ? undefined : String(newStr),
         status: this.status,
@@ -189,7 +195,6 @@ export default class Input extends Component<InputProps> {
   private handleClear = (e: MouseEvent) => {
     const { onChange, onClear } = this.props;
     this.composingValue = '';
-    this.value = '';
     this.update();
     onChange?.('', { e });
     onClear?.({ e });
@@ -198,20 +203,27 @@ export default class Input extends Component<InputProps> {
   private handleKeyDown = (e: KeyboardEvent) => {
     const { onEnter } = this.props;
     const { key, currentTarget }: { key: string; currentTarget: any } = e;
-    this.value = '';
     key === 'Enter' && onEnter?.(currentTarget.value, { e });
     this.props.onMyKeydown?.(currentTarget.value, { e });
+    this.props.onKeydown?.(currentTarget.value, { e });
+    // 防止 最外层 onKeydown
+    e.stopPropagation();
   };
 
   private handleKeyUp = (e: KeyboardEvent) => {
     const { currentTarget }: { currentTarget: any } = e;
     this.props.onMyKeyup?.(currentTarget.value, { e });
+    this.props.onKeyup?.(currentTarget.value, { e });
+    // 防止 最外层 onKeyup
+    e.stopPropagation();
   };
 
   private handleKeyPress = (e: KeyboardEvent) => {
     const { onKeypress } = this.props;
     const { currentTarget }: { currentTarget: any } = e;
     onKeypress?.(currentTarget.value, { e });
+    // 防止 最外层 onKeypress
+    e.stopPropagation();
   };
 
   private handleCompositionStart = (e: CompositionEvent) => {
@@ -245,7 +257,7 @@ export default class Input extends Component<InputProps> {
   private resizeObserver: ResizeObserver | null = null;
 
   install() {
-    this.value = this.props.defaultValue || this.props.value;
+    this.innerValue = this.props.value || this.props.defaultValue;
     this.status = this.props.status;
   }
 
@@ -270,9 +282,12 @@ export default class Input extends Component<InputProps> {
         return;
       }
       const target = e.currentTarget as any;
-      this.value = target.value;
+      if (!this.isControlled) {
+        this.innerValue = target.value;
+      }
+
       const { getValueByLimitNumber, onValidateChange } = useLengthLimit({
-        value: this.value === undefined ? undefined : String(this.value),
+        value: this.innerValue === undefined ? undefined : String(this.innerValue),
         status: this.status,
         maxlength: this.props.maxlength,
         maxcharacter: this.props.maxcharacter,
@@ -280,7 +295,9 @@ export default class Input extends Component<InputProps> {
         onValidate: this.props.onValidate,
       });
       const limitedValue = getValueByLimitNumber(target.value);
-      this.value = limitedValue;
+      if (!this.isControlled) {
+        this.innerValue = limitedValue;
+      }
       this.composingValue = limitedValue;
       this.props.onChange?.(limitedValue);
       if (!this.props.allowInputOverMax) {
@@ -288,6 +305,15 @@ export default class Input extends Component<InputProps> {
       }
       onValidateChange();
     });
+  }
+
+  receiveProps(props: InputProps | OmiProps<InputProps, any>, oldProps: InputProps | OmiProps<InputProps, any>) {
+    if (
+      (this.isControlled && props.value !== oldProps.value) ||
+      (Reflect.has(oldProps, 'value') && !this.isControlled)
+    ) {
+      this.innerValue = props.value;
+    }
   }
 
   render(props: OmiProps<InputProps>) {
@@ -322,7 +348,7 @@ export default class Input extends Component<InputProps> {
     } = props;
 
     const { limitNumber, tStatus } = useLengthLimit({
-      value: this.value === undefined ? undefined : String(this.value),
+      value: this.innerValue === undefined ? undefined : String(this.innerValue),
       status,
       maxlength,
       maxcharacter,
@@ -330,7 +356,7 @@ export default class Input extends Component<InputProps> {
       onValidate,
     });
 
-    const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
+    const isShowClearIcon = ((clearable && this.innerValue && !disabled) || showClearIconOnEmpty) && this.isHover;
 
     const prefixIconContent = prefixIcon
       ? renderIcon(
@@ -390,8 +416,8 @@ export default class Input extends Component<InputProps> {
     }
 
     const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
-    const labelContent = isFunction(label) ? label() : label;
-    const suffixContent = isFunction(suffix) ? suffix() : suffix;
+    const labelContent = isFunction(label) ? label({}) : label;
+    const suffixContent = isFunction(suffix) ? suffix({}) : suffix;
 
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
@@ -404,7 +430,7 @@ export default class Input extends Component<InputProps> {
         </div>
       ) : null;
 
-    const innerValue = this.composingRef.current ? this.composingValue : this.value ?? '';
+    const innerValue = this.composingRef.current ? this.composingValue : this.innerValue ?? '';
     const formatDisplayValue = format && !this.isFocused ? format(innerValue) : innerValue;
     const renderInput = (
       <input
