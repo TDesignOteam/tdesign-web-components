@@ -320,6 +320,12 @@ export default [
         component: () => import('tdesign-web-components/alert/README.md'),
       },
       {
+        title: 'Dialog 对话框',
+        name: 'dialog',
+        path: '/components/dialog',
+        component: () => import('tdesign-web-components/dialog/README.md'),
+      },
+      {
         title: 'Message 全局提示',
         name: 'message',
         path: '/components/message',
