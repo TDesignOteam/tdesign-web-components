@@ -350,6 +350,9 @@ export default class Slider extends Component<SliderProps> {
             min={min}
             max={max}
             props={this.calcInputNumberProps}
+            onChange={(v: number) => {
+              this.secondValue.value = v;
+            }}
           />
         )}
       </div>
