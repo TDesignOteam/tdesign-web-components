@@ -149,6 +149,12 @@ export default [
         component: () => import('tdesign-web-components/input/README.md'),
       },
       {
+        title: 'InputNumber 数字输入框',
+        name: 'input-number',
+        path: '/components/input-number',
+        component: () => import('tdesign-web-components/input-number/README.md'),
+      },
+      {
         title: 'RangeInput 范围输入框',
         name: 'range-input',
         path: '/components/range-input',
@@ -312,6 +318,12 @@ export default [
         name: 'alert',
         path: '/components/alert',
         component: () => import('tdesign-web-components/alert/README.md'),
+      },
+      {
+        title: 'Dialog 对话框',
+        name: 'dialog',
+        path: '/components/dialog',
+        component: () => import('tdesign-web-components/dialog/README.md'),
       },
       {
         title: 'Message 全局提示',

@@ -65,7 +65,7 @@ const buildLightDomCtor = (nodeCtor: ComponentConstructor) => {
 
       const cssList = getCssList(nodeCtor.css);
       cssList.forEach((style) => {
-        const preStyleSheet = parentElement.adoptedStyleSheets.find((item) => (item as any).styleStr === style);
+        const preStyleSheet = parentElement.adoptedStyleSheets?.find((item) => (item as any).styleStr === style);
         if (preStyleSheet) {
           return;
         }
