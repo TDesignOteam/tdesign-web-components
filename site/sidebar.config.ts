@@ -149,10 +149,23 @@ export default [
         component: () => import('tdesign-web-components/input/README.md'),
       },
       {
+        title: 'InputNumber 数字输入框',
+        name: 'input-number',
+        path: '/components/input-number',
+        component: () => import('tdesign-web-components/input-number/README.md'),
+      },
+      {
         title: 'RangeInput 范围输入框',
         name: 'range-input',
         path: '/components/range-input',
         component: () => import('tdesign-web-components/range-input/README.md'),
+      },
+      {
+        title: 'SelectInput 筛选器输入框',
+        name: 'select-input',
+        docType: 'form',
+        path: '/components/select-input',
+        component: () => import('tdesign-web-components/select-input/README.md'),
       },
       {
         title: 'TagInput 标签输入框',

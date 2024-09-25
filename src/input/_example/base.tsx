@@ -12,9 +12,11 @@ export default class InputBase extends Component {
     return (
       <t-space direction="vertical" style={{ width: 500 }}>
         <t-input
+          value={this.value1}
           placeholder="请输入内容（无默认值）"
           onChange={(value) => {
             this.value1 = value;
+            this.update();
             console.log('change', value);
           }}
           onFocus={() => {
@@ -30,6 +32,7 @@ export default class InputBase extends Component {
           onChange={(value) => {
             console.log(value);
             this.value2 = value;
+            this.update();
           }}
           onEnter={(value) => {
             console.log(value);

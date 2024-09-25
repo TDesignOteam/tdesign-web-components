@@ -18,6 +18,10 @@ export type Styles = Record<string, string | number>;
 export interface StyledProps {
   className?: string;
   style?: Styles;
+  // shadowDom内部根节点的class
+  innerClass?: string;
+  // shadowDom内部根节点的style
+  innerStyle?: Styles;
 }
 
 /**

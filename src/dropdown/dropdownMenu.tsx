@@ -72,7 +72,7 @@ export default class DropdownMenu extends Component<DropdownProps> {
     this.update();
   };
 
-  throttleUpdate = throttle(this.handleScroll, 100);
+  throttleUpdate = throttle(this.handleScroll, 10);
 
   renderOptions = (data: Array<DropdownOption | TNode>, deep: number) => {
     const { minColumnWidth = 10, maxColumnWidth = 160 } = this.props;
@@ -80,9 +80,10 @@ export default class DropdownMenu extends Component<DropdownProps> {
     let renderContent: TNode;
     data.forEach?.((menu, idx) => {
       const optionItem = { ...(menu as DropdownOption) };
-      const onViewIdx = Math.ceil(this.calcScrollTopMap[deep] / 30);
-      const isOverflow = idx >= onViewIdx;
-      const itemIdx = isOverflow ? idx - onViewIdx : idx;
+
+      // 只有第一层子节点需要加上 panelTopContent 的高度
+      const shouldCalcPanelTopContent = this.props.panelTopContent && deep > 0;
+
       if (optionItem.children) {
         optionItem.children = this.renderOptions(optionItem.children, deep + 1);
         renderContent = (
@@ -113,7 +114,11 @@ export default class DropdownMenu extends Component<DropdownProps> {
                 })}
                 style={{
                   position: 'absolute',
-                  top: `${itemIdx * 30 + (isOverflow ? 0 : this.panelTopContentHeight)}px`,
+                  top: `${
+                    idx * 30 -
+                    this.calcScrollTopMap[deep] +
+                    (shouldCalcPanelTopContent ? 0 : this.panelTopContentHeight)
+                  }px`,
                 }}
               >
                 <div

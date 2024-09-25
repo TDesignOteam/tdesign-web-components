@@ -43,6 +43,13 @@ const isFunction = (arg: unknown) => typeof arg === 'function';
 
 @tag('t-input')
 export default class Input extends Component<InputProps> {
+  static css = [
+    `:host {
+      width: 100%;
+    };
+    `,
+  ];
+
   static defaultProps = {
     align: 'left',
     allowInputOverMax: false,
@@ -87,7 +94,7 @@ export default class Input extends Component<InputProps> {
 
   composingRef = createRef();
 
-  value;
+  innerValue;
 
   composingValue = '';
 
@@ -103,6 +110,10 @@ export default class Input extends Component<InputProps> {
 
   eventProps;
 
+  private get isControlled() {
+    return Reflect.has(this.props, 'value');
+  }
+
   private handlePasswordVisible = (e: MouseEvent) => {
     e.stopImmediatePropagation();
     if (this.props.disabled) return;
@@ -116,14 +127,13 @@ export default class Input extends Component<InputProps> {
     const { maxlength, maxcharacter, allowInputOverMax, status, onValidate, onChange } = this.props;
 
     const { getValueByLimitNumber } = useLengthLimit({
-      value: this.value === undefined ? undefined : String(this.value),
+      value: this.innerValue === undefined ? undefined : String(this.innerValue),
       status,
       maxlength,
       maxcharacter,
       allowInputOverMax,
       onValidate,
     });
-
     let { value: newStr } = e.currentTarget;
     if (this.composingRef.current) {
       this.composingValue = newStr;
@@ -134,7 +144,9 @@ export default class Input extends Component<InputProps> {
       // 完成中文输入时同步一次 composingValue
       this.composingValue = newStr;
       // 防止输入中文后移开光标触发mouseleave时value没更新
-      this.value = newStr;
+      if (!this.isControlled) {
+        this.innerValue = newStr;
+      }
       const { onValidateChange } = useLengthLimit({
         value: newStr === undefined ? undefined : String(newStr),
         status: this.status,
@@ -189,7 +201,6 @@ export default class Input extends Component<InputProps> {
   private handleClear = (e: MouseEvent) => {
     const { onChange, onClear } = this.props;
     this.composingValue = '';
-    this.value = '';
     this.update();
     onChange?.('', { e });
     onClear?.({ e });
@@ -198,20 +209,27 @@ export default class Input extends Component<InputProps> {
   private handleKeyDown = (e: KeyboardEvent) => {
     const { onEnter } = this.props;
     const { key, currentTarget }: { key: string; currentTarget: any } = e;
-    this.value = '';
     key === 'Enter' && onEnter?.(currentTarget.value, { e });
     this.props.onMyKeydown?.(currentTarget.value, { e });
+    this.props.onKeydown?.(currentTarget.value, { e });
+    // 防止 最外层 onKeydown
+    e.stopPropagation();
   };
 
   private handleKeyUp = (e: KeyboardEvent) => {
     const { currentTarget }: { currentTarget: any } = e;
     this.props.onMyKeyup?.(currentTarget.value, { e });
+    this.props.onKeyup?.(currentTarget.value, { e });
+    // 防止 最外层 onKeyup
+    e.stopPropagation();
   };
 
   private handleKeyPress = (e: KeyboardEvent) => {
     const { onKeypress } = this.props;
     const { currentTarget }: { currentTarget: any } = e;
     onKeypress?.(currentTarget.value, { e });
+    // 防止 最外层 onKeypress
+    e.stopPropagation();
   };
 
   private handleCompositionStart = (e: CompositionEvent) => {
@@ -245,11 +263,11 @@ export default class Input extends Component<InputProps> {
   private resizeObserver: ResizeObserver | null = null;
 
   install() {
-    this.value = this.props.defaultValue || this.props.value;
+    this.innerValue = this.props.value || this.props.defaultValue;
     this.status = this.props.status;
   }
 
-  installed() {
+  ready() {
     this.renderType = this.props.type;
     const inputNode = this.inputRef.current;
 
@@ -263,6 +281,8 @@ export default class Input extends Component<InputProps> {
       this.updateInputWidth();
     });
 
+    if (!inputNode) return;
+
     inputNode.addEventListener('input', (e) => {
       if (this.composingRef.current) {
         this.composingValue = (e.currentTarget as HTMLInputElement)?.value || '';
@@ -270,9 +290,12 @@ export default class Input extends Component<InputProps> {
         return;
       }
       const target = e.currentTarget as any;
-      this.value = target.value;
+      if (!this.isControlled) {
+        this.innerValue = target.value;
+      }
+
       const { getValueByLimitNumber, onValidateChange } = useLengthLimit({
-        value: this.value === undefined ? undefined : String(this.value),
+        value: this.innerValue === undefined ? undefined : String(this.innerValue),
         status: this.status,
         maxlength: this.props.maxlength,
         maxcharacter: this.props.maxcharacter,
@@ -280,7 +303,9 @@ export default class Input extends Component<InputProps> {
         onValidate: this.props.onValidate,
       });
       const limitedValue = getValueByLimitNumber(target.value);
-      this.value = limitedValue;
+      if (!this.isControlled) {
+        this.innerValue = limitedValue;
+      }
       this.composingValue = limitedValue;
       this.props.onChange?.(limitedValue);
       if (!this.props.allowInputOverMax) {
@@ -290,14 +315,24 @@ export default class Input extends Component<InputProps> {
     });
   }
 
+  receiveProps(props: InputProps | OmiProps<InputProps, any>, oldProps: InputProps | OmiProps<InputProps, any>) {
+    if (
+      (this.isControlled && props.value !== oldProps.value) ||
+      (Reflect.has(oldProps, 'value') && !this.isControlled)
+    ) {
+      this.innerValue = props.value;
+    }
+  }
+
   render(props: OmiProps<InputProps>) {
     const {
+      innerClass,
+      innerStyle,
       autoWidth,
       placeholder,
       disabled,
       status,
       size,
-      className,
       prefixIcon,
       suffixIcon,
       clearable,
@@ -316,13 +351,17 @@ export default class Input extends Component<InputProps> {
       keepWrapperWidth,
       showLimitNumber,
       allowInputOverMax,
+      inputClass,
       format,
       onValidate,
       ...restProps
     } = props;
 
+    delete restProps.className;
+    delete restProps.style;
+
     const { limitNumber, tStatus } = useLengthLimit({
-      value: this.value === undefined ? undefined : String(this.value),
+      value: this.innerValue === undefined ? undefined : String(this.innerValue),
       status,
       maxlength,
       maxcharacter,
@@ -330,14 +369,14 @@ export default class Input extends Component<InputProps> {
       onValidate,
     });
 
-    const isShowClearIcon = ((clearable && this.value && !disabled) || showClearIconOnEmpty) && this.isHover;
+    const isShowClearIcon = ((clearable && this.innerValue && !disabled) || showClearIconOnEmpty) && this.isHover;
 
     const prefixIconContent = prefixIcon
       ? renderIcon(
           't',
           'prefix',
           cloneElement(parseTNode(convertToLightDomNode(prefixIcon)) as VNode, {
-            className: `${classPrefix}-input__prefix`,
+            cls: `${classPrefix}-input__prefix`,
             style: { marginRight: '0px' },
           }),
         )
@@ -349,7 +388,7 @@ export default class Input extends Component<InputProps> {
         <t-icon-close-circle-filled
           onMouseDown={(e) => e.preventDefault()}
           name={'close-circle-filled'}
-          className={classname(
+          cls={classname(
             `${classPrefix}-input__suffix-clear`,
             `${classPrefix}-input__suffix`,
             `${classPrefix}-input__suffix-icon`,
@@ -365,7 +404,7 @@ export default class Input extends Component<InputProps> {
           <t-icon-browse-off
             onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
-            className={classname(
+            cls={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
@@ -378,7 +417,7 @@ export default class Input extends Component<InputProps> {
           <t-icon-browse
             onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
-            className={classname(
+            cls={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
@@ -390,8 +429,8 @@ export default class Input extends Component<InputProps> {
     }
 
     const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
-    const labelContent = isFunction(label) ? label() : label;
-    const suffixContent = isFunction(suffix) ? suffix() : suffix;
+    const labelContent = isFunction(label) ? label({}) : label;
+    const suffixContent = isFunction(suffix) ? suffix({}) : suffix;
 
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (
@@ -404,7 +443,7 @@ export default class Input extends Component<InputProps> {
         </div>
       ) : null;
 
-    const innerValue = this.composingRef.current ? this.composingValue : this.value ?? '';
+    const innerValue = this.composingRef.current ? this.composingValue : this.innerValue ?? '';
     const formatDisplayValue = format && !this.isFocused ? format(innerValue) : innerValue;
     const renderInput = (
       <input
@@ -430,7 +469,7 @@ export default class Input extends Component<InputProps> {
     );
     const renderInputNode = (
       <div
-        class={classname(`${classPrefix}-input`, {
+        class={classname(inputClass, `${classPrefix}-input`, {
           [`${classPrefix}-is-readonly`]: readonly,
           [`${classPrefix}-is-disabled`]: disabled,
           [`${classPrefix}-is-focused`]: this.isFocused,
@@ -473,7 +512,7 @@ export default class Input extends Component<InputProps> {
           {
             [`${classPrefix}-input--auto-width`]: autoWidth && !keepWrapperWidth,
           },
-          className,
+          innerClass,
         )}
         ref={this.wrapperRef}
         part="wrap"
@@ -482,6 +521,7 @@ export default class Input extends Component<InputProps> {
           restProps.onClick?.(e);
         }}
         {...restProps}
+        style={innerStyle}
       >
         {renderInputNode}
         <div class={classname(`${classPrefix}-input__tips`, `${classPrefix}-input__tips--${tStatus || 'default'}`)}>

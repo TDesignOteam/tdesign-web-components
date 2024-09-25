@@ -4,8 +4,6 @@ import 'tdesign-web-components/space';
 import { Component } from 'omi';
 
 export default class InputAlign extends Component {
-  inputValue = '';
-
   render() {
     return (
       <t-space direction="vertical" style={{ width: '100%' }}>

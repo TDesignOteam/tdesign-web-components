@@ -18,6 +18,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
           />
           <t-input
@@ -26,6 +27,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
           />
         </t-space>
@@ -35,6 +37,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
             status="success"
           />
@@ -43,6 +46,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
             status="warning"
           />
@@ -51,6 +55,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
             status="error"
           />
@@ -62,6 +67,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
           />
           <t-input
@@ -70,6 +76,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
             status="success"
           />
@@ -79,6 +86,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
             status="warning"
           />
@@ -88,6 +96,7 @@ export default class InputStatus extends Component {
             value={this.inputValue}
             onChange={(value) => {
               this.inputValue = value;
+              this.update();
             }}
             status="error"
           />

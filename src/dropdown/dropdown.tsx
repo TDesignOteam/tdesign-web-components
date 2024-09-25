@@ -2,6 +2,7 @@ import './dropdownItem';
 import './dropdownMenu';
 import '../popup';
 
+import { isFunction } from 'lodash';
 import omit from 'lodash/omit';
 import { Component, css, tag } from 'omi';
 
@@ -59,8 +60,23 @@ export default class Dropdown extends Component<DropdownProps> {
     this.options = getDropdownOptions(this.props.children as TNode[], this.props.options);
   }
 
+  getOverlayInnerStyle = () => {
+    const { popupProps } = this.props;
+    if (!popupProps?.overlayInnerStyle) return { padding: 0 };
+    if (isFunction(popupProps.overlayInnerStyle)) {
+      return (triggerElement: HTMLElement, popupElement: HTMLElement) => ({
+        padding: 0,
+        ...(popupProps as any).overlayInnerStyle(triggerElement, popupElement),
+      });
+    }
+    return {
+      padding: 0,
+      ...(popupProps?.overlayInnerStyle || {}),
+    };
+  };
+
   render(props: DropdownProps) {
-    const { popupProps = {}, disabled, placement, trigger, className, children, popupCss, style } = props;
+    const { popupProps = {}, disabled, placement, trigger, innerClass, children, innerStyle } = props;
 
     const renderContent = <t-dropdown-menu {...props} options={this.options} onClick={this.handleMenuClick} />;
 
@@ -71,22 +87,18 @@ export default class Dropdown extends Component<DropdownProps> {
       showArrow: false,
       content: renderContent,
       ...omit(popupProps, 'onVisibleChange'),
-      overlayInnerClassName: classNames(`${getClassPrefix()}-dropdown`, className, popupProps?.overlayInnerClassName),
-      overlayInnerStyle: style,
+      overlayInnerClassName: classNames(`${getClassPrefix()}-dropdown`, popupProps?.overlayInnerClassName),
+      overlayInnerStyle: this.getOverlayInnerStyle(),
     };
 
     return (
       <t-popup
         expandAnimation={false}
-        destroyOnClose={true}
+        // destroyOnClose={true}
         visible={this.isPopupVisible}
         onVisibleChange={this.handleVisibleChange}
-        css={`
-          .${getClassPrefix()}-dropdown {
-            padding: 0px !important;
-          }
-          ${popupCss || ''}
-        `}
+        innerClass={innerClass}
+        innerStyle={innerStyle}
         {...popupParams}
       >
         {children?.[0]}
