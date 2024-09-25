@@ -42,7 +42,7 @@ const classPrefix = getClassPrefix();
 @tag('t-select-input')
 class SelectInput extends Component<SelectInputProps> {
   static css = [
-    `.${classPrefix}-select-input > t-popup {
+    `.${classPrefix}-select-input > ${classPrefix}-popup {
       display: inline-flex;
       width: 100%;
     };`,

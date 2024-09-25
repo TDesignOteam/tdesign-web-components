@@ -27,7 +27,7 @@ const classPrefix = getClassPrefix();
 const autoWidthCss = `
 .${classPrefix}-input--auto-width.${classPrefix}-tag-input__with-suffix-icon.${classPrefix}-tag-input--with-tag .${classPrefix}-input {
   padding-right: var(--td-comp-paddingLR-xl);
-}
+};
 `;
 @tag('t-select-input-multiple')
 export default class SelectInputMultiple extends Component<
