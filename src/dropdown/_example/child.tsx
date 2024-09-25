@@ -11,7 +11,7 @@ export default function BasicDropdown() {
     MessagePlugin.success(`选中【${data.value}】`);
   };
   return (
-    <t-dropdown minColumnWidth={100} trigger="click">
+    <t-dropdown minColumnWidth={100} trigger="click" onClick={clickHandler}>
       <t-button variant="text" suffix={<t-icon name="chevron-down" size="16" />}>
         更多
       </t-button>
@@ -39,9 +39,7 @@ export default function BasicDropdown() {
                 <t-dropdown-item value={211}>操作2-1-2</t-dropdown-item>
               </t-dropdown-menu>
             </t-dropdown-item>
-            <t-dropdown-item value={22} onClick={clickHandler}>
-              操作2-2
-            </t-dropdown-item>
+            <t-dropdown-item value={22}>操作2-2</t-dropdown-item>
           </t-dropdown-menu>
         </t-dropdown-item>
         <t-dropdown-item value={3}>操作三</t-dropdown-item>
