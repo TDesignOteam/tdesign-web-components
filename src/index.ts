@@ -28,6 +28,7 @@ export * from './popup';
 export * from './progress';
 export * from './radio';
 export * from './range-input';
+export * from './select';
 export * from './select-input';
 export * from './skeleton';
 export * from './slider';

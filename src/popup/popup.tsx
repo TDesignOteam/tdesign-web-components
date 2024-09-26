@@ -289,6 +289,12 @@ export default class Popup extends Component<PopupProps> {
     this.updatePopper();
   };
 
+  showPopupByControlled = () => {
+    this.isPopoverInDomTree = true;
+    this.update();
+    this.addPopContentEvent();
+  };
+
   beforeUpdate() {
     if (this.getVisible()) {
       if (this.popperRef.current) {
@@ -310,11 +316,16 @@ export default class Popup extends Component<PopupProps> {
     this.addTriggerEvent();
 
     this.visible = this.props.visible;
+
     // 初始化就显示时
     if (this.visible) {
-      this.isPopoverInDomTree = true;
-      this.update();
-      this.addPopContentEvent();
+      this.showPopupByControlled();
+    }
+  }
+
+  receiveProps(props, oldProps) {
+    if (props.visible && oldProps.visible !== props.visible) {
+      this.showPopupByControlled();
     }
   }
 
