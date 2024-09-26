@@ -327,7 +327,7 @@ export default class Slider extends Component<SliderProps> {
         {
           <t-input-number
             class={sliderNumberClass}
-            value={range ? this.firstValue : this.prevValue}
+            value={range ? this.firstValue.value : this.prevValue.value}
             ref={this.leftInputRef}
             step={this.props.step}
             onChange={(v: number) => {
@@ -343,13 +343,16 @@ export default class Slider extends Component<SliderProps> {
         {range && (
           <t-input-number
             className={sliderNumberClass}
-            value={this.secondValue}
+            value={this.secondValue.value}
             ref={this.rightInputRef}
             step={this.props.step}
             disabled={this.props.disabled}
             min={min}
             max={max}
             props={this.calcInputNumberProps}
+            onChange={(v: number) => {
+              this.secondValue.value = v;
+            }}
           />
         )}
       </div>
