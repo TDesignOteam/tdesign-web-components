@@ -1,6 +1,8 @@
 import docStyles from '@common/style/web/docs.less?inline';
 import type { VNode } from 'omi';
 import { bind, Component, tag } from 'omi';
+import prismCss from 'tdesign-site-components/lib/styles/prism-theme.less?inline';
+import prismCssDark from 'tdesign-site-components/lib/styles/prism-theme-dark.less?inline';
 import siteStyles from 'tdesign-site-components/lib/styles/style.css?raw';
 
 import { fallback } from '../../components/fallback.tsx';
@@ -55,7 +57,7 @@ export class tdWcContent extends Component<{ componentImport: () => Promise<any>
 
   pageStatus: string = 'show';
 
-  static css = [siteStyles, docStyles, styles];
+  static css = [siteStyles, docStyles, prismCss, prismCssDark, styles];
 
   changeTocAndTitleHeight() {
     const { scrollTop } = document.documentElement;
