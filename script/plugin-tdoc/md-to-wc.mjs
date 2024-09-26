@@ -38,7 +38,6 @@ export default async function mdToReact(options) {
     import { h, define } from 'omi';
     import { signal, effect } from 'reactive-signal'
     import Prismjs from 'prismjs';
-    import 'prismjs/components/prism-bash.js';
     ${demoDefsStr}
     ${demoCodesDefsStr}
     ${components}
@@ -96,8 +95,21 @@ export default async function mdToReact(options) {
       document.title = \`${mdSegment.title} | TDesign\`;
 
       setTimeout(() => {
-        Prismjs.highlightAll();
-      }, 10);
+        const container = document.querySelector("#app > router-view").shadowRoot.querySelector("component-layout > td-wc-content").shadowRoot.querySelector("div[name='DOC']");
+        if(container){
+          if(document.getElementById('prismjs-bash')) {
+            Prismjs.highlightAllUnder(container, false);
+          } else {
+            import('prismjs/components/prism-bash.js?raw').then((e)=>{
+              const script = document.createElement('script');
+              script.innerHTML = e.default;
+              script.id = 'prismjs-bash';
+              document.body.appendChild(script);
+              Prismjs.highlightAllUnder(container, false);
+            })
+          }
+        };
+      });
 
       return (
         <>

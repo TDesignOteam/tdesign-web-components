@@ -36,5 +36,8 @@
     "Swiper",
     "tdesign"
   ],
-  "typescript.tsdk": "node_modules/typescript/lib"
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "search.exclude": {
+    "**/node_modules": false
+  }
 }
