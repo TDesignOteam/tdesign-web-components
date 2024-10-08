@@ -123,9 +123,9 @@ export default class Affix extends Component<AffixProps> {
   }
 
   render() {
-    const { children, content, style } = this.props;
+    const { children, content, innerStyle, innerClass } = this.props;
     return (
-      <div ref={this.affixWrapRef} className={this.className} style={style}>
+      <div ref={this.affixWrapRef} className={innerClass} style={innerStyle}>
         <div ref={this.affixRef}>{children || content}</div>
       </div>
     );

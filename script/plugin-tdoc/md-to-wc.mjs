@@ -171,6 +171,7 @@ async function customRender({ source, file, md }) {
     docClass: '',
     lastUpdated,
     designDocLastUpdated: lastUpdated,
+    isGettingStarted: false,
     ...data,
   };
 
@@ -226,7 +227,9 @@ async function customRender({ source, file, md }) {
   } else {
     mdSegment.docMd = md.render.call(
       md,
-      `${pageData.toc ? '[toc]\n' : ''}${content.replace(/<!--[\s\S]+?-->/g, '')}`,
+      `${pageData.toc ? '[toc]\n' : ''}${
+        mdSegment?.isGettingStarted ? content : content.replace(/<!--[\s\S]+?-->/g, '')
+      }`,
     ).html;
   }
 

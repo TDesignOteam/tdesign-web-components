@@ -6,7 +6,6 @@ export default function Button() {
   return (
     <t-space direction="vertical">
       <t-button block variant="base">
-        <t-icon-add></t-icon-add>
         填充按钮
       </t-button>
       <t-button block variant="outline">

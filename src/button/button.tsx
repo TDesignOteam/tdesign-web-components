@@ -108,7 +108,6 @@ export default class Button extends Component<ButtonProps> {
     return (
       <Tag
         className={classname(
-          innerClass,
           [
             `${classPrefix}-button`,
             `${classPrefix}-button--theme-${this.theme}`,
@@ -123,6 +122,7 @@ export default class Button extends Component<ButtonProps> {
             [`${classPrefix}-size-l`]: size === 'large',
             [`${classPrefix}-size-full-width`]: block,
           },
+          innerClass,
         )}
         onClick={this.clickHandle}
         style={innerStyle}
