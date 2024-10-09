@@ -54,7 +54,6 @@ export default class Card extends Component<CardProps> {
       avatar,
       bordered,
       children,
-      className,
       cover,
       description,
       footer,
@@ -64,13 +63,14 @@ export default class Card extends Component<CardProps> {
       loading,
       shadow,
       size,
-      style,
       subtitle,
       title,
       theme,
       status,
       loadingProps,
       ignoreAttributes,
+      innerClass,
+      innerStyle,
     } = props;
 
     if (ignoreAttributes?.length > 0) {
@@ -158,13 +158,17 @@ export default class Card extends Component<CardProps> {
     const card = (
       <div
         ref={this.cardRef}
-        className={classname(`${classPrefix}-card`, className, {
-          [commonClassNames.SIZE.small]: size === 'small',
-          [`${classPrefix}-card--bordered`]: bordered,
-          [`${classPrefix}-card--shadow`]: shadow,
-          [`${classPrefix}-card--shadow-hover`]: hoverShadow,
-        })}
-        style={style}
+        className={classname(
+          `${classPrefix}-card`,
+          {
+            [commonClassNames.SIZE.small]: size === 'small',
+            [`${classPrefix}-card--bordered`]: bordered,
+            [`${classPrefix}-card--shadow`]: shadow,
+            [`${classPrefix}-card--shadow-hover`]: hoverShadow,
+          },
+          innerClass,
+        )}
+        style={innerStyle}
       >
         {showHeader ? renderHeader : null}
         {renderCover}
@@ -173,12 +177,6 @@ export default class Card extends Component<CardProps> {
       </div>
     );
 
-    return loading ? (
-      <t-loading {...loadingProps} style={style}>
-        {card}
-      </t-loading>
-    ) : (
-      card
-    );
+    return loading ? <t-loading {...loadingProps}>{card}</t-loading> : card;
   }
 }

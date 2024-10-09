@@ -29,14 +29,18 @@ export default class Divider extends Component<DividerProps> {
     const childNode = props.content || props.children;
 
     const showText = props.layout !== 'vertical' && !!childNode;
-    const dividerClassNames = classNames(props.class, `${this.componentName}`, {
-      [`${this.componentName}--${props.layout}`]: props.layout,
-      [`${this.componentName}--dashed`]: !!props.dashed,
-      [`${this.componentName}--with-text`]: showText,
-      [`${this.componentName}--with-text-${props.align}`]: showText,
-    });
+    const dividerClassNames = classNames(
+      `${this.componentName}`,
+      {
+        [`${this.componentName}--${props.layout}`]: props.layout,
+        [`${this.componentName}--dashed`]: !!props.dashed,
+        [`${this.componentName}--with-text`]: showText,
+        [`${this.componentName}--with-text-${props.align}`]: showText,
+      },
+      props.innerClass,
+    );
     return (
-      <div class={dividerClassNames} style={props.style}>
+      <div class={dividerClassNames} style={props.innerStyle}>
         {showText ? <span class={`${this.componentName}__inner-text`}>{childNode}</span> : null}
       </div>
     );

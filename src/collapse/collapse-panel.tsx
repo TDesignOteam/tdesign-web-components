@@ -161,19 +161,24 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     );
   }
 
-  render(props: TdCollapsePanelProps): TNode {
-    const { className } = props;
+  render(props: CollapsePanelProps): TNode {
+    const { innerClass, innerStyle } = props;
 
     return (
       <div
-        className={classname(`${this.className}`, className, {
-          [`${classPrefix}-is-disabled`]: this.isDisabled.value,
-        })}
+        className={classname(
+          `${this.className}`,
+          {
+            [`${classPrefix}-is-disabled`]: this.isDisabled.value,
+          },
+          innerClass,
+        )}
       >
         <div
           className={classname(`${this.className}__wrapper`, {
             [`${classPrefix}--borderless`]: this.injection.borderless.value,
           })}
+          style={innerStyle}
         >
           {this.renderHeader()}
           {this.renderBody()}

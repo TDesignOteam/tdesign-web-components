@@ -2,6 +2,10 @@ import { TNode } from '../common';
 
 export interface TdBreadcrumbProps {
   /**
+   * 内容
+   */
+  children?: TNode;
+  /**
    * 类名
    */
   className?: string;

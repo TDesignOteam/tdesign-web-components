@@ -92,6 +92,13 @@ const calcRowStyle = (gutter: TdRowProps['gutter'], currentSize: string): object
 export default class Row extends Component<RowProps> {
   static defaultProps = rowDefaultProps;
 
+  static propTypes = {
+    align: String,
+    gutter: [Number, Object, Array],
+    justify: String,
+    tag: String,
+  };
+
   size = canUseDocument ? calcSize(window.innerWidth) : 'md';
 
   provide = {
@@ -116,18 +123,24 @@ export default class Row extends Component<RowProps> {
   }
 
   render(props: RowProps) {
-    const { align, gutter, justify, tag: Tag, style: propStyle, className, ...otherRowProps } = props;
+    const { align, gutter, justify, tag: Tag, innerStyle, innerClass, ...otherRowProps } = props;
 
+    delete otherRowProps.className;
+    delete otherRowProps.style;
     delete otherRowProps.children;
 
     const classPrefix = getClassPrefix();
-    const rowClassNames = classNames(`${classPrefix}-row`, className, {
-      [`${classPrefix}-row--${justify}`]: true,
-      [`${classPrefix}-row--${align}`]: true,
-    });
+    const rowClassNames = classNames(
+      `${classPrefix}-row`,
+      {
+        [`${classPrefix}-row--${justify}`]: true,
+        [`${classPrefix}-row--${align}`]: true,
+      },
+      innerClass,
+    );
     const rowStyle = {
       ...calcRowStyle(gutter, this.size),
-      ...propStyle,
+      ...innerStyle,
     };
 
     const children = getChildrenArray(props.children).map((child, index) => {

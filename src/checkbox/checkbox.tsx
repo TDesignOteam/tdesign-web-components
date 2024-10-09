@@ -103,17 +103,21 @@ export default class Checkbox extends Component<CheckboxProps> {
   }
 
   render() {
-    const { className, value, label, children } = this.props;
+    const { innerClass, innerStyle, value, label, children } = this.props;
     const classPrefix = getClassPrefix();
 
-    const labelClassName = clsx(`${classPrefix}-checkbox`, className, {
-      [`${classPrefix}-is-checked`]: this.tChecked,
-      [`${classPrefix}-is-disabled`]: this.isDisabled,
-      [`${classPrefix}-is-indeterminate`]: this.tIndeterminate,
-    });
+    const labelClassName = clsx(
+      `${classPrefix}-checkbox`,
+      {
+        [`${classPrefix}-is-checked`]: this.tChecked,
+        [`${classPrefix}-is-disabled`]: this.isDisabled,
+        [`${classPrefix}-is-indeterminate`]: this.tIndeterminate,
+      },
+      innerClass,
+    );
 
     return (
-      <label ref={this.labelRef} class={labelClassName} tabindex={this.isDisabled ? undefined : '0'}>
+      <label ref={this.labelRef} class={labelClassName} style={innerStyle} tabindex={this.isDisabled ? undefined : '0'}>
         <input
           type="checkbox"
           class={`${classPrefix}-checkbox__former`}

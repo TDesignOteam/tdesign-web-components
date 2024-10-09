@@ -126,7 +126,7 @@ module.exports = {
 
 #### 通过设置`style`、`innerStyle`来改变样式
 
-所有的组件，均可设置`style`和`innerStyle`，设置`style`只会在最外层标签上起作用：
+**任意组件**，均可设置`style`和`innerStyle`，约定`style`只在最外层标签上起作用：
 
 ```html
 <!-- 设置style -->
@@ -139,7 +139,7 @@ module.exports = {
 </t-button>
 ```
 
-设置`innerStyle`只会在`shadowDOM`内部第一层标签上起作用：
+约定`innerStyle`只在`shadowDOM`内部第一层标签上起作用：
  
 ```html
 <!-- 设置innerStyle -->
@@ -154,7 +154,7 @@ module.exports = {
 
 #### 通过设置`class`、`innerClass`来改变样式（可以和`css`属性搭配使用）
 
-所有的组件，均可设置`class`和`innerClass`，设置`class`只会在最外层标签上起作用：
+**任意组件**，均可设置`class`和`innerClass`，约定`class`只在最外层标签上起作用：
 
 ```html
 <!-- 设置class -->
@@ -167,7 +167,7 @@ module.exports = {
 </t-button>
 ```
 
-设置`innerClass`只会在`shadowDOM`内部第一层标签上起作用：
+约定`innerClass`只在`shadowDOM`内部第一层标签上起作用：
 
 ```html
 <!-- 设置innerStyle -->

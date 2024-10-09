@@ -1,7 +1,7 @@
 import { classNames, Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname.ts';
-import { StyledProps } from '../common';
+import { StyledProps, Styles } from '../common';
 import { TdBadgeProps } from './type.ts';
 
 export interface BadgeProps extends TdBadgeProps, StyledProps {}
@@ -49,10 +49,10 @@ export default class Badge extends Component<BadgeProps> {
     return count;
   };
 
-  getStyle = () => {
+  getStyle = (styles: Styles) => {
     // 红点偏移逻辑
-    const { style, color, offset } = this.props;
-    const mergedStyle = { ...style };
+    const { color, offset } = this.props;
+    const mergedStyle = { ...styles };
     if (color) {
       mergedStyle.backgroundColor = color;
     }
@@ -68,7 +68,23 @@ export default class Badge extends Component<BadgeProps> {
   };
 
   render(props: BadgeProps) {
-    const { children, content, count, dot, shape, showZero, size, className, ignoreAttributes, ...restProps } = props;
+    const {
+      children,
+      content,
+      count,
+      dot,
+      shape,
+      showZero,
+      size,
+      ignoreAttributes,
+      innerStyle,
+      innerClass,
+      ...restProps
+    } = props;
+
+    delete restProps.style;
+    delete restProps.className;
+
     // 去除父元素属性
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {
@@ -81,7 +97,7 @@ export default class Badge extends Component<BadgeProps> {
       !childNode && `${this.classPrefix}-badge--static`,
       dot ? `${this.classPrefix}-badge--dot` : `${this.classPrefix}-badge--${shape}`,
       size === 'small' && `${this.classPrefix}-size-s`,
-      !childNode && className,
+      !childNode && innerClass,
     );
 
     // 隐藏逻辑
@@ -90,7 +106,11 @@ export default class Badge extends Component<BadgeProps> {
       isHidden = count < MIN_COUNT && !showZero;
     }
     const badge = !isHidden ? (
-      <span {...(childNode ? {} : restProps)} className={badgeClassName} style={this.getStyle()}>
+      <span
+        {...(childNode ? {} : restProps)}
+        className={badgeClassName}
+        style={this.getStyle(childNode ? {} : innerStyle)}
+      >
         {!dot ? this.getDisplayCount() : null}
       </span>
     ) : null;
@@ -99,7 +119,12 @@ export default class Badge extends Component<BadgeProps> {
       return badge;
     }
     return (
-      <span {...restProps} className={classNames(`${this.classPrefix}-badge`, className)} ref={this.nodeRef}>
+      <span
+        {...restProps}
+        className={classNames(`${this.classPrefix}-badge`, innerClass)}
+        style={innerStyle}
+        ref={this.nodeRef}
+      >
         {childNode}
         {badge}
       </span>
