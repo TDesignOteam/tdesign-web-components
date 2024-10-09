@@ -121,11 +121,15 @@ export default class Dialog extends Component<DialogProps> {
   }
 
   get ctxClass() {
-    return classname(`${this.className}__ctx`, {
-      [`${this.className}__ctx--fixed`]: this.isModal || this.isFullScreen,
-      [`${this.className}__ctx--absolute`]: this.isModal && this.state.value.showInAttachedElement,
-      [`${this.className}__ctx--modeless`]: this.isModeLess,
-    });
+    return classname(
+      `${this.className}__ctx`,
+      {
+        [`${this.className}__ctx--fixed`]: this.isModal || this.isFullScreen,
+        [`${this.className}__ctx--absolute`]: this.isModal && this.state.value.showInAttachedElement,
+        [`${this.className}__ctx--modeless`]: this.isModeLess,
+      },
+      this.props.innerClass,
+    );
   }
 
   get maskClass() {
@@ -573,6 +577,7 @@ export default class Dialog extends Component<DialogProps> {
     const ctxStyle: Styles = {
       zIndex: this.state.value.zIndex,
       display: !this.state.value.visible && this.animationEnd.value ? 'none' : 'block',
+      ...this.props.innerStyle,
     };
 
     if (this.isNormal) {

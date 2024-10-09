@@ -82,7 +82,23 @@ export default class Avatar extends Component<AvatarProps> {
   render(props: OmiProps<AvatarProps, any>) {
     const { SIZE } = getCommonClassName();
     const { componentName, isImgExist, groupSize, avatarRef, avatarChildrenRef, handleImgLoadError } = this;
-    const { alt, icon, image, shape, size: avatarSize, children, content, style, imageProps, ...avatarProps } = props;
+    const {
+      alt,
+      icon,
+      image,
+      shape,
+      size: avatarSize,
+      children,
+      content,
+      innerClass,
+      innerStyle,
+      imageProps,
+      ...avatarProps
+    } = props;
+
+    delete avatarProps.className;
+    delete avatarProps.style;
+
     const size = avatarSize === undefined ? groupSize : avatarSize;
 
     const numSizeStyle =
@@ -102,11 +118,15 @@ export default class Avatar extends Component<AvatarProps> {
           }
         : {};
 
-    const avatarClass = classNames(componentName, this.className, {
-      [SIZE[size]]: !!SIZE[size],
-      [`${componentName}--${shape}`]: !!shape,
-      [`${componentName}__icon`]: !!icon,
-    });
+    const avatarClass = classNames(
+      componentName,
+      {
+        [SIZE[size]]: !!SIZE[size],
+        [`${componentName}--${shape}`]: !!shape,
+        [`${componentName}__icon`]: !!icon,
+      },
+      innerClass,
+    );
     let renderChildren: string | number | boolean | object;
 
     if (image && isImgExist) {
@@ -127,7 +147,7 @@ export default class Avatar extends Component<AvatarProps> {
       );
     }
     return (
-      <div class={avatarClass} style={{ ...numSizeStyle, ...style }} {...avatarProps} ref={avatarRef}>
+      <div class={avatarClass} style={{ ...numSizeStyle, ...innerStyle }} {...avatarProps} ref={avatarRef}>
         {renderChildren}
       </div>
     );

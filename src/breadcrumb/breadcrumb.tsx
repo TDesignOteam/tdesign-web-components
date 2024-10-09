@@ -1,12 +1,13 @@
 import './breadcrumb-item';
 
-import { Component, OmiDOMAttributes, tag } from 'omi';
+import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
+import { StyledProps } from '../common';
 import { TdBreadcrumbProps } from './type';
 
-interface BreadcrumbProps extends TdBreadcrumbProps, OmiDOMAttributes {}
+interface BreadcrumbProps extends TdBreadcrumbProps, StyledProps {}
 
 @tag('t-breadcrumb')
 export default class Breadcrumb extends Component<BreadcrumbProps> {
@@ -46,7 +47,11 @@ export default class Breadcrumb extends Component<BreadcrumbProps> {
   }
 
   render() {
-    const { className } = this.props;
-    return <div class={classname(this.className, className)}>{this.contentNodes}</div>;
+    const { innerClass, innerStyle } = this.props;
+    return (
+      <div class={classname(this.className, innerClass)} style={innerStyle}>
+        {this.contentNodes}
+      </div>
+    );
   }
 }

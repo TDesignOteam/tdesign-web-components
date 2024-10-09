@@ -149,7 +149,7 @@ export default class Alert extends Component<AlertProps> {
   }
 
   render(props: AlertProps) {
-    const { className, style, theme, ignoreAttributes } = props;
+    const { innerClass, innerStyle, theme, ignoreAttributes } = props;
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {
         this.removeAttribute(attr);
@@ -161,10 +161,10 @@ export default class Alert extends Component<AlertProps> {
       {
         [`${this.classPrefix}-is-hidden`]: this.closed.value,
       },
-      className,
+      innerClass,
     ]);
     return (
-      <div ref={this.nodeRef} className={cls} style={style}>
+      <div ref={this.nodeRef} className={cls} style={innerStyle}>
         {this.renderIcon()}
         {this.renderContext()}
         {this.renderClose()}

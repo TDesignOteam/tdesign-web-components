@@ -206,7 +206,8 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
 
     return (
       <div
-        class={classname(`${classPrefix}-checkbox-group`, this.props.className)}
+        class={classname(`${classPrefix}-checkbox-group`, this.props.innerClass)}
+        style={this.props.innerStyle}
         role="group"
         aria-label="checkbox-group"
       >

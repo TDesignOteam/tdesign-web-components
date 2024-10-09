@@ -132,15 +132,15 @@ export default class BackTop extends Component<BackTopProps> {
       target,
       shape,
       size,
-      className,
       container,
       duration,
       content,
       offset,
       children,
       default: cusContent,
-      style,
       onClick,
+      innerClass,
+      innerStyle,
       ignoreAttributes,
     } = props;
     if (ignoreAttributes?.length > 0) {
@@ -151,7 +151,7 @@ export default class BackTop extends Component<BackTopProps> {
     const backTopStyle = {
       insetInlineEnd: offset[0],
       insetBlockEnd: offset[1],
-      ...style,
+      ...innerStyle,
     };
     const classPrefix = getClassPrefix();
     const defaultContent = (
@@ -169,7 +169,7 @@ export default class BackTop extends Component<BackTopProps> {
         [`${classPrefix}-size-s`]: size === 'small',
         [`${classPrefix}-size-m`]: size === 'medium',
       },
-      className,
+      innerClass,
     );
     const renderChildren = children || content || cusContent || defaultContent;
     const clickEventProps = { target, container, duration, onClick } as ClickEventProps;

@@ -100,14 +100,13 @@ export default class Col extends Component<ColProps> {
       order,
       pull,
       push,
-      className,
-      style: propStyle,
+      innerClass,
+      innerStyle,
       gutter: rowGutter,
       size: rowSize,
     } = this.props as ColProps & { gutter: TdRowProps['gutter']; size: string };
     const colClassNames = classNames(
       `${classPrefix}-col`,
-      className,
       {
         [`${classPrefix}-col-${span}`]: span !== undefined,
         [`${classPrefix}-col-offset-${offset}`]: parseInt(offset as unknown as string, 10) >= 0,
@@ -116,11 +115,12 @@ export default class Col extends Component<ColProps> {
         [`${classPrefix}-col-order-${order}`]: parseInt(order as unknown as string, 10) >= 0,
       },
       this.sizeClasses,
+      innerClass,
     );
 
     const colStyle = {
       ...calcColPadding(rowGutter, rowSize),
-      ...propStyle,
+      ...innerStyle,
     };
     flex && ((colStyle as any).flex = parseFlex(flex));
 
