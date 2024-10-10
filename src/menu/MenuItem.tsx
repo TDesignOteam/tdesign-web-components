@@ -74,7 +74,7 @@ export default class MenuItem extends Component<MenuItemProps> {
   }
 
   render() {
-    const { label, icon, className, disabled, href, target, value } = this.props;
+    const { label, icon, className, innerClass, innerStyle, disabled, href, target, value } = this.props;
 
     const classPrefix = getClassPrefix();
 
@@ -102,7 +102,9 @@ export default class MenuItem extends Component<MenuItemProps> {
 
     return (
       <>
-        <div className={`${classPrefix}-menu__item--inner`}>{content}</div>
+        <div className={classname(`${classPrefix}-menu__item--inner`, innerClass)} style={innerStyle}>
+          {content}
+        </div>
         {this.injection.collapsed.value && !this.props.disabled ? (
           <t-tooltip content={label} placement="right">
             <div style={{ position: 'absolute', inset: 0 }} />

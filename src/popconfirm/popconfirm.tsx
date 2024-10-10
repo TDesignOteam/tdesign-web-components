@@ -57,11 +57,14 @@ export default class Popconfirm extends Component<PopconfirmProps> {
   }
 
   render(props: OmiProps<PopconfirmProps>) {
-    const { cancelBtn = '取消', confirmBtn = '确定' } = props;
+    const { cancelBtn = '取消', confirmBtn = '确定', ...rest } = props;
+
+    delete rest.className;
+    delete rest.style;
 
     return (
       <t-popup
-        {...props}
+        {...rest}
         visible={this.visible}
         trigger="click"
         onVisibleChange={(visible) => this.handlePopVisible(visible)}
@@ -70,7 +73,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
           <t-popcontent
             cancelBtn={cancelBtn}
             confirmBtn={confirmBtn}
-            {...props}
+            {...rest}
             onClose={(context: PopconfirmVisibleChangeContext) => this.handlePopVisible(false, context)}
           />
         }

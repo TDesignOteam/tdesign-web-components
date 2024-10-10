@@ -400,7 +400,7 @@ export default class Slider extends Component<SliderProps> {
     }
   }
 
-  render(props: TdSliderProps): TNode {
+  render(props: SliderProps): TNode {
     const { isVertical } = this;
     const sliderClass = classname(this.className, {
       'is-vertical': isVertical,
@@ -417,9 +417,14 @@ export default class Slider extends Component<SliderProps> {
 
     return (
       <div
-        className={classname(`${this.className}__container`, {
-          'is-vertical': isVertical,
-        })}
+        className={classname(
+          `${this.className}__container`,
+          {
+            'is-vertical': isVertical,
+          },
+          props.innerClass,
+        )}
+        style={props.innerStyle}
       >
         <div className={sliderClass}>
           <div className={railClass} style={runwayStyle} onClick={this.onSliderClick} ref={this.sliderRef}>

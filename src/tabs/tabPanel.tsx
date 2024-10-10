@@ -26,9 +26,9 @@ export default class TabPanel extends Component<TabPanelProps> {
 
   render() {
     const { tdTabPanelClassPrefix } = useTabClass();
-    const { children, className, style, panel } = this.props;
+    const { children, innerClass, innerStyle, panel } = this.props;
     return (
-      <div className={classname(tdTabPanelClassPrefix, className)} style={style}>
+      <div className={classname(tdTabPanelClassPrefix, innerClass)} style={innerStyle}>
         {children || panel}
       </div>
     );

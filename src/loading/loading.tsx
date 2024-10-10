@@ -1,7 +1,7 @@
 import './gradient';
 import '../common/portal';
 
-import { Component, tag } from 'omi';
+import { Component, OmiProps, tag } from 'omi';
 
 import classnames, { getClassPrefix } from '../_util/classname';
 import { addClass, canUseDocument, removeClass } from '../_util/dom';
@@ -105,7 +105,7 @@ export default class Loading extends Component<LoadingProps> {
     removeClass(document.body, this.lockClass);
   }
 
-  render(props) {
+  render(props: OmiProps<LoadingProps>) {
     const {
       indicator,
       text,
@@ -116,8 +116,8 @@ export default class Loading extends Component<LoadingProps> {
       content,
       children,
       inheritColor,
-      className,
-      style,
+      innerClass,
+      innerStyle,
       attach,
     } = props;
 
@@ -137,14 +137,9 @@ export default class Loading extends Component<LoadingProps> {
       medium: `${classPrefix}-size-m`,
     };
 
-    const baseClasses = classnames(
-      centerClass,
-      sizeMap[size],
-      {
-        [inheritColorClass]: inheritColor,
-      },
-      className,
-    );
+    const baseClasses = classnames(centerClass, sizeMap[size], {
+      [inheritColorClass]: inheritColor,
+    });
 
     const commonContent = () => {
       let renderIndicator = <t-loading-gradient />;
@@ -163,8 +158,8 @@ export default class Loading extends Component<LoadingProps> {
     if (fullscreen) {
       return loading ? (
         <div
-          className={classnames(name, fullscreenClass, centerClass, overlayClass)}
-          style={{ ...this.calcStyles, ...style }}
+          className={classnames(name, fullscreenClass, centerClass, innerClass, overlayClass)}
+          style={{ ...this.calcStyles, ...innerStyle }}
         >
           <div className={baseClasses}>{commonContent()}</div>
         </div>
@@ -173,7 +168,7 @@ export default class Loading extends Component<LoadingProps> {
 
     if (content || children) {
       return (
-        <div className={relativeClass} style={style}>
+        <div className={classnames(relativeClass, innerClass)} style={innerStyle}>
           {content || children}
           {this.showLoading ? (
             <div
@@ -194,8 +189,8 @@ export default class Loading extends Component<LoadingProps> {
         <t-portal attach={attach}>
           {loading ? (
             <div
-              className={classnames(name, baseClasses, fullClass, { [overlayClass]: showOverlay })}
-              style={{ ...this.calcStyles, ...style }}
+              className={classnames(name, baseClasses, fullClass, innerClass, { [overlayClass]: showOverlay })}
+              style={{ ...this.calcStyles, ...innerStyle }}
             >
               {commonContent()}
             </div>
@@ -205,7 +200,7 @@ export default class Loading extends Component<LoadingProps> {
     }
 
     return loading ? (
-      <div className={classnames(name, baseClasses)} style={{ ...this.calcStyles, ...style }}>
+      <div className={classnames(name, baseClasses, innerClass)} style={{ ...this.calcStyles, ...innerStyle }}>
         {commonContent()}
       </div>
     ) : null;

@@ -52,9 +52,13 @@ export default class Notification extends Component<NotificationProps> {
     if ((this.constructor as any).isLightDOM) {
       this.setAttribute(
         'class',
-        classname(className, this.className, {
-          [`${this.className}-is-${theme}`]: theme,
-        }),
+        classname(
+          this.className,
+          {
+            [`${this.className}-is-${theme}`]: theme,
+          },
+          className,
+        ),
       );
     }
   }
@@ -153,7 +157,7 @@ export default class Notification extends Component<NotificationProps> {
   }
 
   render(props: OmiProps<NotificationProps>) {
-    const { className, theme, style } = props;
+    const { innerClass, theme, innerStyle } = props;
 
     if ((this.constructor as any).isLightDOM) {
       return this.renderContent();
@@ -161,10 +165,14 @@ export default class Notification extends Component<NotificationProps> {
     // shadowDOM下额外渲染一层container用于渲染样式
     return (
       <div
-        className={classname(className, this.className, {
-          [`${this.className}-is-${theme}`]: theme,
-        })}
-        style={style}
+        className={classname(
+          this.className,
+          {
+            [`${this.className}-is-${theme}`]: theme,
+          },
+          innerClass,
+        )}
+        style={innerStyle}
       >
         {this.renderContent()}
       </div>

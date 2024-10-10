@@ -54,11 +54,15 @@ export default class Check extends Component<CheckProps> {
   }
 
   get labelClassName() {
-    return classNames(`${this.classPrefix}-${this.afterProps.type}`, this.afterProps.className, {
-      [`${this.classPrefix}-is-checked`]: this.internalChecked,
-      [`${this.classPrefix}-is-disabled`]: this.afterProps.disabled,
-      [`${this.classPrefix}-is-indeterminate`]: this.afterProps.indeterminate,
-    });
+    return classNames(
+      `${this.classPrefix}-${this.afterProps.type}`,
+      {
+        [`${this.classPrefix}-is-checked`]: this.internalChecked,
+        [`${this.classPrefix}-is-disabled`]: this.afterProps.disabled,
+        [`${this.classPrefix}-is-indeterminate`]: this.afterProps.indeterminate,
+      },
+      this.afterProps.innerClass,
+    );
   }
 
   // Checkbox/ Radio 内容为空则不再渲染 span，不存在 0:Number 的情况
@@ -123,16 +127,16 @@ export default class Check extends Component<CheckProps> {
   }
 
   render() {
-    const { type, value, label, content, children, disabled, title, style, ...rest } = this.afterProps;
+    const { type, value, label, content, children, disabled, title, innerStyle, ...rest } = this.afterProps;
 
     return (
       <label
         tabIndex={disabled ? undefined : 0}
         className={this.labelClassName}
         title={title}
-        style={style}
+        style={innerStyle}
         value={isBoolean(value) ? String(value) : value}
-        {...omit(rest, ['checkAll', 'stopLabelTrigger', 'onChange'])}
+        {...omit(rest, ['checkAll', 'stopLabelTrigger', 'onChange', 'style', 'className'])}
         onClick={this.onInnerClick}
       >
         {this.input}

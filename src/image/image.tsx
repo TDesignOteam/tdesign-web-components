@@ -136,8 +136,8 @@ export default class Image extends Component<ImageProps> {
       handleLoad,
     } = this;
     const {
-      class: className,
-      style,
+      innerClass,
+      innerStyle,
       alt,
       fit,
       position,
@@ -156,6 +156,8 @@ export default class Image extends Component<ImageProps> {
     delete rest.lazy;
     delete rest.overlayTrigger;
     delete rest.src;
+    delete rest.className;
+    delete rest.style;
 
     const renderOverlay = () => {
       if (!overlayContent) {
@@ -214,9 +216,9 @@ export default class Image extends Component<ImageProps> {
           `${componentName}__wrapper--shape-${shape}`,
           gallery && `${componentName}__wrapper--gallery`,
           hasMouseEvent && `${componentName}__wrapper--need-hover`,
-          className,
+          innerClass,
         )}
-        style={style}
+        style={innerStyle}
         {...(hasMouseEvent
           ? {
               onMouseEnter: () => handleToggleOverlay(true),

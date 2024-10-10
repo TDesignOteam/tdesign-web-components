@@ -3,9 +3,10 @@ import { bind, classNames, Component, createRef, tag } from 'omi';
 import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
 import { getCharacterLength, limitUnicodeMaxLength } from '../_common/js/utils/helper';
 import { getClassPrefix } from '../_util/classname';
+import { StyledProps } from '../common';
 import { TdTextareaProps } from './type';
 
-export type TextareaProps = TdTextareaProps;
+export interface TextareaProps extends TdTextareaProps, StyledProps {}
 @tag('t-textarea')
 export default class Textarea extends Component<TdTextareaProps> {
   static css = [];
@@ -146,11 +147,22 @@ export default class Textarea extends Component<TdTextareaProps> {
   }
 
   render(props: TextareaProps) {
-    const { autofocus, placeholder, readonly, status, disabled, tips, maxlength, maxcharacter } = props;
+    const {
+      autofocus,
+      placeholder,
+      readonly,
+      status,
+      disabled,
+      tips,
+      maxlength,
+      maxcharacter,
+      innerClass,
+      innerStyle,
+    } = props;
 
     return (
       <>
-        <div class={classNames(`${this.classPrefix}-textarea`)}>
+        <div class={classNames(`${this.classPrefix}-textarea`, innerClass)} style={innerStyle}>
           <textarea
             {...this.eventProps}
             class={this.cls()}

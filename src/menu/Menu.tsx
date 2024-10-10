@@ -42,7 +42,7 @@ export default class Menu extends Component<MenuProps> {
   }
 
   render() {
-    const { className, style, width, value, collapsed } = this.props;
+    const { innerClass, innerStyle, width, value, collapsed } = this.props;
 
     this.active.value = value;
     this.menuCollapsed.value = collapsed;
@@ -59,10 +59,14 @@ export default class Menu extends Component<MenuProps> {
 
     return (
       <div
-        className={classname(`${classPrefix}-default-menu`, className, {
-          [`${classPrefix}-is-collapsed`]: collapsed,
-        })}
-        style={{ width: collapsed ? menuWidthArr[1] : menuWidthArr[0], ...style }}
+        className={classname(
+          `${classPrefix}-default-menu`,
+          {
+            [`${classPrefix}-is-collapsed`]: collapsed,
+          },
+          innerClass,
+        )}
+        style={{ width: collapsed ? menuWidthArr[1] : menuWidthArr[0], ...innerStyle }}
       >
         <div className={`${classPrefix}-default-menu__inner`}>
           {hasLogo && (

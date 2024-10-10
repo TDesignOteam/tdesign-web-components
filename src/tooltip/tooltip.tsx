@@ -3,11 +3,12 @@ import '../popup';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { StyledProps } from '../common';
 import { type PopupVisibleChangeContext } from '../popup';
 import { PopupTypes } from '../popup/popup';
 import { TdTooltipProps } from './type';
 
-export type TooltipProps = TdTooltipProps;
+export interface TooltipProps extends TdTooltipProps, StyledProps {}
 
 export const tooltipDefaultProps: TooltipProps = {
   destroyOnClose: true,
@@ -90,6 +91,8 @@ export default class Tooltip extends Component<TooltipProps> {
 
     delete restProps.onVisibleChange;
     delete restProps.duration;
+    delete restProps.className;
+    delete restProps.style;
 
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {

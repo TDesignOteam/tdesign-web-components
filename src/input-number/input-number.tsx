@@ -390,13 +390,18 @@ export default class InputNumber extends Component<InputNumberProps> {
 
     return (
       <div
-        style={props.style}
-        className={classname(`${classPrefix}-input-number`, SIZE[props.size], props.className, {
-          [STATUS.disabled]: props.disabled,
-          [`${classPrefix}-is-controls-right`]: props.theme === 'column',
-          [`${classPrefix}-input-number--${props.theme}`]: props.theme,
-          [`${classPrefix}-input-number--auto-width`]: props.autoWidth,
-        })}
+        style={props.innerStyle}
+        className={classname(
+          `${classPrefix}-input-number`,
+          SIZE[props.size],
+          {
+            [STATUS.disabled]: props.disabled,
+            [`${classPrefix}-is-controls-right`]: props.theme === 'column',
+            [`${classPrefix}-input-number--${props.theme}`]: props.theme,
+            [`${classPrefix}-input-number--auto-width`]: props.autoWidth,
+          },
+          props.innerClass,
+        )}
       >
         {props.theme !== 'normal' &&
           convertToLightDomNode(

@@ -12,12 +12,12 @@ import {
 import { OnResponseErrorContext, SizeLimitObj } from '../../_common/js/upload/types';
 import { getFileList } from '../../_common/js/upload/utils';
 import { classPrefix } from '../../_util/classname';
-import { TdUploadProps, UploadChangeContext, UploadFile, UploadRemoveContext } from '../type';
+import { TdUploadProps, UploadChangeContext, UploadFile, UploadProps, UploadRemoveContext } from '../type';
 import { t, toRef } from '../utils';
 
 export type ValidateParams = Parameters<TdUploadProps['onValidate']>[0];
 
-export default function useUpload(props: SignalValue<TdUploadProps>) {
+export default function useUpload(props: SignalValue<UploadProps>) {
   const inputRef = createRef<HTMLInputElement>();
   const {
     disabled,

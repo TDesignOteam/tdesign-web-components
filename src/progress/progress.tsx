@@ -121,7 +121,7 @@ export default class Progress extends Component<ProgressProps> {
 
   render(props: OmiProps<ProgressProps>) {
     const { componentName } = this;
-    const { theme, percentage, label, color = '', trackColor, strokeWidth, size, class: className } = props;
+    const { theme, percentage, label, color = '', trackColor, strokeWidth, size } = props;
     let iconMap = this.iconLineMap;
     let { status } = props;
     if (!status && percentage >= 100) {
@@ -210,7 +210,11 @@ export default class Progress extends Component<ProgressProps> {
           </svg>
         </div>
       );
-      return <div class={classNames(className)}>{progressDom}</div>;
+      return (
+        <div class={classNames(props.innerClass)} style={props.innerStyle}>
+          {progressDom}
+        </div>
+      );
     }
     const getHeight = (): string => {
       if (strokeWidth) {
@@ -265,7 +269,7 @@ export default class Progress extends Component<ProgressProps> {
       );
     }
     return (
-      <div class={classNames(className)} style={props.style}>
+      <div class={classNames(props.innerClass)} style={props.innerStyle}>
         {progressDom}
       </div>
     );

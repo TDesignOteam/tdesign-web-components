@@ -87,16 +87,21 @@ export default class BackTop extends Component<ListProps> {
   }
 
   render(props: OmiProps<ListProps>) {
-    const { header, footer, split, size, className, layout, stripe, children, asyncLoading } = props;
+    const { header, footer, split, size, innerClass, innerStyle, layout, stripe, children, asyncLoading } = props;
     return (
       <div
-        class={classNames(`${listclassPrefix('')}`, className, {
-          [listclassPrefix('--split')]: split,
-          [listclassPrefix('--stripe')]: stripe,
-          [listclassPrefix('--vertical-action')]: layout === 'vertical',
-          [`${getClassPrefix()}-size-s`]: size === 'small',
-          [`${getClassPrefix()}-size-l`]: size === 'large',
-        })}
+        class={classNames(
+          `${listclassPrefix('')}`,
+          {
+            [listclassPrefix('--split')]: split,
+            [listclassPrefix('--stripe')]: stripe,
+            [listclassPrefix('--vertical-action')]: layout === 'vertical',
+            [`${getClassPrefix()}-size-s`]: size === 'small',
+            [`${getClassPrefix()}-size-l`]: size === 'large',
+          },
+          innerClass,
+        )}
+        style={innerStyle}
       >
         {header && this.renderHeader(header)}
         <ul class={classNames(listclassPrefix('__inner'))}>{children}</ul>

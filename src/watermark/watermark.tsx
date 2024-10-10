@@ -186,14 +186,14 @@ export default class Watermark extends Component<WatermarkProps> {
   }
 
   render(props: WatermarkProps) {
-    const { content, children, className } = props;
+    const { content, children, innerClass, innerStyle } = props;
 
     const classPrefix = getClassPrefix();
 
     const clsName = `${classPrefix}-watermark`;
 
     return (
-      <div ref={this.watermarkRef} className={classNames([clsName, className])}>
+      <div ref={this.watermarkRef} className={classNames([clsName, innerClass])} style={innerStyle}>
         {children || content}
       </div>
     );

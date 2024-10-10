@@ -9,10 +9,8 @@ import CustomFile from './CustomFile';
 import ImageCard from './ImageCard';
 import { CommonDisplayFileProps } from './interface';
 import NormalFile from './NormalFile';
-import { TdUploadProps, UploadFile } from './type';
+import { TdUploadProps, UploadFile, UploadProps } from './type';
 import { toRef } from './utils';
-
-export type UploadProps = TdUploadProps;
 
 export const uploadDefaultProps: TdUploadProps = {
   autoUpload: true,
@@ -24,11 +22,11 @@ export const uploadDefaultProps: TdUploadProps = {
 @tag('t-upload')
 export default class Upload extends Component<UploadProps> {
   static css = css`
-    .t-upload__single-input-clear {
+    .${classPrefix}-upload__single-input-clear {
       display: none;
     }
 
-    .t-upload__single-progress .t-loading {
+    .${classPrefix}-upload__single-progress .t-loading {
       line-height: calc(var(--td-font-size-body-medium) + 2px);
     }
   `;
@@ -181,15 +179,15 @@ export default class Upload extends Component<UploadProps> {
   render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
     const { sizeOverLimitMessage, inputRef, tipsClasses, errorClasses, onNormalFileChange } = this.uploadState;
     const uploadClasses = [
-      // props.className,
       `${classPrefix}-upload`,
       {
         [`${classPrefix}-upload--theme-${props.theme}`]: props.theme === 'file-input',
       },
+      props.innerClass,
     ];
 
     return (
-      <div class={classNames(uploadClasses)}>
+      <div class={classNames(uploadClasses)} style={props.innerStyle}>
         <input
           ref={inputRef}
           type="file"

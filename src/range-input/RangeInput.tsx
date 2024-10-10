@@ -141,7 +141,6 @@ export default class RangeInput extends Component<RangeInputProps> {
     const name = `${classPrefix}-range-input`;
 
     const {
-      className,
       disabled,
       status,
       size,
@@ -151,6 +150,8 @@ export default class RangeInput extends Component<RangeInputProps> {
       readonly,
       format,
       clearable,
+      innerClass,
+      innerStyle,
       value = this.innerValue,
     } = this.props;
 
@@ -173,14 +174,19 @@ export default class RangeInput extends Component<RangeInputProps> {
 
     return (
       <div
-        className={classNames(name, className, {
-          [`${classPrefix}-is-disabled`]: disabled,
-          [`${classPrefix}-is-focused`]: this.isFocused.value,
-          [`${classPrefix}-is-${status}`]: status,
-          [`${classPrefix}-size-l`]: size === 'large',
-          [`${classPrefix}-size-s`]: size === 'small',
-          [`${name}--suffix`]: suffixIconContent,
-        })}
+        className={classNames(
+          name,
+          {
+            [`${classPrefix}-is-disabled`]: disabled,
+            [`${classPrefix}-is-focused`]: this.isFocused.value,
+            [`${classPrefix}-is-${status}`]: status,
+            [`${classPrefix}-size-l`]: size === 'large',
+            [`${classPrefix}-size-s`]: size === 'small',
+            [`${name}--suffix`]: suffixIconContent,
+          },
+          innerClass,
+        )}
+        style={innerStyle}
       >
         <div className={`${name}__inner`}>
           <t-range-input-inner

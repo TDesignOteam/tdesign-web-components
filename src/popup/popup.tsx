@@ -335,7 +335,7 @@ export default class Popup extends Component<PopupProps> {
 
   render(props: OmiProps<PopupProps>) {
     const componentName = 't-popup';
-    const popperClasses = classname(componentName, props.overlayClassName);
+    const popperClasses = classname(componentName, props.innerClass, props.overlayClassName);
     const overlayClasses = classname(
       `${componentName}__content`,
       {
@@ -379,7 +379,7 @@ export default class Popup extends Component<PopupProps> {
                 beforeEnter: this.handleBeforeEnter,
               }}
               class={popperClasses}
-              style={{ zIndex: props.zIndex, ...this.getOverlayStyle(props.overlayStyle) }}
+              style={{ zIndex: props.zIndex, ...props.innerStyle, ...this.getOverlayStyle(props.overlayStyle) }}
               ref={this.popperRef}
               onMouseDown={() => (this.contentClicked = true)}
             >

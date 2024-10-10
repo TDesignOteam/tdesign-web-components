@@ -66,7 +66,7 @@ export default class MessageComponent extends Component<MessageComponentProps> {
   }
 
   render(props: Omi.OmiProps<MessageComponentProps> | MessageComponentProps) {
-    const { theme, className, children, style, icon = true, content, closeBtn, onCloseBtnClick, onClose } = props;
+    const { theme, innerClass, children, innerStyle, icon = true, content, closeBtn, onCloseBtnClick, onClose } = props;
     const onCloseFn = onClose;
     const onCloseBtnClickFn = onCloseBtnClick;
     const handleCloseBtnClick = (e) => {
@@ -79,12 +79,12 @@ export default class MessageComponent extends Component<MessageComponentProps> {
     return (
       <div
         key="message"
-        style={style}
+        style={innerStyle}
         className={classNames(
-          className,
           `${tdMessagePrefix}`,
           tdClassIsGenerator(theme),
           closeBtn ? tdClassIsGenerator('closable') : '',
+          innerClass,
         )}
         onMouseEnter={this.resetTimer}
         onMouseLeave={this.clearTimer}
