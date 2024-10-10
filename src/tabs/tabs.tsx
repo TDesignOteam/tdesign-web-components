@@ -123,10 +123,10 @@ export default class Tabs extends Component<TabsProps> {
   }
 
   render(props: TabsProps) {
-    const { className, style } = props;
+    const { innerClass, innerStyle } = props;
 
     return (
-      <div ref={this.props.ref} className={classname(this.tabClasses.tdTabsClassPrefix, className)} style={style}>
+      <div ref={this.props.ref} className={classname(this.tabClasses.tdTabsClassPrefix, innerClass)} style={innerStyle}>
         {this.props.placement !== 'bottom' ? this.headerNode : null}
         <div
           className={classname(

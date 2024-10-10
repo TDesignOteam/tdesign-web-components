@@ -33,7 +33,6 @@ export default class Link extends Component<LinkProps> {
     const {
       children,
       content,
-      className,
       underline,
       prefixIcon,
       suffixIcon,
@@ -43,6 +42,8 @@ export default class Link extends Component<LinkProps> {
       onClick,
       href,
       size,
+      innerClass,
+      innerStyle,
       ...otherProps
     } = props;
     const classPrefix = getClassPrefix();
@@ -56,15 +57,20 @@ export default class Link extends Component<LinkProps> {
     return (
       <a
         {...otherProps}
+        style={innerStyle}
         href={disabled || !href ? undefined : href}
         ref={this.linkRef}
-        className={classname(className, [`${classPrefix}-link`, `${classPrefix}-link--theme-${theme}`], {
-          [`${classPrefix}-size-s`]: size === 'small',
-          [`${classPrefix}-size-l`]: size === 'large',
-          [`${classPrefix}-is-disabled`]: !!disabled,
-          [`${classPrefix}-is-underline`]: !!underline,
-          [`${classPrefix}-link--hover-${hover}`]: !disabled,
-        })}
+        className={classname(
+          [`${classPrefix}-link`, `${classPrefix}-link--theme-${theme}`],
+          {
+            [`${classPrefix}-size-s`]: size === 'small',
+            [`${classPrefix}-size-l`]: size === 'large',
+            [`${classPrefix}-is-disabled`]: !!disabled,
+            [`${classPrefix}-is-underline`]: !!underline,
+            [`${classPrefix}-link--hover-${hover}`]: !disabled,
+          },
+          innerClass,
+        )}
         onClick={handleClick}
       >
         {prefixIcon && (

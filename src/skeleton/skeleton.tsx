@@ -79,7 +79,7 @@ export default class Skeleton extends Component<SkeletonProps> {
   }
 
   render() {
-    const { animation, rowCol, theme, className, style, children } = this.afterProps;
+    const { animation, rowCol, theme, innerClass, innerStyle, children } = this.afterProps;
     const renderCols = (_cols: Number | SkeletonRowColObj | Array<SkeletonRowColObj>) => {
       const getColItemClass = (obj: SkeletonRowColObj) =>
         classNames(`${compname}__col`, `${compname}--type-${obj.type || 'text'}`, {
@@ -156,7 +156,7 @@ export default class Skeleton extends Component<SkeletonProps> {
     }
 
     return (
-      <div class={classNames(className)} style={style}>
+      <div class={classNames(innerClass)} style={innerStyle}>
         {childrenContent[0]}
       </div>
     );

@@ -68,6 +68,21 @@ const classPrefix = getClassPrefix();
 export default class Col extends Component<ColProps> {
   static defaultProps = colDefaultProps;
 
+  static propTypes = {
+    flex: [String, Number],
+    lg: [Number, Object],
+    md: [Number, Object],
+    offset: Number,
+    order: Number,
+    pull: Number,
+    push: Number,
+    sm: [Number, Object],
+    span: Number,
+    xl: [Number, Object],
+    xs: [Number, Object],
+    xxl: [Number, Object],
+  };
+
   inject = ['size', 'gutter'];
 
   get sizeClasses() {

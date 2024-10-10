@@ -81,7 +81,7 @@ export default class Tag extends Component<TagProps> {
   }
 
   render(props: TagProps) {
-    const { disabled, maxWidth, icon, children, content, closable, style } = props;
+    const { disabled, maxWidth, icon, children, content, closable, innerStyle, innerClass } = props;
 
     if (icon) {
       icon.attributes.style = {};
@@ -94,7 +94,10 @@ export default class Tag extends Component<TagProps> {
         part="my-part"
         ref={this.span}
         onClick={this.handleClick}
-        style={maxWidth ? { maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth, ...style } : style}
+        className={innerClass}
+        style={
+          maxWidth ? { maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth, ...innerStyle } : innerStyle
+        }
       >
         <>
           {icon}

@@ -1,6 +1,8 @@
 import { FormatResponseContext, ResponseType, SizeLimitObj } from '../_common/js/upload/types';
 import { ButtonProps } from '../button';
-import { PlainObject, TNode } from '../common';
+import { PlainObject, StyledProps, TNode } from '../common';
+
+export interface UploadProps extends TdUploadProps, StyledProps {}
 
 export interface TdUploadProps<T extends UploadFile = UploadFile> {
   /**

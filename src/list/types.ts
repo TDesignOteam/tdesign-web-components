@@ -1,12 +1,12 @@
 /* eslint-disable */
 
-import { TNode } from '../common';
+import { StyledProps, TNode } from '../common';
 
-export type ListProps = {
+export interface ListProps extends StyledProps {
   children?: TNode;
-  split?: Boolean;
-  stripe?: Boolean;
-  dragSort?: Boolean;
+  split?: boolean;
+  stripe?: boolean;
+  dragSort?: boolean;
 
   asyncLoading?: string | Function;
   footer?: string | TNode;
@@ -17,36 +17,36 @@ export type ListProps = {
 
   onLoadMore?: Function;
   onScroll?: Function;
-};
+}
 
-export type ListItemProps = {
+export interface ListItemProps extends StyledProps {
   /**
    * 操作栏
    */
-  action?: String | TNode;
+  action?: string | TNode;
   /**
    * 内容，同 content
    */
-  children?: String | TNode;
+  children?: string | TNode;
   /**
    * 内容
    */
-  content?: String | TNode;
+  content?: string | TNode;
 
   onClick?: Function;
-};
+}
 
 export type ListItemMetaProps = {
   /**
    * 列表项内容
    */
-  description?: String | TNode;
+  description?: string | TNode;
   /**
    * 列表项图片
    */
-  image?: String | TNode;
+  image?: string | TNode;
   /**
    * 列表项标题
    */
-  title?: String | TNode;
+  title?: string | TNode;
 };

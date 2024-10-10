@@ -30,7 +30,7 @@ export default class Space extends Component<SpaceProps> {
   renderStyle = {
     gap: this.renderGap,
     ...(this.props.breakLine ? { flexWrap: 'wrap' } : {}),
-    ...this.props.style,
+    ...this.props.innerStyle,
   };
 
   install() {
@@ -51,7 +51,7 @@ export default class Space extends Component<SpaceProps> {
     this.renderStyle = {
       gap: this.renderGap,
       ...(this.props.breakLine ? { flexWrap: 'wrap' } : {}),
-      ...this.props.style,
+      ...this.props.innerStyle,
     };
   }
 
@@ -75,10 +75,14 @@ export default class Space extends Component<SpaceProps> {
     return (
       <div
         style={this.renderStyle}
-        class={classNames(`${this.componentName}`, props.class, {
-          [`${this.componentName}-align-${props.align}`]: props.align,
-          [`${this.componentName}-${props.direction}`]: props.direction,
-        })}
+        class={classNames(
+          `${this.componentName}`,
+          {
+            [`${this.componentName}-align-${props.align}`]: props.align,
+            [`${this.componentName}-${props.direction}`]: props.direction,
+          },
+          props.innerClass,
+        )}
       >
         {this.contentNode.flat()}
       </div>

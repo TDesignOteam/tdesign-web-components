@@ -89,22 +89,22 @@ export default class Switch extends Component<SwitchProps> {
   }
 
   render(props: SwitchProps): TNode {
-    const { className, disabled, loading, size, style } = props;
+    const { innerClass, disabled, loading, size, innerStyle } = props;
 
     const { SIZE, STATUS } = getCommonClassName();
     const switchClassName = classname(
       `${classPrefix}-switch`,
-      className,
       {
         [STATUS.checked]: this.innerChecked.value,
         [STATUS.disabled]: disabled,
         [STATUS.loading]: loading,
       },
       SIZE[size],
+      innerClass,
     );
     return (
       <button
-        style={style}
+        style={innerStyle}
         type="button"
         role="switch"
         disabled={disabled || loading}

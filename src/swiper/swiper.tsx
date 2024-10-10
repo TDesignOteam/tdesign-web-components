@@ -427,10 +427,11 @@ export default class Swiper extends Component<SwiperProps> {
   }
 
   render(props: SwiperProps): TNode {
-    const { animation, type } = props;
+    const { animation, type, innerClass, innerStyle } = props;
     return (
       <div
-        className={classname(`${classPrefix}-swiper`)}
+        className={classname(`${classPrefix}-swiper`, innerClass)}
+        style={innerStyle}
         onMouseEnter={this.onMouseEnter}
         onMouseLeave={this.onMouseLeave}
         ref={this.swiperWrapRef}

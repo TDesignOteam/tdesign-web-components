@@ -155,16 +155,18 @@ class SelectInput extends Component<SelectInputProps> {
     // 浮层显示的受控与非受控
     const visibleProps = { visible: popupVisible ?? this.innerPopupVisible };
 
-    const popupClasses = classNames([
+    const popupClasses = classNames(
+      [
+        `${this.classPrefix}-select-input`,
+        {
+          [`${this.classPrefix}-select-input--borderless`]: borderless,
+          [`${this.classPrefix}-select-input--multiple`]: multiple,
+          [`${this.classPrefix}-select-input--popup-visible`]: popupVisible ?? this.innerPopupVisible,
+          [`${this.classPrefix}-select-input--empty`]: value instanceof Array ? !value.length : !value,
+        },
+      ],
       !props.tips ? props.innerClass : '',
-      `${this.classPrefix}-select-input`,
-      {
-        [`${this.classPrefix}-select-input--borderless`]: borderless,
-        [`${this.classPrefix}-select-input--multiple`]: multiple,
-        [`${this.classPrefix}-select-input--popup-visible`]: popupVisible ?? this.innerPopupVisible,
-        [`${this.classPrefix}-select-input--empty`]: value instanceof Array ? !value.length : !value,
-      },
-    ]);
+    );
 
     const mainContent = (
       <div className={popupClasses} style={!props.tips ? props.innerStyle : {}}>
