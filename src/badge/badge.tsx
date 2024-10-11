@@ -1,8 +1,8 @@
 import { classNames, Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname.ts';
+import { getClassPrefix } from '../_util/classname';
 import { StyledProps, Styles } from '../common';
-import { TdBadgeProps } from './type.ts';
+import { TdBadgeProps } from './type';
 
 export interface BadgeProps extends TdBadgeProps, StyledProps {}
 

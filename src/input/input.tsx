@@ -429,8 +429,8 @@ export default class Input extends Component<InputProps> {
     }
 
     const suffixIconContent = renderIcon('t', 'suffix', parseTNode(convertToLightDomNode(suffixIconNew)));
-    const labelContent = isFunction(label) ? label({}) : label;
-    const suffixContent = isFunction(suffix) ? suffix({}) : suffix;
+    const labelContent = isFunction(label) ? (label as Function)({}) : label;
+    const suffixContent = isFunction(suffix) ? (suffix as Function)({}) : suffix;
 
     const limitNumberNode =
       limitNumber() && showLimitNumber ? (

@@ -1,7 +1,7 @@
 import 'tdesign-web-components/card';
 
 import { bind, Component } from 'omi';
-import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+import { MessagePlugin } from 'tdesign-web-components/message/message';
 
 export default class Button extends Component {
   @bind

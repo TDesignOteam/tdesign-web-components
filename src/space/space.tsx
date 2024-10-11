@@ -71,6 +71,10 @@ export default class Space extends Component<SpaceProps> {
     });
   }
 
+  beforeRender(): void {
+    this.innerHTML = '';
+  }
+
   render(props: OmiProps<SpaceProps>) {
     return (
       <div

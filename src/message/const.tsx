@@ -1,4 +1,4 @@
-import { getClassPrefix } from 'tdesign-web-components/_util/classname.ts';
+import { getClassPrefix } from 'tdesign-web-components/_util/classname';
 
 import { MessagePlacementList, MessageThemeList } from './type';
 

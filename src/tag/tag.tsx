@@ -83,7 +83,7 @@ export default class Tag extends Component<TagProps> {
   render(props: TagProps) {
     const { disabled, maxWidth, icon, children, content, closable, innerStyle, innerClass } = props;
 
-    if (icon) {
+    if (typeof icon === 'object' && 'attributes' in icon) {
       icon.attributes.style = {};
       icon.attributes.style.marginRight = 4;
     }

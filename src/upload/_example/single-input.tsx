@@ -1,6 +1,6 @@
 import { Component, createRef, signal } from 'omi';
 import { Button, Space, Upload } from 'tdesign-web-components';
-import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+import { MessagePlugin } from 'tdesign-web-components/message/message';
 import type { UploadProps } from 'tdesign-web-components/upload';
 
 export default class UploadSingleInput extends Component {

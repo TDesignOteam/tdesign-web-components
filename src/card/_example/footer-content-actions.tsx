@@ -4,7 +4,7 @@ import 'tdesign-web-components/comment';
 import 'tdesign-web-components/grid';
 
 import { Component } from 'omi';
-import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+import { MessagePlugin } from 'tdesign-web-components/message/message';
 
 interface Option {
   content: string;

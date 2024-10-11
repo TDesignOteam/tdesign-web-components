@@ -1,11 +1,11 @@
 import { Component, render, tag } from 'omi';
-import { convertToLightDomNode } from 'tdesign-web-components/_util/lightDom.ts';
+import { convertToLightDomNode } from 'tdesign-web-components/_util/lightDom';
 
 import classname from '../_util/classname';
 import { AttachNodeReturnValue, Styles, TNode } from '../common';
-import { getMessageConfig, globalConfig, setGlobalConfig } from './config.ts';
-import { PlacementOffset, tdMessageListClass, tdMessagePlacementClassGenerator } from './const.tsx';
-import MessageComponent from './messageComponent.tsx';
+import { getMessageConfig, globalConfig, setGlobalConfig } from './config';
+import { PlacementOffset, tdMessageListClass, tdMessagePlacementClassGenerator } from './const';
+import MessageComponent from './messageComponent';
 import {
   MessageCloseAllMethod,
   MessageContainerProps,

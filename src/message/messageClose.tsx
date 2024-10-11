@@ -6,9 +6,9 @@ import 'tdesign-icons-web-components/esm/components/close';
 
 import Omi, { classNames, Component, tag } from 'omi';
 import { StyledProps } from 'tdesign-web-components';
-import { parseContentTNode } from 'tdesign-web-components/_util/parseTNode.ts';
+import { parseContentTNode } from 'tdesign-web-components/_util/parseTNode';
 
-import { tdMessageClassGenerator } from './const.tsx';
+import { tdMessageClassGenerator } from './const';
 import { TdMessageProps } from './type';
 
 export interface TdMessageCloseProps extends TdMessageProps, StyledProps {}

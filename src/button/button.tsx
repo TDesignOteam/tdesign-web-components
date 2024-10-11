@@ -17,6 +17,7 @@ export default class Button extends Component<ButtonProps> {
   static css = [];
 
   static propTypes = {
+    children: [Function, Object, String, Number],
     theme: String,
     type: String,
     variant: String,

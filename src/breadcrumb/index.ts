@@ -5,7 +5,7 @@ import _BreadcrumbItem from './breadcrumb-item';
 
 export * from './type';
 
-export type { TdBreadcrumbProps, TdBreadcrumbItemProps } from './type.ts';
+export type { TdBreadcrumbProps, TdBreadcrumbItemProps } from './type';
 export const Breadcrumb = _Breadcrumb;
 export const BreadcrumbItem = _BreadcrumbItem;
 export default Breadcrumb;

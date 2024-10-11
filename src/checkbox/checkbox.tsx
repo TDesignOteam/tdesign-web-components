@@ -1,7 +1,7 @@
 import { Component, createRef, signal, tag } from 'omi';
 
 import clsx, { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common.ts';
+import { StyledProps } from '../common';
 import { TdCheckboxProps } from './type';
 
 export const CheckboxContextKey = 'CheckboxContextKey';

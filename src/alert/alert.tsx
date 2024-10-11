@@ -6,10 +6,10 @@ import 'tdesign-icons-web-components/esm/components/close';
 import { isObject } from 'lodash';
 import { Component, createRef, signal, SignalValue, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname.ts';
-import parseTNode from '../_util/parseTNode.ts';
+import classname, { getClassPrefix } from '../_util/classname';
+import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
-import { TdAlertProps } from './type.ts';
+import { TdAlertProps } from './type';
 
 export interface AlertProps extends TdAlertProps, StyledProps {}
 

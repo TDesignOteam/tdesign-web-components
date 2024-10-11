@@ -89,6 +89,11 @@ const buildLightDomCtor = (nodeCtor: ComponentConstructor) => {
  */
 export const convertToLightDomNode = (node: TNode) => {
   const tNode = parseTNode(node);
+
+  if (!tNode) {
+    return tNode;
+  }
+
   if (!(typeof tNode === 'object' && 'nodeName' in tNode && typeof tNode.nodeName === 'string')) {
     return tNode;
   }
