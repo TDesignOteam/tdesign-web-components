@@ -4,7 +4,8 @@ import { Input } from 'tdesign-web-components/input';
 
 @tag('t-range-input-inner')
 export default class RangeInput extends Input {
-  static css = `
+  static css = [
+    `
     .${getClassPrefix()}-range-input__inner-left,
     .${getClassPrefix()}-range-input__inner-right {
       width: 100%;
@@ -34,5 +35,6 @@ export default class RangeInput extends Input {
     .${getClassPrefix()}-size-l .${getClassPrefix()}-input {
       padding: 0 var(--td-comp-margin-s);
     }
-  `;
+  `,
+  ];
 }

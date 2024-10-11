@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/close';
 
 import { Component, computed, createRef, signal } from 'omi';
 import Button from 'tdesign-web-components/button';
-import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+import { MessagePlugin } from 'tdesign-web-components/message/message';
 import Space from 'tdesign-web-components/space';
 import type { UploadFile, UploadProps } from 'tdesign-web-components/upload';
 import Upload from 'tdesign-web-components/upload';

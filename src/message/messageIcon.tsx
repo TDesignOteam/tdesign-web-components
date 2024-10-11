@@ -4,7 +4,7 @@ import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/help-circle-filled';
 import 'tdesign-web-components/loading';
 
-import { classPrefix } from './const.tsx';
+import { classPrefix } from './const';
 import { TdMessageProps } from './type';
 
 export default function MessageIcon({ theme, onCloseBtnClick }: TdMessageProps) {

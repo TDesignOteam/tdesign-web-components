@@ -8,7 +8,7 @@ import 'tdesign-icons-web-components/esm/components/share';
 import 'tdesign-icons-web-components/esm/components/more';
 
 import { Component } from 'omi';
-import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+import { MessagePlugin } from 'tdesign-web-components/message/message';
 
 interface Option {
   content: string;

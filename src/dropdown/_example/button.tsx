@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components';
 import 'tdesign-web-components/dropdown';
 import 'tdesign-web-components/button';
 
-import { MessagePlugin } from 'tdesign-web-components/message/message.tsx';
+import { MessagePlugin } from 'tdesign-web-components/message/message';
 
 export default function BasicDropdown() {
   const getContent = () => <div>操作四</div>;

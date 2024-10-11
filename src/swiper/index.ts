@@ -1,8 +1,8 @@
-import './style/index.ts';
+import './style/index';
 
-import _Swiper from './swiper.tsx';
+import _Swiper from './swiper';
 
-export type { SwiperProps } from './type.ts';
+export type { SwiperProps } from './swiper';
 
 export const Swiper = _Swiper;
 export default Swiper;

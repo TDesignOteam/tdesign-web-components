@@ -1,4 +1,4 @@
-import { AttachNode, StyledProps, Styles, TNode } from '../common.ts';
+import { AttachNode, StyledProps, Styles, TNode } from '../common';
 
 export interface TdMessageProps {
   /**
