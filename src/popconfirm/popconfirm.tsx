@@ -52,7 +52,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
     this.update();
   };
 
-  installed(): void {
+  install(): void {
     this.pVisible = this.props.visible;
   }
 
