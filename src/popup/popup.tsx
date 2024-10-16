@@ -307,6 +307,11 @@ export default class Popup extends Component<PopupProps> {
     }
   }
 
+  ready(): void {
+    console.log('==ready');
+    this.updatePopper();
+  }
+
   receiveProps(props, oldProps) {
     if (props.visible && oldProps.visible !== props.visible) {
       this.showPopupByControlled();
