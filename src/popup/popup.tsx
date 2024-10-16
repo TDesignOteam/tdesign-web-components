@@ -275,21 +275,10 @@ export default class Popup extends Component<PopupProps> {
   }
 
   updatePopper = () => {
-    console.log('===this.triggerRef.current', this.triggerRef.current, this.popperRef.current);
-    if (this.popperInstance) {
-      this.popperInstance.update();
-      return;
-    }
-    if (this.triggerRef.current && this.popperRef.current) {
-      this.popperInstance = createPopper(
-        this.triggerRef.current as HTMLElement,
-        this.popperRef.current as HTMLElement,
-        {
-          placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-          ...(this.props?.popperOptions || {}),
-        },
-      );
-    }
+    this.popperInstance = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
+      placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
+      ...(this.props?.popperOptions || {}),
+    });
   };
 
   setVisible = (visible: boolean) => {
@@ -297,27 +286,11 @@ export default class Popup extends Component<PopupProps> {
     handlePopVisible(visible, { trigger: 'document' });
   };
 
-  handleBeforeEnter = () => {
-    this.updatePopper();
-  };
-
   showPopupByControlled = () => {
     this.isPopoverInDomTree = true;
     this.update();
     this.addPopContentEvent();
   };
-
-  // beforeUpdate() {
-  //   if (this.getVisible()) {
-  //     if (this.popperRef.current) {
-  //       const el = this.popperRef.current as HTMLElement;
-  //       el.style.display = 'block';
-  //     }
-  //   } else if (this.popperRef.current) {
-  //     const el = this.popperRef.current as HTMLElement;
-  //     el.style.display = 'none';
-  //   }
-  // }
 
   install(): void {
     window.addEventListener('resize', this.updatePopper);
@@ -332,11 +305,6 @@ export default class Popup extends Component<PopupProps> {
     if (this.visible) {
       this.showPopupByControlled();
     }
-  }
-
-  ready(): void {
-    console.log('==ready');
-    this.updatePopper();
   }
 
   receiveProps(props, oldProps) {
@@ -387,16 +355,22 @@ export default class Popup extends Component<PopupProps> {
           cloneElement(children[0] as VNode, { ref: this.triggerRef })
         )}
         {this.isPopoverInDomTree ? (
-          <t-portal attach={props.attach}>
+          <t-portal
+            attach={props.attach}
+            onDOMReady={(h) => {
+              this.popperRef.current = h;
+              setTimeout(() => {
+                this.updatePopper();
+              });
+            }}
+          >
             <div
               show={this.getVisible()}
               o-transition={{
                 name: props.expandAnimation ? `${componentName}--animation-expand` : `${componentName}--animation`,
-                beforeEnter: this.handleBeforeEnter,
               }}
               class={popperClasses}
               style={{ zIndex: props.zIndex, ...props.innerStyle, ...this.getOverlayStyle(props.overlayStyle) }}
-              ref={this.popperRef}
               onMouseDown={() => (this.contentClicked = true)}
             >
               <div

@@ -12,7 +12,7 @@ spline: navigation
 
 {{ base }}
 
-<!-- ### 按钮下拉菜单
+### 按钮下拉菜单
 
 普通按钮触发下拉菜单。常用于操作收纳场景。
 
@@ -70,7 +70,7 @@ spline: navigation
 
 下拉菜单操作项支持通过传入Children的方式传递操作项。
 
-{{ child }} -->
+{{ child }}
 
 ## API
 ### Dropdown Props

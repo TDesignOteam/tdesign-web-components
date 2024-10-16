@@ -14,6 +14,7 @@ export interface PortalProps {
    */
   triggerNode?: HTMLElement;
   children: TNode;
+  onDOMReady?: (h: Element) => void;
 }
 
 export function getAttach(attach: PortalProps['attach'], triggerNode?: HTMLElement): AttachNodeReturnValue {
@@ -72,6 +73,10 @@ export default class Portal extends Component<PortalProps> {
 
   uninstall(): void {
     this.parentElement?.removeChild?.(this.container);
+  }
+
+  ready(): void {
+    this.props.onDOMReady(this.container.children[0]);
   }
 
   render() {
