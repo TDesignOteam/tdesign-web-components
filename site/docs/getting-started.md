@@ -47,7 +47,7 @@ export default defineConfig({
 
 如果使用webpack打包工具，需要在`babel`中设置`jsx`的解析逻辑：
 
-```json
+```javascript
 {
   "presets": [
     ...
