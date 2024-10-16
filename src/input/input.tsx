@@ -388,7 +388,7 @@ export default class Input extends Component<InputProps> {
         <t-icon-close-circle-filled
           onMouseDown={(e) => e.preventDefault()}
           name={'close-circle-filled'}
-          cls={classname(
+          innerClass={classname(
             `${classPrefix}-input__suffix-clear`,
             `${classPrefix}-input__suffix`,
             `${classPrefix}-input__suffix-icon`,
@@ -404,7 +404,7 @@ export default class Input extends Component<InputProps> {
           <t-icon-browse-off
             onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
-            cls={classname(
+            innerClass={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,
@@ -417,7 +417,7 @@ export default class Input extends Component<InputProps> {
           <t-icon-browse
             onMouseDown={(e) => e.preventDefault()}
             onClick={this.handlePasswordVisible}
-            cls={classname(
+            innerClass={classname(
               `${classPrefix}-input__suffix-clear`,
               `${classPrefix}-input__suffix`,
               `${classPrefix}-input__suffix-icon`,

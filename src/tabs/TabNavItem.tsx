@@ -92,7 +92,7 @@ export default class TabNavItem extends Component<TabNavItemProps> {
         )}
         {removable ? (
           <t-icon-close
-            cls={classname('remove-btn')}
+            innerClass={classname('remove-btn')}
             onClick={(e) => {
               if (disabled) {
                 return;

@@ -17,7 +17,7 @@ import { terser } from 'rollup-plugin-terser';
 
 import pkg from '../package.json';
 
-const name = 'tdesign';
+const name = 'Tdesign Web Components';
 const externalDeps = Object.keys(pkg.dependencies || {});
 const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
 const banner = `/**
@@ -78,7 +78,7 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
   } else {
     plugins.push(
       staticImport({
-        include: ['src/**/style/index.js', 'src/_common/style/web/**/*.less'],
+        include: ['src/**/style/index.js', 'src/_common/style/web/**/*.less', 'src/**/style/*.less'],
       }),
       ignoreImport({
         include: ['src/*/style/*'],
@@ -146,14 +146,14 @@ const libConfig = {
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '_chunks/dep-[hash].js',
-    intro: `import { h } from 'omi';`,
+    intro: `import { h } from 'omi';\nwindow.h = h;`,
   },
 };
 
 // 按需加载组件 带原始 less 文件，可定制主题
 const esmConfig = {
   input: inputList.concat('!src/index-lib.ts'),
-  treeshake: false,
+  // treeshake: false,
   // preserveModules: true,
   external: externalDeps.concat(externalPeerDeps),
   plugins: [multiInput()].concat(getPlugins({ ignoreLess: true })),
@@ -163,7 +163,7 @@ const esmConfig = {
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '_chunks/dep-[hash].js',
-    intro: `import { h } from 'omi';`,
+    intro: `import { h } from 'omi';\nwindow.h = h;`,
   },
 };
 
@@ -179,7 +179,7 @@ const cjsConfig = {
     sourcemap: true,
     exports: 'named',
     chunkFileNames: '_chunks/dep-[hash].js',
-    intro: `var { h } = require('omi');`,
+    intro: `var { h } = require('omi');\nwindow.h = h;`,
   },
 };
 
