@@ -98,14 +98,14 @@ export default class Notification extends Component<NotificationProps> {
     if (theme && theme === 'success') {
       return (
         <IconWrapper>
-          {convertToLightDomNode(<t-icon-check-circle-filled cls={`${getClassPrefix()}-is-success`} />)}
+          {convertToLightDomNode(<t-icon-check-circle-filled innerClass={`${getClassPrefix()}-is-success`} />)}
         </IconWrapper>
       );
     }
     if (theme && ['info', 'warning', 'error'].indexOf(theme) >= 0) {
       return (
         <IconWrapper>
-          {convertToLightDomNode(<t-icon-info-circle-filled cls={`${getClassPrefix()}-is-${theme}`} />)}
+          {convertToLightDomNode(<t-icon-info-circle-filled innerClass={`${getClassPrefix()}-is-${theme}`} />)}
         </IconWrapper>
       );
     }
@@ -118,7 +118,7 @@ export default class Notification extends Component<NotificationProps> {
         this.props.closeBtn &&
         convertToLightDomNode(
           <t-icon-close
-            cls={`${this.className}-icon-close`}
+            innerClass={`${this.className}-icon-close`}
             onClick={(e) => {
               this.props.onCloseBtnClick?.({ e });
             }}

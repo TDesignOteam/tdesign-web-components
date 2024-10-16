@@ -2,7 +2,7 @@ import 'omi-transition';
 import './popupTrigger';
 import '../common/portal';
 
-import { createPopper } from '@popperjs/core';
+import { createPopper, Instance } from '@popperjs/core';
 import debounce from 'lodash/debounce';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
@@ -86,6 +86,8 @@ export default class Popup extends Component<PopupProps> {
   leaveFlag = false;
 
   isPopoverInDomTree = false;
+
+  popperInstance: Instance = null;
 
   triggerType = () =>
     triggers.reduce(
@@ -273,10 +275,21 @@ export default class Popup extends Component<PopupProps> {
   }
 
   updatePopper = () => {
-    createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
-      placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-      ...(this.props?.popperOptions || {}),
-    });
+    console.log('===this.triggerRef.current', this.triggerRef.current, this.popperRef.current);
+    if (this.popperInstance) {
+      this.popperInstance.update();
+      return;
+    }
+    if (this.triggerRef.current && this.popperRef.current) {
+      this.popperInstance = createPopper(
+        this.triggerRef.current as HTMLElement,
+        this.popperRef.current as HTMLElement,
+        {
+          placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
+          ...(this.props?.popperOptions || {}),
+        },
+      );
+    }
   };
 
   setVisible = (visible: boolean) => {
@@ -286,7 +299,6 @@ export default class Popup extends Component<PopupProps> {
 
   handleBeforeEnter = () => {
     this.updatePopper();
-    this.updatePopper();
   };
 
   showPopupByControlled = () => {
@@ -295,24 +307,23 @@ export default class Popup extends Component<PopupProps> {
     this.addPopContentEvent();
   };
 
-  beforeUpdate() {
-    if (this.getVisible()) {
-      if (this.popperRef.current) {
-        const el = this.popperRef.current as HTMLElement;
-        el.style.display = 'block';
-      }
-    } else if (this.popperRef.current) {
-      const el = this.popperRef.current as HTMLElement;
-      el.style.display = 'none';
-    }
-  }
+  // beforeUpdate() {
+  //   if (this.getVisible()) {
+  //     if (this.popperRef.current) {
+  //       const el = this.popperRef.current as HTMLElement;
+  //       el.style.display = 'block';
+  //     }
+  //   } else if (this.popperRef.current) {
+  //     const el = this.popperRef.current as HTMLElement;
+  //     el.style.display = 'none';
+  //   }
+  // }
 
   install(): void {
     window.addEventListener('resize', this.updatePopper);
   }
 
   installed() {
-    this.updatePopper();
     this.addTriggerEvent();
 
     this.visible = this.props.visible;
@@ -321,6 +332,11 @@ export default class Popup extends Component<PopupProps> {
     if (this.visible) {
       this.showPopupByControlled();
     }
+  }
+
+  ready(): void {
+    console.log('==ready');
+    this.updatePopper();
   }
 
   receiveProps(props, oldProps) {

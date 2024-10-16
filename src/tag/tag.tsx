@@ -67,7 +67,7 @@ export default class Tag extends Component<TagProps> {
         e.stopImmediatePropagation();
         this.props.onClose(e);
       }}
-      cls={classNames(TagClassNamePrefix(`__icon-close`))}
+      innerClass={classNames(TagClassNamePrefix(`__icon-close`))}
     />
   );
 

@@ -15,17 +15,7 @@ isGettingStarted: true
 npm i tdesign-web-components
 ```
 
-#### 浏览器引入
-
-目前可以通过 [unpkg.com/tdesign-react](https://unpkg.com/tdesign-react) 获取到最新版本的资源，在页面上引入 js 和 css 文件即可开始使用。
-
-```html
-<link rel="stylesheet" href="https://unpkg.com/tdesign-react/dist/tdesign.min.css" />
-<script src="https://unpkg.com/tdesign-react/dist/tdesign.min.js"></script>
-```
-> 请注意，我们不推荐使用这种方式，这样无法实现按需加载等优化手段，生产项目会直接受版本更新影响，同时也可能受到 CDN 的稳定性的影响。
-
-npm package 中提供了多种构建产物，可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解不同目录下产物的差别。
+#### 浏览器引入（敬请期待）
 
 ### 基础使用
 
@@ -41,6 +31,36 @@ import 'tdesign-web-components/lib/button';
 ```javascript
 import 'tdesign-web-components/lib/style/index.css'; // 少量公共样式
 import 'tdesign-web-components';
+```
+
+如果使用vite打包工具，需要在`vite.config.ts`中添加以下配置，设置vite解析`jsx`的逻辑：
+
+```javascript
+import { defineConfig } from 'vite'
+export default defineConfig({
++   esbuild: {
++     jsxFactory: 'h',
++     jsxFragment: 'h.f',
++   },
+})
+```
+
+如果使用webpack打包工具，需要在`babel`中设置`jsx`的解析逻辑：
+
+```json
+{
+  "presets": [
+    ...
++   [
++     "@babel/preset-react",
++     {
++       "pragma": "h",
++       "pragmaFrag": "h.f"
++     }
++   ]
++  ],
+   ...
+}
 ```
 
 ### 更改主题
@@ -79,9 +99,10 @@ module.exports = {
   rules: [{
     test: /\.less$/,
     use: [{
-      loader: 'style-loader',
-    }, {
-      loader: 'css-loader', // translates CSS into CommonJS
+      loader: 'css-loader',
+      options: {
++       exportType: 'string', // translates CSS into string
+      },
     }, {
       loader: 'less-loader', // compiles Less to CSS
 +     options: {
@@ -93,6 +114,7 @@ module.exports = {
 +       },
 +     },
     }],
++   include: /node_modules\/tdesign-web-components/, // 建议对组件库中的less单独处理
   }],
 }
 ```
