@@ -12,6 +12,13 @@ export default [
         component: () => import('@docs/getting-started.md'),
       },
       {
+        title: '自定义主题',
+        titleEn: 'Theme Customization',
+        name: 'custom-theme',
+        path: '/custom-theme',
+        component: () => import('@common/theme.md'),
+      },
+      {
         title: '最佳实践',
         titleEn: 'Starter Kit',
         name: 'quick-start',
