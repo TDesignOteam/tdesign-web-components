@@ -308,7 +308,6 @@ export default class Popup extends Component<PopupProps> {
   }
 
   ready(): void {
-    console.log('==ready');
     this.updatePopper();
   }
 

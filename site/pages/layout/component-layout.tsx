@@ -6,6 +6,7 @@ import styles from 'tdesign-site-components/lib/styles/style.css?raw';
 import sidebarConfig from '../../sidebar.config.ts';
 
 const routerList = JSON.parse(JSON.stringify(sidebarConfig).replace(/component:.+/g, ''));
+
 @tag('component-layout')
 export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
   asideRef: Element | null = null;
