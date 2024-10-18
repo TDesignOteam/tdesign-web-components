@@ -19,7 +19,7 @@ function createComponentRoutes(config: any[] = []) {
 export const routes = [
   {
     path: '/',
-    redirect: '/components/button',
+    redirect: '/webcomponents/getting-started',
   },
   ...createComponentRoutes(sidebar),
   {
