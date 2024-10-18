@@ -5,17 +5,17 @@
 </p>
 
 <p align="center">
-   <a href="https://www.npmjs.com/package/tdesign-react">
-    <img src="https://img.shields.io/npm/l/tdesign-react.svg?sanitize=true" alt="License" />
+   <a href="https://www.npmjs.com/package/tdesign-web-components">
+    <img src="https://img.shields.io/npm/l/tdesign-web-components.svg?sanitize=true" alt="License" />
   </a>
-  <a href="https://app.codecov.io/gh/Tencent/tdesign-react">
-    <img src="https://img.shields.io/codecov/c/github/Tencent/tdesign-react/develop.svg?style=flat-square" alt="codecov">
+  <a href="https://app.codecov.io/gh/Tencent/tdesign-web-components">
+    <img src="https://img.shields.io/codecov/c/github/Tencent/tdesign-web-components/develop.svg?style=flat-square" alt="codecov">
   </a>
-  <a href="https://www.npmjs.com/package/tdesign-react">
-    <img src="https://img.shields.io/npm/v/tdesign-react.svg?sanitize=true" alt="Version">
+  <a href="https://www.npmjs.com/package/tdesign-web-components">
+    <img src="https://img.shields.io/npm/v/tdesign-web-components.svg?sanitize=true" alt="Version">
   </a>
-  <a href="https://www.npmjs.com/package/tdesign-react">
-    <img src="https://img.shields.io/npm/dm/tdesign-react.svg?sanitize=true" alt="Downloads" />
+  <a href="https://www.npmjs.com/package/tdesign-web-components">
+    <img src="https://img.shields.io/npm/dm/tdesign-web-components.svg?sanitize=true" alt="Downloads" />
   </a>
 </p>
 
