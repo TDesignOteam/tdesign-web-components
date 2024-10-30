@@ -1,5 +1,5 @@
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/input';
+import '../input';
 import './RangeInputInner';
 
 import { bind, classNames, Component, signal, tag } from 'omi';

@@ -1,5 +1,4 @@
-import { getClassPrefix } from 'tdesign-web-components/_util/classname';
-
+import { getClassPrefix } from '../_util/classname';
 import { MessagePlacementList, MessageThemeList } from './type';
 
 const Distance = '32px';
