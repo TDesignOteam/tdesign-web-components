@@ -1,6 +1,7 @@
 import { tag } from 'omi';
-import { getClassPrefix } from 'tdesign-web-components/_util/classname';
-import { Input } from 'tdesign-web-components/input';
+
+import { getClassPrefix } from '../_util/classname';
+import { Input } from '../input';
 
 @tag('t-range-input-inner')
 export default class RangeInput extends Input {

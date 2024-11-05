@@ -1,4 +1,4 @@
-import 'tdesign-web-components/tooltip';
+import '../tooltip';
 
 import { bind, Component, tag } from 'omi';
 

@@ -63,6 +63,32 @@ export default defineConfig({
 }
 ```
 
+### 在React中使用
+
+首先引入`renderReact`
+
+```javascript
+import { renderReact } from 'tdesign-web-components';
+```
+
+在React项目中使用
+
+```javascript
+const App: React.FC = () => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  React.useEffect(() => {
+    if (ref.current) {
+      renderReact(<t-button>BUTTON</t-button>, ref.current)
+    }
+  }, [])
+
+
+  return (
+    <div ref={ref}></div>
+  )
+}
+```
+
 ### 更改主题
 
 由于原始样式基于 less 编写，需要自行处理 less 文件的编译（例如安装 less、less-loader）

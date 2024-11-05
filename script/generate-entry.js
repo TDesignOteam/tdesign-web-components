@@ -10,7 +10,7 @@ const componentsPath = path.resolve(__dirname, '../src');
 const components = fs.readdirSync(componentsPath).filter((name) => {
   if (['style', 'icon'].includes(name) || name.startsWith('_')) return false;
   const componentPath = path.resolve(componentsPath, name);
-  if (fs.statSync(componentPath).isDirectory()) {
+  if (fs.statSync(componentPath).isDirectory() || /src\/react\.ts|src\/vue\.ts/.test(componentPath)) {
     return true;
   }
   return false;

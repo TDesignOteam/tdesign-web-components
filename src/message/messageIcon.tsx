@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/check-circle-filled';
 import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/help-circle-filled';
-import 'tdesign-web-components/loading';
+import '../loading';
 
 import { classPrefix } from './const';
 import { TdMessageProps } from './type';

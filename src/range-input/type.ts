@@ -1,6 +1,5 @@
-import { InputFormatType, InputValue } from 'tdesign-web-components/input';
-
 import { TNode } from '../common';
+import { InputFormatType, InputValue } from '../input';
 
 export interface TdRangeInputProps {
   /**
