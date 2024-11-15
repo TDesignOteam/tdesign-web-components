@@ -16,15 +16,15 @@ export default [
         titleEn: 'Theme Customization',
         name: 'custom-theme',
         path: '/webcomponents/custom-theme',
-        component: () => import('@common/theme.md'),
+        component: () => import('@docs/theme.md'),
       },
-      {
-        title: '最佳实践',
-        titleEn: 'Starter Kit',
-        name: 'quick-start',
-        path: '/webcomponents/quick-start',
-        component: () => import('@docs/starter.md'),
-      },
+      // {
+      //   title: '最佳实践',
+      //   titleEn: 'Starter Kit',
+      //   name: 'quick-start',
+      //   path: '/webcomponents/quick-start',
+      //   component: () => import('@docs/starter.md'),
+      // },
       {
         title: '更新日志',
         titleEn: 'CHANGELOG',
