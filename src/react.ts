@@ -2,7 +2,27 @@
  * 在React环境中使用的兼容方法
  */
 
-import { render } from 'omi';
+import { Component, render } from 'omi';
+
+export type ExtendedElement = (HTMLElement | SVGAElement | HTMLInputElement) & {
+  receiveProps: Function;
+  update: Function;
+  queuedUpdate: Function;
+  store?: unknown;
+  className?: string;
+  props: Record<string, unknown>;
+  splitText?: Function;
+  prevProps?: Record<string, unknown> & {
+    ref?:
+      | {
+          current?: unknown;
+        }
+      | Function;
+  };
+  attributes: NamedNodeMap;
+  _component?: Component;
+  _listeners: Record<string, Function>;
+} & Record<string, unknown>;
 
 const convertReactToOmi = (r: any): Omi.ComponentChild => {
   if (!r) return r;
@@ -49,8 +69,7 @@ const convertReactToOmi = (r: any): Omi.ComponentChild => {
  * @param reactVNode react的vnode结构
  * @param root 需要挂载的html
  */
-const renderReact = <T = any>(reactVNode: T, root: HTMLElement) => {
+const renderReact = <T = any>(reactVNode: T, root: HTMLElement): ExtendedElement =>
   render(convertReactToOmi(reactVNode), root);
-};
 
 export { renderReact, convertReactToOmi };

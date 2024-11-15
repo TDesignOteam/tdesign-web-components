@@ -16,7 +16,7 @@ const components = fs.readdirSync(componentsPath).filter((name) => {
   return false;
 });
 
-const code = components.reduce((pre, next) => `${pre}export * from './${next}';\n`, '');
+const code = components.reduce((pre, next) => `${pre}export * from './${next.replace(/\.ts/, '')}';\n`, '');
 
 fs.writeFileSync(path.resolve(componentsPath, 'index.ts'), code, {
   encoding: 'utf-8',
