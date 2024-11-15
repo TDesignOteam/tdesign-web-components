@@ -14,7 +14,7 @@
     "site:intranet": "cd site && vite build --mode intranet",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
     "prebuild": "rimraf es/* lib/* dist/* esm/*",
-    "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js",
+    "build": "npm run generate:entry && cross-env NODE_ENV=production rollup -c script/rollup.config.js",
     "build:tsc": "run-p build:tsc-*",
     "build:tsc-lib": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir lib/",
     "build:tsc-esm": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir esm/",
@@ -71,7 +71,7 @@
     "lodash": "~4.17.15",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.1.5"
+    "tdesign-icons-web-components": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
