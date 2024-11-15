@@ -1,5 +1,5 @@
 ---
-title: Tdesign Web Components
+title: TDesign Web Components
 description: TDesign 适配桌面端的组件库，可以在任何前端项目中使用。
 spline: explain
 isGettingStarted: true
@@ -147,7 +147,7 @@ module.exports = {
 
 ### 更改样式
 
-有些业务场景需要更改组件的样式，但是`shadowDOM`具有天然样式隔离的特点，组件外部的样式影响不到组件内部，为此 Tdesign Web Components 提供了几种方式来对样式进行更改：
+有些业务场景需要更改组件的样式，但是`shadowDOM`具有天然样式隔离的特点，组件外部的样式影响不到组件内部，为此 TDesign Web Components 提供了几种方式来对样式进行更改：
 
 #### 通过设置`css`属性，来修改样式（推荐）
   
