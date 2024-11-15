@@ -28,7 +28,7 @@ export * from './popup';
 export * from './progress';
 export * from './radio';
 export * from './range-input';
-export * from './react.ts';
+export * from './react';
 export * from './select';
 export * from './select-input';
 export * from './skeleton';

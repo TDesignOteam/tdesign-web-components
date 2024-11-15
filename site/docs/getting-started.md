@@ -69,6 +69,7 @@ export default defineConfig({
 
 ```javascript
 import { renderReact } from 'tdesign-web-components';
+import type { ExtendedElement } from 'tdesign-web-components';
 ```
 
 在React项目中使用
@@ -76,15 +77,23 @@ import { renderReact } from 'tdesign-web-components';
 ```javascript
 const App: React.FC = () => {
   const ref = React.useRef<HTMLDivElement>(null);
+  const tdComponent = React.useRef<ExtendedElement>();
+
+  const changeTheme = () => {
+    if(!tdComponent.current) return;
+    tdComponent.current.props.theme = 'danger';
+    tdComponent.current.update(); // 调用update更新对应的组件
+  }
+
   React.useEffect(() => {
-    if (ref.current) {
-      renderReact(<t-button>BUTTON</t-button>, ref.current)
-    }
+    tdComponent.current = renderReact(<t-button theme={'primary'}>BUTTON</t-button>, ref.current);
   }, [])
 
 
   return (
-    <div ref={ref}></div>
+    <div ref={ref}>
+      <button onClick={changeTheme}>点击我切换主题</button>
+    </div>
   )
 }
 ```
