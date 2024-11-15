@@ -8,8 +8,8 @@ import pwaConfig from './pwaConfig.js';
 
 const publicPathMap = {
   preview: '/',
-  intranet: '/web-components/',
-  production: 'https://static.tdesign.tencent.com/web-components/',
+  intranet: '/webcomponents/',
+  production: 'https://static.tdesign.tencent.com/webcomponents/',
 };
 
 // https://vitejs.dev/config/
