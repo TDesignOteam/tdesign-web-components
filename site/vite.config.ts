@@ -1,15 +1,13 @@
 import fs from 'node:fs';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import { VitePWA } from 'vite-plugin-pwa';
 
 import tdocPlugin from '../script/plugin-tdoc';
-import pwaConfig from './pwaConfig.js';
 
 const publicPathMap = {
   preview: '/',
-  intranet: '/web-components/',
-  production: 'https://static.tdesign.tencent.com/web-components/',
+  intranet: '/webcomponents/',
+  production: 'https://static.tdesign.tencent.com/webcomponents/',
 };
 
 // https://vitejs.dev/config/
@@ -51,7 +49,7 @@ export default ({ mode }) => {
         },
       },
     },
-    plugins: [tdocPlugin(), VitePWA(pwaConfig)],
+    plugins: [tdocPlugin()],
     logLevel: 'error',
   });
 };
