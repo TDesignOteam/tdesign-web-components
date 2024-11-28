@@ -1,5 +1,5 @@
 ---
-title: Tdesign Web Components
+title: TDesign Web Components
 description: TDesign 适配桌面端的组件库，可以在任何前端项目中使用。
 spline: explain
 isGettingStarted: true
@@ -63,6 +63,41 @@ export default defineConfig({
 }
 ```
 
+### 在React中使用
+
+首先引入`renderReact`
+
+```javascript
+import { renderReact } from 'tdesign-web-components';
+import type { ExtendedElement } from 'tdesign-web-components';
+```
+
+在React项目中使用
+
+```javascript
+const App: React.FC = () => {
+  const ref = React.useRef<HTMLDivElement>(null);
+  const tdComponent = React.useRef<ExtendedElement>();
+
+  const changeTheme = () => {
+    if(!tdComponent.current) return;
+    tdComponent.current.props.theme = 'danger';
+    tdComponent.current.update(); // 调用update更新对应的组件
+  }
+
+  React.useEffect(() => {
+    tdComponent.current = renderReact(<t-button theme={'primary'}>BUTTON</t-button>, ref.current);
+  }, [])
+
+
+  return (
+    <div ref={ref}>
+      <button onClick={changeTheme}>点击我切换主题</button>
+    </div>
+  )
+}
+```
+
 ### 更改主题
 
 由于原始样式基于 less 编写，需要自行处理 less 文件的编译（例如安装 less、less-loader）
@@ -121,7 +156,7 @@ module.exports = {
 
 ### 更改样式
 
-有些业务场景需要更改组件的样式，但是`shadowDOM`具有天然样式隔离的特点，组件外部的样式影响不到组件内部，为此 Tdesign Web Components 提供了几种方式来对样式进行更改：
+有些业务场景需要更改组件的样式，但是`shadowDOM`具有天然样式隔离的特点，组件外部的样式影响不到组件内部，为此 TDesign Web Components 提供了几种方式来对样式进行更改：
 
 #### 通过设置`css`属性，来修改样式（推荐）
   

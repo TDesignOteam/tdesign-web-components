@@ -2,10 +2,10 @@ import './messageClose';
 
 import classNames from 'classnames';
 import Omi, { Component, createRef, signal, tag } from 'omi';
-import MessageIcon from 'tdesign-web-components/message/messageIcon';
 
 import { StyledProps, TNode } from '../common';
 import { tdClassIsGenerator, tdMessageClassGenerator, tdMessagePrefix } from './const';
+import MessageIcon from './messageIcon';
 // 依赖组件引入
 import { TdMessageProps } from './type';
 
