@@ -1,4 +1,4 @@
-import { VNode, WeElement } from 'omi';
+import { Component, VNode, WeElement } from 'omi';
 
 export type TElement<T = undefined> = T extends undefined ? WeElement : (props: T) => WeElement;
 export type TNode<T = any> = VNode<T> | ((props: T) => VNode) | object | string | number | boolean | null;
@@ -119,3 +119,23 @@ export interface ScrollToElementParams {
 export interface ComponentScrollToElementParams extends ScrollToElementParams {
   key?: string | number;
 }
+
+export type ExtendedElement = (HTMLElement | SVGAElement | HTMLInputElement) & {
+  receiveProps: Function;
+  update: Function;
+  queuedUpdate: Function;
+  store?: unknown;
+  className?: string;
+  props: Record<string, unknown>;
+  splitText?: Function;
+  prevProps?: Record<string, unknown> & {
+    ref?:
+      | {
+          current?: unknown;
+        }
+      | Function;
+  };
+  attributes: NamedNodeMap;
+  _component?: Component;
+  _listeners: Record<string, Function>;
+} & Record<string, unknown>;

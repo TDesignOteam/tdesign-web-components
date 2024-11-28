@@ -2,27 +2,9 @@
  * 在React环境中使用的兼容方法
  */
 
-import { Component, render } from 'omi';
+import { render } from 'omi';
 
-export type ExtendedElement = (HTMLElement | SVGAElement | HTMLInputElement) & {
-  receiveProps: Function;
-  update: Function;
-  queuedUpdate: Function;
-  store?: unknown;
-  className?: string;
-  props: Record<string, unknown>;
-  splitText?: Function;
-  prevProps?: Record<string, unknown> & {
-    ref?:
-      | {
-          current?: unknown;
-        }
-      | Function;
-  };
-  attributes: NamedNodeMap;
-  _component?: Component;
-  _listeners: Record<string, Function>;
-} & Record<string, unknown>;
+import { ExtendedElement } from './common';
 
 const convertReactToOmi = (r: any): Omi.ComponentChild => {
   if (!r) return r;
