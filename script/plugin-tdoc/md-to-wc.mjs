@@ -30,11 +30,11 @@ function getGitTimestamp(file) {
   });
 }
 
-export default async function mdToReact(options) {
+export default async function mdToWebC(options) {
   const mdSegment = await customRender(options);
   const { demoDefsStr, demoCodesDefsStr, components } = options;
 
-  const reactSource = `
+  const webCSource = `
     import { h, define } from 'omi';
     import { signal, effect } from 'reactive-signal'
     import Prismjs from 'prismjs';
@@ -137,7 +137,7 @@ export default async function mdToReact(options) {
     }
   `;
 
-  const result = esbuild.transformSync(reactSource, {
+  const result = esbuild.transformSync(webCSource, {
     loader: 'tsx',
     jsxFactory: 'h',
     jsxFragment: 'h.f',
