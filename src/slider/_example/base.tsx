@@ -20,7 +20,7 @@ export default class Demo extends Component {
 
   render() {
     return (
-      <t-space direction="vertical" size="60px" style={{ width: '100%' }}>
+      <t-space direction="vertical" size="60px" style={{ width: '100%' }} innerStyle={{ width: '100%' }}>
         <t-slider value={this.value1.value} onChange={this.onChange} onChangeEnd={this.onChangeEnd} />
         <t-slider range value={this.value2.value} onChange={this.onChange} onChangeEnd={this.onChangeEnd} />
       </t-space>

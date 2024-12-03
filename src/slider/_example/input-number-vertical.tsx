@@ -15,7 +15,7 @@ export default class Demo extends Component {
     };
 
     return (
-      <t-space size="60px" style={{ height: '300px' }}>
+      <t-space size="60px" style={{ height: '300px', display: 'inline-flex' }}>
         <t-slider value={this.value1.value} layout="vertical" inputNumberProps={inputNumberProps} />
         <t-slider range value={this.value2.value} layout="vertical" inputNumberProps={inputNumberProps} />
       </t-space>
