@@ -28,7 +28,7 @@ export default class Demo extends Component {
 
   render() {
     return (
-      <t-space size="60px" style={{ height: '300px' }}>
+      <t-space size="60px" style={{ height: '300px', display: 'inline-flex' }}>
         <t-slider value={this.value1.value} marks={this.marks1.value} layout="vertical" />
         <t-slider range value={this.value2.value} marks={this.marks2.value} layout="vertical" />
       </t-space>
