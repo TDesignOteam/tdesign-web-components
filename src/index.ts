@@ -42,4 +42,5 @@ export * from './tag-input';
 export * from './textarea';
 export * from './tooltip';
 export * from './upload';
+export * from './vue';
 export * from './watermark';

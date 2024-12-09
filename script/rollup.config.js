@@ -222,7 +222,7 @@ const umdMinConfig = {
 };
 
 const pluginConfig = buildPlugins.map((plugin) => ({
-  input: `plugin/${plugin}.ts`,
+  input: `plugins/${plugin}.ts`,
   external: ['less', 'fs'],
   plugins: [
     nodeResolve(),
@@ -239,7 +239,7 @@ const pluginConfig = buildPlugins.map((plugin) => ({
     banner,
     format: 'esm',
     sourcemap: false,
-    file: `plugin/${plugin}.js`,
+    file: `plugins/${plugin}.js`,
   },
 }));
 
