@@ -20,12 +20,15 @@ import pkg from '../package.json';
 const name = 'TDesign Web Components';
 const externalDeps = Object.keys(pkg.dependencies || {});
 const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
+const buildPlugins = ['vite-plugin-less-compiler'];
+
 const banner = `/**
  * ${name} v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author}
  * @license ${pkg.license}
  */
 `;
+
 const input = 'src/index-lib.ts';
 const inputList = [
   'src/**/*.ts',
@@ -218,4 +221,26 @@ const umdMinConfig = {
   },
 };
 
-export default [cssConfig, umdCssConfig, libConfig, cjsConfig, umdConfig, umdMinConfig, esmConfig];
+const pluginConfig = buildPlugins.map((plugin) => ({
+  input: `plugins/${plugin}.ts`,
+  external: ['less', 'fs'],
+  plugins: [
+    nodeResolve(),
+    commonjs(),
+    esbuild({
+      include: /\.[jt]s$/,
+      target: 'esnext',
+      minify: false,
+      loader: 'ts',
+      tsconfig: resolve(__dirname, '../tsconfig.build.json'),
+    }),
+  ],
+  output: {
+    banner,
+    format: 'esm',
+    sourcemap: false,
+    file: `plugins/${plugin}.js`,
+  },
+}));
+
+export default [cssConfig, umdCssConfig, libConfig, cjsConfig, umdConfig, umdMinConfig, esmConfig, ...pluginConfig];

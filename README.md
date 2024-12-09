@@ -54,6 +54,8 @@ import 'tdesign-web-components/lib/style/index.css'
 document.querySelector('#app').innerHTML = `<t-button>Hello TDesign</t-button>`
 ```
 
+More ways to use please click 👉🏻 [getting-started](./site/docs/getting-started.md)
+
 The package of tdesign-web-components provides kinds of bundles, read [the documentation](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) for the detail of differences between bundles.
 
 # Quick Start

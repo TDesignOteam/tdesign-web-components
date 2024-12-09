@@ -56,6 +56,8 @@ import 'tdesign-web-components/lib/style/index.css'
 document.querySelector('#app').innerHTML = `<t-button>Hello TDesign</t-button>`
 ```
 
+更多使用方式请点击 👉🏻 [快速开始](./site/docs/getting-started.md)
+
 npm package 中提供了多种构建产物，可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解不同目录下产物的差别。
 
 # 快速体验
