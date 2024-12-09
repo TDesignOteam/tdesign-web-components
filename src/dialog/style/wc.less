@@ -1,0 +1,41 @@
+@import "../../_common/style/web/base.less";
+@import "../../_common/style/web/components/dialog/_var.less";
+
+// for web-component
+.@{prefix}-dialog {
+  // icon theme
+  t-icon-info-circle.@{prefix}-is-info {
+    color: @dialog-info-icon-color;
+  }
+
+  t-icon-check-circle.@{prefix}-is-success {
+    color: @dialog-success-icon-color;
+  }
+
+  t-icon-error-circle.@{prefix}-is-warning {
+    color: @dialog-warning-icon-color;
+  }
+
+  t-icon-error-circle.@{prefix}-is-error {
+    color: @dialog-error-icon-color;
+  }
+
+  &__header {
+    t-icon-check-circle,
+    t-icon-info-circle,
+    t-icon-error-circle {
+      font-size: @dialog-icon-size;
+      display: inline-flex;
+      align-items: center;
+      margin-right: @dialog-header-icon-margin-right;
+      flex-shrink: 0;
+    }
+  }
+
+  &__footer {
+    .@{prefix}-button + .@{prefix}-button,
+    .@{prefix}-dialog__button + .@{prefix}-dialog__button {
+      margin-left: @dialog-footer-button-margin-left;
+    }
+  }
+}
