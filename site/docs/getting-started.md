@@ -45,6 +45,19 @@ export default defineConfig({
 })
 ```
 
+> 注意：在`vite >= 5.x` 版本中，需要使用下面的vite插件，其它版本可跳过
+
+```js
+import lessCompilerPlugin from 'tdesign-web-components/plugins/vite-plugin-less-compiler';
+
+// vite.config.ts
+export default defineConfig({
+  plugins: [lessCompilerPlugin({
+    lessOptions: {} // less 相关参数
+  })]
+})
+```
+
 如果使用webpack打包工具，需要在`babel`中设置`jsx`的解析逻辑：
 
 ```javascript
