@@ -53,4 +53,6 @@ const convertVueToOmi = (r: any): Omi.ComponentChild => {
 const renderVue = <T = any>(reactVNode: T, root: HTMLElement): ExtendedElement =>
   render(convertVueToOmi(reactVNode), root);
 
-export { renderVue, convertVueToOmi };
+export default renderVue;
+
+export { convertVueToOmi };

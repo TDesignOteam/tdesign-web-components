@@ -79,6 +79,9 @@ export default defineConfig({
 ### 在React中使用
 
 ```js
+
+import renderReact from 'tdesign-web-components/lib/react';
+
 const App = () => {
   const wrapper = React.useRef();
   const button = React.useRef();
@@ -107,6 +110,8 @@ const App = () => {
 ### 在Vue中使用
 
 ```js
+import renderVue from 'tdesign-web-components/lib/vue';
+
 export default {
   name: 'App',
   setup() {

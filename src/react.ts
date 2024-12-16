@@ -54,4 +54,6 @@ const convertReactToOmi = (r: any): Omi.ComponentChild => {
 const renderReact = <T = any>(reactVNode: T, root: HTMLElement): ExtendedElement =>
   render(convertReactToOmi(reactVNode), root);
 
-export { renderReact, convertReactToOmi };
+export default renderReact;
+
+export { convertReactToOmi };
