@@ -26,3 +26,5 @@ lib
 es
 esm
 cjs
+plugins/*.js
+plugins/*.js.map

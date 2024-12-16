@@ -45,6 +45,19 @@ export default defineConfig({
 })
 ```
 
+> 注意：在`vite >= 5.x` 版本中，需要使用下面的vite插件，其它版本可跳过
+
+```js
+import lessCompilerPlugin from 'tdesign-web-components/plugins/vite-plugin-less-compiler';
+
+// vite.config.ts
+export default defineConfig({
+  plugins: [lessCompilerPlugin({
+    lessOptions: {} // less 相关参数
+  })]
+})
+```
+
 如果使用webpack打包工具，需要在`babel`中设置`jsx`的解析逻辑：
 
 ```javascript
@@ -65,36 +78,62 @@ export default defineConfig({
 
 ### 在React中使用
 
-首先引入`renderReact`
+```js
 
-```javascript
-import { renderReact } from 'tdesign-web-components';
-import type { ExtendedElement } from 'tdesign-web-components';
-```
+import renderReact from 'tdesign-web-components/lib/react';
 
-在React项目中使用
-
-```javascript
-const App: React.FC = () => {
-  const ref = React.useRef<HTMLDivElement>(null);
-  const tdComponent = React.useRef<ExtendedElement>();
-
-  const changeTheme = () => {
-    if(!tdComponent.current) return;
-    tdComponent.current.props.theme = 'danger';
-    tdComponent.current.update(); // 调用update更新对应的组件
-  }
+const App = () => {
+  const wrapper = React.useRef();
+  const button = React.useRef();
 
   React.useEffect(() => {
-    tdComponent.current = renderReact(<t-button theme={'primary'}>BUTTON</t-button>, ref.current);
+    button.current = renderReact(
+      <t-button
+        onClick={() => {
+          button.current.props.theme = 'success';
+          button.current.update();
+        }}
+      >
+        按钮
+      </t-button>,
+      ref.current
+    );
   }, [])
 
-
   return (
-    <div ref={ref}>
-      <button onClick={changeTheme}>点击我切换主题</button>
+    <div ref={wrapper}>
     </div>
   )
+}
+```
+
+### 在Vue中使用
+
+```js
+import renderVue from 'tdesign-web-components/lib/vue';
+
+export default {
+  name: 'App',
+  setup() {
+    const wrapper = ref()
+    const button = ref()
+
+    onMounted(() => {
+      button.value = renderVue(
+        <t-button
+          onClick={() => {
+            button.value.props.theme = 'success'
+            button.value.update()
+          }}
+        >
+          按钮
+        </t-button>,
+        wrapper.value,
+      )
+    })
+
+    return () => <div ref={wrapper}></div>
+  },
 }
 ```
 

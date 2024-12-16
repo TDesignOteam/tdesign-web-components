@@ -50,11 +50,15 @@ pnpm add tdesign-web-components
 推荐使用 Webpack 或 Rollup 等支持 tree-shaking 特性的构建工具，无需额外配置即可实现组件按需引入：
 
 ```tsx
-import 'tdesign-web-components/lib/button'
 import 'tdesign-web-components/lib/style/index.css'
+import 'tdesign-web-components/lib/button'
 
-document.querySelector('#app').innerHTML = `<t-button>Hello TDesign</t-button>`
+import 'tdesign-web-components/lib/jsx';
+
+render(jsx`<t-button>Hello TDesign</t-button>`, document.body);
 ```
+
+更多使用方式请点击 👉🏻 [快速开始](./site/docs/getting-started.md)
 
 npm package 中提供了多种构建产物，可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解不同目录下产物的差别。
 
