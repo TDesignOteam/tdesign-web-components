@@ -32,6 +32,7 @@
     "lib",
     "cjs",
     "dist",
+    "plugins",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
@@ -68,6 +69,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
+    "htm": "^3.1.1",
     "lodash": "~4.17.15",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
