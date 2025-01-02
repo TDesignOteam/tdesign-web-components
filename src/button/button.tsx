@@ -83,7 +83,6 @@ export default class Button extends Component<ButtonProps> {
       loading,
       shape,
       ignoreAttributes,
-      children,
       suffix,
       innerClass,
       innerStyle,
@@ -129,8 +128,10 @@ export default class Button extends Component<ButtonProps> {
         style={innerStyle}
         {...rest}
       >
-        {iconNode ? iconNode : null}
-        <span className={`${classPrefix}-button__text`}>{children}</span>
+        <slot name="icon">{iconNode ? iconNode : null}</slot>
+        <span className={`${classPrefix}-button__text`}>
+          <slot></slot>
+        </span>
         {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
