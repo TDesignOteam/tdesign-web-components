@@ -32,6 +32,13 @@ import 'tdesign-web-components/lib/button';
 import 'tdesign-web-components/lib/style/index.css'; // 少量公共样式
 import 'tdesign-web-components';
 ```
+然后按照以下写法使用即可
+
+```js
+document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
+```
+
+### 工程化使用
 
 如果使用vite打包工具，需要在`vite.config.ts`中添加以下配置，设置vite解析`jsx`的逻辑：
 
@@ -73,67 +80,6 @@ export default defineConfig({
 +   ]
 +  ],
    ...
-}
-```
-
-### 在React中使用
-
-```js
-
-import renderReact from 'tdesign-web-components/lib/react';
-
-const App = () => {
-  const wrapper = React.useRef();
-  const button = React.useRef();
-
-  React.useEffect(() => {
-    button.current = renderReact(
-      <t-button
-        onClick={() => {
-          button.current.props.theme = 'success';
-          button.current.update();
-        }}
-      >
-        按钮
-      </t-button>,
-      ref.current
-    );
-  }, [])
-
-  return (
-    <div ref={wrapper}>
-    </div>
-  )
-}
-```
-
-### 在Vue中使用
-
-```js
-import renderVue from 'tdesign-web-components/lib/vue';
-
-export default {
-  name: 'App',
-  setup() {
-    const wrapper = ref()
-    const button = ref()
-
-    onMounted(() => {
-      button.value = renderVue(
-        <t-button
-          onClick={() => {
-            button.value.props.theme = 'success'
-            button.value.update()
-          }}
-        >
-          按钮
-        </t-button>,
-        wrapper.value,
-      )
-    })
-
-    return () => <div ref={wrapper}></div>
-  },
 }
 ```
 
