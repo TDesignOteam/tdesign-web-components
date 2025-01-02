@@ -51,9 +51,7 @@ pnpm add tdesign-web-components
 import 'tdesign-web-components/lib/style/index.css'
 import 'tdesign-web-components/lib/button'
 
-import 'tdesign-web-components/lib/jsx';
-
-render(jsx`<t-button>Hello TDesign</t-button>`, document.body);
+document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
 
 More ways to use please click 👉🏻 [getting-started](./site/docs/getting-started.md)
