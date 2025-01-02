@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 0.0.3 `2025-01-02` 
+### 🚧 Others
+- feat(omi): 优化非omi环境下使用 @duenyang ([#180](https://github.com/TDesignOteam/tdesign-web-components/pull/180))
+- chore(docs): 优化使用文档 @duenyang ([#181](https://github.com/TDesignOteam/tdesign-web-components/pull/181))
+
 ## 🌈 0.0.2 `2024-12-16` 
 ### 🚀 Features
 - `util`: convertToLightDomNode 将基于 Omi 的 Showdow Root 组件转成 LightDom @ming680 ([#68](https://github.com/TDesignOteam/tdesign-web-components/pull/68))
@@ -47,9 +52,9 @@ spline: explain
 - feat(popup): add popup 🎉 @duenyang ([#59](https://github.com/TDesignOteam/tdesign-web-components/pull/59))
 - [feat]: add image,divider,space @carolin913 ([#58](https://github.com/TDesignOteam/tdesign-web-components/pull/58))
 - feat(tooltip): add tooltip 🎉 @duenyang ([#61](https://github.com/TDesignOteam/tdesign-web-components/pull/61))
-- feat(loading): add loading adn portal 🎉 @duenyang ([#64](https://github.com/TDesignOteam/tdesign-web-components/pull/64))
+- feat(loading): add loading and portal 🎉 @duenyang ([#64](https://github.com/TDesignOteam/tdesign-web-components/pull/64))
 - feat(avatar): add avatar component @aaronmhl ([#70](https://github.com/TDesignOteam/tdesign-web-components/pull/70))
-- feat(collpase): add collapse component @novlan1 ([#66](https://github.com/TDesignOteam/tdesign-web-components/pull/66))
+- feat(collapse): add collapse component @novlan1 ([#66](https://github.com/TDesignOteam/tdesign-web-components/pull/66))
 - Feature/collapse transition @novlan1 ([#72](https://github.com/TDesignOteam/tdesign-web-components/pull/72))
 - add slider component @novlan1 ([#71](https://github.com/TDesignOteam/tdesign-web-components/pull/71))
 - chore: update prop type @novlan1 ([#80](https://github.com/TDesignOteam/tdesign-web-components/pull/80))
@@ -85,7 +90,7 @@ spline: explain
 - feat(progress): add new component progress @carolin913 ([#133](https://github.com/TDesignOteam/tdesign-web-components/pull/133))
 - feat(notification): add new component notification @LzhengH ([#135](https://github.com/TDesignOteam/tdesign-web-components/pull/135))
 - feat(skeleton): add new component skeleton @carolin913 ([#134](https://github.com/TDesignOteam/tdesign-web-components/pull/134))
-- tabs compelete🎉 @601odd ([#127](https://github.com/TDesignOteam/tdesign-web-components/pull/127))
+- tabs complete🎉 @601odd ([#127](https://github.com/TDesignOteam/tdesign-web-components/pull/127))
 - fix(progress): icons use single tag @carolin913 ([#137](https://github.com/TDesignOteam/tdesign-web-components/pull/137))
 - feat(message): add message @Tzz1194593491 ([#136](https://github.com/TDesignOteam/tdesign-web-components/pull/136))
 - fix(icon): 修复多次渲染问题 @duenyang ([#140](https://github.com/TDesignOteam/tdesign-web-components/pull/140))

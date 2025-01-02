@@ -19,6 +19,15 @@ export interface PopupProps extends TdPopupProps, StyledProps {
   updateScrollTop?: (content: HTMLElement) => void;
 }
 
+export const defaultProps = {
+  attach: 'body',
+  destroyOnClose: false,
+  hideEmptyPopup: false,
+  placement: 'top',
+  showArrow: true,
+  trigger: 'hover' as TdPopupProps['trigger'],
+};
+
 export const PopupTypes = {
   attach: [String, Function],
   content: [String, Number, Object, Function],
@@ -59,14 +68,7 @@ export default class Popup extends Component<PopupProps> {
 
   static propTypes = PopupTypes;
 
-  static defaultProps = {
-    attach: 'body',
-    destroyOnClose: false,
-    hideEmptyPopup: false,
-    placement: 'top',
-    showArrow: true,
-    trigger: 'hover',
-  };
+  static defaultProps = defaultProps;
 
   triggerRef = createRef();
 

@@ -42,6 +42,25 @@ export default [
     ],
   },
   {
+    title: '框架使用',
+    name: 'frame',
+    type: 'doc',
+    children: [
+      {
+        title: 'React',
+        name: 'react',
+        path: '/webcomponents/react',
+        component: () => import('@docs/react.md'),
+      },
+      {
+        title: 'Vue',
+        name: 'vue',
+        path: '/webcomponents/vue',
+        component: () => import('@docs/vue.md'),
+      },
+    ],
+  },
+  {
     title: '基础',
     name: 'base',
     type: 'component', // 组件文档

@@ -1,16 +1,18 @@
 import '../popup';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { Component, createElement, createRef, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
 import { type PopupVisibleChangeContext } from '../popup';
+import { defaultProps as popupDefaultProps } from '../popup/popup';
 import { PopupTypes } from '../popup/popup';
 import { TdTooltipProps } from './type';
 
 export interface TooltipProps extends TdTooltipProps, StyledProps {}
 
 export const tooltipDefaultProps: TooltipProps = {
+  ...popupDefaultProps,
   destroyOnClose: true,
   placement: 'top',
   showArrow: true,
@@ -100,19 +102,19 @@ export default class Tooltip extends Component<TooltipProps> {
       });
     }
 
-    return (
-      <t-popup
-        visible={this.popupVisible}
-        destroyOnClose={destroyOnClose}
-        showArrow={showArrow}
-        overlayClassName={toolTipClass}
-        onVisibleChange={this.handleVisibleChange}
-        placement={placement}
-        {...restProps}
-        ref={this.popupRef}
-      >
-        {children}
-      </t-popup>
+    return createElement(
+      't-popup',
+      {
+        visible: this.popupVisible,
+        destroyOnClose,
+        showArrow,
+        overlayClassName: toolTipClass,
+        onVisibleChange: this.handleVisibleChange,
+        placement,
+        ...restProps,
+        ref: this.popupRef,
+      },
+      children,
     );
   }
 }
