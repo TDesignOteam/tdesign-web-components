@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 0.0.3 `2025-01-02` 
+### 🚧 Others
+- feat(omi): 优化非omi环境下使用 @duenyang ([#180](https://github.com/TDesignOteam/tdesign-web-components/pull/180))
+- chore(docs): 优化使用文档 @duenyang ([#181](https://github.com/TDesignOteam/tdesign-web-components/pull/181))
+
 ## 🌈 0.0.2 `2024-12-16` 
 ### 🚀 Features
 - `util`: convertToLightDomNode 将基于 Omi 的 Showdow Root 组件转成 LightDom @ming680 ([#68](https://github.com/TDesignOteam/tdesign-web-components/pull/68))
