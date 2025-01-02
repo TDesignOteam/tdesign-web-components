@@ -1,9 +1,8 @@
 import 'tdesign-icons-web-components/esm/components/loading';
 
-import { Component, tag } from 'omi';
+import { Component, createRef, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
-import eventDispose from '../_util/eventDispose';
 import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
@@ -48,6 +47,8 @@ export default class Button extends Component<ButtonProps> {
     ignoreAttributes: [],
   };
 
+  slotRef = createRef<HTMLElement>();
+
   get tag() {
     const { tag, href, disabled } = this.props;
     if (!tag && href && !disabled) return 'a';
@@ -64,13 +65,14 @@ export default class Button extends Component<ButtonProps> {
     return theme;
   }
 
-  clickHandle = (e: MouseEvent) => {
-    eventDispose.call(this, 'click', e, () => {
-      const { disabled, loading } = this.props;
-      if (disabled || loading) return false;
-      return true;
+  installed() {
+    this.slotRef.current?.addEventListener('click', (e: Event) => {
+      if (this.props.disabled || this.props.loading) {
+        e.stopPropagation();
+      }
     });
-  };
+    this.slotRef.current?.addEventListener('touchstart', () => {});
+  }
 
   render(props: ButtonProps) {
     const {
@@ -83,13 +85,13 @@ export default class Button extends Component<ButtonProps> {
       loading,
       shape,
       ignoreAttributes,
-      children,
       suffix,
       innerClass,
       innerStyle,
       ...rest
     } = props;
 
+    delete rest.children;
     delete rest.onClick;
     delete rest.className;
     delete rest.style;
@@ -125,12 +127,14 @@ export default class Button extends Component<ButtonProps> {
           },
           innerClass,
         )}
-        onClick={this.clickHandle}
         style={innerStyle}
+        ref={this.slotRef}
         {...rest}
       >
         {iconNode ? iconNode : null}
-        <span className={`${classPrefix}-button__text`}>{children}</span>
+        <span className={`${classPrefix}-button__text`}>
+          <slot></slot>
+        </span>
         {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
