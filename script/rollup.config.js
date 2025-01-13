@@ -49,8 +49,8 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
       target: 'esnext',
       minify: false,
       loader: 'tsx',
-      jsxFactory: 'h',
-      jsxFragment: 'h.f',
+      jsxFactory: 'Component.h',
+      jsxFragment: 'Component.f',
       tsconfig: resolve(__dirname, '../tsconfig.build.json'),
     }),
     babel({
@@ -149,7 +149,6 @@ const libConfig = {
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '_chunks/dep-[hash].js',
-    intro: `import { h } from 'omi';\nwindow.h = h;`,
   },
 };
 
@@ -166,7 +165,6 @@ const esmConfig = {
     format: 'esm',
     sourcemap: true,
     chunkFileNames: '_chunks/dep-[hash].js',
-    intro: `import { h } from 'omi';\nwindow.h = h;`,
   },
 };
 
@@ -182,7 +180,6 @@ const cjsConfig = {
     sourcemap: true,
     exports: 'named',
     chunkFileNames: '_chunks/dep-[hash].js',
-    intro: `var { h } = require('omi');\nwindow.h = h;`,
   },
 };
 

@@ -40,14 +40,14 @@ document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 
 ### 工程化使用
 
-如果使用vite打包工具，需要在`vite.config.ts`中添加以下配置，设置vite解析`jsx`的逻辑：
+如果使用vite打包工具，并且使用了`jsx`语法，需要在`vite.config.ts`中添加以下配置，设置vite解析`jsx`的逻辑：
 
 ```javascript
 import { defineConfig } from 'vite'
 export default defineConfig({
 +   esbuild: {
-+     jsxFactory: 'h',
-+     jsxFragment: 'h.f',
++     jsxFactory: 'Component.h',
++     jsxFragment: 'Component.f',
 +   },
 })
 ```
@@ -65,7 +65,7 @@ export default defineConfig({
 })
 ```
 
-如果使用webpack打包工具，需要在`babel`中设置`jsx`的解析逻辑：
+如果使用webpack打包工具，并且使用了`jsx`语法，需要在`babel`中设置`jsx`的解析逻辑：
 
 ```javascript
 {
@@ -74,8 +74,8 @@ export default defineConfig({
 +   [
 +     "@babel/preset-react",
 +     {
-+       "pragma": "h",
-+       "pragmaFrag": "h.f"
++       "pragma": "Component.h",
++       "pragmaFrag": "Component.f"
 +     }
 +   ]
 +  ],
