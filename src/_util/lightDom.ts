@@ -71,7 +71,11 @@ const buildLightDomCtor = (nodeCtor: ComponentConstructor) => {
         }
 
         const styleSheet = createStyleSheet(style);
-        parentElement.adoptedStyleSheets = [...parentElement.adoptedStyleSheets, styleSheet];
+        if (parentElement.adoptedStyleSheets) {
+          parentElement.adoptedStyleSheets.push(styleSheet);
+        } else {
+          parentElement.adoptedStyleSheets = [styleSheet];
+        }
       });
 
       super.beforeRender();

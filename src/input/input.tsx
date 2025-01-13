@@ -110,6 +110,13 @@ export default class Input extends Component<InputProps> {
 
   eventProps;
 
+  inputHandlerBind;
+
+  constructor() {
+    super();
+    this.inputHandlerBind = this.inputHandler.bind(this);
+  }
+
   private get isControlled() {
     return Reflect.has(this.props, 'value');
   }
@@ -262,6 +269,41 @@ export default class Input extends Component<InputProps> {
 
   private resizeObserver: ResizeObserver | null = null;
 
+  private inputHandler = (e: Event) => {
+    if (this.composingRef.current) {
+      this.composingValue = (e.currentTarget as HTMLInputElement)?.value || '';
+      this.update();
+      return;
+    }
+    const target = e.currentTarget as any;
+    if (!this.isControlled) {
+      this.innerValue = target.value;
+    }
+
+    const { getValueByLimitNumber, onValidateChange } = useLengthLimit({
+      value: this.innerValue === undefined ? undefined : String(this.innerValue),
+      status: this.status,
+      maxlength: this.props.maxlength,
+      maxcharacter: this.props.maxcharacter,
+      allowInputOverMax: this.props.allowInputOverMax,
+      onValidate: this.props.onValidate,
+    });
+    const limitedValue = getValueByLimitNumber(target.value);
+    if (!this.isControlled) {
+      this.innerValue = limitedValue;
+    }
+    this.composingValue = limitedValue;
+    this.props.onChange?.(limitedValue);
+    if (!this.props.allowInputOverMax) {
+      this.update();
+    }
+    onValidateChange();
+
+    if (!(this.props as any).ignoreAttrs) {
+      this.fire('change', { value: limitedValue, context: { e } });
+    }
+  };
+
   install() {
     this.innerValue = this.props.value || this.props.defaultValue;
     this.status = this.props.status;
@@ -269,7 +311,6 @@ export default class Input extends Component<InputProps> {
 
   ready() {
     this.renderType = this.props.type;
-    const inputNode = this.inputRef.current;
 
     if (this.props.autoWidth) {
       requestAnimationFrame(() => {
@@ -281,38 +322,13 @@ export default class Input extends Component<InputProps> {
       this.updateInputWidth();
     });
 
-    if (!inputNode) return;
+    if (!this.inputRef.current) return;
 
-    inputNode.addEventListener('input', (e) => {
-      if (this.composingRef.current) {
-        this.composingValue = (e.currentTarget as HTMLInputElement)?.value || '';
-        this.update();
-        return;
-      }
-      const target = e.currentTarget as any;
-      if (!this.isControlled) {
-        this.innerValue = target.value;
-      }
+    this.inputRef.current.addEventListener('input', this.inputHandlerBind);
+  }
 
-      const { getValueByLimitNumber, onValidateChange } = useLengthLimit({
-        value: this.innerValue === undefined ? undefined : String(this.innerValue),
-        status: this.status,
-        maxlength: this.props.maxlength,
-        maxcharacter: this.props.maxcharacter,
-        allowInputOverMax: this.props.allowInputOverMax,
-        onValidate: this.props.onValidate,
-      });
-      const limitedValue = getValueByLimitNumber(target.value);
-      if (!this.isControlled) {
-        this.innerValue = limitedValue;
-      }
-      this.composingValue = limitedValue;
-      this.props.onChange?.(limitedValue);
-      if (!this.props.allowInputOverMax) {
-        this.update();
-      }
-      onValidateChange();
-    });
+  uninstall(): void {
+    this.inputRef.current.removeEventListener('input', this.inputHandlerBind);
   }
 
   receiveProps(props: InputProps | OmiProps<InputProps, any>, oldProps: InputProps | OmiProps<InputProps, any>) {
