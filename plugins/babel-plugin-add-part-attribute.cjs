@@ -20,7 +20,12 @@ module.exports = function ({ types: t }) {
     visitor: {
       CallExpression(path) {
         const { node } = path;
-        if (t.isIdentifier(node.callee, { name: 'h' })) {
+        const { callee } = node;
+        if (
+          t.isMemberExpression(callee) &&
+          t.isIdentifier(callee.object, { name: 'Component' }) &&
+          t.isIdentifier(callee.property, { name: 'h' })
+        ) {
           const [type, props] = node.arguments;
 
           // t-开头的标签忽略
