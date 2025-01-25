@@ -1,7 +1,7 @@
 import './dropdownItem';
 import './dropdownMenu';
 
-import { toArray } from 'lodash';
+import { toArray } from 'lodash-es';
 
 import { TElement, TNode } from '../common';
 import { DropdownOption } from './type';

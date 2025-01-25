@@ -1,4 +1,4 @@
-import { intersection, isObject, isString, isUndefined, toArray } from 'lodash';
+import { intersection, isObject, isString, isUndefined, toArray } from 'lodash-es';
 import { bind, Component, signal, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';

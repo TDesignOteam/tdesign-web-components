@@ -1,6 +1,6 @@
 import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 
-import isString from 'lodash/isString';
+import { isString } from 'lodash-es';
 import { cloneElement, Component, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';

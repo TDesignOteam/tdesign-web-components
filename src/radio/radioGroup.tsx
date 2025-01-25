@@ -1,6 +1,6 @@
 import './radio';
 
-import { toArray } from 'lodash';
+import { toArray } from 'lodash-es';
 import { classNames, cloneElement, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix, getCommonClassName } from '../_util/classname';

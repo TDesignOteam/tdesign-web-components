@@ -1,4 +1,4 @@
-import upperFirst from 'lodash/upperFirst';
+import { upperFirst } from 'lodash-es';
 import { Component, setActiveComponent, signal, SignalValue } from 'omi';
 
 export interface ChangeHandler<T, P extends any[]> {

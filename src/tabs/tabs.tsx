@@ -1,7 +1,7 @@
 import './TabNav';
 import './tabPanel';
 
-import { toArray } from 'lodash';
+import { toArray } from 'lodash-es';
 import { Component, tag, VNode } from 'omi';
 
 import classname from '../_util/classname';
