@@ -82,5 +82,16 @@ module.exports = {
     'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^html'] }],
     'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '__TDESIGN_THEME_PREFIX__'] }],
     'import/no-duplicates': 'off',
+    'no-restricted-imports': [
+      'error',
+      {
+        paths: [
+          {
+            name: 'lodash',
+            message: 'Please use lodash-es instead.',
+          },
+        ],
+      },
+    ],
   },
 };

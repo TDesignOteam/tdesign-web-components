@@ -1,4 +1,4 @@
-import { isBoolean, omit } from 'lodash';
+import { isBoolean, omit } from 'lodash-es';
 import { classNames, Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';

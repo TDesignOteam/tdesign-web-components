@@ -1,7 +1,7 @@
 import '../tag-input';
 
 import classNames from 'classnames';
-import isObject from 'lodash/isObject';
+import { isObject } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';

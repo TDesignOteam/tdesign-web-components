@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/chevron-right';
 import './dropdownItem';
 import '../divider';
 
-import throttle from 'lodash/throttle';
+import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
 import classNames, { getClassPrefix } from '../_util/classname';

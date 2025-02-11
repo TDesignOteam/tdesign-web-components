@@ -1,4 +1,4 @@
-import { isFunction, isString } from 'lodash';
+import { isFunction, isString } from 'lodash-es';
 import { computed, signal, SignalValue } from 'omi';
 
 export const toSignal = <T extends Record<string, any>>(props: T) => {

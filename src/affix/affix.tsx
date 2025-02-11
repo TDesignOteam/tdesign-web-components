@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash';
+import { isFunction } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';

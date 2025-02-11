@@ -5,7 +5,7 @@ import 'tdesign-icons-web-components/esm/components/remove';
 import '../button';
 import '../input';
 
-import { isEqual, pick } from 'lodash';
+import { isEqual, pick } from 'lodash-es';
 import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import {

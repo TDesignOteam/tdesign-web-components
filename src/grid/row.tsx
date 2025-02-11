@@ -1,4 +1,4 @@
-import isObject from 'lodash/isObject';
+import { isObject } from 'lodash-es';
 import { cloneElement, Component, createElement, tag } from 'omi';
 
 import classNames, { getClassPrefix } from '../_util/classname';
