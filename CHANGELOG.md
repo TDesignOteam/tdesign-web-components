@@ -5,6 +5,12 @@ toc: false
 spline: explain
 ---
 
+## 🌈 0.0.5 `2025-02-11` 
+### 🚧 Others
+- Build/part plugin 添加babel插件补充元素part属性 @LzhengH ([#185](https://github.com/TDesignOteam/tdesign-web-components/pull/185))
+- fix(babel): 修复babel添加part插件失效问题 @LzhengH ([#186](https://github.com/TDesignOteam/tdesign-web-components/pull/186))
+- refactor(lodash): lodash-es instead of lodash @liweijie0812 ([#187](https://github.com/TDesignOteam/tdesign-web-components/pull/187))
+
 ## 🌈 0.0.3 `2025-01-02` 
 ### 🚧 Others
 - feat(omi): 优化非omi环境下使用 @duenyang ([#180](https://github.com/TDesignOteam/tdesign-web-components/pull/180))
