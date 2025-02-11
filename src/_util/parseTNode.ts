@@ -1,4 +1,4 @@
-import isFunction from 'lodash/isFunction';
+import { isFunction } from 'lodash-es';
 import { cloneElement, VNode } from 'omi';
 
 import log from '../_common/js/log';

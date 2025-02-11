@@ -1,4 +1,4 @@
-import { toArray } from 'lodash';
+import { toArray } from 'lodash-es';
 import { cloneElement, Component, tag, VNode } from 'omi';
 
 import { TNode } from '../common';

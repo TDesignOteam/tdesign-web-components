@@ -2,8 +2,7 @@ import './dropdownItem';
 import './dropdownMenu';
 import '../popup';
 
-import { isFunction } from 'lodash';
-import omit from 'lodash/omit';
+import { isFunction, omit } from 'lodash-es';
 import { Component, css, tag } from 'omi';
 
 import classNames, { getClassPrefix } from '../_util/classname';

@@ -5,7 +5,7 @@ import 'tdesign-icons-web-components/esm/components/error-circle';
 import 'omi-transition';
 import '../common/portal';
 
-import { isNumber, isObject, isString } from 'lodash';
+import { isNumber, isObject, isString } from 'lodash-es';
 import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';

@@ -1,4 +1,4 @@
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash-es';
 
 const toLowercaseSeparator = (key: string) => key.replace(/([A-Z])/g, '-$1').toLowerCase();
 
