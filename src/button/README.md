@@ -6,6 +6,10 @@ usage: { title: '', description: '' }
 spline: base
 ---
 
+### 测试mobx使用
+
+{{ mobx }}
+
 ### 基础使用
 
 {{ base }}
