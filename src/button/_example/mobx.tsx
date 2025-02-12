@@ -1,6 +1,7 @@
 import 'tdesign-web-components/button';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/input';
+import './mobxChild';
 
 import { autorun } from 'mobx';
 import { Component } from 'omi';
@@ -22,7 +23,6 @@ export default class TestMobx extends Component {
     });
   };
 
-  // 使用autorun来响应状态变化
   installed() {
     console.log('installed');
     autorun(() => {
@@ -39,6 +39,7 @@ export default class TestMobx extends Component {
         </t-button>
         <t-input value={myStore.message} onChange={this.inputChange} />
         {myStore.message}
+        <t-mobx-child />
       </t-space>
     );
   }
