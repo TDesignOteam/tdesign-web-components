@@ -1,6 +1,6 @@
 import './Notification';
 
-import { noop } from 'lodash';
+import { noop } from 'lodash-es';
 import { Component, createRef, OmiProps, render, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';

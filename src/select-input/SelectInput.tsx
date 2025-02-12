@@ -4,7 +4,7 @@ import './SelectInputSingle';
 import '../popup';
 
 import classNames from 'classnames';
-import { pick } from 'lodash';
+import { pick } from 'lodash-es';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';

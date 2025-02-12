@@ -1,4 +1,4 @@
-import isNumber from 'lodash/isNumber';
+import { isNumber } from 'lodash-es';
 import { classNames, Component, createRef, tag } from 'omi';
 
 import { pxCompat } from '../_common/js/utils/helper';

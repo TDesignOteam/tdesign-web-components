@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/chevron-right';
 import 'tdesign-icons-web-components/esm/components/chevron-left';
 import './swiper-item';
 
-import { isEqual } from 'lodash';
+import { isEqual } from 'lodash-es';
 import { bind, cloneElement, Component, createRef, signal, tag } from 'omi';
 
 import classname, { classPrefix } from '../_util/classname';

@@ -3,7 +3,7 @@ import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/close';
 
-import { isObject } from 'lodash';
+import { isObject } from 'lodash-es';
 import { Component, createRef, signal, SignalValue, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';

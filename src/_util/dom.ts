@@ -1,4 +1,4 @@
-import isString from 'lodash/isString';
+import { isString } from 'lodash-es';
 import raf from 'raf';
 
 import { ScrollContainer, ScrollContainerElement } from '../common';
