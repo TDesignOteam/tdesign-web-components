@@ -27,8 +27,8 @@ export default {
       theme.value === 'success' ? 'warning' : 'success'
     }
 
-    return () => <t-button :theme={theme} @click="clickFn"></t-button>
-  },
+    return () => <t-button :theme={theme} @click="clickFn">按钮</t-button>
+  }
 }
 ```
 
