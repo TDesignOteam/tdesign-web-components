@@ -1,4 +1,5 @@
 export * from './affix';
+export * from './aigc';
 export * from './alert';
 export * from './avatar';
 export * from './back-top';

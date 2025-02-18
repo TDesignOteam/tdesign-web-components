@@ -61,6 +61,20 @@ export default [
     ],
   },
   {
+    title: 'aigc测试',
+    name: 'aigc',
+    type: 'component', // 组件文档
+    children: [
+      {
+        title: 'aigc组件',
+        name: 'aigc',
+        path: '/webcomponents/components/aigc',
+        component: () => import('tdesign-web-components/aigc/README.md'),
+      },
+    ],
+    tag: '',
+  },
+  {
     title: '基础',
     name: 'base',
     type: 'component', // 组件文档
