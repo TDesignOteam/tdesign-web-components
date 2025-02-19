@@ -43,7 +43,6 @@ export default class BaseExample extends Component {
       ...mockUserMsg,
       key: uniqueId(),
       content: e.detail,
-
     });
 
     setTimeout(() => {
