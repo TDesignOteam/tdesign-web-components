@@ -9,14 +9,14 @@ import { BubbleProps } from './bubble';
 
 export type ChatProps = StyledProps & {
   // message
-  messages?: BubbleProps[];
+  messages?: BubbleProps[] | string;
   onMessageChange?: (v: BubbleProps[]) => void;
   // input
   inputValue?: string;
   inputDefaultValue?: string;
   placeholder?: string;
-  onInputChange?: (v: string) => void;
-  onSubmit?: (v: string) => void;
+  onInputChange?: (e: CustomEvent) => void;
+  onSubmit?: (e: CustomEvent) => void;
 };
 
 const className = `${getClassPrefix()}-chat`;
@@ -26,15 +26,13 @@ export default class Chat extends Component<ChatProps> {
   static css = [];
 
   static propTypes = {
-    messages: Array,
+    messages: [Array, String],
     onMessageChange: Function,
     inputValue: String,
     inputDefaultValue: String,
     placeholder: String,
     onInputChange: Function,
-    'input-change': Function,
     onSubmit: Function,
-    submit: Function,
   };
 
   static defaultProps = {
@@ -44,15 +42,21 @@ export default class Chat extends Component<ChatProps> {
   className = className;
 
   private renderMessage() {
-    return this.props.messages?.map((message) => <t-chat-bubble key={message.key || message.content} {...message} />);
+    let msg = this.props.messages;
+    if (typeof msg === 'string') {
+      msg = JSON.parse(msg);
+    }
+    return (msg as BubbleProps[] | undefined)?.map((message) => (
+      <t-chat-bubble key={message.key || message.content} {...message} />
+    ));
   }
 
-  install(): void {
+  installed(): void {
     console.log('查看chat接收到的参数', this.props);
   }
 
   render(props: ChatProps) {
-    const { inputValue, inputDefaultValue, onInputChange, onSubmit, placeholder } = props;
+    const { inputValue, inputDefaultValue, placeholder, onInputChange, onSubmit } = props;
 
     return (
       <div className={`${className}-wrapper`}>

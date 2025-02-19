@@ -5,10 +5,10 @@ import { Component } from 'omi';
 export default class SenderExample extends Component {
   value: string = '默认';
 
-  onChange = (v) => {
-    this.value = v;
+  onChange = (e: CustomEvent) => {
+    this.value = e.detail;
     this.update();
-    console.log('输入', v);
+    console.log('输入', e.detail);
   };
 
   onSubmit = (v) => {
