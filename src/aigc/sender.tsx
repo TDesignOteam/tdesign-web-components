@@ -10,8 +10,8 @@ export type SenderProps = StyledProps & {
   value?: string;
   defaultValue?: string;
   placeholder?: string;
-  onChange?: (v: string) => void;
-  onSubmit?: (v: string) => void;
+  onChange?: (e: CustomEvent) => void;
+  onSubmit?: (e: CustomEvent) => void;
 };
 
 const className = `${getClassPrefix()}-chat-sender`;
@@ -31,8 +31,8 @@ export default class Sender extends Component<SenderProps> {
     value: String,
     defaultValue: String,
     placeholder: String,
-    onChange: Function,
-    onSubmit: Function,
+    change: Function,
+    submit: Function,
   };
 
   static defaultProps = {};
@@ -50,11 +50,15 @@ export default class Sender extends Component<SenderProps> {
     this.pValue = v;
     this.update();
 
-    this.props.onChange?.(v);
+    this.fire('change', v, {
+      composed: true,
+    });
   };
 
   handleSubmit = () => {
-    this.props.onSubmit?.(this.inputValue);
+    this.fire('submit', this.inputValue, {
+      composed: true,
+    });
 
     this.pValue = '';
     this.update();

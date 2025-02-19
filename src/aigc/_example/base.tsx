@@ -31,18 +31,19 @@ export default class BaseExample extends Component {
     console.log('触发了message', this.messages);
   };
 
-  onChange = (v) => {
-    this.value = v;
+  onChange = (e: CustomEvent) => {
+    this.value = e.detail;
     this.update();
-    console.log('输入', v);
+    console.log('输入', e);
   };
 
-  onSubmit = (v) => {
-    console.log('提交', v);
+  onSubmit = (e: CustomEvent) => {
+    console.log('提交', e);
     this.appendMessage({
       ...mockUserMsg,
       key: uniqueId(),
-      content: v,
+      content: e.detail,
+
     });
 
     setTimeout(() => {
@@ -59,7 +60,7 @@ export default class BaseExample extends Component {
         messages={this.messages}
         inputValue={this.value}
         placeholder="请输入内容"
-        onInputChange={this.onChange}
+        onChange={this.onChange}
         onSubmit={this.onSubmit}
       >
         <div slot="header">插入的header</div>
