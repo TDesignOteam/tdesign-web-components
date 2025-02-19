@@ -32,7 +32,7 @@ const App = () => {
   }, [theme])
 
   return (
-    <t-button ref={button} theme={theme}></t-button>
+    <t-button ref={button} theme={theme}>按钮</t-button>
   )
 }
 ```
