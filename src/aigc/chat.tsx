@@ -61,7 +61,7 @@ export default class Chat extends Component<ChatProps> {
     return (
       <div className={`${className}-wrapper`}>
         <header className={`${className}-header`}>
-          <slot name="header"></slot>
+          <slot name="header" messageNum="测试作用域"></slot>
         </header>
         <main className={`${className}-main`}>
           <slot name="main-top"></slot>
