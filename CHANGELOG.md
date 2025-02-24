@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 0.0.6 `2025-02-24` 
+### 🚧 Others
+- feat(omi): 支持复杂对象使用DOMProperty的方式传参 @duenyang ([#193](https://github.com/TDesignOteam/tdesign-web-components/pull/193))
+
 ## 🌈 0.0.5 `2025-02-11` 
 ### 🚧 Others
 - Build/part plugin 添加babel插件补充元素part属性 @LzhengH ([#185](https://github.com/TDesignOteam/tdesign-web-components/pull/185))
