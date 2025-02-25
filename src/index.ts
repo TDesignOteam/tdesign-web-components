@@ -44,3 +44,4 @@ export * from './tooltip';
 export * from './upload';
 export * from './vue';
 export * from './watermark';
+export * from './chatbot';

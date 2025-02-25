@@ -61,6 +61,20 @@ export default [
     ],
   },
   {
+    title: 'aigc',
+    name: 'aigc',
+    type: 'component', // 组件文档
+    children: [
+      {
+        title: 'Chatbot 智能聊天',
+        name: 'chatbot',
+        path: '/webcomponents/components/chatbot',
+        component: () => import('tdesign-web-components/chatbot/README.md'),
+      },
+    ],
+    tag: '',
+  },
+  {
     title: '基础',
     name: 'base',
     type: 'component', // 组件文档
