@@ -1,8 +1,7 @@
 import './style/index.js';
 
-import _Chat from './chat.jsx';
+import _Chat from './chat';
 
-export type { CardProps } from './chat.jsx';
 export const Chat = _Chat;
 export default Chat;
 

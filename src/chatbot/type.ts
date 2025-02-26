@@ -1,95 +1,157 @@
-/* eslint-disable */
-import { LoadingProps } from '../loading';
-import { TNode } from '../common';
+import type { StyledProps,TNode } from '../common';
 
-export interface TdCardProps {
+export interface TdChatItemProps {
   /**
-   * 卡片操作区
+   * 操作
    */
-  actions?: TNode;
+  actions?: Array<TNode>;
   /**
-   * 卡片中的用户头像，仅在海报风格的卡片中有效
+   * 作者
    */
-  avatar?: TNode;
+  name?: string | TNode;
   /**
-   * 是否有边框
-   * @default true
+   * 头像
    */
-  bordered?: boolean;
+  avatar?: string | TNode;
   /**
-   * 卡片内容，同 content
+   * 内容
    */
-  children?: TNode;
+  content?: string;
   /**
-   * 卡片内容
+   * 时间
    */
-  content?: TNode;
+  datetime?: string | TNode;
   /**
-   * 卡片封面图。值类型为字符串，会自动使用 `img` 标签输出封面图；也可以完全最定义封面图
+   * 消息类型
    */
-  cover?: TNode;
+  role?: ModelRoleEnum;
   /**
-   * 卡片描述文案
+   * 流式消息加载中
    */
-  description?: TNode;
+  textLoading?: boolean;
   /**
-   * 卡片底部内容，可完全自定义
+   * 消息样式， 是否有边框，背景色等
    */
-  footer?: TNode;
+  variant?: Variant;
   /**
-   * 卡片顶部内容，优先级高于其他所有元素
+   * 是否为动画
    */
-  header?: TNode;
+  movable?: Boolean;
   /**
-   * 头部是否带分割线，仅在有header时有效
+   * 加载动画
+   */
+  animation?: string;
+  // 消息索引
+  itemIndex?: Number;
+}
+interface ChatProps {
+  /**
+   * 布局
+   */
+  layout?: Layout;
+  /**
+   * 倒序渲染
+   */
+  reverse?: boolean;
+  /**
+   * 数据
+   */
+  data?: Array<TdChatItemProps>;
+  /**
+   * 接口请求中
+   */
+  textLoading?: boolean;
+  /** 清空历史按钮，值为 true 显示默认操作按钮，值为 false 不显示任何内容，值类型为 Function 表示自定义 */
+  clearHistory?: boolean | TNode;
+  /** 点赞差评复制重新生成按钮集合，值为true显示默认操作按钮 */
+  actions?: boolean | TNode;
+  // 流式数据加载中
+  isStreamLoad?: boolean;
+  onClear?: (context: { e: MouseEvent }) => void;
+}
+
+export interface TdChatProps extends ChatProps, StyledProps {}
+
+export interface TdChatListProps {
+  /**
+   * 数据
+   */
+  data?: Array<TdChatItemProps>;
+  /**
+   * 流式消息加载中
+   */
+  textLoading?: boolean;
+  onScroll?: (e: Event) => void;
+}
+export interface TdChatContentProps {
+  content?: string;
+  role?: string;
+  isNormalText?: boolean;
+  textLoading: boolean;
+}
+export interface TdChatActionsProps {
+  isGood?: Boolean;
+  isBad?: Boolean;
+  content?: string;
+  disabled?: boolean;
+  /**
+   * 点击时触发
+   */
+  onOperation?: (value: string, context: { e: MouseEvent; index?: number; item?: TdChatItemProps }) => void;
+}
+export interface TdChatInputProps {
+  placeholder?: string;
+  disabled?: boolean;
+  value: string | number;
+  modelValue: string | number;
+  defaultValue: string | number;
+  /**
+   * 高度自动撑开。 autosize = true 表示组件高度自动撑开，同时，依旧允许手动拖高度。如果设置了 autosize.maxRows 或者 autosize.minRows 则不允许手动调整高度
    * @default false
    */
-  headerBordered?: boolean;
+  autosize?: boolean | { minRows?: number; maxRows?: number };
+  onSend?: (value: string, context: { e: MouseEvent | KeyboardEvent }) => void;
+  onStop?: (value: string, context: { e: MouseEvent }) => void;
+  onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
+  onBlur?: (value: string, context: { e: FocusEvent }) => void;
+  onFocus?: (value: string, context: { e: FocusEvent }) => void;
+}
+export interface MetaData {
   /**
-   * hover时是否有阴影
-   * @default false
+   * 角色头像
+   * @description 可选参数，如果不传则使用默认头像
    */
-  hoverShadow?: boolean;
+  avatar?: string;
   /**
-   * 加载状态，值为 true 会根据不同的布局显示不同的加载状态，值为 false 则表示非加载状态。也可以使用 Sketon 组件完全自定义加载态呈现内容
-   * @default false
+   * 名称
+   * @description 可选参数，如果不传则使用默认名称
    */
-  loading?: TNode;
+  name?: string;
   /**
-   * 透传加载组件(Loading)全部属性
+   * 附加数据
+   * @description 可选参数，如果不传则使用默认名称
    */
-  loadingProps?: LoadingProps;
-  /**
-   * 是否显示卡片阴影，默认不显示
-   * @default false
-   */
-  shadow?: boolean;
-  /**
-   * 尺寸
-   * @default medium
-   */
-  size?: 'medium' | 'small';
-  /**
-   * 卡片状态内容，仅在操作区域不在顶部时有效（即 `theme=poster2` ）
-   * @default ''
-   */
-  status?: string;
-  /**
-   * 卡片副标题
-   */
-  subtitle?: TNode;
-  /**
-   * 卡片风格：普通风格、海报风格1（操作区域在顶部）、海报风格2（操作区域在底部）
-   * @default normal
-   */
-  theme?: 'normal' | 'poster1' | 'poster2';
-  /**
-   * 卡片标题
-   */
-  title?: TNode;
-  /**
-   * 在host标签上忽略的属性
-   * @default []
-   */
-  ignoreAttributes?: string[];
+  [key: string]: any;
+}
+export interface TdChatItemMeta {
+  avatar?: string;
+  name?: string;
+  role?: string;
+  datetime?: string;
+}
+export type ModelRoleEnum = 'assistant' | 'user' | 'error' | 'model-change' | 'system';
+
+export type Variant = 'text' | 'base' | 'outline';
+export type Layout = 'single' | 'both';
+export interface FetchSSEOptions {
+  success?: (res: SSEEvent) => void; // 流式数据解析成功回调
+  fail?: () => void; // 流式请求失败回调
+  complete?: (isOk: Boolean, msg?: String, requestid?: String) => void; // 流式请求完成回调
+}
+export interface SSEEvent {
+  type: string | null;
+  data: string | null;
+}
+export interface BackBottomParams {
+  behavior?: 'auto' | 'smooth';
 }

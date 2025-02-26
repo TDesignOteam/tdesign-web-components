@@ -6,9 +6,10 @@ usage: { title: '', description: '' }
 spline: base
 ---
 
-### 极简卡片
+### 基础使用
 
-仅有内容的卡片形式。
+{{ basic }}
+
 
 
 ## API
