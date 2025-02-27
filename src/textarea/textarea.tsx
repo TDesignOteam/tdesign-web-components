@@ -1,4 +1,4 @@
-import { classNames, Component, createRef, signal, tag } from 'omi';
+import { classNames, Component, createRef, tag } from 'omi';
 
 import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
 import { getClassPrefix } from '../_util/classname';
@@ -40,7 +40,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     };
   }
 
-  private pValue = signal('');
+  private pValue = '';
 
   isFocused = false;
 
@@ -52,12 +52,12 @@ export default class Textarea extends Component<TdTextareaProps> {
 
   get inputValue() {
     if (this.props.value !== undefined) return this.props.value;
-    return this.pValue.value;
+    return this.pValue;
   }
 
   installed() {
     const { value, defaultValue, disabled, ...otherProps } = this.props;
-    this.pValue.value = value || defaultValue;
+    this.pValue = value || defaultValue;
     this.eventPropsNames = Object.keys(otherProps).filter((key) => /^on[A-Z]/.test(key));
     this.eventProps = this.eventPropsNames.reduce((eventProps, key) => {
       Object.assign(eventProps, {
@@ -155,7 +155,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     });
 
     const limitedValue = getValueByLimitNumber(target.value);
-    this.pValue.value = limitedValue;
+    this.pValue = limitedValue;
 
     this.fire('change', limitedValue);
   };
