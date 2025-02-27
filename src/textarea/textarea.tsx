@@ -84,6 +84,10 @@ export default class Textarea extends Component<TdTextareaProps> {
     }, 0);
   }
 
+  updated(): void {
+    this.adjustTextareaHeight();
+  }
+
   countCharacters(text: string) {
     // 按照一个中文汉字等于一个字符长度计算
     const chineseCharacterRegex = /[\u4e00-\u9fa5]/g;
@@ -154,7 +158,6 @@ export default class Textarea extends Component<TdTextareaProps> {
     this.pValue.value = limitedValue;
 
     this.fire('change', limitedValue);
-    this.adjustTextareaHeight();
   };
 
   render(props: TextareaProps) {
