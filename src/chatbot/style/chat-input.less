@@ -41,7 +41,7 @@
     }
   }
 
-  &__icon {
+  &__button {
     position: absolute;
     bottom: @comp-paddingTB-s;
     right: @comp-paddingLR-s;
@@ -66,8 +66,14 @@
       color: @text-color-anti;
     }
 
-    .@{prefix}-button.@{prefix}-size-s .@{prefix}-icon {
-      font-size: @font-size-xl;
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .@{prefix}-icon {
+        font-size: @font-size-l;
+      }
     }
   }
 

@@ -1,10 +1,11 @@
+import 'tdesign-icons-web-components/esm/components/send';
+import 'tdesign-icons-web-components/esm/components/stop-circle';
 import '../../textarea';
 import '../../button';
 
 import { Component, createRef, css, globalCSS, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import { flexIcon } from '../../_util/icon';
 import { convertToLightDomNode } from '../../_util/lightDom';
 import type { TdChatInputProps } from '../type';
 
@@ -53,13 +54,15 @@ export default class ChatInput extends Component<TdChatInputProps> {
         theme="default"
         size="small"
         variant="text"
-        className={`${className}__footer__icon`}
-        innerClass={[`${className}__footer__icon__default`, this.inputValue ? `${className}__footer__icon--focus` : '']}
+        className={`${className}__footer__button`}
+        innerClass={[
+          `${className}__footer__button__default`,
+          this.inputValue ? `${className}__footer__button--focus` : '',
+        ]}
+        onClick={this.handleSend}
         // disabled={disabled.value || !this.inputValue || textareaDisabled.value}
       >
-        {/* TODO: 图标 */}
-        按钮
-        {convertToLightDomNode(flexIcon(<t-icon-loading />))}
+        {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
       </t-button>
     );
   }
@@ -89,10 +92,10 @@ export default class ChatInput extends Component<TdChatInputProps> {
           onCompositionEnd={this.handleCompositionEnd}
         ></t-textarea>
         {this.renderSender()}
-        {/* TODO: 样式 */}
+        {/* TODO: 控制逻辑 */}
         {props.stopDisabled && (
           <t-button onClick={this.handleStop}>
-            <stop-icon />
+            {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
           </t-button>
         )}
       </div>
