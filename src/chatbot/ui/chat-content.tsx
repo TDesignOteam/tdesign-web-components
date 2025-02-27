@@ -1,8 +1,14 @@
 import markdownIt from 'markdown-it';
-import { Component, OmiProps,tag } from 'omi';
+import { Component, css, globalCSS, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import type { TdChatContentProps } from '../type';
+
+import styles from '../style/chat-content.less';
+
+globalCSS(css`
+  ${styles}
+`);
 
 const md = markdownIt({ html: true, breaks: true });
 const baseClass = `${getClassPrefix()}-chat__text`;
@@ -33,13 +39,17 @@ export default class ChatContent extends Component<TdChatContentProps> {
     const textContent = this.getTextInfo();
     const roleClass = `${baseClass}--${role}`;
 
-    return role === 'user' ? (
-      <div className={`${baseClass}__user`}>
-        <pre>{textContent}</pre>
-      </div>
-    ) : (
-      <div className={`${baseClass}__assistant`}>
-        <div className={`${baseClass}__content ${roleClass}`}>{textContent}</div>
+    return (
+      <div className={`${baseClass}`}>
+        {role === 'user' ? (
+          <div className={`${baseClass}__user`}>
+            <pre>{textContent}</pre>
+          </div>
+        ) : (
+          <div className={`${baseClass}__assistant`}>
+            <div className={`${baseClass}__content ${roleClass}`}>{textContent}</div>
+          </div>
+        )}
       </div>
     );
   }

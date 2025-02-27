@@ -1,13 +1,27 @@
 import '../../textarea';
 import '../../button';
 
-import { Component, createRef, tag } from 'omi';
+import { Component, createRef, css, globalCSS, tag } from 'omi';
 
+import { getClassPrefix } from '../../_util/classname';
+import { flexIcon } from '../../_util/icon';
+import { convertToLightDomNode } from '../../_util/lightDom';
 import type { TdChatInputProps } from '../type';
 
+import styles from '../style/chat-input.less';
+
+globalCSS(css`
+  ${styles}
+`);
+
+const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-input')
 export default class ChatInput extends Component<TdChatInputProps> {
-  static css = [];
+  static css = `
+    :host {
+      width: 100%;
+    }
+  `;
 
   static propTypes = {
     stopDisabled: Boolean,
@@ -33,21 +47,38 @@ export default class ChatInput extends Component<TdChatInputProps> {
     return this.pValue;
   }
 
+  renderSender() {
+    return (
+      <t-button
+        theme="default"
+        size="small"
+        variant="text"
+        className={`${className}__footer__icon`}
+        innerClass={[`${className}__footer__icon__default`, this.inputValue ? `${className}__footer__icon--focus` : '']}
+        // disabled={disabled.value || !this.inputValue || textareaDisabled.value}
+      >
+        {/* TODO: 图标 */}
+        按钮
+        {convertToLightDomNode(flexIcon(<t-icon-loading />))}
+      </t-button>
+    );
+  }
+
   render(props: any) {
-    const textareaStyle = {
-      minHeight: '40px',
-      maxHeight: '120px',
-      ...(typeof props.autosize === 'object' ? props.autosize : {}),
-    };
+    // const textareaStyle = {
+    //   ...(typeof props.autosize === 'object' ? props.autosize : {}),
+    // };
 
     return (
-      <div class="t-chat-input flex gap-2 p-2 bg-white border rounded-lg">
+      <div className={`${className}__footer__content`}>
         <t-textarea
           ref={this.inputRef}
-          class="flex-1 resize-none outline-none"
-          style={textareaStyle}
+          class={`${className}__footer__textarea`}
+          innerClass={`${className}__footer__textarea__outer`}
+          // style={textareaStyle}
           placeholder={props.placeholder}
           disabled={props.disabled}
+          autosize={props.autosize}
           autofocus={props.autofocus}
           value={props.value}
           onChange={this.handleChange}
@@ -57,16 +88,13 @@ export default class ChatInput extends Component<TdChatInputProps> {
           onCompositionStart={this.handleCompositionStart}
           onCompositionEnd={this.handleCompositionEnd}
         ></t-textarea>
-        <div class="t-chat-input-actions flex gap-2">
-          <t-button onClick={this.handleSend} disabled={false}>
-            发送
+        {this.renderSender()}
+        {/* TODO: 样式 */}
+        {props.stopDisabled && (
+          <t-button onClick={this.handleStop}>
+            <stop-icon />
           </t-button>
-          {props.stopDisabled && (
-            <t-button onClick={this.handleStop}>
-              <stop-icon />
-            </t-button>
-          )}
-        </div>
+        )}
       </div>
     );
   }

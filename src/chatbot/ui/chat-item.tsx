@@ -1,8 +1,18 @@
-import { Component, tag } from 'omi';
+import './chat-content';
 
-import classname from '../../_util/classname';
+import { isString } from 'lodash-es';
+import { Component, css, globalCSS, tag } from 'omi';
+
+import classname, { getClassPrefix } from '../../_util/classname';
 import type { TdChatItemProps } from '../type';
 
+import styles from '../style/chat-item.less';
+
+globalCSS(css`
+  ${styles}
+`);
+
+const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-item')
 export default class ChatItem extends Component<TdChatItemProps> {
   static css = [];
@@ -44,15 +54,55 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   beforeUpdate() {}
 
+  renderAvatar() {
+    if (!this.props.avatar) {
+      return null;
+    }
+    return (
+      <div class={`${className}__avatar`}>
+        <div class={`${className}__avatar__box`}>
+          {isString(this.props.avatar) ? (
+            <img src={this.props.avatar} alt="avatar" class={`${className}__avatar-image`} />
+          ) : (
+            this.props.avatar
+          )}
+        </div>
+      </div>
+    );
+  }
+
   render(props: TdChatItemProps) {
-    const baseClass = 't-chat-item flex gap-3 p-4';
-    const roleClass = `t-chat-item-${props.role}`;
-    const variantClass = props.variant ? `t-chat-item-${props.variant}` : '';
+    const { textLoading, role, variant } = props;
     console.log('===item render', props.id);
+
+    const baseClass = `${className}__inner`;
+    const roleClass = role;
+    const variantClass = variant ? `${className}__text--variant--${variant}` : '';
+
     return (
       <div className={classname(baseClass, roleClass, variantClass)}>
-        <div className="t-chat-item-text think">{props.content?.thinking?.finalConclusion}</div>
-        <div className="t-chat-item-text main">{props.content?.main?.text}</div>
+        {this.renderAvatar()}
+        <div class={classname(`${className}__content`, `${className}__content--base`)}>
+          <div class={`${className}__base`}>
+            <slot name="intro"></slot>
+          </div>
+
+          {/* TODO: 骨架屏加载 */}
+          {/* {textLoading && <t-skeleton loading={textLoading} animation={'gradient'}></t-skeleton>} */}
+          {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
+          {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
+          {/* TODO: 样式 */}
+          <div class={`${className}__think`}>{props.content?.thinking?.finalConclusion}</div>
+          {!textLoading && (
+            <div class={`${className}__detail`}>
+              {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
+              {props.content?.main?.text}
+            </div>
+          )}
+          <div class={`${className}__actions-margin`}>
+            <slot name="actions"></slot>
+          </div>
+        </div>
       </div>
     );
   }

@@ -10,6 +10,14 @@ spline: base
 
 {{ basic }}
 
+### 输入框
+
+{{ input }}
+
+### 聊天列表
+
+{{ list }}
+
 
 
 ## API

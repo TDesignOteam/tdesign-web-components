@@ -1,0 +1,96 @@
+@import "./import.less";
+
+.@{prefix}-chat__footer {
+  position: relative;
+
+  &__content {
+    width: 100%;
+    position: relative;
+    display: flex;
+    margin-top: @comp-margin-xl;
+    padding-right: 0;
+  }
+
+  &__textarea {
+    flex-grow: 1;
+    position: relative;
+    border-radius: @border-radius-round;
+
+    &__outer.@{prefix}-textarea {
+      width: 100%;
+
+      .@{prefix}-textarea__inner {
+        background: @bg-color-secondarycontainer;
+        padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
+        border-radius: @chat-input-radius;
+        scrollbar-width: none;
+      }
+
+      .@{prefix}-textarea__inner.@{prefix}-is-focused {
+        border-color: @brand-color;
+        background: @bg-color-container;
+      }
+
+      .@{prefix}-textarea__inner::placeholder {
+        color: @text-color-secondary;
+      }
+
+      .@{prefix}-textarea__inner:hover {
+        box-shadow: @chat-input-hover;
+      }
+    }
+  }
+
+  &__icon {
+    position: absolute;
+    bottom: @comp-paddingTB-s;
+    right: @comp-paddingLR-s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: @comp-size-s;
+    text-align: center;
+    cursor: pointer;
+
+    &__default.@{prefix}-button {
+      transform: rotate(-90deg);
+      width: @comp-size-s;
+      height: @comp-size-s;
+      border-radius: @border-radius-circle;
+      color: @text-color-disabled;
+    }
+
+    &--focus.@{prefix}-button {
+      background: @brand-color;
+      color: @text-color-anti;
+    }
+
+    .@{prefix}-button.@{prefix}-size-s .@{prefix}-icon {
+      font-size: @font-size-xl;
+    }
+  }
+
+  &__stopbtn {
+    flex: 0 0 auto;
+    margin-left: @comp-margin-l;
+
+    .@{prefix}-button {
+      width: 100px;
+      height: @comp-size-xxxxl;
+      border-radius: @border-radius-round;
+      background: @bg-color-secondarycontainer;
+      color: @text-color-primary;
+      font-size: @font-size-l;
+
+      &__text {
+        align-items: center;
+      }
+
+      .@{prefix}-icon {
+        font-size: @font-size-xl;
+        margin-right: @comp-margin-s;
+      }
+    }
+  }
+}
