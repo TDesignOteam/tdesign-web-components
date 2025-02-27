@@ -2,7 +2,7 @@ import './chat-item';
 
 import { Component, createRef, tag } from 'omi';
 
-import type { TdChatItemProps,TdChatListProps } from '../type';
+import type { TdChatItemProps, TdChatListProps } from '../type';
 
 @tag('t-chat-list')
 export default class Chatlist extends Component<TdChatListProps> {

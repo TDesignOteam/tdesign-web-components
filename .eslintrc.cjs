@@ -20,6 +20,9 @@ module.exports = {
   },
   rules: {
     'no-use-before-define': 'off',
+    'no-useless-constructor': 'off',
+    'no-param-reassign': 'off',
+    '@typescript-eslint/no-useless-constructor': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -79,7 +82,6 @@ module.exports = {
     'object-curly-spacing': 'warn',
     'class-methods-use-this': 'off',
     'no-script-url': 'warn',
-    'no-param-reassign': ['error', { props: true, ignorePropertyModificationsForRegex: ['^html'] }],
     'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '__TDESIGN_THEME_PREFIX__'] }],
     'import/no-duplicates': 'off',
     'no-restricted-imports': [

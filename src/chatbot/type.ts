@@ -1,6 +1,8 @@
-import type { StyledProps,TNode } from '../common';
+import type { StyledProps, TNode } from '../common';
+import type { LLMConfig } from './core/type';
+import { Message } from './core/type';
 
-export interface TdChatItemProps {
+export interface TdChatItemProps extends Message {
   /**
    * 操作
    */
@@ -16,7 +18,7 @@ export interface TdChatItemProps {
   /**
    * 内容
    */
-  content?: string;
+  // content?: string;
   /**
    * 时间
    */
@@ -24,7 +26,7 @@ export interface TdChatItemProps {
   /**
    * 消息类型
    */
-  role?: ModelRoleEnum;
+  // role?: ModelRoleEnum;
   /**
    * 流式消息加载中
    */
@@ -67,6 +69,7 @@ interface ChatProps {
   actions?: boolean | TNode;
   // 流式数据加载中
   isStreamLoad?: boolean;
+  modelConfig: LLMConfig[];
   onClear?: (context: { e: MouseEvent }) => void;
 }
 

@@ -67,12 +67,13 @@
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
     "htm": "^3.1.1",
+    "immer": "^10.1.1",
     "lodash-es": "^4.17.21",
+    "markdown-it": "^14.1.0",
     "omi": "^7.7.7",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.2.4",
-    "markdown-it": "^14.1.0"
+    "tdesign-icons-web-components": "^0.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",

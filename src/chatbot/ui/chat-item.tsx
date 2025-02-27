@@ -24,7 +24,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
     const variantClass = props.variant ? `t-chat-item-${props.variant}` : '';
     return (
       <div className={classname(baseClass, roleClass, variantClass)}>
-        <div className="t-chat-item-text">{props.content}</div>
+        <div className="t-chat-item-text think">{props.content?.thinking?.finalConclusion}</div>
+        <div className="t-chat-item-text main">{props.content?.main?.text}</div>
       </div>
     );
   }

@@ -2,11 +2,12 @@ import './ui/chat-list';
 import './ui/chat-input';
 import '../button';
 
-import { uniqueId } from 'lodash-es';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { TdChatListProps,TdChatProps } from './type';
+import type { MessageState } from './core/type';
+import ChatService from './core';
+import type { TdChatListProps, TdChatProps } from './type';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chatbot')
@@ -25,23 +26,45 @@ export default class Chatbot extends Component<TdChatProps> {
     layout: String,
     data: Array,
     reverse: Boolean,
+    modelConfig: Object,
   };
 
   listRef = createRef<TdChatListProps>();
 
   private messages;
 
+  private chatService: ChatService;
+
+  private unsubscribe?: () => void;
+
   install(): void {
-    this.messages = this.props.data || [];
+    this.chatService = new ChatService(this.props.modelConfig, this.props.data);
+    this.subscribeToChat();
+    this.messages = this.convertMessages(this.chatService.messageStore.getState());
   }
 
-  private handleSend = (value: string) => {
-    console.log('====handleSend value', value);
-    this.appendMessage({
-      role: 'user',
-      key: uniqueId(),
-      content: value,
+  uninstall() {
+    this.unsubscribe?.();
+  }
+
+  // 订阅聊天状态变化
+  private subscribeToChat() {
+    this.unsubscribe = this.chatService.messageStore.subscribe((state) => {
+      this.messages = this.convertMessages(state);
+      this.update();
     });
+  }
+
+  // 转换消息格式到UI所需格式
+  private convertMessages(state: MessageState) {
+    return state.messageIds.map((id) => {
+      const msg = state.messages[id];
+      return { ...msg };
+    });
+  }
+
+  private handleSend = async (value: string, files?: File[]) => {
+    await this.chatService.sendMessage(value, files);
     this.fire('submit', value, {
       composed: true,
     });
@@ -56,13 +79,7 @@ export default class Chatbot extends Component<TdChatProps> {
     this.fire('clear', e);
   };
 
-  private appendMessage = (msg) => {
-    this.messages = [...this.messages, msg];
-    this.update();
-  };
-
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
-    console.log('====this.messages.value', this.messages);
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     return (
       <div className={`${className} ${layoutClass}`}>
