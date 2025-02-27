@@ -5,7 +5,7 @@ import '../../button';
 
 import { Component, createRef, css, globalCSS, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
+import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
 import type { TdChatInputProps } from '../type';
 
@@ -55,12 +55,14 @@ export default class ChatInput extends Component<TdChatInputProps> {
         size="small"
         variant="text"
         className={`${className}__footer__button`}
-        innerClass={[
+        innerClass={classname([
           `${className}__footer__button__default`,
-          this.inputValue ? `${className}__footer__button--focus` : '',
-        ]}
+          {
+            [`${className}__footer__button--focus`]: this.inputValue,
+          },
+        ])}
         onClick={this.handleSend}
-        // disabled={disabled.value || !this.inputValue || textareaDisabled.value}
+        disabled={this.props.disabled}
       >
         {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
       </t-button>

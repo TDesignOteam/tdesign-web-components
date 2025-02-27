@@ -20,7 +20,6 @@ export default class ChatInput extends Component {
         value={this.inputValue}
         placeholder="请输入内容"
         autosize={{ minRows: 2 }}
-        autofocus
         onChange={this.onChange}
         onSend={this.onSend}
       ></t-chat-input>

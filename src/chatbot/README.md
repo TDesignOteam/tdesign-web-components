@@ -14,12 +14,6 @@ spline: base
 
 {{ input }}
 
-### 聊天列表
-
-{{ list }}
-
-
-
 ## API
 
 ### Chatbot Props

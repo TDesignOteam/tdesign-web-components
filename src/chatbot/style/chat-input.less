@@ -21,12 +21,12 @@
 
       .@{prefix}-textarea__inner {
         background: @bg-color-secondarycontainer;
-        padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
+        padding: @comp-paddingTB-m @comp-size-xl @comp-paddingTB-m @comp-paddingLR-m;
         border-radius: @chat-input-radius;
         scrollbar-width: none;
       }
 
-      .@{prefix}-textarea__inner.@{prefix}-is-focused {
+      .@{prefix}-textarea__inner:focus {
         border-color: @brand-color;
         background: @bg-color-container;
       }
@@ -58,7 +58,8 @@
       width: @comp-size-s;
       height: @comp-size-s;
       border-radius: @border-radius-circle;
-      color: @text-color-disabled;
+      background: @chat-input-button-default-bg;
+      color: @chat-input-button-default-color;
     }
 
     &--focus.@{prefix}-button {
