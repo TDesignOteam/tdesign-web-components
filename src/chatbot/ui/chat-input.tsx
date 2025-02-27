@@ -33,41 +33,41 @@ export default class ChatInput extends Component<TdChatInputProps> {
     value: String,
   };
 
-  private pValue = '';
+  private pValue: string | number = '';
 
   inputRef = createRef<HTMLTextAreaElement>();
 
   shiftDown = false;
 
   install() {
-    // observe(this, 'value', () => this.update());
+    const { value } = this.props;
+
+    this.pValue = value;
   }
 
   get inputValue() {
     if (this.props.value !== undefined) return this.props.value;
-    return this.pValue;
+    return String(this.pValue);
   }
 
-  renderSender() {
-    return (
-      <t-button
-        theme="default"
-        size="small"
-        variant="text"
-        className={`${className}__footer__button`}
-        innerClass={classname([
-          `${className}__footer__button__default`,
-          {
-            [`${className}__footer__button--focus`]: this.inputValue,
-          },
-        ])}
-        onClick={this.handleSend}
-        disabled={this.props.disabled}
-      >
-        {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
-      </t-button>
-    );
-  }
+  renderSender = () => (
+    <t-button
+      theme="default"
+      size="small"
+      variant="text"
+      className={`${className}__footer__button`}
+      innerClass={classname([
+        `${className}__footer__button__default`,
+        {
+          [`${className}__footer__button--focus`]: this.inputValue,
+        },
+      ])}
+      onClick={this.handleSend}
+      disabled={this.props.disabled}
+    >
+      {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
+    </t-button>
+  );
 
   render(props: any) {
     // const textareaStyle = {
@@ -85,9 +85,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
           disabled={props.disabled}
           autosize={props.autosize}
           autofocus={props.autofocus}
-          value={props.value}
+          value={this.inputValue}
           onChange={this.handleChange}
-          onInput={this.handleInput}
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
           onCompositionStart={this.handleCompositionStart}
@@ -104,26 +103,11 @@ export default class ChatInput extends Component<TdChatInputProps> {
     );
   }
 
-  private handleChange = (v: string) => {
-    this.pValue = v;
-    this.update();
-    this.fire('change', v, {
+  private handleChange = (e: CustomEvent) => {
+    this.pValue = e.detail;
+    this.fire('change', e.detail, {
       composed: true,
     });
-  };
-
-  private handleInput = (e: Event) => {
-    const target = e.target as HTMLTextAreaElement;
-    this.fire('change', target.value);
-    this.resizeTextarea();
-  };
-
-  private resizeTextarea = () => {
-    const textarea = this.inputRef.current;
-    if (textarea && this.props.autosize) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
   };
 
   private handleKeyDown = (e: KeyboardEvent) => {

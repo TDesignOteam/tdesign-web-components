@@ -1,41 +1,47 @@
 import 'tdesign-web-components/textarea';
 
-export default function Textarea() {
-  const value = '';
+import { Component, signal } from 'omi';
 
-  const onBlur = (value, { e }) => {
+export default class Textarea extends Component {
+  inputValue = signal('');
+
+  onBlur = (value, { e }) => {
     console.log('onBlur: ', value, e);
   };
 
-  const onFocus = (value, { e }) => {
+  onFocus = (value, { e }) => {
     console.log('onFocus: ', value, e);
   };
 
-  const onKeyup = (value, { e }) => {
+  onKeyup = (value, { e }) => {
     console.log('onKeyup', value, e);
   };
 
-  const onKeypress = (value, { e }) => {
+  onKeypress = (value, { e }) => {
     console.log('onKeypress', value, e);
   };
 
-  const onKeydown = (value, { e }) => {
+  onKeydown = (value, { e }) => {
     console.log('onKeydown', value, e);
   };
-  const onChange = (value, { e }) => {
-    console.log('onChange', value, e);
+
+  onChange = (e: CustomEvent) => {
+    console.log('onChange', e);
+    this.inputValue.value = e.detail;
   };
 
-  return (
-    <t-textarea
-      placeholder="请输入"
-      value={value}
-      onBlur={onBlur}
-      onFocus={onFocus}
-      onKeypress={onKeypress}
-      onKeydown={onKeydown}
-      onKeyup={onKeyup}
-      onChange={onChange}
-    ></t-textarea>
-  );
+  render() {
+    return (
+      <t-textarea
+        placeholder="请输入"
+        value={this.inputValue.value}
+        onBlur={this.onBlur}
+        onFocus={this.onFocus}
+        onKeypress={this.onKeypress}
+        onKeydown={this.onKeydown}
+        onKeyup={this.onKeyup}
+        onChange={this.onChange}
+      ></t-textarea>
+    );
+  }
 }
