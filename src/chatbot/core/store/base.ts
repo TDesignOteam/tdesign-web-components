@@ -1,4 +1,4 @@
-// 基础Store抽象类
+// // 基础Store抽象类
 import ReactiveState, { Subscriber } from './reactiveState';
 
 export abstract class BaseStore<T extends object> {

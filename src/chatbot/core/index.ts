@@ -2,7 +2,7 @@
 import { MessageStore } from './store/message';
 import { ModelStore } from './store/model';
 import { ChatEngine } from './engine';
-import type { LLMConfig,Message } from './type';
+import type { LLMConfig, Message } from './type';
 
 export default class ChatService {
   public readonly messageStore: MessageStore;

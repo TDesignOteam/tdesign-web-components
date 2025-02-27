@@ -37,8 +37,13 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private unsubscribe?: () => void;
 
+  provide = {
+    messageStore: {},
+  };
+
   install(): void {
     this.chatService = new ChatService(this.props.modelConfig, this.props.data);
+    this.provide.messageStore = this.chatService.messageStore;
     this.subscribeToChat();
     this.messages = this.convertMessages(this.chatService.messageStore.getState());
   }
@@ -49,10 +54,13 @@ export default class Chatbot extends Component<TdChatProps> {
 
   // 订阅聊天状态变化
   private subscribeToChat() {
-    this.unsubscribe = this.chatService.messageStore.subscribe((state) => {
-      this.messages = this.convertMessages(state);
-      this.update();
-    });
+    this.unsubscribe = this.chatService.messageStore.subscribe(
+      (state) => {
+        this.messages = this.convertMessages(state);
+        this.update();
+      },
+      ['messageIds'], // 指定关注路径，仅当 messageIds 变化时更新列表结构
+    );
   }
 
   // 转换消息格式到UI所需格式
@@ -81,6 +89,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
+    console.log('====chat render');
     return (
       <div className={`${className} ${layoutClass}`}>
         <t-chat-list ref={this.listRef} data={this.messages} reverse={reverse} />

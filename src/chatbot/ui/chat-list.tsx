@@ -17,7 +17,7 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   render(props: { data: TdChatItemProps[]; reverse?: boolean }) {
     const items = props.reverse ? [...props.data].reverse() : props.data;
-    console.log('====items', items);
+    console.log('====list render', items);
     return (
       <div ref={this.listRef} className="t-chat-list space-y-4 overflow-y-auto" onScroll={this.handleScroll}>
         {items.map((item, index) => (

@@ -25,39 +25,30 @@ export class MessageStore extends BaseStore<MessageState> {
   }
 
   updateMessageContent(messageId: string, content: Message['content']) {
-    this.setState(
-      (draft) => {
-        const message = draft.messages[messageId];
-        if (message) {
-          message.content = content;
-        }
-      },
-      [`messages.${messageId}`],
-    );
+    this.setState((draft) => {
+      const message = draft.messages[messageId];
+      if (message) {
+        message.content = content;
+      }
+    });
   }
 
   setMessagePhase(messageId: string, phase: Message['phase']) {
-    this.setState(
-      (draft) => {
-        const message = draft.messages[messageId];
-        if (message) {
-          message.phase = phase;
-        }
-      },
-      [`messages.${messageId}.phase`],
-    );
+    this.setState((draft) => {
+      const message = draft.messages[messageId];
+      if (message) {
+        message.phase = phase;
+      }
+    });
   }
 
   setMessageStatus(messageId: string, status: Message['status']) {
-    this.setState(
-      (draft) => {
-        const message = draft.messages[messageId];
-        if (message) {
-          message.status = status;
-        }
-      },
-      [`messages.${messageId}.status`],
-    );
+    this.setState((draft) => {
+      const message = draft.messages[messageId];
+      if (message) {
+        message.status = status;
+      }
+    });
   }
 
   clearHistory() {
