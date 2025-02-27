@@ -3,7 +3,7 @@ import 'tdesign-icons-web-components/esm/components/stop-circle';
 import '../../textarea';
 import '../../button';
 
-import { Component, createRef, css, globalCSS, tag } from 'omi';
+import { Component, createRef, css, globalCSS, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
@@ -33,7 +33,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     value: String,
   };
 
-  private pValue: string | number = '';
+  pValue: Omi.SignalValue<string | number> = signal('');
 
   inputRef = createRef<HTMLTextAreaElement>();
 
@@ -42,12 +42,12 @@ export default class ChatInput extends Component<TdChatInputProps> {
   install() {
     const { value } = this.props;
 
-    this.pValue = value;
+    this.pValue.value = value;
   }
 
   get inputValue() {
     if (this.props.value !== undefined) return this.props.value;
-    return String(this.pValue);
+    return this.pValue.value;
   }
 
   renderSender = () => (
@@ -104,7 +104,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
   }
 
   private handleChange = (e: CustomEvent) => {
-    this.pValue = e.detail;
+    this.pValue.value = e.detail;
     this.fire('change', e.detail, {
       composed: true,
     });
@@ -133,8 +133,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
   private handleSend = (e: KeyboardEvent | MouseEvent) => {
     if (!this.props.disabled && this.inputValue) {
       this.props.onSend(this.inputValue as string, { e });
-      this.pValue = '';
-      this.update();
+      this.pValue.value = '';
     }
   };
 

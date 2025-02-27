@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 import { Component, signal } from 'omi';
 
 export default class ChatInput extends Component {
-  inputValue = signal('');
+  inputValue = signal('传入内容');
 
   onChange = (e: CustomEvent) => {
     console.log('onChange', e);
@@ -23,7 +23,7 @@ export default class ChatInput extends Component {
         autosize={{ minRows: 2 }}
         onChange={this.onChange}
         onSend={this.onSend}
-      ></t-chat-input>
+      />
     );
   }
 }
