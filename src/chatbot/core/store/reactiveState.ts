@@ -18,7 +18,7 @@ enablePatches();
 export default class ReactiveState<T extends object> {
   private currentState: T; // 当前状态（始终为冻结对象）
 
-  private subscribers = new Set<Subscriber<T>>(); // 订阅者集合（使用Set保证唯一性）
+  private subscribers = new Set<{ handler: Subscriber<T>; paths?: string[] }>(); // 订阅者集合（包含路径过滤条件）
 
   private pendingChanges: string[] = []; // 待处理的变更路径（自动去重）
 
@@ -62,13 +62,15 @@ export default class ReactiveState<T extends object> {
   }
 
   /**
-   * 订阅状态变更
+   * 订阅状态变更（支持路径过滤）
    * @param subscriber 订阅回调函数
+   * @param paths 可选的要监听的属性路径数组
    * @returns 取消订阅的函数
    */
-  public subscribe(subscriber: Subscriber<T>): () => void {
-    this.subscribers.add(subscriber);
-    return () => this.subscribers.delete(subscriber);
+  public subscribe(subscriber: Subscriber<T>, paths?: string[]): () => void {
+    const subscription = { handler: subscriber, paths };
+    this.subscribers.add(subscription);
+    return () => this.subscribers.delete(subscription);
   }
 
   /**
@@ -90,9 +92,12 @@ export default class ReactiveState<T extends object> {
       const frozenPaths = Object.freeze(changedPaths);
 
       // 安全通知所有订阅者
-      this.subscribers.forEach((sub) => {
+      this.subscribers.forEach(({ handler, paths }) => {
         try {
-          sub(frozenState, frozenPaths);
+          // 如果没有设置监听路径，或变更路径中有匹配项，则触发回调
+          if (!paths || frozenPaths.some((p) => paths.some((target) => p.startsWith(target)))) {
+            handler(frozenState, frozenPaths);
+          }
         } catch (error) {
           console.error('Subscriber error:', error);
         }

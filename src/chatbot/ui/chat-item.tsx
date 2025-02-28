@@ -44,7 +44,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         this.props.status = msg?.status;
         this.update();
       },
-      [`messages.${this.messageId}.content`, `messages.${this.messageId}.status`],
+      [`messages.${this.messageId}`],
     );
   }
 

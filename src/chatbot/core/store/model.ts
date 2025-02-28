@@ -14,32 +14,23 @@ export class ModelStore extends ReactiveState<ModelServiceState> {
   }
 
   setCurrentModel(modelName: string) {
-    this.setState(
-      (draft) => {
-        if (draft.availableModels.includes(modelName)) {
-          draft.currentModel = modelName;
-        }
-      },
-      ['currentModel'],
-    );
+    this.setState((draft) => {
+      if (draft.availableModels.includes(modelName)) {
+        draft.currentModel = modelName;
+      }
+    });
   }
 
   setIsLoading(loading: boolean) {
-    this.setState(
-      (draft) => {
-        draft.isLoading = loading;
-      },
-      ['isLoading'],
-    );
+    this.setState((draft) => {
+      draft.isLoading = loading;
+    });
   }
 
   setError(error: string | Error | null) {
-    this.setState(
-      (draft) => {
-        draft.error = error;
-      },
-      ['error'],
-    );
+    this.setState((draft) => {
+      draft.error = error;
+    });
   }
 
   updateAvailableModels(models: string[]) {
