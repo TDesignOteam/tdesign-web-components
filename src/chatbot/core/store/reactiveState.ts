@@ -24,6 +24,8 @@ export default class ReactiveState<T extends object> {
 
   private notificationScheduled = false; // 通知调度锁（防止重复调度）
 
+  private pathSubscribers = new Map<string, Set<{ handler: Subscriber<T> }>>(); // 增加订阅者分组缓存
+
   /**
    * 初始化响应式状态
    * @param initialState 初始状态（会自动冻结）
@@ -62,7 +64,7 @@ export default class ReactiveState<T extends object> {
   }
 
   /**
-   * 订阅状态变更（支持路径过滤）
+   * 订阅状态变更（支持路径过滤），订阅时维护路径索引
    * @param subscriber 订阅回调函数
    * @param paths 可选的要监听的属性路径数组
    * @returns 取消订阅的函数
@@ -70,7 +72,20 @@ export default class ReactiveState<T extends object> {
   public subscribe(subscriber: Subscriber<T>, paths?: string[]): () => void {
     const subscription = { handler: subscriber, paths };
     this.subscribers.add(subscription);
-    return () => this.subscribers.delete(subscription);
+    // 维护路径索引
+    paths?.forEach((path) => {
+      if (!this.pathSubscribers.has(path)) {
+        this.pathSubscribers.set(path, new Set());
+      }
+      this.pathSubscribers.get(path)?.add(subscription);
+    });
+
+    return () => {
+      this.subscribers.delete(subscription);
+      paths?.forEach((path) => {
+        this.pathSubscribers.get(path)?.delete(subscription);
+      });
+    };
   }
 
   /**
@@ -95,7 +110,16 @@ export default class ReactiveState<T extends object> {
       this.subscribers.forEach(({ handler, paths }) => {
         try {
           // 如果没有设置监听路径，或变更路径中有匹配项，则触发回调
-          if (!paths || frozenPaths.some((p) => paths.some((target) => p.startsWith(target)))) {
+          if (
+            !paths ||
+            frozenPaths.some((p) =>
+              paths.some((target) => {
+                const targetParts = target.split('.');
+                const pathParts = p.split('.');
+                return targetParts.every((part, i) => pathParts[i] === part);
+              }),
+            )
+          ) {
             handler(frozenState, frozenPaths);
           }
         } catch (error) {

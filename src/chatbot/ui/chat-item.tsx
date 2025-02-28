@@ -1,7 +1,7 @@
 import './chat-content';
 
 import { isString } from 'lodash-es';
-import { Component, css, globalCSS, tag } from 'omi';
+import { Component, css, globalCSS, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import type { TdChatItemProps } from '../type';
@@ -48,11 +48,19 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  receiveProps(
+    props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
+    oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
+  ) {
+    if (props.content.main === oldProps.content.main) {
+      return false;
+    }
+    return true;
+  }
+
   uninstall() {
     this.unsubscribe?.();
   }
-
-  beforeUpdate() {}
 
   renderAvatar() {
     if (!this.props.avatar) {

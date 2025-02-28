@@ -35,8 +35,8 @@ export default class Chatlist extends Component<TdChatListProps> {
     console.log('====list render', items);
     return (
       <div ref={this.listRef} className={`${className}__list`} onScroll={this.handleScroll}>
-        {items.map((item, index) => (
-          <t-chat-item {...item} key={index} />
+        {items.map((item) => (
+          <t-chat-item {...item} key={item.id} />
         ))}
       </div>
     );
