@@ -10,7 +10,9 @@ spline: base
 
 {{ basic }}
 
+### 输入框
 
+{{ input }}
 
 ## API
 

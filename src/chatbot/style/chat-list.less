@@ -1,0 +1,38 @@
+@import "./import.less";
+
+// 聊天列表
+.@{prefix}-chat__list {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  &--reverse {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  .place-holder {
+    flex-grow: 1;
+    flex-shrink: 1;
+  }
+
+  .clear-btn {
+    color: @text-color-secondary;
+    font-size: @font-size-s;
+    cursor: pointer;
+
+    .@{prefix}-divider__inner-text {
+      display: flex;
+      align-items: center;
+    }
+
+    .clear-btn-text {
+      margin-left: @comp-margin-xs;
+    }
+
+    &:hover {
+      color: @text-color-primary;
+    }
+  }
+}

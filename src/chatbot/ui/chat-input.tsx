@@ -1,13 +1,28 @@
+import 'tdesign-icons-web-components/esm/components/send';
+import 'tdesign-icons-web-components/esm/components/stop-circle';
 import '../../textarea';
 import '../../button';
 
-import { Component, createRef, tag } from 'omi';
+import { Component, createRef, css, globalCSS, signal, tag } from 'omi';
 
+import classname, { getClassPrefix } from '../../_util/classname';
+import { convertToLightDomNode } from '../../_util/lightDom';
 import type { TdChatInputProps } from '../type';
 
+import styles from '../style/chat-input.less';
+
+globalCSS(css`
+  ${styles}
+`);
+
+const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-input')
 export default class ChatInput extends Component<TdChatInputProps> {
-  static css = [];
+  static css = `
+    :host {
+      width: 100%;
+    }
+  `;
 
   static propTypes = {
     stopDisabled: Boolean,
@@ -18,79 +33,81 @@ export default class ChatInput extends Component<TdChatInputProps> {
     value: String,
   };
 
-  private pValue = '';
+  pValue: Omi.SignalValue<string | number> = signal('');
 
   inputRef = createRef<HTMLTextAreaElement>();
 
   shiftDown = false;
 
   install() {
-    // observe(this, 'value', () => this.update());
+    const { value } = this.props;
+
+    this.pValue.value = value;
   }
 
   get inputValue() {
     if (this.props.value !== undefined) return this.props.value;
-    return this.pValue;
+    return this.pValue.value;
   }
 
+  renderSender = () => (
+    <t-button
+      theme="default"
+      size="small"
+      variant="text"
+      className={`${className}__footer__button`}
+      innerClass={classname([
+        `${className}__footer__button__default`,
+        {
+          [`${className}__footer__button--focus`]: this.inputValue,
+        },
+      ])}
+      onClick={this.handleSend}
+      disabled={this.props.disabled}
+    >
+      {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
+    </t-button>
+  );
+
   render(props: any) {
-    const textareaStyle = {
-      minHeight: '40px',
-      maxHeight: '120px',
-      ...(typeof props.autosize === 'object' ? props.autosize : {}),
-    };
+    // const textareaStyle = {
+    //   ...(typeof props.autosize === 'object' ? props.autosize : {}),
+    // };
 
     return (
-      <div class="t-chat-input flex gap-2 p-2 bg-white border rounded-lg">
+      <div className={`${className}__footer__content`}>
         <t-textarea
           ref={this.inputRef}
-          class="flex-1 resize-none outline-none"
-          style={textareaStyle}
+          class={`${className}__footer__textarea`}
+          innerClass={`${className}__footer__textarea__outer`}
+          // style={textareaStyle}
           placeholder={props.placeholder}
           disabled={props.disabled}
+          autosize={props.autosize}
           autofocus={props.autofocus}
-          value={props.value}
+          value={this.inputValue}
           onChange={this.handleChange}
-          onInput={this.handleInput}
           onKeyDown={this.handleKeyDown}
           onKeyUp={this.handleKeyUp}
           onCompositionStart={this.handleCompositionStart}
           onCompositionEnd={this.handleCompositionEnd}
         ></t-textarea>
-        <div class="t-chat-input-actions flex gap-2">
-          <t-button onClick={this.handleSend} disabled={false}>
-            发送
+        {this.renderSender()}
+        {/* TODO: 控制逻辑 */}
+        {props.stopDisabled && (
+          <t-button onClick={this.handleStop}>
+            {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
           </t-button>
-          {props.stopDisabled && (
-            <t-button onClick={this.handleStop}>
-              <stop-icon />
-            </t-button>
-          )}
-        </div>
+        )}
       </div>
     );
   }
 
-  private handleChange = (v: string) => {
-    this.pValue = v;
-    this.update();
-    this.fire('change', v, {
+  private handleChange = (e: CustomEvent) => {
+    this.pValue.value = e.detail;
+    this.fire('change', e.detail, {
       composed: true,
     });
-  };
-
-  private handleInput = (e: Event) => {
-    const target = e.target as HTMLTextAreaElement;
-    this.fire('change', target.value);
-    this.resizeTextarea();
-  };
-
-  private resizeTextarea = () => {
-    const textarea = this.inputRef.current;
-    if (textarea && this.props.autosize) {
-      textarea.style.height = 'auto';
-      textarea.style.height = `${textarea.scrollHeight}px`;
-    }
   };
 
   private handleKeyDown = (e: KeyboardEvent) => {
@@ -116,8 +133,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
   private handleSend = (e: KeyboardEvent | MouseEvent) => {
     if (!this.props.disabled && this.inputValue) {
       this.props.onSend(this.inputValue as string, { e });
-      this.pValue = '';
-      this.update();
+      this.pValue.value = '';
     }
   };
 

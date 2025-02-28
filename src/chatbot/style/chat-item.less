@@ -1,0 +1,151 @@
+@import "./import.less";
+
+.@{prefix}-chat {
+  &__inner {
+    display: flex;
+    margin-bottom: @comp-margin-l;
+    .@{prefix}-chat__avatar {
+      flex: 0 0 auto;
+    }
+    .@{prefix}-chat__content {
+      flex: 1 1 auto;
+      width: 100%;
+  
+      &--base {
+        padding-top: @comp-paddingTB-xl;
+      }
+    }
+    .@{prefix}-chat__detail {
+      max-width: calc(100% - @comp-size-xl);
+      box-sizing: border-box;
+      padding: @pop-padding-xl @pop-padding-xxl;
+    }
+  
+    &.model-change {
+      justify-content: center;
+      margin-top: @comp-margin-xxl;
+    }
+  
+    &.error {
+      .@{prefix}-chat__text__content {
+        color: @error-color;
+      }
+    }
+    .@{prefix}-chat__notice {
+      // 水平居中
+      background: @bg-color-secondarycontainer;
+      padding: @comp-paddingTB-xxs @comp-paddingLR-s;
+      font-size: @font-size-s;
+      color: @text-color-disabled;
+      border-radius: @border-radius-default;
+      box-sizing: border-box;
+      line-height: 20px;
+      text-align: center;
+  
+      span {
+        color: @text-color-placeholder;
+      }
+    }
+  }
+
+  &__avatar {
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex;
+    margin: 0 @comp-margin-xs;
+    padding-top: @comp-paddingTB-xl;
+  
+    &__box {
+      padding-top: @pop-padding-m;
+    }
+  
+    &-image {
+      width: @comp-size-m;
+      height: @comp-size-m;
+      border-radius: @border-radius-circle;
+    }
+  }
+
+  &__content {
+    font: @comment-content-text-size;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    .@{prefix}-skeleton {
+      width: 100%;
+      padding: @pop-padding-xxl;
+    }
+  }
+
+  &__base {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: baseline;
+    font: @font-title-small;
+    color: @text-color-placeholder;
+    padding-left: @pop-padding-xxl;
+  }
+
+  &__name {
+    padding-right: @comp-margin-s;
+    cursor: pointer;
+  }
+
+  &__actions-margin {
+    margin-left: @comp-margin-l;
+  }
+
+  &__actions {
+    margin-top: @comp-margin-xs;
+    display: flex;
+    list-style: none;
+    padding: @chat-action-icon-padding;
+    background-color: @bg-color-secondarycontainer;
+    border-radius: @border-radius-medium;
+    border: 1px solid @border-level-2-color;
+    overflow: hidden;
+
+    & .@{prefix}-button {
+      padding: @pop-padding-s;
+      width: @comp-size-xxxs;
+      height: @comp-size-xxxs;
+      box-sizing: content-box;
+      color: @text-color-primary;
+      background-color: @bg-color-secondarycontainer;
+      border: 0;
+      margin-right: @comp-margin-xs;
+      .@{prefix}-icon {
+        font-size: @font-size-l;
+      }
+    }
+    & .@{prefix}-chat-button--active {
+      color: @brand-color;
+    }
+    & .@{prefix}-button:hover {
+      background-color: @chat-actions-hover;
+    }
+    & .@{prefix}-space .@{prefix}-space-item {
+      height: @comp-size-xs;
+    }
+  }
+
+  &__refresh {
+    display: flex;
+    align-items: center;
+
+    &-line {
+      width: 1px;
+      height: @comp-size-xxxs;
+      background-color: @chat-refresh-line;
+      margin-right: @comp-margin-xs;
+    }
+  }
+
+  &__copy-btn {
+    color: @code-font-color-base;
+    // margin-left: auto;
+    cursor: pointer;
+  }
+}
