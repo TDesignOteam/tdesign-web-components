@@ -2,7 +2,7 @@ import './ui/chat-list';
 import './ui/chat-input';
 import '../button';
 
-import { Component, createRef, css, globalCSS, OmiProps, tag } from 'omi';
+import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import type { MessageState } from './core/type';
@@ -11,14 +11,10 @@ import type { TdChatListProps, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
-globalCSS(css`
-  ${styles}
-`);
-
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chatbot')
 export default class Chatbot extends Component<TdChatProps> {
-  static css = [];
+  static css = [styles];
 
   static defaultProps = {
     clearHistory: false,

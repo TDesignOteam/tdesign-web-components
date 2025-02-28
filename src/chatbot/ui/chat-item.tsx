@@ -1,21 +1,17 @@
 import './chat-content';
 
 import { isString } from 'lodash-es';
-import { Component, css, globalCSS, OmiProps, tag } from 'omi';
+import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import type { TdChatItemProps } from '../type';
 
 import styles from '../style/chat-item.less';
 
-globalCSS(css`
-  ${styles}
-`);
-
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-item')
 export default class ChatItem extends Component<TdChatItemProps> {
-  static css = [];
+  static css = [styles];
 
   static propTypes = {
     actions: Array,

@@ -1,5 +1,9 @@
 @import "./import.less";
 
+:host {
+  width: 100%;
+}
+
 .@{prefix}-chat__footer {
   position: relative;
 
@@ -16,28 +20,28 @@
     position: relative;
     border-radius: @border-radius-round;
 
-    &__outer.@{prefix}-textarea {
+    &::part(@{prefix}-textarea) {
       width: 100%;
+    }
 
-      .@{prefix}-textarea__inner {
-        background: @bg-color-secondarycontainer;
-        padding: @comp-paddingTB-m @comp-size-xl @comp-paddingTB-m @comp-paddingLR-m;
-        border-radius: @chat-input-radius;
-        scrollbar-width: none;
-      }
+    &::part(@{prefix}-textarea__inner) {
+      background: @bg-color-secondarycontainer;
+      padding: @comp-paddingTB-m @comp-size-xl @comp-paddingTB-m @comp-paddingLR-m;
+      border-radius: @chat-input-radius;
+      scrollbar-width: none;
+    }
 
-      .@{prefix}-textarea__inner:focus {
-        border-color: @brand-color;
-        background: @bg-color-container;
-      }
+    &::part(@{prefix}-textarea__inner):focus {
+      border-color: @brand-color;
+      background: @bg-color-container;
+    }
 
-      .@{prefix}-textarea__inner::placeholder {
-        color: @text-color-secondary;
-      }
+    &::part(@{prefix}-textarea__inner):placeholder {
+      color: @text-color-secondary;
+    }
 
-      .@{prefix}-textarea__inner:hover {
-        box-shadow: @chat-input-hover;
-      }
+    &::part(@{prefix}-textarea__inner):hover {
+      box-shadow: @chat-input-hover;
     }
   }
 
@@ -53,7 +57,7 @@
     text-align: center;
     cursor: pointer;
 
-    &__default.@{prefix}-button {
+    &::part(@{prefix}-button) {
       transform: rotate(-90deg);
       width: @comp-size-s;
       height: @comp-size-s;
@@ -61,8 +65,8 @@
       background: @chat-input-button-default-bg;
       color: @chat-input-button-default-color;
     }
-
-    &--focus.@{prefix}-button {
+    
+    &--focus::part(@{prefix}-button) {
       background: @brand-color;
       color: @text-color-anti;
     }

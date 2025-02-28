@@ -1,27 +1,16 @@
 import './chat-item';
 
-import { Component, createRef, css, globalCSS, tag } from 'omi';
+import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import type { TdChatItemProps, TdChatListProps } from '../type';
 
 import styles from '../style/chat-list.less';
 
-globalCSS(css`
-  ${styles}
-`);
-
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-list')
 export default class Chatlist extends Component<TdChatListProps> {
-  static css = `
-    :host {
-      flex: 1;
-      min-height: 0;
-      display: flex;
-      flex-direction: column;
-    }
-  `;
+  static css = [styles];
 
   static propTypes = {
     data: Array,

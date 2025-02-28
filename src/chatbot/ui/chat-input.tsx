@@ -3,7 +3,7 @@ import 'tdesign-icons-web-components/esm/components/stop-circle';
 import '../../textarea';
 import '../../button';
 
-import { Component, createRef, css, globalCSS, signal, tag } from 'omi';
+import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
@@ -11,18 +11,10 @@ import type { TdChatInputProps } from '../type';
 
 import styles from '../style/chat-input.less';
 
-globalCSS(css`
-  ${styles}
-`);
-
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-input')
 export default class ChatInput extends Component<TdChatInputProps> {
-  static css = `
-    :host {
-      width: 100%;
-    }
-  `;
+  static css = [styles];
 
   static propTypes = {
     stopDisabled: Boolean,
@@ -55,9 +47,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
       theme="default"
       size="small"
       variant="text"
-      className={`${className}__footer__button`}
-      innerClass={classname([
-        `${className}__footer__button__default`,
+      className={classname([
+        `${className}__footer__button`,
         {
           [`${className}__footer__button--focus`]: this.inputValue,
         },
@@ -70,17 +61,11 @@ export default class ChatInput extends Component<TdChatInputProps> {
   );
 
   render(props: any) {
-    // const textareaStyle = {
-    //   ...(typeof props.autosize === 'object' ? props.autosize : {}),
-    // };
-
     return (
       <div className={`${className}__footer__content`}>
         <t-textarea
           ref={this.inputRef}
-          class={`${className}__footer__textarea`}
-          innerClass={`${className}__footer__textarea__outer`}
-          // style={textareaStyle}
+          className={`${className}__footer__textarea`}
           placeholder={props.placeholder}
           disabled={props.disabled}
           autosize={props.autosize}
@@ -92,6 +77,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
           onCompositionStart={this.handleCompositionStart}
           onCompositionEnd={this.handleCompositionEnd}
         ></t-textarea>
+        {/* <div className={`${className}__footer__actions`}>
+          <div className={`${className}__footer__`}>模型功能区</div> */}
         {this.renderSender()}
         {/* TODO: 控制逻辑 */}
         {props.stopDisabled && (
@@ -99,6 +86,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
             {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
           </t-button>
         )}
+        {/* </div> */}
       </div>
     );
   }
