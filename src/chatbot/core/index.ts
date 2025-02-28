@@ -52,12 +52,8 @@ export default class ChatService {
     return {
       role: 'user',
       status: 'sent',
-      timestamp: Date.now(),
-      content: {
-        main: { type: 'text', text: content },
-        // attachments: files?.length ? this.createAttachments(files) : null,
-      },
-      phase: 'complete',
+      timestamp: `${Date.now()}`,
+      main: { type: 'text', status: 'sent', content },
     };
   }
 

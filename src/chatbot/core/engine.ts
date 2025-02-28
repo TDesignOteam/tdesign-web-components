@@ -1,7 +1,7 @@
 import { SSEResponse } from '../mock/sseService';
 import { MessageStore } from './store/message';
 import { ModelStore } from './store/model';
-import type { ContentData,LLMConfig } from './type';
+import type { ContentData, LLMConfig } from './type';
 
 export class ChatEngine {
   constructor(
@@ -21,7 +21,7 @@ export class ChatEngine {
 
     try {
       this.modelStore.setIsLoading(true);
-      const assistantMessageId = this.createAssistantMessage(params.messageId);
+      const assistantMessageId = this.createAssistantMessage();
 
       if (config.stream) {
         // 处理sse流式响应模式
@@ -40,32 +40,32 @@ export class ChatEngine {
     }
   }
 
-  private createAssistantMessage(parentId: string): string {
+  private createAssistantMessage(): string {
     // 创建初始助手消息
-    return this.messageStore.createMessage(
-      {
-        role: 'assistant',
-        status: 'thinking',
-        phase: 'thinking',
-        timestamp: Date.now(),
-        content: {
-          thinking: { steps: [] },
-          main: { type: 'text', text: '思考中...' },
-        },
+    return this.messageStore.createMessage({
+      role: 'assistant',
+      status: 'streaming',
+      timestamp: `${Date.now()}`,
+      thinking: {
+        title: '思考中...',
+        type: 'text',
+        content: '好的，现在开始分析，，，',
+        status: 'pending',
       },
-      parentId,
-    );
+    });
   }
 
   private async handleBatchResponse(messageId: string, content: string, config: LLMConfig) {
     const response = await this.fetchLLMResponse(content, config);
     const parsed = this.parseChunk(response);
-
+    const currentContent = this.messageStore.getState().messages[messageId];
     this.messageStore.updateMessageContent(messageId, {
-      main: parsed.content,
+      ...currentContent,
+      main: parsed.main,
       thinking: parsed.thinking,
+      role: 'assistant',
+      status: 'sent',
     });
-    this.messageStore.setMessagePhase(messageId, 'complete');
     this.messageStore.setMessageStatus(messageId, 'sent');
   }
 
@@ -78,33 +78,40 @@ export class ChatEngine {
 
   private processStreamChunk(chunk: string, messageId: string) {
     const parsed = this.parseChunk(chunk);
-    const currentContent = this.messageStore.getState().messages[messageId]?.content;
-
+    const currentContent = this.messageStore.getState().messages[messageId];
     if (!currentContent) return;
-
-    if (parsed.thinkingStep) {
+    if (parsed.thinking) {
       this.messageStore.updateMessageContent(messageId, {
         ...currentContent,
         thinking: {
-          steps: [...(currentContent.thinking?.steps || []), parsed.thinkingStep],
-          finalConclusion: parsed.finalConclusion,
+          status: 'streaming',
+          ...parsed.thinkingStep,
         },
       });
     }
 
-    if (parsed.content) {
+    if (parsed.main) {
       this.messageStore.updateMessageContent(messageId, {
         ...currentContent,
-        main: this.mergeContent(currentContent.main, parsed.content),
+        main: {
+          ...currentContent.main,
+          status: 'streaming',
+          content: `${currentContent?.main?.content || ''}${parsed.main}`,
+          type: 'text',
+        },
+        thinking: {
+          ...currentContent.thinking,
+          status: 'sent',
+        },
       });
-      this.messageStore.setMessagePhase(messageId, 'generating');
-      this.messageStore.setMessageStatus(messageId, 'streaming');
     }
+
+    // this.messageStore.setMessageStatus(messageId, 'streaming');
   }
 
   private handleError(messageId: string, error: unknown) {
     this.messageStore.setMessageStatus(messageId, 'error');
-    this.messageStore.setMessagePhase(messageId, 'complete');
+    // this.messageStore.setMessagePhase(messageId, 'complete');
     this.modelStore.setError(error instanceof Error ? error.message : 'Unknown error');
   }
 
@@ -112,7 +119,7 @@ export class ChatEngine {
     try {
       if (typeof data === 'string') {
         return {
-          content: data,
+          main: data,
         };
       }
       // if (data === '。') {
@@ -142,6 +149,7 @@ export class ChatEngine {
 
     const readStream = async () => {
       const { done, value } = await reader.read();
+
       if (done) return;
 
       const chunk = decoder.decode(value);

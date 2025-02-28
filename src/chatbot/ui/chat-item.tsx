@@ -30,14 +30,18 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private messageId!: string;
 
+  private message: TdChatItemProps;
+
   install() {
     this.messageId = this.props.id!;
+    this.message = this.props;
     // 订阅特定消息的更新
     this.unsubscribe = this.injection.messageStore.subscribe(
       (state) => {
-        const msg = state.messages[this.messageId];
-        this.props.content = msg?.content;
-        this.props.status = msg?.status;
+        this.message = {
+          ...this.message,
+          ...state.messages[this.messageId],
+        };
         this.update();
       },
       [`messages.${this.messageId}`],
@@ -48,7 +52,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
     oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
   ) {
-    if (props.content.main === oldProps.content.main) {
+    if (props?.main?.content === oldProps?.main?.content) {
       return false;
     }
     return true;
@@ -96,11 +100,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
           {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
           {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
           {/* TODO: 样式 */}
-          <div class={`${className}__think`}>{props.content?.thinking?.finalConclusion}</div>
-          {!textLoading && (
+          {this.message?.thinking?.content && <div class={`${className}__think`}>{this.message.thinking.content}</div>}
+          {!textLoading && this.message?.main?.content && (
             <div class={`${className}__detail`}>
               {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
-              {props.content?.main?.text}
+              {this.message.main.content}
             </div>
           )}
           <div class={`${className}__actions-margin`}>

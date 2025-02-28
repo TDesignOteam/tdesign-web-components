@@ -1,8 +1,8 @@
 // types.ts
 export type MessageRole = 'user' | 'assistant' | 'system'; // 消息类型
-export type MessageStatus = 'pending' | 'thinking' | 'streaming' | 'sent' | 'error'; // 消息状态
-export type MessagePhase = 'thinking' | 'generating' | 'complete'; // 消息阶段
-export type ContentType = 'text' | 'markdown' | 'image' | 'file'; // 内容类型
+export type MessageStatus = 'pending' | 'streaming' | 'sent' | 'error'; // 消息状态
+export type ContentType = 'text' | 'markdown' | 'image' | 'audio' | 'video' | 'file'; // 内容类型
+export type AttachmentType = 'file' | 'image' | 'video' | 'audio'; // 附件类型
 
 export interface ContentData {
   type: ContentType;
@@ -12,9 +12,8 @@ export interface ContentData {
 }
 
 export interface ThinkingStep {
-  type: 'analysis' | 'search' | 'calculation';
+  type: 'search' | 'analysis' | 'calculation';
   content: string;
-  timestamp: number;
 }
 
 export interface MessageReference {
@@ -24,35 +23,95 @@ export interface MessageReference {
 }
 
 export interface Attachment {
-  type: 'file' | 'image' | 'data';
+  type: AttachmentType;
   name: string;
   url: string;
-  metadata?: Record<string, any>;
+  isReference: boolean;
+  metadata: Record<string, any>;
 }
 
-export interface MessageContent {
-  thinking?: {
-    steps: ThinkingStep[];
-    finalConclusion?: string;
-  };
-  main: ContentData;
-  attachments?: Attachment[];
-  clarification?: string;
+// 文本类内容
+interface TextContent {
+  type: 'text' | 'markdown';
+  status: MessageStatus;
+  content: string;
+}
+
+// 图片内容
+interface ImageContent {
+  type: 'image';
+  status: MessageStatus;
+  content: {
+    url: string;
+    alt?: string;
+    format?: 'jpg' | 'png' | 'webp'; //  图片格式
+  }[];
+}
+
+// 音频内容
+interface AudioContent {
+  type: 'audio';
+  status: MessageStatus;
+  content: {
+    url: string;
+    duration: number;
+    format?: 'mp3' | 'wav' | 'ogg';
+    sampleRate?: number; // 音频采样率
+  }[];
+}
+
+// 视频内容
+interface VideoContent {
+  type: 'video';
+  status: MessageStatus;
+  content: {
+    url: string;
+    poster?: string;
+    duration?: number;
+    resolution?: [number, number];
+    format?: 'mp4' | 'mov' | 'avi';
+  }[];
+}
+
+export type MessageContent = TextContent | ImageContent | AudioContent | VideoContent;
+// | {
+//     type: 'mixed';
+//     content: (TextContent | MediaContent)[];
+//   }; // 支持混合内容
+
+// 搜索模块
+interface ReferenceContent {
+  title: string;
+  url?: string;
+  detail?: string;
+  source?: string;
+  timestamp?: string;
+}
+
+type PhaseContent = {
+  title?: string;
+  status: MessageStatus;
+};
+
+export interface SearchResult extends PhaseContent {
+  content: ReferenceContent[];
+}
+
+// 思考过程
+export interface ThinkingContent extends PhaseContent {
+  type: 'text' | 'markdown';
+  content: string;
 }
 
 export interface Message {
   id: string;
   role: MessageRole;
   status: MessageStatus;
-  phase?: MessagePhase;
-  timestamp: number;
-  content: MessageContent;
-  references?: MessageReference[];
-  error?: string;
-  context?: {
-    parentMessageId?: string;
-    reasoningChain?: string[];
-  };
+  main?: MessageContent;
+  search?: SearchResult;
+  thinking?: ThinkingContent;
+  attachments?: Attachment[];
+  timestamp?: string;
 }
 
 export interface LLMConfig {

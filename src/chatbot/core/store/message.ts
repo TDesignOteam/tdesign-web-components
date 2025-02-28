@@ -11,34 +11,28 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  createMessage(message: Omit<Message, 'id'>, parentId?: string): string {
+  createMessage(message: Omit<Message, 'id'>): string {
     const messageId = `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
     this.setState((draft) => {
       draft.messageIds.push(messageId);
       draft.messages[messageId] = {
         ...message,
         id: messageId,
-        context: { parentMessageId: parentId },
       };
     });
     return messageId;
   }
 
-  updateMessageContent(messageId: string, content: Message['content']) {
+  updateMessageContent(messageId: string, msg: Message) {
     this.setState((draft) => {
-      const message = draft.messages[messageId];
-      if (message) {
-        message.content = content;
-      }
-    });
-  }
-
-  setMessagePhase(messageId: string, phase: Message['phase']) {
-    this.setState((draft) => {
-      const message = draft.messages[messageId];
-      if (message) {
-        message.phase = phase;
-      }
+      // const message = draft.messages[messageId];
+      // console.log('====message', { ...message }, msg);
+      // if (msg?.main?.type === 'text') {
+      //   message.main.content = msg.main.content;
+      // }
+      draft.messages[messageId] = {
+        ...msg,
+      };
     });
   }
 
