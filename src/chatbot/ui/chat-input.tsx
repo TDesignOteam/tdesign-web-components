@@ -77,16 +77,17 @@ export default class ChatInput extends Component<TdChatInputProps> {
           onCompositionStart={this.handleCompositionStart}
           onCompositionEnd={this.handleCompositionEnd}
         ></t-textarea>
-        {/* <div className={`${className}__footer__actions`}>
-          <div className={`${className}__footer__`}>模型功能区</div> */}
-        {this.renderSender()}
-        {/* TODO: 控制逻辑 */}
-        {props.stopDisabled && (
-          <t-button onClick={this.handleStop}>
-            {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
-          </t-button>
-        )}
-        {/* </div> */}
+        <div className={`${className}__footer__actions`}>
+          {/* TODO: 功能实现 */}
+          <div className={`${className}__footer__model`}>模型功能区</div>
+          {this.renderSender()}
+          {/* TODO: 控制逻辑 */}
+          {props.stopDisabled && (
+            <t-button onClick={this.handleStop}>
+              {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
+            </t-button>
+          )}
+        </div>
       </div>
     );
   }

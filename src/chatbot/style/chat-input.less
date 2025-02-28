@@ -9,46 +9,58 @@
 
   &__content {
     width: 100%;
-    position: relative;
     display: flex;
+    flex-direction: column;
     margin-top: @comp-margin-xl;
-    padding-right: 0;
+    padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
+    border: 1px solid @chat-input-content-default-border;
+    border-radius: @chat-input-radius;
+    background: @bg-color-secondarycontainer;
+    transition: all .3s;
+
+    &:focus-within {
+      border-color: @brand-color;
+      background: @bg-color-container;
+      box-shadow: 0px 0px 0px 2px @brand-color-2;
+    }
+
+    &:hover {
+      border-color: @brand-color;
+    }
   }
 
   &__textarea {
-    flex-grow: 1;
-    position: relative;
-    border-radius: @border-radius-round;
+    flex: 1;
+    min-height: 0;
 
     &::part(@{prefix}-textarea) {
       width: 100%;
     }
 
     &::part(@{prefix}-textarea__inner) {
-      background: @bg-color-secondarycontainer;
-      padding: @comp-paddingTB-m @comp-size-xl @comp-paddingTB-m @comp-paddingLR-m;
-      border-radius: @chat-input-radius;
+      padding: 0 0 @comp-paddingTB-s 0;
+      border: none;
+      background: none;
+      box-shadow: none;
       scrollbar-width: none;
-    }
-
-    &::part(@{prefix}-textarea__inner):focus {
-      border-color: @brand-color;
-      background: @bg-color-container;
     }
 
     &::part(@{prefix}-textarea__inner):placeholder {
       color: @text-color-secondary;
     }
+  }
 
-    &::part(@{prefix}-textarea__inner):hover {
-      box-shadow: @chat-input-hover;
-    }
+  &__actions {
+    display: flex;
+    align-items: center;
+  }
+
+  &__model {
+    flex: 1;
+    min-width: 0;
   }
 
   &__button {
-    position: absolute;
-    bottom: @comp-paddingTB-s;
-    right: @comp-paddingLR-s;
     display: flex;
     align-items: center;
     justify-content: center;
