@@ -1,8 +1,8 @@
 import type { ModelServiceState } from '../type';
-import { BaseStore } from './base';
+import ReactiveState from './reactiveState';
 
 // 专注模型状态和运行时管理
-export class ModelStore extends BaseStore<ModelServiceState> {
+export class ModelStore extends ReactiveState<ModelServiceState> {
   constructor(initialState?: Partial<ModelServiceState>) {
     super({
       currentModel: '',

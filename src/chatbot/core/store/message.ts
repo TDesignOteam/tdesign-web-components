@@ -1,8 +1,8 @@
 import type { Message, MessageState } from '../type';
-import { BaseStore } from './base';
+import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
-export class MessageStore extends BaseStore<MessageState> {
+export class MessageStore extends ReactiveState<MessageState> {
   constructor(initialState?: Partial<MessageState>) {
     super({
       messageIds: [],
