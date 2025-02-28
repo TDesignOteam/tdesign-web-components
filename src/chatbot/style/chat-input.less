@@ -32,9 +32,27 @@
   &__textarea {
     flex: 1;
     min-height: 0;
+    max-height: @chat-input-textarea-max-height;
+    display: flex;
+    flex-direction: column;
 
     &::part(@{prefix}-textarea) {
+      flex: 1;
+      min-height: 0;
       width: 100%;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: @chat-input-textarea-scrollbar-width;
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: @chat-input-textarea-scrollbar-thumb-radius;
+        background-color: @chat-input-textarea-scrollbar-color;
+        cursor: pointer;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: @chat-input-textarea-scrollbar-hover-color;
+      }
     }
 
     &::part(@{prefix}-textarea__inner) {
@@ -42,7 +60,6 @@
       border: none;
       background: none;
       box-shadow: none;
-      scrollbar-width: none;
     }
 
     &::part(@{prefix}-textarea__inner):placeholder {
