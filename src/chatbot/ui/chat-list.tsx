@@ -3,9 +3,8 @@ import './chat-item';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
+import styles from '../style/chat-list.less?inline';
 import type { TdChatItemProps, TdChatListProps } from '../type';
-
-import styles from '../style/chat-list.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-list')

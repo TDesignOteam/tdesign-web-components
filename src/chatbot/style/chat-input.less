@@ -1,7 +1,6 @@
 @import "./import.less";
 
 :host {
-  margin-top: @comp-margin-xl;
   width: 100%;
 }
 
@@ -12,6 +11,7 @@
   &__header {
     position: relative;
     bottom: calc(-@chat-input-radius);
+    margin-top: calc(-@chat-input-radius);
     padding-bottom: @chat-input-radius;
     border: 1px solid @chat-input-content-default-border;
     border-bottom: none;
