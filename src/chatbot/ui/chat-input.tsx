@@ -7,9 +7,8 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
+import styles from '../style/chat-input.less?inline';
 import type { TdChatInputProps } from '../type';
-
-import styles from '../style/chat-input.less';
 
 const className = `${getClassPrefix()}-chat__input`;
 @tag('t-chat-input')

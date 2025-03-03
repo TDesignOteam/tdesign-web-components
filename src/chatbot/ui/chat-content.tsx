@@ -2,9 +2,8 @@ import markdownIt from 'markdown-it';
 import { Component, css, globalCSS, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
+import styles from '../style/chat-content.less?inline';
 import type { TdChatContentProps } from '../type';
-
-import styles from '../style/chat-content.less';
 
 globalCSS(css`
   ${styles}

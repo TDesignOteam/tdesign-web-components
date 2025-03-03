@@ -5,9 +5,8 @@ import MarkdownIt from 'markdown-it';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
+import styles from '../style/chat-item.less?inline';
 import type { TdChatItemProps } from '../type';
-
-import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-item')
