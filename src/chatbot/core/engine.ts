@@ -59,7 +59,7 @@ export class ChatEngine {
     const response = await this.fetchLLMResponse(content, config);
     const parsed = this.parseChunk(response);
     const currentContent = this.messageStore.getState().messages[messageId];
-    this.messageStore.updateMessageContent(messageId, {
+    this.messageStore.updateMessage(messageId, {
       ...currentContent,
       main: parsed.main,
       thinking: parsed.thinking,
@@ -81,8 +81,8 @@ export class ChatEngine {
     const currentContent = this.messageStore.getState().messages[messageId];
     if (!currentContent) return;
     if (parsed.thinking) {
-      this.messageStore.updateMessageContent(messageId, {
-        ...currentContent,
+      this.messageStore.updateMessage(messageId, {
+        // ...currentContent,
         thinking: {
           status: 'streaming',
           ...parsed.thinkingStep,
@@ -91,10 +91,10 @@ export class ChatEngine {
     }
 
     if (parsed.main) {
-      this.messageStore.updateMessageContent(messageId, {
-        ...currentContent,
+      this.messageStore.updateMessage(messageId, {
+        // ...currentContent,
         main: {
-          ...currentContent.main,
+          // ...currentContent.main,
           status: 'streaming',
           content: `${currentContent?.main?.content || ''}${parsed.main}`,
           type: 'text',

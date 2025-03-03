@@ -23,14 +23,11 @@ export class MessageStore extends ReactiveState<MessageState> {
     return messageId;
   }
 
-  updateMessageContent(messageId: string, msg: Message) {
+  updateMessage(messageId: string, msg: Partial<Message>) {
     this.setState((draft) => {
-      // const message = draft.messages[messageId];
-      // console.log('====message', { ...message }, msg);
-      // if (msg?.main?.type === 'text') {
-      //   message.main.content = msg.main.content;
-      // }
+      const message = draft.messages[messageId];
       draft.messages[messageId] = {
+        ...message,
         ...msg,
       };
     });
