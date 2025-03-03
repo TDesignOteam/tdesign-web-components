@@ -120,10 +120,6 @@ export class SSEResponse {
     { type: 'text', msg: '**' },
     { type: 'text', msg: '参考' },
     { type: 'text', msg: '**\n' },
-    {
-      type: 'text',
-      msg: '# Markdown功能测试 (H1标题)\n## 基础语法测试 (H2标题)\n### 文字样式 (H3标题)\n**加粗文字**  \n*斜体文字*  \n~~删除线~~  \n***加粗且斜体***  \n',
-    },
     // 测试用例1 - 标题开头被截断
     {
       type: 'text',
