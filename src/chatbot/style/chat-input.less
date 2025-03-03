@@ -1,22 +1,40 @@
 @import "./import.less";
 
 :host {
+  margin-top: @comp-margin-xl;
   width: 100%;
 }
 
-.@{prefix}-chat__footer {
-  position: relative;
+.@{prefix}-chat__input {
+  width: 100%;
 
+  // 附件区
+  &__header {
+    position: relative;
+    bottom: calc(-@chat-input-radius);
+    padding-bottom: @chat-input-radius;
+    border: 1px solid @chat-input-content-default-border;
+    border-bottom: none;
+    border-top-left-radius: @chat-input-radius;
+    border-top-right-radius: @chat-input-radius;
+
+    &:empty {
+      display: none;
+    }
+  }
+
+  // 主体区
   &__content {
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
-    margin-top: @comp-margin-xl;
     padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
     border: 1px solid @chat-input-content-default-border;
     border-radius: @chat-input-radius;
     background: @bg-color-secondarycontainer;
     transition: all .3s;
+    z-index: 1;
 
     &:focus-within {
       border-color: @brand-color;
@@ -29,6 +47,7 @@
     }
   }
 
+  // 输入框
   &__textarea {
     flex: 1;
     min-height: 0;
@@ -67,6 +86,7 @@
     }
   }
 
+  // 功能区
   &__actions {
     display: flex;
     align-items: center;

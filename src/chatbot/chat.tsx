@@ -102,9 +102,7 @@ export default class Chatbot extends Component<TdChatProps> {
             </t-button>
           </div>
         )}
-        <div className={`${className}__footer`}>
-          <t-chat-input autosize={{ minRows: 2 }} onSend={this.handleSend} onStop={this.handleStop} />
-        </div>
+        <t-chat-input autosize={{ minRows: 2 }} onSend={this.handleSend} onStop={this.handleStop} />
       </div>
     );
   }

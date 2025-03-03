@@ -11,7 +11,7 @@ import type { TdChatInputProps } from '../type';
 
 import styles from '../style/chat-input.less';
 
-const className = `${getClassPrefix()}-chat`;
+const className = `${getClassPrefix()}-chat__input`;
 @tag('t-chat-input')
 export default class ChatInput extends Component<TdChatInputProps> {
   static css = [styles];
@@ -48,45 +48,48 @@ export default class ChatInput extends Component<TdChatInputProps> {
       size="small"
       variant="text"
       className={classname([
-        `${className}__footer__button`,
+        `${className}__button`,
         {
-          [`${className}__footer__button--focus`]: this.inputValue,
+          [`${className}__button--focus`]: this.inputValue,
         },
       ])}
       onClick={this.handleSend}
       disabled={this.props.disabled}
     >
-      {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
+      {convertToLightDomNode(<t-icon-send className={`${className}__button__icon`} />)}
     </t-button>
   );
 
   render(props: any) {
     return (
-      <div className={`${className}__footer__content`}>
-        <t-textarea
-          ref={this.inputRef}
-          className={`${className}__footer__textarea`}
-          placeholder={props.placeholder}
-          disabled={props.disabled}
-          autosize={props.autosize}
-          autofocus={props.autofocus}
-          value={this.inputValue}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          onKeyUp={this.handleKeyUp}
-          onCompositionStart={this.handleCompositionStart}
-          onCompositionEnd={this.handleCompositionEnd}
-        ></t-textarea>
-        <div className={`${className}__footer__actions`}>
-          {/* TODO: 功能实现 */}
-          <div className={`${className}__footer__model`}>模型功能区</div>
-          {this.renderSender()}
-          {/* TODO: 控制逻辑 */}
-          {props.stopDisabled && (
-            <t-button onClick={this.handleStop}>
-              {convertToLightDomNode(<t-icon-send className={`${className}__footer__button__icon`} />)}
-            </t-button>
-          )}
+      <div className={`${className}`}>
+        <div className={`${className}__header`}>附件区</div>
+        <div className={`${className}__content`}>
+          <t-textarea
+            ref={this.inputRef}
+            className={`${className}__textarea`}
+            placeholder={props.placeholder}
+            disabled={props.disabled}
+            autosize={props.autosize}
+            autofocus={props.autofocus}
+            value={this.inputValue}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+            onKeyUp={this.handleKeyUp}
+            onCompositionStart={this.handleCompositionStart}
+            onCompositionEnd={this.handleCompositionEnd}
+          ></t-textarea>
+          <div className={`${className}__actions`}>
+            {/* TODO: 功能实现 */}
+            <div className={`${className}__model`}>模型功能区</div>
+            {this.renderSender()}
+            {/* TODO: 控制逻辑 */}
+            {props.stopDisabled && (
+              <t-button onClick={this.handleStop}>
+                {convertToLightDomNode(<t-icon-send className={`${className}__button__icon`} />)}
+              </t-button>
+            )}
+          </div>
         </div>
       </div>
     );
