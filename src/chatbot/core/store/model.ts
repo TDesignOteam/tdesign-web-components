@@ -5,19 +5,19 @@ import ReactiveState from './reactiveState';
 export class ModelStore extends ReactiveState<ModelServiceState> {
   constructor(initialState?: Partial<ModelServiceState>) {
     super({
-      currentModel: '',
+      currentModel: 'hunyuan',
       isLoading: false,
       error: null,
-      availableModels: [],
+      config: {
+        stream: true,
+      },
       ...initialState,
     });
   }
 
   setCurrentModel(modelName: string) {
     this.setState((draft) => {
-      if (draft.availableModels.includes(modelName)) {
-        draft.currentModel = modelName;
-      }
+      draft.currentModel = modelName;
     });
   }
 
@@ -31,14 +31,5 @@ export class ModelStore extends ReactiveState<ModelServiceState> {
     this.setState((draft) => {
       draft.error = error;
     });
-  }
-
-  updateAvailableModels(models: string[]) {
-    this.setState(
-      (draft) => {
-        draft.availableModels = models;
-      },
-      ['availableModels'],
-    );
   }
 }

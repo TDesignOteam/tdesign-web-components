@@ -1,31 +1,31 @@
 import { SSEResponse } from '../mock/sseService';
 import { MessageStore } from './store/message';
 import { ModelStore } from './store/model';
-import type { ContentData, LLMConfig } from './type';
+import type { ChunkParserResult,LLMConfig } from './type';
 
 export class ChatEngine {
+  private config: LLMConfig;
+
   constructor(
     private messageStore: MessageStore,
     private modelStore: ModelStore,
-    private config: LLMConfig[],
   ) {
     // 构造函数参数属性初始化
   }
 
   public async processMessage(params: { messageId: string; content: string; files?: File[] }) {
-    const config = this.config.find((m) => m.name === this.modelStore.getState().currentModel);
-    if (!config) {
-      this.modelStore.setError(`Model ${this.modelStore.getState().currentModel} not found`);
+    const { config, currentModel } = this.modelStore.getState();
+    if (!config || !currentModel) {
+      this.modelStore.setError(`Model config not found`);
       return;
     }
-
+    this.config = config;
     try {
       this.modelStore.setIsLoading(true);
       const assistantMessageId = this.createAssistantMessage();
-
       if (config.stream) {
         // 处理sse流式响应模式
-        const mockSSEResponse = new SSEResponse(`这是一段模拟的流式字符串数据。`);
+        const mockSSEResponse = new SSEResponse();
         const mockResponse = await mockSSEResponse.getResponse();
         await this.handleSSEResponse(mockResponse, assistantMessageId);
         // await this.handleStreamResponse(assistantMessageId, params.content, config);
@@ -55,14 +55,16 @@ export class ChatEngine {
     });
   }
 
-  private async handleBatchResponse(messageId: string, content: string, config: LLMConfig) {
-    const response = await this.fetchLLMResponse(content, config);
+  private async handleBatchResponse(messageId: string, content: string, config?: LLMConfig) {
+    const response = await this.fetchLLMResponse(content, {
+      ...this.config,
+      ...config,
+    });
     const parsed = this.parseChunk(response);
-    const currentContent = this.messageStore.getState().messages[messageId];
+    console.log('===parsed', parsed);
     this.messageStore.updateMessage(messageId, {
-      ...currentContent,
-      main: parsed.main,
-      thinking: parsed.thinking,
+      // main: parsed.main,
+      // thinking: parsed.thinking,
       role: 'assistant',
       status: 'sent',
     });
@@ -80,30 +82,48 @@ export class ChatEngine {
     const parsed = this.parseChunk(chunk);
     const currentContent = this.messageStore.getState().messages[messageId];
     if (!currentContent) return;
-    if (parsed.thinking) {
+    const { search, thinking, main } = currentContent;
+    // 处理搜索阶段
+    if (parsed.search) {
       this.messageStore.updateMessage(messageId, {
-        // ...currentContent,
-        thinking: {
+        search: {
+          ...search,
           status: 'streaming',
-          ...parsed.thinkingStep,
+          content: parsed.search.content,
         },
       });
+      return;
     }
 
-    if (parsed.main) {
+    if (parsed.thinking) {
       this.messageStore.updateMessage(messageId, {
-        // ...currentContent,
-        main: {
-          // ...currentContent.main,
-          status: 'streaming',
-          content: `${currentContent?.main?.content || ''}${parsed.main}`,
-          type: 'text',
-        },
-        thinking: {
-          ...currentContent.thinking,
+        search: {
+          ...search,
           status: 'sent',
         },
+        thinking: {
+          ...thinking,
+          status: 'streaming',
+          content: `${thinking?.content || ''}${parsed.thinking.content}`,
+          // type: parsed.thinking.type,
+        },
       });
+      return;
+    }
+
+    if (parsed.main && (parsed.main.type === 'text' || parsed.main.type === 'markdown')) {
+      this.messageStore.updateMessage(messageId, {
+        thinking: {
+          ...thinking,
+          status: 'sent',
+        },
+        main: {
+          status: 'streaming',
+          content: `${main?.content || ''}${parsed.main.content}`,
+          type: parsed.main.type,
+        },
+      });
+      return;
     }
 
     // this.messageStore.setMessageStatus(messageId, 'streaming');
@@ -115,30 +135,8 @@ export class ChatEngine {
     this.modelStore.setError(error instanceof Error ? error.message : 'Unknown error');
   }
 
-  private parseChunk(data: any) {
-    try {
-      if (typeof data === 'string') {
-        return {
-          main: data,
-        };
-      }
-      // if (data === '。') {
-      //   return {
-      //     isComplete: true,
-      //   };
-      // }
-      return data;
-    } catch (err) {
-      console.error('Failed to parse chunk:', data);
-      return {};
-    }
-  }
-
-  private mergeContent(current: ContentData, update: ContentData): ContentData {
-    // if (current.type === 'text' && update.type === 'text') {
-    return { ...current, text: (current.text || '') + (update?.text || update || '') };
-    // }
-    // return update;
+  private parseChunk(data: any): ChunkParserResult {
+    return this.config?.parser?.parse(data);
   }
 
   private async handleSSEResponse(response: Response, messageId: string) {

@@ -69,7 +69,7 @@ interface ChatProps {
   actions?: boolean | TNode;
   // 流式数据加载中
   isStreamLoad?: boolean;
-  modelConfig: LLMConfig[];
+  modelConfig: LLMConfig;
   onClear?: (context: { e: MouseEvent }) => void;
 }
 

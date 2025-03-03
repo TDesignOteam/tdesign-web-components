@@ -24,6 +24,7 @@ export class MessageStore extends ReactiveState<MessageState> {
   }
 
   updateMessage(messageId: string, msg: Partial<Message>) {
+    console.log('====updateMessage msg', msg);
     this.setState((draft) => {
       const message = draft.messages[messageId];
       draft.messages[messageId] = {

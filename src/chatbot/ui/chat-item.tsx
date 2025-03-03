@@ -1,6 +1,7 @@
 import './chat-content';
 
 import { isString } from 'lodash-es';
+import MarkdownIt from 'markdown-it';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
@@ -31,6 +32,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private messageId!: string;
 
   private message: TdChatItemProps;
+
+  static md = new MarkdownIt({
+    html: true,
+    breaks: true,
+    // linkify: true,
+    // typographer: true,
+  });
 
   install() {
     this.messageId = this.props.id!;
@@ -81,7 +89,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   render(props: TdChatItemProps) {
     const { textLoading, role, variant } = props;
-    console.log('===item render', props.id);
+    console.log('===item render', this.messageId);
 
     const baseClass = `${className}__inner`;
     const roleClass = role;
@@ -100,14 +108,21 @@ export default class ChatItem extends Component<TdChatItemProps> {
           {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
           {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
           {/* TODO: 样式 */}
-          {this.message?.thinking?.content && <div class={`${className}__think`}>{this.message.thinking.content}</div>}
+          {this.message?.thinking?.content && (
+            <div className={`${className}__think`}>{this.message.thinking.content}</div>
+          )}
+          {this.message?.search?.content && <div className={`${className}__search`}>{this.message.search.content}</div>}
           {!textLoading && this.message?.main?.content && (
-            <div class={`${className}__detail`}>
+            <div className={`${className}__detail`}>
               {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
-              {this.message.main.content}
+              {this.message.main.type === 'markdown' ? (
+                <div className="markdown-body" innerHTML={ChatItem.md.render(this.message.main.content)}></div>
+              ) : (
+                <div className="maintext-body">{this.message.main.content}</div>
+              )}
             </div>
           )}
-          <div class={`${className}__actions-margin`}>
+          <div className={`${className}__actions-margin`}>
             <slot name="actions"></slot>
           </div>
         </div>

@@ -9,15 +9,15 @@ export default class ChatService {
 
   public readonly modelStore: ModelStore;
 
-  public readonly engine: ChatEngine;
+  private engine: ChatEngine;
 
-  constructor(config: LLMConfig[], initialMessages?: Message[]) {
+  constructor(config: LLMConfig, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
     this.modelStore = new ModelStore({
-      availableModels: config.map((c) => c.name),
-      currentModel: config[0]?.name || '',
+      currentModel: config.name || '未知',
+      config,
     });
-    this.engine = new ChatEngine(this.messageStore, this.modelStore, config);
+    this.engine = new ChatEngine(this.messageStore, this.modelStore);
   }
 
   public async sendMessage(input: string, files?: File[]) {
