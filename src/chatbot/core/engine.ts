@@ -62,7 +62,7 @@ export class ChatEngine {
     });
     const parsed = this.parseChunk(response);
     console.log('===parsed', parsed);
-    this.messageStore.updateMessage(messageId, {
+    this.messageStore.updateContent(messageId, {
       // main: parsed.main,
       // thinking: parsed.thinking,
       role: 'assistant',
@@ -85,7 +85,7 @@ export class ChatEngine {
     const { search, thinking, main } = currentContent;
     // 处理搜索阶段
     if (parsed.search) {
-      this.messageStore.updateMessage(messageId, {
+      this.messageStore.updateContent(messageId, {
         search: {
           ...search,
           status: 'streaming',
@@ -96,7 +96,7 @@ export class ChatEngine {
     }
 
     if (parsed.thinking) {
-      this.messageStore.updateMessage(messageId, {
+      this.messageStore.updateContent(messageId, {
         search: {
           ...search,
           status: 'sent',
@@ -112,7 +112,7 @@ export class ChatEngine {
     }
 
     if (parsed.main && (parsed.main.type === 'text' || parsed.main.type === 'markdown')) {
-      this.messageStore.updateMessage(messageId, {
+      this.messageStore.updateContent(messageId, {
         thinking: {
           ...thinking,
           status: 'sent',

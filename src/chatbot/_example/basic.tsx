@@ -93,7 +93,7 @@ function handleStructuredData(data: unknown): ReturnType<any> {
       const content = 'msg' in data ? (data as any).msg : JSON.stringify(data);
       return {
         main: {
-          type: content?.includes('**') ? 'markdown' : 'text',
+          type: 'markdown',
           content: content || '',
         },
       };

@@ -33,10 +33,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private message: TdChatItemProps;
 
   static md = new MarkdownIt({
-    html: true,
-    breaks: true,
-    // linkify: true,
-    // typographer: true,
+    html: true, // 允许HTML标签
+    breaks: true, // 自动换行
+    linkify: true, // 自动转换链接
+    typographer: true, // 排版优化
   });
 
   install() {
