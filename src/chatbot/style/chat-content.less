@@ -17,22 +17,37 @@
     }
 
     &__assistant {
+    }
+
+    & &__assistant &__content .hljs {
+      background-color: @code-bg-color-page;
+      border-radius: @border-radius-large;
+    }
+
+    &__markdown {
       color: @text-color-primary;
 
-      ol {
-        padding-inline-start: 20px;
-
-        li {
-          list-style: decimal;
-        }
+      h1 {
+        font: var(--t-chat-md-h1-font);
+        margin: var(--t-chat-md-content-gap-t1);
+      }
+      h2 {
+        font: var(--t-chat-md-h2-font);
+        margin: var(--t-chat-md-content-gap-t2);
+      }
+      h3, h4, h5, h6 {
+        font: var(--t-chat-md-h3-font);
+        margin: var(--t-chat-md-content-gap-t3);
       }
 
-      img {
-        max-width: 100%;
-        margin: @comp-margin-xs 0;
-        border-radius: @border-radius-default;
+      p {
+        margin: var(--t-chat-md-content-gap-main);
+        word-break: break-word;
+        overflow-wrap: break-word;
       }
-
+      s {
+        color: var(--t-chat-md-s-color);
+      }
       :where(code):not(:where(pre *)) {
         color: @error-color;
         background: @error-color-1;
@@ -43,22 +58,46 @@
         margin: 0 @comp-margin-xxs;
       }
 
+      li {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        margin: 0.5em 0;
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+      ul, ol {
+        margin: var(--t-chat-md-content-gap-main);
+        margin-left: 2em;
+      }
+      ul {
+        list-style: var(--t-chat-md-ul-style);
+      }
+      ol {
+        list-style: var(--t-chat-md-ol-style);
+      }
+
+      img {
+        max-width: 100%;
+        margin: @comp-margin-xs 0;
+        border-radius: @border-radius-default;
+      }
+
       blockquote {
-        border-left: 2px solid @gray-color-3;
-        background: @gray-color-1;
-        color: @font-gray-1;
-        padding: @comp-paddingTB-m @comp-paddingTB-m @comp-paddingTB-m @comp-size-xs;
-        margin: @comp-margin-l 0;
+        margin: var(--t-chat-md-blockquote-margin);
+        font-size: inherit;
+        border-left: var(--t-chat-md-blockquote-border-left);
+        padding-left: 12px;
+        color: var(--t-chat-md-blockquote-color);
       }
 
       hr {
-        opacity: 0;
+        margin: var(--t-chat-md-hr-margin);
+        border: none;
+        border-top: var(--t-chat-md-hr-border);
+        background: none;
       }
-    }
-
-    & &__assistant &__content .hljs {
-      background-color: @code-bg-color-page;
-      border-radius: @border-radius-large;
     }
   }
 
