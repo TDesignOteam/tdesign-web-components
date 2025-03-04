@@ -3,6 +3,12 @@
 .@{prefix}-chat {
   // 消息样式
   &__text {
+    font: @font-body-large;
+    word-break: break-all;
+
+    &--error {
+      color: @error-color;
+    }
 
     & &__user pre {
       color: @text-color-secondary;

@@ -1,9 +1,11 @@
 import './chat-content';
+import '../../collapse';
 
 import { isString } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
+import { convertToLightDomNode } from '../../_util/lightDom';
 import styles from '../style/chat-item.less?inline';
 import type { TdChatItemProps } from '../type';
 
@@ -84,6 +86,26 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  renderThinking() {
+    const { thinking } = this.message;
+
+    if (!thinking?.content) {
+      return null;
+    }
+
+    return (
+      <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
+        {convertToLightDomNode(
+          <t-collapse-panel
+            className={`${className}__think__content`}
+            header={thinking.title || '思考中...'}
+            content={thinking.content}
+          />,
+        )}
+      </t-collapse>
+    );
+  }
+
   render(props: TdChatItemProps) {
     const { textLoading, role, variant, theme, placement } = props;
     console.log('===item render', this.messageId);
@@ -99,7 +121,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         {this.renderAvatar()}
         <div class={`${className}__main`}>
           <div class={classname(`${className}__content`, `${className}__content--base`)}>
-            <div class={`${className}__base`}>
+            <div class={`${className}__header`}>
               <slot name="intro"></slot>
             </div>
 
@@ -108,9 +130,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
             {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
             {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
             {/* TODO: 样式 */}
-            {this.message?.thinking?.content && (
-              <div className={`${className}__think`}>{this.message.thinking.content}</div>
-            )}
+            {this.renderThinking()}
             {this.message?.search?.content && (
               <div className={`${className}__search`}>{this.message.search.content}</div>
             )}

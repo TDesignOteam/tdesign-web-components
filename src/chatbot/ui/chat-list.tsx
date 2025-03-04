@@ -32,11 +32,13 @@ export default class Chatlist extends Component<TdChatListProps> {
                   theme: 'primary',
                   variant: 'base',
                   placement: 'right',
+                  avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
                 }
               : {
                   theme: 'default',
                   variant: 'base',
                   placements: 'left',
+                  avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
                 };
           return <t-chat-item {...roleProps} {...item} key={item.id} />;
         })}

@@ -12,6 +12,7 @@ export interface CollapsePanelProps extends TdCollapsePanelProps, StyledProps {}
 
 const { beforeEnter, enter, afterEnter, beforeLeave, leave, afterLeave } = getCollapseAnimation();
 
+const className = `${classPrefix}-collapse-panel`;
 @tag('t-collapse-panel')
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   static defaultProps = {
@@ -29,8 +30,6 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   };
 
   innerValue = signal(0);
-
-  className = `${classPrefix}-collapse-panel`;
 
   isDisabled = signal(false);
 
@@ -96,9 +95,10 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     }
     return (
       <div
-        className={classname(`${this.className}__icon`, [`${this.className}__icon--${expandIconPlacement.value}`], {
-          [`${this.className}__icon--active`]: isActive,
+        className={classname(`${className}__icon`, [`${className}__icon--${expandIconPlacement.value}`], {
+          [`${className}__icon--active`]: isActive,
         })}
+        part={`${className}__icon`}
         onClick={this.handleClick}
       >
         {typeof this.props.expandIcon !== 'boolean' ? (
@@ -114,19 +114,26 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     const { expandIconPlacement, expandOnRowClick } = this.injection;
     return (
       <div
-        className={classname(`${this.className}__header`, {
+        className={classname(`${className}__header`, {
           [`${classPrefix}-is-clickable`]: expandOnRowClick.value && !this.isDisabled.value,
         })}
+        part={`${className}__header`}
         onClick={(e) => this.handleClick(e, true)}
       >
-        <div className={`${this.className}__header-left`}>
+        <div className={`${className}__header-left`} part={`${className}__header-left`}>
           {expandIconPlacement.value === 'left' && this.renderIcon()}
         </div>
 
-        <div className={`${this.className}__header-content`}>{this.props.header}</div>
-        <div className={`${this.className}__header--blank`}></div>
-        <div className={`${this.className}__header-right`}>
-          <div className={`${this.className}__header-right-content`} onClick={(e: MouseEvent) => e.stopPropagation()}>
+        <div className={`${className}__header-content`} part={`${className}__header-content`}>
+          {this.props.header}
+        </div>
+        <div className={`${className}__header--blank`} part={`${className}__header--blank`}></div>
+        <div className={`${className}__header-right`} part={`${className}__header-right`}>
+          <div
+            className={`${className}__header-right-content`}
+            part={`${className}__header-right-content`}
+            onClick={(e: MouseEvent) => e.stopPropagation()}
+          >
             {this.props.headerRightContent}
           </div>
           {expandIconPlacement.value === 'right' && this.renderIcon()}
@@ -153,10 +160,13 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
           leave,
           afterLeave: this.afterLeave,
         }}
-        className={`${this.className}__body`}
+        className={`${className}__body`}
+        part={`${className}__body`}
         show={isActive}
       >
-        <div className={`${this.className}__content`}>{this.props.content}</div>
+        <div className={`${className}__content`} part={`${className}__content`}>
+          {this.props.content}
+        </div>
       </div>
     );
   }
@@ -167,18 +177,20 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     return (
       <div
         className={classname(
-          `${this.className}`,
+          `${className}`,
           {
             [`${classPrefix}-is-disabled`]: this.isDisabled.value,
           },
           innerClass,
         )}
+        part={`${className}`}
       >
         <div
-          className={classname(`${this.className}__wrapper`, {
+          className={classname(`${className}__wrapper`, {
             [`${classPrefix}--borderless`]: this.injection.borderless.value,
           })}
           style={innerStyle}
+          part={`${className}__wrapper`}
         >
           {this.renderHeader()}
           {this.renderBody()}
