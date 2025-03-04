@@ -1,5 +1,5 @@
 import type { Message, MessageState } from '../type';
-import ReactiveState from './reactiveState2';
+import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
 export class MessageStore extends ReactiveState<MessageState> {

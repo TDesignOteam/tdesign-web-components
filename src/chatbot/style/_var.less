@@ -23,30 +23,33 @@
 //   --td-code-font-base: @font-white-1;
 // }
 
-// 颜色
-@chat-input-content-default-border: #dcdcdc;
-@chat-input-textarea-scrollbar-color: #e7e7e7;
-@chat-input-textarea-scrollbar-hover-color: #c8c8c8;
-@chat-input-button-default-bg: #dcdcdc;
-@chat-input-button-default-color: #fff;
+:root {
+  // 盒模型
+  --chat-input-textarea-max-height: 134px;
+  --chat-input-textarea-scrollbar-width: 4px;
+  --chat-input-textarea-scrollbar-thumb-radius: 2px;
+  --chat-input-radius: 16px;
 
-@chat-item-primary-bg: @bg-color-secondarycontainer;
-@chat-item-default-bg: #fff;
-@chat-item-think-bg: @bg-color-secondarycontainer;
-@chat-item-think-content-color: #929292;
+  --chat-item-gap: 38px;
+  --chat-item-main-max-width: 800px;
+  --chat-item-avatar-padding-top: 6px;
+  --chat-item-think-margin-bottom: 12px;
+  --chat-item-think-padding-tb: 8px;
+  --chat-item-think-padding-lr: 12px;
+  --chat-item-think-radius: 6px;
+  --chat-item-think-content-margin-top: 12px;
 
-// 字体尺寸、行高
+  // 字体尺寸、行高
 
-// 盒模型尺寸
-@chat-input-textarea-max-height: 134px;
-@chat-input-textarea-scrollbar-width: 4px;
-@chat-input-textarea-scrollbar-thumb-radius: 2px;
-@chat-input-radius: 16px;
+  // 颜色
+  --chat-input-content-default-border: #dcdcdc;
+  --chat-input-textarea-scrollbar-color: #e7e7e7;
+  --chat-input-textarea-scrollbar-hover-color: #c8c8c8;
+  --chat-input-button-default-bg: #dcdcdc;
+  --chat-input-button-default-color: #fff;
 
-@chat-item-gap: 38px;
-@chat-item-avatar-padding-top: 6px;
-@chat-item-think-margin-bottom: 12px;
-@chat-item-think-padding-tb: 8px;
-@chat-item-think-padding-lr: 12px;
-@chat-item-think-radius: 6px;
-@chat-item-think-content-margin-top: 12px;
+  --chat-item-primary-bg: @bg-color-secondarycontainer;
+  --chat-item-default-bg: #fff;
+  --chat-item-think-bg: @bg-color-secondarycontainer;
+  --chat-item-think-content-color: #929292;
+}
