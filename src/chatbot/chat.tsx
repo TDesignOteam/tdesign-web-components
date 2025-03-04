@@ -40,13 +40,16 @@ export default class Chatbot extends Component<TdChatProps> {
 
   provide = {
     messageStore: {},
+    modelStore: {},
   };
 
   install(): void {
     this.chatService = new ChatService(this.props.modelConfig, this.props.data);
-    this.provide.messageStore = this.chatService.messageStore;
+    const { messageStore, modelStore } = this.chatService;
+    this.provide.messageStore = messageStore;
+    this.provide.modelStore = modelStore;
     this.subscribeToChat();
-    this.messages = this.convertMessages(this.chatService.messageStore.getState());
+    this.messages = this.convertMessages(messageStore.getState());
   }
 
   uninstall() {

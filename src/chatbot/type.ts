@@ -1,5 +1,5 @@
 import type { StyledProps, TNode } from '../common';
-import type { LLMConfig } from './core/type';
+import type { ModelServiceState } from './core/type';
 import { Message } from './core/type';
 
 export interface TdChatItemProps extends Message {
@@ -73,7 +73,7 @@ interface ChatProps {
   actions?: boolean | TNode;
   // 流式数据加载中
   isStreamLoad?: boolean;
-  modelConfig: LLMConfig;
+  modelConfig: ModelServiceState;
   onClear?: (context: { e: MouseEvent }) => void;
 }
 

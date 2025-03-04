@@ -4,32 +4,30 @@ import ReactiveState from './reactiveState';
 // 专注模型状态和运行时管理
 export class ModelStore extends ReactiveState<ModelServiceState> {
   constructor(initialState?: Partial<ModelServiceState>) {
-    super({
-      name: 'hunyuan',
-      isLoading: false,
-      error: null,
-      config: {
-        stream: true,
+    super(
+      initialState || {
+        useSearch: false,
+        useThink: false,
+        model: '',
       },
-      ...initialState,
-    });
+    );
   }
 
   setCurrentModel(modelName: string) {
     this.setState((draft) => {
-      draft.name = modelName;
+      draft.model = modelName;
     });
   }
 
-  setIsLoading(loading: boolean) {
+  setUseThink(use: boolean) {
     this.setState((draft) => {
-      draft.isLoading = loading;
+      draft.useThink = use;
     });
   }
 
-  setError(error: string | Error | null) {
+  setUseSearch(use: boolean) {
     this.setState((draft) => {
-      draft.error = error;
+      draft.useSearch = use;
     });
   }
 }

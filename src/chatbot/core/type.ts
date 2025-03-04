@@ -82,7 +82,7 @@ export interface Attachment {
 }
 
 // 消息主体
-export interface Message extends ChunkParserResult {
+export interface Message extends ChunkParsedResult {
   id: string;
   role: MessageRole;
   status: MessageStatus;
@@ -91,23 +91,21 @@ export interface Message extends ChunkParserResult {
 }
 
 // 服务配置
-export interface ChunkParserResult {
+export interface ChunkParsedResult {
   main?: MessageContent;
   search?: SearchResult;
   thinking?: ThinkingContent;
 }
 
-export interface ChunkParser {
-  parse(chunk: any): ChunkParserResult;
+export interface RequestParams extends ModelParams {
+  prompt: string;
 }
 
 export interface LLMConfig {
-  name?: string;
-  endpoint?: string;
-  headers?: Record<string, string>;
+  endpoint: string;
   stream?: boolean;
-  supportedContentTypes?: ContentType[];
-  parser?: ChunkParser; // 解析器配置
+  parseRequest?: (params: RequestParams) => RequestInit;
+  parseResponse?: (chunk: any) => ChunkParsedResult;
 }
 
 // 消息相关状态
@@ -117,12 +115,14 @@ export interface MessageState {
 }
 
 // 模型服务相关状态
-export interface ModelServiceState {
-  name: string;
-  isLoading: boolean;
-  error: string | Error | null;
+export interface ModelParams {
+  model?: string;
+  useThink?: boolean;
+  useSearch?: boolean;
+}
+
+export interface ModelServiceState extends ModelParams {
   config: LLMConfig;
-  // availableModels: string[];
 }
 
 // 聚合根状态

@@ -7,6 +7,7 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
+import { ModelServiceState } from '../core/type';
 import styles from '../style/chat-input.less?inline';
 import type { TdChatInputProps } from '../type';
 
@@ -37,10 +38,32 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
   shiftDown = false;
 
+  inject = ['modelStore'];
+
+  private llmParams: ModelServiceState;
+
+  private unsubscribe;
+
   install() {
     const { value } = this.props;
 
     this.pValue.value = value;
+
+    // 订阅模型状态的更新
+    this.unsubscribe = this.injection?.modelStore?.subscribe(
+      (state) => {
+        this.llmParams = {
+          ...this.llmParams,
+          ...state,
+        };
+        this.update();
+      },
+      ['model', 'useThink'],
+    );
+  }
+
+  uninstall() {
+    this.unsubscribe?.();
   }
 
   get inputValue() {

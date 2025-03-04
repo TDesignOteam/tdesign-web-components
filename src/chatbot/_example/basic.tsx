@@ -2,7 +2,7 @@ import 'tdesign-web-components/chatbot';
 
 import { Component } from 'omi';
 
-import type { ChunkParser, ContentType, LLMConfig, ReferenceItem } from '../core/type';
+import type { ContentType, ModelServiceState, ReferenceItem } from '../core/type';
 
 const mockData = [
   {
@@ -23,29 +23,27 @@ const mockData = [
     role: 'assistant',
     thinking: {
       type: 'text',
-      title: '思考中...',
-      status: 'pending',
+      title: '思考完成',
+      status: 'sent',
       content:
         'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
     },
   },
 ];
 
-const defaultChunkParser: ChunkParser = {
-  parse: (chunk) => {
-    try {
-      const data = typeof chunk === 'string' ? tryParseJson(chunk) : chunk;
-      return handleStructuredData(data);
-    } catch (err) {
-      console.error('Parsing error:', err);
-      return {
-        main: {
-          type: 'text' as ContentType,
-          content: 'Error parsing response',
-        },
-      };
-    }
-  },
+const defaultChunkParser = (chunk) => {
+  try {
+    const data = typeof chunk === 'string' ? tryParseJson(chunk) : chunk;
+    return handleStructuredData(data);
+  } catch (err) {
+    console.error('Parsing error:', err);
+    return {
+      main: {
+        type: 'text' as ContentType,
+        content: 'Error parsing response',
+      },
+    };
+  }
 };
 
 function tryParseJson(str: string) {
@@ -117,14 +115,27 @@ function handleStructuredData(data: unknown): ReturnType<any> {
   }
 }
 
-const mockModels: LLMConfig = {
-  name: 'deepseek',
-  endpoint: '/mock-api',
-  stream: true,
-  headers: {
-    'X-Mock-Key': 'test123',
+const mockModels: ModelServiceState = {
+  model: 'hunyuan',
+  useThink: true,
+  useSearch: false,
+  config: {
+    endpoint: '/mock-api',
+    stream: true,
+    parseResponse: defaultChunkParser,
+    parseRequest: (params) => {
+      const { prompt, ...rest } = params;
+      return {
+        headers: {
+          'X-Mock-Key': 'test123',
+        },
+        body: JSON.stringify({
+          msg: prompt,
+          ...rest,
+        }),
+      };
+    },
   },
-  parser: defaultChunkParser,
 };
 
 export default class BasicChat extends Component {

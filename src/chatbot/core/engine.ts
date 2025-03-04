@@ -1,5 +1,5 @@
 import { SSEResponse } from '../mock/sseService';
-import type { ChunkParserResult, LLMConfig, Message } from './type';
+import type { ChunkParsedResult, LLMConfig, Message, RequestParams } from './type';
 
 export class ChatEngine {
   constructor(private config: LLMConfig) {
@@ -12,7 +12,7 @@ export class ChatEngine {
     }
 
     return {
-      id: `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`,
+      id: this.generateID(),
       role: 'user',
       status: 'sent',
       timestamp: `${Date.now()}`,
@@ -23,14 +23,15 @@ export class ChatEngine {
   public createAssistantMessage(): Message {
     // 创建初始助手消息
     return {
-      id: `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`,
+      id: this.generateID(),
       role: 'assistant',
       status: 'pending',
       timestamp: `${Date.now()}`,
-      // thinking: {
-      //   status: 'pending',
-      // },
     };
+  }
+
+  private generateID() {
+    return `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
   }
 
   private createAttachments(files: File[]) {
@@ -45,18 +46,16 @@ export class ChatEngine {
     }));
   }
 
-  public async handleBatchResponse(content: string, config?: LLMConfig) {
-    const response = await this.fetchLLMResponse(content, {
-      ...this.config,
-      ...config,
-    });
+  public async handleBatchResponse(params: RequestParams) {
+    const response = await this.fetchLLMResponse(params);
     const parsed = this.parseChunk(response);
     console.log('===parsed', parsed);
     // this.messageStore.setMessageStatus(messageId, 'sent');
   }
 
-  public async *handleStreamResponse(content: string) {
-    console.log('===handleStreamResponse content', content);
+  public async *handleStreamResponse(params: RequestParams) {
+    // const llmResponse = await this.fetchLLMResponse(params);
+    console.log('===handleStreamResponse content', params);
     const mockSSEResponse = new SSEResponse();
     const response = await mockSSEResponse.getResponse();
     const reader = response.body?.getReader();
@@ -74,9 +73,9 @@ export class ChatEngine {
     }
   }
 
-  private processStreamChunk(chunk: string): ChunkParserResult {
+  private processStreamChunk(chunk: string): ChunkParsedResult {
     const parsed = this.parseChunk(chunk);
-    console.log('===parsed content', parsed);
+    // console.log('===parsed content', parsed);
     // 处理搜索阶段
     if (parsed.search) {
       return {
@@ -115,21 +114,19 @@ export class ChatEngine {
     }
   }
 
-  private parseChunk(data: any): ChunkParserResult {
-    return this.config?.parser?.parse(data);
+  private parseChunk(data: any): ChunkParsedResult {
+    return this.config?.parseResponse?.(data);
   }
 
-  private async fetchLLMResponse(content: string, config: LLMConfig) {
-    const response = await fetch(config.endpoint, {
+  private async fetchLLMResponse(params: RequestParams) {
+    const req = this.config?.parseRequest?.(params);
+    const response = await fetch(this.config.endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        ...config.headers,
+        ...req?.headers,
       },
-      body: JSON.stringify({
-        message: content,
-        stream: false,
-      }),
+      body: req?.body,
     });
 
     if (!response.ok) {
