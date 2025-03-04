@@ -23,9 +23,23 @@ export default class Chatlist extends Component<TdChatListProps> {
     console.log('====list render', items);
     return (
       <div ref={this.listRef} className={`${className}__list`} onScroll={this.handleScroll}>
-        {items.map((item) => (
-          <t-chat-item {...item} key={item.id} />
-        ))}
+        {items.map((item) => {
+          // TODO: 看拿到哪里
+          const { role } = item;
+          const roleProps =
+            role === 'user'
+              ? {
+                  theme: 'primary',
+                  variant: 'base',
+                  placement: 'right',
+                }
+              : {
+                  theme: 'default',
+                  variant: 'base',
+                  placements: 'left',
+                };
+          return <t-chat-item {...roleProps} {...item} key={item.id} />;
+        })}
       </div>
     );
   }

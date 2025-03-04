@@ -32,7 +32,7 @@ export interface TdChatItemProps extends Message {
    */
   textLoading?: boolean;
   /**
-   * 消息样式， 是否有边框，背景色等
+   * 消息样式，是否有边框，背景色等
    */
   variant?: Variant;
   /**
@@ -45,6 +45,10 @@ export interface TdChatItemProps extends Message {
   animation?: string;
   // 消息索引
   itemIndex?: Number;
+  /** 组件风格 */
+  theme?: 'default' | 'primary';
+  /** 气泡方向 */
+  placement?: 'left' | 'right';
 }
 interface ChatProps {
   /**

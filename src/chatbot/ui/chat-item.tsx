@@ -8,7 +8,7 @@ import classname, { getClassPrefix } from '../../_util/classname';
 import styles from '../style/chat-item.less?inline';
 import type { TdChatItemProps } from '../type';
 
-const className = `${getClassPrefix()}-chat`;
+const className = `${getClassPrefix()}-chat__item`;
 @tag('t-chat-item')
 export default class ChatItem extends Component<TdChatItemProps> {
   static css = [styles];
@@ -22,6 +22,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
     role: String,
     textLoading: Boolean,
     variant: String,
+  };
+
+  static defaultProps = {
+    variant: 'base',
+    theme: 'default',
+    placement: 'left',
   };
 
   inject = ['messageStore'];
@@ -87,42 +93,48 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { textLoading, role, variant } = props;
+    const { textLoading, role, variant, theme, placement } = props;
     console.log('===item render', this.messageId);
 
     const baseClass = `${className}__inner`;
     const roleClass = role;
-    const variantClass = variant ? `${className}__text--variant--${variant}` : '';
+    const variantClass = variant ? `${className}--variant--${variant}` : '';
+    const themeClass = theme ? `${className}--theme--${theme}` : '';
+    const placementClass = placement;
 
     return (
-      <div className={classname(baseClass, roleClass, variantClass)}>
+      <div className={classname(baseClass, roleClass, variantClass, themeClass, placementClass)}>
         {this.renderAvatar()}
-        <div class={classname(`${className}__content`, `${className}__content--base`)}>
-          <div class={`${className}__base`}>
-            <slot name="intro"></slot>
-          </div>
-
-          {/* TODO: 骨架屏加载 */}
-          {/* {textLoading && <t-skeleton loading={textLoading} animation={'gradient'}></t-skeleton>} */}
-          {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
-          {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
-          {/* TODO: 样式 */}
-          {this.message?.thinking?.content && (
-            <div className={`${className}__think`}>{this.message.thinking.content}</div>
-          )}
-          {this.message?.search?.content && <div className={`${className}__search`}>{this.message.search.content}</div>}
-          {!textLoading && this.message?.main?.content && (
-            <div className={`${className}__detail`}>
-              {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
-              {this.message.main.type === 'markdown' ? (
-                <div className="markdown-body" innerHTML={ChatItem.md.render(this.message.main.content)}></div>
-              ) : (
-                <div className="maintext-body">{this.message.main.content}</div>
-              )}
+        <div class={`${className}__main`}>
+          <div class={classname(`${className}__content`, `${className}__content--base`)}>
+            <div class={`${className}__base`}>
+              <slot name="intro"></slot>
             </div>
-          )}
-          <div className={`${className}__actions-margin`}>
-            <slot name="actions"></slot>
+
+            {/* TODO: 骨架屏加载 */}
+            {/* {textLoading && <t-skeleton loading={textLoading} animation={'gradient'}></t-skeleton>} */}
+            {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
+            {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
+            {/* TODO: 样式 */}
+            {this.message?.thinking?.content && (
+              <div className={`${className}__think`}>{this.message.thinking.content}</div>
+            )}
+            {this.message?.search?.content && (
+              <div className={`${className}__search`}>{this.message.search.content}</div>
+            )}
+            {!textLoading && this.message?.main?.content && (
+              <div className={`${className}__detail`}>
+                {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
+                {this.message.main.type === 'markdown' ? (
+                  <div className="markdown-body" innerHTML={ChatItem.md.render(this.message.main.content)}></div>
+                ) : (
+                  <div className="maintext-body">{this.message.main.content}</div>
+                )}
+              </div>
+            )}
+            <div className={`${className}__actions-margin`}>
+              <slot name="actions"></slot>
+            </div>
           </div>
         </div>
       </div>
