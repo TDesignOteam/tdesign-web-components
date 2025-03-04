@@ -92,7 +92,7 @@ export class ChatEngine {
           status: 'sent',
         },
         thinking: {
-          title: '思考中...',
+          title: parsed.thinking?.title || '思考中...',
           status: 'streaming',
           content: parsed.thinking.content,
         },
@@ -102,7 +102,7 @@ export class ChatEngine {
     if (parsed.main && (parsed.main.type === 'text' || parsed.main.type === 'markdown')) {
       return {
         thinking: {
-          title: '思考完成',
+          title: parsed?.thinking?.title || '思考完成',
           status: 'sent',
         },
         main: {
