@@ -9,7 +9,13 @@ globalCSS(css`
   ${styles}
 `);
 
-const md = markdownIt({ html: true, breaks: true });
+const md = markdownIt({
+  html: true, // 允许HTML标签
+  breaks: true, // 自动换行
+  linkify: true, // 自动转换链接
+  typographer: true, // 排版优化
+});
+
 const baseClass = `${getClassPrefix()}-chat__text`;
 
 @tag('t-chat-content')
@@ -24,13 +30,13 @@ export default class ChatContent extends Component<TdChatContentProps> {
   getTextInfo() {
     const { content, role } = this.props;
     if (role === 'user') {
-      return escape(content || '');
+      return content;
     }
     return this.parseMarkdown(content);
   }
 
   parseMarkdown(markdown: string) {
-    if (!markdown) return '<div class="waiting"></div>';
+    if (!markdown) return '<div class="waiting">...</div>';
     return md.render(markdown);
   }
 
@@ -41,12 +47,10 @@ export default class ChatContent extends Component<TdChatContentProps> {
     return (
       <div className={`${baseClass}`}>
         {role === 'user' ? (
-          <div className={`${baseClass}__user`}>
-            <pre>{textContent}</pre>
-          </div>
+          <div className={`${baseClass}__user`}>{textContent}</div>
         ) : (
           <div className={`${baseClass}__assistant`}>
-            <div className={`${baseClass}__content ${roleClass}`}>{textContent}</div>
+            <div className={`${baseClass}__content ${roleClass}`} innerHTML={textContent}></div>
           </div>
         )}
       </div>

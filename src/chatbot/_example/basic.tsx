@@ -9,6 +9,7 @@ const mockData = [
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     id: '123',
     main: {
+      type: 'text',
       content: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
     },
     role: 'assistant',
@@ -17,6 +18,7 @@ const mockData = [
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     id: '223',
     main: {
+      type: 'text',
       content: '南极的自动提款机叫什么名字？',
     },
     role: 'user',

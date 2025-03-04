@@ -1,7 +1,7 @@
 import { SSEResponse } from '../mock/sseService';
 import { MessageStore } from './store/message';
 import { ModelStore } from './store/model';
-import type { ChunkParserResult,LLMConfig } from './type';
+import type { ChunkParserResult, LLMConfig } from './type';
 
 export class ChatEngine {
   private config: LLMConfig;
@@ -49,7 +49,7 @@ export class ChatEngine {
       thinking: {
         title: '思考中...',
         type: 'text',
-        content: '好的，现在开始分析，，，',
+        content: '',
         status: 'pending',
       },
     });

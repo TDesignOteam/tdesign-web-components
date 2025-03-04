@@ -1,7 +1,6 @@
 import './chat-content';
 
 import { isString } from 'lodash-es';
-import MarkdownIt from 'markdown-it';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
@@ -31,13 +30,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private messageId!: string;
 
   private message: TdChatItemProps;
-
-  static md = new MarkdownIt({
-    html: true, // 允许HTML标签
-    breaks: true, // 自动换行
-    linkify: true, // 自动转换链接
-    typographer: true, // 排版优化
-  });
 
   install() {
     this.messageId = this.props.id!;
@@ -114,11 +106,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
           {!textLoading && this.message?.main?.content && (
             <div className={`${className}__detail`}>
               {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
-              {this.message.main.type === 'markdown' ? (
-                <div className="markdown-body" innerHTML={ChatItem.md.render(this.message.main.content)}></div>
-              ) : (
-                <div className="maintext-body">{this.message.main.content}</div>
-              )}
+              <t-chat-content content={this.message.main.content} role={role}></t-chat-content>
             </div>
           )}
           <div className={`${className}__actions-margin`}>
