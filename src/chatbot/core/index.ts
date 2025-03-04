@@ -1,32 +1,40 @@
 // chat-service.ts
 import { MessageStore } from './store/message';
-import { ModelStore } from './store/model';
+// import { ModelStore } from './store/model';
 import { ChatEngine } from './engine';
 import type { LLMConfig, Message } from './type';
 
 export default class ChatService {
   public readonly messageStore: MessageStore;
 
-  public readonly modelStore: ModelStore;
+  // public readonly modelStore: ModelStore;
 
   private engine: ChatEngine;
 
+  private config: LLMConfig;
+
   constructor(config: LLMConfig, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.modelStore = new ModelStore({
-      currentModel: config.name || '未知',
-      config,
-    });
-    this.engine = new ChatEngine(this.messageStore, this.modelStore);
+    // this.modelStore = new ModelStore(config);
+    this.config = config;
+    this.engine = new ChatEngine(config);
   }
 
-  public async sendMessage(input: string, files?: File[]) {
-    const messageId = this.messageStore.createMessage(this.createUserMessage(input, files));
-    await this.engine.processMessage({
-      messageId,
-      content: input,
-      files,
-    });
+  public async sendMessage(input: string, attachments?: File[]) {
+    const userMessage = this.engine.createUserMessage(input, attachments);
+    const aiMessage = this.engine.createAssistantMessage();
+    this.messageStore.createMultiMessages([userMessage, aiMessage]);
+
+    if (this.config.stream) {
+      // 处理sse流式响应模式
+      const stream = this.engine.handleStreamResponse(input);
+      for await (const chunk of stream) {
+        this.messageStore.appendContent(aiMessage.id, chunk);
+      }
+    } else {
+      // 处理批量响应模式
+      await this.engine.handleBatchResponse(input);
+    }
   }
 
   private convertMessages(messages?: Message[]) {
@@ -43,49 +51,4 @@ export default class ChatService {
       ),
     };
   }
-
-  private createUserMessage(content: string, files?: File[]): Omit<Message, 'id'> {
-    if (files && files.length > 0) {
-      this.createAttachments(files);
-    }
-
-    return {
-      role: 'user',
-      status: 'sent',
-      timestamp: `${Date.now()}`,
-      main: { type: 'text', status: 'sent', content },
-    };
-  }
-
-  private createAttachments(files: File[]) {
-    return files.map((file) => ({
-      type: 'file',
-      name: file.name,
-      url: URL.createObjectURL(file),
-      metadata: {
-        type: file.type,
-        size: file.size,
-      },
-    }));
-  }
 }
-
-// export function createMockChatService() {
-//   const service = new ChatService([
-//     {
-//       name: 'mock',
-//       endpoint: 'mock://api',
-//       stream: false,
-//     },
-//   ]);
-
-//   service.engine = new MockEngine({
-//     getState: () => service.getState(),
-//     models: [],
-//   });
-
-//   return service;
-// }
-
-// // @ts-ignore
-// window.mockChatService = createMockChatService();

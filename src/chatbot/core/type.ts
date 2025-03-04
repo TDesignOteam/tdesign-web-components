@@ -61,15 +61,15 @@ export interface ReferenceItem {
 }
 
 interface PhaseContent<T = string> {
-  title?: string;
   status: MessageStatus;
-  content: T;
+  title?: string;
+  content?: T;
 }
 
 // 搜索和思考
 export type SearchResult = PhaseContent<ReferenceItem[]>;
 export type ThinkingContent = PhaseContent<string> & {
-  type: 'text' | 'markdown';
+  type?: 'text' | 'markdown';
 };
 
 // 附件系统
@@ -82,27 +82,25 @@ export interface Attachment {
 }
 
 // 消息主体
-export interface Message {
+export interface Message extends ChunkParserResult {
   id: string;
   role: MessageRole;
   status: MessageStatus;
   timestamp?: string;
   main?: MessageContent;
-  search?: SearchResult;
-  thinking?: ThinkingContent;
-  attachments?: Attachment[];
 }
 
 // 服务配置
-
 export interface ChunkParserResult {
-  search?: { title?: string; content: ReferenceItem[] };
-  thinking?: { title?: string; content: string };
-  main?: { type: ContentType; content: string };
+  main?: MessageContent;
+  search?: SearchResult;
+  thinking?: ThinkingContent;
 }
+
 export interface ChunkParser {
   parse(chunk: any): ChunkParserResult;
 }
+
 export interface LLMConfig {
   name?: string;
   endpoint?: string;
@@ -120,7 +118,7 @@ export interface MessageState {
 
 // 模型服务相关状态
 export interface ModelServiceState {
-  currentModel: string;
+  name: string;
   isLoading: boolean;
   error: string | Error | null;
   config: LLMConfig;

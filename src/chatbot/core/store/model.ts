@@ -5,7 +5,7 @@ import ReactiveState from './reactiveState';
 export class ModelStore extends ReactiveState<ModelServiceState> {
   constructor(initialState?: Partial<ModelServiceState>) {
     super({
-      currentModel: 'hunyuan',
+      name: 'hunyuan',
       isLoading: false,
       error: null,
       config: {
@@ -17,7 +17,7 @@ export class ModelStore extends ReactiveState<ModelServiceState> {
 
   setCurrentModel(modelName: string) {
     this.setState((draft) => {
-      draft.currentModel = modelName;
+      draft.name = modelName;
     });
   }
 
