@@ -14,6 +14,10 @@ spline: base
 
 {{ input }}
 
+### markdown渲染
+
+{{ markdown }}
+
 ## API
 
 ### Chatbot Props

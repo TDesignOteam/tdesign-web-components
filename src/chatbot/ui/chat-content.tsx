@@ -35,6 +35,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
     return this.parseMarkdown(content);
   }
 
+  // TODO: 代码块、公式、表格、链接
   parseMarkdown(markdown: string) {
     if (!markdown) return '<div class="waiting">...</div>';
     return md.render(markdown);
@@ -50,7 +51,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
           <div className={`${baseClass}__user`}>{textContent}</div>
         ) : (
           <div className={`${baseClass}__assistant`}>
-            <div className={`${baseClass}__content ${roleClass}`} innerHTML={textContent}></div>
+            <div className={`${baseClass}__markdown ${roleClass}`} innerHTML={textContent}></div>
           </div>
         )}
       </div>

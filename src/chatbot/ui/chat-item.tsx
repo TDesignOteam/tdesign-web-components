@@ -21,6 +21,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     name: String,
     avatar: String,
     datetime: String,
+    main: Object,
     content: String,
     role: String,
     textLoading: Boolean,
@@ -45,7 +46,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     this.messageId = this.props.id!;
     this.message = this.props;
     // 订阅特定消息的更新
-    this.unsubscribe = this.injection.messageStore.subscribe(
+    this.unsubscribe = this.injection?.messageStore?.subscribe(
       (state) => {
         this.message = {
           ...this.message,
