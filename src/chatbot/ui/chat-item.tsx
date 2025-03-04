@@ -1,5 +1,7 @@
 import './chat-content';
 import '../../collapse';
+import 'tdesign-icons-web-components/esm/components/check-circle';
+import 'tdesign-icons-web-components/esm/components/close-circle';
 
 import { isString } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
@@ -86,19 +88,44 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  renderThinkingStatus() {
+    if (!this.message.thinking) {
+      return null;
+    }
+
+    if (this.message.thinking?.status === 'pending' || this.message.thinking?.status === 'streaming')
+      return <div class={`${className}__think__status--pending`} part={`${className}__think__status--pending`} />;
+    if (this.message.thinking?.status === 'sent')
+      return convertToLightDomNode(
+        <t-icon-check-circle class={`${className}__think__status--sent`} part={`${className}__think__status--sent`} />,
+      );
+    if (this.message.thinking?.status === 'error')
+      return convertToLightDomNode(
+        <t-icon-close-circle
+          class={`${className}__think__status--error`}
+          part={`${className}__think__status--error`}
+        />,
+      );
+    return null;
+  }
+
   renderThinking() {
     const { thinking } = this.message;
 
     if (!thinking?.content) {
       return null;
     }
-
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         {convertToLightDomNode(
           <t-collapse-panel
             className={`${className}__think__content`}
-            header={thinking.title || '思考中...'}
+            header={
+              <>
+                {this.renderThinkingStatus()}
+                {thinking.title || '思考中...'}
+              </>
+            }
             content={thinking.content}
           />,
         )}

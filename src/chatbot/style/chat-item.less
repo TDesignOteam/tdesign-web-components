@@ -135,6 +135,32 @@
       padding: 0;
       border: none;
     }
+    &::part(@{prefix}-collapse-panel__header-content) {
+      display: flex;
+      align-items: center;
+      gap: var(--chat-item-think-title-gap);
+    }
+    // status icon
+    &::part(@{prefix}-chat__item__think__status--pending) {
+      width: var(--chat-item-think-status-wh);
+      height: var(--chat-item-think-status-wh);
+      border-radius: calc(var(--chat-item-think-status-wh) / 2);
+      background: var(--chat-item-think-status-pending-color);
+      // 现在思维链更新时动画会被刷新，看怎么处理
+      animation: t-chat-item-think-pending 2s linear infinite;
+    }
+    &::part(@{prefix}-chat__item__think__status--sent) {
+      display: flex;
+      width: var(--chat-item-think-status-wh);
+      height: var(--chat-item-think-status-wh);
+      color: var(--chat-item-think-status-sent-color);
+    }
+    &::part(@{prefix}-chat__item__think__status--error) {
+      display: flex;
+      width: var(--chat-item-think-status-wh);
+      height: var(--chat-item-think-status-wh);
+      color: var(--chat-item-think-status-error-color);
+    }
 
     &::part(@{prefix}-collapse-panel__header-content) {
       font-weight: 400;

@@ -24,7 +24,7 @@ const mockData = [
     thinking: {
       type: 'text',
       title: '思考中...',
-      status: 'sent',
+      status: 'pending',
       content:
         'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
     },
