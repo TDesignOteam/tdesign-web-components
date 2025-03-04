@@ -92,7 +92,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (!this.message.thinking) {
       return null;
     }
-
     if (this.message.thinking?.status === 'pending' || this.message.thinking?.status === 'streaming')
       return <div class={`${className}__think__status--pending`} part={`${className}__think__status--pending`} />;
     if (this.message.thinking?.status === 'sent')
@@ -109,6 +108,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     return null;
   }
 
+  // 思维链
   renderThinking() {
     const { thinking } = this.message;
 

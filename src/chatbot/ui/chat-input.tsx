@@ -1,5 +1,5 @@
 import 'tdesign-icons-web-components/esm/components/send';
-import 'tdesign-icons-web-components/esm/components/stop-circle';
+import 'tdesign-icons-web-components/esm/components/stop';
 import '../../textarea';
 import '../../button';
 
@@ -22,6 +22,13 @@ export default class ChatInput extends Component<TdChatInputProps> {
     autofocus: Boolean,
     autosize: [Boolean, Object],
     value: String,
+    pending: Boolean,
+    allowStop: Boolean,
+  };
+
+  static defaultProps = {
+    pending: false,
+    allowStop: true,
   };
 
   pValue: Omi.SignalValue<string | number> = signal('');
@@ -41,23 +48,34 @@ export default class ChatInput extends Component<TdChatInputProps> {
     return this.pValue.value;
   }
 
-  renderSender = () => (
-    <t-button
-      theme="default"
-      size="small"
-      variant="text"
-      className={classname([
-        `${className}__button`,
-        {
-          [`${className}__button--focus`]: this.inputValue,
-        },
-      ])}
-      onClick={this.handleSend}
-      disabled={this.props.disabled}
-    >
-      {convertToLightDomNode(<t-icon-send className={`${className}__button__icon`} />)}
-    </t-button>
-  );
+  renderButton = () => {
+    const { pending, allowStop, disabled } = this.props;
+    const hasStop = allowStop && pending;
+
+    return (
+      <t-button
+        theme="default"
+        size="small"
+        variant="text"
+        className={classname([
+          `${className}__button`,
+          {
+            [`${className}__button--focus`]: this.inputValue || hasStop,
+          },
+        ])}
+        onClick={hasStop ? this.handleStop : this.handleSend}
+        disabled={disabled}
+      >
+        {convertToLightDomNode(
+          hasStop ? (
+            <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
+          ) : (
+            <t-icon-send className={`${className}__button__icon`} />
+          ),
+        )}
+      </t-button>
+    );
+  };
 
   render(props: any) {
     return (
@@ -81,13 +99,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
           <div className={`${className}__actions`}>
             {/* TODO: 功能实现 */}
             <div className={`${className}__model`}>模型功能区</div>
-            {this.renderSender()}
-            {/* TODO: 控制逻辑 */}
-            {props.stopDisabled && (
-              <t-button onClick={this.handleStop}>
-                {convertToLightDomNode(<t-icon-send className={`${className}__button__icon`} />)}
-              </t-button>
-            )}
+            {this.renderButton()}
           </div>
         </div>
       </div>
@@ -129,6 +141,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
   };
 
   private handleStop = () => {
-    this.fire('stop');
+    if (this.props.allowStop) {
+      this.fire('stop');
+    }
   };
 }
