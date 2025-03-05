@@ -26,36 +26,29 @@ app.post('/sse/normal', (req, res) => {
   setSSEHeaders(res);
 
   // 将chunks转换为SSE格式消息
-  const messages = chunks
-    .map((chunk) => {
-      switch (chunk.type) {
-        case 'text':
-          return `event: message\ndata: ${JSON.stringify({
-            type: 'text',
-            msg: chunk.msg,
-          })}\n\n`;
+  const messages = chunks.map((chunk) => {
+    switch (chunk.type) {
+      case 'text':
+        return `event: message\ndata: ${JSON.stringify({
+          type: 'text',
+          msg: chunk.msg,
+        })}\n\n`;
 
-        case 'search':
-          return `event: message\ndata: ${JSON.stringify({
-            type: 'search',
-            title: chunk.title,
-            content: chunk.content || [],
-          })}\n\n`;
+      case 'search':
+        return `event: message\ndata: ${JSON.stringify({
+          type: 'search',
+          title: chunk.title,
+          content: chunk.content || [],
+        })}\n\n`;
 
-        case 'think':
-          return `event: message\ndata: ${JSON.stringify({
-            type: 'think',
-            title: chunk.title,
-            content: chunk.content,
-          })}\n\n`;
-      }
-    })
-    .concat(
-      `event: complete\ndata: ${JSON.stringify({
-        query: req.body.query,
-        citations: [],
-      })}\n\n`,
-    );
+      case 'think':
+        return `event: message\ndata: ${JSON.stringify({
+          type: 'think',
+          title: chunk.title,
+          content: chunk.content,
+        })}\n\n`;
+    }
+  });
 
   sendStream(res, messages, 200, req);
 });

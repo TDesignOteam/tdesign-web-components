@@ -66,7 +66,6 @@ export class ChatEngine {
 
     // 直接通过生成器返回数据
     for await (const data of sseClient.connect(req)) {
-      console.log('=====stream data', data);
       yield this.processStreamChunk(data);
     }
   }

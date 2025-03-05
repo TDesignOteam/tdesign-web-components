@@ -56,7 +56,6 @@ function handleStructuredData(chunk: SSEChunkData): ReturnType<any> {
   }
 
   const { type, ...rest } = chunk.data;
-  console.log('====client handleStructuredData', chunk.data);
   switch (type) {
     case 'search':
       return {
@@ -88,7 +87,7 @@ function handleStructuredData(chunk: SSEChunkData): ReturnType<any> {
       return {
         main: {
           type: 'text',
-          content: JSON.stringify(chunk.data),
+          content: chunk?.event === 'complete' ? '' : JSON.stringify(chunk.data),
         },
       };
   }
