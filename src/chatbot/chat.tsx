@@ -6,9 +6,10 @@ import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import type { MessageState } from './core/type';
-import styles from './style/chat.less?inline';
 import ChatService from './core';
 import type { TdChatListProps, TdChatProps } from './type';
+
+import styles from './style/chat.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chatbot')

@@ -1,5 +1,3 @@
-**参考**
-
 # Markdown功能测试 (H1标题)
 
 ## 基础语法测试 (H2标题)
@@ -21,10 +19,29 @@ _斜体文字_
 ### 代码块测试
 
 ```javascript
+// JavaScript 代码块
+const express = require('express')
+const app = express()
+const port = 3000
+
+app.get('/', (req, res) => {
+  res.send('Hello World')
+})
+
+app.listen(port, () => {
+  console.log(`http://localhost:${port}`)
+})
+
 function greet(name) {
   console.log(`Hello, ${name}!`);
 }
 greet('Markdown');
+```
+
+```python
+# Python 代码块
+def hello():
+    print("Markdown 示例")
 ```
 
 ### 列表测试

@@ -1,4 +1,6 @@
 @import "./import.less";
+// 代码高亮风格
+@import 'highlight.js/styles/atom-one-light.min.css';
 
 .@{prefix}-chat {
   // 消息样式
@@ -17,11 +19,6 @@
     }
 
     &__assistant {
-    }
-
-    & &__assistant &__content .hljs {
-      background-color: @code-bg-color-page;
-      border-radius: @border-radius-large;
     }
 
     &__markdown {
@@ -88,6 +85,39 @@
         }
       }
 
+      &__code {
+        position: relative;
+        margin: var(--t-chat-md-code-margin);
+        border-radius: var(--t-chat-md-code-radius);
+        overflow: hidden;
+
+        &__header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          height: var(--t-chat-md-code-header-height);
+          padding: var(--t-chat-md-code-header-padding);
+          background: var(--t-chat-md-code-header-bg);
+
+          &__lang {
+            font: var(--t-chat-md-code-header-font);
+          }
+
+          &__copy {
+            cursor: pointer;
+          }
+        }
+
+        &__body {
+          padding: var(--t-chat-md-code-body-padding);
+          background-color: var(--t-chat-md-code-body-bg);
+
+          code {
+            font-size: var(--t-chat-md-code-body-code-font-size);
+          }
+        }
+      }
+
       .katex-block {
         margin: var(--t-chat-md-katex-block-margin);
       }
@@ -121,7 +151,7 @@
         background: none;
       }
 
-      &__table--wrapper {
+      &__table__wrapper {
         overflow-x: auto;
         white-space: nowrap;
         border: var(--t-chat-md-table-border);
@@ -160,16 +190,5 @@
         background-color: var(--t-chat-md-table-td-bg-even);
       }
     }
-  }
-
-  &__code-header {
-    display: flex;
-    padding: 0 @pop-padding-xl;
-    padding-top: @pop-padding-xl;
-    justify-content: space-between;
-  }
-
-  &__language-txt {
-    color: @code-font-color-base;
   }
 }
