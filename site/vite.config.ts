@@ -3,6 +3,7 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
 import tdocPlugin from '../script/plugin-tdoc';
+import addPartAttributePlugin from './vite-plugin-add-part';
 
 const publicPathMap = {
   preview: '/',
@@ -18,9 +19,9 @@ export default ({ mode }) => {
   return defineConfig({
     base: publicPathMap[mode] || './',
     esbuild: {
-      jsxFactory: 'h',
-      jsxFragment: 'h.f',
-      jsxInject: `import { h } from 'omi'`,
+      jsxFactory: 'OmiComponent.h',
+      jsxFragment: 'OmiComponent.f',
+      jsxInject: `import { Component as OmiComponent  } from 'omi'`,
     },
     resolve: {
       alias: {
@@ -49,7 +50,12 @@ export default ({ mode }) => {
         },
       },
     },
-    plugins: [tdocPlugin()],
+    plugins: [
+      addPartAttributePlugin({
+        include: /\.(js|jsx|ts|tsx)$/,
+      }),
+      tdocPlugin(),
+    ],
     logLevel: 'error',
   });
 };
