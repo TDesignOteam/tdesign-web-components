@@ -109,6 +109,7 @@
 // }
 
 export class SSEResponse {
+  constructor(private isErrorScenario = false) {}
   private chunks = [
     { type: 'search', title: '开始获取资料…' },
     { type: 'search', title: '找到 12 篇相关资料...', content: [] },
@@ -172,18 +173,36 @@ export class SSEResponse {
   }
 
   async getResponse(): Promise<Response> {
+    if (this.isErrorScenario) {
+      return new Response(null, {
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+    }
+
     return new Response(
       new ReadableStream({
         start: async (controller) => {
-          //@ts-ignore
           for (const chunk of this.chunks) {
             controller.enqueue(this.formatChunk(chunk));
-            await this.delay(100);
+            await this.delay(100); // 模拟网络延迟
           }
           controller.close();
         },
       }),
+      {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      },
     );
+  }
+
+  // 添加错误测试用例
+  static createResponse(isErr: boolean) {
+    return new SSEResponse(isErr);
   }
 
   private formatChunk(data: any): Uint8Array {

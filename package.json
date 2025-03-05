@@ -131,6 +131,8 @@
     "vite": "^4.4.5",
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-tdoc": "^2.0.4",
-    "workbox-precaching": "^7.1.0"
+    "workbox-precaching": "^7.1.0",
+    "express": "^4.17.3",
+    "cors":"^2.8.5"
   }
 }

@@ -1,12 +1,12 @@
-import { SSEResponse } from '../mock/sseService';
-import type { ChunkParsedResult, LLMConfig, Message, RequestParams } from './type';
+import SSEClient from './sseClient';
+import type { Attachment, ChunkParsedResult, LLMConfig, Message, RequestParams, SSEChunkData } from './type';
 
 export class ChatEngine {
   constructor(private config: LLMConfig) {
     // 构造函数参数属性初始化
   }
 
-  public createUserMessage(content: string, files?: File[]): Message {
+  public createUserMessage(content: string, files?: Attachment[]): Message {
     if (files && files.length > 0) {
       this.createAttachments(files);
     }
@@ -34,48 +34,46 @@ export class ChatEngine {
     return `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
   }
 
-  private createAttachments(files: File[]) {
+  private createAttachments(files: Attachment[]) {
     return files.map((file) => ({
-      type: 'file',
-      name: file.name,
-      url: URL.createObjectURL(file),
-      metadata: {
-        type: file.type,
-        size: file.size,
-      },
+      ...file,
     }));
   }
 
-  public async handleBatchResponse(params: RequestParams) {
+  public async handleBatchResponse(params: RequestParams): Promise<ChunkParsedResult> {
     const response = await this.fetchLLMResponse(params);
-    const parsed = this.parseChunk(response);
+    const parsed = this.config?.parseResponse?.(response);
     console.log('===parsed', parsed);
+    return parsed;
     // this.messageStore.setMessageStatus(messageId, 'sent');
   }
 
   public async *handleStreamResponse(params: RequestParams) {
-    // const llmResponse = await this.fetchLLMResponse(params);
-    console.log('===handleStreamResponse content', params);
-    const mockSSEResponse = new SSEResponse();
-    const response = await mockSSEResponse.getResponse();
-    const reader = response.body?.getReader();
-    const decoder = new TextDecoder();
+    const req = this.config?.parseRequest?.(params);
+    console.log('=====req', { ...req }, this.config.endpoint);
+    const sseClient = new SSEClient(this.config.endpoint, {
+      // onMessage: (data) => {
+      //   console.log('=====onMessage', data);
+      //   return this.processStreamChunk(data);
+      // },
+      onError: (error) => {
+        console.error('SSE连接错误:', error);
+      },
+      onComplete: () => {
+        console.log('SSE连接关闭');
+      },
+    });
 
-    if (!reader) return;
-
-    while (true) {
-      // eslint-disable-next-line no-await-in-loop
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      const chunk = decoder.decode(value);
-      yield this.processStreamChunk(chunk);
+    // 直接通过生成器返回数据
+    for await (const data of sseClient.connect(req)) {
+      console.log('=====stream data', data);
+      yield this.processStreamChunk(data);
     }
   }
 
-  private processStreamChunk(chunk: string): ChunkParsedResult {
-    const parsed = this.parseChunk(chunk);
-    // console.log('===parsed content', parsed);
+  private processStreamChunk(chunk: SSEChunkData): ChunkParsedResult {
+    const parsed = this.config?.parseResponse?.(chunk);
+    console.log('===parsed content', parsed);
     // 处理搜索阶段
     if (parsed.search) {
       return {
@@ -114,10 +112,6 @@ export class ChatEngine {
     }
   }
 
-  private parseChunk(data: any): ChunkParsedResult {
-    return this.config?.parseResponse?.(data);
-  }
-
   private async fetchLLMResponse(params: RequestParams) {
     const req = this.config?.parseRequest?.(params);
     const response = await fetch(this.config.endpoint, {
@@ -126,7 +120,7 @@ export class ChatEngine {
         'Content-Type': 'application/json',
         ...req?.headers,
       },
-      body: req?.body,
+      body: JSON.stringify(req?.body),
     });
 
     if (!response.ok) {

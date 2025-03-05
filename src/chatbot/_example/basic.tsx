@@ -2,7 +2,7 @@ import 'tdesign-web-components/chatbot';
 
 import { Component } from 'omi';
 
-import type { ContentType, ModelServiceState, ReferenceItem } from '../core/type';
+import type { ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
 const mockData = [
   {
@@ -33,8 +33,7 @@ const mockData = [
 
 const defaultChunkParser = (chunk) => {
   try {
-    const data = typeof chunk === 'string' ? tryParseJson(chunk) : chunk;
-    return handleStructuredData(data);
+    return handleStructuredData(chunk);
   } catch (err) {
     console.error('Parsing error:', err);
     return {
@@ -46,37 +45,18 @@ const defaultChunkParser = (chunk) => {
   }
 };
 
-function tryParseJson(str: string) {
-  // 清洗SSE格式数据
-  const cleanedStr = str
-    .replace(/^data:\s*/, '') // 去除SSE前缀
-    .replace(/\n\n$/, ''); // 去除结尾换行
-
-  try {
-    return JSON.parse(cleanedStr);
-  } catch {
-    // 包含多层data:前缀的特殊情况处理
-    const deepCleaned = cleanedStr.replace(/(\bdata:\s*)+/g, '');
-    try {
-      return JSON.parse(deepCleaned);
-    } catch {
-      return { type: 'text', msg: deepCleaned };
-    }
-  }
-}
-
-function handleStructuredData(data: unknown): ReturnType<any> {
-  if (!data || typeof data !== 'object') {
+function handleStructuredData(chunk: SSEChunkData): ReturnType<any> {
+  if (!chunk?.data || typeof chunk === 'string') {
     return {
       main: {
         type: 'text',
-        content: String(data),
+        content: chunk,
       },
     };
   }
 
-  const { type, ...rest } = data as Record<string, unknown>;
-
+  const { type, ...rest } = chunk.data;
+  console.log('====client handleStructuredData', chunk.data);
   switch (type) {
     case 'search':
       return {
@@ -96,11 +76,10 @@ function handleStructuredData(data: unknown): ReturnType<any> {
       };
 
     case 'text': {
-      const content = 'msg' in data ? (data as any).msg : JSON.stringify(data);
       return {
         main: {
           type: 'markdown',
-          content: content || '',
+          content: rest?.msg || '',
         },
       };
     }
@@ -109,7 +88,7 @@ function handleStructuredData(data: unknown): ReturnType<any> {
       return {
         main: {
           type: 'text',
-          content: JSON.stringify(data),
+          content: JSON.stringify(chunk.data),
         },
       };
   }
@@ -120,18 +99,27 @@ const mockModels: ModelServiceState = {
   useThink: true,
   useSearch: false,
   config: {
-    endpoint: '/mock-api',
+    endpoint: 'http://localhost:3000/sse/normal',
     stream: true,
     parseResponse: defaultChunkParser,
     parseRequest: (params) => {
-      const { prompt, ...rest } = params;
+      const { prompt } = params;
       return {
+        credentials: 'include',
         headers: {
           'X-Mock-Key': 'test123',
         },
         body: JSON.stringify({
-          msg: prompt,
-          ...rest,
+          session_id: 'session_123456789',
+          question: [
+            {
+              // id: itemId,
+              content: prompt,
+              create_at: Date.now(),
+              role: 'user',
+            },
+          ],
+          is_search_net: 1,
         }),
       };
     },

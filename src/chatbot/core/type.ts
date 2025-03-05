@@ -87,7 +87,6 @@ export interface Message extends ChunkParsedResult {
   role: MessageRole;
   status: MessageStatus;
   timestamp?: string;
-  main?: MessageContent;
 }
 
 // 服务配置
@@ -97,15 +96,22 @@ export interface ChunkParsedResult {
   thinking?: ThinkingContent;
 }
 
+export type SSEChunkData = {
+  event?: string;
+  data: any;
+};
+
 export interface RequestParams extends ModelParams {
   prompt: string;
 }
 
 export interface LLMConfig {
-  endpoint: string;
+  endpoint?: string;
   stream?: boolean;
+  retryInterval?: number;
+  maxRetries?: number;
   parseRequest?: (params: RequestParams) => RequestInit;
-  parseResponse?: (chunk: any) => ChunkParsedResult;
+  parseResponse?: (chunk: SSEChunkData) => ChunkParsedResult;
 }
 
 // 消息相关状态

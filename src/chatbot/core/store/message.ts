@@ -1,4 +1,4 @@
-import type { ChunkParserResult, Message, MessageState, TextContent, ThinkingContent } from '../type';
+import type { ChunkParsedResult, Message, MessageState, TextContent, ThinkingContent } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
@@ -31,7 +31,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     }
   }
 
-  appendContent(messageId: string, chunk: ChunkParserResult) {
+  appendContent(messageId: string, chunk: ChunkParsedResult) {
     this.setState((draft) => {
       const message = draft.messages[messageId];
       if (!message) return;

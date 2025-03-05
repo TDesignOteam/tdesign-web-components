@@ -2,7 +2,7 @@
 import { MessageStore } from './store/message';
 import { ModelStore } from './store/model';
 import { ChatEngine } from './engine';
-import type { LLMConfig, Message, ModelParams, ModelServiceState } from './type';
+import type { Attachment, LLMConfig, Message, ModelParams, ModelServiceState } from './type';
 
 export default class ChatService {
   public readonly messageStore: MessageStore;
@@ -20,15 +20,15 @@ export default class ChatService {
     this.engine = new ChatEngine(this.config);
   }
 
-  public async sendMessage(input: string, attachments?: File[]) {
-    const userMessage = this.engine.createUserMessage(input, attachments);
+  public async sendMessage(prompt: string, attachments?: Attachment[]) {
+    const userMessage = this.engine.createUserMessage(prompt, attachments);
     const aiMessage = this.engine.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
 
     if (this.config.stream) {
       // 处理sse流式响应模式
       const stream = this.engine.handleStreamResponse({
-        prompt: input,
+        prompt,
       });
       for await (const chunk of stream) {
         this.messageStore.appendContent(aiMessage.id, chunk);
@@ -36,7 +36,7 @@ export default class ChatService {
     } else {
       // 处理批量响应模式
       await this.engine.handleBatchResponse({
-        prompt: input,
+        prompt,
       });
     }
   }
