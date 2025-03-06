@@ -75,6 +75,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (thinking?.content || search?.content || main?.content) {
       return null;
     }
+    if (status === 'stop' || status === 'complete') {
+      return '已终止';
+    }
     if (status === 'error') {
       return '出错了';
     }
