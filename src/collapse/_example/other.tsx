@@ -27,7 +27,7 @@ export default class Demo extends Component {
   render() {
     const { borderless, expandIcon, disabled } = this;
     return (
-      <t-space direction={'vertical'} style={{ width: '100%' }}>
+      <t-space direction={'vertical'} innerStyle={{ width: '100%' }}>
         <t-collapse borderless={borderless.value} disabled={disabled.value}>
           <t-collapse-panel
             expandIcon={expandIcon.value}

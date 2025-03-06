@@ -41,7 +41,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
 
     const { value } = this.props;
 
-    this.innerValue = computed(() => (value === undefined ? getUniqId() : value));
+    this.innerValue = computed(() => value ?? getUniqId());
 
     if (defaultExpandAll.value) {
       updateCollapseValue(this.innerValue.value);
@@ -61,6 +61,8 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     'expandIconPlacement',
     'expandOnRowClick',
   ];
+
+  injection: { [key: string]: any } = {};
 
   @bind
   handleClick(event, fromHeader = false) {
@@ -96,7 +98,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     }
     return (
       <div
-        className={classname(`${this.className}__icon`, [`${this.className}__icon--${expandIconPlacement.value}`], {
+        className={classname(`${this.className}__icon`, [`${this.className}__icon--${expandIconPlacement?.value}`], {
           [`${this.className}__icon--active`]: isActive,
         })}
         onClick={this.handleClick}
@@ -115,12 +117,12 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     return (
       <div
         className={classname(`${this.className}__header`, {
-          [`${classPrefix}-is-clickable`]: expandOnRowClick.value && !this.isDisabled.value,
+          [`${classPrefix}-is-clickable`]: expandOnRowClick?.value && !this.isDisabled.value,
         })}
         onClick={(e) => this.handleClick(e, true)}
       >
         <div className={`${this.className}__header-left`}>
-          {expandIconPlacement.value === 'left' && this.renderIcon()}
+          {expandIconPlacement?.value === 'left' && this.renderIcon()}
         </div>
 
         <div className={`${this.className}__header-content`}>{this.props.header}</div>
@@ -129,14 +131,14 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
           <div className={`${this.className}__header-right-content`} onClick={(e: MouseEvent) => e.stopPropagation()}>
             {this.props.headerRightContent}
           </div>
-          {expandIconPlacement.value === 'right' && this.renderIcon()}
+          {expandIconPlacement?.value === 'right' && this.renderIcon()}
         </div>
       </div>
     );
   }
 
   renderBody() {
-    const isActive = this.injection.collapseValue.value.includes(this.innerValue.value);
+    const isActive = this.injection.collapseValue?.value.includes(this.innerValue.value);
     const { destroyOnCollapse } = this.props;
     if (this.afterLeaved.value === null && !isActive) {
       return null;
@@ -163,7 +165,6 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
 
   render(props: CollapsePanelProps): TNode {
     const { innerClass, innerStyle } = props;
-
     return (
       <div
         className={classname(
@@ -176,7 +177,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
       >
         <div
           className={classname(`${this.className}__wrapper`, {
-            [`${classPrefix}--borderless`]: this.injection.borderless.value,
+            [`${classPrefix}--borderless`]: this.injection?.borderless?.value,
           })}
           style={innerStyle}
         >

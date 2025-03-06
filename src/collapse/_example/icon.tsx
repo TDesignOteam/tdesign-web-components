@@ -18,7 +18,7 @@ export default class Demo extends Component {
 
   render() {
     return (
-      <t-space direction={'vertical'} style={{ width: '100%' }}>
+      <t-space direction={'vertical'} innerStyle={{ width: '100%' }}>
         <t-collapse
           onChange={this.onChange}
           expandIconPlacement={this.isLeftIcon.value ? 'left' : 'right'}
