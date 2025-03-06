@@ -56,6 +56,10 @@ export default class ChatService {
     }
   }
 
+  public async abortChat() {
+    this.engine.abort();
+  }
+
   public async updateModel(params: ModelParams) {
     if (params?.model) {
       this.modelStore.setCurrentModel(params.model);

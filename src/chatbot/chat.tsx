@@ -89,6 +89,7 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   private handleStop = () => {
+    this.chatService.abortChat();
     this.fire('stop');
   };
 

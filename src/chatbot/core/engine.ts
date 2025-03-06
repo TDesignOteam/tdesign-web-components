@@ -2,6 +2,8 @@ import SSEClient from './sseClient';
 import type { Attachment, ChunkParsedResult, LLMConfig, Message, RequestParams, SSEChunkData } from './type';
 
 export class ChatEngine {
+  private sseClient: SSEClient;
+
   constructor(private config: LLMConfig) {
     // 构造函数参数属性初始化
   }
@@ -51,7 +53,7 @@ export class ChatEngine {
   public async *handleStreamResponse(params: RequestParams) {
     const req = this.config?.parseRequest?.(params);
     console.log('=====req', { ...req }, this.config.endpoint);
-    const sseClient = new SSEClient(this.config.endpoint, {
+    this.sseClient = new SSEClient(this.config.endpoint, {
       onError: (error) => {
         console.error('SSE连接错误:', error);
         this.config?.onError?.(params, error);
@@ -63,9 +65,13 @@ export class ChatEngine {
     });
 
     // 直接通过生成器返回数据
-    for await (const data of sseClient.connect(req)) {
+    for await (const data of this.sseClient.connect(req)) {
       yield this.processStreamChunk(data);
     }
+  }
+
+  public abort() {
+    this.sseClient?.close();
   }
 
   private processStreamChunk(chunk: SSEChunkData): ChunkParsedResult {

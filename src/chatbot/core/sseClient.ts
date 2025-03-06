@@ -52,6 +52,13 @@ export default class SSEClient {
     }
   }
 
+  close() {
+    this.reader?.cancel().catch(() => {});
+    this.controller?.abort();
+    this.reader = null;
+    this.controller = null;
+  }
+
   private async *readStream() {
     try {
       while (true) {
@@ -149,12 +156,5 @@ export default class SSEClient {
         this.connect(this.config);
       }, this.options.retryInterval ?? 1000);
     }
-  }
-
-  close() {
-    this.reader?.cancel().catch(() => {});
-    this.controller?.abort();
-    this.reader = null;
-    this.controller = null;
   }
 }

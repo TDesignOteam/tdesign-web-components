@@ -142,9 +142,10 @@ export default class ChatInput extends Component<TdChatInputProps> {
     }
   };
 
-  private handleStop = () => {
+  private handleStop = (e) => {
     if (this.props.allowStop) {
       this.fire('stop');
+      this.props.onStop(this.inputValue as string, { e });
     }
   };
 }
