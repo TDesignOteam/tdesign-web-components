@@ -14,6 +14,7 @@ export * from './common';
 export * from './dialog';
 export * from './divider';
 export * from './dropdown';
+export * from './filecard';
 export * from './grid';
 export * from './image';
 export * from './input';
