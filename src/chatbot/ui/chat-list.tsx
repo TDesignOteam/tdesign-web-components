@@ -34,7 +34,7 @@ export default class Chatlist extends Component<TdChatListProps> {
                   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
                 }
               : {
-                  variant: 'outline',
+                  variant: 'text',
                   placements: 'left',
                   avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
                   actions: (preset) => preset,

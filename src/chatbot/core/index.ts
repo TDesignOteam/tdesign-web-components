@@ -1,33 +1,26 @@
-// chat-service.ts
+import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
-import { ModelStore } from './store/model';
 import ChatProcessor from './processor';
-import SSEClient from './sseClient';
-import type {
-  Attachment,
-  LLMConfig,
-  Message,
-  ModelParams,
-  ModelServiceState,
-  RequestParams,
-  SSEChunkData,
-} from './type';
+import type { Attachment, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
 
-export default class ChatEngine {
+export interface IChatEngine {
+  sendMessage(prompt: string, attachments?: Attachment[]): Promise<void>;
+  abortChat(): void;
+}
+
+export default class ChatEngine implements IChatEngine {
   public readonly messageStore: MessageStore;
-
-  public readonly modelStore: ModelStore;
 
   private processor: ChatProcessor;
 
-  private config: LLMConfig;
+  private llmService: LLMService;
 
-  private sseClient: SSEClient;
+  private config: LLMConfig;
 
   constructor(initialModelState: ModelServiceState, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.modelStore = new ModelStore(initialModelState);
     this.config = initialModelState.config;
+    this.llmService = new LLMService();
     this.processor = new ChatProcessor(this.config);
   }
 
@@ -36,63 +29,64 @@ export default class ChatEngine {
     const aiMessage = this.processor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
     const { id } = aiMessage;
-    if (this.config.stream) {
-      // 处理sse流式响应模式
-      this.setMessageStatus(id, 'streaming');
-      await this.handleStreamResponse({
-        prompt,
-        messageID: id,
-      });
-    } else {
-      // 处理批量响应模式
-      this.setMessageStatus(id, 'pending');
-      await this.processor.handleBatchResponse({
-        prompt,
-        messageID: id,
-      });
-      this.setMessageStatus(id, 'complete');
+    try {
+      if (this.config.stream) {
+        // 处理sse流式响应模式
+        this.setMessageStatus(id, 'streaming');
+        await this.handleStreamResponse({
+          prompt,
+          messageID: id,
+        });
+      } else {
+        // 处理批量响应模式
+        this.setMessageStatus(id, 'pending');
+        await this.handleBatchRequest({
+          prompt,
+          messageID: id,
+        });
+        this.setMessageStatus(id, 'complete');
+      }
+    } catch (error) {
+      this.setMessageStatus(id, 'error');
+      throw error;
     }
   }
 
   public abortChat() {
-    this.sseClient.close();
+    this.llmService.closeSSE();
+    // this.setMessageStatus(this.messageStore.currentMessageId, 'stop');
+    this.config?.onAbort && this.config.onAbort();
   }
 
-  public async updateModel(params: ModelParams) {
-    if (params?.model) {
-      this.modelStore.setCurrentModel(params.model);
-    }
-    if ('useSearch' in params) {
-      this.modelStore.setUseSearch(params.useSearch);
-    }
-    if ('useThink' in params) {
-      this.modelStore.setUseThink(params.useThink);
-    }
+  private async handleBatchRequest(params: RequestParams) {
+    const id = params.messageID;
+    this.setMessageStatus(id, 'pending');
+    const result = await this.llmService.handleBatchRequest(params, this.config);
+    this.messageStore.appendContent(id, result);
+    this.setMessageStatus(id, 'complete');
   }
 
-  public async handleStreamResponse(params: RequestParams) {
-    const req = this.config?.onRequest?.(params);
-    this.sseClient = new SSEClient(this.config.endpoint, {
-      onMessage: (msg: SSEChunkData) => {
-        const parsed = this.config?.onMessage?.(msg);
+  private async handleStreamResponse(params: RequestParams) {
+    const id = params.messageID;
+    this.setMessageStatus(id, 'streaming');
+
+    await this.llmService.handleStreamRequest(params, {
+      ...this.config,
+      onMessage: (chunk: SSEChunkData) => {
+        const parsed = this.config?.onMessage?.(chunk);
         const processed = this.processor.processStreamChunk(parsed);
-        this.messageStore.appendContent(params.messageID, processed);
+        this.messageStore.appendContent(id, processed);
+        return processed;
       },
       onError: (error) => {
-        this.setMessageStatus(params.messageID, 'error');
+        this.setMessageStatus(id, 'error');
         this.config.onError?.(error, params);
       },
-      onComplete: () => {
-        this.setMessageStatus(params.messageID, 'complete');
-        this.config.onComplete?.(params);
+      onComplete: (isAborted) => {
+        this.setMessageStatus(id, isAborted ? 'stop' : 'complete');
+        this.config.onComplete?.(isAborted, params);
       },
     });
-
-    await this.sseClient.connect(req);
-  }
-
-  public abort() {
-    this.sseClient?.close();
   }
 
   private convertMessages(messages?: Message[]) {

@@ -53,7 +53,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
   renderButton = () => {
     const { status, allowStop, disabled } = this.props;
-    const hasStop = allowStop && status !== 'complete' && status !== 'idle';
+    const hasStop = allowStop && status !== 'complete' && status !== 'stop' && status !== 'idle';
 
     return (
       <t-button

@@ -1,4 +1,4 @@
-import { SSEChunkData } from './type';
+import { SSEChunkData } from '../type';
 
 export default class SSEClient {
   private controller: AbortController | null = null;
@@ -14,7 +14,7 @@ export default class SSEClient {
     private handlers: {
       onMessage?: (data: any) => void;
       onError?: (error: Error) => void;
-      onComplete?: () => void;
+      onComplete?: (isAborted: boolean) => void;
     },
     private options: {
       retryInterval?: number;
@@ -65,7 +65,8 @@ export default class SSEClient {
         // eslint-disable-next-line no-await-in-loop
         const { done, value } = await this.reader!.read();
         if (done) {
-          this.handlers.onComplete?.();
+          const isAborted = this.reader === null;
+          this.handlers.onComplete?.(isAborted);
           return;
         }
 

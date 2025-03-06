@@ -110,6 +110,11 @@ export class MessageStore extends ReactiveState<MessageState> {
       draft.messages = {};
     });
   }
+
+  get currentMessageId(): string {
+    const { messages, messageIds } = this.getState();
+    return messages[messageIds.slice(-1)[0]]?.id;
+  }
 }
 
 // 订阅消息列表变化

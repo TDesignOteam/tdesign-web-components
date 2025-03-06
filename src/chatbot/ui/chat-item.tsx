@@ -120,9 +120,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderThinkingStatus() {
-    const { thinking } = this.props;
+    const { thinking, status } = this.props;
 
-    if (thinking?.status === 'complete' || thinking?.status === 'stop')
+    if (thinking?.status === 'complete' || thinking?.status === 'stop' || status === 'stop')
       return convertToLightDomNode(
         <t-icon-check-circle
           class={`${className}__think__status--complete`}
@@ -141,7 +141,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   // 思维链
   renderThinking() {
-    const { thinking } = this.props;
+    const { thinking, status } = this.props;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         {convertToLightDomNode(
@@ -150,7 +150,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
             header={
               <>
                 {this.renderThinkingStatus()}
-                {thinking?.title}
+                {status === 'stop' ? '思考终止' : thinking?.title}
               </>
             }
             content={thinking?.content || ''}
@@ -161,8 +161,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { role, variant, placement, name, datetime } = props;
-    console.log('===item render', this.messageId);
+    const { role, variant, placement, name, datetime, status } = props;
+    console.log('===item render', this.messageId, status);
 
     const baseClass = `${className}__inner`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';

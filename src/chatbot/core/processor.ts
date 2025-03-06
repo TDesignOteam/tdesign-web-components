@@ -1,10 +1,6 @@
-import type { Attachment, ChunkParsedResult, LLMConfig, Message, RequestParams } from './type';
+import type { Attachment, ChunkParsedResult, Message } from './type';
 
 export default class ChatProcessor {
-  constructor(private config: LLMConfig) {
-    // 构造函数参数属性初始化
-  }
-
   public createUserMessage(content: string, files?: Attachment[]): Message {
     if (files && files.length > 0) {
       this.createAttachments(files);
@@ -37,13 +33,6 @@ export default class ChatProcessor {
     return files.map((file) => ({
       ...file,
     }));
-  }
-
-  public async handleBatchResponse(params: RequestParams): Promise<ChunkParsedResult> {
-    const response = await this.fetchLLMResponse(params);
-    const parsed = this.config?.onMessage?.(response);
-    return parsed;
-    // this.messageStore.setMessageStatus(messageId, 'complete');
   }
 
   processStreamChunk(parsed: ChunkParsedResult): ChunkParsedResult {
@@ -85,23 +74,5 @@ export default class ChatProcessor {
         },
       };
     }
-  }
-
-  private async fetchLLMResponse(params: RequestParams) {
-    const req = this.config?.onRequest?.(params);
-    const response = await fetch(this.config.endpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...req?.headers,
-      },
-      body: JSON.stringify(req?.body),
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    return response.json();
   }
 }

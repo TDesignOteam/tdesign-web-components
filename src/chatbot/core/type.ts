@@ -114,7 +114,8 @@ export interface LLMConfig {
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
   onMessage?: (chunk: SSEChunkData) => ChunkParsedResult;
-  onComplete?: (params: RequestParams) => void;
+  onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
+  onAbort?: () => void;
   onError?: (error: Error, params: RequestParams) => void;
 }
 
