@@ -3,7 +3,7 @@
 {
   id: '123123123',
   role: 'user',
-  status: 'sent',
+  status: 'complete',
   timestamp: '2039492949',
   main: {
     type: 'text',

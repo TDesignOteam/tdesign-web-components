@@ -1,5 +1,6 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
-export type MessageStatus = 'pending' | 'streaming' | 'sent' | 'error';
+export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
+export type ModelStatus = 'idle' | MessageStatus;
 export type ContentType = 'text' | 'markdown' | 'image' | 'audio' | 'video';
 export type AttachmentType = 'file' | 'image' | 'video' | 'audio';
 export type MediaFormat = {
@@ -102,6 +103,7 @@ export type SSEChunkData = {
 };
 
 export interface RequestParams extends ModelParams {
+  messageID: string;
   prompt: string;
 }
 
@@ -112,12 +114,15 @@ export interface LLMConfig {
   maxRetries?: number;
   parseRequest?: (params: RequestParams) => RequestInit;
   parseResponse?: (chunk: SSEChunkData) => ChunkParsedResult;
+  onComplete?: (params: RequestParams) => void;
+  onError?: (params: RequestParams, error: Error) => void;
 }
 
 // 消息相关状态
 export interface MessageState {
   messageIds: string[];
   messages: Record<string, Message>;
+  modelStatus: ModelStatus;
 }
 
 // 模型服务相关状态
@@ -133,6 +138,6 @@ export interface ModelServiceState extends ModelParams {
 
 // 聚合根状态
 export interface ChatState {
-  messagesList: MessageState;
-  modelService: ModelServiceState;
+  message: MessageState;
+  model: ModelServiceState;
 }

@@ -14,9 +14,9 @@ export class ChatEngine {
     return {
       id: this.generateID(),
       role: 'user',
-      status: 'sent',
+      status: 'complete',
       timestamp: `${Date.now()}`,
-      main: { type: 'text', status: 'sent', content },
+      main: { type: 'text', status: 'complete', content },
     };
   }
 
@@ -45,22 +45,20 @@ export class ChatEngine {
     const parsed = this.config?.parseResponse?.(response);
     console.log('===parsed', parsed);
     return parsed;
-    // this.messageStore.setMessageStatus(messageId, 'sent');
+    // this.messageStore.setMessageStatus(messageId, 'complete');
   }
 
   public async *handleStreamResponse(params: RequestParams) {
     const req = this.config?.parseRequest?.(params);
     console.log('=====req', { ...req }, this.config.endpoint);
     const sseClient = new SSEClient(this.config.endpoint, {
-      // onMessage: (data) => {
-      //   console.log('=====onMessage', data);
-      //   return this.processStreamChunk(data);
-      // },
       onError: (error) => {
         console.error('SSE连接错误:', error);
+        this.config?.onError?.(params, error);
       },
       onComplete: () => {
         console.log('SSE连接关闭');
+        this.config?.onComplete?.(params);
       },
     });
 
@@ -84,14 +82,16 @@ export class ChatEngine {
     }
     // 处理思考阶段
     if (parsed.thinking) {
+      const { type = 'text', title = '思考中...', content } = parsed.thinking;
       return {
         search: {
-          status: 'sent',
+          status: 'complete',
         },
         thinking: {
-          title: parsed.thinking?.title || '思考中...',
+          type,
+          title,
           status: 'streaming',
-          content: parsed.thinking.content,
+          content,
         },
       };
     }
@@ -100,7 +100,7 @@ export class ChatEngine {
       return {
         thinking: {
           title: parsed?.thinking?.title || '思考完成',
-          status: 'sent',
+          status: 'complete',
         },
         main: {
           status: 'streaming',

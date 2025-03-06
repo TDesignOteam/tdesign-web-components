@@ -17,7 +17,7 @@ const props = {
   thinking: {
     type: 'text',
     title: '思考中...',
-    status: 'sent',
+    status: 'complete',
     content: 'mock',
   },
 };

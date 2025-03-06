@@ -1,10 +1,11 @@
-import type { ChunkParsedResult, Message, MessageState, TextContent, ThinkingContent } from '../type';
+import type { ChunkParsedResult, Message, MessageState, ModelStatus, TextContent, ThinkingContent } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
 export class MessageStore extends ReactiveState<MessageState> {
   constructor(initialState?: Partial<MessageState>) {
     super({
+      modelStatus: 'idle',
       messageIds: [],
       messages: {},
       ...initialState,
@@ -36,6 +37,7 @@ export class MessageStore extends ReactiveState<MessageState> {
       const message = draft.messages[messageId];
       if (!message) return;
 
+      message.status = 'streaming';
       // 合并主内容（文本流式追加）
       if (chunk.main && (chunk.main.type === 'text' || chunk.main.type === 'markdown')) {
         message.main = this.mergeTextContent(message.main as TextContent, chunk.main);
@@ -84,6 +86,12 @@ export class MessageStore extends ReactiveState<MessageState> {
         ...message,
         ...msg,
       };
+    });
+  }
+
+  setModelStatus(status: ModelStatus) {
+    this.setState((draft) => {
+      draft.modelStatus = status;
     });
   }
 

@@ -17,27 +17,42 @@ export default class ChatService {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
     this.modelStore = new ModelStore(initialModelState);
     this.config = initialModelState.config;
-    this.engine = new ChatEngine(this.config);
+    this.engine = new ChatEngine({
+      ...this.config,
+      onComplete: (params) => {
+        this.setMessageStatus(params.messageID, 'complete');
+        this.config.onComplete?.(params);
+      },
+      onError: (params, error) => {
+        this.setMessageStatus(params.messageID, 'error');
+        this.config.onError?.(params, error);
+      },
+    });
   }
 
   public async sendMessage(prompt: string, attachments?: Attachment[]) {
     const userMessage = this.engine.createUserMessage(prompt, attachments);
     const aiMessage = this.engine.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
-
+    const { id } = aiMessage;
     if (this.config.stream) {
       // 处理sse流式响应模式
+      this.setMessageStatus(id, 'streaming');
       const stream = this.engine.handleStreamResponse({
         prompt,
+        messageID: id,
       });
       for await (const chunk of stream) {
-        this.messageStore.appendContent(aiMessage.id, chunk);
+        this.messageStore.appendContent(id, chunk);
       }
     } else {
       // 处理批量响应模式
+      this.setMessageStatus(id, 'pending');
       await this.engine.handleBatchResponse({
         prompt,
+        messageID: id,
       });
+      this.setMessageStatus(id, 'complete');
     }
   }
 
@@ -66,5 +81,10 @@ export default class ChatService {
         {} as Record<string, Message>,
       ),
     };
+  }
+
+  private setMessageStatus(messageId: string, status: Message['status']) {
+    this.messageStore.setModelStatus(status);
+    this.messageStore.setMessageStatus(messageId, status);
   }
 }

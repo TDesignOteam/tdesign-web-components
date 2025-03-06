@@ -1,17 +1,22 @@
-import type { ModelServiceState } from '../type';
+import type { MessageStatus,ModelServiceState } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注模型状态和运行时管理
 export class ModelStore extends ReactiveState<ModelServiceState> {
   constructor(initialState?: ModelServiceState) {
-    super(
-      initialState || {
-        config: {},
-        useSearch: false,
-        useThink: false,
-        model: '',
-      },
-    );
+    super({
+      useSearch: false,
+      useThink: false,
+      model: '',
+      ...initialState,
+      status: 'idle',
+    });
+  }
+
+  setModelStatus(status: MessageStatus) {
+    this.setState((draft) => {
+      draft.status = status;
+    });
   }
 
   setCurrentModel(modelName: string) {

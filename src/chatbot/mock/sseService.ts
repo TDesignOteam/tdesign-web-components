@@ -12,7 +12,7 @@
 //     //   state.messages[assistantId] = {
 //     //     id: assistantId,
 //     //     role: 'assistant',
-//     //     status: 'sent',
+//     //     status: 'complete',
 //     //     phase: 'complete',
 //     //     timestamp: Date.now(),
 //     //     content: {

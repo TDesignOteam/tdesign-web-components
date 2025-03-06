@@ -35,42 +35,20 @@ export default class ChatItem extends Component<TdChatItemProps> {
     placement: 'left',
   };
 
-  inject = ['messageStore'];
-
-  private unsubscribe?: () => void;
-
   private messageId!: string;
-
-  private message: TdChatItemProps;
 
   install() {
     this.messageId = this.props.id!;
-    this.message = this.props;
-    // 订阅特定消息的更新
-    this.unsubscribe = this.injection?.messageStore?.subscribe(
-      (state) => {
-        this.message = {
-          ...this.message,
-          ...state.messages[this.messageId],
-        };
-        this.update();
-      },
-      [`messages.${this.messageId}`],
-    );
   }
 
   receiveProps(
     props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
     oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
   ) {
-    if (props?.main?.content === oldProps?.main?.content) {
+    if (props?.main?.content === oldProps?.main?.content && props?.thinking?.content === oldProps?.thinking?.content) {
       return false;
     }
     return true;
-  }
-
-  uninstall() {
-    this.unsubscribe?.();
   }
 
   renderAvatar() {
@@ -91,16 +69,16 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderThinkingStatus() {
-    if (!this.message.thinking) {
-      return null;
-    }
-    if (this.message.thinking?.status === 'pending' || this.message.thinking?.status === 'streaming')
+    if (this.props.thinking?.status === 'pending' || this.props.thinking?.status === 'streaming')
       return <div class={`${className}__think__status--pending`} part={`${className}__think__status--pending`} />;
-    if (this.message.thinking?.status === 'sent')
+    if (this.props.thinking?.status === 'complete')
       return convertToLightDomNode(
-        <t-icon-check-circle class={`${className}__think__status--sent`} part={`${className}__think__status--sent`} />,
+        <t-icon-check-circle
+          class={`${className}__think__status--complete`}
+          part={`${className}__think__status--complete`}
+        />,
       );
-    if (this.message.thinking?.status === 'error')
+    if (this.props.thinking?.status === 'error')
       return convertToLightDomNode(
         <t-icon-close-circle
           class={`${className}__think__status--error`}
@@ -112,11 +90,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   // 思维链
   renderThinking() {
-    const { thinking } = this.message;
-
-    if (!thinking?.content) {
-      return null;
-    }
+    const { thinking } = this.props;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         {convertToLightDomNode(
@@ -125,10 +99,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
             header={
               <>
                 {this.renderThinkingStatus()}
-                {thinking.title || '思考中...'}
+                {thinking?.title}
               </>
             }
-            content={thinking.content}
+            content={thinking?.content || ''}
           />,
         )}
       </t-collapse>
@@ -137,7 +111,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   render(props: TdChatItemProps) {
     const { textLoading, role, variant, theme, placement } = props;
-    console.log('===item render', this.messageId);
+    console.log('===render item', this.messageId);
 
     const baseClass = `${className}__inner`;
     const roleClass = role;
@@ -159,14 +133,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
             {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
             {/* {textLoading && movable && <ChatLoading loading={textLoading} animation={'gradient'}></ChatLoading>} */}
             {/* TODO: 样式 */}
-            {this.renderThinking()}
-            {this.message?.search?.content && (
-              <div className={`${className}__search`}>{this.message.search.content}</div>
-            )}
-            {!textLoading && this.message?.main?.content && (
+            {this.props?.thinking?.content && this.renderThinking()}
+            {this.props?.search?.content && <div className={`${className}__search`}>{this.props.search.content}</div>}
+            {!textLoading && this.props?.main?.content && (
               <div className={`${className}__detail`}>
                 {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
-                <t-chat-content content={this.message.main.content} role={role}></t-chat-content>
+                <t-chat-content content={this.props.main.content} role={role}></t-chat-content>
               </div>
             )}
             <div className={`${className}__actions-margin`}>

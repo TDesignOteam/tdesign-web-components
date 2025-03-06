@@ -5,7 +5,7 @@ import '../button';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { MessageState } from './core/type';
+import type { Attachment, Message, MessageState, ModelStatus } from './core/type';
 import ChatService from './core';
 import type { TdChatListProps, TdChatProps } from './type';
 
@@ -33,11 +33,15 @@ export default class Chatbot extends Component<TdChatProps> {
 
   listRef = createRef<TdChatListProps>();
 
-  private messages;
+  private messages: Message[];
+
+  private modelStatus: ModelStatus;
 
   private chatService: ChatService;
 
-  private unsubscribe?: () => void;
+  private unsubscribeMsg?: () => void;
+
+  private unsubscribeModel?: () => void;
 
   provide = {
     messageStore: {},
@@ -54,17 +58,19 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   uninstall() {
-    this.unsubscribe?.();
+    this.unsubscribeMsg?.();
+    this.unsubscribeModel?.();
   }
 
   // 订阅聊天状态变化
   private subscribeToChat() {
-    this.unsubscribe = this.chatService.messageStore.subscribe(
+    this.unsubscribeMsg = this.chatService.messageStore.subscribe(
       (state) => {
         this.messages = this.convertMessages(state);
+        this.modelStatus = state.modelStatus;
         this.update();
       },
-      ['messageIds'], // 指定关注路径，仅当 messageIds 变化时更新列表结构
+      // ['messageIds'],
     );
   }
 
@@ -76,7 +82,7 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   }
 
-  private handleSend = async (value: string, files?: File[]) => {
+  private handleSend = async (value: string, files?: Attachment[]) => {
     await this.chatService.sendMessage(value, files);
     this.fire('submit', value, {
       composed: true,
@@ -94,7 +100,8 @@ export default class Chatbot extends Component<TdChatProps> {
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
-    console.log('====chat render');
+    const pending = this.modelStatus === 'pending' || this.modelStatus === 'streaming';
+    console.log('====render chat', pending, this.modelStatus);
     return (
       <div className={`${className} ${layoutClass}`}>
         <t-chat-list ref={this.listRef} data={this.messages} reverse={reverse} />
@@ -105,7 +112,7 @@ export default class Chatbot extends Component<TdChatProps> {
             </t-button>
           </div>
         )}
-        <t-chat-input autosize={{ minRows: 2 }} onSend={this.handleSend} onStop={this.handleStop} />
+        <t-chat-input autosize={{ minRows: 2 }} onSend={this.handleSend} pending={pending} onStop={this.handleStop} />
       </div>
     );
   }

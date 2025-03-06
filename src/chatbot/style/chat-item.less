@@ -152,11 +152,11 @@
       // 现在思维链更新时动画会被刷新，看怎么处理
       animation: t-chat-item-think-pending 2s linear infinite;
     }
-    &::part(@{prefix}-chat__item__think__status--sent) {
+    &::part(@{prefix}-chat__item__think__status--complete) {
       display: flex;
       width: var(--chat-item-think-status-wh);
       height: var(--chat-item-think-status-wh);
-      color: var(--chat-item-think-status-sent-color);
+      color: var(--chat-item-think-status-complete-color);
     }
     &::part(@{prefix}-chat__item__think__status--error) {
       display: flex;
