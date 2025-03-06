@@ -8,7 +8,8 @@
 .@{prefix}-chat__item {
   &__inner {
     display: flex;
-    margin-bottom: var(--chat-item-gap);
+    margin-bottom: var(--t-chat-item-gap);
+    font-size: var(--t-chat-font-size);
 
     .@{prefix}-chat__item__avatar {
       flex: 0 0 auto;
@@ -51,7 +52,16 @@
       }
 
       .@{prefix}-chat__item__main {
-        justify-content: flex-end;
+        align-items: flex-end;
+      }
+
+      .@{prefix}-chat__item__header {
+        padding: var(--t-chat-item-header-padding-right);
+      }
+
+      .@{prefix}-chat__item__name {
+        order: 2;
+        padding: var(--t-chat-item-name-padding-right);
       }
     }
   }
@@ -59,43 +69,38 @@
   // variant
   &--variant--base {
     .@{prefix}-chat__item__content {
-      border: 1px solid @border-level-2-color;
-    }
-
-    // theme
-    &.@{prefix}-chat__item--theme--primary {
-      .@{prefix}-chat__item__content {
-        background-color: var(--chat-item-primary-bg);
-        border-color: transparent;
-      }
-    }
-
-    &.@{prefix}-chat__item--theme--default {
-      .@{prefix}-chat__item__content {
-        background-color: var(--chat-item-default-bg);
-        border-color: @border-level-2-color;
-      }
+      background-color: var(--t-chat-item-primary-bg);
+      border-color: transparent;
     }
   }
   
+  &--variant--outline {
+    .@{prefix}-chat__item__content {
+      background-color: var(--t-chat-item-default-bg);
+      border-color: var(--t-chat-item-outline-border-color);
+    }
+  }
+
   &--variant--text {
     .@{prefix}-chat__item__content {
       background-color: transparent;
     }
   }
-  
+
   &__main {
     flex: 1;
     min-width: 0;
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   &__avatar {
     flex-shrink: 0;
     cursor: pointer;
     display: flex;
-    margin: 0 @comp-margin-xs;
-    padding-top: var(--chat-item-avatar-padding-top);
+    margin: var(--t-chat-item-avatar-margin);
+    padding: var(--t-chat-item-avatar-padding);
   
     &__box {
     }
@@ -110,10 +115,10 @@
   &__content {
     display: inline-block;
     // less中同时使用min和var有bug，目前只能这么写 https://github.com/less/less.js/issues/3777
-    max-width: e('min(100%, var(--chat-item-main-max-width))');
-    padding: @pop-padding-xl @pop-padding-xxl;
-    border-radius: @border-radius-extraLarge;
-    font-size: @comment-content-text-size;
+    max-width: e('min(100%, var(--t-chat-item-content-max-width))');
+    padding: var(--t-chat-item-content-padding);
+    border: 1px solid transparent;
+    border-radius: var(--t-chat-item-content-radius);
 
     .@{prefix}-skeleton {
       width: 100%;
@@ -126,11 +131,11 @@
 
     &::part(@{prefix}-collapse) {
       width: 100%;
-      margin-bottom: var(--chat-item-think-margin-bottom);
-      padding: var(--chat-item-think-padding-tb) var(--chat-item-think-padding-lr);
+      margin-bottom: var(--t-chat-item-think-margin-bottom);
+      padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr);
       border: none;
-      border-radius: var(--chat-item-think-radius);
-      background-color: var(--chat-item-think-bg);
+      border-radius: var(--t-chat-item-think-radius);
+      background-color: var(--t-chat-item-think-bg);
       overflow: hidden;
     }
 
@@ -141,28 +146,28 @@
     &::part(@{prefix}-collapse-panel__header-content) {
       display: flex;
       align-items: center;
-      gap: var(--chat-item-think-title-gap);
+      gap: var(--t-chat-item-think-title-gap);
     }
     // status icon
     &::part(@{prefix}-chat__item__think__status--pending) {
-      width: var(--chat-item-think-status-wh);
-      height: var(--chat-item-think-status-wh);
-      border-radius: calc(var(--chat-item-think-status-wh) / 2);
-      background: var(--chat-item-think-status-pending-color);
+      width: var(--t-chat-item-think-status-wh);
+      height: var(--t-chat-item-think-status-wh);
+      border-radius: calc(var(--t-chat-item-think-status-wh) / 2);
+      background: var(--t-chat-item-think-status-pending-color);
       // 现在思维链更新时动画会被刷新，看怎么处理
       animation: t-chat-item-think-pending 2s linear infinite;
     }
     &::part(@{prefix}-chat__item__think__status--sent) {
       display: flex;
-      width: var(--chat-item-think-status-wh);
-      height: var(--chat-item-think-status-wh);
-      color: var(--chat-item-think-status-sent-color);
+      width: var(--t-chat-item-think-status-wh);
+      height: var(--t-chat-item-think-status-wh);
+      color: var(--t-chat-item-think-status-sent-color);
     }
     &::part(@{prefix}-chat__item__think__status--error) {
       display: flex;
-      width: var(--chat-item-think-status-wh);
-      height: var(--chat-item-think-status-wh);
-      color: var(--chat-item-think-status-error-color);
+      width: var(--t-chat-item-think-status-wh);
+      height: var(--t-chat-item-think-status-wh);
+      color: var(--t-chat-item-think-status-error-color);
     }
 
     &::part(@{prefix}-collapse-panel__header-content) {
@@ -174,9 +179,9 @@
     }
 
     &::part(@{prefix}-collapse-panel__content) {
-      margin-top: var(--chat-item-think-content-margin-top);
+      margin-top: var(--t-chat-item-think-content-margin-top);
       padding: 0;
-      color: var(--chat-item-think-content-color);
+      color: var(--t-chat-item-think-content-color);
     }
   }
 
@@ -187,12 +192,11 @@
     align-items: baseline;
     font: @font-title-small;
     color: @text-color-placeholder;
-    padding-left: @pop-padding-xxl;
+    padding: var(--t-chat-item-header-padding);
   }
 
   &__name {
-    padding-right: @comp-margin-s;
-    cursor: pointer;
+    padding: var(--t-chat-item-name-padding);
   }
 
   &__actions-margin {
@@ -203,7 +207,7 @@
     margin-top: @comp-margin-xs;
     display: flex;
     list-style: none;
-    padding: var(--chat-action-icon-padding);
+    padding: var(--t-chat-action-icon-padding);
     background-color: @bg-color-secondarycontainer;
     border-radius: @border-radius-medium;
     border: 1px solid @border-level-2-color;

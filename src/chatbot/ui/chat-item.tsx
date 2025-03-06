@@ -31,7 +31,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   static defaultProps = {
     variant: 'base',
-    theme: 'default',
     placement: 'left',
   };
 
@@ -136,24 +135,22 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { textLoading, role, variant, theme, placement } = props;
+    const { textLoading, role, variant, placement, name, datetime } = props;
     console.log('===item render', this.messageId);
 
     const baseClass = `${className}__inner`;
-    const roleClass = role;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
-    const themeClass = theme ? `${className}--theme--${theme}` : '';
     const placementClass = placement;
 
     return (
-      <div className={classname(baseClass, roleClass, variantClass, themeClass, placementClass)}>
+      <div className={classname(baseClass, variantClass, placementClass)}>
         {this.renderAvatar()}
         <div class={`${className}__main`}>
+          <div class={`${className}__header`}>
+            {name && <span class={`${className}__name`}>{name}</span>}
+            {datetime && <span class={`${className}__time`}>{datetime}</span>}
+          </div>
           <div class={classname(`${className}__content`, `${className}__content--base`)}>
-            <div class={`${className}__header`}>
-              <slot name="intro"></slot>
-            </div>
-
             {/* TODO: 骨架屏加载 */}
             {/* {textLoading && <t-skeleton loading={textLoading} animation={'gradient'}></t-skeleton>} */}
             {/* 动画加载 skeleton：骨架屏 gradient：渐变加载动画一个点 dot：三个点 */}
@@ -165,7 +162,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
             )}
             {!textLoading && this.message?.main?.content && (
               <div className={`${className}__detail`}>
-                {/* {isArray(content) ? content : <t-chat-content isNormalText={true} content={content} role={role} />} */}
                 <t-chat-content content={this.message.main.content} role={role}></t-chat-content>
               </div>
             )}

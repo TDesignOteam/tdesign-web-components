@@ -30,14 +30,12 @@ export default class Chatlist extends Component<TdChatListProps> {
           const roleProps =
             role === 'user'
               ? {
-                  theme: 'primary',
                   variant: 'base',
                   placement: 'right',
                   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
                 }
               : {
-                  theme: 'default',
-                  variant: 'base',
+                  variant: 'outline',
                   placements: 'left',
                   avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
                 };
