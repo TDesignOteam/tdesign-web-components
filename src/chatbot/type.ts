@@ -97,6 +97,12 @@ export interface TdChatContentProps {
   isNormalText?: boolean;
   textLoading: boolean;
 }
+
+export interface TdChatCodeProps {
+  lang: string;
+  code: string;
+}
+
 export interface TdChatActionsProps {
   isGood?: Boolean;
   isBad?: Boolean;

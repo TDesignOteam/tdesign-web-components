@@ -1,19 +1,15 @@
-import 'tdesign-icons-web-components/esm/components/file-copy';
+import '../../message';
+import './md/chat-md-code';
 
 import mk from '@vscode/markdown-it-katex';
-import hljs from 'highlight.js';
 import markdownIt from 'markdown-it';
 import mila from 'markdown-it-link-attributes';
-import { Component, css, globalCSS, OmiProps, tag } from 'omi';
+import { Component, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../../_util/classname';
+import { getClassPrefix } from '../../_util/classname';
 import type { TdChatContentProps } from '../type';
 
 import styles from '../style/chat-content.less';
-
-globalCSS(css`
-  ${styles}
-`);
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
@@ -24,23 +20,9 @@ const md = markdownIt({
   linkify: true, // 自动转换链接
   typographer: true, // 排版优化
   // 代码块
-  highlight: (str: string, lang: string) => {
-    let code = md.utils.escapeHtml(str);
-    if (lang && hljs.getLanguage(lang)) {
-      code = hljs.highlight(str, {
-        language: lang,
-        ignoreIllegals: true,
-      }).value;
-    }
-
-    const codeClass = `${baseClass}__markdown__code`;
-    const codeLang = `<span class="${`${codeClass}__header__lang`}">${lang}</span>`;
-    const codeHeader = `<div class="${`${codeClass}__header`}">${codeLang}</div>`;
-    const codeBodyClass = classname([`${codeClass}__body`, 'hljs']);
-    const codeBody = `<div class="${codeBodyClass}"><code>${code}</code></div>`;
-
-    return `<pre class="${codeClass}">${codeHeader}${codeBody}</pre>`;
-  },
+  highlight: (code: string, lang: string) =>
+    // 传参注意转义
+    `<t-chat-md-code lang="${lang}" code="${md.utils.escapeHtml(code)}"></t-chat-md-code>`,
 })
   // 表格
   .use((md) => {
@@ -64,6 +46,8 @@ const md = markdownIt({
 
 @tag('t-chat-content')
 export default class ChatContent extends Component<TdChatContentProps> {
+  static css = [styles];
+
   static propTypes = {
     content: String,
     role: String,
