@@ -87,12 +87,20 @@
     }
   }
 
+  &__skeleton {
+    width: 100%;
+  }
+
   &__main {
     flex: 1;
     min-width: 0;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+
+    &:empty {
+      display: none;
+    }
   }
 
   &__avatar {
@@ -119,6 +127,10 @@
     padding: var(--t-chat-item-content-padding);
     border: 1px solid transparent;
     border-radius: var(--t-chat-item-content-radius);
+
+    &:empty {
+      display: none;
+    }
 
     .@{prefix}-skeleton {
       width: 100%;
@@ -182,6 +194,10 @@
       margin-top: var(--t-chat-item-think-content-margin-top);
       padding: 0;
       color: var(--t-chat-item-think-content-color);
+
+      &:empty {
+        display: none;
+      }
     }
   }
 
@@ -193,6 +209,10 @@
     font: @font-title-small;
     color: @text-color-placeholder;
     padding: var(--t-chat-item-header-padding);
+
+    &:empty {
+      display: none;
+    }
   }
 
   &__name {
@@ -201,6 +221,10 @@
 
   &__actions-margin {
     margin-left: @comp-margin-l;
+
+    &:empty {
+      display: none;
+    }
   }
 
   &__actions {
@@ -234,6 +258,10 @@
     }
     & .@{prefix}-space .@{prefix}-space-item {
       height: @comp-size-xs;
+    }
+
+    &:empty {
+      display: none;
     }
   }
 

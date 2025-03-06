@@ -29,25 +29,11 @@ export interface TdChatItemProps extends Message {
    */
   // role?: ModelRoleEnum;
   /**
-   * 流式消息加载中
-   */
-  textLoading?: boolean;
-  /**
    * 消息样式，是否有边框，背景色等
    */
   variant?: Variant;
-  /**
-   * 是否为动画
-   */
-  movable?: Boolean;
-  /**
-   * 加载动画
-   */
-  animation?: string;
   // 消息索引
   itemIndex?: Number;
-  /** 组件风格 */
-  theme?: 'default' | 'primary';
   /** 气泡方向 */
   placement?: 'left' | 'right';
 }

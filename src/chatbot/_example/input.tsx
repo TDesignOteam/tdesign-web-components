@@ -1,12 +1,13 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
-import { TdChatInputStatus } from 'tdesign-web-components/chatbot';
+
+import { ModelStatus } from '../core/type';
 
 export default class ChatInput extends Component {
   inputValue = signal('传入内容');
 
-  status = signal<TdChatInputStatus>('sent');
+  status = signal<ModelStatus>('idle');
 
   onChange = (e: CustomEvent) => {
     console.log('onChange', e);
@@ -21,7 +22,7 @@ export default class ChatInput extends Component {
 
   onStop = () => {
     console.log('停止');
-    this.status.value = 'sent';
+    this.status.value = 'idle';
   };
 
   render() {
