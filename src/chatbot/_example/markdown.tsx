@@ -12,6 +12,8 @@ const props = {
   main: {
     content: mdContent,
   },
+  status: 'complete',
+  actions: true,
   role: 'assistant',
   thinking: {
     type: 'text',

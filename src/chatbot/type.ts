@@ -1,13 +1,20 @@
 import type { StyledProps, TNode } from '../common';
 import { TdTextareaProps } from '../textarea';
-import type { ModelServiceState, ModelStatus } from './core/type';
+import type { MessageStatus, ModelServiceState, ModelStatus } from './core/type';
 import { Message } from './core/type';
+
+export interface TdChatItemAction {
+  name: string;
+  render: TNode;
+  // 消息满足状态时才展示，默认消息完成时才展示
+  status?: MessageStatus[];
+}
 
 export interface TdChatItemProps extends Message {
   /**
    * 操作
    */
-  actions?: Array<TNode>;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | Boolean;
   /**
    * 作者
    */

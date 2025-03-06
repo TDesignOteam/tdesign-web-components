@@ -3,23 +3,30 @@ import '../../collapse';
 import '../../skeleton';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
+import 'tdesign-icons-web-components/esm/components/refresh';
+import 'tdesign-icons-web-components/esm/components/copy';
 
 import { isString } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { TdChatItemProps } from '../type';
+import type { TdChatItemAction, TdChatItemProps } from '../type';
 
 import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
+
+const presetActions: TdChatItemAction[] = [
+  { name: 'refresh', render: <t-icon-refresh />, status: ['complete'] },
+  { name: 'copy', render: <t-icon-copy /> },
+];
 @tag('t-chat-item')
 export default class ChatItem extends Component<TdChatItemProps> {
   static css = [styles];
 
   static propTypes = {
-    actions: Array,
+    actions: [Array, Function, Boolean],
     name: String,
     avatar: String,
     datetime: String,
@@ -67,6 +74,32 @@ export default class ChatItem extends Component<TdChatItemProps> {
         </div>
       </div>
     );
+  }
+
+  renderActions() {
+    const { actions, status } = this.props;
+    if (!actions) {
+      return null;
+    }
+    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : presetActions;
+    if (typeof actions === 'function') {
+      arrayActions = actions(presetActions);
+    }
+
+    return arrayActions.map((item, idx) => {
+      // 默认消息完成时才展示action
+      if (!item.status && status !== 'complete') {
+        return null;
+      }
+      if (item.status && !item.status.includes(status)) {
+        return null;
+      }
+      return (
+        <span class={`${className}__actions__item__wrapper`} onClick={() => this.handleAction(item.name, idx)}>
+          {item.render}
+        </span>
+      );
+    });
   }
 
   get renderMessageStatus() {
@@ -155,17 +188,15 @@ export default class ChatItem extends Component<TdChatItemProps> {
                   role={role}
                 ></t-chat-content>
               )}
-              <div className={`${className}__actions-margin`}>
-                <slot name="actions"></slot>
-              </div>
             </div>
+            <div className={`${className}__actions`}>{this.renderActions()}</div>
           </div>
         ) : null}
       </div>
     );
   }
 
-  private handleAction = (action: any, index: number) => {
+  private handleAction = (action: string, index: number) => {
     this.fire('action', { action, index });
   };
 }

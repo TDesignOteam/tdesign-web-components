@@ -37,6 +37,10 @@ export default class Chatlist extends Component<TdChatListProps> {
                   variant: 'outline',
                   placements: 'left',
                   avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+                  actions: (preset) => preset,
+                  onAction: (e) => {
+                    console.log('点击', e.detail);
+                  },
                 };
           return <t-chat-item {...roleProps} {...item} key={item.id} />;
         })}
