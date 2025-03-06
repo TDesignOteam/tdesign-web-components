@@ -1,7 +1,7 @@
 const chunks = [
-  { type: 'search', title: '开始获取资料…' },
-  { type: 'search', title: '找到 12 篇相关资料...', content: [] },
-  { type: 'search', title: '找到 21 篇相关资料...', content: [] },
+  // { type: 'search', title: '开始获取资料…' },
+  // { type: 'search', title: '找到 12 篇相关资料...', content: [] },
+  // { type: 'search', title: '找到 21 篇相关资料...', content: [] },
   { type: 'think', title: '思考中...', content: '嗯.' },
   { type: 'think', title: '思考中...', content: '我现在需' },
   { type: 'think', title: '思考中...', content: '要帮用' },

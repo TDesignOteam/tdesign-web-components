@@ -50,7 +50,7 @@ app.post('/sse/normal', (req, res) => {
     }
   });
 
-  sendStream(res, messages, 200, req);
+  sendStream(res, messages, 600, req);
 });
 
 // 带鉴权的POST请求

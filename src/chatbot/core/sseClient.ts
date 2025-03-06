@@ -24,7 +24,7 @@ export default class SSEClient {
     // 构造函数参数属性初始化
   }
 
-  async *connect(config: RequestInit) {
+  async connect(config: RequestInit) {
     try {
       this.controller = new AbortController();
       this.config = {
@@ -44,8 +44,8 @@ export default class SSEClient {
       }
 
       this.reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
-      // 直接开始读取流数据并通过生成器返回
-      yield* this.readStream();
+      // 直接开始读取流数据
+      await this.readStream();
     } catch (err) {
       this.handleError(err);
       this.reconnect();
@@ -59,7 +59,7 @@ export default class SSEClient {
     this.controller = null;
   }
 
-  private async *readStream() {
+  private async readStream() {
     try {
       while (true) {
         // eslint-disable-next-line no-await-in-loop
@@ -71,7 +71,8 @@ export default class SSEClient {
 
         // 解析SSE格式数据（可能包含多个事件）
         for (const eventData of this.parseChunk(value)) {
-          yield eventData;
+          this.handlers.onMessage?.(eventData);
+          // yield eventData;
         }
       }
     } catch (err) {
@@ -79,26 +80,6 @@ export default class SSEClient {
       this.reconnect();
     }
   }
-
-  // private parseChunk(chunk: string) {
-  //   // 清洗SSE格式数据
-  //   const cleanedStr = chunk
-  //     .replace(/^data:\s*/gm, '') // 处理多行data前缀
-  //     .replace(/\n\n$/, '');
-
-  //   try {
-  //     return JSON.parse(cleanedStr);
-  //   } catch {
-  //     // 包含多层data:前缀的特殊情况处理
-  //     const deepCleaned = cleanedStr.replace(/(\bdata:\s*)+/g, '');
-  //     try {
-  //       return JSON.parse(deepCleaned);
-  //     } catch {
-  //       console.warn('SSE数据解析失败，返回原始数据');
-  //       return deepCleaned;
-  //     }
-  //   }
-  // }
 
   private parseChunk(chunk: string): Array<SSEChunkData> {
     // 分割多个SSE事件（按两个换行符分割）

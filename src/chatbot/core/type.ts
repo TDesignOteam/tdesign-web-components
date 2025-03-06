@@ -112,10 +112,10 @@ export interface LLMConfig {
   stream?: boolean;
   retryInterval?: number;
   maxRetries?: number;
-  parseRequest?: (params: RequestParams) => RequestInit;
-  parseResponse?: (chunk: SSEChunkData) => ChunkParsedResult;
+  onRequest?: (params: RequestParams) => RequestInit;
+  onMessage?: (chunk: SSEChunkData) => ChunkParsedResult;
   onComplete?: (params: RequestParams) => void;
-  onError?: (params: RequestParams, error: Error) => void;
+  onError?: (error: Error, params: RequestParams) => void;
 }
 
 // 消息相关状态

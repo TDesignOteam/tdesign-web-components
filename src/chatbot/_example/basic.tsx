@@ -100,8 +100,14 @@ const mockModels: ModelServiceState = {
   config: {
     endpoint: 'http://localhost:3000/sse/normal',
     stream: true,
-    parseResponse: defaultChunkParser,
-    parseRequest: (params) => {
+    onComplete: () => {
+      console.log('onComplete');
+    },
+    onError: (err) => {
+      console.log('onError', err);
+    },
+    onMessage: defaultChunkParser,
+    onRequest: (params) => {
       const { prompt, messageID } = params;
       return {
         credentials: 'include',

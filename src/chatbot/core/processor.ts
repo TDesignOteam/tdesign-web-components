@@ -1,9 +1,6 @@
-import SSEClient from './sseClient';
-import type { Attachment, ChunkParsedResult, LLMConfig, Message, RequestParams, SSEChunkData } from './type';
+import type { Attachment, ChunkParsedResult, LLMConfig, Message, RequestParams } from './type';
 
-export class ChatEngine {
-  private sseClient: SSEClient;
-
+export default class ChatProcessor {
   constructor(private config: LLMConfig) {
     // 构造函数参数属性初始化
   }
@@ -44,38 +41,12 @@ export class ChatEngine {
 
   public async handleBatchResponse(params: RequestParams): Promise<ChunkParsedResult> {
     const response = await this.fetchLLMResponse(params);
-    const parsed = this.config?.parseResponse?.(response);
-    console.log('===parsed', parsed);
+    const parsed = this.config?.onMessage?.(response);
     return parsed;
     // this.messageStore.setMessageStatus(messageId, 'complete');
   }
 
-  public async *handleStreamResponse(params: RequestParams) {
-    const req = this.config?.parseRequest?.(params);
-    console.log('=====req', { ...req }, this.config.endpoint);
-    this.sseClient = new SSEClient(this.config.endpoint, {
-      onError: (error) => {
-        console.error('SSE连接错误:', error);
-        this.config?.onError?.(params, error);
-      },
-      onComplete: () => {
-        console.log('SSE连接关闭');
-        this.config?.onComplete?.(params);
-      },
-    });
-
-    // 直接通过生成器返回数据
-    for await (const data of this.sseClient.connect(req)) {
-      yield this.processStreamChunk(data);
-    }
-  }
-
-  public abort() {
-    this.sseClient?.close();
-  }
-
-  private processStreamChunk(chunk: SSEChunkData): ChunkParsedResult {
-    const parsed = this.config?.parseResponse?.(chunk);
+  processStreamChunk(parsed: ChunkParsedResult): ChunkParsedResult {
     // 处理搜索阶段
     if (parsed.search) {
       return {
@@ -117,7 +88,7 @@ export class ChatEngine {
   }
 
   private async fetchLLMResponse(params: RequestParams) {
-    const req = this.config?.parseRequest?.(params);
+    const req = this.config?.onRequest?.(params);
     const response = await fetch(this.config.endpoint, {
       method: 'POST',
       headers: {

@@ -1,54 +1,52 @@
 // chat-service.ts
 import { MessageStore } from './store/message';
 import { ModelStore } from './store/model';
-import { ChatEngine } from './engine';
-import type { Attachment, LLMConfig, Message, ModelParams, ModelServiceState } from './type';
+import ChatProcessor from './processor';
+import SSEClient from './sseClient';
+import type {
+  Attachment,
+  LLMConfig,
+  Message,
+  ModelParams,
+  ModelServiceState,
+  RequestParams,
+  SSEChunkData,
+} from './type';
 
-export default class ChatService {
+export default class ChatEngine {
   public readonly messageStore: MessageStore;
 
   public readonly modelStore: ModelStore;
 
-  private engine: ChatEngine;
+  private processor: ChatProcessor;
 
   private config: LLMConfig;
+
+  private sseClient: SSEClient;
 
   constructor(initialModelState: ModelServiceState, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
     this.modelStore = new ModelStore(initialModelState);
     this.config = initialModelState.config;
-    this.engine = new ChatEngine({
-      ...this.config,
-      onComplete: (params) => {
-        this.setMessageStatus(params.messageID, 'complete');
-        this.config.onComplete?.(params);
-      },
-      onError: (params, error) => {
-        this.setMessageStatus(params.messageID, 'error');
-        this.config.onError?.(params, error);
-      },
-    });
+    this.processor = new ChatProcessor(this.config);
   }
 
   public async sendMessage(prompt: string, attachments?: Attachment[]) {
-    const userMessage = this.engine.createUserMessage(prompt, attachments);
-    const aiMessage = this.engine.createAssistantMessage();
+    const userMessage = this.processor.createUserMessage(prompt, attachments);
+    const aiMessage = this.processor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
     const { id } = aiMessage;
     if (this.config.stream) {
       // 处理sse流式响应模式
       this.setMessageStatus(id, 'streaming');
-      const stream = this.engine.handleStreamResponse({
+      await this.handleStreamResponse({
         prompt,
         messageID: id,
       });
-      for await (const chunk of stream) {
-        this.messageStore.appendContent(id, chunk);
-      }
     } else {
       // 处理批量响应模式
       this.setMessageStatus(id, 'pending');
-      await this.engine.handleBatchResponse({
+      await this.processor.handleBatchResponse({
         prompt,
         messageID: id,
       });
@@ -56,8 +54,8 @@ export default class ChatService {
     }
   }
 
-  public async abortChat() {
-    this.engine.abort();
+  public abortChat() {
+    this.sseClient.close();
   }
 
   public async updateModel(params: ModelParams) {
@@ -70,6 +68,31 @@ export default class ChatService {
     if ('useThink' in params) {
       this.modelStore.setUseThink(params.useThink);
     }
+  }
+
+  public async handleStreamResponse(params: RequestParams) {
+    const req = this.config?.onRequest?.(params);
+    this.sseClient = new SSEClient(this.config.endpoint, {
+      onMessage: (msg: SSEChunkData) => {
+        const parsed = this.config?.onMessage?.(msg);
+        const processed = this.processor.processStreamChunk(parsed);
+        this.messageStore.appendContent(params.messageID, processed);
+      },
+      onError: (error) => {
+        this.setMessageStatus(params.messageID, 'error');
+        this.config.onError?.(error, params);
+      },
+      onComplete: () => {
+        this.setMessageStatus(params.messageID, 'complete');
+        this.config.onComplete?.(params);
+      },
+    });
+
+    await this.sseClient.connect(req);
+  }
+
+  public abort() {
+    this.sseClient?.close();
   }
 
   private convertMessages(messages?: Message[]) {
