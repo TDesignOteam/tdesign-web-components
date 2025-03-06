@@ -14,6 +14,15 @@ const { beforeEnter, enter, afterEnter, beforeLeave, leave, afterLeave } = getCo
 
 @tag('t-collapse-panel')
 export default class CollapsePanel extends Component<TdCollapsePanelProps> {
+  static css = [
+    `
+    .${classPrefix}-slide-down-enter-active,
+    .${classPrefix}-slide-down-leave-active {
+      transition: height 0.2s, padding 0.2s;
+    }
+    `,
+  ];
+
   static defaultProps = {
     expandIcon: true,
   };
@@ -158,7 +167,9 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         className={`${this.className}__body`}
         show={isActive}
       >
-        <div className={`${this.className}__content`}>{this.props.content}</div>
+        <div className={`${this.className}__content`}>
+          <slot>{this.props.content}</slot>
+        </div>
       </div>
     );
   }
