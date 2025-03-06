@@ -17,19 +17,21 @@ export default class ChatInput extends Component<TdChatInputProps> {
   static css = [styles];
 
   static propTypes = {
-    stopDisabled: Boolean,
     placeholder: String,
     disabled: Boolean,
-    autofocus: Boolean,
-    autosize: [Boolean, Object],
     value: String,
-    pending: Boolean,
+    defaultValue: String,
+    status: String,
     allowStop: Boolean,
+    textareaProps: Object,
   };
 
-  static defaultProps = {
-    pending: false,
+  static defaultProps: Partial<TdChatInputProps> = {
+    status: 'idle',
     allowStop: true,
+    textareaProps: {
+      autosize: { minRows: 2 },
+    },
   };
 
   pValue: Omi.SignalValue<string | number> = signal('');
@@ -39,9 +41,9 @@ export default class ChatInput extends Component<TdChatInputProps> {
   shiftDown = false;
 
   install() {
-    const { value } = this.props;
+    const { value, defaultValue } = this.props;
 
-    this.pValue.value = value;
+    this.pValue.value = value || defaultValue;
   }
 
   get inputValue() {
@@ -50,8 +52,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
   }
 
   renderButton = () => {
-    const { pending, allowStop, disabled } = this.props;
-    const hasStop = allowStop && pending;
+    const { status, allowStop, disabled } = this.props;
+    const hasStop = allowStop && status !== 'complete' && status !== 'idle';
 
     return (
       <t-button
@@ -86,10 +88,9 @@ export default class ChatInput extends Component<TdChatInputProps> {
           <t-textarea
             ref={this.inputRef}
             className={`${className}__textarea`}
+            {...props.textareaProps}
             placeholder={props.placeholder}
             disabled={props.disabled}
-            autosize={props.autosize}
-            autofocus={props.autofocus}
             value={this.inputValue}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}

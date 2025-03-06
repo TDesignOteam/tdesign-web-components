@@ -5,10 +5,10 @@ import ReactiveState from './reactiveState';
 export class MessageStore extends ReactiveState<MessageState> {
   constructor(initialState?: Partial<MessageState>) {
     super({
-      modelStatus: 'idle',
       messageIds: [],
       messages: {},
       ...initialState,
+      modelStatus: 'idle',
     });
   }
 

@@ -5,8 +5,7 @@ import { Component } from 'omi';
 import mdContent from '../mock/testMarkdown.md?raw';
 
 const props = {
-  theme: 'default',
-  variant: 'base',
+  variant: 'outline',
   placements: 'left',
   avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
   id: '123',

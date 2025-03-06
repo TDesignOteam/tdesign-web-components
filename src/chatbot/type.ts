@@ -1,5 +1,6 @@
 import type { StyledProps, TNode } from '../common';
-import type { ModelServiceState } from './core/type';
+import { TdTextareaProps } from '../textarea';
+import type { ModelServiceState, ModelStatus } from './core/type';
 import { Message } from './core/type';
 
 export interface TdChatItemProps extends Message {
@@ -96,6 +97,12 @@ export interface TdChatContentProps {
   isNormalText?: boolean;
   textLoading: boolean;
 }
+
+export interface TdChatCodeProps {
+  lang: string;
+  code: string;
+}
+
 export interface TdChatActionsProps {
   isGood?: Boolean;
   isBad?: Boolean;
@@ -110,17 +117,13 @@ export interface TdChatInputProps {
   placeholder?: string;
   disabled?: boolean;
   value: string | number;
-  modelValue: string | number;
   defaultValue: string | number;
-  /** 是否在生成中 */
-  pending?: boolean;
-  /** 是否允许停止 */
+  /** 生成状态 */
+  status?: ModelStatus;
+  /** 生成时是否允许停止 */
   allowStop?: boolean;
-  /**
-   * 高度自动撑开。 autosize = true 表示组件高度自动撑开，同时，依旧允许手动拖高度。如果设置了 autosize.maxRows 或者 autosize.minRows 则不允许手动调整高度
-   * @default false
-   */
-  autosize?: boolean | { minRows?: number; maxRows?: number };
+  /** 透传textarea参数 */
+  textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
   onSend?: (value: string, context: { e: MouseEvent | KeyboardEvent }) => void;
   onStop?: (value: string, context: { e: MouseEvent }) => void;
   onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
@@ -152,7 +155,7 @@ export interface TdChatItemMeta {
 }
 export type ModelRoleEnum = 'assistant' | 'user' | 'error' | 'model-change' | 'system';
 
-export type Variant = 'text' | 'base' | 'outline';
+export type Variant = 'base' | 'text' | 'outline';
 export type Layout = 'single' | 'both';
 export interface FetchSSEOptions {
   success?: (res: SSEEvent) => void; // 流式数据解析成功回调

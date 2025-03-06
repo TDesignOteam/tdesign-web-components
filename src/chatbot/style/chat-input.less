@@ -10,13 +10,13 @@
   // 附件区
   &__header {
     position: relative;
-    bottom: calc(-1 * var(--chat-input-radius));
-    margin-top: calc(-1 * var(--chat-input-radius));
-    padding-bottom: var(--chat-input-radius);
-    border: 1px solid var(--chat-input-content-default-border);
+    bottom: calc(-1 * var(--t-chat-input-radius));
+    margin-top: calc(-1 * var(--t-chat-input-radius));
+    padding-bottom: var(--t-chat-input-radius);
+    border: 1px solid var(--t-chat-input-content-default-border);
     border-bottom: none;
-    border-top-left-radius: var(--chat-input-radius);
-    border-top-right-radius: var(--chat-input-radius);
+    border-top-left-radius: var(--t-chat-input-radius);
+    border-top-right-radius: var(--t-chat-input-radius);
 
     &:empty {
       display: none;
@@ -30,8 +30,8 @@
     display: flex;
     flex-direction: column;
     padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
-    border: 1px solid var(--chat-input-content-default-border);
-    border-radius: var(--chat-input-radius);
+    border: 1px solid var(--t-chat-input-content-default-border);
+    border-radius: var(--t-chat-input-radius);
     background: @bg-color-secondarycontainer;
     transition: all .3s;
     z-index: 1;
@@ -51,7 +51,7 @@
   &__textarea {
     flex: 1;
     min-height: 0;
-    max-height: var(--chat-input-textarea-max-height);
+    max-height: var(--t-chat-input-textarea-max-height);
     display: flex;
     flex-direction: column;
 
@@ -62,15 +62,15 @@
       overflow-y: auto;
 
       &::-webkit-scrollbar {
-        width: var(--chat-input-textarea-scrollbar-width);
+        width: var(--t-chat-input-textarea-scrollbar-width);
       }
       &::-webkit-scrollbar-thumb {
-        border-radius: var(--chat-input-textarea-scrollbar-thumb-radius);
-        background-color: var(--chat-input-textarea-scrollbar-color);
+        border-radius: var(--t-chat-input-textarea-scrollbar-thumb-radius);
+        background-color: var(--t-chat-input-textarea-scrollbar-color);
         cursor: pointer;
       }
       &::-webkit-scrollbar-thumb:hover {
-        background-color: var(--chat-input-textarea-scrollbar-hover-color);
+        background-color: var(--t-chat-input-textarea-scrollbar-hover-color);
       }
     }
 
@@ -111,8 +111,8 @@
       width: @comp-size-s;
       height: @comp-size-s;
       border-radius: @border-radius-circle;
-      background: var(--chat-input-button-default-bg);
-      color: var(--chat-input-button-default-color);
+      background: var(--t-chat-input-button-default-bg);
+      color: var(--t-chat-input-button-default-color);
     }
     
     &--focus::part(@{prefix}-button) {

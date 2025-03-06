@@ -70,7 +70,6 @@ export class ChatEngine {
 
   private processStreamChunk(chunk: SSEChunkData): ChunkParsedResult {
     const parsed = this.config?.parseResponse?.(chunk);
-    console.log('===parsed content', parsed);
     // 处理搜索阶段
     if (parsed.search) {
       return {

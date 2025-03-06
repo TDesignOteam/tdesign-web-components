@@ -41,7 +41,6 @@ export default class MessageComponent extends Component<MessageComponentProps> {
   resetTimer = () => {
     const { duration, onDurationEnd, onClose } = this.props;
     if (duration > 0) {
-      console.log(1);
       this.timer.current = setTimeout(() => {
         onDurationEnd?.();
         onClose?.({

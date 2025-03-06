@@ -41,8 +41,6 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private unsubscribeMsg?: () => void;
 
-  private unsubscribeModel?: () => void;
-
   provide = {
     messageStore: {},
     modelStore: {},
@@ -53,13 +51,13 @@ export default class Chatbot extends Component<TdChatProps> {
     const { messageStore, modelStore } = this.chatService;
     this.provide.messageStore = messageStore;
     this.provide.modelStore = modelStore;
-    this.subscribeToChat();
+    this.modelStatus = messageStore.getState().modelStatus;
     this.messages = this.convertMessages(messageStore.getState());
+    this.subscribeToChat();
   }
 
   uninstall() {
     this.unsubscribeMsg?.();
-    this.unsubscribeModel?.();
   }
 
   // 订阅聊天状态变化
@@ -100,8 +98,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
-    const pending = this.modelStatus === 'pending' || this.modelStatus === 'streaming';
-    console.log('====render chat', pending, this.modelStatus);
+    console.log('====render chat', this.modelStatus);
     return (
       <div className={`${className} ${layoutClass}`}>
         <t-chat-list ref={this.listRef} data={this.messages} reverse={reverse} />
@@ -112,7 +109,12 @@ export default class Chatbot extends Component<TdChatProps> {
             </t-button>
           </div>
         )}
-        <t-chat-input autosize={{ minRows: 2 }} onSend={this.handleSend} pending={pending} onStop={this.handleStop} />
+        <t-chat-input
+          autosize={{ minRows: 2 }}
+          onSend={this.handleSend}
+          status={this.modelStatus}
+          onStop={this.handleStop}
+        />
       </div>
     );
   }
