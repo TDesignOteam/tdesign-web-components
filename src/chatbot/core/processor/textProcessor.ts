@@ -1,6 +1,6 @@
-import type { Attachment, ChunkParsedResult, Message } from './type';
+import type { Attachment, ChunkParsedResult, Message } from '../type';
 
-export default class ChatProcessor {
+export default class ChatTextProcessor {
   public createUserMessage(content: string, files?: Attachment[]): Message {
     if (files && files.length > 0) {
       this.createAttachments(files);

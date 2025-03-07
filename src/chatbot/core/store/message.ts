@@ -24,12 +24,12 @@ export class MessageStore extends ReactiveState<MessageState> {
   }
 
   createMultiMessages(messages: Message[]) {
-    for (const msg of messages) {
-      this.setState((draft) => {
+    this.setState((draft) => {
+      messages.forEach((msg) => {
         draft.messageIds.push(msg.id);
         draft.messages[msg.id] = msg;
       });
-    }
+    });
   }
 
   appendContent(messageId: string, chunk: ChunkParsedResult) {

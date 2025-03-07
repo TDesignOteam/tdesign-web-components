@@ -1,6 +1,6 @@
+import ChatProcessor from './processor/textProcessor';
 import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
-import ChatProcessor from './processor';
 import type { Attachment, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
 
 export interface IChatEngine {
@@ -21,7 +21,7 @@ export default class ChatEngine implements IChatEngine {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
     this.config = initialModelState.config;
     this.llmService = new LLMService();
-    this.processor = new ChatProcessor(this.config);
+    this.processor = new ChatProcessor();
   }
 
   public async sendMessage(prompt: string, attachments?: Attachment[]) {
@@ -54,7 +54,6 @@ export default class ChatEngine implements IChatEngine {
 
   public abortChat() {
     this.llmService.closeSSE();
-    // this.setMessageStatus(this.messageStore.currentMessageId, 'stop');
     this.config?.onAbort && this.config.onAbort();
   }
 
