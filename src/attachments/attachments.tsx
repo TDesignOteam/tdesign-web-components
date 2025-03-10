@@ -62,11 +62,11 @@ export default class Attachments extends Component {
   };
 
   render(props: AttachmentsProps) {
-    const { items, onRemove } = props;
+    const { items, onRemove, class: classNames } = props;
 
     const listCls = `${className}-list`;
     return (
-      <div class={`${listCls}-wrap`}>
+      <div class={classname(classNames, `${listCls}-wrap`)}>
         <o-transition-group
           ref={(e) => (this.containerRef.current = e)}
           class={classname(listCls, {
@@ -80,6 +80,7 @@ export default class Attachments extends Component {
               class="t-filecard-item"
               {...(onRemove && {
                 onRemove: () => {
+                  // 触发删除事件让父组件更新数据源
                   this.fire('remove', item);
                 },
               })}

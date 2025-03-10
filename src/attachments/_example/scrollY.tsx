@@ -70,6 +70,8 @@ export default class Button extends Component {
               overflow="scrollY"
               onRemove={(item) => {
                 console.log('remove', item);
+                this.filesList = this.filesList.filter((a) => a.uid !== item.detail.uid);
+                this.update();
               }}
             ></t-attachments>
           </div>
