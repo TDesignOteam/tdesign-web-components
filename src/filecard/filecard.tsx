@@ -1,14 +1,21 @@
 import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
 import { Component, tag } from 'omi';
 
 import classname from '../_util/classname';
+import { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
 import { TdFileCardProps } from './type';
 
+import styles from './style/filecard.less';
+
 export interface FileCardProps extends TdFileCardProps, StyledProps {}
+const className = `${getClassPrefix()}-filecard`;
 @tag('t-filecard')
 export default class FileCard extends Component<FileCardProps> {
+  static css = [styles];
+
   // 常量定义
   EMPTY = '\u00A0';
 
@@ -18,58 +25,56 @@ export default class FileCard extends Component<FileCardProps> {
 
   PRESET_FILE_ICONS = [
     {
-      icon: <t-icon name="file-excel" size="24px" />,
-      color: '#22b35e',
+      icon: <t-icon name="file-excel-filled" size="24px" />,
+      color: '#2BA471',
       ext: ['xlsx', 'xls'],
     },
     {
-      icon: <t-icon name="file-image" size="24px" />,
+      icon: <t-icon name="file-image-filled" size="24px" />,
       color: this.DEFAULT_ICON_COLOR,
       ext: this.IMG_EXTS,
     },
 
     {
-      icon: <t-icon name="file-code-1" size="24px" />,
+      icon: <t-icon name="file-code-1-filled" size="24px" />,
       color: this.DEFAULT_ICON_COLOR,
       ext: ['md', 'mdx'],
     },
     {
-      icon: <t-icon name="file-pdf" size="24px" />,
-      color: '#ff4d4f',
+      icon: <t-icon name="file-pdf-filled" size="24px" />,
+      color: '#D54941',
       ext: ['pdf'],
     },
     {
-      icon: <t-icon name="file-powerpoint" size="24px" />,
-      color: '#ff6e31',
+      icon: <t-icon name="file-powerpoint-filled" size="24px" />,
+      color: '#E37318',
       ext: ['ppt', 'pptx'],
     },
     {
-      icon: <t-icon name="file-word" size="24px" />,
-      color: '#1677ff',
+      icon: <t-icon name="file-word-filled" size="24px" />,
+      color: '#0052D9',
       ext: ['doc', 'docx'],
     },
     {
-      icon: <t-icon name="file-zip" size="24px" />,
-      color: '#fab714',
+      icon: <t-icon name="file-zip-filled" size="24px" />,
+      color: '#E37318',
       ext: ['zip', 'rar', '7z', 'tar', 'gz'],
     },
     {
-      icon: <t-icon name="video" size="24px" />,
-      color: '#ff4d4f',
+      icon: <t-icon name="video-filled" size="24px" />,
+      color: '#D54941',
       ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
     },
     {
-      icon: <t-icon name="file-music" size="24px" />,
-      color: '#8c8c8c',
+      icon: <t-icon name="file-music-filled" size="24px" />,
+      color: '#D54941',
       ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
     },
   ];
 
   state = {
-    previewImg: '',
     namePrefix: '',
     nameSuffix: '',
-    isImg: false,
     desc: '',
     icon: null,
     iconColor: '#8c8c8c',
@@ -88,7 +93,6 @@ export default class FileCard extends Component<FileCardProps> {
 
     this.state.namePrefix = namePrefix;
     this.state.nameSuffix = nameSuffix;
-    this.state.isImg = this.IMG_EXTS.includes(nameSuffix.toLowerCase().replace('.', ''));
     this.update();
   }
 
@@ -152,29 +156,29 @@ export default class FileCard extends Component<FileCardProps> {
   }
 
   render(props: FileCardProps) {
-    const { item, disabled, class: className } = props;
+    const { item, disabled, class: classNames } = props;
     const { status = 'done' } = item;
     const { desc, icon, iconColor, namePrefix, nameSuffix } = this.state;
 
     return (
       <div
-        class={classname(className, 'file-card-type-overview', {
-          'file-card-status-uploading': status === 'progress',
-          'file-card-status-error': status === 'fail',
+        class={classname(classNames, `${className}-overview`, {
+          [`${className}-status-uploading`]: status === 'progress',
+          [`${className}-status-error`]: status === 'fail',
         })}
       >
         {this.renderFileOverview(namePrefix, nameSuffix, icon, iconColor, desc)}
 
         {!disabled && this.props.onRemove && (
-          <button
-            class="file-card-remove"
+          <div
+            class={`${className}-remove`}
             onClick={(e: Event) => {
               e.stopPropagation();
-              this.fire('remove', { detail: item });
+              this.fire('remove', item);
             }}
           >
-            <t-icon name="close-circle-filled" />
-          </button>
+            <t-icon name="close-circle-filled" size="15px" />
+          </div>
         )}
       </div>
     );
@@ -183,15 +187,15 @@ export default class FileCard extends Component<FileCardProps> {
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
     return (
       <>
-        <div class="file-card-icon" style={{ color: iconColor }}>
+        <div class={`${className}-icon`} style={{ color: iconColor }}>
           {icon}
         </div>
-        <div class="file-card-content">
-          <div class="file-card-name">
-            <span class="file-card-name-prefix">{namePrefix || this.EMPTY}</span>
-            <span class="file-card-name-suffix">{nameSuffix}</span>
+        <div class={`${className}-content`}>
+          <div class={`${className}-name`}>
+            <span class={`${className}-name-prefix`}>{namePrefix || this.EMPTY}</span>
+            <span class={`${className}-name-suffix`}>{nameSuffix}</span>
           </div>
-          <div class="file-card-desc">{desc}</div>
+          <div class={`${className}-desc`}>{desc}</div>
         </div>
       </>
     );

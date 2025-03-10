@@ -1,5 +1,6 @@
 export * from './affix';
 export * from './alert';
+export * from './attachments';
 export * from './avatar';
 export * from './back-top';
 export * from './badge';

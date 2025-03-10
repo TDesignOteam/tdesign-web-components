@@ -1,23 +1,27 @@
-:host {
-    display: block;
+@import "./import.less";
+
+.@{prefix}-filecard {
+
+  &-overview {
     position: relative;
-    border-radius: 4px;
-    overflow: hidden;
-    transition: all 0.2s;
-  }
-  .file-card-type-overview {
-    width: 168px;
-    height: 52px;
-    border-radius: 6px;
-    padding: 11px;
-    background: #F3F3F3;
+    width: @file-card-item-width;
+    height: @file-card-item-height;
+    border-radius: @file-card-item-radius;
+    padding: @file-card-item-padding;
+    background: @file-card-item-bg;
     display: flex;
     align-items: center;
-    font-size: 14px;
-    color: #000;
+    font-size: @file-card-item-size;
+    color: @file-card-item-color;
+
+    &:hover {
+      .@{prefix}-filecard-remove {
+        visibility: visible;
+      }
+    }
   }
-  
-  .file-card-remove {
+
+  &-remove {
     position: absolute;
     top: 0px;
     right: 0px;
@@ -26,33 +30,35 @@
     cursor: pointer;
     padding: 0;
     z-index: 1;
+    visibility: hidden;
   }
-  
-  .file-card-icon {
+
+  &-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: @file-card-icon-width;
+    height: @file-card-icon-height;
   }
-  
-  .file-card-content {
-    margin-left: 6px;
+
+  &-content {
+    margin-left: @file-card-content-margin;
     text-align: left;
   }
 
-  .file-card-name {
-    max-width: 120px;
+  &-name {
+    max-width: @file-card-name-width;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
-  .file-card-desc {
+  &-desc {
     color: #9e9d9e;
-    font-size: 12px;
+    font-size: @file-card-item-desc-size;
 
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+}

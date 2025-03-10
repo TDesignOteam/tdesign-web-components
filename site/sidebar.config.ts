@@ -77,6 +77,12 @@ export default [
         path: '/webcomponents/components/filecard',
         component: () => import('tdesign-web-components/filecard/README.md'),
       },
+      {
+        title: 'attachments 文件附件',
+        name: 'attachments',
+        path: '/webcomponents/components/attachments',
+        component: () => import('tdesign-web-components/attachments/README.md'),
+      },
     ],
     tag: '',
   },
