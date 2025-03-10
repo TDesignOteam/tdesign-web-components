@@ -13,7 +13,6 @@ import styles from './style/attachments.less';
 
 export interface AttachmentsProps extends TdAttachmentsProps, StyledProps {}
 
-const TOLERANCE = 1;
 const className = `${getClassPrefix()}-attachment`;
 @tag('t-attachments')
 export default class Attachments extends Component {
@@ -25,32 +24,73 @@ export default class Attachments extends Component {
 
   containerRef = createRef<HTMLElement>();
 
+  installed() {
+    // 初始化时检查滚动状态
+    this.updateButtonVisibility();
+    // 监听手动滚动事件
+    this.containerRef.current?.addEventListener('scroll', () => {
+      this.updateButtonVisibility();
+    });
+  }
+
+  showPrevButton = false;
+
+  showNextButton = true;
+
+  // 更新按钮可见状态
+  updateButtonVisibility = () => {
+    const container = this.containerRef.current;
+    if (!container) return;
+
+    const { scrollLeft, scrollWidth, clientWidth } = container;
+    const maxScroll = scrollWidth - clientWidth;
+
+    // 保留1px容差防止小数计算问题
+    this.showPrevButton = scrollLeft > 1;
+    this.showNextButton = scrollLeft < maxScroll - 1;
+    this.update();
+  };
+
   // 滚动处理逻辑
 
   onScrollOffset = (offset: -1 | 1) => {
     const containerEle = this.containerRef.current;
     if (!containerEle) return;
 
-    // 计算整行滚动
+    // 获取所有子元素
+    const children = containerEle.querySelectorAll('t-filecard');
+    if (!children.length) return;
+
+    // 获取第一个子元素的宽度（包含外边距）
+    const firstChild = children[0] as HTMLElement;
+    const childStyle = window.getComputedStyle(firstChild);
+    const childWidth =
+      firstChild.offsetWidth + parseInt(childStyle.marginLeft, 10) + parseInt(childStyle.marginRight, 10) + 12;
+
+    // 计算可见区域能显示多少个子元素
     const containerWidth = containerEle.clientWidth;
+    const visibleCount = Math.floor(containerWidth / childWidth);
+    const scrollDistance = childWidth * visibleCount;
+
     const currentScroll = containerEle.scrollLeft;
+    const maxScroll = containerEle.scrollWidth - containerWidth;
     let targetScrollLeft = 0;
+
     if (offset === 1) {
       // 向右滚动
-      const maxScroll = containerEle.scrollWidth - containerWidth;
-      targetScrollLeft = Math.min(currentScroll + containerWidth, maxScroll);
+      targetScrollLeft = Math.min(currentScroll + scrollDistance, maxScroll);
 
-      // 到达最右边时停止
-      if (currentScroll >= maxScroll - TOLERANCE) {
-        return;
+      // 处理最后不足一屏的情况
+      if (maxScroll - targetScrollLeft < childWidth) {
+        targetScrollLeft = maxScroll;
       }
     } else {
       // 向左滚动
-      targetScrollLeft = Math.max(currentScroll - containerWidth, 0);
+      targetScrollLeft = Math.max(currentScroll - scrollDistance, 0);
 
-      // 到达最左边时停止
-      if (currentScroll <= TOLERANCE) {
-        return;
+      // 处理最后不足一屏的情况
+      if (targetScrollLeft < childWidth) {
+        targetScrollLeft = 0;
       }
     }
 
@@ -59,6 +99,9 @@ export default class Attachments extends Component {
       left: targetScrollLeft,
       behavior: 'smooth',
     });
+
+    // 滚动结束后更新按钮状态
+    setTimeout(() => this.updateButtonVisibility(), 500);
   };
 
   render(props: AttachmentsProps) {
@@ -88,14 +131,16 @@ export default class Attachments extends Component {
           ))}
         </o-transition-group>
 
-        {this.overflow === 'scrollX' && [
+        {this.overflow === 'scrollX' && this.showPrevButton && (
           <div class={`${listCls}-prev-btn`} onClick={() => this.onScrollOffset(-1)}>
             <t-icon name="chevron-left-circle" size="16px" />
-          </div>,
+          </div>
+        )}
+        {this.overflow === 'scrollX' && this.showNextButton && (
           <div class={`${listCls}-next-btn`} onClick={() => this.onScrollOffset(1)}>
             <t-icon name="chevron-right-circle" size="16px" />
-          </div>,
-        ]}
+          </div>
+        )}
       </div>
     );
   }
