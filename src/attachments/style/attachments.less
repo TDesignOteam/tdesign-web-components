@@ -1,0 +1,69 @@
+@import "./import.less";
+.@{prefix}-attachment {
+
+  &-list-wrap {
+    position: relative;
+    overflow: visible;
+    &:hover {
+      .@{prefix}-attachment-list-prev-btn,
+      .@{prefix}-attachment-list-next-btn {
+        visibility: visible;
+      }
+    }
+  }
+  
+  &-list {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: @attachment-line-gap;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+
+    .@{prefix}-filecard-item {
+      flex: 0 0 auto;
+    }
+
+    &-overflow-scrollX {
+      flex-wrap: nowrap;
+    }
+    &-overflow-scrollY {
+      overflow-y: auto;
+      flex-wrap: wrap;
+      max-height: calc(@attachment-line-height * 2 + @attachment-line-gap);
+    }
+
+    &-prev-btn,
+    &-next-btn {
+      width: @attachment-arrow-width;
+      height: @attachment-arrow-width;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: opacity 0.2s;
+      visibility: hidden;  
+      opacity: @attachment-arrow-opacity;
+    }
+
+    &-prev-btn {
+      left: @attachment-arrow-left;
+    }
+    
+    &-next-btn {
+      right: @attachment-arrow-left;
+    }
+  }
+}
+
+
+
+

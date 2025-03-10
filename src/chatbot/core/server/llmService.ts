@@ -1,4 +1,4 @@
-import type { ChunkParsedResult,LLMConfig, RequestParams, SSEChunkData } from '../type';
+import type { ChunkParsedResult, LLMConfig, RequestParams, SSEChunkData } from '../type';
 import SSEClient from './sseClient';
 
 export interface ILLMService {

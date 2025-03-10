@@ -1,5 +1,6 @@
 export * from './affix';
 export * from './alert';
+export * from './attachments';
 export * from './avatar';
 export * from './back-top';
 export * from './badge';
@@ -14,6 +15,7 @@ export * from './common';
 export * from './dialog';
 export * from './divider';
 export * from './dropdown';
+export * from './filecard';
 export * from './grid';
 export * from './image';
 export * from './input';

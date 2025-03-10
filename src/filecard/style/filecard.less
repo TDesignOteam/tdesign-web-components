@@ -1,0 +1,64 @@
+@import "./import.less";
+
+.@{prefix}-filecard {
+
+  &-overview {
+    position: relative;
+    width: @file-card-item-width;
+    height: @file-card-item-height;
+    border-radius: @file-card-item-radius;
+    padding: @file-card-item-padding;
+    background: @file-card-item-bg;
+    display: flex;
+    align-items: center;
+    font-size: @file-card-item-size;
+    color: @file-card-item-color;
+
+    &:hover {
+      .@{prefix}-filecard-remove {
+        visibility: visible;
+      }
+    }
+  }
+
+  &-remove {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1;
+    visibility: hidden;
+  }
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: @file-card-icon-width;
+    height: @file-card-icon-height;
+  }
+
+  &-content {
+    margin-left: @file-card-content-margin;
+    text-align: left;
+  }
+
+  &-name {
+    max-width: @file-card-name-width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-desc {
+    color: #9e9d9e;
+    font-size: @file-card-item-desc-size;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
