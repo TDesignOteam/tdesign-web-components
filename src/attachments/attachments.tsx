@@ -25,7 +25,7 @@ export default class Attachments extends Component {
   containerRef = createRef<HTMLElement>();
 
   installed() {
-    // 初始化时检查滚动状态
+    // 初始化时检查滚动的状态
     this.updateButtonVisibility();
     // 监听手动滚动事件
     this.containerRef.current?.addEventListener('scroll', () => {
