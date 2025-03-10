@@ -1,31 +1,90 @@
-// chat-service.ts
+import ChatProcessor from './processor/textProcessor';
+import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
-import { ModelStore } from './store/model';
-import { ChatEngine } from './engine';
-import type { LLMConfig, Message } from './type';
+import type { Attachment, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
 
-export default class ChatService {
+export interface IChatEngine {
+  sendMessage(prompt: string, attachments?: Attachment[]): Promise<void>;
+  abortChat(): void;
+}
+
+export default class ChatEngine implements IChatEngine {
   public readonly messageStore: MessageStore;
 
-  public readonly modelStore: ModelStore;
+  private processor: ChatProcessor;
 
-  private engine: ChatEngine;
+  private llmService: LLMService;
 
-  constructor(config: LLMConfig, initialMessages?: Message[]) {
+  private config: LLMConfig;
+
+  constructor(initialModelState: ModelServiceState, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.modelStore = new ModelStore({
-      currentModel: config.name || '未知',
-      config,
-    });
-    this.engine = new ChatEngine(this.messageStore, this.modelStore);
+    this.config = initialModelState.config;
+    this.llmService = new LLMService();
+    this.processor = new ChatProcessor();
   }
 
-  public async sendMessage(input: string, files?: File[]) {
-    const messageId = this.messageStore.createMessage(this.createUserMessage(input, files));
-    await this.engine.processMessage({
-      messageId,
-      content: input,
-      files,
+  public async sendMessage(prompt: string, attachments?: Attachment[]) {
+    const userMessage = this.processor.createUserMessage(prompt, attachments);
+    const aiMessage = this.processor.createAssistantMessage();
+    this.messageStore.createMultiMessages([userMessage, aiMessage]);
+    const { id } = aiMessage;
+    try {
+      if (this.config.stream) {
+        // 处理sse流式响应模式
+        this.setMessageStatus(id, 'streaming');
+        await this.handleStreamResponse({
+          prompt,
+          messageID: id,
+        });
+      } else {
+        // 处理批量响应模式
+        this.setMessageStatus(id, 'pending');
+        await this.handleBatchRequest({
+          prompt,
+          messageID: id,
+        });
+        this.setMessageStatus(id, 'complete');
+      }
+    } catch (error) {
+      this.setMessageStatus(id, 'error');
+      throw error;
+    }
+  }
+
+  public abortChat() {
+    this.llmService.closeSSE();
+    this.config?.onAbort && this.config.onAbort();
+  }
+
+  private async handleBatchRequest(params: RequestParams) {
+    const id = params.messageID;
+    this.setMessageStatus(id, 'pending');
+    const result = await this.llmService.handleBatchRequest(params, this.config);
+    this.messageStore.appendContent(id, result);
+    this.setMessageStatus(id, 'complete');
+  }
+
+  private async handleStreamResponse(params: RequestParams) {
+    const id = params.messageID;
+    this.setMessageStatus(id, 'streaming');
+
+    await this.llmService.handleStreamRequest(params, {
+      ...this.config,
+      onMessage: (chunk: SSEChunkData) => {
+        const parsed = this.config?.onMessage?.(chunk);
+        const processed = this.processor.processStreamChunk(parsed);
+        this.messageStore.appendContent(id, processed);
+        return processed;
+      },
+      onError: (error) => {
+        this.setMessageStatus(id, 'error');
+        this.config.onError?.(error, params);
+      },
+      onComplete: (isAborted) => {
+        this.setMessageStatus(id, isAborted ? 'stop' : 'complete');
+        this.config.onComplete?.(isAborted, params);
+      },
     });
   }
 
@@ -44,48 +103,8 @@ export default class ChatService {
     };
   }
 
-  private createUserMessage(content: string, files?: File[]): Omit<Message, 'id'> {
-    if (files && files.length > 0) {
-      this.createAttachments(files);
-    }
-
-    return {
-      role: 'user',
-      status: 'sent',
-      timestamp: `${Date.now()}`,
-      main: { type: 'text', status: 'sent', content },
-    };
-  }
-
-  private createAttachments(files: File[]) {
-    return files.map((file) => ({
-      type: 'file',
-      name: file.name,
-      url: URL.createObjectURL(file),
-      metadata: {
-        type: file.type,
-        size: file.size,
-      },
-    }));
+  private setMessageStatus(messageId: string, status: Message['status']) {
+    this.messageStore.setModelStatus(status);
+    this.messageStore.setMessageStatus(messageId, status);
   }
 }
-
-// export function createMockChatService() {
-//   const service = new ChatService([
-//     {
-//       name: 'mock',
-//       endpoint: 'mock://api',
-//       stream: false,
-//     },
-//   ]);
-
-//   service.engine = new MockEngine({
-//     getState: () => service.getState(),
-//     models: [],
-//   });
-
-//   return service;
-// }
-
-// // @ts-ignore
-// window.mockChatService = createMockChatService();

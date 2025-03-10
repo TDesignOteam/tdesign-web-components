@@ -1,5 +1,6 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
-export type MessageStatus = 'pending' | 'streaming' | 'sent' | 'error';
+export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
+export type ModelStatus = 'idle' | MessageStatus;
 export type ContentType = 'text' | 'markdown' | 'image' | 'audio' | 'video';
 export type AttachmentType = 'file' | 'image' | 'video' | 'audio';
 export type MediaFormat = {
@@ -61,15 +62,15 @@ export interface ReferenceItem {
 }
 
 interface PhaseContent<T = string> {
-  title?: string;
   status: MessageStatus;
-  content: T;
+  title?: string;
+  content?: T;
 }
 
 // 搜索和思考
 export type SearchResult = PhaseContent<ReferenceItem[]>;
 export type ThinkingContent = PhaseContent<string> & {
-  type: 'text' | 'markdown';
+  type?: 'text' | 'markdown';
 };
 
 // 附件系统
@@ -82,53 +83,62 @@ export interface Attachment {
 }
 
 // 消息主体
-export interface Message {
+export interface Message extends ChunkParsedResult {
   id: string;
   role: MessageRole;
   status: MessageStatus;
   timestamp?: string;
-  main?: MessageContent;
-  search?: SearchResult;
-  thinking?: ThinkingContent;
-  attachments?: Attachment[];
 }
 
 // 服务配置
+export interface ChunkParsedResult {
+  main?: MessageContent;
+  search?: SearchResult;
+  thinking?: ThinkingContent;
+}
 
-export interface ChunkParserResult {
-  search?: { title?: string; content: ReferenceItem[] };
-  thinking?: { title?: string; content: string };
-  main?: { type: ContentType; content: string };
+export type SSEChunkData = {
+  event?: string;
+  data: any;
+};
+
+export interface RequestParams extends ModelParams {
+  messageID: string;
+  prompt: string;
 }
-export interface ChunkParser {
-  parse(chunk: any): ChunkParserResult;
-}
+
 export interface LLMConfig {
-  name?: string;
   endpoint?: string;
-  headers?: Record<string, string>;
   stream?: boolean;
-  supportedContentTypes?: ContentType[];
-  parser?: ChunkParser; // 解析器配置
+  retryInterval?: number;
+  maxRetries?: number;
+  onRequest?: (params: RequestParams) => RequestInit;
+  onMessage?: (chunk: SSEChunkData) => ChunkParsedResult;
+  onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
+  onAbort?: () => void;
+  onError?: (error: Error, params: RequestParams) => void;
 }
 
 // 消息相关状态
 export interface MessageState {
   messageIds: string[];
   messages: Record<string, Message>;
+  modelStatus: ModelStatus;
 }
 
 // 模型服务相关状态
-export interface ModelServiceState {
-  currentModel: string;
-  isLoading: boolean;
-  error: string | Error | null;
+export interface ModelParams {
+  model?: string;
+  useThink?: boolean;
+  useSearch?: boolean;
+}
+
+export interface ModelServiceState extends ModelParams {
   config: LLMConfig;
-  // availableModels: string[];
 }
 
 // 聚合根状态
 export interface ChatState {
-  messagesList: MessageState;
-  modelService: ModelServiceState;
+  message: MessageState;
+  model: ModelServiceState;
 }

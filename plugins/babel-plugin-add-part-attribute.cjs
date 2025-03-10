@@ -1,4 +1,4 @@
-module.exports = function ({ types: t }) {
+module.exports = function ({ types: t, jsxFactoryName = 'Component' }) {
   /** 解析基础类型数据 */
   function baseTypeHandler(v) {
     // 字符串
@@ -23,7 +23,7 @@ module.exports = function ({ types: t }) {
         const { callee } = node;
         if (
           t.isMemberExpression(callee) &&
-          t.isIdentifier(callee.object, { name: 'Component' }) &&
+          t.isIdentifier(callee.object, { name: jsxFactoryName }) &&
           t.isIdentifier(callee.property, { name: 'h' })
         ) {
           const [type, props] = node.arguments;

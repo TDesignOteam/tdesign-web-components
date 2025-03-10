@@ -3,8 +3,9 @@ import './chat-item';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import styles from '../style/chat-list.less?inline';
 import type { TdChatItemProps, TdChatListProps } from '../type';
+
+import styles from '../style/chat-list.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chat-list')
@@ -20,7 +21,6 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   render(props: { data: TdChatItemProps[]; reverse?: boolean }) {
     const items = props.reverse ? [...props.data].reverse() : props.data;
-    console.log('====list render', items);
     return (
       <div ref={this.listRef} className={`${className}__list`} onScroll={this.handleScroll}>
         {items.map((item) => {
@@ -29,16 +29,18 @@ export default class Chatlist extends Component<TdChatListProps> {
           const roleProps =
             role === 'user'
               ? {
-                  theme: 'primary',
                   variant: 'base',
                   placement: 'right',
                   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
                 }
               : {
-                  theme: 'default',
-                  variant: 'base',
+                  variant: 'text',
                   placements: 'left',
                   avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+                  actions: (preset) => preset,
+                  onAction: (e) => {
+                    console.log('点击', e.detail);
+                  },
                 };
           return <t-chat-item {...roleProps} {...item} key={item.id} />;
         })}

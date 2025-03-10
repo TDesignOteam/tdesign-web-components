@@ -1,5 +1,5 @@
 import 'tdesign-icons-web-components/esm/components/send';
-import 'tdesign-icons-web-components/esm/components/stop-circle';
+import 'tdesign-icons-web-components/esm/components/stop';
 import '../../textarea';
 import '../../button';
 
@@ -7,8 +7,9 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import styles from '../style/chat-input.less?inline';
 import type { TdChatInputProps } from '../type';
+
+import styles from '../style/chat-input.less';
 
 const className = `${getClassPrefix()}-chat__input`;
 @tag('t-chat-input')
@@ -16,12 +17,21 @@ export default class ChatInput extends Component<TdChatInputProps> {
   static css = [styles];
 
   static propTypes = {
-    stopDisabled: Boolean,
     placeholder: String,
     disabled: Boolean,
-    autofocus: Boolean,
-    autosize: [Boolean, Object],
     value: String,
+    defaultValue: String,
+    status: String,
+    allowStop: Boolean,
+    textareaProps: Object,
+  };
+
+  static defaultProps: Partial<TdChatInputProps> = {
+    status: 'idle',
+    allowStop: true,
+    textareaProps: {
+      autosize: { minRows: 2 },
+    },
   };
 
   pValue: Omi.SignalValue<string | number> = signal('');
@@ -31,9 +41,9 @@ export default class ChatInput extends Component<TdChatInputProps> {
   shiftDown = false;
 
   install() {
-    const { value } = this.props;
+    const { value, defaultValue } = this.props;
 
-    this.pValue.value = value;
+    this.pValue.value = value || defaultValue;
   }
 
   get inputValue() {
@@ -41,23 +51,34 @@ export default class ChatInput extends Component<TdChatInputProps> {
     return this.pValue.value;
   }
 
-  renderSender = () => (
-    <t-button
-      theme="default"
-      size="small"
-      variant="text"
-      className={classname([
-        `${className}__button`,
-        {
-          [`${className}__button--focus`]: this.inputValue,
-        },
-      ])}
-      onClick={this.handleSend}
-      disabled={this.props.disabled}
-    >
-      {convertToLightDomNode(<t-icon-send className={`${className}__button__icon`} />)}
-    </t-button>
-  );
+  renderButton = () => {
+    const { status, allowStop, disabled } = this.props;
+    const hasStop = allowStop && status !== 'complete' && status !== 'stop' && status !== 'idle';
+
+    return (
+      <t-button
+        theme="default"
+        size="small"
+        variant="text"
+        className={classname([
+          `${className}__button`,
+          {
+            [`${className}__button--focus`]: this.inputValue || hasStop,
+          },
+        ])}
+        onClick={hasStop ? this.handleStop : this.handleSend}
+        disabled={disabled}
+      >
+        {convertToLightDomNode(
+          hasStop ? (
+            <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
+          ) : (
+            <t-icon-send className={`${className}__button__icon`} />
+          ),
+        )}
+      </t-button>
+    );
+  };
 
   render(props: any) {
     return (
@@ -67,10 +88,9 @@ export default class ChatInput extends Component<TdChatInputProps> {
           <t-textarea
             ref={this.inputRef}
             className={`${className}__textarea`}
+            {...props.textareaProps}
             placeholder={props.placeholder}
             disabled={props.disabled}
-            autosize={props.autosize}
-            autofocus={props.autofocus}
             value={this.inputValue}
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}
@@ -81,13 +101,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
           <div className={`${className}__actions`}>
             {/* TODO: 功能实现 */}
             <div className={`${className}__model`}>模型功能区</div>
-            {this.renderSender()}
-            {/* TODO: 控制逻辑 */}
-            {props.stopDisabled && (
-              <t-button onClick={this.handleStop}>
-                {convertToLightDomNode(<t-icon-send className={`${className}__button__icon`} />)}
-              </t-button>
-            )}
+            {this.renderButton()}
           </div>
         </div>
       </div>
@@ -128,7 +142,10 @@ export default class ChatInput extends Component<TdChatInputProps> {
     }
   };
 
-  private handleStop = () => {
-    this.fire('stop');
+  private handleStop = (e) => {
+    if (this.props.allowStop) {
+      this.fire('stop');
+      this.props.onStop(this.inputValue as string, { e });
+    }
   };
 }

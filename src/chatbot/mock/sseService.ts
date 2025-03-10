@@ -12,7 +12,7 @@
 //     //   state.messages[assistantId] = {
 //     //     id: assistantId,
 //     //     role: 'assistant',
-//     //     status: 'sent',
+//     //     status: 'complete',
 //     //     phase: 'complete',
 //     //     timestamp: Date.now(),
 //     //     content: {
@@ -109,6 +109,7 @@
 // }
 
 export class SSEResponse {
+  constructor(private isErrorScenario = false) {}
   private chunks = [
     { type: 'search', title: '开始获取资料…' },
     { type: 'search', title: '找到 12 篇相关资料...', content: [] },
@@ -116,6 +117,9 @@ export class SSEResponse {
     { type: 'think', title: '思考中...', content: '嗯.' },
     { type: 'think', title: '思考中...', content: '我现在需' },
     { type: 'think', title: '思考中...', content: '要帮用' },
+    { type: 'think', title: '思考中...', content: '户说明一下' },
+    { type: 'think', title: '思考中...', content: '假数据是' },
+    { type: 'think', title: '思考中...', content: '这是个mock' },
     { type: 'text', msg: '\n\n' },
     { type: 'text', msg: '**' },
     { type: 'text', msg: '参考' },
@@ -169,18 +173,36 @@ export class SSEResponse {
   }
 
   async getResponse(): Promise<Response> {
+    if (this.isErrorScenario) {
+      return new Response(null, {
+        status: 500,
+        statusText: 'Internal Server Error',
+      });
+    }
+
     return new Response(
       new ReadableStream({
         start: async (controller) => {
-          //@ts-ignore
           for (const chunk of this.chunks) {
             controller.enqueue(this.formatChunk(chunk));
-            await this.delay(100);
+            await this.delay(100); // 模拟网络延迟
           }
           controller.close();
         },
       }),
+      {
+        headers: {
+          'Content-Type': 'text/event-stream',
+          'Cache-Control': 'no-cache',
+          Connection: 'keep-alive',
+        },
+      },
     );
+  }
+
+  // 添加错误测试用例
+  static createResponse(isErr: boolean) {
+    return new SSEResponse(isErr);
   }
 
   private formatChunk(data: any): Uint8Array {
