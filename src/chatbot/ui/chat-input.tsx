@@ -1,5 +1,6 @@
 import 'tdesign-icons-web-components/esm/components/send';
 import 'tdesign-icons-web-components/esm/components/stop';
+import '../../attachments';
 import '../../textarea';
 import '../../button';
 
@@ -20,15 +21,20 @@ export default class ChatInput extends Component<TdChatInputProps> {
     placeholder: String,
     disabled: Boolean,
     value: String,
+    attachments: Array,
     defaultValue: String,
     status: String,
     allowStop: Boolean,
+    attachmentsProps: Object,
     textareaProps: Object,
   };
 
   static defaultProps: Partial<TdChatInputProps> = {
     status: 'idle',
     allowStop: true,
+    attachmentsProps: {
+      overflow: 'scrollX',
+    },
     textareaProps: {
       autosize: { minRows: 2 },
     },
@@ -80,10 +86,16 @@ export default class ChatInput extends Component<TdChatInputProps> {
     );
   };
 
-  render(props: any) {
+  render(props: TdChatInputProps) {
+    const { attachments, attachmentsProps } = props;
+
     return (
       <div className={`${className}`}>
-        <div className={`${className}__header`}>附件区</div>
+        <div className={`${className}__header`}>
+          {attachments?.length ? (
+            <t-attachments className={`${className}__attachments`} {...attachmentsProps} items={attachments} />
+          ) : null}
+        </div>
         <div className={`${className}__content`}>
           <t-textarea
             ref={this.inputRef}

@@ -7,7 +7,6 @@ export interface Attachment extends UploadFile {
 }
 export interface TdAttachmentsProps {
   items: Attachment[];
-  class?: string;
   overflow?: 'scrollX' | 'scrollY' | 'wrap';
   onRemove?: (event: CustomEvent<Attachment>) => void;
 }

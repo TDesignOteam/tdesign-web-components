@@ -1,7 +1,8 @@
+import type { Attachment, TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
-import { TdTextareaProps } from '../textarea';
+import type { TdTextareaProps } from '../textarea';
 import type { MessageStatus, ModelServiceState, ModelStatus } from './core/type';
-import { Message } from './core/type';
+import type { Message } from './core/type';
 
 export interface TdChatItemAction {
   name: string;
@@ -111,10 +112,14 @@ export interface TdChatInputProps {
   disabled?: boolean;
   value: string | number;
   defaultValue: string | number;
+  /** 附件项 */
+  attachments?: Attachment[];
   /** 生成状态 */
   status?: ModelStatus;
   /** 生成时是否允许停止 */
   allowStop?: boolean;
+  /** 透传attachment参数 */
+  attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items'>>;
   /** 透传textarea参数 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
   onSend?: (value: string, context: { e: MouseEvent | KeyboardEvent }) => void;

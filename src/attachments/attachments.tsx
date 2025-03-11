@@ -18,6 +18,11 @@ const className = `${getClassPrefix()}-attachment`;
 export default class Attachments extends Component {
   static css = [styles];
 
+  static propTypes = {
+    items: Array,
+    overflow: String,
+  };
+
   items: Attachment[] = [];
 
   overflow?: 'scrollX' | 'scrollY' | 'wrap';
@@ -105,11 +110,11 @@ export default class Attachments extends Component {
   };
 
   render(props: AttachmentsProps) {
-    const { items, onRemove, class: classNames } = props;
+    const { items, onRemove, innerClass } = props;
 
     const listCls = `${className}-list`;
     return (
-      <div class={classname(classNames, `${listCls}-wrap`)}>
+      <div class={classname(`${listCls}-wrap`, innerClass)}>
         <o-transition-group
           ref={(e) => (this.containerRef.current = e)}
           class={classname(listCls, {
