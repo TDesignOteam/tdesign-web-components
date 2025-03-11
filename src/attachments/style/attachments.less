@@ -15,7 +15,7 @@
   &-list {
 
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     gap: 12px;
     width: 100%;
     height: 100%;
@@ -30,6 +30,7 @@
 
     &-overflow-scrollX {
       overflow-x: auto;
+      flex-wrap: nowrap;
       // 防止flex容器无限扩展
       min-width: 0;
       // 确保子元素不收缩
