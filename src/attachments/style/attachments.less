@@ -15,8 +15,8 @@
   &-list {
 
     display: flex;
-    flex-wrap: wrap;
-    gap: @attachment-line-gap;
+    flex-wrap: nowrap;
+    gap: 12px;
     width: 100%;
     height: 100%;
     overflow-x: hidden;
@@ -29,8 +29,16 @@
     }
 
     &-overflow-scrollX {
-      flex-wrap: nowrap;
+      overflow-x: auto;
+      // 防止flex容器无限扩展
+      min-width: 0;
+      // 确保子元素不收缩
+      > * {
+        flex-shrink: 0;
+      }
+      width: '100%'; // 确保容器继承父级宽度
     }
+
     &-overflow-scrollY {
       overflow-y: auto;
       flex-wrap: wrap;
@@ -63,7 +71,3 @@
     }
   }
 }
-
-
-
-
