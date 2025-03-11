@@ -1,11 +1,11 @@
-import type { ChunkParsedResult, LLMConfig, RequestParams, SSEChunkData } from '../type';
+import type { AIResponse, LLMConfig, RequestParams, SSEChunkData } from '../type';
 import SSEClient from './sseClient';
 
 export interface ILLMService {
   /**
    * 处理批量请求（非流式）
    */
-  handleBatchRequest(params: RequestParams, config: LLMConfig): Promise<ChunkParsedResult>;
+  handleBatchRequest(params: RequestParams, config: LLMConfig): Promise<AIResponse>;
 
   /**
    * 处理流式请求

@@ -8,18 +8,20 @@ const props = {
   variant: 'outline',
   placements: 'left',
   avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-  id: '123',
-  main: {
-    content: mdContent,
-  },
-  status: 'complete',
-  actions: true,
-  role: 'assistant',
-  thinking: {
-    type: 'text',
-    title: '思考中...',
+  message: {
+    id: '123',
+    main: {
+      content: mdContent,
+    },
     status: 'complete',
-    content: 'mock',
+    actions: true,
+    role: 'assistant',
+    thinking: {
+      type: 'text',
+      title: '思考中...',
+      status: 'complete',
+      content: 'mock',
+    },
   },
 };
 

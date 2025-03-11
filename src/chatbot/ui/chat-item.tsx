@@ -11,6 +11,7 @@ import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
+import { isAIMessage,isUserMessage } from '../core/type';
 import type { TdChatItemAction, TdChatItemProps } from '../type';
 
 import styles from '../style/chat-item.less';
@@ -46,16 +47,30 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private messageId!: string;
 
   install() {
-    this.messageId = this.props.id!;
+    this.messageId = this.props.message.id!;
   }
 
   receiveProps(
     props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
     oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
   ) {
-    if (props?.main?.content === oldProps?.main?.content && props?.thinking?.content === oldProps?.thinking?.content) {
+    const newMsg = props?.message;
+    const oldMsg = oldProps?.message;
+
+    // 处理用户消息
+    if (isUserMessage(newMsg) && isUserMessage(oldMsg) && newMsg.content === oldMsg.content) {
       return false;
     }
+    // 处理AI消息
+    if (
+      isAIMessage(newMsg) &&
+      isAIMessage(oldMsg) &&
+      newMsg.main?.content === oldMsg.main?.content &&
+      newMsg.thinking?.content === oldMsg.thinking?.content
+    ) {
+      return false;
+    }
+
     return true;
   }
 
@@ -77,7 +92,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderActions() {
-    const { actions, status } = this.props;
+    const { actions, message } = this.props;
     if (!actions) {
       return null;
     }
@@ -88,10 +103,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
     return arrayActions.map((item, idx) => {
       // 默认消息完成时才展示action
-      if (!item.status && status !== 'complete') {
+      if (!item.status && message.status !== 'complete') {
         return null;
       }
-      if (item.status && !item.status.includes(status)) {
+      if (item.status && !item.status.includes(message.status)) {
         return null;
       }
       return (
@@ -103,7 +118,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   get renderMessageStatus() {
-    const { status, thinking, search, main } = this.props;
+    if (!isAIMessage(this.props.message)) return;
+    const { status, thinking, search, main } = this.props.message;
     // 如果有任一内容，就不用展示message整体状态
     if (thinking?.content || search?.content || main?.content) {
       return null;
@@ -120,7 +136,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderThinkingStatus() {
-    const { thinking, status } = this.props;
+    if (!isAIMessage(this.props.message)) return;
+    const { thinking, status } = this.props.message;
 
     if (thinking?.status === 'complete' || thinking?.status === 'stop' || status === 'stop')
       return convertToLightDomNode(
@@ -136,12 +153,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
           part={`${className}__think__status--error`}
         />,
       );
-    return <div class={`${className}__think__status--pending`} part={`${className}__think__status--pending`} />;
+    return (
+      <div class={`${className}__think__status--pending`} part={`${className}__think__status--pending`}>
+        ...
+      </div>
+    );
   }
 
   // 思维链
   renderThinking() {
-    const { thinking, status } = this.props;
+    if (!isAIMessage(this.props.message)) return;
+    const { thinking, status } = this.props.message;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         {convertToLightDomNode(
@@ -161,7 +183,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { role, variant, placement, name, datetime, status } = props;
+    const { message, variant, placement, name } = props;
+    const { role, status } = message;
     console.log('===item render', this.messageId, status);
 
     const baseClass = `${className}__inner`;
@@ -176,15 +199,26 @@ export default class ChatItem extends Component<TdChatItemProps> {
           <div class={`${className}__main`}>
             <div class={`${className}__header`}>
               {name && <span class={`${className}__name`}>{name}</span>}
-              {datetime && <span class={`${className}__time`}>{datetime}</span>}
+              {/* {timestamp && <span class={`${className}__time`}>{timestamp}</span>} */}
             </div>
             <div class={classname(`${className}__content`, `${className}__content--base`)}>
-              {this.props?.thinking?.content && this.renderThinking()}
-              {this.props?.search?.content && <div className={`${className}__search`}>{this.props.search.content}</div>}
-              {this.props?.main?.content && (
+              {role === 'assistant' && (
+                <>
+                  {message?.thinking?.content && this.renderThinking()}
+                  {message?.search?.content && <div className={`${className}__search`}>{message.search.content}</div>}
+                  {message?.main?.content && (
+                    <t-chat-content
+                      className={`${className}__detail`}
+                      content={message?.main?.content}
+                      role={role}
+                    ></t-chat-content>
+                  )}
+                </>
+              )}
+              {role === 'user' && message?.content && (
                 <t-chat-content
                   className={`${className}__detail`}
-                  content={this.props.main.content}
+                  content={message.content}
                   role={role}
                 ></t-chat-content>
               )}

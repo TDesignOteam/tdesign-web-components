@@ -47,10 +47,11 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   install(): void {
-    this.chatService = new ChatService(this.props.modelConfig, this.props.data);
-    const { messageStore, modelStore } = this.chatService;
+    const { data } = this.props;
+    const initialMessages = data.map(({ message }) => message);
+    this.chatService = new ChatService(this.props.modelConfig, initialMessages);
+    const { messageStore } = this.chatService;
     this.provide.messageStore = messageStore;
-    this.provide.modelStore = modelStore;
     this.modelStatus = messageStore.getState().modelStatus;
     this.messages = this.convertMessages(messageStore.getState());
     this.subscribeToChat();
@@ -99,7 +100,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
-    console.log('====render chat', this.modelStatus);
+    console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
         <t-chat-list ref={this.listRef} data={this.messages} reverse={reverse} />

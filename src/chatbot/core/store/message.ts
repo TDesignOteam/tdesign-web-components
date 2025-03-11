@@ -1,4 +1,4 @@
-import type { ChunkParsedResult, Message, MessageState, ModelStatus, TextContent, ThinkingContent } from '../type';
+import type { AIResponse, Message, MessageState, ModelStatus, TextContent, ThinkingContent } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
@@ -32,10 +32,11 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  appendContent(messageId: string, chunk: ChunkParsedResult) {
+  appendContent(messageId: string, chunk: AIResponse) {
     this.setState((draft) => {
       const message = draft.messages[messageId];
       if (!message) return;
+      if (message.role !== 'assistant') return;
 
       message.status = 'streaming';
       // 合并主内容（文本流式追加）
@@ -51,11 +52,6 @@ export class MessageStore extends ReactiveState<MessageState> {
       // 合并搜索结果（增量更新）
       // if (chunk.search) {
       //   message.search = this.mergeSearchResults(message.search, chunk.search);
-      // }
-
-      // 更新状态（如果有）
-      // if (chunk.status) {
-      //   message.status = chunk.status;
       // }
     });
   }
@@ -76,17 +72,6 @@ export class MessageStore extends ReactiveState<MessageState> {
       ...incoming,
       content: (current?.content || '') + (incoming?.content || ''),
     };
-  }
-
-  updateContent(messageId: string, msg: Partial<Message>) {
-    console.log('====updateContent msg', msg?.main?.content);
-    this.setState((draft) => {
-      const message = draft.messages[messageId];
-      draft.messages[messageId] = {
-        ...message,
-        ...msg,
-      };
-    });
   }
 
   setModelStatus(status: ModelStatus) {

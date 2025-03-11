@@ -19,13 +19,14 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   listRef = createRef<HTMLDivElement>();
 
-  render(props: { data: TdChatItemProps[]; reverse?: boolean }) {
+  render(props: { data: TdChatItemProps['message'][]; reverse?: boolean }) {
     const items = props.reverse ? [...props.data].reverse() : props.data;
+    console.log('====items', items);
     return (
       <div ref={this.listRef} className={`${className}__list`} onScroll={this.handleScroll}>
         {items.map((item) => {
           // TODO: 看拿到哪里
-          const { role } = item;
+          const { role, id } = item;
           const roleProps =
             role === 'user'
               ? {
@@ -42,7 +43,7 @@ export default class Chatlist extends Component<TdChatListProps> {
                     console.log('点击', e.detail);
                   },
                 };
-          return <t-chat-item {...roleProps} {...item} key={item.id} />;
+          return <t-chat-item {...roleProps} message={item} key={id} />;
         })}
       </div>
     );

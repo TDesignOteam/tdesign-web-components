@@ -83,15 +83,33 @@ export interface Attachment {
 }
 
 // 消息主体
-export interface Message extends ChunkParsedResult {
+
+// 基础消息结构
+interface BaseMessage {
   id: string;
-  role: MessageRole;
   status: MessageStatus;
   timestamp?: string;
 }
 
-// 服务配置
-export interface ChunkParsedResult {
+export interface UserMessage extends BaseMessage {
+  role: 'user';
+  content: string;
+  attatchments?: Attachment[];
+}
+
+export interface SystemMessage extends BaseMessage {
+  role: 'system';
+  content: string;
+}
+
+export type Message = UserMessage | AIMessage | SystemMessage;
+
+// 回答消息体配置
+export interface AIMessage extends BaseMessage, AIResponse {
+  role: 'assistant';
+}
+
+export interface AIResponse {
   main?: MessageContent;
   search?: SearchResult;
   thinking?: ThinkingContent;
@@ -113,7 +131,7 @@ export interface LLMConfig {
   retryInterval?: number;
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
-  onMessage?: (chunk: SSEChunkData) => ChunkParsedResult;
+  onMessage?: (chunk: SSEChunkData) => AIResponse;
   onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
   onAbort?: () => void;
   onError?: (error: Error, params: RequestParams) => void;
@@ -141,4 +159,13 @@ export interface ModelServiceState extends ModelParams {
 export interface ChatState {
   message: MessageState;
   model: ModelServiceState;
+}
+
+// 类型守卫函数
+export function isUserMessage(message: Message): message is UserMessage {
+  return message.role === 'user' && 'content' in message;
+}
+
+export function isAIMessage(message: Message): message is AIMessage {
+  return message.role === 'assistant';
 }

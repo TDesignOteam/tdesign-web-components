@@ -7,28 +7,29 @@ import type { ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from
 const mockData = [
   {
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    id: '223',
-    main: {
-      type: 'text',
+    message: {
+      id: '223',
       content: '南极的自动提款机叫什么名字？',
+      role: 'user',
     },
-    role: 'user',
   },
   {
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    id: '123',
-    main: {
-      content: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
-    },
-    role: 'assistant',
-    thinking: {
-      type: 'text',
-      title: '思考完成',
+    message: {
+      id: '123',
+      main: {
+        content: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
+      },
+      role: 'assistant',
+      thinking: {
+        type: 'text',
+        title: '思考完成',
+        status: 'complete',
+        content:
+          'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
+      },
       status: 'complete',
-      content:
-        'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
     },
-    status: 'complete',
   },
 ];
 

@@ -1,4 +1,4 @@
-import type { Attachment, ChunkParsedResult, Message } from '../type';
+import type { AIResponse, Attachment, Message } from '../type';
 
 export default class ChatTextProcessor {
   public createUserMessage(content: string, files?: Attachment[]): Message {
@@ -11,7 +11,7 @@ export default class ChatTextProcessor {
       role: 'user',
       status: 'complete',
       timestamp: `${Date.now()}`,
-      main: { type: 'text', status: 'complete', content },
+      content,
     };
   }
 
@@ -35,7 +35,7 @@ export default class ChatTextProcessor {
     }));
   }
 
-  processStreamChunk(parsed: ChunkParsedResult): ChunkParsedResult {
+  processStreamChunk(parsed: AIResponse): AIResponse {
     // 处理搜索阶段
     if (parsed.search) {
       return {

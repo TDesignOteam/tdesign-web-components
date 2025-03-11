@@ -10,7 +10,7 @@ export interface TdChatItemAction {
   status?: MessageStatus[];
 }
 
-export interface TdChatItemProps extends Message {
+export interface TdChatItemProps {
   /**
    * 操作
    */
@@ -43,6 +43,8 @@ export interface TdChatItemProps extends Message {
   itemIndex?: Number;
   /** 气泡方向 */
   placement?: 'left' | 'right';
+  /** 消息体 */
+  message: Message;
 }
 interface ChatProps {
   /**
@@ -77,7 +79,7 @@ export interface TdChatListProps {
   /**
    * 数据
    */
-  data?: Array<TdChatItemProps>;
+  data?: Array<TdChatItemProps['message']>;
   /**
    * 流式消息加载中
    */

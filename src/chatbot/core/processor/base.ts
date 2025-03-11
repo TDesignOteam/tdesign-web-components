@@ -1,5 +1,5 @@
 /* eslint-disable max-classes-per-file */
-import type { ChunkParsedResult, ContentType } from '../type';
+import type { AIResponse, ContentType } from '../type';
 
 // 定义内容处理器接口
 interface ContentProcessor {
@@ -109,7 +109,7 @@ export default class ChatProcessor {
     return processor;
   }
 
-  processStreamChunk(parsed: ChunkParsedResult): ChunkParsedResult {
+  processStreamChunk(parsed: AIResponse): AIResponse {
     // 统一处理多模态内容
     if (parsed.main) {
       parsed.main.content = this.processContent(parsed.main.type || ContentTypes.TEXT, parsed.main.content);
