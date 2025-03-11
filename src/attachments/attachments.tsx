@@ -30,8 +30,18 @@ export default class Attachments extends Component {
   containerRef = createRef<HTMLElement>();
 
   installed() {
-    // 初始化时检查滚动的状态
-    this.updateButtonVisibility();
+    // 添加延迟确保DOM完全渲染
+    setTimeout(() => {
+      this.updateButtonVisibility();
+      // 添加尺寸变化监听
+      const resizeObserver = new ResizeObserver(() => {
+        this.updateButtonVisibility();
+      });
+      if (this.containerRef.current) {
+        resizeObserver.observe(this.containerRef.current);
+      }
+    }, 100);
+
     // 监听手动滚动事件
     this.containerRef.current?.addEventListener('scroll', () => {
       this.updateButtonVisibility();
@@ -69,8 +79,9 @@ export default class Attachments extends Component {
     // 获取第一个子元素的宽度（包含外边距）
     const firstChild = children[0] as HTMLElement;
     const childStyle = window.getComputedStyle(firstChild);
+    // 精确计算子元素总宽度（包含外边距和间距）
     const childWidth =
-      firstChild.offsetWidth + parseInt(childStyle.marginLeft, 10) + parseInt(childStyle.marginRight, 10) + 12;
+      firstChild.offsetWidth + parseInt(childStyle.marginLeft, 10) + parseInt(childStyle.marginRight, 10) + 12; // 12px来自flex布局的gap值
 
     // 计算可见区域能显示多少个子元素
     const containerWidth = containerEle.clientWidth;
