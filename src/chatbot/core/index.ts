@@ -104,7 +104,6 @@ export default class ChatEngine implements IChatEngine {
   }
 
   private setMessageStatus(messageId: string, status: Message['status']) {
-    this.messageStore.setModelStatus(status);
     this.messageStore.setMessageStatus(messageId, status);
   }
 }

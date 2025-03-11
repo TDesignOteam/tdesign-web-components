@@ -1,7 +1,7 @@
 import type { Attachment, TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { TdTextareaProps } from '../textarea';
-import type { MessageStatus, ModelServiceState, ModelStatus } from './core/type';
+import type { ChatStatus, MessageStatus, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
 export interface TdChatItemAction {
@@ -117,7 +117,7 @@ export interface TdChatInputProps {
   /** 附件项 */
   attachments?: Attachment[];
   /** 生成状态 */
-  status?: ModelStatus;
+  status?: ChatStatus;
   /** 生成时是否允许停止 */
   allowStop?: boolean;
   /** 透传attachment参数 */
