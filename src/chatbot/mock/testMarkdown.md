@@ -61,6 +61,8 @@ def hello():
 | 单元格     |  单元格  | 单元格 |
 | 长文本示例 | 中等长度 |   $100 |
 
+![示例](https://tdesign.gtimg.com/demo/demo-image-1.png "示例")
+
 ### 其他元素
 
 > 引用文本块  

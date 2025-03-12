@@ -211,9 +211,32 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  renderMessage() {
+    const { message } = this.props;
+    const { role } = message;
+
+    if (role === 'user' || role === 'system') {
+      if (!message?.content) return null;
+      return <t-chat-content className={`${className}__detail`} content={message.content} role={role}></t-chat-content>;
+    }
+    return (
+      <>
+        {message?.thinking?.content && this.renderThinking()}
+        {message?.search?.content && <div className={`${className}__search`}>{message.search.content}</div>}
+        {message?.main?.content && (
+          <t-chat-content
+            className={`${className}__detail`}
+            content={message?.main?.content}
+            role={role}
+          ></t-chat-content>
+        )}
+      </>
+    );
+  }
+
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name } = props;
-    const { role, status } = message;
+    const { message, variant, placement, name, datetime } = props;
+    const { status } = message;
     console.log('===item render', this.messageId, status);
 
     const baseClass = `${className}__inner`;
@@ -228,30 +251,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
           <div class={`${className}__main`}>
             <div class={`${className}__header`}>
               {name && <span class={`${className}__name`}>{name}</span>}
-              {/* {timestamp && <span class={`${className}__time`}>{timestamp}</span>} */}
+              {datetime && <span class={`${className}__time`}>{datetime}</span>}
             </div>
-            <div class={classname(`${className}__content`, `${className}__content--base`)}>
-              {role === 'assistant' && (
-                <>
-                  {message?.thinking?.content && this.renderThinking()}
-                  {message?.search?.content && <div className={`${className}__search`}>{message.search.content}</div>}
-                  {message?.main?.content && (
-                    <t-chat-content
-                      className={`${className}__detail`}
-                      content={message?.main?.content}
-                      role={role}
-                    ></t-chat-content>
-                  )}
-                </>
-              )}
-              {role === 'user' && message?.content && (
-                <t-chat-content
-                  className={`${className}__detail`}
-                  content={message.content}
-                  role={role}
-                ></t-chat-content>
-              )}
-            </div>
+            <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             <div className={`${className}__actions`}>{this.renderActions()}</div>
           </div>
         ) : null}

@@ -98,8 +98,6 @@ export interface TdChatListProps {
 export interface TdChatContentProps {
   content?: string;
   role?: string;
-  isNormalText?: boolean;
-  textLoading: boolean;
 }
 
 export interface TdChatCodeProps {

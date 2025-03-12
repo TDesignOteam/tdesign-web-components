@@ -68,26 +68,36 @@
 
   // variant
   &--variant--base {
-    .@{prefix}-chat__item__content {
-      background-color: var(--t-chat-item-primary-bg);
-      border-color: transparent;
+    .@{prefix}-chat__item__main {
+      .@{prefix}-chat__item__content {
+        background-color: var(--t-chat-item-primary-bg);
+        border-color: transparent;
+      }
     }
   }
   
   &--variant--outline {
-    .@{prefix}-chat__item__content {
-      background-color: var(--t-chat-item-default-bg);
-      border-color: var(--t-chat-item-outline-border-color);
+    .@{prefix}-chat__item__main {
+      .@{prefix}-chat__item__content {
+        background-color: var(--t-chat-item-default-bg);
+        border-color: var(--t-chat-item-outline-border-color);
+      }
     }
   }
 
   &--variant--text {
-    .@{prefix}-chat__item__content {
-      padding: var(--t-chat-item-text-content-padding);
-      background-color: transparent;
-    }
-    .@{prefix}-chat__item__actions {
-      margin: var(--t-chat-item-text-actions-list-margin);
+    .@{prefix}-chat__item__main {
+      .@{prefix}-chat__item__header {
+        padding: var(--t-chat-item-text-header-padding);
+      }
+  
+      .@{prefix}-chat__item__content {
+        padding: var(--t-chat-item-text-content-padding);
+        background-color: transparent;
+      }
+      .@{prefix}-chat__item__actions {
+        margin: var(--t-chat-item-text-actions-list-margin);
+      }
     }
   }
 
