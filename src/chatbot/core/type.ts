@@ -75,7 +75,7 @@ export type ThinkingContent = PhaseContent<string> & {
 
 // 附件系统
 export interface AttachmentContent {
-  type: AttachmentType;
+  type: string;
   name: string;
   url: string;
   size: number;

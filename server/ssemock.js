@@ -47,10 +47,16 @@ app.post('/sse/normal', (req, res) => {
           title: chunk.title,
           content: chunk.content,
         })}\n\n`;
+
+      case 'image':
+        return `event: message\ndata: ${JSON.stringify({
+          type: 'image',
+          content: chunk.content,
+        })}\n\n`;
     }
   });
 
-  sendStream(res, messages, 600, req);
+  sendStream(res, messages, 200, req);
 });
 
 // 带鉴权的POST请求
@@ -91,7 +97,7 @@ app.post('/file/upload', (req, res) => {
     res.json({
       code: 200,
       result: {
-        cdnurl: `https://tdesign.gtimg.com/site/avatar.jpg}`,
+        cdnurl: `https://tdesign.gtimg.com/site/avatar.jpg`,
         size: 1024,
         width: 800,
         height: 600,

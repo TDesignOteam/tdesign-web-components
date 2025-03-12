@@ -4,7 +4,7 @@ import 'tdesign-web-components/chatbot';
 import { Component } from 'omi';
 
 import type { Attachment } from '../../filecard';
-import type { AttachmentContent, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
+import type { ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
 const mockData = [
   {
@@ -161,16 +161,15 @@ const mockModels: ModelServiceState = {
 };
 
 const attachmentProps = {
-  onFileSelected: async (files: Attachment[]): Promise<AttachmentContent[]> => {
+  onFileSelected: async (files: File[]): Promise<Attachment[]> => {
     console.log('====onFileSelected', files);
-    const attachments: AttachmentContent[] = [];
+    const attachments: Attachment[] = [];
 
     // 串行处理每个文件
     for (const file of files) {
       try {
         const formData = new FormData();
-        formData.append('file', file.raw);
-
+        formData.append('file', file);
         // 上传单个文件
         const response = await fetch(`http://localhost:3000/file/upload`, {
           method: 'POST',
@@ -181,12 +180,16 @@ const attachmentProps = {
 
         const data = await response.json();
 
+        console.log('=====file', file);
         // 构造附件对象
+        const { name, size, type } = file;
         attachments.push({
-          type: 'image',
-          name: file.name,
-          size: file.size,
           url: data.result.cdnurl,
+          status: 'success',
+          name,
+          type,
+          size,
+          raw: file,
         });
       } catch (error) {
         console.error(`${file.name} 上传失败:`, error);

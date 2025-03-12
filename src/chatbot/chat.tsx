@@ -2,7 +2,7 @@ import './ui/chat-list';
 import './ui/chat-input';
 import '../button';
 
-import { Component, createRef, OmiProps, signal,tag } from 'omi';
+import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { Attachment } from '../filecard';
@@ -105,17 +105,25 @@ export default class Chatbot extends Component<TdChatProps> {
     this.fire('clear', e);
   };
 
-  private onAttachmentsRemove = (e: CustomEvent<Attachment[]>) => {
+  private onAttachmentsRemove = (e: CustomEvent<File[]>) => {
     console.log('onAttachmentsRemove', e);
     this.files.value = e.detail;
   };
 
-  private onAttachmentsSelect = async (e: CustomEvent<Attachment[]>) => {
-    const uploadedAttachments = await this.props?.attachmentProps?.onFileSelected?.(e.detail);
-    if (uploadedAttachments.length > 0) {
-      this.uploadedAttachments = uploadedAttachments;
+  private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
+    const uploadedResult = await this.props?.attachmentProps?.onFileSelected?.(e.detail);
+    if (uploadedResult.length > 0) {
+      uploadedResult.forEach(({ name, url, type, size }) => {
+        this.uploadedAttachments.push({
+          name,
+          url,
+          type,
+          size,
+          isReference: false,
+        });
+      });
+      this.files.value = this.files.value.concat(uploadedResult);
     }
-    this.files.value = this.files.value.concat(e.detail);
   };
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {

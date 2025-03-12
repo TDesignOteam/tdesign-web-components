@@ -239,6 +239,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
   private handleSend = () => {
     if (!this.props.disabled && this.inputValue) {
+      console.log('====this.attachmentsValue', this.attachmentsValue);
       this.fire(
         'send',
         {

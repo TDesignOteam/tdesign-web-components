@@ -8,6 +8,12 @@ const chunks = [
   { type: 'think', title: '思考中...', content: '户说明一下' },
   { type: 'think', title: '思考中...', content: '假数据是' },
   { type: 'think', title: '思考中...', content: '这是个mock' },
+  // 图片测试
+  {
+    type: 'image',
+    content:
+      '{"url":"https://tdesign.gtimg.com/site/avatar.jpg","format":"png","width":1204,"height":1024,"size":1032}',
+  },
   { type: 'text', msg: '\n\n' },
   { type: 'text', msg: '**' },
   { type: 'text', msg: '参考' },
@@ -47,7 +53,6 @@ const chunks = [
     type: 'text',
     msg: '是脚注内容\n\n✅ 任务列表：\n- [ ] 未完成任务\n- [x] 已完成任务\n\nHTML混合测试：\n<br>（需要开启html选项）\n<small>辅助文',
   },
-
   // 测试用例7 - 最终结束段
   {
     type: 'text',
