@@ -1,10 +1,5 @@
-import { UploadFile } from '../_common/js/upload/types';
+import { Attachment } from '../filecard';
 
-export interface Attachment extends UploadFile {
-  uid?: string;
-  xhr?: XMLHttpRequest;
-  description?: string;
-}
 export interface TdAttachmentsProps {
   items: Attachment[];
   overflow?: 'scrollX' | 'scrollY' | 'wrap';

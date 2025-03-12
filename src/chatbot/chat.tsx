@@ -5,9 +5,9 @@ import '../button';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { Attachment, ChatStatus, Message, MessageState } from './core/type';
+import type { ChatStatus, Message, MessageState } from './core/type';
 import ChatService from './core';
-import type { TdChatListProps, TdChatProps } from './type';
+import type { TdChatInputSend, TdChatListProps, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
@@ -29,6 +29,7 @@ export default class Chatbot extends Component<TdChatProps> {
     data: Array,
     reverse: Boolean,
     modelConfig: Object,
+    attachmentProps: Object,
   };
 
   listRef = createRef<TdChatListProps>();
@@ -81,8 +82,9 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   }
 
-  private handleSend = async (value: string, files?: Attachment[]) => {
-    await this.chatService.sendMessage(value, files);
+  private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
+    const { value, attachments } = e.detail;
+    await this.chatService.sendMessage(value, attachments);
     this.fire('submit', value, {
       composed: true,
     });
@@ -112,6 +114,7 @@ export default class Chatbot extends Component<TdChatProps> {
           </div>
         )}
         <t-chat-input
+          actions
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
           status={this.chatStatus}

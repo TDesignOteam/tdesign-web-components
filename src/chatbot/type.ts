@@ -1,5 +1,6 @@
-import type { Attachment, TdAttachmentsProps } from '../attachments';
+import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
+import type { Attachment } from '../filecard';
 import type { TdTextareaProps } from '../textarea';
 import type { ChatStatus, MessageStatus, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
@@ -15,7 +16,7 @@ export interface TdChatItemProps {
   /**
    * 操作
    */
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | Boolean;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
   /**
    * 作者
    */
@@ -47,6 +48,7 @@ export interface TdChatItemProps {
   /** 消息体 */
   message: Message;
 }
+
 interface ChatProps {
   /**
    * 布局
@@ -71,6 +73,10 @@ interface ChatProps {
   // 流式数据加载中
   isStreamLoad?: boolean;
   modelConfig: ModelServiceState;
+  attachmentProps: {
+    onFileSelected?: (files: Attachment[]) => Promise<Attachment[]>;
+    onFileRemove?: (file: Attachment) => void;
+  };
   onClear?: (context: { e: MouseEvent }) => void;
 }
 
@@ -99,21 +105,23 @@ export interface TdChatCodeProps {
   code: string;
 }
 
-export interface TdChatActionsProps {
-  isGood?: Boolean;
-  isBad?: Boolean;
-  content?: string;
+export interface TdChatInputAction {
+  name: string;
+  render: TNode;
   disabled?: boolean;
-  /**
-   * 点击时触发
-   */
-  onOperation?: (value: string, context: { e: MouseEvent; index?: number; item?: TdChatItemProps }) => void;
 }
+
+export interface TdChatInputSend {
+  value: string;
+  attachments?: Attachment[];
+}
+
 export interface TdChatInputProps {
   placeholder?: string;
   disabled?: boolean;
   value: string | number;
   defaultValue: string | number;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
   /** 附件项 */
   attachments?: Attachment[];
   /** 生成状态 */
@@ -121,10 +129,12 @@ export interface TdChatInputProps {
   /** 生成时是否允许停止 */
   allowStop?: boolean;
   /** 透传attachment参数 */
-  attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items'>>;
+  attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items' | 'onRemove'>>;
   /** 透传textarea参数 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
-  onSend?: (value: string, context: { e: MouseEvent | KeyboardEvent }) => void;
+  /** 透传input-file参数 */
+  uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
+  onSend?: (e: CustomEvent<TdChatInputSend>) => void;
   onStop?: (value: string, context: { e: MouseEvent }) => void;
   onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
   onBlur?: (value: string, context: { e: FocusEvent }) => void;

@@ -84,6 +84,22 @@ function sendStream(res, messages, interval, req) {
   });
 }
 
+// 模拟文件上传接口
+app.post('/file/upload', (req, res) => {
+  // 模拟1秒延迟
+  setTimeout(() => {
+    res.json({
+      code: 200,
+      result: {
+        cdnurl: `https://tdesign.gtimg.com/site/avatar.jpg}`,
+        size: 1024,
+        width: 800,
+        height: 600,
+      },
+    });
+  }, 300);
+});
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`SSE Mock Server: http://localhost:${PORT}`);

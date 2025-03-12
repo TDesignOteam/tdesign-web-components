@@ -1,7 +1,9 @@
+/* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
 import { Component } from 'omi';
 
+import type { Attachment } from '../../filecard';
 import type { ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
 const mockData = [
@@ -9,6 +11,7 @@ const mockData = [
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     message: {
       id: '223',
+      status: 'complete',
       content: '南极的自动提款机叫什么名字？',
       role: 'user',
     },
@@ -44,6 +47,7 @@ const mockData = [
       id: '456',
       content: '总结一下这篇文章',
       role: 'user',
+      status: 'complete',
     },
     attachments: [
       {
@@ -156,8 +160,46 @@ const mockModels: ModelServiceState = {
   },
 };
 
+const attachmentProps = {
+  onFileSelected: async (files: Attachment[]): Promise<Attachment[]> => {
+    const attachments: Attachment[] = [];
+
+    // 串行处理每个文件
+    for (const file of files) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file.raw);
+
+        // 上传单个文件
+        const response = await fetch(`/file/upload`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) continue; // 跳过失败文件
+
+        const data = await response.json();
+
+        // 构造附件对象
+        attachments.push({
+          type: 'image',
+          name: file.name,
+          size: file.size,
+          url: data.result.cdnurl,
+        });
+      } catch (error) {
+        console.error(`${file.name} 上传失败:`, error);
+        // 可选：记录失败文件信息到错误日志
+      }
+    }
+
+    return attachments;
+  },
+  onFileRemove: () => {},
+};
+
 export default class BasicChat extends Component {
   render() {
-    return <t-chatbot data={mockData} modelConfig={mockModels}></t-chatbot>;
+    return <t-chatbot data={mockData} modelConfig={mockModels} attachmentProps={attachmentProps}></t-chatbot>;
   }
 }

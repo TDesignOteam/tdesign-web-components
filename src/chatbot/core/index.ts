@@ -1,10 +1,10 @@
 import ChatProcessor from './processor/textProcessor';
 import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
-import type { Attachment, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
+import type { AttachmentContent, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
 
 export interface IChatEngine {
-  sendMessage(prompt: string, attachments?: Attachment[]): Promise<void>;
+  sendMessage(prompt: string, attachments?: AttachmentContent[]): Promise<void>;
   abortChat(): void;
 }
 
@@ -24,7 +24,7 @@ export default class ChatEngine implements IChatEngine {
     this.processor = new ChatProcessor();
   }
 
-  public async sendMessage(prompt: string, attachments?: Attachment[]) {
+  public async sendMessage(prompt: string, attachments?: AttachmentContent[]) {
     const userMessage = this.processor.createUserMessage(prompt, attachments);
     const aiMessage = this.processor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);

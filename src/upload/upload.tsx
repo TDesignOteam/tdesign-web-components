@@ -178,16 +178,17 @@ export default class Upload extends Component<UploadProps> {
 
   render(props: UploadProps | OmiProps<UploadProps, any>): JSX.Element {
     const { sizeOverLimitMessage, inputRef, tipsClasses, errorClasses, onNormalFileChange } = this.uploadState;
-    const uploadClasses = [
-      `${classPrefix}-upload`,
-      {
-        [`${classPrefix}-upload--theme-${props.theme}`]: props.theme === 'file-input',
-      },
-      props.innerClass,
-    ];
-
     return (
-      <div class={classNames(uploadClasses)} style={props.innerStyle}>
+      <div
+        class={classNames([
+          `${classPrefix}-upload`,
+          {
+            [`${classPrefix}-upload--theme-${props.theme}`]: props.theme === 'file-input',
+          },
+          props.innerClass,
+        ])}
+        style={props.innerStyle}
+      >
         <input
           ref={inputRef}
           type="file"

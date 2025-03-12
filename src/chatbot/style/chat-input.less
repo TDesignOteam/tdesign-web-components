@@ -92,15 +92,53 @@
     }
   }
 
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__right {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__model {
+  }
+
   // 功能区
   &__actions {
     display: flex;
     align-items: center;
-  }
+    gap: var(--t-chat-input-actions-gap);
+    margin: var(--t-chat-input-actions-margin);
 
-  &__model {
-    flex: 1;
-    min-width: 0;
+    &__item__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--t-chat-input-actions-item-wh);
+      height: var(--t-chat-input-actions-item-wh);
+      border-radius: var(--t-chat-input-actions-item-radius);
+      background: var(--t-chat-input-actions-item-bg);
+
+      &:hover {
+        background: var(--t-chat-input-actions-item-hover-bg);
+      }
+    }
+
+    &__upload {
+      &::part(@{prefix}-upload__trigger) {
+        display: flex;
+      }
+    }
+
+    &__tooltip {
+      display: flex;
+      color: var(--t-chat-input-actions-item-color);
+      font-size: var(--t-chat-input-actions-item-font-size);
+      cursor: pointer;
+    }
   }
 
   &__button {

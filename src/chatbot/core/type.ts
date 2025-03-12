@@ -74,7 +74,7 @@ export type ThinkingContent = PhaseContent<string> & {
 };
 
 // 附件系统
-export interface Attachment {
+export interface AttachmentContent {
   type: AttachmentType;
   fileName: string;
   url: string;
@@ -96,7 +96,7 @@ interface BaseMessage {
 export interface UserMessage extends BaseMessage {
   role: 'user';
   content: string;
-  attachments?: Attachment[];
+  attachments?: AttachmentContent[];
 }
 
 export interface SystemMessage extends BaseMessage {
@@ -125,7 +125,7 @@ export type SSEChunkData = {
 export interface RequestParams extends ModelParams {
   messageID: string;
   prompt: string;
-  attachments?: Attachment[];
+  attachments?: AttachmentContent[];
 }
 
 export interface LLMConfig {
