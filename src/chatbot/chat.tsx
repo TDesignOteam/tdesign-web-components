@@ -2,10 +2,11 @@ import './ui/chat-list';
 import './ui/chat-input';
 import '../button';
 
-import { Component, createRef, OmiProps, tag } from 'omi';
+import { Component, createRef, OmiProps, signal,tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { ChatStatus, Message, MessageState } from './core/type';
+import { Attachment } from '../filecard';
+import type { AttachmentContent, ChatStatus, Message, MessageState } from './core/type';
 import ChatService from './core';
 import type { TdChatInputSend, TdChatListProps, TdChatProps } from './type';
 
@@ -40,7 +41,11 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private chatService: ChatService;
 
+  private uploadedAttachments: AttachmentContent[] = [];
+
   private unsubscribeMsg?: () => void;
+
+  private files = signal<Attachment[]>([]);
 
   provide = {
     messageStore: {},
@@ -83,8 +88,8 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
-    const { value, attachments } = e.detail;
-    await this.chatService.sendMessage(value, attachments);
+    const { value } = e.detail;
+    await this.chatService.sendMessage(value, this.uploadedAttachments);
     this.fire('submit', value, {
       composed: true,
     });
@@ -98,6 +103,19 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private handleClear = (e: Event) => {
     this.fire('clear', e);
+  };
+
+  private onAttachmentsRemove = (e: CustomEvent<Attachment[]>) => {
+    console.log('onAttachmentsRemove', e);
+    this.files.value = e.detail;
+  };
+
+  private onAttachmentsSelect = async (e: CustomEvent<Attachment[]>) => {
+    const uploadedAttachments = await this.props?.attachmentProps?.onFileSelected?.(e.detail);
+    if (uploadedAttachments.length > 0) {
+      this.uploadedAttachments = uploadedAttachments;
+    }
+    this.files.value = this.files.value.concat(e.detail);
   };
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
@@ -119,6 +137,9 @@ export default class Chatbot extends Component<TdChatProps> {
           onSend={this.handleSend}
           status={this.chatStatus}
           onStop={this.handleStop}
+          attachments={this.files.value}
+          onAttachmentsSelect={this.onAttachmentsSelect}
+          onAttachmentsRemove={this.onAttachmentsRemove}
         />
       </div>
     );

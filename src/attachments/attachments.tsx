@@ -141,6 +141,13 @@ export default class Attachments extends Component {
     setTimeout(() => this.updateButtonVisibility(), 500);
   };
 
+  afterUpdate() {
+    // DOM更新后检查按钮状态（包括新增filecard的情况）
+    requestAnimationFrame(() => {
+      this.updateButtonVisibility();
+    });
+  }
+
   render(props: AttachmentsProps) {
     const { items, onRemove, innerClass } = props;
 

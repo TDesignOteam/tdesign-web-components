@@ -76,10 +76,10 @@ export type ThinkingContent = PhaseContent<string> & {
 // 附件系统
 export interface AttachmentContent {
   type: AttachmentType;
-  fileName: string;
+  name: string;
   url: string;
-  isReference: boolean;
   size: number;
+  isReference?: boolean;
   width?: number;
   height?: number;
   metadata?: Record<string, any>;

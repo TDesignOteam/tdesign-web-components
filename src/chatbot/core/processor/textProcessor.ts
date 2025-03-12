@@ -1,17 +1,14 @@
 import type { AIResponse, AttachmentContent, Message } from '../type';
 
 export default class ChatTextProcessor {
-  public createUserMessage(content: string, files?: AttachmentContent[]): Message {
-    if (files && files.length > 0) {
-      this.createAttachments(files);
-    }
-
+  public createUserMessage(content: string, attachments?: AttachmentContent[]): Message {
     return {
       id: this.generateID(),
       role: 'user',
       status: 'complete',
       timestamp: `${Date.now()}`,
       content,
+      attachments,
     };
   }
 
@@ -27,12 +24,6 @@ export default class ChatTextProcessor {
 
   private generateID() {
     return `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
-  }
-
-  private createAttachments(files: AttachmentContent[]) {
-    return files.map((file) => ({
-      ...file,
-    }));
   }
 
   processStreamChunk(parsed: AIResponse): AIResponse {

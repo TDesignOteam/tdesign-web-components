@@ -2,7 +2,7 @@ import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { Attachment } from '../filecard';
 import type { TdTextareaProps } from '../textarea';
-import type { ChatStatus, MessageStatus, ModelServiceState } from './core/type';
+import type { AttachmentContent, ChatStatus, MessageStatus, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
 export interface TdChatItemAction {
@@ -73,8 +73,8 @@ interface ChatProps {
   // 流式数据加载中
   isStreamLoad?: boolean;
   modelConfig: ModelServiceState;
-  attachmentProps: {
-    onFileSelected?: (files: Attachment[]) => Promise<Attachment[]>;
+  attachmentProps?: {
+    onFileSelected?: (files: Attachment[]) => Promise<AttachmentContent[]>;
     onFileRemove?: (file: Attachment) => void;
   };
   onClear?: (context: { e: MouseEvent }) => void;

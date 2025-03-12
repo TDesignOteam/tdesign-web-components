@@ -28,22 +28,22 @@ export default class ChatEngine implements IChatEngine {
     const userMessage = this.processor.createUserMessage(prompt, attachments);
     const aiMessage = this.processor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
+
     const { id } = aiMessage;
+    const params = {
+      prompt,
+      attachments,
+      messageID: id,
+    };
     try {
       if (this.config.stream) {
         // 处理sse流式响应模式
         this.setMessageStatus(id, 'streaming');
-        await this.handleStreamResponse({
-          prompt,
-          messageID: id,
-        });
+        await this.handleStreamRequest(params);
       } else {
         // 处理批量响应模式
         this.setMessageStatus(id, 'pending');
-        await this.handleBatchRequest({
-          prompt,
-          messageID: id,
-        });
+        await this.handleBatchRequest(params);
         this.setMessageStatus(id, 'complete');
       }
     } catch (error) {
@@ -65,7 +65,7 @@ export default class ChatEngine implements IChatEngine {
     this.setMessageStatus(id, 'complete');
   }
 
-  private async handleStreamResponse(params: RequestParams) {
+  private async handleStreamRequest(params: RequestParams) {
     const id = params.messageID;
     this.setMessageStatus(id, 'streaming');
 
