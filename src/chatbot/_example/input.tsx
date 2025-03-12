@@ -38,7 +38,7 @@ export default class ChatInput extends Component {
 
   onAttachmentsSelect = (e: CustomEvent<Attachment[]>) => {
     console.log('onAttachmentsSelect', e);
-    this.files.value = this.files.value.concat(e.detail);
+    this.files.value = e.detail.concat(this.files.value);
   };
 
   onSend = (e: CustomEvent<TdChatInputSend>) => {
