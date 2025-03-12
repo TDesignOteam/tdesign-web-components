@@ -7,7 +7,6 @@ import '../../textarea';
 import '../../button';
 import '../../tooltip';
 
-import { merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
@@ -33,6 +32,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     allowStop: Boolean,
     attachmentsProps: Object,
     textareaProps: Object,
+    uploadProps: Object,
   };
 
   static defaultProps: Partial<TdChatInputProps> = {
@@ -44,25 +44,22 @@ export default class ChatInput extends Component<TdChatInputProps> {
     textareaProps: {
       autosize: { minRows: 2 },
     },
+    uploadProps: {},
   };
-
-  attachmentsProps = ChatInput.defaultProps.attachmentsProps;
-
-  textareaProps = ChatInput.defaultProps.textareaProps;
 
   pValue: Omi.SignalValue<string | number> = signal('');
 
   pAttachments: Omi.SignalValue<Attachment[]> = signal([]);
+
+  uploadRef = createRef<HTMLInputElement>();
 
   inputRef = createRef<HTMLTextAreaElement>();
 
   shiftDown = false;
 
   install() {
-    const { value, defaultValue, attachments, attachmentsProps, textareaProps } = this.props;
+    const { value, defaultValue, attachments } = this.props;
 
-    this.attachmentsProps = merge(this.attachmentsProps, attachmentsProps);
-    this.textareaProps = merge(this.textareaProps, textareaProps);
     this.pValue.value = value || defaultValue;
     attachments && (this.pAttachments.value = attachments);
   }
@@ -76,6 +73,40 @@ export default class ChatInput extends Component<TdChatInputProps> {
     if (this.props.attachments !== undefined) return this.props.attachments;
     return this.pAttachments.value;
   }
+
+  private handleAttachmentsRemove = (e: CustomEvent<Attachment>) => {
+    const removed = e.detail;
+    const rest = this.attachmentsValue.filter((item) => item !== removed);
+    this.pAttachments.value = rest;
+    this.fire('attachmentsRemove', rest, {
+      composed: true,
+    });
+  };
+
+  private handleFileSelected = () => {
+    const files = Array.from(this.uploadRef.current?.files || []);
+    if (!files.length) {
+      return;
+    }
+    this.fire('attachmentsSelect', files, {
+      composed: true,
+    });
+    this.uploadRef.current.value = '';
+  };
+
+  /** 上传附件按钮 */
+  renderUploadAttachment = () => (
+    <t-tooltip content="上传附件" className={`${className}__actions__tooltip`}>
+      <span
+        className={`${className}__actions__item`}
+        onClick={() => {
+          this.uploadRef.current?.click();
+        }}
+      >
+        {convertToLightDomNode(<t-icon-file-add />)}
+      </span>
+    </t-tooltip>
+  );
 
   renderButton = () => {
     const { status, allowStop, disabled } = this.props;
@@ -108,21 +139,9 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
   private presetActions: TdChatInputAction[] = [
     {
-      name: 'uploadImage',
-      render: (
-        <t-tooltip content="上传图片">
-          <span
-            // TODO: 上传附件
-            onClick={() => {
-              console.log('查看');
-            }}
-          >
-            <t-icon-image />
-          </span>
-        </t-tooltip>
-      ),
+      name: 'uploadAttachment',
+      render: this.renderUploadAttachment(),
     },
-    { name: 'uploadFile', render: <t-icon-file-add /> },
   ];
 
   renderActions = () => {
@@ -135,24 +154,26 @@ export default class ChatInput extends Component<TdChatInputProps> {
       arrayActions = actions(this.presetActions);
     }
     return arrayActions.map((item, idx) => (
-      <span
+      <div
         key={item.name}
         class={`${className}__actions__item__wrapper`}
+        tabIndex={-1}
         onClick={() => this.handleAction(item.name, idx)}
       >
         {item.render}
-      </span>
+      </div>
     ));
   };
 
   render(props: TdChatInputProps) {
     return (
       <div className={`${className}`}>
+        <input {...this.props.uploadProps} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />
         <div className={`${className}__header`}>
           {this.attachmentsValue?.length ? (
             <t-attachments
               className={`${className}__attachments`}
-              {...this.attachmentsProps}
+              {...this.props.attachmentsProps}
               items={this.attachmentsValue}
               onRemove={this.handleAttachmentsRemove}
             />
@@ -162,7 +183,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
           <t-textarea
             ref={this.inputRef}
             className={`${className}__textarea`}
-            {...this.textareaProps}
+            {...this.props.textareaProps}
             placeholder={props.placeholder}
             disabled={props.disabled}
             value={this.inputValue}
@@ -185,23 +206,6 @@ export default class ChatInput extends Component<TdChatInputProps> {
     );
   }
 
-  private handleAttachmentsChange = (attachments: Attachment[]) => {
-    this.pAttachments.value = attachments;
-    this.fire('attachmentsChange', attachments, {
-      composed: true,
-    });
-  };
-
-  private handleAttachmentsUpload = (e: CustomEvent<Attachment>) => {
-    console.log(e);
-  };
-
-  private handleAttachmentsRemove = (e: CustomEvent<Attachment>) => {
-    const removed = e.detail;
-    const rest = this.pAttachments.value.filter((item) => item !== removed);
-    this.handleAttachmentsChange(rest);
-  };
-
   private handleChange = (e: CustomEvent) => {
     this.pValue.value = e.detail;
     this.fire('change', e.detail, {
@@ -213,7 +217,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     if (e.key === 'Shift') this.shiftDown = true;
     if (e.key === 'Enter' && !this.shiftDown) {
       e.preventDefault();
-      this.handleSend(e);
+      this.handleSend();
     }
   };
 
@@ -233,9 +237,18 @@ export default class ChatInput extends Component<TdChatInputProps> {
     this.fire('action', { action, index });
   };
 
-  private handleSend = (e: KeyboardEvent | MouseEvent) => {
+  private handleSend = () => {
     if (!this.props.disabled && this.inputValue) {
-      this.props.onSend(this.inputValue as string, { e });
+      this.fire(
+        'send',
+        {
+          value: this.inputValue,
+          attachments: this.attachmentsValue,
+        },
+        {
+          composed: true,
+        },
+      );
       this.pValue.value = '';
     }
   };

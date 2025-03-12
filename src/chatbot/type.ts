@@ -105,6 +105,11 @@ export interface TdChatInputAction {
   disabled?: boolean;
 }
 
+export interface TdChatInputSend {
+  value: string;
+  attachments?: Attachment[];
+}
+
 export interface TdChatInputProps {
   placeholder?: string;
   disabled?: boolean;
@@ -121,7 +126,9 @@ export interface TdChatInputProps {
   attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items' | 'onRemove'>>;
   /** 透传textarea参数 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
-  onSend?: (value: string, context: { e: MouseEvent | KeyboardEvent }) => void;
+  /** 透传input-file参数 */
+  uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
+  onSend?: (e: CustomEvent<TdChatInputSend>) => void;
   onStop?: (value: string, context: { e: MouseEvent }) => void;
   onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
   onBlur?: (value: string, context: { e: FocusEvent }) => void;
