@@ -91,6 +91,8 @@ export interface TdChatListProps {
    * 流式消息加载中
    */
   textLoading?: boolean;
+  /** 自动滚动底部 */
+  autoScroll?: boolean;
   onScroll?: (e: Event) => void;
 }
 export interface TdChatContentProps {

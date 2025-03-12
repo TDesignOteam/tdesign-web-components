@@ -201,6 +201,13 @@ const attachmentProps = {
 
 export default class BasicChat extends Component {
   render() {
-    return <t-chatbot data={mockData} modelConfig={mockModels} attachmentProps={attachmentProps}></t-chatbot>;
+    return (
+      <t-chatbot
+        style={{ display: 'block', height: '80vh' }}
+        data={mockData}
+        modelConfig={mockModels}
+        attachmentProps={attachmentProps}
+      ></t-chatbot>
+    );
   }
 }
