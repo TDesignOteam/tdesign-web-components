@@ -51,7 +51,7 @@ export default class ChatTextProcessor {
         },
       };
     }
-    // 处理生成阶段
+    // 处理文字生成阶段
     if (parsed.main && (parsed.main.type === 'text' || parsed.main.type === 'markdown')) {
       return {
         thinking: {
@@ -60,6 +60,16 @@ export default class ChatTextProcessor {
         },
         main: {
           status: 'streaming',
+          content: parsed.main.content,
+          type: parsed.main.type,
+        },
+      };
+    }
+    // 处理图片生成阶段
+    if (parsed.main && parsed.main.type === 'image') {
+      return {
+        main: {
+          status: 'complete',
           content: parsed.main.content,
           type: parsed.main.type,
         },

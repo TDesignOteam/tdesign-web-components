@@ -1,4 +1,4 @@
-import type { AIResponse, Message, MessageState, TextContent, ThinkingContent } from '../type';
+import type { AIResponse, ImageContent, Message, MessageState, TextContent, ThinkingContent } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
@@ -41,6 +41,14 @@ export class MessageStore extends ReactiveState<MessageState> {
       // 合并主内容（文本流式追加）
       if (chunk.main && (chunk.main.type === 'text' || chunk.main.type === 'markdown')) {
         message.main = this.mergeTextContent(message.main as TextContent, chunk.main);
+      }
+
+      // 图片内容
+      if (chunk.main && chunk.main.type === 'image') {
+        message.main = {
+          ...message.main,
+          ...(chunk.main.content as ImageContent),
+        };
       }
 
       // 合并思考过程（覆盖更新）

@@ -4,7 +4,7 @@ import 'tdesign-web-components/chatbot';
 import { Component } from 'omi';
 
 import type { Attachment } from '../../filecard';
-import type { ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
+import type { AIResponse, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
 const mockData = [
   {
@@ -18,7 +18,7 @@ const mockData = [
     attachments: [
       {
         type: 'image',
-        fileName: 'avatar.jpg',
+        name: 'avatar.jpg',
         url: 'https://tdesign.gtimg.com/site/avatar.jpg',
       },
     ],
@@ -52,7 +52,7 @@ const mockData = [
     attachments: [
       {
         type: 'pdf',
-        fileName: 'demo.pdf',
+        name: 'demo.pdf',
         url: 'https://tdesign.gtimg.com/site/demo.pdf',
       },
     ],
@@ -73,12 +73,12 @@ const defaultChunkParser = (chunk) => {
   }
 };
 
-function handleStructuredData(chunk: SSEChunkData): ReturnType<any> {
+function handleStructuredData(chunk: SSEChunkData): AIResponse {
   if (!chunk?.data || typeof chunk === 'string') {
     return {
       main: {
         type: 'text',
-        content: chunk,
+        content: String(chunk),
       },
     };
   }
@@ -107,6 +107,15 @@ function handleStructuredData(chunk: SSEChunkData): ReturnType<any> {
         main: {
           type: 'markdown',
           content: rest?.msg || '',
+        },
+      };
+    }
+
+    case 'image': {
+      return {
+        main: {
+          type: 'image',
+          content: JSON.parse(rest?.content),
         },
       };
     }

@@ -2,22 +2,21 @@ const chunks = [
   // { type: 'search', title: '开始获取资料…' },
   // { type: 'search', title: '找到 12 篇相关资料...', content: [] },
   // { type: 'search', title: '找到 21 篇相关资料...', content: [] },
-  { type: 'think', title: '思考中...', content: '嗯.' },
+  { type: 'think', title: '思考中...', content: '嗯，' },
   { type: 'think', title: '思考中...', content: '我现在需' },
   { type: 'think', title: '思考中...', content: '要帮用' },
-  { type: 'think', title: '思考中...', content: '户说明一下' },
-  { type: 'think', title: '思考中...', content: '假数据是' },
-  { type: 'think', title: '思考中...', content: '这是个mock' },
+  { type: 'think', title: '思考中...', content: '户说明一下，' },
+  { type: 'think', title: '思考中...', content: '让我先仔细想想，' },
+  { type: 'think', title: '思考中...', content: '这是个mock，' },
+  { type: 'think', title: '思考中...', content: '这是个mock，' },
+  { type: 'think', title: '思考中...', content: '这是个mock，' },
+  { type: 'think', title: '思考中...', content: '重要的事情说三遍' },
   // 图片测试
   {
     type: 'image',
     content:
       '{"url":"https://tdesign.gtimg.com/site/avatar.jpg","format":"png","width":1204,"height":1024,"size":1032}',
   },
-  { type: 'text', msg: '\n\n' },
-  { type: 'text', msg: '**' },
-  { type: 'text', msg: '参考' },
-  { type: 'text', msg: '**\n' },
   // 测试用例1 - 标题开头被截断
   {
     type: 'text',

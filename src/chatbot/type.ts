@@ -2,7 +2,7 @@ import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { Attachment } from '../filecard';
 import type { TdTextareaProps } from '../textarea';
-import type { ChatStatus, MessageStatus, ModelServiceState } from './core/type';
+import type { ChatStatus, ImageContent, MessageStatus, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
 export interface TdChatItemAction {
@@ -96,7 +96,7 @@ export interface TdChatListProps {
   onScroll?: (e: Event) => void;
 }
 export interface TdChatContentProps {
-  content?: string;
+  content?: string | ImageContent['content'];
   role?: string;
 }
 

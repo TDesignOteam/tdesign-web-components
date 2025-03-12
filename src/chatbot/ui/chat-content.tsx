@@ -49,7 +49,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
   static css = [styles];
 
   static propTypes = {
-    content: String,
+    content: String || Object,
     role: String,
     isNormalText: Boolean,
     textLoading: Boolean,
@@ -57,10 +57,12 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
   getTextInfo() {
     const { content, role } = this.props;
+    console.log('====content', content);
     if (role === 'user') {
-      return content;
+      if (typeof content === 'string') return content;
+      if (content.type === 'image') return <image src={content.url} />;
     }
-    return this.parseMarkdown(content);
+    return this.parseMarkdown(content as string);
   }
 
   parseMarkdown(markdown: string) {

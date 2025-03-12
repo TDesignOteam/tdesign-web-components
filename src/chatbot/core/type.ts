@@ -12,14 +12,7 @@ export type MediaFormat = {
 // 基础类型
 interface BaseContent<T extends ContentType> {
   type: T;
-  status: MessageStatus;
-}
-
-interface BaseMediaItem<F = string> {
-  url: string;
-  format?: F;
-  duration?: number;
-  metadata?: Record<string, any>;
+  status?: MessageStatus;
 }
 
 // 内容类型
@@ -28,29 +21,16 @@ export type TextContent = BaseContent<'text' | 'markdown'> & {
 };
 
 export type ImageContent = BaseContent<'image'> & {
-  content: (BaseMediaItem<MediaFormat['image']> & {
-    source?: string;
-    alt?: string;
-    resolution?: [number, number];
-  })[];
+  content: {
+    type: 'image';
+    name?: string;
+    url?: string;
+    width?: number;
+    height?: number;
+  };
 };
 
-export type AudioContent = BaseContent<'audio'> & {
-  content: (BaseMediaItem<MediaFormat['audio']> & {
-    source?: string;
-    sampleRate?: number;
-  })[];
-};
-
-export type VideoContent = BaseContent<'video'> & {
-  content: (BaseMediaItem<MediaFormat['video']> & {
-    source?: string;
-    poster?: string;
-    resolution?: [number, number];
-  })[];
-};
-
-export type MessageContent = TextContent | ImageContent | AudioContent | VideoContent;
+export type MessageContent = TextContent | ImageContent;
 
 // 公共引用结构
 export interface ReferenceItem {
@@ -62,7 +42,7 @@ export interface ReferenceItem {
 }
 
 interface PhaseContent<T = string> {
-  status: MessageStatus;
+  status?: MessageStatus;
   title?: string;
   content?: T;
 }
