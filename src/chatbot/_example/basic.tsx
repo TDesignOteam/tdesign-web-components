@@ -206,7 +206,6 @@ const mockModels: ModelServiceState = {
 
 const attachmentProps = {
   onFileSelected: async (files: File[]): Promise<Attachment[]> => {
-    console.log('====onFileSelected', files);
     const attachments: Attachment[] = [];
 
     // 串行处理每个文件
@@ -224,7 +223,6 @@ const attachmentProps = {
 
         const data = await response.json();
 
-        console.log('=====file', file);
         // 构造附件对象
         const { name, size, type } = file;
         attachments.push({
