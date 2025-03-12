@@ -11,7 +11,7 @@ import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import { isAIMessage,isUserMessage } from '../core/type';
+import { isAIMessage, isUserMessage } from '../core/type';
 import type { TdChatItemAction, TdChatItemProps } from '../type';
 
 import styles from '../style/chat-item.less';
@@ -110,7 +110,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
         return null;
       }
       return (
-        <span class={`${className}__actions__item__wrapper`} onClick={() => this.handleAction(item.name, idx)}>
+        <span
+          key={item.name}
+          class={`${className}__actions__item__wrapper`}
+          onClick={() => this.handleAction(item.name, idx)}
+        >
           {item.render}
         </span>
       );

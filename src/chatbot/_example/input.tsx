@@ -2,6 +2,7 @@ import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
 
+import { Attachment } from '../../attachments';
 import { ChatStatus } from '../core/type';
 
 export default class ChatInput extends Component {
@@ -9,7 +10,7 @@ export default class ChatInput extends Component {
 
   status = signal<ChatStatus>('idle');
 
-  files = signal([
+  files = signal<Attachment[]>([
     {
       uid: '1',
       name: 'excel-file.xlsx',
@@ -57,6 +58,11 @@ export default class ChatInput extends Component {
     this.inputValue.value = e.detail;
   };
 
+  onAttachmentsChange = (e: CustomEvent<Attachment[]>) => {
+    console.log('onAttachmentsChange', e);
+    this.files.value = e.detail;
+  };
+
   onSend = () => {
     console.log('提交', this.inputValue);
     this.inputValue.value = '';
@@ -75,10 +81,12 @@ export default class ChatInput extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         status={this.status.value}
+        actions
         attachments={this.files.value}
         textareaProps={{
           autosize: { minRows: 2 },
         }}
+        onAttachmentsChange={this.onAttachmentsChange}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}

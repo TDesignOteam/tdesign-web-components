@@ -15,7 +15,7 @@ export interface TdChatItemProps {
   /**
    * 操作
    */
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | Boolean;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
   /**
    * 作者
    */
@@ -99,21 +99,18 @@ export interface TdChatCodeProps {
   code: string;
 }
 
-export interface TdChatActionsProps {
-  isGood?: Boolean;
-  isBad?: Boolean;
-  content?: string;
+export interface TdChatInputAction {
+  name: string;
+  render: TNode;
   disabled?: boolean;
-  /**
-   * 点击时触发
-   */
-  onOperation?: (value: string, context: { e: MouseEvent; index?: number; item?: TdChatItemProps }) => void;
 }
+
 export interface TdChatInputProps {
   placeholder?: string;
   disabled?: boolean;
   value: string | number;
   defaultValue: string | number;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
   /** 附件项 */
   attachments?: Attachment[];
   /** 生成状态 */
@@ -121,7 +118,7 @@ export interface TdChatInputProps {
   /** 生成时是否允许停止 */
   allowStop?: boolean;
   /** 透传attachment参数 */
-  attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items'>>;
+  attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items' | 'onRemove'>>;
   /** 透传textarea参数 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
   onSend?: (value: string, context: { e: MouseEvent | KeyboardEvent }) => void;

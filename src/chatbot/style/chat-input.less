@@ -92,15 +92,36 @@
     }
   }
 
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__right {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &__model {
+  }
+
   // 功能区
   &__actions {
     display: flex;
     align-items: center;
-  }
+    gap: var(--t-chat-input-actions-gap);
+    margin: var(--t-chat-input-actions-margin);
 
-  &__model {
-    flex: 1;
-    min-width: 0;
+    &__item__wrapper {
+      font-size: var(--t-chat-input-actions-item-font-size);
+      color: var(--t-chat-input-actions-item-color);
+      cursor: pointer;
+
+      &:hover {
+        color: var(--t-chat-input-actions-item-hover-color);
+      }
+    }
   }
 
   &__button {
