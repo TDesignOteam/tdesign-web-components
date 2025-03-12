@@ -11,6 +11,7 @@ const mockData = [
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     message: {
       id: '223',
+      status: 'complete',
       content: '南极的自动提款机叫什么名字？',
       role: 'user',
     },
@@ -46,6 +47,7 @@ const mockData = [
       id: '456',
       content: '总结一下这篇文章',
       role: 'user',
+      status: 'complete',
     },
     attachments: [
       {

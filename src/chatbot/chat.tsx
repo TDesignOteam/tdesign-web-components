@@ -5,7 +5,6 @@ import '../button';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import { Attachment } from '../filecard';
 import type { ChatStatus, Message, MessageState } from './core/type';
 import ChatService from './core';
 import type { TdChatInputSend, TdChatListProps, TdChatProps } from './type';

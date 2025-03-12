@@ -1,5 +1,6 @@
-import type { Attachment, TdAttachmentsProps } from '../attachments';
+import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
+import type { Attachment } from '../filecard';
 import type { TdTextareaProps } from '../textarea';
 import type { ChatStatus, MessageStatus, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
