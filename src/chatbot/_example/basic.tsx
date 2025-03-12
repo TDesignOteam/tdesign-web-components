@@ -12,6 +12,13 @@ const mockData = [
       content: '南极的自动提款机叫什么名字？',
       role: 'user',
     },
+    attachments: [
+      {
+        type: 'image',
+        fileName: 'avatar.jpg',
+        url: 'https://tdesign.gtimg.com/site/avatar.jpg',
+      },
+    ],
   },
   {
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
@@ -30,6 +37,21 @@ const mockData = [
       },
       status: 'complete',
     },
+  },
+  {
+    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    message: {
+      id: '456',
+      content: '总结一下这篇文章',
+      role: 'user',
+    },
+    attachments: [
+      {
+        type: 'pdf',
+        fileName: 'demo.pdf',
+        url: 'https://tdesign.gtimg.com/site/demo.pdf',
+      },
+    ],
   },
 ];
 
@@ -110,7 +132,7 @@ const mockModels: ModelServiceState = {
     },
     onMessage: defaultChunkParser,
     onRequest: (params) => {
-      const { prompt, messageID } = params;
+      const { prompt, messageID, attachments = [] } = params;
       return {
         credentials: 'include',
         headers: {
@@ -126,6 +148,7 @@ const mockModels: ModelServiceState = {
               role: 'user',
             },
           ],
+          attachments,
           is_search_net: 1,
         }),
       };
@@ -134,9 +157,7 @@ const mockModels: ModelServiceState = {
 };
 
 export default class BasicChat extends Component {
-  onSubmit = () => {};
-
   render() {
-    return <t-chatbot data={mockData} modelConfig={mockModels} onSubmit={this.onSubmit}></t-chatbot>;
+    return <t-chatbot data={mockData} modelConfig={mockModels}></t-chatbot>;
   }
 }

@@ -125,6 +125,7 @@ export type SSEChunkData = {
 export interface RequestParams extends ModelParams {
   messageID: string;
   prompt: string;
+  attachments?: Attachment[];
 }
 
 export interface LLMConfig {
