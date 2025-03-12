@@ -134,7 +134,7 @@ export default class Attachments extends Component {
         >
           {items.map((item, index) => (
             <t-filecard
-              key={`filecard-${index}`}
+              key={item.name || `filecard-${index}`}
               item={item}
               class="t-filecard-item"
               {...(onRemove && {

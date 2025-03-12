@@ -11,7 +11,7 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import { Attachment } from '../../attachments';
+import { Attachment } from '../../filecard';
 import type { TdChatInputAction, TdChatInputProps } from '../type';
 
 import styles from '../style/chat-input.less';
