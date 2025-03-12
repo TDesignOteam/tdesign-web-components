@@ -91,13 +91,13 @@ export interface TdChatListProps {
    * 流式消息加载中
    */
   textLoading?: boolean;
+  /** 自动滚动底部 */
+  autoScroll?: boolean;
   onScroll?: (e: Event) => void;
 }
 export interface TdChatContentProps {
   content?: string;
   role?: string;
-  isNormalText?: boolean;
-  textLoading: boolean;
 }
 
 export interface TdChatCodeProps {

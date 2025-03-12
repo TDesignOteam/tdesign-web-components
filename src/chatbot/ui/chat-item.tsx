@@ -11,6 +11,7 @@ import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
+import { MessagePlugin } from '../../message';
 import { isAIMessage, isUserMessage } from '../core/type';
 import type { TdChatItemAction, TdChatItemProps } from '../type';
 
@@ -18,10 +19,6 @@ import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-const presetActions: TdChatItemAction[] = [
-  { name: 'refresh', render: <t-icon-refresh />, status: ['complete'] },
-  { name: 'copy', render: <t-icon-copy /> },
-];
 @tag('t-chat-item')
 export default class ChatItem extends Component<TdChatItemProps> {
   static css = [styles];
@@ -45,6 +42,22 @@ export default class ChatItem extends Component<TdChatItemProps> {
   };
 
   private messageId!: string;
+
+  clickCopyHandler = () => {
+    if (this.props.message?.role !== 'assistant') {
+      return;
+    }
+    const copyContent = this.props.message.main.content;
+
+    navigator.clipboard
+      .writeText(copyContent.toString())
+      .then(() => {
+        MessagePlugin.success('复制成功');
+      })
+      .catch(() => {
+        MessagePlugin.success('复制失败，请手动复制');
+      });
+  };
 
   install() {
     this.messageId = this.props.message.id!;
@@ -91,14 +104,26 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  presetActions: TdChatItemAction[] = [
+    { name: 'refresh', render: <t-icon-refresh />, status: ['complete'] },
+    {
+      name: 'copy',
+      render: (
+        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
+          <t-icon-copy />
+        </div>
+      ),
+    },
+  ];
+
   renderActions() {
     const { actions, message } = this.props;
     if (!actions) {
       return null;
     }
-    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : presetActions;
+    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
     if (typeof actions === 'function') {
-      arrayActions = actions(presetActions);
+      arrayActions = actions(this.presetActions);
     }
 
     return arrayActions.map((item, idx) => {
@@ -186,9 +211,32 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  renderMessage() {
+    const { message } = this.props;
+    const { role } = message;
+
+    if (role === 'user' || role === 'system') {
+      if (!message?.content) return null;
+      return <t-chat-content className={`${className}__detail`} content={message.content} role={role}></t-chat-content>;
+    }
+    return (
+      <>
+        {message?.thinking?.content && this.renderThinking()}
+        {message?.search?.content && <div className={`${className}__search`}>{message.search.content}</div>}
+        {message?.main?.content && (
+          <t-chat-content
+            className={`${className}__detail`}
+            content={message?.main?.content}
+            role={role}
+          ></t-chat-content>
+        )}
+      </>
+    );
+  }
+
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name } = props;
-    const { role, status } = message;
+    const { message, variant, placement, name, datetime } = props;
+    const { status } = message;
     console.log('===item render', this.messageId, status);
 
     const baseClass = `${className}__inner`;
@@ -203,30 +251,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
           <div class={`${className}__main`}>
             <div class={`${className}__header`}>
               {name && <span class={`${className}__name`}>{name}</span>}
-              {/* {timestamp && <span class={`${className}__time`}>{timestamp}</span>} */}
+              {datetime && <span class={`${className}__time`}>{datetime}</span>}
             </div>
-            <div class={classname(`${className}__content`, `${className}__content--base`)}>
-              {role === 'assistant' && (
-                <>
-                  {message?.thinking?.content && this.renderThinking()}
-                  {message?.search?.content && <div className={`${className}__search`}>{message.search.content}</div>}
-                  {message?.main?.content && (
-                    <t-chat-content
-                      className={`${className}__detail`}
-                      content={message?.main?.content}
-                      role={role}
-                    ></t-chat-content>
-                  )}
-                </>
-              )}
-              {role === 'user' && message?.content && (
-                <t-chat-content
-                  className={`${className}__detail`}
-                  content={message.content}
-                  role={role}
-                ></t-chat-content>
-              )}
-            </div>
+            <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             <div className={`${className}__actions`}>{this.renderActions()}</div>
           </div>
         ) : null}
