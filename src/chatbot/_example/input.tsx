@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 import { Component, signal } from 'omi';
 import { TdChatInputSend } from 'tdesign-web-components/chatbot';
 
-import { Attachment } from '../../attachments';
+import { Attachment } from '../../filecard';
 import { ChatStatus } from '../core/type';
 
 export default class ChatInput extends Component {
@@ -13,17 +13,14 @@ export default class ChatInput extends Component {
 
   files = signal<Attachment[]>([
     {
-      uid: '1',
       name: 'excel-file.xlsx',
       size: 111111,
     },
     {
-      uid: '2',
       name: 'word-file.docx',
       size: 222222,
     },
     {
-      uid: '3',
       name: 'image-file.png',
       size: 333333,
     },

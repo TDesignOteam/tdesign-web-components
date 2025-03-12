@@ -4,7 +4,7 @@ import 'tdesign-web-components/chatbot';
 import { Component } from 'omi';
 
 import type { Attachment } from '../../filecard';
-import type { ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
+import type { AttachmentContent, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
 const mockData = [
   {
@@ -161,8 +161,9 @@ const mockModels: ModelServiceState = {
 };
 
 const attachmentProps = {
-  onFileSelected: async (files: Attachment[]): Promise<Attachment[]> => {
-    const attachments: Attachment[] = [];
+  onFileSelected: async (files: Attachment[]): Promise<AttachmentContent[]> => {
+    console.log('====onFileSelected', files);
+    const attachments: AttachmentContent[] = [];
 
     // 串行处理每个文件
     for (const file of files) {
@@ -171,7 +172,7 @@ const attachmentProps = {
         formData.append('file', file.raw);
 
         // 上传单个文件
-        const response = await fetch(`/file/upload`, {
+        const response = await fetch(`http://localhost:3000/file/upload`, {
           method: 'POST',
           body: formData,
         });
