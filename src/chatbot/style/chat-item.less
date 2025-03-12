@@ -280,4 +280,11 @@
     // margin-left: auto;
     cursor: pointer;
   }
+
+  &__attachments {
+    margin-top: var(--t-chat-item-attachments-margin-top);
+    ::part(t-image) {
+      max-width: var(--t-chat-item-image-max-width);
+    }
+  }
 }

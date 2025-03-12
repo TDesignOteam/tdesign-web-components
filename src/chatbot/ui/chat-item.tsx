@@ -1,6 +1,8 @@
 import './chat-content';
 import '../../collapse';
 import '../../skeleton';
+import '../../attachments';
+import '../../image';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
@@ -211,6 +213,28 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  renderAttachments() {
+    if (!isUserMessage(this.props.message) || !this.props?.message.attachments) return null;
+    const { attachments } = this.props.message;
+    // 判断是否全部是图片类型
+    const isAllImages = attachments.every((att) => att.type === 'image');
+    return (
+      <div className={`${className}__attachments`}>
+        {isAllImages ? (
+          <div className={`${className}__image-grid`}>
+            {attachments.map(({ url, name }, index) => (
+              <div className={`${className}__image-wrapper`} key={index}>
+                <t-image src={url} alt={name} className={`${className}__preview-image`} shape="round" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <t-attachments items={attachments} />
+        )}
+      </div>
+    );
+  }
+
   renderMessage() {
     const { message } = this.props;
     const { role } = message;
@@ -219,6 +243,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       if (!message?.content) return null;
       return <t-chat-content className={`${className}__detail`} content={message.content} role={role}></t-chat-content>;
     }
+
     return (
       <>
         {message?.thinking?.content && this.renderThinking()}
@@ -254,6 +279,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
               {datetime && <span class={`${className}__time`}>{datetime}</span>}
             </div>
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
+            {this.renderAttachments(message)}
             <div className={`${className}__actions`}>{this.renderActions()}</div>
           </div>
         ) : null}

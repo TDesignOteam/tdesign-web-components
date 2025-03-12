@@ -15,13 +15,6 @@ const mockData = [
       content: '南极的自动提款机叫什么名字？',
       role: 'user',
     },
-    attachments: [
-      {
-        type: 'image',
-        name: 'avatar.jpg',
-        url: 'https://tdesign.gtimg.com/site/avatar.jpg',
-      },
-    ],
   },
   {
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
@@ -45,17 +38,17 @@ const mockData = [
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     message: {
       id: '456',
-      content: '总结一下这篇文章',
+      content: '这张图里的帅哥是谁',
       role: 'user',
       status: 'complete',
+      attachments: [
+        {
+          type: 'image',
+          name: 'avatar.jpg',
+          url: 'https://tdesign.gtimg.com/site/avatar.jpg',
+        },
+      ],
     },
-    attachments: [
-      {
-        type: 'pdf',
-        name: 'demo.pdf',
-        url: 'https://tdesign.gtimg.com/site/demo.pdf',
-      },
-    ],
   },
 ];
 
