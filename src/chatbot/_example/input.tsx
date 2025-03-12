@@ -2,12 +2,12 @@ import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
 
-import { ModelStatus } from '../core/type';
+import { ChatStatus } from '../core/type';
 
 export default class ChatInput extends Component {
   inputValue = signal('传入内容');
 
-  status = signal<ModelStatus>('idle');
+  status = signal<ChatStatus>('idle');
 
   files = signal([
     {

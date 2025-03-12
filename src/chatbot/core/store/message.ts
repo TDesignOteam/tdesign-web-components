@@ -1,4 +1,4 @@
-import type { AIResponse, Message, MessageState, ModelStatus, TextContent, ThinkingContent } from '../type';
+import type { AIResponse, Message, MessageState, TextContent, ThinkingContent } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
@@ -8,7 +8,6 @@ export class MessageStore extends ReactiveState<MessageState> {
       messageIds: [],
       messages: {},
       ...initialState,
-      modelStatus: 'idle',
     });
   }
 
@@ -74,12 +73,6 @@ export class MessageStore extends ReactiveState<MessageState> {
     };
   }
 
-  setModelStatus(status: ModelStatus) {
-    this.setState((draft) => {
-      draft.modelStatus = status;
-    });
-  }
-
   setMessageStatus(messageId: string, status: Message['status']) {
     this.setState((draft) => {
       const message = draft.messages[messageId];
@@ -96,9 +89,9 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  get currentMessageId(): string {
+  get currentMessage(): Message {
     const { messages, messageIds } = this.getState();
-    return messages[messageIds.slice(-1)[0]]?.id;
+    return messages[messageIds.slice(-1)[0]];
   }
 }
 

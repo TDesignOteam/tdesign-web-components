@@ -1,8 +1,8 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
-export type ModelStatus = 'idle' | MessageStatus;
+export type ChatStatus = 'idle' | MessageStatus;
 export type ContentType = 'text' | 'markdown' | 'image' | 'audio' | 'video';
-export type AttachmentType = 'file' | 'image' | 'video' | 'audio';
+export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 export type MediaFormat = {
   image: 'jpg' | 'png' | 'webp';
   audio: 'mp3' | 'wav' | 'ogg';
@@ -76,14 +76,16 @@ export type ThinkingContent = PhaseContent<string> & {
 // 附件系统
 export interface Attachment {
   type: AttachmentType;
-  name: string;
+  fileName: string;
   url: string;
   isReference: boolean;
+  size: number;
+  width?: number;
+  height?: number;
   metadata?: Record<string, any>;
 }
 
 // 消息主体
-
 // 基础消息结构
 interface BaseMessage {
   id: string;
@@ -94,7 +96,7 @@ interface BaseMessage {
 export interface UserMessage extends BaseMessage {
   role: 'user';
   content: string;
-  attatchments?: Attachment[];
+  attachments?: Attachment[];
 }
 
 export interface SystemMessage extends BaseMessage {
@@ -123,6 +125,7 @@ export type SSEChunkData = {
 export interface RequestParams extends ModelParams {
   messageID: string;
   prompt: string;
+  attachments?: Attachment[];
 }
 
 export interface LLMConfig {
@@ -141,7 +144,6 @@ export interface LLMConfig {
 export interface MessageState {
   messageIds: string[];
   messages: Record<string, Message>;
-  modelStatus: ModelStatus;
 }
 
 // 模型服务相关状态

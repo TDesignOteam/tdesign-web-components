@@ -5,7 +5,7 @@ import '../button';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { Attachment, Message, MessageState, ModelStatus } from './core/type';
+import type { Attachment, ChatStatus, Message, MessageState } from './core/type';
 import ChatService from './core';
 import type { TdChatListProps, TdChatProps } from './type';
 
@@ -35,7 +35,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private messages: Message[];
 
-  private modelStatus: ModelStatus;
+  private chatStatus: ChatStatus;
 
   private chatService: ChatService;
 
@@ -52,7 +52,7 @@ export default class Chatbot extends Component<TdChatProps> {
     this.chatService = new ChatService(this.props.modelConfig, initialMessages);
     const { messageStore } = this.chatService;
     this.provide.messageStore = messageStore;
-    this.modelStatus = messageStore.getState().modelStatus;
+    this.chatStatus = messageStore.currentMessage.status;
     this.messages = this.convertMessages(messageStore.getState());
     this.subscribeToChat();
   }
@@ -66,7 +66,7 @@ export default class Chatbot extends Component<TdChatProps> {
     this.unsubscribeMsg = this.chatService.messageStore.subscribe(
       (state) => {
         this.messages = this.convertMessages(state);
-        this.modelStatus = state.modelStatus;
+        this.chatStatus = this.messages.at(-1)?.status;
         this.update();
       },
       // ['messageIds'],
@@ -114,7 +114,7 @@ export default class Chatbot extends Component<TdChatProps> {
         <t-chat-input
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
-          status={this.modelStatus}
+          status={this.chatStatus}
           onStop={this.handleStop}
         />
       </div>
