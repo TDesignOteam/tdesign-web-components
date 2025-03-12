@@ -1,7 +1,9 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
+import { TdChatInputSend } from 'tdesign-web-components/chatbot';
 
+import { Attachment } from '../../attachments';
 import { ChatStatus } from '../core/type';
 
 export default class ChatInput extends Component {
@@ -9,7 +11,7 @@ export default class ChatInput extends Component {
 
   status = signal<ChatStatus>('idle');
 
-  files = signal([
+  files = signal<Attachment[]>([
     {
       uid: '1',
       name: 'excel-file.xlsx',
@@ -25,31 +27,6 @@ export default class ChatInput extends Component {
       name: 'image-file.png',
       size: 333333,
     },
-    {
-      uid: '4',
-      name: 'pdf-file.pdf',
-      size: 444444,
-    },
-    {
-      uid: '5',
-      name: 'ppt-file.pptx',
-      size: 555555,
-    },
-    {
-      uid: '6',
-      name: 'video-file.mp4',
-      size: 666666,
-    },
-    {
-      uid: '7',
-      name: 'audio-file.mp3',
-      size: 777777,
-    },
-    {
-      uid: '8',
-      name: 'zip-file.zip',
-      size: 888888,
-    },
   ]);
 
   onChange = (e: CustomEvent) => {
@@ -57,8 +34,18 @@ export default class ChatInput extends Component {
     this.inputValue.value = e.detail;
   };
 
-  onSend = () => {
-    console.log('提交', this.inputValue);
+  onAttachmentsRemove = (e: CustomEvent<Attachment[]>) => {
+    console.log('onAttachmentsRemove', e);
+    this.files.value = e.detail;
+  };
+
+  onAttachmentsSelect = (e: CustomEvent<Attachment[]>) => {
+    console.log('onAttachmentsSelect', e);
+    this.files.value = this.files.value.concat(e.detail);
+  };
+
+  onSend = (e: CustomEvent<TdChatInputSend>) => {
+    console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];
     this.status.value = 'pending';
@@ -75,10 +62,17 @@ export default class ChatInput extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         status={this.status.value}
+        actions
         attachments={this.files.value}
         textareaProps={{
           autosize: { minRows: 2 },
         }}
+        uploadProps={{
+          multiple: true,
+          accept: 'image/*',
+        }}
+        onAttachmentsSelect={this.onAttachmentsSelect}
+        onAttachmentsRemove={this.onAttachmentsRemove}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}

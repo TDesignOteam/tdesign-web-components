@@ -132,9 +132,9 @@ export default class Attachments extends Component {
             [`${listCls}-overflow-${this.overflow}`]: this.overflow,
           })}
         >
-          {items.map((item) => (
+          {items.map((item, index) => (
             <t-filecard
-              key={item.uid}
+              key={`filecard-${index}`}
               item={item}
               class="t-filecard-item"
               {...(onRemove && {
