@@ -40,7 +40,7 @@ export default class Attachments extends Component {
       if (this.containerRef.current) {
         resizeObserver.observe(this.containerRef.current);
       }
-    }, 100);
+    }, 200);
 
     // 监听手动滚动事件
     this.containerRef.current?.addEventListener('scroll', () => {
@@ -48,12 +48,20 @@ export default class Attachments extends Component {
     });
   }
 
-  // afterUpdate() {
-  //   // DOM更新后检查按钮状态（包括新增filecard的情况）
-  //   requestAnimationFrame(() => {
-  //     this.updateButtonVisibility();
-  //   });
-  // }
+  updated() {
+    // 在下一帧执行确保DOM更新完成
+    requestAnimationFrame(() => {
+      const prevShowPrev = this.showPrevButton;
+      const prevShowNext = this.showNextButton;
+
+      this.updateButtonVisibility();
+
+      // 只有当按钮状态真正变化时才触发更新
+      if (prevShowPrev !== this.showPrevButton || prevShowNext !== this.showNextButton) {
+        this.update();
+      }
+    });
+  }
 
   showPrevButton = false;
 
@@ -66,11 +74,17 @@ export default class Attachments extends Component {
 
     const { scrollLeft, scrollWidth, clientWidth } = container;
     const maxScroll = scrollWidth - clientWidth;
-    console.log('=====123', scrollLeft, scrollWidth, clientWidth);
-    // 保留1px容差防止小数计算问题
-    this.showPrevButton = scrollLeft > 1;
-    this.showNextButton = scrollLeft < maxScroll - 1;
-    this.update();
+
+    // 计算新状态
+    const newShowPrev = scrollLeft > 1;
+    const newShowNext = scrollLeft < maxScroll - 1;
+
+    // 只有当状态真正变化时才更新
+    if (newShowPrev !== this.showPrevButton || newShowNext !== this.showNextButton) {
+      this.showPrevButton = newShowPrev;
+      this.showNextButton = newShowNext;
+      this.update();
+    }
   };
 
   // 滚动处理逻辑
