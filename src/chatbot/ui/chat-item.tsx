@@ -11,6 +11,7 @@ import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
+import { MessagePlugin } from '../../message';
 import { isAIMessage, isUserMessage } from '../core/type';
 import type { TdChatItemAction, TdChatItemProps } from '../type';
 
@@ -18,10 +19,6 @@ import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-const presetActions: TdChatItemAction[] = [
-  { name: 'refresh', render: <t-icon-refresh />, status: ['complete'] },
-  { name: 'copy', render: <t-icon-copy /> },
-];
 @tag('t-chat-item')
 export default class ChatItem extends Component<TdChatItemProps> {
   static css = [styles];
@@ -45,6 +42,22 @@ export default class ChatItem extends Component<TdChatItemProps> {
   };
 
   private messageId!: string;
+
+  clickCopyHandler = () => {
+    if (this.props.message?.role !== 'assistant') {
+      return;
+    }
+    const copyContent = this.props.message.main.content;
+
+    navigator.clipboard
+      .writeText(copyContent.toString())
+      .then(() => {
+        MessagePlugin.success('复制成功');
+      })
+      .catch(() => {
+        MessagePlugin.success('复制失败，请手动复制');
+      });
+  };
 
   install() {
     this.messageId = this.props.message.id!;
@@ -91,14 +104,26 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  presetActions: TdChatItemAction[] = [
+    { name: 'refresh', render: <t-icon-refresh />, status: ['complete'] },
+    {
+      name: 'copy',
+      render: (
+        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
+          <t-icon-copy />
+        </div>
+      ),
+    },
+  ];
+
   renderActions() {
     const { actions, message } = this.props;
     if (!actions) {
       return null;
     }
-    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : presetActions;
+    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
     if (typeof actions === 'function') {
-      arrayActions = actions(presetActions);
+      arrayActions = actions(this.presetActions);
     }
 
     return arrayActions.map((item, idx) => {
