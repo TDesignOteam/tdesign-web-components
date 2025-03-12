@@ -48,6 +48,13 @@ export default class Attachments extends Component {
     });
   }
 
+  // afterUpdate() {
+  //   // DOM更新后检查按钮状态（包括新增filecard的情况）
+  //   requestAnimationFrame(() => {
+  //     this.updateButtonVisibility();
+  //   });
+  // }
+
   showPrevButton = false;
 
   showNextButton = true;
@@ -59,7 +66,7 @@ export default class Attachments extends Component {
 
     const { scrollLeft, scrollWidth, clientWidth } = container;
     const maxScroll = scrollWidth - clientWidth;
-
+    console.log('=====123', scrollLeft, scrollWidth, clientWidth);
     // 保留1px容差防止小数计算问题
     this.showPrevButton = scrollLeft > 1;
     this.showNextButton = scrollLeft < maxScroll - 1;
@@ -139,6 +146,7 @@ export default class Attachments extends Component {
               class="t-filecard-item"
               {...(onRemove && {
                 onRemove: () => {
+                  this.updateButtonVisibility();
                   // 触发删除事件让父组件更新数据源
                   this.fire('remove', item);
                 },
