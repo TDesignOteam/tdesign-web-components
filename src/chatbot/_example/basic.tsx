@@ -37,6 +37,37 @@ const mockData = [
   {
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     message: {
+      id: '789',
+      content: '分析下以下内容，总结一篇广告策划方案',
+      role: 'user',
+      status: 'complete',
+      attachments: [
+        {
+          type: 'file',
+          name: 'demo.docx',
+          url: 'https://tdesign.gtimg.com/site/demo.docx',
+          size: 12312,
+        },
+        {
+          type: 'file',
+          name: 'demo.pdf',
+          url: 'https://tdesign.gtimg.com/site/demo.pdf',
+          size: 3433,
+        },
+      ],
+    },
+  },
+  {
+    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+    message: {
+      id: '3243',
+      role: 'assistant',
+      status: 'error',
+    },
+  },
+  {
+    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    message: {
       id: '456',
       content: '这张图里的帅哥是谁',
       role: 'user',
@@ -48,6 +79,17 @@ const mockData = [
           url: 'https://tdesign.gtimg.com/site/avatar.jpg',
         },
       ],
+    },
+  },
+  {
+    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+    message: {
+      id: '3242',
+      main: {
+        content: '他就是tdesign的核心成员uyarnchen',
+      },
+      role: 'assistant',
+      status: 'complete',
     },
   },
 ];

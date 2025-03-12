@@ -90,6 +90,8 @@ export default class Chatbot extends Component<TdChatProps> {
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
     await this.chatService.sendMessage(value, this.uploadedAttachments);
+    this.uploadedAttachments = [];
+    this.files.value = [];
     this.fire('submit', value, {
       composed: true,
     });
@@ -113,15 +115,17 @@ export default class Chatbot extends Component<TdChatProps> {
   private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
     const uploadedResult = await this.props?.attachmentProps?.onFileSelected?.(e.detail);
     if (uploadedResult.length > 0) {
-      uploadedResult.forEach(({ name, url, type, size }) => {
-        this.uploadedAttachments.push({
-          name,
-          url,
-          type,
-          size,
-          isReference: false,
-        });
-      });
+      // 使用不可变方式更新数组
+      const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
+        name,
+        url,
+        type,
+        size,
+        isReference: false,
+      }));
+
+      // 使用扩展运算符创建新数组
+      this.uploadedAttachments = [...this.uploadedAttachments, ...newAttachments];
       this.files.value = this.files.value.concat(uploadedResult);
     }
   };

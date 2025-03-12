@@ -217,7 +217,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (!isUserMessage(this.props.message) || !this.props?.message.attachments) return null;
     const { attachments } = this.props.message;
     // 判断是否全部是图片类型
-    const isAllImages = attachments.every((att) => att.type === 'image');
+    const isAllImages = attachments.every((att) => /image/.test(att.type));
     return (
       <div className={`${className}__attachments`}>
         {isAllImages ? (
