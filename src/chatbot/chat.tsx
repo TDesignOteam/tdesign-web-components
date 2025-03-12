@@ -5,7 +5,8 @@ import '../button';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { Attachment, ChatStatus, Message, MessageState } from './core/type';
+import { Attachment } from '../filecard';
+import type { ChatStatus, Message, MessageState } from './core/type';
 import ChatService from './core';
 import type { TdChatListProps, TdChatProps } from './type';
 
@@ -29,6 +30,7 @@ export default class Chatbot extends Component<TdChatProps> {
     data: Array,
     reverse: Boolean,
     modelConfig: Object,
+    attachmentProps: Object,
   };
 
   listRef = createRef<TdChatListProps>();

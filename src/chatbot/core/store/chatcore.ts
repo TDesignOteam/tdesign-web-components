@@ -79,7 +79,7 @@ export type ThinkingContent = PhaseContent<string> & {
 };
 
 // 附件系统
-export interface Attachment {
+export interface AttachmentContent {
   type: AttachmentType;
   name: string;
   url: string;

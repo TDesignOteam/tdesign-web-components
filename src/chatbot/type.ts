@@ -47,6 +47,7 @@ export interface TdChatItemProps {
   /** 消息体 */
   message: Message;
 }
+
 interface ChatProps {
   /**
    * 布局
@@ -71,6 +72,10 @@ interface ChatProps {
   // 流式数据加载中
   isStreamLoad?: boolean;
   modelConfig: ModelServiceState;
+  attachmentProps: {
+    onFileSelected?: (files: Attachment[]) => Promise<Attachment[]>;
+    onFileRemove?: (file: Attachment) => void;
+  };
   onClear?: (context: { e: MouseEvent }) => void;
 }
 

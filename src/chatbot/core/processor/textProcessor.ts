@@ -1,7 +1,7 @@
-import type { AIResponse, Attachment, Message } from '../type';
+import type { AIResponse, AttachmentContent, Message } from '../type';
 
 export default class ChatTextProcessor {
-  public createUserMessage(content: string, files?: Attachment[]): Message {
+  public createUserMessage(content: string, files?: AttachmentContent[]): Message {
     if (files && files.length > 0) {
       this.createAttachments(files);
     }
@@ -29,7 +29,7 @@ export default class ChatTextProcessor {
     return `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
   }
 
-  private createAttachments(files: Attachment[]) {
+  private createAttachments(files: AttachmentContent[]) {
     return files.map((file) => ({
       ...file,
     }));
