@@ -160,7 +160,6 @@ export default class Attachments extends Component {
               class="t-filecard-item"
               {...(onRemove && {
                 onRemove: () => {
-                  this.updateButtonVisibility();
                   // 触发删除事件让父组件更新数据源
                   this.fire('remove', item);
                 },
