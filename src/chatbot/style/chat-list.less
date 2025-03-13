@@ -16,26 +16,22 @@
   overflow-x: hidden;
 
   &__scroll__button {
-    // TODO: 提取变量
     position: sticky;
-    top: calc(100% - 64px);
-    left: 50%;
+    top: var(--t-chat-list-scroll-button-top);
+    left: var(--t-chat-list-scroll-button-left);
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px;
-    height: 40px;
-    padding: 0 0 4px 0;
-    border: 0.5px solid rgba(220, 220, 220, 1);
-    border-radius: 20px;
-    background-color: #fff;
-    font-size: 20px;
-    z-index: 50;
-    transform: translate(-50%, 0);
-    box-shadow:
-      0px 8px 10px -5px rgba(0, 0, 0, 0.08),
-      0px 16px 24px 2px rgba(0, 0, 0, 0.04),
-      0px 6px 30px 5px rgba(0, 0, 0, 0.05);
+    width: var(--t-chat-list-scroll-button-w);
+    height: var(--t-chat-list-scroll-button-h);
+    padding: var(--t-chat-list-scroll-button-padding);
+    border: var(--t-chat-list-scroll-button-border);
+    border-radius: var(--t-chat-list-scroll-button-radius);
+    background-color: var(--t-chat-list-scroll-button-bg);
+    font-size: var(--t-chat-list-scroll-button-font-size);
+    z-index: var(--t-chat-list-scroll-button-index);
+    transform: var(--t-chat-list-scroll-button-transform);
+    box-shadow: var(--t-chat-list-scroll-button-shadow);
     cursor: pointer;
 
     &--hide {
