@@ -48,7 +48,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
   static css = [styles];
 
   static propTypes = {
-    content: String || Object,
+    content: String,
     role: String,
   };
 

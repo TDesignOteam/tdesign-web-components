@@ -1,14 +1,9 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
 export type ChatStatus = 'idle' | MessageStatus;
-export type ContentType = 'text' | 'markdown' | 'image' | 'audio' | 'video';
+export type ContentType = 'text' | 'markdown' | 'search' | 'attachment' | 'thinking' | 'image' | 'audio' | 'video';
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
-export type MediaFormat = {
-  image: 'jpg' | 'png' | 'webp';
-  audio: 'mp3' | 'wav' | 'ogg';
-  video: 'mp4' | 'mov' | 'avi';
-};
-
+export type PhaseType = 'thinking' | 'search' | 'main';
 // 基础类型
 interface BaseContent<T extends ContentType> {
   type: T;
@@ -16,13 +11,16 @@ interface BaseContent<T extends ContentType> {
 }
 
 // 内容类型
-export type TextContent = BaseContent<'text' | 'markdown'> & {
-  content: string;
+export type TextContent = BaseContent<'text'> & {
+  detail: string;
+};
+
+export type MarkdownContent = BaseContent<'markdown'> & {
+  detail: string;
 };
 
 export type ImageContent = BaseContent<'image'> & {
-  content: {
-    type: 'image';
+  detail: {
     name?: string;
     url?: string;
     width?: number;
@@ -30,73 +28,73 @@ export type ImageContent = BaseContent<'image'> & {
   };
 };
 
-export type MessageContent = TextContent | ImageContent;
-
+// 搜索
 // 公共引用结构
-export interface ReferenceItem {
+export type ReferenceItem = {
   title: string;
   url?: string;
   detail?: string;
   source?: string;
   timestamp?: string;
-}
-
-interface PhaseContent<T = string> {
-  status?: MessageStatus;
-  title?: string;
-  content?: T;
-}
-
-// 搜索和思考
-export type SearchResult = PhaseContent<ReferenceItem[]>;
-export type ThinkingContent = PhaseContent<string> & {
-  type?: 'text' | 'markdown';
+};
+export type SearchContent = BaseContent<'search'> & {
+  detail: ReferenceItem[];
 };
 
-// 附件系统
-export interface AttachmentContent {
-  type: string;
+// 附件消息
+export type AttachmentItem = {
+  fileType: AttachmentType;
   name: string;
   url: string;
   size: number;
-  isReference?: boolean;
+  isReference?: boolean; // 是否是引用
   width?: number;
   height?: number;
   metadata?: Record<string, any>;
-}
+};
+export type AttachmentContent = BaseContent<'attachment'> & {
+  detail: AttachmentItem[];
+};
+
+// 思考过程
+export type ThinkingContent = BaseContent<'thinking'> & {
+  detail: {
+    text?: string;
+    // markdown?: string;
+    title?: string;
+  };
+};
 
 // 消息主体
 // 基础消息结构
 interface BaseMessage {
   id: string;
-  status: MessageStatus;
+  status?: MessageStatus;
   timestamp?: string;
 }
 
+export type AIMessageContent = TextContent | MarkdownContent | ThinkingContent | ImageContent | SearchContent;
+export type UserMessageContent = TextContent | AttachmentContent;
+
 export interface UserMessage extends BaseMessage {
   role: 'user';
-  content: string;
-  attachments?: AttachmentContent[];
+  content: UserMessageContent[];
+}
+
+export interface AIMessage extends BaseMessage {
+  role: 'assistant';
+  phase?: PhaseType;
+  content: AIMessageContent[];
 }
 
 export interface SystemMessage extends BaseMessage {
   role: 'system';
-  content: string;
+  content: TextContent[];
 }
 
 export type Message = UserMessage | AIMessage | SystemMessage;
 
 // 回答消息体配置
-export interface AIMessage extends BaseMessage, AIResponse {
-  role: 'assistant';
-}
-
-export interface AIResponse {
-  main?: MessageContent;
-  search?: SearchResult;
-  thinking?: ThinkingContent;
-}
-
 export type SSEChunkData = {
   event?: string;
   data: any;
@@ -105,7 +103,7 @@ export type SSEChunkData = {
 export interface RequestParams extends ModelParams {
   messageID: string;
   prompt: string;
-  attachments?: AttachmentContent[];
+  attachments?: AttachmentContent['detail'][];
 }
 
 export interface LLMConfig {
@@ -114,7 +112,7 @@ export interface LLMConfig {
   retryInterval?: number;
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
-  onMessage?: (chunk: SSEChunkData) => AIResponse;
+  onMessage?: (chunk: SSEChunkData) => Message;
   onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
   onAbort?: () => void;
   onError?: (error: Error, params: RequestParams) => void;
@@ -123,7 +121,7 @@ export interface LLMConfig {
 // 消息相关状态
 export interface MessageState {
   messageIds: string[];
-  messages: Record<string, Message>;
+  messages: Message[];
 }
 
 // 模型服务相关状态
@@ -144,10 +142,10 @@ export interface ChatState {
 }
 
 // 类型守卫函数
-export function isUserMessage(message: Message): message is UserMessage {
+export function isUserMessage(message: Message) {
   return message.role === 'user' && 'content' in message;
 }
 
-export function isAIMessage(message: Message): message is AIMessage {
+export function isAIMessage(message: Message) {
   return message.role === 'assistant';
 }

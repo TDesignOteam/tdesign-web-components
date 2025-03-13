@@ -2,57 +2,22 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component } from 'omi';
+import type { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
 import type { AIResponse, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
-const mockData = [
+const mockData: TdChatItemProps[] = [
   {
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     message: {
       id: '223',
-      status: 'complete',
-      content: '南极的自动提款机叫什么名字？',
-      role: 'user',
-    },
-  },
-  {
-    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    message: {
-      id: '123',
-      role: 'assistant',
-      main: {
-        content: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
-      },
-      thinking: {
-        type: 'markdown',
-        title: '思考完成（耗时3秒）',
-        status: 'complete',
-        content:
-          'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
-      },
-      status: 'complete',
-    },
-  },
-  {
-    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    message: {
-      id: '789',
-      content: '分析下以下内容，总结一篇广告策划方案',
       role: 'user',
       status: 'complete',
-      attachments: [
+      content: [
         {
-          type: 'file',
-          name: 'demo.docx',
-          url: 'https://tdesign.gtimg.com/site/demo.docx',
-          size: 12312,
-        },
-        {
-          type: 'file',
-          name: 'demo.pdf',
-          url: 'https://tdesign.gtimg.com/site/demo.pdf',
-          size: 3433,
+          type: 'text',
+          detail: '南极的自动提款机叫什么名字？',
         },
       ],
     },
@@ -60,23 +25,96 @@ const mockData = [
   {
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     message: {
-      id: '3243',
+      id: '123',
       role: 'assistant',
-      status: 'error',
+      status: 'complete',
+      content: [
+        {
+          type: 'thinking',
+          detail: {
+            title: '思考完成（耗时3s）',
+            text: 'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
+          },
+        },
+        {
+          type: 'text',
+          detail: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
+        },
+      ],
     },
   },
   {
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     message: {
-      id: '456',
-      content: '这张图里的帅哥是谁',
+      id: '789',
       role: 'user',
       status: 'complete',
-      attachments: [
+      content: [
         {
-          type: 'image',
-          name: 'avatar.jpg',
-          url: 'https://tdesign.gtimg.com/site/avatar.jpg',
+          type: 'text',
+          detail: '分析下以下内容，总结一篇广告策划方案',
+        },
+        {
+          type: 'attachment',
+          detail: [
+            {
+              fileType: 'doc',
+              name: 'demo.docx',
+              url: 'https://tdesign.gtimg.com/site/demo.docx',
+              size: 12312,
+            },
+            {
+              fileType: 'pdf',
+              name: 'demo.pdf',
+              url: 'https://tdesign.gtimg.com/site/demo.pdf',
+              size: 3433,
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
+    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+    message: {
+      id: '34234',
+      status: 'error',
+      role: 'assistant',
+      content: [
+        {
+          type: 'text',
+          detail: '出错了',
+        },
+      ],
+    },
+  },
+  {
+    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    message: {
+      id: '7389',
+      role: 'user',
+      status: 'complete',
+      content: [
+        {
+          type: 'text',
+          detail: '这张图里的帅哥是谁',
+        },
+        {
+          type: 'attachment',
+          detail: [
+            {
+              fileType: 'image',
+              name: 'avatar.jpg',
+              size: 234234,
+              url: 'https://tdesign.gtimg.com/site/avatar.jpg',
+            },
+            {
+              fileType: 'pdf',
+              name: 'demo.pdf',
+              url: 'https://tdesign.gtimg.com/site/demo.pdf',
+              size: 3433,
+            },
+          ],
         },
       ],
     },
@@ -85,11 +123,14 @@ const mockData = [
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     message: {
       id: '3242',
-      main: {
-        content: '他就是tdesign的核心成员uyarnchen',
-      },
       role: 'assistant',
       status: 'complete',
+      content: [
+        {
+          type: 'text',
+          detail: '他就是tdesign的核心成员uyarnchen',
+        },
+      ],
     },
   },
 ];
