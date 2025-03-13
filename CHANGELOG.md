@@ -5,6 +5,13 @@ toc: false
 spline: explain
 ---
 
+## 🌈 0.0.7 `2025-03-13` 
+### 🚧 Others
+- fix(image): 修复image组件展示问题 @duenyang ([#198](https://github.com/TDesignOteam/tdesign-web-components/pull/198))
+- fix(collapse): 修复collapse在react中使用报错不显示问题 @duenyang ([#199](https://github.com/TDesignOteam/tdesign-web-components/pull/199))
+- fix(collapse): 修复collapse动画不执行问题 @duenyang ([#200](https://github.com/TDesignOteam/tdesign-web-components/pull/200))
+- fix(omi): 通过 css props 插入的 style 标签层级保持和 shadowroot 一致 @duenyang ([#203](https://github.com/TDesignOteam/tdesign-web-components/pull/203))
+
 ## 🌈 0.0.6 `2025-02-24` 
 ### 🚧 Others
 - feat(omi): 支持复杂对象使用DOMProperty的方式传参 @duenyang ([#193](https://github.com/TDesignOteam/tdesign-web-components/pull/193))

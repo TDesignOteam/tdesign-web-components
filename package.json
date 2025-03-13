@@ -1,7 +1,7 @@
 {
   "name": "tdesign-web-components",
   "purename": "tdesign",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -68,7 +68,7 @@
     "copy-to-clipboard": "^3.3.3",
     "htm": "^3.1.1",
     "lodash-es": "^4.17.21",
-    "omi": "^7.7.7",
+    "omi": "^7.7.8",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
     "tdesign-icons-web-components": "^0.2.4"
