@@ -194,7 +194,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   // 思维链
   renderThinking() {
     if (!isAIMessage(this.props.message)) return;
-    const { thinking, status, role } = this.props.message;
+    const { thinking, status } = this.props.message;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         {convertToLightDomNode(
@@ -206,18 +206,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
                 {status === 'stop' ? '思考终止' : thinking?.title}
               </>
             }
-            content={
-              thinking.type === 'text' ? (
-                thinking.content || ''
-              ) : (
-                <t-chat-content
-                  className={`${className}__detail`}
-                  content={thinking.content}
-                  role={role}
-                  plainText={true} // todo: 这里需要支持只解析md不带样式
-                ></t-chat-content>
-              )
-            }
+            content={thinking.content}
           >
             {thinking?.content || ''}
           </t-collapse-panel>,
