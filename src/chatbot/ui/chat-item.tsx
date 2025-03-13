@@ -14,7 +14,15 @@ import { Component, OmiProps, tag } from 'omi';
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
 import { MessagePlugin } from '../../message';
-import { isAIMessage, isUserMessage } from '../core/type';
+import {
+  AttachmentItem,
+  isAIMessage,
+  isTextContent,
+  isThinkingContent,
+  isUserMessage,
+  MessageStatus,
+  ThinkingContent,
+} from '../core/type';
 import type { TdChatItemAction, TdChatItemProps } from '../type';
 
 import styles from '../style/chat-item.less';
@@ -80,8 +88,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (
       isAIMessage(newMsg) &&
       isAIMessage(oldMsg) &&
-      newMsg.main?.content === oldMsg.main?.content &&
-      newMsg.thinking?.content === oldMsg.thinking?.content
+      JSON.stringify(newMsg.content) === JSON.stringify(oldMsg.content)
     ) {
       return false;
     }
@@ -150,12 +157,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return;
-    const { status, thinking, search, main } = this.props.message;
+    const { status, content } = this.props.message;
     // 如果有任一内容，就不用展示message整体状态
-    if (thinking?.content || search?.content || main?.content) {
+    if (content.length > 0) {
       return null;
     }
-    if (status === 'stop' || status === 'complete') {
+    if (status === 'stop') {
       return <div className={`${className}__detail`}>已终止</div>;
     }
     if (status === 'error') {
@@ -166,39 +173,39 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  renderThinkingStatus() {
-    if (!isAIMessage(this.props.message)) return;
-    const { thinking, status } = this.props.message;
-
-    if (thinking?.status === 'complete' || thinking?.status === 'stop' || status === 'stop')
+  // 思维链
+  private renderThinkingStatus(status: MessageStatus) {
+    if (status === 'complete' || status === 'stop')
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
-    if (thinking?.status === 'error')
+    if (status === 'error')
       return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
     return <div class={`${className}__think__status--pending`}>...</div>;
   }
 
-  // 思维链
-  renderThinking() {
-    if (!isAIMessage(this.props.message)) return;
-    const { thinking, status } = this.props.message;
+  private renderThinking(content: ThinkingContent) {
+    const { detail, status } = content;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         <t-collapse-panel className={`${className}__think__content`}>
-          {thinking?.content || ''}
+          {detail?.text || ''}
           <div slot="header" className={`${className}__think__header__content`}>
-            {this.renderThinkingStatus()}
-            {status === 'stop' ? '思考终止' : thinking?.title}
+            {this.renderThinkingStatus(status)}
+            {status === 'stop' ? '思考终止' : detail?.title}
           </div>
         </t-collapse-panel>
       </t-collapse>
     );
   }
 
-  renderAttachments() {
-    if (!isUserMessage(this.props.message) || !this.props?.message.attachments) return null;
-    const { attachments } = this.props.message;
+  private renderAttachments() {
+    if (!isUserMessage(this.props.message)) return null;
+    const findAttachment = this.props.message.content.find(
+      ({ type, detail }) => type === 'attachment' && Array.isArray(detail) && detail.length > 0,
+    );
+    if (!findAttachment) return;
+    const attachments = findAttachment.detail as AttachmentItem[];
     // 判断是否全部是图片类型
-    const isAllImages = attachments.every((att) => /image/.test(att.type));
+    const isAllImages = attachments.every((att) => /image/.test(att.fileType));
     return (
       <div className={`${className}__attachments`}>
         {isAllImages ? (
@@ -219,25 +226,33 @@ export default class ChatItem extends Component<TdChatItemProps> {
   renderMessage() {
     const { message } = this.props;
     const { role } = message;
-
-    if (role === 'user' || role === 'system') {
-      if (!message?.content) return null;
-      return <t-chat-content className={`${className}__detail`} content={message.content} role={role}></t-chat-content>;
-    }
-
-    return (
-      <>
-        {message?.thinking?.content && this.renderThinking()}
-        {message?.search?.content && <div className={`${className}__search`}>{message.search.content}</div>}
-        {message?.main?.content && (
+    return message.content.map((content, index) => {
+      const elementKey = `${message.id}-${index}`;
+      // 用户和系统消息处理
+      if (role === 'user' || role === 'system') {
+        if (!message?.content) return null;
+        return (
           <t-chat-content
+            key={elementKey}
             className={`${className}__detail`}
-            content={message?.main?.content}
+            content={content?.detail || content}
             role={role}
           ></t-chat-content>
-        )}
-      </>
-    );
+        );
+      }
+
+      // AI消息处理
+      if (role === 'assistant') {
+        if (isThinkingContent(content)) {
+          return this.renderThinking(content);
+        }
+        if (isTextContent(content)) {
+          return <t-chat-content content={content.detail} role={role}></t-chat-content>;
+        }
+      }
+
+      return null;
+    });
   }
 
   render(props: TdChatItemProps) {
@@ -260,7 +275,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
               {datetime && <span class={`${className}__time`}>{datetime}</span>}
             </div>
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
-            {this.renderAttachments(message)}
+            {this.renderAttachments()}
             <div className={`${className}__actions`}>{this.renderActions()}</div>
           </div>
         ) : null}

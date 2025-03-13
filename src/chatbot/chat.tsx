@@ -59,7 +59,7 @@ export default class Chatbot extends Component<TdChatProps> {
     const { messageStore } = this.chatService;
     this.provide.messageStore = messageStore;
     this.chatStatus = messageStore.currentMessage.status;
-    this.messages = this.convertMessages(messageStore.getState());
+    this.messages = messageStore.getState().messages;
     this.subscribeToChat();
   }
 

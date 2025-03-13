@@ -149,3 +149,15 @@ export function isUserMessage(message: Message) {
 export function isAIMessage(message: Message) {
   return message.role === 'assistant';
 }
+
+export function isThinkingContent(content: AIMessageContent): content is ThinkingContent {
+  return content.type === 'thinking';
+}
+
+export function isTextContent(content: AIMessageContent): content is TextContent {
+  return content.type === 'text';
+}
+
+export function isMarkdownContent(content: AIMessageContent): content is MarkdownContent {
+  return content.type === 'markdown';
+}

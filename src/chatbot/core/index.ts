@@ -93,17 +93,11 @@ export default class ChatEngine implements IChatEngine {
   }
 
   private convertMessages(messages?: Message[]) {
-    if (!messages) return { messageIds: [], messages: {} };
+    if (!messages) return { messageIds: [], messages: [] };
 
     return {
       messageIds: messages.map((msg) => msg.id),
-      messages: messages.reduce(
-        (acc, msg) => {
-          acc[msg.id] = msg;
-          return acc;
-        },
-        {} as Record<string, Message>,
-      ),
+      messages,
     };
   }
 

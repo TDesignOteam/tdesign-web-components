@@ -1,4 +1,11 @@
-import type { AIResponse, ImageContent, Message, MessageState, TextContent, ThinkingContent } from '../type';
+import {
+  type AIMessageContent,
+  isAIMessage,
+  type Message,
+  type MessageState,
+  type TextContent,
+  type ThinkingContent,
+} from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
@@ -6,7 +13,7 @@ export class MessageStore extends ReactiveState<MessageState> {
   constructor(initialState?: Partial<MessageState>) {
     super({
       messageIds: [],
-      messages: {},
+      messages: [],
       ...initialState,
     });
   }
@@ -15,10 +22,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     const { id } = message;
     this.setState((draft) => {
       draft.messageIds.push(id);
-      draft.messages[id] = {
-        ...message,
-        id,
-      };
+      draft.messages.push(message);
     });
   }
 
@@ -26,35 +30,44 @@ export class MessageStore extends ReactiveState<MessageState> {
     this.setState((draft) => {
       messages.forEach((msg) => {
         draft.messageIds.push(msg.id);
-        draft.messages[msg.id] = msg;
       });
+      draft.messages.push(...messages);
     });
   }
 
-  appendContent(messageId: string, chunk: AIResponse) {
+  appendContent(messageId: string, chunk: AIMessageContent) {
     this.setState((draft) => {
-      const message = draft.messages[messageId];
+      const message = draft.messages.find((m) => m.id === messageId);
       if (!message) return;
-      if (message.role !== 'assistant') return;
+      if (!isAIMessage(message)) return;
 
       message.status = 'streaming';
+      const { content } = message;
+      const { type, detail } = chunk;
+      const { type: cType, detail: cDetail } = content.at(-1);
+      if (type !== cType) return;
+
+      if (type === 'text' || type === 'markdown') {
+        content.at(-1).detail = cDetail + detail;
+      }
+
       // 合并主内容（文本流式追加）
-      if (chunk.main && (chunk.main.type === 'text' || chunk.main.type === 'markdown')) {
-        message.main = this.mergeTextContent(message.main as TextContent, chunk.main);
-      }
+      // if (content.type === 'text' || type === 'markdown') {
+      //   message.main = this.mergeTextContent(message.main as TextContent, chunk.main);
+      // }
 
-      // 图片内容
-      if (chunk.main && chunk.main.type === 'image') {
-        message.main = {
-          ...message.main,
-          ...(chunk.main.content as ImageContent),
-        };
-      }
+      // // 图片内容
+      // if (chunk.main && chunk.main.type === 'image') {
+      //   message.main = {
+      //     ...message.main,
+      //     ...(chunk.main.content as ImageContent),
+      //   };
+      // }
 
-      // 合并思考过程（覆盖更新）
-      if (chunk.thinking) {
-        message.thinking = this.mergeThinking(message.thinking, chunk.thinking);
-      }
+      // // 合并思考过程（覆盖更新）
+      // if (chunk.thinking) {
+      //   message.thinking = this.mergeThinking(message.thinking, chunk.thinking);
+      // }
 
       // 合并搜索结果（增量更新）
       // if (chunk.search) {
@@ -93,13 +106,13 @@ export class MessageStore extends ReactiveState<MessageState> {
   clearHistory() {
     this.setState((draft) => {
       draft.messageIds = [];
-      draft.messages = {};
+      draft.messages = [];
     });
   }
 
   get currentMessage(): Message {
-    const { messages, messageIds } = this.getState();
-    return messages[messageIds.slice(-1)[0]];
+    const { messages } = this.getState();
+    return messages.at(-1);
   }
 }
 
