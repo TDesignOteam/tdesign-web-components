@@ -19,6 +19,15 @@ export default class Collapse extends Component<TdCollapseProps> {
     onChange: Function,
   };
 
+  static defaultProps = {
+    borderless: false,
+    defaultExpandAll: false,
+    expandIconPlacement: 'left',
+    expandMutex: false,
+    expandOnRowClick: true,
+    value: [],
+  };
+
   collapseValue = signal([]);
 
   innerBorderless = signal(false);
@@ -87,7 +96,7 @@ export default class Collapse extends Component<TdCollapseProps> {
   }
 
   render(props: OmiProps<CollapseProps>): TNode {
-    const { innerClass, innerStyle, borderless, children } = props;
+    const { innerClass, innerStyle, borderless } = props;
 
     const classes = classname(
       `${classPrefix}-collapse`,
@@ -98,8 +107,8 @@ export default class Collapse extends Component<TdCollapseProps> {
     );
 
     return (
-      <div className={classes} part={`${classPrefix}-collapse`} style={innerStyle}>
-        {children}
+      <div className={classes} style={innerStyle}>
+        <slot></slot>
       </div>
     );
   }
