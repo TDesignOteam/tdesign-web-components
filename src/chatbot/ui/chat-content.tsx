@@ -58,8 +58,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
   getTextInfo() {
     const { content, role } = this.props;
     if (role === 'user') {
-      if (typeof content === 'string') return content;
-      if (content.type === 'image') return <image src={content.url} />;
+      return content;
     }
     return this.parseMarkdown(content as string);
   }
