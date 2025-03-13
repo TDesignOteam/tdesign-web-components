@@ -93,6 +93,8 @@ export interface TdChatListProps {
   textLoading?: boolean;
   /** 自动滚动底部 */
   autoScroll?: boolean;
+  /** 滚动底部按钮 */
+  scrollToBottom?: boolean;
   onScroll?: (e: Event) => void;
 }
 export interface TdChatContentProps {

@@ -90,7 +90,6 @@
       .@{prefix}-chat__item__header {
         padding: var(--t-chat-item-text-header-padding);
       }
-  
       .@{prefix}-chat__item__content {
         padding: var(--t-chat-item-text-content-padding);
         background-color: transparent;
@@ -98,6 +97,10 @@
       .@{prefix}-chat__item__actions {
         margin: var(--t-chat-item-text-actions-list-margin);
       }
+    }
+
+    .@{prefix}-chat__item__detail {
+      margin: var(--t-chat-item-text-detail-margin);
     }
   }
 
@@ -153,11 +156,12 @@
   }
 
   &__think {
+    display: block;
     width: 100%;
+    margin-bottom: var(--t-chat-item-think-margin-bottom);
 
     &::part(@{prefix}-collapse) {
       width: 100%;
-      margin-bottom: var(--t-chat-item-think-margin-bottom);
       padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr);
       border: none;
       border-radius: var(--t-chat-item-think-radius);
@@ -213,6 +217,10 @@
         display: none;
       }
     }
+  }
+
+  &__detail {
+    display: block;
   }
 
   &__header {

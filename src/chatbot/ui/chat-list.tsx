@@ -1,13 +1,16 @@
+import 'tdesign-icons-web-components/esm/components/arrow-down';
 import './chat-item';
 
-import { Component, createRef, tag } from 'omi';
+import { debounce } from 'lodash-es';
+import { Component, createRef, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
+import classname, { getClassPrefix } from '../../_util/classname';
+import { convertToLightDomNode } from '../../_util/lightDom';
 import type { TdChatItemProps, TdChatListProps } from '../type';
 
 import styles from '../style/chat-list.less';
 
-const className = `${getClassPrefix()}-chat`;
+const className = `${getClassPrefix()}-chat__list`;
 @tag('t-chat-list')
 export default class Chatlist extends Component<TdChatListProps> {
   static css = [styles];
@@ -16,19 +19,75 @@ export default class Chatlist extends Component<TdChatListProps> {
     data: Array,
     textLoading: Boolean,
     autoScroll: Boolean,
+    scrollToBottom: Boolean,
   };
 
   static defaultProps = {
     data: [],
     autoScroll: true,
+    scrollToBottom: true,
   };
 
   listRef = createRef<HTMLDivElement>();
 
+  scrollButtonVisible = signal(false);
+
+  /** 检测并滚动到底部 */
+  checkAndScrollToBottom = () => {
+    const { data, autoScroll } = this.props;
+    if (!autoScroll) {
+      return;
+    }
+    const lastData = data[data.length - 1];
+    // 消息生成中 / 发送消息时自动滚到底部
+    if (lastData.status === 'pending' || lastData.status === 'streaming' || lastData.role !== 'assistant') {
+      this.scrollToBottom();
+    }
+  };
+
+  /** 检测并显示滚到底部按钮 */
+  checkAndShowScrollButton = debounce(() => {
+    const { scrollToBottom } = this.props;
+    if (!scrollToBottom) {
+      this.scrollButtonVisible.value = false;
+      return;
+    }
+    const list = this.listRef.current;
+    // 距离底部大于阈值 展示按钮
+    if (list && list.scrollHeight - list.clientHeight - list.scrollTop > 140) {
+      this.scrollButtonVisible.value = true;
+    } else {
+      this.scrollButtonVisible.value = false;
+    }
+  }, 100);
+
+  installed(): void {
+    this.checkAndShowScrollButton();
+  }
+
+  updated() {
+    // 下个循环触发滚动，否则滚动高度取不到最新
+    setTimeout(() => {
+      this.checkAndScrollToBottom();
+      this.checkAndShowScrollButton();
+    }, 0);
+  }
+
   render(props: { data: TdChatItemProps['message'][]; reverse?: boolean }) {
     const items = props.reverse ? [...props.data].reverse() : props.data;
     return (
-      <div ref={this.listRef} className={`${className}__list`} onScroll={this.handleScroll}>
+      <div ref={this.listRef} className={className} onScroll={this.handleScroll}>
+        <div
+          className={classname([
+            `${className}__scroll__button`,
+            {
+              [`${className}__scroll__button--hide`]: !this.scrollButtonVisible.value,
+            },
+          ])}
+          onClick={() => this.scrollToBottom()}
+        >
+          {convertToLightDomNode(<t-icon-arrow-down />)}
+        </div>
         {items.map((item) => {
           // TODO: 看拿到哪里
           const { role, id } = item;
@@ -54,27 +113,8 @@ export default class Chatlist extends Component<TdChatListProps> {
     );
   }
 
-  updated() {
-    // 下个循环触发滚动，否则滚动高度取不到最新
-    setTimeout(() => {
-      this.checkAndScrollToBottom();
-    }, 0);
-  }
-
-  /** 检测并滚动到底部 */
-  checkAndScrollToBottom = () => {
-    const { data, autoScroll } = this.props;
-    if (!autoScroll) {
-      return;
-    }
-    const lastData = data[data.length - 1];
-    // 消息生成中 / 发送消息时自动滚到底部
-    if (lastData.status === 'pending' || lastData.status === 'streaming' || lastData.role !== 'assistant') {
-      this.scrollToBottom();
-    }
-  };
-
   private handleScroll = (e: Event) => {
+    this.checkAndShowScrollButton();
     this.fire('scroll', e);
   };
 

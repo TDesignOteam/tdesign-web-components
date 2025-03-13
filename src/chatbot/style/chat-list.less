@@ -9,37 +9,37 @@
 
 // 聊天列表
 .@{prefix}-chat__list {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 
-  &--reverse {
+  &__scroll__button {
+    // TODO: 提取变量
+    position: sticky;
+    top: calc(100% - 64px);
+    left: 50%;
     display: flex;
-    flex-direction: column-reverse;
-  }
-
-  .place-holder {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-
-  .clear-btn {
-    color: @text-color-secondary;
-    font-size: @font-size-s;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    padding: 0 0 4px 0;
+    border: 0.5px solid rgba(220, 220, 220, 1);
+    border-radius: 20px;
+    background-color: #fff;
+    font-size: 20px;
+    z-index: 50;
+    transform: translate(-50%, 0);
+    box-shadow:
+      0px 8px 10px -5px rgba(0, 0, 0, 0.08),
+      0px 16px 24px 2px rgba(0, 0, 0, 0.04),
+      0px 6px 30px 5px rgba(0, 0, 0, 0.05);
     cursor: pointer;
 
-    .@{prefix}-divider__inner-text {
-      display: flex;
-      align-items: center;
-    }
-
-    .clear-btn-text {
-      margin-left: @comp-margin-xs;
-    }
-
-    &:hover {
-      color: @text-color-primary;
+    &--hide {
+      visibility: hidden;
     }
   }
 }

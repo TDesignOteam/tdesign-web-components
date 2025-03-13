@@ -156,10 +156,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
       return null;
     }
     if (status === 'stop' || status === 'complete') {
-      return '已终止';
+      return <div className={`${className}__detail`}>已终止</div>;
     }
     if (status === 'error') {
-      return '出错了';
+      return <div className={`${className}__detail`}>出错了</div>;
     }
     return (
       <t-skeleton class={`${className}__skeleton`} loading={true} theme="paragraph" animation="gradient"></t-skeleton>
