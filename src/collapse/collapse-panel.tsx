@@ -133,7 +133,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         <div className={`${className}__header-left`}>{expandIconPlacement?.value === 'left' && this.renderIcon()}</div>
 
         <div className={`${className}__header-content`} part={`${className}__header-content`}>
-          {this.props.header}
+          <slot name="header">{this.props.header}</slot>
         </div>
         <div className={`${className}__header--blank`} part={`${className}__header--blank`}></div>
         <div className={`${className}__header-right`} part={`${className}__header-right`}>

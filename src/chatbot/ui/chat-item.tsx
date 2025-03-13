@@ -171,24 +171,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
     const { thinking, status } = this.props.message;
 
     if (thinking?.status === 'complete' || thinking?.status === 'stop' || status === 'stop')
-      return convertToLightDomNode(
-        <t-icon-check-circle
-          class={`${className}__think__status--complete`}
-          part={`${className}__think__status--complete`}
-        />,
-      );
+      return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
     if (thinking?.status === 'error')
-      return convertToLightDomNode(
-        <t-icon-close-circle
-          class={`${className}__think__status--error`}
-          part={`${className}__think__status--error`}
-        />,
-      );
-    return (
-      <div class={`${className}__think__status--pending`} part={`${className}__think__status--pending`}>
-        ...
-      </div>
-    );
+      return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
+    return <div class={`${className}__think__status--pending`}>...</div>;
   }
 
   // 思维链
@@ -197,20 +183,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
     const { thinking, status } = this.props.message;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
-        {convertToLightDomNode(
-          <t-collapse-panel
-            className={`${className}__think__content`}
-            header={
-              <>
-                {this.renderThinkingStatus()}
-                {status === 'stop' ? '思考终止' : thinking?.title}
-              </>
-            }
-            content={thinking.content}
-          >
-            {thinking?.content || ''}
-          </t-collapse-panel>,
-        )}
+        <t-collapse-panel className={`${className}__think__content`}>
+          {thinking?.content || ''}
+          <div slot="header" className={`${className}__think__header__content`}>
+            {this.renderThinkingStatus()}
+            {status === 'stop' ? '思考终止' : thinking?.title}
+          </div>
+        </t-collapse-panel>
       </t-collapse>
     );
   }

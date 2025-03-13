@@ -168,17 +168,36 @@
       overflow: hidden;
     }
 
-    &::part(@{prefix}-collapse-panel__header) {
-      padding: 0;
-      border: none;
+    &__content {
+      &::part(@{prefix}-collapse-panel__header) {
+        padding: 0;
+        border: none;
+      }
+  
+      &::part(@{prefix}-collapse-panel__body) {
+        border: none;
+      }
+  
+      &::part(@{prefix}-collapse-panel__content) {
+        margin-top: var(--t-chat-item-think-content-margin-top);
+        padding: 0;
+        color: var(--t-chat-item-think-content-color);
+  
+        &:empty {
+          display: none;
+        }
+      }
     }
-    &::part(@{prefix}-collapse-panel__header-content) {
+
+    &__header__content {
       display: flex;
       align-items: center;
       gap: var(--t-chat-item-think-title-gap);
+      font-weight: 400;
     }
+
     // status icon
-    &::part(@{prefix}-chat__item__think__status--pending) {
+    &__status--pending {
       width: var(--t-chat-item-think-status-wh);
       height: var(--t-chat-item-think-status-wh);
       border-radius: calc(var(--t-chat-item-think-status-wh) / 2);
@@ -186,35 +205,17 @@
       // 现在思维链更新时动画会被刷新，看怎么处理
       animation: t-chat-item-think-pending 2s linear infinite;
     }
-    &::part(@{prefix}-chat__item__think__status--complete) {
+    &__status--complete {
       display: flex;
       width: var(--t-chat-item-think-status-wh);
       height: var(--t-chat-item-think-status-wh);
       color: var(--t-chat-item-think-status-sent-color);
     }
-    &::part(@{prefix}-chat__item__think__status--error) {
+    &__status--error {
       display: flex;
       width: var(--t-chat-item-think-status-wh);
       height: var(--t-chat-item-think-status-wh);
       color: var(--t-chat-item-think-status-error-color);
-    }
-
-    &::part(@{prefix}-collapse-panel__header-content) {
-      font-weight: 400;
-    }
-
-    &::part(@{prefix}-collapse-panel__body) {
-      border: none;
-    }
-
-    &::part(@{prefix}-collapse-panel__content) {
-      margin-top: var(--t-chat-item-think-content-margin-top);
-      padding: 0;
-      color: var(--t-chat-item-think-content-color);
-
-      &:empty {
-        display: none;
-      }
     }
   }
 
