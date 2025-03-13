@@ -13,7 +13,6 @@ import styles from '../style/chat-content.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
-// TODO: 图片
 const md = markdownIt({
   html: true, // 允许HTML标签
   breaks: true, // 自动换行
@@ -51,15 +50,10 @@ export default class ChatContent extends Component<TdChatContentProps> {
   static propTypes = {
     content: String || Object,
     role: String,
-    isNormalText: Boolean,
-    textLoading: Boolean,
   };
 
   getTextInfo() {
-    const { content, role } = this.props;
-    if (role === 'user') {
-      return content;
-    }
+    const { content } = this.props;
     return this.parseMarkdown(content as string);
   }
 
@@ -74,13 +68,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
     return (
       <div className={`${baseClass}`}>
-        {role === 'user' ? (
-          <div className={`${baseClass}__user`}>{textContent}</div>
-        ) : (
-          <div className={`${baseClass}__assistant`}>
-            <div className={`${baseClass}__markdown ${roleClass}`} innerHTML={textContent}></div>
-          </div>
-        )}
+        <div className={`${baseClass}__markdown ${roleClass}`} innerHTML={textContent}></div>
       </div>
     );
   }
