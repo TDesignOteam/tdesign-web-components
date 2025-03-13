@@ -15,7 +15,13 @@ export interface ImageProps extends TdImageProps, StyledProps {}
 
 @tag('t-image')
 export default class Image extends Component<ImageProps> {
-  static css = [];
+  static css = [
+    `
+    :host {
+      display: inline-flex;
+    }
+  `,
+  ];
 
   static defaultProps = {
     fit: 'fill',

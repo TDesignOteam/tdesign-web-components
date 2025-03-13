@@ -90,7 +90,6 @@
       .@{prefix}-chat__item__header {
         padding: var(--t-chat-item-text-header-padding);
       }
-  
       .@{prefix}-chat__item__content {
         padding: var(--t-chat-item-text-content-padding);
         background-color: transparent;
@@ -98,6 +97,9 @@
       .@{prefix}-chat__item__actions {
         margin: var(--t-chat-item-text-actions-list-margin);
       }
+    }
+    .@{prefix}-chat__item__detail {
+      margin: var(--t-chat-item-text-detail-margin);
     }
   }
 
@@ -153,11 +155,12 @@
   }
 
   &__think {
+    display: block;
     width: 100%;
+    margin-bottom: var(--t-chat-item-think-margin-bottom);
 
     &::part(@{prefix}-collapse) {
       width: 100%;
-      margin-bottom: var(--t-chat-item-think-margin-bottom);
       padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr);
       border: none;
       border-radius: var(--t-chat-item-think-radius);
@@ -165,17 +168,36 @@
       overflow: hidden;
     }
 
-    &::part(@{prefix}-collapse-panel__header) {
-      padding: 0;
-      border: none;
+    &__content {
+      &::part(@{prefix}-collapse-panel__header) {
+        padding: 0;
+        border: none;
+      }
+  
+      &::part(@{prefix}-collapse-panel__body) {
+        border: none;
+      }
+  
+      &::part(@{prefix}-collapse-panel__content) {
+        margin-top: var(--t-chat-item-think-content-margin-top);
+        padding: 0;
+        color: var(--t-chat-item-think-content-color);
+  
+        &:empty {
+          display: none;
+        }
+      }
     }
-    &::part(@{prefix}-collapse-panel__header-content) {
+
+    &__header__content {
       display: flex;
       align-items: center;
       gap: var(--t-chat-item-think-title-gap);
+      font-weight: 400;
     }
+
     // status icon
-    &::part(@{prefix}-chat__item__think__status--pending) {
+    &__status--pending {
       width: var(--t-chat-item-think-status-wh);
       height: var(--t-chat-item-think-status-wh);
       border-radius: calc(var(--t-chat-item-think-status-wh) / 2);
@@ -183,36 +205,22 @@
       // 现在思维链更新时动画会被刷新，看怎么处理
       animation: t-chat-item-think-pending 2s linear infinite;
     }
-    &::part(@{prefix}-chat__item__think__status--complete) {
+    &__status--complete {
       display: flex;
       width: var(--t-chat-item-think-status-wh);
       height: var(--t-chat-item-think-status-wh);
       color: var(--t-chat-item-think-status-sent-color);
     }
-    &::part(@{prefix}-chat__item__think__status--error) {
+    &__status--error {
       display: flex;
       width: var(--t-chat-item-think-status-wh);
       height: var(--t-chat-item-think-status-wh);
       color: var(--t-chat-item-think-status-error-color);
     }
+  }
 
-    &::part(@{prefix}-collapse-panel__header-content) {
-      font-weight: 400;
-    }
-
-    &::part(@{prefix}-collapse-panel__body) {
-      border: none;
-    }
-
-    &::part(@{prefix}-collapse-panel__content) {
-      margin-top: var(--t-chat-item-think-content-margin-top);
-      padding: 0;
-      color: var(--t-chat-item-think-content-color);
-
-      &:empty {
-        display: none;
-      }
-    }
+  &__detail {
+    display: block;
   }
 
   &__header {

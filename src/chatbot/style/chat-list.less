@@ -9,37 +9,33 @@
 
 // 聊天列表
 .@{prefix}-chat__list {
+  position: relative;
   flex: 1;
   min-height: 0;
   overflow-y: auto;
   overflow-x: hidden;
 
-  &--reverse {
+  &__scroll__button {
+    position: sticky;
+    top: var(--t-chat-list-scroll-button-top);
+    left: var(--t-chat-list-scroll-button-left);
     display: flex;
-    flex-direction: column-reverse;
-  }
-
-  .place-holder {
-    flex-grow: 1;
-    flex-shrink: 1;
-  }
-
-  .clear-btn {
-    color: @text-color-secondary;
-    font-size: @font-size-s;
+    align-items: center;
+    justify-content: center;
+    width: var(--t-chat-list-scroll-button-w);
+    height: var(--t-chat-list-scroll-button-h);
+    padding: var(--t-chat-list-scroll-button-padding);
+    border: var(--t-chat-list-scroll-button-border);
+    border-radius: var(--t-chat-list-scroll-button-radius);
+    background-color: var(--t-chat-list-scroll-button-bg);
+    font-size: var(--t-chat-list-scroll-button-font-size);
+    z-index: var(--t-chat-list-scroll-button-index);
+    transform: var(--t-chat-list-scroll-button-transform);
+    box-shadow: var(--t-chat-list-scroll-button-shadow);
     cursor: pointer;
 
-    .@{prefix}-divider__inner-text {
-      display: flex;
-      align-items: center;
-    }
-
-    .clear-btn-text {
-      margin-left: @comp-margin-xs;
-    }
-
-    &:hover {
-      color: @text-color-primary;
+    &--hide {
+      visibility: hidden;
     }
   }
 }
