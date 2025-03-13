@@ -1,5 +1,6 @@
-import express from 'express';
 import cors from 'cors';
+import express from 'express';
+
 import { chunks } from './data.js';
 
 const app = express();
@@ -49,7 +50,7 @@ app.post('/sse/normal', (req, res) => {
         })}\n\n`;
 
       case 'image':
-        return `event: message\ndata: ${JSON.stringify({
+        return `event: media\ndata: ${JSON.stringify({
           type: 'image',
           content: chunk.content,
         })}\n\n`;

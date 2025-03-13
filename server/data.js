@@ -1,6 +1,6 @@
 const chunks = [
   // { type: 'search', title: '开始获取资料…' },
-  // { type: 'search', title: '找到 12 篇相关资料...', content: [] },
+  // { type: 'search', title: '找到 12 篇相关资料...', content: [{ title: 'AI推理模式研究', url: 'https://example.com/ref1' },{ title: 'SSE协议规范', url: 'https://example.com/ref2' }] },
   // { type: 'search', title: '找到 21 篇相关资料...', content: [] },
   { type: 'think', title: '思考中...', content: '嗯，' },
   { type: 'think', title: '思考中...', content: '我现在需' },
@@ -10,7 +10,7 @@ const chunks = [
   { type: 'think', title: '思考中...', content: '这是个mock，' },
   { type: 'think', title: '思考中...', content: '这是个mock，' },
   { type: 'think', title: '思考中...', content: '这是个mock，' },
-  { type: 'think', title: '思考中...', content: '重要的事情说三遍' },
+  { type: 'think', title: '思考完成（耗时4秒）', content: '重要的事情说三遍' },
   // 图片测试
   {
     type: 'image',

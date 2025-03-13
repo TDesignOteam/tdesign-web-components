@@ -53,9 +53,9 @@ export default class ChatTextProcessor {
     }
     // 处理文字生成阶段
     if (parsed.main && (parsed.main.type === 'text' || parsed.main.type === 'markdown')) {
+      console.log('====parsed', parsed);
       return {
         thinking: {
-          title: parsed?.thinking?.title || '思考完成',
           status: 'complete',
         },
         main: {
