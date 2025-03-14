@@ -102,7 +102,7 @@ export type SSEChunkData = {
 export interface RequestParams extends ModelParams {
   messageID: string;
   prompt: string;
-  attachments?: AttachmentContent['data'][];
+  attachments?: AttachmentContent['data'];
 }
 
 export interface LLMConfig {

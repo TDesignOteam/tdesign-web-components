@@ -152,15 +152,6 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 
   const { type, ...rest } = chunk.data;
   switch (type) {
-    // case 'search':
-    //   return {
-    //     type: 'search',
-    //     data: {
-    //       title: (rest.title) || '搜索中...',
-    //       text: (rest.content) || '',
-    //     },
-    //   };
-
     case 'think':
       return {
         type: 'thinking',
