@@ -43,12 +43,12 @@ export class MessageStore extends ReactiveState<MessageState> {
 
       message.status = 'streaming';
       const { content } = message;
-      const { type, detail } = chunk;
-      const { type: cType, detail: cDetail } = content.at(-1);
+      const { type, data } = chunk;
+      const { type: cType, data: cDetail } = content.at(-1);
       if (type !== cType) return;
 
       if (type === 'text' || type === 'markdown') {
-        content.at(-1).detail = cDetail + detail;
+        content.at(-1).data = cDetail + data;
       }
 
       // 合并主内容（文本流式追加）

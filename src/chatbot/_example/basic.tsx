@@ -5,7 +5,7 @@ import { Component } from 'omi';
 import type { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
-import type { AIResponse, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
 
 const mockData: TdChatItemProps[] = [
   {
@@ -17,7 +17,7 @@ const mockData: TdChatItemProps[] = [
       content: [
         {
           type: 'text',
-          detail: '南极的自动提款机叫什么名字？',
+          data: '南极的自动提款机叫什么名字？',
         },
       ],
     },
@@ -31,14 +31,15 @@ const mockData: TdChatItemProps[] = [
       content: [
         {
           type: 'thinking',
-          detail: {
+          status: 'complete',
+          data: {
             title: '思考完成（耗时3s）',
             text: 'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
           },
         },
         {
           type: 'text',
-          detail: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
+          data: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
         },
       ],
     },
@@ -52,11 +53,11 @@ const mockData: TdChatItemProps[] = [
       content: [
         {
           type: 'text',
-          detail: '分析下以下内容，总结一篇广告策划方案',
+          data: '分析下以下内容，总结一篇广告策划方案',
         },
         {
           type: 'attachment',
-          detail: [
+          data: [
             {
               fileType: 'doc',
               name: 'demo.docx',
@@ -83,7 +84,7 @@ const mockData: TdChatItemProps[] = [
       content: [
         {
           type: 'text',
-          detail: '出错了',
+          data: '出错了',
         },
       ],
     },
@@ -97,22 +98,16 @@ const mockData: TdChatItemProps[] = [
       content: [
         {
           type: 'text',
-          detail: '这张图里的帅哥是谁',
+          data: '这张图里的帅哥是谁',
         },
         {
           type: 'attachment',
-          detail: [
+          data: [
             {
               fileType: 'image',
               name: 'avatar.jpg',
               size: 234234,
               url: 'https://tdesign.gtimg.com/site/avatar.jpg',
-            },
-            {
-              fileType: 'pdf',
-              name: 'demo.pdf',
-              url: 'https://tdesign.gtimg.com/site/demo.pdf',
-              size: 3433,
             },
           ],
         },
@@ -127,8 +122,8 @@ const mockData: TdChatItemProps[] = [
       status: 'complete',
       content: [
         {
-          type: 'text',
-          detail: '他就是tdesign的核心成员uyarnchen',
+          type: 'markdown',
+          data: '**tdesign** 团队的 *核心开发者*  `uyarnchen` 是也。',
         },
       ],
     },
@@ -149,7 +144,7 @@ const defaultChunkParser = (chunk) => {
   }
 };
 
-function handleStructuredData(chunk: SSEChunkData): AIResponse {
+function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
   if (!chunk?.data || typeof chunk === 'string') {
     return {
       main: {

@@ -3,7 +3,7 @@ export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'err
 export type ChatStatus = 'idle' | MessageStatus;
 export type ContentType = 'text' | 'markdown' | 'search' | 'attachment' | 'thinking' | 'image' | 'audio' | 'video';
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
-export type PhaseType = 'thinking' | 'search' | 'main';
+
 // 基础类型
 interface BaseContent<T extends ContentType> {
   type: T;
@@ -12,15 +12,15 @@ interface BaseContent<T extends ContentType> {
 
 // 内容类型
 export type TextContent = BaseContent<'text'> & {
-  detail: string;
+  data: string;
 };
 
 export type MarkdownContent = BaseContent<'markdown'> & {
-  detail: string;
+  data: string;
 };
 
 export type ImageContent = BaseContent<'image'> & {
-  detail: {
+  data: {
     name?: string;
     url?: string;
     width?: number;
@@ -38,7 +38,7 @@ export type ReferenceItem = {
   timestamp?: string;
 };
 export type SearchContent = BaseContent<'search'> & {
-  detail: ReferenceItem[];
+  data: ReferenceItem[];
 };
 
 // 附件消息
@@ -53,12 +53,12 @@ export type AttachmentItem = {
   metadata?: Record<string, any>;
 };
 export type AttachmentContent = BaseContent<'attachment'> & {
-  detail: AttachmentItem[];
+  data: AttachmentItem[];
 };
 
 // 思考过程
 export type ThinkingContent = BaseContent<'thinking'> & {
-  detail: {
+  data: {
     text?: string;
     // markdown?: string;
     title?: string;
@@ -83,7 +83,6 @@ export interface UserMessage extends BaseMessage {
 
 export interface AIMessage extends BaseMessage {
   role: 'assistant';
-  phase?: PhaseType;
   content: AIMessageContent[];
 }
 
@@ -103,7 +102,7 @@ export type SSEChunkData = {
 export interface RequestParams extends ModelParams {
   messageID: string;
   prompt: string;
-  attachments?: AttachmentContent['detail'][];
+  attachments?: AttachmentContent['data'][];
 }
 
 export interface LLMConfig {

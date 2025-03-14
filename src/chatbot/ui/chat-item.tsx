@@ -17,6 +17,7 @@ import { MessagePlugin } from '../../message';
 import {
   AttachmentItem,
   isAIMessage,
+  isMarkdownContent,
   isTextContent,
   isThinkingContent,
   isUserMessage,
@@ -183,14 +184,14 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   private renderThinking(content: ThinkingContent) {
-    const { detail, status } = content;
+    const { data, status } = content;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
         <t-collapse-panel className={`${className}__think__content`}>
-          {detail?.text || ''}
+          {data?.text || ''}
           <div slot="header" className={`${className}__think__header__content`}>
-            {this.renderThinkingStatus(status)}
-            {status === 'stop' ? '思考终止' : detail?.title}
+            {this.renderThinkingStatus(status, data?.title)}
+            {status === 'stop' ? '思考终止' : data?.title}
           </div>
         </t-collapse-panel>
       </t-collapse>
@@ -200,10 +201,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private renderAttachments() {
     if (!isUserMessage(this.props.message)) return null;
     const findAttachment = this.props.message.content.find(
-      ({ type, detail }) => type === 'attachment' && Array.isArray(detail) && detail.length > 0,
+      ({ type, data }) => type === 'attachment' && Array.isArray(data) && data.length > 0,
     );
     if (!findAttachment) return;
-    const attachments = findAttachment.detail as AttachmentItem[];
+    const attachments = findAttachment.data as AttachmentItem[];
     // 判断是否全部是图片类型
     const isAllImages = attachments.every((att) => /image/.test(att.fileType));
     return (
@@ -228,26 +229,28 @@ export default class ChatItem extends Component<TdChatItemProps> {
     const { role } = message;
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
-      // 用户和系统消息处理
+      // 用户和系统消息渲染
       if (role === 'user' || role === 'system') {
         if (!message?.content) return null;
         return (
           <t-chat-content
             key={elementKey}
             className={`${className}__detail`}
-            content={content?.detail || content}
+            content={content?.data || content}
             role={role}
           ></t-chat-content>
         );
       }
 
-      // AI消息处理
+      // AI消息渲染
       if (role === 'assistant') {
         if (isThinkingContent(content)) {
+          // 思考
           return this.renderThinking(content);
         }
-        if (isTextContent(content)) {
-          return <t-chat-content content={content.detail} role={role}></t-chat-content>;
+        if (isTextContent(content) || isMarkdownContent(content)) {
+          // 正文回答
+          return <t-chat-content content={content.data} role={role}></t-chat-content>;
         }
       }
 
@@ -257,8 +260,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
-    const { status } = message;
-    console.log('===item render', this.messageId, status);
+    const { status, content } = message;
+    console.log('===item render', this.messageId, status, content);
 
     const baseClass = `${className}__inner`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
