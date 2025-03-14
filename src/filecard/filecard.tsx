@@ -105,7 +105,7 @@ export default class FileCard extends Component<FileCardProps> {
       if (status === 'progress') {
         desc = `上传中...${percent || 0}%`;
       } else if (status === 'fail') {
-        desc = item?.response || this.EMPTY;
+        desc = typeof item?.response === 'string' ? item.response : this.EMPTY;
       } else {
         desc = size ? this.getSize(size) : this.EMPTY;
       }
