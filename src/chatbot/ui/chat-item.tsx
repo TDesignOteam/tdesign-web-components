@@ -158,7 +158,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return;
-    const { status, content } = this.props.message;
+    const { status, content = [] } = this.props.message;
     // 如果有任一内容，就不用展示message整体状态
     if (content.length > 0) {
       return null;
@@ -190,7 +190,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         <t-collapse-panel className={`${className}__think__content`}>
           {data?.text || ''}
           <div slot="header" className={`${className}__think__header__content`}>
-            {this.renderThinkingStatus(status, data?.title)}
+            {this.renderThinkingStatus(status)}
             {status === 'stop' ? '思考终止' : data?.title}
           </div>
         </t-collapse-panel>
@@ -201,7 +201,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private renderAttachments() {
     if (!isUserMessage(this.props.message)) return null;
     const findAttachment = this.props.message.content.find(
-      ({ type, data }) => type === 'attachment' && Array.isArray(data) && data.length > 0,
+      ({ type, data = [] }) => type === 'attachment' && data.length,
     );
     if (!findAttachment) return;
     const attachments = findAttachment.data as AttachmentItem[];
