@@ -54,7 +54,8 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
   getTextInfo() {
     const { content } = this.props;
-    return this.parseMarkdown(content as string);
+    if (typeof content !== 'string') return;
+    return this.parseMarkdown(content);
   }
 
   parseMarkdown(markdown: string) {

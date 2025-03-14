@@ -64,7 +64,7 @@ export class MessageStore extends ReactiveState<MessageState> {
           break;
       }
 
-      this.updateMessageStatus(message);
+      this.updateMessageStatusByContent(message);
     });
   }
 
@@ -138,7 +138,7 @@ export class MessageStore extends ReactiveState<MessageState> {
   }
 
   // 更新消息整体状态
-  private updateMessageStatus(message: AIMessage) {
+  private updateMessageStatusByContent(message: AIMessage) {
     // 优先处理错误状态
     if (message.content.some((c) => c.status === 'error')) {
       message.status = 'error';
@@ -153,11 +153,15 @@ export class MessageStore extends ReactiveState<MessageState> {
     message.status = allComplete ? 'complete' : 'streaming';
   }
 
+  // 更新消息整体状态
   setMessageStatus(messageId: string, status: Message['status']) {
     this.setState((draft) => {
-      const message = draft.messages[messageId];
+      const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
         message.status = status;
+        message.content.forEach((content) => {
+          content.status = status;
+        });
       }
     });
   }
