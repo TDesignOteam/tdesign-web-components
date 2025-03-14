@@ -73,10 +73,9 @@ export default class ChatEngine implements IChatEngine {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
         const parsed = this.config?.onMessage?.(chunk);
-        console.log('====parsed', parsed);
-        const processed = this.processor.processStreamChunk(parsed);
-        this.messageStore.appendContent(id, processed);
-        return processed;
+        // const processed = this.processor.processStreamChunk(parsed);
+        this.messageStore.appendContent(id, parsed);
+        return parsed;
       },
       onError: (error) => {
         this.setMessageStatus(id, 'error');

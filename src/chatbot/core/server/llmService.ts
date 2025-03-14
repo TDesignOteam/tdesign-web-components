@@ -1,11 +1,11 @@
-import type { AIResponse, LLMConfig, RequestParams, SSEChunkData } from '../type';
+import type { AIMessageContent, LLMConfig, RequestParams, SSEChunkData } from '../type';
 import SSEClient from './sseClient';
 
 export interface ILLMService {
   /**
    * 处理批量请求（非流式）
    */
-  handleBatchRequest(params: RequestParams, config: LLMConfig): Promise<AIResponse>;
+  handleBatchRequest(params: RequestParams, config: LLMConfig): Promise<AIMessageContent>;
 
   /**
    * 处理流式请求

@@ -1,8 +1,12 @@
 import {
+  type AIMessage,
   type AIMessageContent,
+  type ImageContent,
   isAIMessage,
+  MarkdownContent,
   type Message,
   type MessageState,
+  type SearchContent,
   type TextContent,
   type ThinkingContent,
 } from '../type';
@@ -38,60 +42,115 @@ export class MessageStore extends ReactiveState<MessageState> {
   appendContent(messageId: string, chunk: AIMessageContent) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
-      if (!message) return;
-      if (!isAIMessage(message)) return;
+      if (!message || !isAIMessage(message)) return;
 
       message.status = 'streaming';
-      const { content } = message;
-      const { type, data } = chunk;
-      const { type: cType, data: cDetail } = content.at(-1);
-      if (type !== cType) return;
+      const lastContentIndex = message.content.findIndex((c) => c.type === chunk.type);
 
-      if (type === 'text' || type === 'markdown') {
-        content.at(-1).data = cDetail + data;
+      // 根据内容类型分发处理
+      switch (chunk.type) {
+        case 'text':
+        case 'markdown':
+          this.handleTextContent(message, chunk, lastContentIndex);
+          break;
+        case 'thinking':
+          this.handleThinkingContent(message, chunk, lastContentIndex);
+          break;
+        case 'image':
+          this.handleImageContent(message, chunk, lastContentIndex);
+          break;
+        case 'search':
+          this.handleSearchContent(message, chunk, lastContentIndex);
+          break;
       }
 
-      // 合并主内容（文本流式追加）
-      // if (content.type === 'text' || type === 'markdown') {
-      //   message.main = this.mergeTextContent(message.main as TextContent, chunk.main);
-      // }
-
-      // // 图片内容
-      // if (chunk.main && chunk.main.type === 'image') {
-      //   message.main = {
-      //     ...message.main,
-      //     ...(chunk.main.content as ImageContent),
-      //   };
-      // }
-
-      // // 合并思考过程（覆盖更新）
-      // if (chunk.thinking) {
-      //   message.thinking = this.mergeThinking(message.thinking, chunk.thinking);
-      // }
-
-      // 合并搜索结果（增量更新）
-      // if (chunk.search) {
-      //   message.search = this.mergeSearchResults(message.search, chunk.search);
-      // }
+      this.updateMessageStatus(message);
     });
   }
 
-  private mergeTextContent(current?: TextContent, incoming?: TextContent): TextContent {
-    if (!current || current.type !== incoming?.type) return incoming || current;
-
-    // 文本类型内容追加
-    return {
-      ...current,
-      content: (current.content || '') + (incoming.content || ''),
-    };
+  // 处理文本类内容（text/markdown）
+  private handleTextContent(message: AIMessage, chunk: TextContent | MarkdownContent, existingIndex: number) {
+    if (existingIndex >= 0) {
+      const existing = message.content[existingIndex] as TextContent | MarkdownContent;
+      existing.data += chunk.data;
+    } else {
+      message.content.push({
+        type: chunk.type,
+        data: chunk.data,
+        status: 'streaming',
+      });
+    }
   }
 
-  private mergeThinking(current?: ThinkingContent, incoming?: ThinkingContent): ThinkingContent {
-    return {
-      ...current,
-      ...incoming,
-      content: (current?.content || '') + (incoming?.content || ''),
-    };
+  // 处理思考过程内容
+  private handleThinkingContent(message: AIMessage, chunk: ThinkingContent, existingIndex: number) {
+    if (existingIndex >= 0) {
+      const existing = message.content[existingIndex] as ThinkingContent;
+      existing.data = {
+        ...existing.data,
+        ...chunk.data,
+        text: (existing.data?.text || '') + (chunk.data?.text || ''),
+      };
+    } else {
+      message.content.push({
+        type: 'thinking',
+        data: {
+          text: chunk.data?.text || '',
+          title: chunk.data?.title || '',
+        },
+        status: 'streaming',
+      });
+    }
+  }
+
+  // 处理图片内容
+  private handleImageContent(message: AIMessage, chunk: ImageContent, existingIndex: number) {
+    if (existingIndex >= 0) {
+      const existing = message.content[existingIndex] as ImageContent;
+      existing.data = {
+        ...existing.data,
+        ...chunk.data,
+      };
+    } else {
+      message.content.push({
+        type: 'image',
+        data: chunk.data,
+        status: 'streaming',
+      });
+    }
+  }
+
+  // 处理搜索内容
+  private handleSearchContent(message: AIMessage, chunk: SearchContent, existingIndex: number) {
+    if (existingIndex >= 0) {
+      const existing = message.content[existingIndex] as SearchContent;
+      const newRefs = chunk.data.filter(
+        (newItem) => !existing.data.some((existingItem) => existingItem.url === newItem.url),
+      );
+      existing.data.push(...newRefs);
+    } else {
+      message.content.push({
+        type: 'search',
+        data: chunk.data,
+        status: 'streaming',
+      });
+    }
+  }
+
+  // 更新消息整体状态
+  private updateMessageStatus(message: AIMessage) {
+    // 优先处理错误状态
+    if (message.content.some((c) => c.status === 'error')) {
+      message.status = 'error';
+      return;
+    }
+
+    // 检查是否全部完成
+    const allComplete = message.content.every(
+      (c) => c.status === 'complete' || c.status === 'stop', // 包含停止状态
+    );
+
+    message.status = allComplete ? 'complete' : 'streaming';
   }
 
   setMessageStatus(messageId: string, status: Message['status']) {

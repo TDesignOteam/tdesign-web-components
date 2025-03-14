@@ -71,7 +71,7 @@ export default class Chatbot extends Component<TdChatProps> {
   private subscribeToChat() {
     this.unsubscribeMsg = this.chatService.messageStore.subscribe(
       (state) => {
-        this.messages = this.convertMessages(state);
+        this.messages = state.messages;
         this.chatStatus = this.messages.at(-1)?.status;
         this.update();
       },

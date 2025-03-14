@@ -227,6 +227,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   renderMessage() {
     const { message } = this.props;
     const { role } = message;
+    console.log('====message', message);
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
       // 用户和系统消息渲染
@@ -260,8 +261,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
-    const { status, content } = message;
-    console.log('===item render', this.messageId, status, content);
+    if (!message?.content) return;
+    console.log('===item render', this.messageId);
 
     const baseClass = `${className}__inner`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
