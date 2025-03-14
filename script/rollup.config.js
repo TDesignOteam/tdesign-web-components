@@ -52,6 +52,9 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
       jsxFactory: 'Component.h',
       jsxFragment: 'Component.f',
       tsconfig: resolve(__dirname, '../tsconfig.build.json'),
+      loaders: {
+        '.less': 'css',
+      },
     }),
     babel({
       babelHelpers: 'runtime',
@@ -86,6 +89,17 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
       ignoreImport({
         include: ['src/*/style/*'],
         body: 'import "./style/index.js";',
+      }),
+      styles({
+        mode: 'extract',
+        extensions: ['.less', '.css'],
+        use: ['less', 'css-loader'],
+        less: {
+          javascriptEnabled: true,
+        },
+        url: {
+          inline: true,
+        },
       }),
     );
   }

@@ -3,7 +3,7 @@ import 'highlight.js/styles/atom-one-light.min.css';
 import '../../../message';
 
 import hljs from 'highlight.js';
-import { escapeHtml } from 'markdown-it/lib/common/utils';
+import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../../_util/classname';
