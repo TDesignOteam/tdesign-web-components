@@ -18,7 +18,7 @@ export default class Chatlist extends Component<TdChatListProps> {
   static propTypes = {
     data: Array,
     textLoading: Boolean,
-    autoScroll: Boolean,
+    autoScroll: [Boolean, Number],
     scrollToBottom: Boolean,
   };
 
@@ -35,13 +35,21 @@ export default class Chatlist extends Component<TdChatListProps> {
   /** 检测并滚动到底部 */
   checkAndScrollToBottom = () => {
     const { data, autoScroll } = this.props;
-    if (!autoScroll) {
+    if (typeof autoScroll === 'boolean' && !autoScroll) {
       return;
     }
     const lastData = data[data.length - 1];
     // 消息生成中 / 发送消息时自动滚到底部
     if (lastData.status === 'pending' || lastData.status === 'streaming' || lastData.role !== 'assistant') {
-      this.scrollToBottom();
+      // 传入阈值时，滚动高度小于阈值时才自动滚动
+      if (typeof autoScroll === 'number') {
+        const list = this.listRef.current;
+        if (list.scrollHeight - list.clientHeight - list.scrollTop <= autoScroll) {
+          this.scrollToBottom();
+        }
+      } else {
+        this.scrollToBottom();
+      }
     }
   };
 

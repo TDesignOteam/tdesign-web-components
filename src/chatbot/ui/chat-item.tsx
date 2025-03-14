@@ -39,7 +39,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     name: String,
     avatar: String,
     datetime: String,
-    main: Object,
+    message: Object,
     content: String,
     role: String,
     status: String,
@@ -58,7 +58,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (this.props.message?.role !== 'assistant') {
       return;
     }
-    const copyContent = this.props.message.main.content;
+    const copyContent = this.props.message.content.reduce((pre, item) => {
+      if (!isTextContent(item) && !isMarkdownContent(item)) {
+        return pre;
+      }
+      return pre + item.data;
+    }, '');
 
     navigator.clipboard
       .writeText(copyContent.toString())
@@ -186,7 +191,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private renderThinking(content: ThinkingContent) {
     const { data, status } = content;
     return (
-      <t-collapse className={`${className}__think`} expandIconPlacement="right" defaultExpandAll>
+      <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
         <t-collapse-panel className={`${className}__think__content`}>
           {data?.text || ''}
           <div slot="header" className={`${className}__think__header__content`}>
@@ -250,7 +255,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
-          return <t-chat-content content={content.data} role={role}></t-chat-content>;
+          return (
+            <t-chat-content className={`${className}__detail`} content={content.data} role={role}></t-chat-content>
+          );
         }
       }
 

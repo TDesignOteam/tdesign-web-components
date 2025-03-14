@@ -109,7 +109,6 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         className={classname(`${className}__icon`, [`${className}__icon--${expandIconPlacement.value}`], {
           [`${className}__icon--active`]: isActive,
         })}
-        part={`${className}__icon`}
         onClick={this.handleClick}
       >
         {typeof this.props.expandIcon !== 'boolean' ? (
