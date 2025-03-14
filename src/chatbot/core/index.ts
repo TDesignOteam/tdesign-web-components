@@ -1,10 +1,10 @@
 import ChatProcessor from './processor/textProcessor';
 import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
-import type { AttachmentContent, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
+import type { AttachmentItem, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
 
 export interface IChatEngine {
-  sendMessage(prompt: string, attachments?: AttachmentContent[]): Promise<void>;
+  sendMessage(prompt: string, attachments?: AttachmentItem[]): Promise<void>;
   abortChat(): void;
 }
 
@@ -24,7 +24,7 @@ export default class ChatEngine implements IChatEngine {
     this.processor = new ChatProcessor();
   }
 
-  public async sendMessage(prompt: string, attachments?: AttachmentContent[]) {
+  public async sendMessage(prompt: string, attachments?: AttachmentItem[]) {
     const userMessage = this.processor.createUserMessage(prompt, attachments);
     const aiMessage = this.processor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
@@ -73,11 +73,8 @@ export default class ChatEngine implements IChatEngine {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
         const parsed = this.config?.onMessage?.(chunk);
+        console.log('====parsed', parsed);
         const processed = this.processor.processStreamChunk(parsed);
-
-        if (parsed?.main?.type === 'image') {
-          console.log('====onmessage', processed);
-        }
         this.messageStore.appendContent(id, processed);
         return processed;
       },

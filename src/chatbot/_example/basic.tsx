@@ -5,7 +5,7 @@ import { Component } from 'omi';
 import type { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
-import type { AIMessageContent, ContentType, ModelServiceState, ReferenceItem, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ModelServiceState, SSEChunkData } from '../core/type';
 
 const mockData: TdChatItemProps[] = [
   {
@@ -130,16 +130,14 @@ const mockData: TdChatItemProps[] = [
   },
 ];
 
-const defaultChunkParser = (chunk) => {
+const defaultChunkParser = (chunk): AIMessageContent => {
   try {
     return handleStructuredData(chunk);
   } catch (err) {
     console.error('Parsing error:', err);
     return {
-      main: {
-        type: 'text' as ContentType,
-        content: 'Error parsing response',
-      },
+      type: 'text',
+      data: '内容解析错误',
     };
   }
 };
@@ -147,56 +145,49 @@ const defaultChunkParser = (chunk) => {
 function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
   if (!chunk?.data || typeof chunk === 'string') {
     return {
-      main: {
-        type: 'text',
-        content: String(chunk),
-      },
+      type: 'markdown',
+      data: String(chunk),
     };
   }
 
   const { type, ...rest } = chunk.data;
   switch (type) {
-    case 'search':
-      return {
-        search: {
-          title: (rest.title as string) || '搜索结果',
-          content: Array.isArray(rest.content) ? (rest.content as ReferenceItem[]) : [],
-        },
-      };
+    // case 'search':
+    //   return {
+    //     type: 'search',
+    //     data: {
+    //       title: (rest.title) || '搜索中...',
+    //       text: (rest.content) || '',
+    //     },
+    //   };
 
     case 'think':
       return {
-        thinking: {
-          title: (rest.title as string) || '思考中...',
-          type: 'text',
-          content: (rest.content as string) || '',
+        type: 'thinking',
+        data: {
+          title: rest.title || '思考中...',
+          text: rest.content || '',
         },
       };
 
     case 'text': {
       return {
-        main: {
-          type: 'markdown',
-          content: rest?.msg || '',
-        },
+        type: 'markdown',
+        data: rest?.msg || '',
       };
     }
 
     case 'image': {
       return {
-        main: {
-          type: 'image',
-          content: JSON.parse(rest?.content),
-        },
+        type: 'image',
+        data: { ...rest },
       };
     }
 
     default:
       return {
-        main: {
-          type: 'text',
-          content: chunk?.event === 'complete' ? '' : JSON.stringify(chunk.data),
-        },
+        type: 'text',
+        data: chunk?.event === 'complete' ? '' : JSON.stringify(chunk.data),
       };
   }
 }

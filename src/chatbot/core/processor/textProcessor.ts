@@ -1,14 +1,27 @@
-import type { AIResponse, AttachmentContent, Message } from '../type';
+import type { AIMessageContent, AIResponse, AttachmentItem, Message, UserMessage } from '../type';
 
 export default class ChatTextProcessor {
-  public createUserMessage(content: string, attachments?: AttachmentContent[]): Message {
+  public createUserMessage(content: string, attachments?: AttachmentItem[]): Message {
+    const messageContent: UserMessage['content'] = [
+      {
+        type: 'text',
+        data: content,
+      },
+    ];
+
+    if (attachments?.length) {
+      messageContent.push({
+        type: 'attachment',
+        data: attachments,
+      });
+    }
+
     return {
       id: this.generateID(),
       role: 'user',
       status: 'complete',
       timestamp: `${Date.now()}`,
-      content,
-      attachments,
+      content: messageContent,
     };
   }
 
@@ -26,7 +39,7 @@ export default class ChatTextProcessor {
     return `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
   }
 
-  processStreamChunk(parsed: AIResponse): AIResponse {
+  processStreamChunk(parsed: AIMessageContent): AIResponse {
     // 处理搜索阶段
     if (parsed.search) {
       return {

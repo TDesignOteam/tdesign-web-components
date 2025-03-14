@@ -111,7 +111,7 @@ export interface LLMConfig {
   retryInterval?: number;
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
-  onMessage?: (chunk: SSEChunkData) => Message;
+  onMessage?: (chunk: SSEChunkData) => AIMessageContent;
   onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
   onAbort?: () => void;
   onError?: (error: Error, params: RequestParams) => void;

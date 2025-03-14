@@ -6,7 +6,7 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { Attachment } from '../filecard';
-import type { AttachmentContent, ChatStatus, Message, MessageState } from './core/type';
+import type { AttachmentItem, AttachmentType, ChatStatus, Message, MessageState } from './core/type';
 import ChatService from './core';
 import type { TdChatInputSend, TdChatListProps, TdChatProps } from './type';
 
@@ -41,7 +41,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private chatService: ChatService;
 
-  private uploadedAttachments: AttachmentContent[] = [];
+  private uploadedAttachments: AttachmentItem[] = [];
 
   private unsubscribeMsg?: () => void;
 
@@ -119,7 +119,7 @@ export default class Chatbot extends Component<TdChatProps> {
       const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
         name,
         url,
-        type,
+        fileType: type as AttachmentType,
         size,
         isReference: false,
       }));
