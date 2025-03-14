@@ -5,28 +5,26 @@ export type ContentType = 'text' | 'markdown' | 'search' | 'attachment' | 'think
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 
 // 基础类型
-interface BaseContent<T extends ContentType> {
+export interface BaseContent<T extends string, TData> {
   type: T;
+  data: TData;
   status?: MessageStatus;
 }
 
 // 内容类型
-export type TextContent = BaseContent<'text'> & {
-  data: string;
-};
+export type TextContent = BaseContent<'text', string>;
 
-export type MarkdownContent = BaseContent<'markdown'> & {
-  data: string;
-};
+export type MarkdownContent = BaseContent<'markdown', string>;
 
-export type ImageContent = BaseContent<'image'> & {
-  data: {
+export type ImageContent = BaseContent<
+  'image',
+  {
     name?: string;
     url?: string;
     width?: number;
     height?: number;
-  };
-};
+  }
+>;
 
 // 搜索
 // 公共引用结构
@@ -37,9 +35,7 @@ export type ReferenceItem = {
   source?: string;
   timestamp?: string;
 };
-export type SearchContent = BaseContent<'search'> & {
-  data: ReferenceItem[];
-};
+export type SearchContent = BaseContent<'search', ReferenceItem[]>;
 
 // 附件消息
 export type AttachmentItem = {
@@ -52,18 +48,17 @@ export type AttachmentItem = {
   height?: number;
   metadata?: Record<string, any>;
 };
-export type AttachmentContent = BaseContent<'attachment'> & {
-  data: AttachmentItem[];
-};
+export type AttachmentContent = BaseContent<'attachment', AttachmentItem[]>;
 
 // 思考过程
-export type ThinkingContent = BaseContent<'thinking'> & {
-  data: {
+export type ThinkingContent = BaseContent<
+  'thinking',
+  {
     text?: string;
     // markdown?: string;
     title?: string;
-  };
-};
+  }
+>;
 
 // 消息主体
 // 基础消息结构
@@ -73,7 +68,24 @@ interface BaseMessage {
   timestamp?: string;
 }
 
-export type AIMessageContent = TextContent | MarkdownContent | ThinkingContent | ImageContent | SearchContent;
+// 类型扩展机制
+declare global {
+  interface ContentTypeOverrides {
+    _?: unknown;
+  }
+}
+
+type MergedContentTypes = {
+  [K in keyof ContentTypeOverrides]: ContentTypeOverrides[K];
+} & {
+  text: TextContent;
+  markdown: MarkdownContent;
+  thinking: ThinkingContent;
+  ImageContent: ImageContent;
+  SearchContent: SearchContent;
+};
+
+export type AIMessageContent = MergedContentTypes[keyof MergedContentTypes];
 export type UserMessageContent = TextContent | AttachmentContent;
 
 export interface UserMessage extends BaseMessage {
@@ -139,6 +151,16 @@ export interface ChatState {
   message: MessageState;
   model: ModelServiceState;
 }
+
+export type AIContentHandler<T extends BaseContent<any, any>> = (chunk: T, existing?: T) => T;
+
+export interface ContentTypeDefinition<T extends string = string, D = any> {
+  type: T;
+  handler?: (chunk: BaseContent<T, any>, existing?: BaseContent<T, any>) => BaseContent<T, any>;
+  renderer?: (content: BaseContent<T, D>) => unknown;
+}
+
+export type ContentRenderer<T extends BaseContent<any, any>> = (content: T) => unknown;
 
 // 类型守卫函数
 export function isUserMessage(message: Message) {
