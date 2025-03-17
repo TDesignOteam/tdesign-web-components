@@ -211,6 +211,8 @@ const umdConfig = {
     globals: { omi: 'omi', lodash: '_' },
     sourcemap: true,
     file: `dist/${name}.js`,
+    // 禁止代码分割，内联所有动态导入
+    inlineDynamicImports: true,
   },
 };
 
@@ -229,6 +231,8 @@ const umdMinConfig = {
     globals: { omi: 'omi', lodash: '_' },
     sourcemap: true,
     file: `dist/${name}.min.js`,
+    // 禁止代码分割，内联所有动态导入
+    inlineDynamicImports: true,
   },
 };
 
