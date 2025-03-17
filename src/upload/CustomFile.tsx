@@ -44,14 +44,9 @@ const CustomFile = (props: CustomFileProps) => {
   // };
 
   return (
-    <>
-      {/* {draggable ? (
-        renderDragContent()
-      ) :  */}
-      <div className={`${classPrefix}-upload__trigger`} onClick={props.triggerUpload}>
-        <slot></slot>
-      </div>
-    </>
+    <div className={`${classPrefix}-upload__trigger`} onClick={props.triggerUpload}>
+      <slot></slot>
+    </div>
   );
 };
 
