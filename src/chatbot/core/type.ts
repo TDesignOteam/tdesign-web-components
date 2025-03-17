@@ -75,7 +75,7 @@ declare global {
   interface AIContentTypeOverrides {}
 }
 
-type AIMergedContentTypes = {
+type AIContentTypeMap = {
   text: TextContent;
   markdown: MarkdownContent;
   thinking: ThinkingContent;
@@ -83,7 +83,11 @@ type AIMergedContentTypes = {
   search: SearchContent;
 } & AIContentTypeOverrides;
 
-export type AIMessageContent = AIMergedContentTypes[keyof AIMergedContentTypes];
+// 自动生成联合类型
+// export type AIMessageContent = AIContentTypeMap[keyof AIContentTypeMap];
+export type AIMessageContent = {
+  [K in keyof AIContentTypeMap]: AIContentTypeMap[K];
+}[keyof AIContentTypeMap];
 export type UserMessageContent = TextContent | AttachmentContent;
 
 export interface UserMessage extends BaseMessage {

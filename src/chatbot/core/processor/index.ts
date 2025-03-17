@@ -51,7 +51,10 @@ export default class MessageProcessor {
   }
 
   // 通用处理器注册方法
-  public registerHandler<T extends AIMessageContent>(type: string, handler: (chunk: T, existing?: T) => T) {
+  public registerHandler<T extends AIMessageContent>(
+    type: T['type'], // 使用类型中定义的type字段作为参数类型
+    handler: (chunk: T, existing?: T) => T,
+  ) {
     this.contentHandlers.set(type, handler);
   }
 

@@ -17,6 +17,7 @@ import { MessagePlugin } from '../../message';
 import {
   AttachmentItem,
   isAIMessage,
+  isImageContent,
   isMarkdownContent,
   isTextContent,
   isThinkingContent,
@@ -264,6 +265,21 @@ export default class ChatItem extends Component<TdChatItemProps> {
             ></t-chat-content>
           );
         }
+        if (isImageContent(content)) {
+          // 图片
+          const { url, name } = content.data;
+          return (
+            <div>
+              <img src={url} alt={name} width={200} height={200}></img>
+            </div>
+          );
+        }
+        return (
+          // todo: 自定义消息Render
+          <div>
+            自定义消息：{content.type}，{JSON.stringify(content.data)}
+          </div>
+        );
       }
 
       return null;

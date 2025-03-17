@@ -5,7 +5,21 @@ import { Component } from 'omi';
 import type { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
-import type { AIMessageContent, ModelServiceState, SSEChunkData } from '../core/type';
+import type { AIMessageContent, BaseContent, ModelServiceState, SSEChunkData } from '../core/type';
+
+// 天气扩展类型定义
+declare module '../core/type' {
+  interface AIContentTypeOverrides {
+    weather: BaseContent<
+      'weather',
+      {
+        temp: number;
+        city: string;
+        conditions?: string;
+      }
+    >;
+  }
+}
 
 const mockData: TdChatItemProps[] = [
   {
@@ -171,7 +185,18 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
     case 'image': {
       return {
         type: 'image',
-        data: { ...rest },
+        data: { ...JSON.parse(chunk.data.content) },
+      };
+    }
+
+    case 'weather': {
+      return {
+        type: 'weather',
+        data: {
+          temp: 1,
+          city: '北京',
+          conditions: '多云',
+        },
       };
     }
 
