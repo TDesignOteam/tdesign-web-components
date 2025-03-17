@@ -10,6 +10,8 @@ import mdContent from '../mock/testMarkdown.md?raw';
 export default class MarkdownExample extends Component {
   hasCode = signal(false);
 
+  hasLink = signal(false);
+
   hasKatex = signal(false);
 
   rerenderKey = signal(1);
@@ -36,7 +38,6 @@ export default class MarkdownExample extends Component {
           options: {
             html: true,
             breaks: true,
-            linkify: true,
             typographer: true,
           },
           pluginConfig: [
@@ -44,6 +45,21 @@ export default class MarkdownExample extends Component {
             {
               preset: 'code',
               enabled: this.hasCode.value,
+            },
+            {
+              preset: 'link',
+              enabled: this.hasLink.value,
+              options: [
+                {
+                  matcher(href) {
+                    return href.match(/^https?:\/\//);
+                  },
+                  attrs: {
+                    target: '_blank',
+                    rel: 'noopener noreferrer',
+                  },
+                },
+              ],
             },
             {
               preset: 'katex',
@@ -57,6 +73,11 @@ export default class MarkdownExample extends Component {
 
   changeCodeHandler = (e) => {
     this.hasCode.value = e;
+    this.rerenderKey.value += 1;
+  };
+
+  changeLinkHandler = (e) => {
+    this.hasLink.value = e;
     this.rerenderKey.value += 1;
   };
 
@@ -75,6 +96,10 @@ export default class MarkdownExample extends Component {
           <t-space>
             代码块
             <t-switch size="large" value={this.hasCode.value} onChange={this.changeCodeHandler} />
+          </t-space>
+          <t-space>
+            链接
+            <t-switch size="large" value={this.hasLink.value} onChange={this.changeLinkHandler} />
           </t-space>
           <t-space>
             公式

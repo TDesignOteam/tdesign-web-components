@@ -1,7 +1,6 @@
 import '../../message';
 
 import markdownIt from 'markdown-it';
-import mila from 'markdown-it-link-attributes';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
@@ -27,13 +26,27 @@ export default class ChatContent extends Component<TdChatContentProps> {
       options: {
         html: true, // 允许HTML标签
         breaks: true, // 自动换行
-        linkify: true, // 自动转换链接
         typographer: true, // 排版优化
       },
       pluginConfig: [
         {
           preset: 'code',
           enabled: true,
+        },
+        {
+          preset: 'link',
+          enabled: true,
+          options: [
+            {
+              matcher(href) {
+                return href.match(/^https?:\/\//);
+              },
+              attrs: {
+                target: '_blank',
+                rel: 'noopener noreferrer',
+              },
+            },
+          ],
         },
         {
           preset: 'katex',
@@ -63,19 +76,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
       .use((md) => {
         md.renderer.rules.table_open = () => `<div class=${baseClass}__markdown__table__wrapper>\n<table>\n`;
         md.renderer.rules.table_close = () => '</table>\n</div>';
-      })
-      // 链接
-      .use(mila, [
-        {
-          matcher(href) {
-            return href.match(/^https?:\/\//);
-          },
-          attrs: {
-            target: '_blank',
-            rel: 'noopener noreferrer',
-          },
-        },
-      ]);
+      });
 
     // 筛选生效的预设插件
     const enabledPresetPlugins =
@@ -112,10 +113,17 @@ export default class ChatContent extends Component<TdChatContentProps> {
     for await (const config of enabledPresetPlugins) {
       const { preset, options } = config;
       switch (preset) {
+        // 链接
+        case 'link': {
+          const plugin = await import('markdown-it-link-attributes');
+          md.use(plugin.default, options);
+          break;
+        }
         // 公式
         case 'katex': {
           const plugin = await import('@vscode/markdown-it-katex');
           md.use(plugin.default, options);
+          break;
         }
       }
     }

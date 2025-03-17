@@ -99,7 +99,7 @@ export interface TdChatListProps {
 }
 
 /** markdown插件预设 */
-export type TdChatContentMDPresetPlugin = 'code' | 'katex';
+export type TdChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
 
 export interface TdChatContentMDPresetConfig {
   preset: TdChatContentMDPresetPlugin;
