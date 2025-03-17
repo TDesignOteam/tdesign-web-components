@@ -93,7 +93,7 @@ function sendStream(res, messages, interval, req) {
 
 // 模拟文件上传接口
 app.post('/file/upload', (req, res) => {
-  // 模拟1秒延迟
+  // 模拟延迟
   setTimeout(() => {
     res.json({
       code: 200,

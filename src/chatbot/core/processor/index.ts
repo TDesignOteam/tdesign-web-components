@@ -12,7 +12,7 @@ export default class MessageProcessor {
   private contentHandlers: Map<string, (chunk: any, existing?: any) => any> = new Map();
 
   constructor() {
-    this.registerCoreHandlers();
+    this.registerDefaultHandlers();
   }
 
   public createUserMessage(content: string, attachments?: AttachmentItem[]): Message {
@@ -74,8 +74,8 @@ export default class MessageProcessor {
     return `msg_${Date.now()}_${Math.floor(Math.random() * 90000) + 10000}`;
   }
 
-  // 注册核心内容处理器
-  private registerCoreHandlers() {
+  // 注册默认支持的内容处理器
+  private registerDefaultHandlers() {
     this.registerTextHandlers();
     this.registerThinkingHandler();
     this.registerImageHandler();
@@ -85,7 +85,6 @@ export default class MessageProcessor {
   // 通用处理器工厂
   private createContentHandler<T extends AIMessageContent>(
     mergeData: (existing: T['data'], incoming: T['data']) => T['data'],
-    options?: { initData?: (chunk: T) => T['data'] },
   ): (chunk: T, existing?: T) => T {
     return (chunk: T, existing?: T): T => {
       if (existing?.type === chunk.type) {
@@ -97,7 +96,7 @@ export default class MessageProcessor {
       }
       return {
         ...chunk,
-        data: options?.initData ? options.initData(chunk) : chunk.data,
+        data: chunk.data,
         status: 'streaming',
       };
     };
@@ -117,19 +116,11 @@ export default class MessageProcessor {
   private registerThinkingHandler() {
     this.registerHandler<ThinkingContent>(
       'thinking',
-      this.createContentHandler(
-        (existing, incoming) => ({
-          ...existing,
-          ...incoming,
-          text: (existing?.text || '') + (incoming?.text || ''),
-        }),
-        {
-          initData: (chunk) => ({
-            text: chunk.data?.text || '',
-            title: chunk.data?.title || '',
-          }),
-        },
-      ),
+      this.createContentHandler((existing, incoming) => ({
+        ...existing,
+        ...incoming,
+        text: (existing?.text || '') + (incoming?.text || ''),
+      })),
     );
   }
 
