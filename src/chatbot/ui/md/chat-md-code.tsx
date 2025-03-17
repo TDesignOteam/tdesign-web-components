@@ -10,7 +10,7 @@ import classname, { getClassPrefix } from '../../../_util/classname';
 import { MessagePlugin } from '../../../message';
 import type { TdChatCodeProps } from '../../type';
 
-import styles from './chat-md-code.less';
+import styles from '../../style/md/chat-md-code.less';
 
 const className = `${getClassPrefix()}-chat__text__markdown__code`;
 
