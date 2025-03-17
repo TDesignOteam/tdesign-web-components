@@ -6,13 +6,13 @@ usage: { title: '', description: '' }
 spline: base
 ---
 
-<!-- ### 基础使用
+### 基础使用
 
 {{ basic }}
 
 ### 输入框
 
-{{ input }} -->
+{{ input }}
 
 ### markdown渲染
 
