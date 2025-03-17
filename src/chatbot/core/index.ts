@@ -1,7 +1,16 @@
-import ChatProcessor from './processor/textProcessor';
 import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
-import type { AttachmentItem, LLMConfig, Message, ModelServiceState, RequestParams, SSEChunkData } from './type';
+import MessageProcessor from './processor';
+import {
+  type AIMessageContent,
+  type AttachmentItem,
+  isAIMessage,
+  type LLMConfig,
+  type Message,
+  type ModelServiceState,
+  type RequestParams,
+  type SSEChunkData,
+} from './type';
 
 export interface IChatEngine {
   sendMessage(prompt: string, attachments?: AttachmentItem[]): Promise<void>;
@@ -11,7 +20,9 @@ export interface IChatEngine {
 export default class ChatEngine implements IChatEngine {
   public readonly messageStore: MessageStore;
 
-  private processor: ChatProcessor;
+  private contentHandlers: Map<string, (chunk: any, existing?: any) => any> = new Map();
+
+  private processor: MessageProcessor;
 
   private llmService: LLMService;
 
@@ -21,7 +32,7 @@ export default class ChatEngine implements IChatEngine {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
     this.config = initialModelState.config;
     this.llmService = new LLMService();
-    this.processor = new ChatProcessor();
+    this.processor = new MessageProcessor();
   }
 
   public async sendMessage(prompt: string, attachments?: AttachmentItem[]) {
@@ -67,13 +78,13 @@ export default class ChatEngine implements IChatEngine {
 
   private async handleStreamRequest(params: RequestParams) {
     const id = params.messageID;
-    this.setMessageStatus(id, 'streaming');
+    this.setMessageStatus(id, 'pending');
 
     await this.llmService.handleStreamRequest(params, {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
         const parsed = this.config?.onMessage?.(chunk);
-        this.messageStore.appendContent(id, parsed);
+        this.processContentUpdate(id, parsed);
         return parsed;
       },
       onError: (error) => {
@@ -98,5 +109,21 @@ export default class ChatEngine implements IChatEngine {
 
   private setMessageStatus(messageId: string, status: Message['status']) {
     this.messageStore.setMessageStatus(messageId, status);
+  }
+
+  // 注册自定义内容处理器
+  registerContentHandler<T extends AIMessageContent>(type: string, handler: (chunk: T, existing?: T) => T) {
+    this.contentHandlers.set(type, handler);
+  }
+
+  // 处理内容更新逻辑
+  private processContentUpdate(messageId: string, rawChunk: AIMessageContent) {
+    const message = this.messageStore.getState().messages.find((m) => m.id === messageId);
+    if (!message || !isAIMessage(message)) return;
+
+    // 只需要处理最后一个内容快
+    const lastContent = message.content[message.content.length - 1];
+    const processed = this.processor.processContentUpdate(lastContent, rawChunk);
+    this.messageStore.appendContent(messageId, processed);
   }
 }

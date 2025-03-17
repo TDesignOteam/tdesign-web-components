@@ -9,6 +9,7 @@ export interface BaseContent<T extends string, TData> {
   type: T;
   data: TData;
   status?: MessageStatus;
+  id?: string;
 }
 
 // 内容类型
@@ -178,4 +179,12 @@ export function isTextContent(content: AIMessageContent): content is TextContent
 
 export function isMarkdownContent(content: AIMessageContent): content is MarkdownContent {
   return content.type === 'markdown';
+}
+
+export function isImageContent(content: AIMessageContent): content is ImageContent {
+  return content.type === 'image';
+}
+
+export function isSearchContent(content: AIMessageContent): content is SearchContent {
+  return content.type === 'search';
 }
