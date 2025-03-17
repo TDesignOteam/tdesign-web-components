@@ -70,22 +70,19 @@ interface BaseMessage {
 
 // 类型扩展机制
 declare global {
-  interface ContentTypeOverrides {
-    _?: unknown;
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface AIContentTypeOverrides {}
 }
 
-type MergedContentTypes = {
-  [K in keyof ContentTypeOverrides]: ContentTypeOverrides[K];
-} & {
+type AIMergedContentTypes = {
   text: TextContent;
   markdown: MarkdownContent;
   thinking: ThinkingContent;
-  ImageContent: ImageContent;
-  SearchContent: SearchContent;
-};
+  image: ImageContent;
+  search: SearchContent;
+} & AIContentTypeOverrides;
 
-export type AIMessageContent = MergedContentTypes[keyof MergedContentTypes];
+export type AIMessageContent = AIMergedContentTypes[keyof AIMergedContentTypes];
 export type UserMessageContent = TextContent | AttachmentContent;
 
 export interface UserMessage extends BaseMessage {
@@ -156,8 +153,8 @@ export type AIContentHandler<T extends BaseContent<any, any>> = (chunk: T, exist
 
 export interface ContentTypeDefinition<T extends string = string, D = any> {
   type: T;
-  handler?: (chunk: BaseContent<T, any>, existing?: BaseContent<T, any>) => BaseContent<T, any>;
-  renderer?: (content: BaseContent<T, D>) => unknown;
+  handler?: AIContentHandler<BaseContent<T, D>>;
+  renderer?: ContentRenderer<BaseContent<T, D>>;
 }
 
 export type ContentRenderer<T extends BaseContent<any, any>> = (content: T) => unknown;
