@@ -1,3 +1,5 @@
+import MarkdownIt from 'markdown-it';
+
 import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { Attachment } from '../filecard';
@@ -97,9 +99,33 @@ export interface TdChatListProps {
   scrollToBottom?: boolean;
   onScroll?: (e: Event) => void;
 }
+
+/** markdown插件预设 */
+export type TdChatContentMDPresetPlugin = 'code' | 'katex';
+
+export interface TdChatContentMDPresetConfig {
+  preset: TdChatContentMDPresetPlugin;
+  /** 是否开启 */
+  enabled?: boolean;
+  /** 插件参数 */
+  options?: any;
+}
+
+export type TdChatContentMDPluginConfig =
+  | TdChatContentMDPresetConfig
+  | MarkdownIt.PluginSimple
+  | MarkdownIt.PluginWithParams
+  | MarkdownIt.PluginWithOptions;
+
+export interface TdChatContentMDProps {
+  options?: MarkdownIt.Options;
+  pluginConfig?: Array<TdChatContentMDPluginConfig>;
+}
+
 export interface TdChatContentProps {
   content?: string;
   role?: string;
+  markdownProps?: TdChatContentMDProps;
 }
 
 export interface TdChatCodeProps {
