@@ -4,7 +4,7 @@ import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { Attachment } from '../filecard';
 import type { TdTextareaProps } from '../textarea';
-import type { ChatStatus, MessageStatus, ModelServiceState } from './core/type';
+import type { ChatStatus, MessageRole, MessageStatus, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
 export interface TdChatItemAction {
@@ -28,17 +28,13 @@ export interface TdChatItemProps {
    */
   avatar?: string | TNode;
   /**
-   * 内容
-   */
-  // content?: string;
-  /**
    * 时间
    */
   datetime?: string | TNode;
   /**
    * 消息类型
    */
-  // role?: ModelRoleEnum;
+  role?: MessageRole;
   /**
    * 消息样式，是否有边框，背景色等
    */
@@ -49,6 +45,8 @@ export interface TdChatItemProps {
   placement?: 'left' | 'right';
   /** 消息体 */
   message: Message;
+  /** 透传chat-content参数 */
+  chatContentProps?: Omit<TdChatContentProps, 'content' | 'role'>;
 }
 
 interface ChatProps {
@@ -112,7 +110,9 @@ export interface TdChatContentMDPresetConfig {
 }
 
 export type TdChatContentMDPluginConfig =
+  /** 预设插件配置 */
   | TdChatContentMDPresetConfig
+  /** markdownIt原生插件配置 */
   | MarkdownIt.PluginSimple
   | MarkdownIt.PluginWithParams
   | MarkdownIt.PluginWithOptions;

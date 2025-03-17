@@ -45,6 +45,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     status: String,
     textLoading: Boolean,
     variant: String,
+    chatContentProps: Object,
   };
 
   static defaultProps = {
@@ -230,7 +231,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderMessage() {
-    const { message } = this.props;
+    const { message, chatContentProps } = this.props;
     const { role } = message;
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
@@ -241,6 +242,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
           <t-chat-content
             key={elementKey}
             className={`${className}__detail`}
+            {...chatContentProps}
             content={content?.data || content}
             role={role}
           ></t-chat-content>
@@ -256,7 +258,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
           return (
-            <t-chat-content className={`${className}__detail`} content={content.data} role={role}></t-chat-content>
+            <t-chat-content
+              className={`${className}__detail`}
+              {...chatContentProps}
+              content={content.data}
+              role={role}
+            ></t-chat-content>
           );
         }
       }

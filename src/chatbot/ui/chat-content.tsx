@@ -37,7 +37,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
         },
         {
           preset: 'katex',
-          enabled: true,
+          enabled: false,
         },
       ],
     },
