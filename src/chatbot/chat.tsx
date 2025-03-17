@@ -17,13 +17,6 @@ const className = `${getClassPrefix()}-chat`;
 export default class Chatbot extends Component<TdChatProps> {
   static css = [styles];
 
-  static defaultProps = {
-    clearHistory: false,
-    layout: 'both',
-    reverse: false,
-    data: [],
-  };
-
   static propTypes = {
     clearHistory: Boolean,
     layout: String,
@@ -31,6 +24,13 @@ export default class Chatbot extends Component<TdChatProps> {
     reverse: Boolean,
     modelConfig: Object,
     attachmentProps: Object,
+  };
+
+  static defaultProps = {
+    clearHistory: false,
+    layout: 'both',
+    reverse: false,
+    data: [],
   };
 
   listRef = createRef<TdChatListProps>();
