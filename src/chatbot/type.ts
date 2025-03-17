@@ -39,8 +39,6 @@ export interface TdChatItemProps {
    * 消息样式，是否有边框，背景色等
    */
   variant?: Variant;
-  // 消息索引
-  itemIndex?: Number;
   /** 气泡方向 */
   placement?: 'left' | 'right';
   /** 消息体 */

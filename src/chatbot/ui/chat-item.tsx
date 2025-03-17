@@ -40,10 +40,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
     avatar: String,
     datetime: String,
     message: Object,
-    content: String,
+    placement: String,
     role: String,
-    status: String,
-    textLoading: Boolean,
     variant: String,
     chatContentProps: Object,
   };
