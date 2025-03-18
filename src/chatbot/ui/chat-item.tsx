@@ -54,26 +54,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private messageId!: string;
 
-  clickCopyHandler = () => {
-    if (this.props.message?.role !== 'assistant') {
-      return;
-    }
-    const copyContent = this.props.message.content.reduce((pre, item) => {
-      if (!isTextContent(item) && !isMarkdownContent(item)) {
-        return pre;
-      }
-      return pre + item.data;
-    }, '');
-
-    navigator.clipboard
-      .writeText(copyContent.toString())
-      .then(() => {
-        MessagePlugin.success('复制成功');
-      })
-      .catch(() => {
-        MessagePlugin.success('复制失败，请手动复制');
-      });
-  };
+  inject = ['chatEngine'];
 
   install() {
     this.messageId = this.props.message.id!;
@@ -119,8 +100,50 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  clickRefreshHandler = () => {
+    if (!isAIMessage(this.props.message)) {
+      return;
+    }
+    console.log('====refresh', this.props.message.content);
+    this.injection.chatEngine.regenerateAIMessage();
+    this.fire('action', { action: 'refresh', index: 0 });
+  };
+
+  clickCopyHandler = () => {
+    if (this.props.message?.role !== 'assistant') {
+      return;
+    }
+    const copyContent = this.props.message.content.reduce((pre, item) => {
+      if (!isTextContent(item) && !isMarkdownContent(item)) {
+        return pre;
+      }
+      return pre + item.data;
+    }, '');
+
+    navigator.clipboard
+      .writeText(copyContent.toString())
+      .then(() => {
+        MessagePlugin.success('复制成功');
+      })
+      .catch(() => {
+        MessagePlugin.success('复制失败，请手动复制');
+      });
+  };
+
   presetActions: TdChatItemAction[] = [
-    { name: 'refresh', render: <t-icon-refresh />, status: ['complete'] },
+    {
+      name: 'refresh',
+      render: (
+        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
+          <t-icon-refresh />
+        </div>
+      ),
+      // 条件：最后一条AI消息才可以重新生成
+      condition: (message) => {
+        const lastAIMessage = this.injection.chatEngine?.messageStore?.lastAIMessage;
+        return message.id === lastAIMessage?.id;
+      },
+    },
     {
       name: 'copy',
       render: (
@@ -143,10 +166,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
     return arrayActions.map((item, idx) => {
       // 默认消息完成时才展示action
-      if (!item.status && message.status !== 'complete') {
+      if (message.status !== 'complete') {
         return null;
       }
-      if (item.status && !item.status.includes(message.status)) {
+      if (item.condition && !item.condition(message)) {
         return null;
       }
       return (

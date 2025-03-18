@@ -4,14 +4,14 @@ import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { Attachment } from '../filecard';
 import type { TdTextareaProps } from '../textarea';
-import type { ChatStatus, MessageRole, MessageStatus, ModelServiceState } from './core/type';
+import type { ChatStatus, MessageRole, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
 export interface TdChatItemAction {
   name: string;
   render: TNode;
-  // 消息满足状态时才展示，默认消息完成时才展示
-  status?: MessageStatus[];
+  // 满足条件才展示
+  condition?: (message: Message) => boolean;
 }
 
 export interface TdChatItemProps {

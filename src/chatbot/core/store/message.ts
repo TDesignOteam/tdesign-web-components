@@ -1,4 +1,12 @@
-import { type AIMessage, type AIMessageContent, isAIMessage, type Message, type MessageState } from '../type';
+import {
+  type AIMessage,
+  type AIMessageContent,
+  isAIMessage,
+  isUserMessage,
+  type Message,
+  type MessageState,
+  UserMessage,
+} from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
@@ -69,9 +77,49 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
+  // 删除指定消息
+  removeMessage(messageId: string) {
+    this.setState((draft) => {
+      // 从ID列表删除
+      const idIndex = draft.messageIds.indexOf(messageId);
+      if (idIndex !== -1) {
+        draft.messageIds.splice(idIndex, 1);
+      }
+
+      // 从消息列表删除
+      draft.messages = draft.messages.filter((msg) => msg.id !== messageId);
+    });
+  }
+
+  // 创建消息分支（用于保留历史版本）
+  createMessageBranch(messageId: string) {
+    const original = this.getState().messages.find((m) => m.id === messageId);
+    if (!original) return;
+
+    // 克隆消息并生成新ID
+    const branchedMessage = {
+      ...original,
+      content: original.content.map((c) => ({ ...c })),
+    };
+
+    this.createMessage(branchedMessage);
+  }
+
   get currentMessage(): Message {
     const { messages } = this.getState();
     return messages.at(-1);
+  }
+
+  get lastAIMessage(): AIMessage | undefined {
+    const { messages } = this.getState();
+    const aiMessages = messages.filter((msg) => isAIMessage(msg));
+    return aiMessages.at(-1);
+  }
+
+  get lastUserMessage(): UserMessage | undefined {
+    const { messages } = this.getState();
+    const userMessages = messages.filter((msg) => isUserMessage(msg));
+    return userMessages.at(-1);
   }
 
   // 更新消息整体状态

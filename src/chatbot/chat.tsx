@@ -39,7 +39,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private chatStatus: ChatStatus;
 
-  private chatService: ChatService;
+  private chatEngine: ChatService;
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -49,15 +49,16 @@ export default class Chatbot extends Component<TdChatProps> {
 
   provide = {
     messageStore: {},
-    modelStore: {},
+    chatEngine: null,
   };
 
   install(): void {
     const { data } = this.props;
     const initialMessages = data.map(({ message }) => message);
-    this.chatService = new ChatService(this.props.modelConfig, initialMessages);
-    const { messageStore } = this.chatService;
+    this.chatEngine = new ChatService(this.props.modelConfig, initialMessages);
+    const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
+    this.provide.chatEngine = this.chatEngine;
     this.chatStatus = messageStore.currentMessage.status;
     this.messages = messageStore.getState().messages;
     this.subscribeToChat();
@@ -69,7 +70,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   // 订阅聊天状态变化
   private subscribeToChat() {
-    this.unsubscribeMsg = this.chatService.messageStore.subscribe(
+    this.unsubscribeMsg = this.chatEngine.messageStore.subscribe(
       (state) => {
         this.messages = state.messages;
         this.chatStatus = this.messages.at(-1)?.status;
@@ -81,7 +82,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
-    await this.chatService.sendMessage(value, this.uploadedAttachments);
+    await this.chatEngine.sendMessage(value, this.uploadedAttachments);
     this.uploadedAttachments = [];
     this.files.value = [];
     this.fire('submit', value, {
@@ -91,7 +92,7 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   private handleStop = () => {
-    this.chatService.abortChat();
+    this.chatEngine.abortChat();
     this.fire('stop');
   };
 
