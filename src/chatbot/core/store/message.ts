@@ -50,22 +50,6 @@ export class MessageStore extends ReactiveState<MessageState> {
   }
 
   // 更新消息整体状态
-  private updateMessageStatusByContent(message: AIMessage) {
-    // 优先处理错误状态
-    if (message.content.some((c) => c.status === 'error')) {
-      message.status = 'error';
-      return;
-    }
-
-    // 检查是否全部完成
-    const allComplete = message.content.every(
-      (c) => c.status === 'complete' || c.status === 'stop', // 包含停止状态
-    );
-
-    message.status = allComplete ? 'complete' : 'streaming';
-  }
-
-  // 更新消息整体状态
   setMessageStatus(messageId: string, status: Message['status']) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
@@ -88,6 +72,22 @@ export class MessageStore extends ReactiveState<MessageState> {
   get currentMessage(): Message {
     const { messages } = this.getState();
     return messages.at(-1);
+  }
+
+  // 更新消息整体状态
+  private updateMessageStatusByContent(message: AIMessage) {
+    // 优先处理错误状态
+    if (message.content.some((c) => c.status === 'error')) {
+      message.status = 'error';
+      return;
+    }
+
+    // 检查是否全部完成
+    const allComplete = message.content.every(
+      (c) => c.status === 'complete' || c.status === 'stop', // 包含停止状态
+    );
+
+    message.status = allComplete ? 'complete' : 'streaming';
   }
 }
 

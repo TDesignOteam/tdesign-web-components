@@ -6,7 +6,7 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatStatus, Message, MessageState } from './core/type';
+import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
 import ChatService from './core';
 import type { TdChatInputSend, TdChatListProps, TdChatProps } from './type';
 
@@ -77,14 +77,6 @@ export default class Chatbot extends Component<TdChatProps> {
       },
       // ['messageIds'],
     );
-  }
-
-  // 转换消息格式到UI所需格式
-  private convertMessages(state: MessageState) {
-    return state.messageIds.map((id) => {
-      const msg = state.messages[id];
-      return { ...msg };
-    });
   }
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {

@@ -50,14 +50,6 @@ export default class MessageProcessor {
     };
   }
 
-  // 通用处理器注册方法
-  public registerHandler<T extends AIMessageContent>(
-    type: T['type'], // 使用类型中定义的type字段作为参数类型
-    handler: (chunk: T, existing?: T) => T,
-  ) {
-    this.contentHandlers.set(type, handler);
-  }
-
   // 处理内容更新
   public processContentUpdate(lastContent: AIMessageContent | undefined, newChunk: AIMessageContent) {
     const handler = this.contentHandlers.get(newChunk.type);
@@ -71,6 +63,14 @@ export default class MessageProcessor {
       ...newChunk,
       status: 'streaming',
     };
+  }
+
+  // 通用处理器注册方法
+  private registerHandler<T extends AIMessageContent>(
+    type: T['type'], // 使用类型中定义的type字段作为参数类型
+    handler: (chunk: T, existing?: T) => T,
+  ) {
+    this.contentHandlers.set(type, handler);
   }
 
   private generateID() {

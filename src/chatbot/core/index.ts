@@ -20,8 +20,6 @@ export interface IChatEngine {
 export default class ChatEngine implements IChatEngine {
   public readonly messageStore: MessageStore;
 
-  private contentHandlers: Map<string, (chunk: any, existing?: any) => any> = new Map();
-
   private processor: MessageProcessor;
 
   private llmService: LLMService;
@@ -109,11 +107,6 @@ export default class ChatEngine implements IChatEngine {
 
   private setMessageStatus(messageId: string, status: Message['status']) {
     this.messageStore.setMessageStatus(messageId, status);
-  }
-
-  // 注册自定义内容处理器
-  registerContentHandler<T extends AIMessageContent>(type: string, handler: (chunk: T, existing?: T) => T) {
-    this.contentHandlers.set(type, handler);
   }
 
   // 处理内容更新逻辑
