@@ -59,7 +59,7 @@ interface ChatProps {
   /**
    * 数据
    */
-  data?: Array<TdChatItemProps>;
+  items?: Array<TdChatItemProps>;
   /**
    * 接口请求中
    */
@@ -84,7 +84,7 @@ export interface TdChatListProps {
   /**
    * 数据
    */
-  data?: Array<TdChatItemProps['message']>;
+  messages?: Array<TdChatItemProps['message']>;
   /**
    * 流式消息加载中
    */

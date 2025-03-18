@@ -20,7 +20,7 @@ export default class Chatbot extends Component<TdChatProps> {
   static propTypes = {
     clearHistory: Boolean,
     layout: String,
-    data: Array,
+    items: Array,
     reverse: Boolean,
     modelConfig: Object,
     attachmentProps: Object,
@@ -30,7 +30,7 @@ export default class Chatbot extends Component<TdChatProps> {
     clearHistory: false,
     layout: 'both',
     reverse: false,
-    data: [],
+    items: [],
   };
 
   listRef = createRef<TdChatListProps>();
@@ -53,13 +53,15 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   install(): void {
-    const { data } = this.props;
-    const initialMessages = data.map(({ message }) => message);
+    const { items } = this.props;
+    const initialMessages = items.map(({ message }) => message);
     this.chatEngine = new ChatService(this.props.modelConfig, initialMessages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
-    this.chatStatus = messageStore.currentMessage.status;
+    if (messageStore.currentMessage) {
+      this.chatStatus = messageStore.currentMessage.status;
+    }
     this.messages = messageStore.getState().messages;
     this.subscribeToChat();
   }
@@ -128,7 +130,7 @@ export default class Chatbot extends Component<TdChatProps> {
     console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
-        <t-chat-list ref={this.listRef} data={this.messages} reverse={reverse} />
+        {this.messages && <t-chat-list ref={this.listRef} messages={this.messages} reverse={reverse} />}
         {clearHistory && (
           <div className={`${className}-clear`}>
             <t-button type="text" onClick={this.handleClear}>

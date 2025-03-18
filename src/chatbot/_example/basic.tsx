@@ -292,7 +292,7 @@ export default class BasicChat extends Component {
     return (
       <t-chatbot
         style={{ display: 'block', height: '80vh' }}
-        data={mockData}
+        items={mockData}
         modelConfig={mockModels}
         attachmentProps={attachmentProps}
       ></t-chatbot>

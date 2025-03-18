@@ -16,14 +16,14 @@ export default class Chatlist extends Component<TdChatListProps> {
   static css = [styles];
 
   static propTypes = {
-    data: Array,
+    messages: Array,
     textLoading: Boolean,
     autoScroll: [Boolean, Number],
     scrollToBottom: Boolean,
   };
 
   static defaultProps = {
-    data: [],
+    messages: [],
     autoScroll: true,
     scrollToBottom: true,
   };
@@ -34,11 +34,11 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   /** 检测并滚动到底部 */
   checkAndScrollToBottom = () => {
-    const { data, autoScroll } = this.props;
+    const { messages, autoScroll } = this.props;
     if (typeof autoScroll === 'boolean' && !autoScroll) {
       return;
     }
-    const lastData = data[data.length - 1];
+    const lastData = messages.at(-1);
     // 消息生成中 / 发送消息时自动滚到底部
     if (lastData.status === 'pending' || lastData.status === 'streaming' || lastData.role !== 'assistant') {
       // 传入阈值时，滚动高度小于阈值时才自动滚动
@@ -81,8 +81,8 @@ export default class Chatlist extends Component<TdChatListProps> {
     }, 0);
   }
 
-  render(props: { data: TdChatItemProps['message'][]; reverse?: boolean }) {
-    const items = props.reverse ? [...props.data].reverse() : props.data;
+  render(props: { messages: TdChatItemProps['message'][]; reverse?: boolean }) {
+    const items = props.reverse ? [...props.messages].reverse() : props.messages;
     return (
       <div ref={this.listRef} className={className} onScroll={this.handleScroll}>
         <div
