@@ -30,7 +30,7 @@ export default class ChatEngine implements IChatEngine {
 
   constructor(initialModelState: ModelServiceState, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.config = initialModelState.config;
+    this.config = initialModelState?.config || {};
     this.llmService = new LLMService();
     this.processor = new MessageProcessor();
   }

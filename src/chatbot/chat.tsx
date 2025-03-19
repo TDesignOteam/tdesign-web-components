@@ -35,9 +35,9 @@ export default class Chatbot extends Component<TdChatProps> {
 
   listRef = createRef<TdChatListProps>();
 
-  private messages: Message[];
+  private messages: Message[] = [];
 
-  private chatStatus: ChatStatus;
+  private chatStatus: ChatStatus = 'idle';
 
   private chatEngine: ChatService;
 
@@ -52,7 +52,12 @@ export default class Chatbot extends Component<TdChatProps> {
     chatEngine: null,
   };
 
-  install(): void {
+  ready(): void {
+    this.initChat();
+    this.update();
+  }
+
+  private initChat() {
     const { items } = this.props;
     const initialMessages = items.map(({ message }) => message);
     this.chatEngine = new ChatService(this.props.modelConfig, initialMessages);
