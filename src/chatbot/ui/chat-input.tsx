@@ -234,7 +234,13 @@ export default class ChatInput extends Component<TdChatInputProps> {
   };
 
   private handleAction = (action: string, index: number) => {
-    this.fire('action', { action, index });
+    this.fire(
+      'action',
+      { action, index },
+      {
+        composed: true,
+      },
+    );
   };
 
   private handleSend = () => {
@@ -253,10 +259,11 @@ export default class ChatInput extends Component<TdChatInputProps> {
     }
   };
 
-  private handleStop = (e) => {
+  private handleStop = () => {
     if (this.props.allowStop) {
-      this.fire('stop');
-      this.props.onStop(this.inputValue as string, { e });
+      this.fire('stop', this.inputValue, {
+        composed: true,
+      });
     }
   };
 }
