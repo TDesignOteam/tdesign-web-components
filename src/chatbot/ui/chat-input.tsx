@@ -57,7 +57,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
   shiftDown = false;
 
-  install() {
+  ready() {
     const { value, defaultValue, attachments } = this.props;
 
     this.pValue.value = value || defaultValue;

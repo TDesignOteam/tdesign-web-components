@@ -11,7 +11,7 @@ export interface TdLoadingProps {
    * 挂载元素，默认挂载到组件本身所在的位置。数据类型为 String 时，会被当作选择器处理，进行节点查询。示例：'body' 或 () => document.body
    * @default ''
    */
-  attach?: AttachNode;
+  attach?: AttachNode | null;
   /**
    * 子元素，同 content
    */

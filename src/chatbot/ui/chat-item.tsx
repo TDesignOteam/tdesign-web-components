@@ -56,7 +56,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   inject = ['chatEngine'];
 
-  install() {
+  ready() {
     this.messageId = this.props.message.id!;
   }
 
