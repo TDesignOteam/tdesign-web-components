@@ -71,7 +71,7 @@ export default class Textarea extends Component<TdTextareaProps> {
             this.isFocused = false;
             this.update();
           }
-          this.props[key](e.currentTarget.value, { e });
+          this.props[key](e);
           e.stopPropagation();
         },
       });

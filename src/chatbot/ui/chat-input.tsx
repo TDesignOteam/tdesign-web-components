@@ -94,6 +94,11 @@ export default class ChatInput extends Component<TdChatInputProps> {
     this.uploadRef.current.value = '';
   };
 
+  get hasStop() {
+    const { status, allowStop } = this.props;
+    return allowStop && status !== 'complete' && status !== 'stop' && status !== 'idle';
+  }
+
   /** 上传附件按钮 */
   renderUploadAttachment = () => (
     <t-tooltip content="上传附件" className={`${className}__actions__tooltip`}>
@@ -109,8 +114,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
   );
 
   renderButton = () => {
-    const { status, allowStop, disabled } = this.props;
-    const hasStop = allowStop && status !== 'complete' && status !== 'stop' && status !== 'idle';
+    const { disabled } = this.props;
 
     return (
       <t-button
@@ -120,14 +124,14 @@ export default class ChatInput extends Component<TdChatInputProps> {
         className={classname([
           `${className}__button`,
           {
-            [`${className}__button--focus`]: this.inputValue || hasStop,
+            [`${className}__button--focus`]: this.inputValue || this.hasStop,
           },
         ])}
-        onClick={hasStop ? this.handleStop : this.handleSend}
+        onClick={this.clickSend}
         disabled={disabled}
       >
         {convertToLightDomNode(
-          hasStop ? (
+          this.hasStop ? (
             <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
           ) : (
             <t-icon-send className={`${className}__button__icon`} />
@@ -217,7 +221,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     if (e.key === 'Shift') this.shiftDown = true;
     if (e.key === 'Enter' && !this.shiftDown) {
       e.preventDefault();
-      this.handleSend();
+      this.clickSend();
     }
   };
 
@@ -266,4 +270,6 @@ export default class ChatInput extends Component<TdChatInputProps> {
       });
     }
   };
+
+  private clickSend = () => (this.hasStop ? this.handleStop() : this.handleSend());
 }
