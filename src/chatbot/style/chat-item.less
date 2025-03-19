@@ -141,8 +141,9 @@
     // less中同时使用min和var有bug，目前只能这么写 https://github.com/less/less.js/issues/3777
     max-width: e('min(100%, var(--t-chat-item-content-max-width))');
     padding: var(--t-chat-item-content-padding);
-    border: 1px solid transparent;
+    border: var(--t-chat-item-content-border);
     border-radius: var(--t-chat-item-content-radius);
+    text-align: var(--t-chat-item-content-text-align);
 
     &:empty {
       display: none;

@@ -1,5 +1,4 @@
 import 'tdesign-icons-web-components/esm/components/file-copy';
-import 'highlight.js/styles/atom-one-light.min.css';
 import '../../../message';
 
 import hljs from 'highlight.js';

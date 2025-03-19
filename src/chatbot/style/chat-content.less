@@ -57,15 +57,15 @@
       li {
         word-break: break-word;
         overflow-wrap: break-word;
-        margin: 0.5em 0;
+        margin: var(--t-chat-md-li-margin);
 
         &:first-child {
           margin-top: 0;
         }
       }
       ul, ol {
-        margin: var(--t-chat-md-content-gap-main);
-        margin-left: 2em;
+        margin: var(--t-chat-md-list-margin);
+        padding: var(--t-chat-md-list-padding);
       }
       ul {
         list-style: var(--t-chat-md-ul-style);

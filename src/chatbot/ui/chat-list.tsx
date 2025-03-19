@@ -40,7 +40,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     }
     const lastData = messages.at(-1);
     // 消息生成中 / 发送消息时自动滚到底部
-    if (lastData.status === 'pending' || lastData.status === 'streaming' || lastData.role !== 'assistant') {
+    if (lastData?.status === 'pending' || lastData?.status === 'streaming' || lastData?.role !== 'assistant') {
       // 传入阈值时，滚动高度小于阈值时才自动滚动
       if (typeof autoScroll === 'number') {
         const list = this.listRef.current;
