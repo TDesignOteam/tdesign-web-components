@@ -82,11 +82,15 @@ interface ChatProps {
 
 export interface TdChatProps extends ChatProps, StyledProps {}
 
+export type TdChatListRoleConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
+
 export interface TdChatListProps {
   /**
    * 数据
    */
   messages?: Array<TdChatItemProps['message']>;
+  /** role对应的item配置 */
+  roleConfig?: TdChatListRoleConfig;
   /**
    * 流式消息加载中
    */
