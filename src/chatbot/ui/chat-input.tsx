@@ -204,43 +204,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
             onCompositionEnd={this.handleCompositionEnd}
           ></t-textarea>
           <div className={`${className}__footer`}>
-            <div className={`${className}__model`}>
-              <t-dropdown
-                options={[
-                  { value: 'hunyuan', content: 'HunYuan' },
-                  { value: 'DeepSeek', content: 'DeepSeek' },
-                ]}
-                value="hunyuan"
-                className={`${className}__model-dropdown`}
-                onClick={(data: { value: string; content: string }) => {
-                  this.fire('model-change', data.value, { composed: true });
-                  this.modelValue.value = data.content; // 更新选中值
-                }}
-              >
-                <t-button
-                  className={`${className}__model-dropdown-btn`}
-                  variant="text"
-                  shape="round"
-                  suffix={<t-icon name="chevron-down" size="16" />}
-                >
-                  {this.modelValue.value || '默认模型'}
-                </t-button>
-              </t-dropdown>
-              <a
-                className={classname([
-                  `${className}__model-deepthink`,
-                  {
-                    [`${className}__model-deepthink--active`]: this.deepThinkActive.value,
-                  },
-                ])}
-                onClick={() => {
-                  this.deepThinkActive.value = !this.deepThinkActive.value;
-                  this.fire('deep-think', null, { composed: true });
-                }}
-              >
-                <t-icon name="system-2" size="16" />
-                深度思考
-              </a>
+            <div>
+              <slot name="input-footer-left"></slot>
             </div>
             <div className={`${className}__footer__right`}>
               <div className={`${className}__actions`}>{this.renderActions()}</div>
