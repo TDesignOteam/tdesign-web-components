@@ -1,7 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/send';
 import 'tdesign-icons-web-components/esm/components/stop';
 import 'tdesign-icons-web-components/esm/components/image';
-import 'tdesign-icons-web-components/esm/components/file-add';
+import 'tdesign-icons-web-components/esm/components/file-attachment';
 import '../../attachments';
 import '../../textarea';
 import '../../button';
@@ -114,7 +114,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
           this.uploadRef.current?.click();
         }}
       >
-        {convertToLightDomNode(<t-icon-file-add />)}
+        {convertToLightDomNode(<t-icon-file-attachment />)}
       </span>
     </t-tooltip>
   );

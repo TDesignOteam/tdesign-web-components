@@ -136,7 +136,6 @@ export interface TdChatCodeProps {
 export interface TdChatInputAction {
   name: string;
   render: TNode;
-  disabled?: boolean;
 }
 
 export interface TdChatInputSend {
@@ -149,7 +148,7 @@ export interface TdChatInputProps {
   disabled?: boolean;
   value: string | number;
   defaultValue: string | number;
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
+  actions?: TdChatInputAction[] | ((preset: TdChatInputAction[]) => TdChatInputAction[]) | boolean;
   /** 附件项 */
   attachments?: Attachment[];
   /** 生成状态 */
