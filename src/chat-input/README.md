@@ -1,5 +1,5 @@
 ---
-title: chat-input 聊天输入框
+title: ChatInput 聊天输入框
 description: xxx
 isComponent: true
 usage: { title: '', description: '' }

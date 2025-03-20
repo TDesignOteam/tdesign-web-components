@@ -17,7 +17,7 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   static propTypes = {
     messages: Array,
-    roleConfig: Object,
+    rolesConfig: Object,
     textLoading: Boolean,
     autoScroll: [Boolean, Number],
     scrollToBottom: Boolean,
@@ -46,7 +46,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     'model-change': {},
   };
 
-  roleConfig = this.presetRoleConfig;
+  rolesConfig = this.presetRoleConfig;
 
   listRef = createRef<HTMLDivElement>();
 
@@ -94,9 +94,9 @@ export default class Chatlist extends Component<TdChatListProps> {
   }
 
   ready(): void {
-    this.roleConfig = {
+    this.rolesConfig = {
       ...this.presetRoleConfig,
-      ...this.props.roleConfig,
+      ...this.props.rolesConfig,
     };
   }
 
@@ -125,7 +125,7 @@ export default class Chatlist extends Component<TdChatListProps> {
         </div>
         {items.map((item) => {
           const { role, id } = item;
-          return <t-chat-item {...this.roleConfig?.[role]} message={item} key={id} />;
+          return <t-chat-item {...this.rolesConfig?.[role]} message={item} key={id} />;
         })}
       </div>
     );

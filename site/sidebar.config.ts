@@ -72,19 +72,19 @@ export default [
         component: () => import('tdesign-web-components/chatbot/README.md'),
       },
       {
-        title: 'chat-input 聊天输入框',
+        title: 'ChatInput 聊天输入框',
         name: 'chat-input',
         path: '/webcomponents/components/chat-input',
         component: () => import('tdesign-web-components/chat-input/README.md'),
       },
       {
-        title: 'filecard 文件缩略卡片',
+        title: 'Filecard 文件缩略卡片',
         name: 'filecard',
         path: '/webcomponents/components/filecard',
         component: () => import('tdesign-web-components/filecard/README.md'),
       },
       {
-        title: 'attachments 文件附件',
+        title: 'Attachments 文件附件',
         name: 'attachments',
         path: '/webcomponents/components/attachments',
         component: () => import('tdesign-web-components/attachments/README.md'),

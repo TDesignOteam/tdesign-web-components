@@ -88,7 +88,7 @@ export interface TdChatListProps {
    */
   messages?: Array<TdChatItemProps['message']>;
   /** role对应的item配置 */
-  roleConfig?: TdChatListRoleConfig;
+  rolesConfig?: TdChatListRoleConfig;
   /**
    * 流式消息加载中
    */
