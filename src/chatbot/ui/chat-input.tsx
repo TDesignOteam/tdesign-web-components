@@ -6,6 +6,7 @@ import '../../attachments';
 import '../../textarea';
 import '../../button';
 import '../../tooltip';
+import '../../dropdown';
 
 import { Component, createRef, signal, tag } from 'omi';
 
@@ -56,6 +57,10 @@ export default class ChatInput extends Component<TdChatInputProps> {
   inputRef = createRef<HTMLTextAreaElement>();
 
   shiftDown = false;
+
+  deepThinkActive = signal(false);
+
+  modelValue = signal(''); // 新增模型值信号
 
   ready() {
     const { value, defaultValue, attachments } = this.props;
@@ -198,8 +203,43 @@ export default class ChatInput extends Component<TdChatInputProps> {
             onCompositionEnd={this.handleCompositionEnd}
           ></t-textarea>
           <div className={`${className}__footer`}>
-            {/* TODO: 功能实现 */}
-            <div className={`${className}__model`}>模型功能区</div>
+            <div className={`${className}__model`}>
+              <t-dropdown
+                options={[
+                  { value: 'hunyuan', content: 'HunYuan' },
+                  { value: 'DeepSeek', content: 'DeepSeek' },
+                ]}
+                value="hunyuan"
+                className={`${className}__model-dropdown`}
+                onClick={(data: { value: string; content: string }) => {
+                  this.fire('model-change', data.value, { composed: true });
+                  this.modelValue.value = data.content; // 更新选中值
+                }}
+              >
+                <t-button
+                  className={`${className}__model-dropdown-btn`}
+                  variant="text"
+                  suffix={<t-icon name="chevron-down" size="16" />}
+                >
+                  {this.modelValue.value || '默认模型'}
+                </t-button>
+              </t-dropdown>
+              <a
+                className={classname([
+                  `${className}__model-deepthink`,
+                  {
+                    [`${className}__model-deepthink--active`]: this.deepThinkActive.value,
+                  },
+                ])}
+                onClick={() => {
+                  this.deepThinkActive.value = !this.deepThinkActive.value;
+                  this.fire('deep-think', null, { composed: true });
+                }}
+              >
+                <t-icon name="system-2" size="16" />
+                深度思考
+              </a>
+            </div>
             <div className={`${className}__footer__right`}>
               <div className={`${className}__actions`}>{this.renderActions()}</div>
               {this.renderButton()}
