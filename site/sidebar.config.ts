@@ -72,6 +72,12 @@ export default [
         component: () => import('tdesign-web-components/chatbot/README.md'),
       },
       {
+        title: 'chat-input 聊天输入框',
+        name: 'chat-input',
+        path: '/webcomponents/components/chat-input',
+        component: () => import('tdesign-web-components/chat-input/README.md'),
+      },
+      {
         title: 'filecard 文件缩略卡片',
         name: 'filecard',
         path: '/webcomponents/components/filecard',

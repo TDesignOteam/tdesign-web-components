@@ -1,14 +1,15 @@
 import './ui/chat-list';
-import './ui/chat-input';
+import '../chat-input';
 import '../button';
 
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
 import ChatService from './core';
-import type { TdChatInputSend, TdChatListProps, TdChatProps } from './type';
+import type { TdChatListProps, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 

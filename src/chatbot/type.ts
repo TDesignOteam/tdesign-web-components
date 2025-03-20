@@ -1,10 +1,8 @@
 import MarkdownIt from 'markdown-it';
 
-import type { TdAttachmentsProps } from '../attachments';
 import type { StyledProps, TNode } from '../common';
 import type { Attachment } from '../filecard';
-import type { TdTextareaProps } from '../textarea';
-import type { ChatStatus, MessageRole, ModelServiceState } from './core/type';
+import type { MessageRole, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
 export type TdChatItemActionName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
@@ -137,40 +135,6 @@ export interface TdChatCodeProps {
   code: string;
 }
 
-export interface TdChatInputAction {
-  name: string;
-  render: TNode;
-}
-
-export interface TdChatInputSend {
-  value: string;
-  attachments?: Attachment[];
-}
-
-export interface TdChatInputProps {
-  placeholder?: string;
-  disabled?: boolean;
-  value: string | number;
-  defaultValue: string | number;
-  actions?: TdChatInputAction[] | ((preset: TdChatInputAction[]) => TdChatInputAction[]) | boolean;
-  /** 附件项 */
-  attachments?: Attachment[];
-  /** 生成状态 */
-  status?: ChatStatus;
-  /** 生成时是否允许停止 */
-  allowStop?: boolean;
-  /** 透传attachment参数 */
-  attachmentsProps?: Partial<Omit<TdAttachmentsProps, 'items' | 'onRemove'>>;
-  /** 透传textarea参数 */
-  textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
-  /** 透传input-file参数 */
-  uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
-  onSend?: (e: CustomEvent<TdChatInputSend>) => void;
-  onStop?: (value: string, context: { e: MouseEvent }) => void;
-  onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
-  onBlur?: (value: string, context: { e: FocusEvent }) => void;
-  onFocus?: (value: string, context: { e: FocusEvent }) => void;
-}
 export interface MetaData {
   /**
    * 角色头像

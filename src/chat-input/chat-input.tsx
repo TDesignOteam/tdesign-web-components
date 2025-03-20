@@ -2,20 +2,20 @@ import 'tdesign-icons-web-components/esm/components/send';
 import 'tdesign-icons-web-components/esm/components/stop';
 import 'tdesign-icons-web-components/esm/components/image';
 import 'tdesign-icons-web-components/esm/components/file-attachment';
-import '../../attachments';
-import '../../textarea';
-import '../../button';
-import '../../tooltip';
-import '../../dropdown';
+import '../attachments';
+import '../textarea';
+import '../button';
+import '../tooltip';
+import '../dropdown';
 
 import { Component, createRef, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../../_util/classname';
-import { convertToLightDomNode } from '../../_util/lightDom';
-import { Attachment } from '../../filecard';
-import type { TdChatInputAction, TdChatInputProps } from '../type';
+import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
+import { Attachment } from '../filecard';
+import { TdChatInputAction, TdChatInputProps } from './type';
 
-import styles from '../style/chat-input.less';
+import styles from './style/chat-input.less';
 
 const className = `${getClassPrefix()}-chat__input`;
 @tag('t-chat-input')
