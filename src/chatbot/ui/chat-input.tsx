@@ -62,6 +62,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
     this.pValue.value = value || defaultValue;
     attachments && (this.pAttachments.value = attachments);
+    this.update();
   }
 
   get inputValue() {
