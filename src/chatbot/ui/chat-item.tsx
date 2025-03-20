@@ -7,6 +7,9 @@ import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
+import 'tdesign-icons-web-components/esm/components/thumb-up';
+import 'tdesign-icons-web-components/esm/components/thumb-down';
+import 'tdesign-icons-web-components/esm/components/share-1';
 
 import { isString } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
@@ -48,7 +51,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   };
 
   static defaultProps = {
-    variant: 'base',
+    variant: 'text',
     placement: 'left',
   };
 
@@ -104,9 +107,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (!isAIMessage(this.props.message)) {
       return;
     }
-    console.log('====refresh', this.props.message.content);
     this.injection.chatEngine.regenerateAIMessage();
-    this.fire('action', { action: 'refresh', index: 0 });
   };
 
   clickCopyHandler = () => {
@@ -132,7 +133,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   presetActions: TdChatItemAction[] = [
     {
-      name: 'refresh',
+      name: 'replay',
       render: (
         <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
           <t-icon-refresh />
@@ -149,6 +150,30 @@ export default class ChatItem extends Component<TdChatItemProps> {
       render: (
         <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
           <t-icon-copy />
+        </div>
+      ),
+    },
+    {
+      name: 'good',
+      render: (
+        <div class={`${className}__actions__preset__wrapper`}>
+          <t-icon-thumb-up />
+        </div>
+      ),
+    },
+    {
+      name: 'bad',
+      render: (
+        <div class={`${className}__actions__preset__wrapper`}>
+          <t-icon-thumb-down />
+        </div>
+      ),
+    },
+    {
+      name: 'share',
+      render: (
+        <div class={`${className}__actions__preset__wrapper`}>
+          <t-icon-share-1 />
         </div>
       ),
     },
