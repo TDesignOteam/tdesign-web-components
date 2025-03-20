@@ -140,9 +140,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
     {
       name: 'replay',
       render: (
-        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
-          <t-icon-refresh />
-        </div>
+        <t-tooltip content="重新生成">
+          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
+            <t-icon-refresh />
+          </div>
+        </t-tooltip>
       ),
       // 条件：最后一条AI消息才可以重新生成
       condition: (message) => {
@@ -153,33 +155,41 @@ export default class ChatItem extends Component<TdChatItemProps> {
     {
       name: 'copy',
       render: (
-        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
-          <t-icon-copy />
-        </div>
+        <t-tooltip content="复制">
+          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
+            <t-icon-copy />
+          </div>
+        </t-tooltip>
       ),
     },
     {
       name: 'good',
       render: (
-        <div class={`${className}__actions__preset__wrapper`}>
-          <t-icon-thumb-up />
-        </div>
+        <t-tooltip content="点赞">
+          <div class={`${className}__actions__preset__wrapper`}>
+            <t-icon-thumb-up />
+          </div>
+        </t-tooltip>
       ),
     },
     {
       name: 'bad',
       render: (
-        <div class={`${className}__actions__preset__wrapper`}>
-          <t-icon-thumb-down />
-        </div>
+        <t-tooltip content="点踩">
+          <div class={`${className}__actions__preset__wrapper`}>
+            <t-icon-thumb-down />
+          </div>
+        </t-tooltip>
       ),
     },
     {
       name: 'share',
       render: (
-        <div class={`${className}__actions__preset__wrapper`}>
-          <t-icon-share-1 />
-        </div>
+        <t-tooltip content="分享">
+          <div class={`${className}__actions__preset__wrapper`}>
+            <t-icon-share-1 />
+          </div>
+        </t-tooltip>
       ),
     },
   ];
