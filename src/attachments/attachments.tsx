@@ -1,9 +1,9 @@
 import '../filecard';
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/chevron-left';
+import 'tdesign-icons-web-components/esm/components/chevron-right';
 
 import { Component, createRef, tag } from 'omi';
 
-import type { Attachment } from '..';
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
@@ -16,17 +16,13 @@ export interface AttachmentsProps extends TdAttachmentsProps, StyledProps {}
 
 const className = `${getClassPrefix()}-attachment`;
 @tag('t-attachments')
-export default class Attachments extends Component {
+export default class Attachments extends Component<AttachmentsProps> {
   static css = [styles];
 
   static propTypes = {
     items: Array,
     overflow: String,
   };
-
-  items: Attachment[] = [];
-
-  overflow?: 'scrollX' | 'scrollY' | 'wrap';
 
   containerRef = createRef<HTMLElement>();
 
@@ -143,7 +139,7 @@ export default class Attachments extends Component {
   };
 
   render(props: AttachmentsProps) {
-    const { items, onRemove, innerClass } = props;
+    const { items, overflow, onRemove, innerClass } = props;
 
     const listCls = `${className}-list`;
     return (
@@ -151,7 +147,7 @@ export default class Attachments extends Component {
         <o-transition-group
           ref={(e) => (this.containerRef.current = e)}
           class={classname(listCls, {
-            [`${listCls}-overflow-${this.overflow}`]: this.overflow,
+            [`${listCls}-overflow-${overflow}`]: overflow,
           })}
         >
           {items.map((item, index) => (
@@ -169,14 +165,14 @@ export default class Attachments extends Component {
           ))}
         </o-transition-group>
 
-        {this.overflow === 'scrollX' && this.showPrevButton && (
+        {overflow === 'scrollX' && this.showPrevButton && (
           <div class={`${listCls}-prev-btn`} onClick={() => this.onScrollOffset(-1)}>
-            {convertToLightDomNode(<t-icon name="chevron-left-circle" size="24px" />)}
+            {convertToLightDomNode(<t-icon-chevron-left />)}
           </div>
         )}
-        {this.overflow === 'scrollX' && this.showNextButton && (
+        {overflow === 'scrollX' && this.showNextButton && (
           <div class={`${listCls}-next-btn`} onClick={() => this.onScrollOffset(1)}>
-            {convertToLightDomNode(<t-icon name="chevron-right-circle" size="24px" />)}
+            {convertToLightDomNode(<t-icon-chevron-right />)}
           </div>
         )}
       </div>

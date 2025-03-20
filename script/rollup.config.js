@@ -6,6 +6,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import url from '@rollup/plugin-url';
 import { resolve } from 'path';
+import atImport from 'postcss-import';
 import analyzer from 'rollup-plugin-analyzer';
 import esbuild from 'rollup-plugin-esbuild';
 import ignoreImport from 'rollup-plugin-ignore-import';
@@ -79,6 +80,7 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
         sourceMap: !isProd,
         inject: false,
         extensions: ['.sass', '.scss', '.css', '.less'],
+        plugins: [atImport()],
       }),
     );
   } else {
