@@ -152,6 +152,8 @@ export default class Chatbot extends Component<TdChatProps> {
           attachments={this.files.value}
           onAttachmentsSelect={this.onAttachmentsSelect}
           onAttachmentsRemove={this.onAttachmentsRemove}
+          onModelChange={(e) => console.log('Selected model:', e.detail)}
+          onDeepThink={() => console.log('Deep think clicked')}
         />
       </div>
     );

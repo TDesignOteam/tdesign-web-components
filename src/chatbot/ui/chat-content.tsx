@@ -57,7 +57,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
   };
 
   // TODO: md对象看看是不是直接provider传进来，否则每个content都要构造一个
-  md = null;
+  md: markdownIt | null = null;
 
   isMarkdownInit = signal(false);
 
@@ -145,7 +145,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
   parseMarkdown(markdown: string) {
     if (!this.isMarkdownInit.value || !markdown) return '<div class="waiting">...</div>';
-    return this.md.render(markdown);
+    return this.md?.render(markdown);
   }
 
   render({ role }: OmiProps<TdChatContentProps>) {

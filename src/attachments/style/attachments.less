@@ -48,15 +48,19 @@
 
     &-prev-btn,
     &-next-btn {
-      width: @attachment-arrow-width;
-      height: @attachment-arrow-width;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--t-attachment-scroll-btn-wh);
+      height: var(--t-attachment-scroll-btn-wh);
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
+      border: var(--t-attachment-scroll-btn-border);
+      font-size: 14px;
       z-index: 10;
-      background: rgba(255, 255, 255, 1);
+      background: var(--t-attachment-scroll-btn-bgc);
       border-radius: 50%;
-      border-color: #DCDCDC;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       transition: opacity 0.2s;
