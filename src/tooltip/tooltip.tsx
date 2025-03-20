@@ -102,6 +102,12 @@ export default class Tooltip extends Component<TooltipProps> {
       });
     }
 
+    const anchor = (
+      <span className={`${classPrefix}-tooltip-anchor`}>
+        <slot>{children}</slot>
+      </span>
+    );
+
     return createElement(
       't-popup',
       {
@@ -114,7 +120,7 @@ export default class Tooltip extends Component<TooltipProps> {
         ...restProps,
         ref: this.popupRef,
       },
-      children,
+      anchor,
     );
   }
 }

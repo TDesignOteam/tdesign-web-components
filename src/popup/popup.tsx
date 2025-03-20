@@ -355,7 +355,7 @@ export default class Popup extends Component<PopupProps> {
       <>
         {children.length > 1 ? (
           <span className="t-trigger" ref={this.triggerRef}>
-            {children}
+            <slot>{children}</slot>
           </span>
         ) : (
           cloneElement(children[0] as VNode, { ref: this.triggerRef })
@@ -384,7 +384,7 @@ export default class Popup extends Component<PopupProps> {
                 style={{ ...this.getOverlayStyle(props.overlayInnerStyle) }}
                 onScroll={this.handleScroll}
               >
-                {props.content}
+                <slot name="content">{props.content}</slot>
                 {props.showArrow ? (
                   <div class={`${componentName}__arrow`} style={{ ...this.getOverlayStyle(props.arrowStyle) }} />
                 ) : null}

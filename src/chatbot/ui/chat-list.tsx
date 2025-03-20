@@ -6,7 +6,7 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { TdChatItemProps, TdChatListProps } from '../type';
+import type { TdChatItemProps, TdChatListProps, TdChatListRoleConfig } from '../type';
 
 import styles from '../style/chat-list.less';
 
@@ -17,6 +17,7 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   static propTypes = {
     messages: Array,
+    roleConfig: Object,
     textLoading: Boolean,
     autoScroll: [Boolean, Number],
     scrollToBottom: Boolean,
@@ -27,6 +28,25 @@ export default class Chatlist extends Component<TdChatListProps> {
     autoScroll: true,
     scrollToBottom: true,
   };
+
+  private presetRoleConfig: TdChatListRoleConfig = {
+    user: {
+      variant: 'text',
+      placement: 'right',
+      avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    },
+    assistant: {
+      variant: 'text',
+      placement: 'left',
+      avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+      actions: (preset) => preset,
+    },
+    error: {},
+    system: {},
+    'model-change': {},
+  };
+
+  roleConfig = this.presetRoleConfig;
 
   listRef = createRef<HTMLDivElement>();
 
@@ -73,6 +93,13 @@ export default class Chatlist extends Component<TdChatListProps> {
     this.checkAndShowScrollButton();
   }
 
+  ready(): void {
+    this.roleConfig = {
+      ...this.presetRoleConfig,
+      ...this.props.roleConfig,
+    };
+  }
+
   updated() {
     // 下个循环触发滚动，否则滚动高度取不到最新
     setTimeout(() => {
@@ -97,25 +124,8 @@ export default class Chatlist extends Component<TdChatListProps> {
           {convertToLightDomNode(<t-icon-arrow-down />)}
         </div>
         {items.map((item) => {
-          // TODO: 看拿到哪里
           const { role, id } = item;
-          const roleProps =
-            role === 'user'
-              ? {
-                  variant: 'text',
-                  placement: 'right',
-                  avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-                }
-              : {
-                  variant: 'text',
-                  placements: 'left',
-                  avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-                  actions: (preset) => preset,
-                  onAction: (e) => {
-                    console.log('点击', e.detail);
-                  },
-                };
-          return <t-chat-item {...roleProps} message={item} key={id} />;
+          return <t-chat-item {...this.roleConfig?.[role]} message={item} key={id} />;
         })}
       </div>
     );

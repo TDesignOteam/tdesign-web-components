@@ -82,11 +82,15 @@ interface ChatProps {
 
 export interface TdChatProps extends ChatProps, StyledProps {}
 
+export type TdChatListRoleConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
+
 export interface TdChatListProps {
   /**
    * 数据
    */
   messages?: Array<TdChatItemProps['message']>;
+  /** role对应的item配置 */
+  roleConfig?: TdChatListRoleConfig;
   /**
    * 流式消息加载中
    */
@@ -136,7 +140,6 @@ export interface TdChatCodeProps {
 export interface TdChatInputAction {
   name: string;
   render: TNode;
-  disabled?: boolean;
 }
 
 export interface TdChatInputSend {
@@ -149,7 +152,7 @@ export interface TdChatInputProps {
   disabled?: boolean;
   value: string | number;
   defaultValue: string | number;
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
+  actions?: TdChatInputAction[] | ((preset: TdChatInputAction[]) => TdChatInputAction[]) | boolean;
   /** 附件项 */
   attachments?: Attachment[];
   /** 生成状态 */
