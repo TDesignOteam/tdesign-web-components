@@ -7,8 +7,10 @@ import type { TdTextareaProps } from '../textarea';
 import type { ChatStatus, MessageRole, ModelServiceState } from './core/type';
 import type { Message } from './core/type';
 
+export type TdChatItemActionName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
+
 export interface TdChatItemAction {
-  name: string;
+  name: TdChatItemActionName;
   render: TNode;
   // 满足条件才展示
   condition?: (message: Message) => boolean;
