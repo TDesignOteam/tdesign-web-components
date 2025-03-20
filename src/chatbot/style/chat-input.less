@@ -109,10 +109,9 @@
       gap: 8px;
 
       &-dropdown {
-        width: 112px;
-        display: inline-flex;
         background: white;
         border-radius: 999px;
+        border: solid 1px #DCDCDC;
       }
       
       &-deepthink {
@@ -240,5 +239,12 @@
         margin-right: @comp-margin-s;
       }
     }
+  }
+}
+
+
+.@{prefix}-portal-wrapper {
+  .@{prefix}-chat__input__model-dropdown {
+    border: none;
   }
 }

@@ -220,6 +220,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
                 <t-button
                   className={`${className}__model-dropdown-btn`}
                   variant="text"
+                  shape="round"
                   suffix={<t-icon name="chevron-down" size="16" />}
                 >
                   {this.modelValue.value || '默认模型'}
