@@ -1,11 +1,12 @@
 import './messageClose';
+import './messageIcon';
 
 import classNames from 'classnames';
 import Omi, { Component, createRef, signal, tag } from 'omi';
 
+import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps, TNode } from '../common';
 import { tdClassIsGenerator, tdMessageClassGenerator, tdMessagePrefix } from './const';
-import MessageIcon from './messageIcon';
 // 依赖组件引入
 import { TdMessageProps } from './type';
 
@@ -88,7 +89,7 @@ export default class MessageComponent extends Component<MessageComponentProps> {
         onMouseEnter={this.resetTimer}
         onMouseLeave={this.clearTimer}
       >
-        {icon === true ? <MessageIcon theme={theme} /> : icon}
+        {icon === true ? convertToLightDomNode(<t-message-icon theme={theme} />) : icon}
         {content ? content : children}
         <t-message-close
           className={tdMessageClassGenerator('close')}
