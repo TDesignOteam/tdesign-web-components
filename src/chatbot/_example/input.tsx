@@ -64,7 +64,7 @@ export default class ChatInput extends Component {
   };
 
   renderModel = () => (
-    <div className={`${className}__model`} slot="input-footer-left">
+    <div className={`${className}__model`} slot="footer-left">
       <t-dropdown
         options={[
           { value: 'hunyuan', content: 'HunYuan' },

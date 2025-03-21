@@ -5,8 +5,8 @@ import { Component, signal } from 'omi';
 import { ChatStatus } from '../../chatbot/core/type';
 import { TdChatInputSend } from '../type';
 
-export default class ChatInput extends Component {
-  inputValue = signal('传入内容');
+export default class BasicExample extends Component {
+  inputValue = signal('输入内容');
 
   status = signal<ChatStatus>('idle');
 
@@ -32,7 +32,6 @@ export default class ChatInput extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         status={this.status.value}
-        actions
         textareaProps={{
           autosize: { minRows: 2 },
         }}

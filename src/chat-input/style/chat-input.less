@@ -10,7 +10,7 @@
   // 附件区
   &__header {
     position: relative;
-    bottom: calc(-1 * var(--t-chat-input-radius));
+    bottom: calc(-1 * var(--t-chat-input-radius) - 1px);
     margin-top: calc(-1 * var(--t-chat-input-radius));
     padding-bottom: var(--t-chat-input-radius);
     max-height: 1000px;
@@ -18,7 +18,7 @@
     border-bottom: none;
     border-top-left-radius: var(--t-chat-input-radius);
     border-top-right-radius: var(--t-chat-input-radius);
-    transition: max-height 1s ease-in;
+    transition: all 1s ease-in;
 
     &:empty {
       max-height: 0;

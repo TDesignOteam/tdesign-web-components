@@ -180,6 +180,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
       <div className={`${className}`}>
         <input {...this.props.uploadProps} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />
         <div className={`${className}__header`}>
+          <slot name="header"></slot>
           {this.attachmentsValue?.length ? (
             <t-attachments
               className={`${className}__attachments`}
@@ -204,8 +205,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
             onCompositionEnd={this.handleCompositionEnd}
           ></t-textarea>
           <div className={`${className}__footer`}>
-            <div>
-              <slot name="input-footer-left"></slot>
+            <div className={`${className}__footer__left`}>
+              <slot name="footer-left"></slot>
             </div>
             <div className={`${className}__footer__right`}>
               <div className={`${className}__actions`}>{this.renderActions()}</div>
