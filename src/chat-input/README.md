@@ -14,13 +14,9 @@ spline: base
 
 {{ attachment }}
 
-### 输入提及
-
-{{ mention }}
-
 ### 自定义区域
 
-{{ customSlot }}
+{{ custom }}
 
 ## API
 

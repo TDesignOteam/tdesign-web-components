@@ -147,7 +147,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     );
   };
 
-  private presetActions: TdChatInputAction[] = [
+  presetActions: TdChatInputAction[] = [
     {
       name: 'uploadAttachment',
       render: this.renderUploadAttachment(),
@@ -209,7 +209,9 @@ export default class ChatInput extends Component<TdChatInputProps> {
               <slot name="footer-left"></slot>
             </div>
             <div className={`${className}__footer__right`}>
-              <div className={`${className}__actions`}>{this.renderActions()}</div>
+              <div className={`${className}__actions`}>
+                <slot name="actions">{this.renderActions()}</slot>
+              </div>
               {this.renderButton()}
             </div>
           </div>
