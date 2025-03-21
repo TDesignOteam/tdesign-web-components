@@ -49,6 +49,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     role: String,
     variant: String,
     chatContentProps: Object,
+    customRenderer: Object,
   };
 
   static defaultProps = {
@@ -293,10 +294,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderMessage() {
-    const { message, chatContentProps } = this.props;
+    const { message, chatContentProps, customRenderer } = this.props;
     const { role } = message;
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
+      const renderer = customRenderer?.[content?.type];
       // 用户和系统消息渲染
       if (role === 'user' || role === 'system') {
         if (!message?.content) return null;
@@ -313,20 +315,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
       // AI消息渲染
       if (role === 'assistant') {
+        // 自定义渲染
+        if (renderer) {
+          return renderer(content);
+        }
         if (isThinkingContent(content)) {
           // 思考
           return this.renderThinking(content);
-        }
-        if (isTextContent(content) || isMarkdownContent(content)) {
-          // 正文回答
-          return (
-            <t-chat-content
-              className={`${className}__detail`}
-              {...chatContentProps}
-              content={content.data}
-              role={role}
-            ></t-chat-content>
-          );
         }
         if (isImageContent(content)) {
           // 图片
@@ -337,11 +332,14 @@ export default class ChatItem extends Component<TdChatItemProps> {
             </div>
           );
         }
+        // 正文回答
         return (
-          // todo: 自定义消息Render
-          <div>
-            自定义消息：{content.type}，{JSON.stringify(content.data)}
-          </div>
+          <t-chat-content
+            className={`${className}__detail`}
+            {...chatContentProps}
+            content={content.data}
+            role={role}
+          ></t-chat-content>
         );
       }
 
@@ -350,16 +348,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime } = props;
+    const { message, variant, placement, name, datetime, role } = props;
     if (!message?.content) return;
     console.log('===item render', this.messageId);
 
     const baseClass = `${className}__inner`;
+    const roleClass = `${className}__role--${role}`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
     const placementClass = placement;
 
     return (
-      <div className={classname(baseClass, variantClass, placementClass)}>
+      <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
         {this.renderAvatar()}
         {this.renderMessageStatus}
         {!this.renderMessageStatus ? (

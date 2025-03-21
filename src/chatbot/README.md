@@ -18,6 +18,10 @@ spline: base
 
 {{ markdown }}
 
+### 自定义渲染
+
+{{ customRender }}
+
 ## API
 
 ### Chatbot Props
