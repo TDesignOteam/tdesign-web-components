@@ -27,6 +27,7 @@ import {
   isUserMessage,
   MessageStatus,
   ThinkingContent,
+  UserMessageContent,
 } from '../core/type';
 import type { TdChatItemAction, TdChatItemProps } from '../type';
 import { markdownToTextWithParser } from './md/utils';
@@ -163,36 +164,36 @@ export default class ChatItem extends Component<TdChatItemProps> {
         </t-tooltip>
       ),
     },
-    // {
-    //   name: 'good',
-    //   render: (
-    //     <t-tooltip content="点赞">
-    //       <div class={`${className}__actions__preset__wrapper`}>
-    //         <t-icon-thumb-up />
-    //       </div>
-    //     </t-tooltip>
-    //   ),
-    // },
-    // {
-    //   name: 'bad',
-    //   render: (
-    //     <t-tooltip content="点踩">
-    //       <div class={`${className}__actions__preset__wrapper`}>
-    //         <t-icon-thumb-down />
-    //       </div>
-    //     </t-tooltip>
-    //   ),
-    // },
-    // {
-    //   name: 'share',
-    //   render: (
-    //     <t-tooltip content="分享">
-    //       <div class={`${className}__actions__preset__wrapper`}>
-    //         <t-icon-share-1 />
-    //       </div>
-    //     </t-tooltip>
-    //   ),
-    // },
+    {
+      name: 'good',
+      render: (
+        <t-tooltip content="点赞">
+          <div class={`${className}__actions__preset__wrapper`}>
+            <t-icon-thumb-up />
+          </div>
+        </t-tooltip>
+      ),
+    },
+    {
+      name: 'bad',
+      render: (
+        <t-tooltip content="点踩">
+          <div class={`${className}__actions__preset__wrapper`}>
+            <t-icon-thumb-down />
+          </div>
+        </t-tooltip>
+      ),
+    },
+    {
+      name: 'share',
+      render: (
+        <t-tooltip content="分享">
+          <div class={`${className}__actions__preset__wrapper`}>
+            <t-icon-share-1 />
+          </div>
+        </t-tooltip>
+      ),
+    },
   ];
 
   renderActions() {
@@ -269,7 +270,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private renderAttachments() {
     if (!isUserMessage(this.props.message)) return null;
-    const findAttachment = this.props.message.content.find(
+    const findAttachment = (this.props.message.content as UserMessageContent[]).find(
       ({ type, data = [] }) => type === 'attachment' && data.length,
     );
     if (!findAttachment) return;
