@@ -58,6 +58,8 @@ interface ChatProps {
    * 倒序渲染
    */
   reverse?: boolean;
+  /** role对应的item配置 */
+  rolesConfig?: TdChatRolesConfig;
   /**
    * 数据
    */
@@ -82,15 +84,13 @@ interface ChatProps {
 
 export interface TdChatProps extends ChatProps, StyledProps {}
 
-export type TdChatListRoleConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
+export type TdChatRolesConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
 
 export interface TdChatListProps {
   /**
    * 数据
    */
   messages?: Array<TdChatItemProps['message']>;
-  /** role对应的item配置 */
-  rolesConfig?: TdChatListRoleConfig;
   /**
    * 流式消息加载中
    */

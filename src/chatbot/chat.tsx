@@ -9,7 +9,7 @@ import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
 import ChatService from './core';
-import type { TdChatListProps, TdChatProps } from './type';
+import type { TdChatListProps, TdChatProps, TdChatRolesConfig } from './type';
 
 import styles from './style/chat.less';
 
@@ -24,6 +24,7 @@ export default class Chatbot extends Component<TdChatProps> {
     items: Array,
     reverse: Boolean,
     modelConfig: Object,
+    rolesConfig: Object,
     attachmentProps: Object,
   };
 
@@ -59,7 +60,11 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { items } = this.props;
+    const { items, rolesConfig } = this.props;
+    this.rolesConfig = {
+      ...this.presetRoleConfig,
+      ...rolesConfig,
+    };
     const initialMessages = items.map(({ message }) => message);
     this.chatEngine = new ChatService(this.props.modelConfig, initialMessages);
     const { messageStore } = this.chatEngine;
@@ -87,6 +92,25 @@ export default class Chatbot extends Component<TdChatProps> {
       // ['messageIds'],
     );
   }
+
+  private presetRoleConfig: TdChatRolesConfig = {
+    user: {
+      variant: 'text',
+      placement: 'right',
+      avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    },
+    assistant: {
+      variant: 'text',
+      placement: 'left',
+      avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+      actions: (preset) => preset,
+    },
+    error: {},
+    system: {},
+    'model-change': {},
+  };
+
+  rolesConfig = this.presetRoleConfig;
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
@@ -131,12 +155,24 @@ export default class Chatbot extends Component<TdChatProps> {
     }
   };
 
+  private renderItems = () => {
+    const items = this.props.reverse ? [...this.messages].reverse() : this.messages;
+    return items.map((item) => {
+      const { role, id } = item;
+      return <t-chat-item {...this.rolesConfig?.[role]} message={item} key={id} />;
+    });
+  };
+
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
-        {this.messages && <t-chat-list ref={this.listRef} messages={this.messages} reverse={reverse} />}
+        {this.messages && (
+          <t-chat-list ref={this.listRef} messages={this.messages} reverse={reverse}>
+            {this.renderItems()}
+          </t-chat-list>
+        )}
         {clearHistory && (
           <div className={`${className}-clear`}>
             <t-button type="text" onClick={this.handleClear}>

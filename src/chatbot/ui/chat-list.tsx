@@ -6,7 +6,7 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { TdChatItemProps, TdChatListProps, TdChatListRoleConfig } from '../type';
+import type { TdChatListProps } from '../type';
 
 import styles from '../style/chat-list.less';
 
@@ -17,7 +17,6 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   static propTypes = {
     messages: Array,
-    rolesConfig: Object,
     textLoading: Boolean,
     autoScroll: [Boolean, Number],
     scrollToBottom: Boolean,
@@ -28,25 +27,6 @@ export default class Chatlist extends Component<TdChatListProps> {
     autoScroll: true,
     scrollToBottom: true,
   };
-
-  private presetRoleConfig: TdChatListRoleConfig = {
-    user: {
-      variant: 'text',
-      placement: 'right',
-      avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    },
-    assistant: {
-      variant: 'text',
-      placement: 'left',
-      avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-      actions: (preset) => preset,
-    },
-    error: {},
-    system: {},
-    'model-change': {},
-  };
-
-  rolesConfig = this.presetRoleConfig;
 
   listRef = createRef<HTMLDivElement>();
 
@@ -93,13 +73,6 @@ export default class Chatlist extends Component<TdChatListProps> {
     this.checkAndShowScrollButton();
   }
 
-  ready(): void {
-    this.rolesConfig = {
-      ...this.presetRoleConfig,
-      ...this.props.rolesConfig,
-    };
-  }
-
   updated() {
     // 下个循环触发滚动，否则滚动高度取不到最新
     setTimeout(() => {
@@ -108,8 +81,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     }, 0);
   }
 
-  render(props: { messages: TdChatItemProps['message'][]; reverse?: boolean }) {
-    const items = props.reverse ? [...props.messages].reverse() : props.messages;
+  render() {
     return (
       <div ref={this.listRef} className={className} onScroll={this.handleScroll}>
         <div
@@ -123,10 +95,7 @@ export default class Chatlist extends Component<TdChatListProps> {
         >
           {convertToLightDomNode(<t-icon-arrow-down />)}
         </div>
-        {items.map((item) => {
-          const { role, id } = item;
-          return <t-chat-item {...this.rolesConfig?.[role]} message={item} key={id} />;
-        })}
+        <slot></slot>
       </div>
     );
   }
