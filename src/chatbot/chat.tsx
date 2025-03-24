@@ -153,7 +153,11 @@ export default class Chatbot extends Component<TdChatProps> {
           attachments={this.files.value}
           onAttachmentsSelect={this.onAttachmentsSelect}
           onAttachmentsRemove={this.onAttachmentsRemove}
-        />
+        >
+          <slot name="input-header" slot="header"></slot>
+          <slot name="input-footer-left" slot="footer-left"></slot>
+          <slot name="input-actions" slot="actions"></slot>
+        </t-chat-input>
       </div>
     );
   }
