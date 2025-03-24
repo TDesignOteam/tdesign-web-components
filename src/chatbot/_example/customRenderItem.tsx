@@ -7,7 +7,7 @@ import { TdChatItemProps } from 'tdesign-web-components/chatbot';
 export default class CustomRenderExample extends Component {
   static css = [
     `
-      .item::part(weather) {
+      .weather {
         margin-top: 8px;
         padding: 8px 16px;
         border-radius: 8px;
@@ -21,18 +21,18 @@ export default class CustomRenderExample extends Component {
     variant: 'text',
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    customRenderer: {
-      weather: (content) => (
-        <div part="weather">
-          今天{content.data.city}天气{content.data.conditions}
-        </div>
-      ),
+    // 自定义渲染-注册插槽规则
+    customRenderConfig: {
+      weather: (content) => ({
+        slotName: `${content.type}-${content.id}`,
+      }),
     },
     message: {
       id: '123',
       content: [
         {
           type: 'weather',
+          id: 'w1',
           data: {
             temp: 1,
             city: '北京',
@@ -40,7 +40,12 @@ export default class CustomRenderExample extends Component {
           },
         },
         {
+          type: 'text',
+          data: '我是文本',
+        },
+        {
           type: 'weather',
+          id: 'w2',
           data: {
             temp: 1,
             city: '上海',
@@ -54,6 +59,21 @@ export default class CustomRenderExample extends Component {
   };
 
   render() {
-    return <t-chat-item className="item" {...this.props} />;
+    return (
+      <t-chat-item {...this.props}>
+        {/* 自定义渲染-植入插槽 */}
+        {this.props.message.content.map((item) => {
+          switch (item.type) {
+            case 'weather':
+              return (
+                <div id={item.data.city} slot={`${item.type}-${item.id}`} className="weather">
+                  今天{item.data.city}天气{item.data.conditions}
+                </div>
+              );
+          }
+          return null;
+        })}
+      </t-chat-item>
+    );
   }
 }

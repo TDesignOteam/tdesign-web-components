@@ -50,7 +50,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     role: String,
     variant: String,
     chatContentProps: Object,
-    customRenderer: Object,
+    customRenderConfig: Object,
   };
 
   static defaultProps = {
@@ -295,11 +295,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderMessage() {
-    const { message, chatContentProps, customRenderer } = this.props;
+    const { message, chatContentProps, customRenderConfig } = this.props;
     const { role } = message;
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
-      const renderer = customRenderer?.[content?.type];
+      const renderer = customRenderConfig?.[content?.type];
       // 用户和系统消息渲染
       if (role === 'user' || role === 'system') {
         if (!message?.content) return null;
@@ -318,7 +318,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
       if (role === 'assistant') {
         // 自定义渲染
         if (renderer) {
-          return renderer(content);
+          const config = renderer(content);
+          return <slot name={config?.slotName || `${content.type}-${index}`}></slot>;
         }
         if (isThinkingContent(content)) {
           // 思考

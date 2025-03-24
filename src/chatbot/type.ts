@@ -14,6 +14,11 @@ export interface TdChatItemAction {
   condition?: (message: Message) => boolean;
 }
 
+export interface TdChatRenderConfig {
+  /** slot命名规则 */
+  slotName?: string;
+}
+
 export interface TdChatItemProps {
   /**
    * 操作
@@ -45,8 +50,8 @@ export interface TdChatItemProps {
   message: Message;
   /** 透传chat-content参数 */
   chatContentProps?: Omit<TdChatContentProps, 'content' | 'role'>;
-  /** 自定义消息体渲染器 */
-  customRenderer?: Record<string, (props: any) => TNode>;
+  /** 自定义消息体渲染配置 */
+  customRenderConfig?: Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
 }
 
 interface ChatProps {

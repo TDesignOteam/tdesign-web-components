@@ -18,9 +18,9 @@ spline: base
 
 {{ markdown }}
 
-### 自定义渲染
+### 自定义item渲染
 
-{{ customRender }}
+{{ customRenderItem }}
 
 ## API
 
