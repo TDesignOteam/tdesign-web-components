@@ -28,16 +28,18 @@ export default class Attachments extends Component<AttachmentsProps> {
 
   installed() {
     // 添加延迟确保DOM完全渲染
-    setTimeout(() => {
-      this.updateButtonVisibility();
-      // 添加尺寸变化监听
-      const resizeObserver = new ResizeObserver(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         this.updateButtonVisibility();
+        // 添加尺寸变化监听
+        const resizeObserver = new ResizeObserver(() => {
+          this.updateButtonVisibility();
+        });
+        if (this.containerRef.current) {
+          resizeObserver.observe(this.containerRef.current);
+        }
       });
-      if (this.containerRef.current) {
-        resizeObserver.observe(this.containerRef.current);
-      }
-    }, 200);
+    });
 
     // 监听手动滚动事件
     this.containerRef.current?.addEventListener('scroll', () => {

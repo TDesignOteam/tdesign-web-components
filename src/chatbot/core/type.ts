@@ -1,7 +1,16 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
 export type ChatStatus = 'idle' | MessageStatus;
-export type ContentType = 'text' | 'markdown' | 'search' | 'attachment' | 'thinking' | 'image' | 'audio' | 'video';
+export type ContentType =
+  | 'text'
+  | 'markdown'
+  | 'search'
+  | 'attachment'
+  | 'thinking'
+  | 'image'
+  | 'audio'
+  | 'video'
+  | 'suggestion';
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 
 // 基础类型
@@ -35,8 +44,10 @@ export type ReferenceItem = {
   detail?: string;
   source?: string;
   timestamp?: string;
+  onClick?: (content?: object) => void;
 };
 export type SearchContent = BaseContent<'search', ReferenceItem[]>;
+export type SuggestionContent = BaseContent<'suggestion', ReferenceItem[]>;
 
 // 附件消息
 export type AttachmentItem = {
@@ -81,6 +92,7 @@ type AIContentTypeMap = {
   thinking: ThinkingContent;
   image: ImageContent;
   search: SearchContent;
+  suggestion: SuggestionContent;
 } & AIContentTypeOverrides;
 
 // 自动生成联合类型
