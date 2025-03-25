@@ -95,14 +95,6 @@ export interface TdChatProps extends ChatProps, StyledProps {}
 export type TdChatRolesConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
 
 export interface TdChatListProps {
-  /**
-   * 数据
-   */
-  messages?: Array<TdChatItemProps['message']>;
-  /**
-   * 流式消息加载中
-   */
-  textLoading?: boolean;
   /** 自动滚动底部 */
   autoScroll?: boolean;
   /** 滚动底部按钮 */
