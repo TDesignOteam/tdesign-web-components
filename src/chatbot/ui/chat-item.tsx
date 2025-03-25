@@ -10,6 +10,7 @@ import 'tdesign-icons-web-components/esm/components/copy';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
+import 'tdesign-icons-web-components/esm/components/arrow-right';
 
 import { isString } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
@@ -22,10 +23,14 @@ import {
   isAIMessage,
   isImageContent,
   isMarkdownContent,
+  isSearchContent,
+  isSuggestionContent,
   isTextContent,
   isThinkingContent,
   isUserMessage,
   MessageStatus,
+  SearchContent,
+  SuggestionContent,
   ThinkingContent,
   UserMessageContent,
 } from '../core/type';
@@ -268,6 +273,42 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  private renderSearch(content: SearchContent) {
+    const { data } = content;
+    const imgs = (
+      <div className={`${className}__search-icons`}>
+        {data.map((img) =>
+          img?.icon ? <img className={`${className}__search-icon`} alt={img.title} src={img.icon} /> : null,
+        )}
+      </div>
+    );
+    return (
+      <div className={`${className}__search`} onClick={() => this.handleAction('search', 0, {})}>
+        {imgs}
+        {data.length}个网页
+      </div>
+    );
+  }
+
+  private renderSuggestion(content: SuggestionContent) {
+    const { data } = content;
+    return (
+      <div className={`${className}__suggestion`}>
+        {data.map((suggestion, idx) =>
+          suggestion?.title ? (
+            <div
+              className={`${className}__suggestion-item`}
+              onClick={() => this.handleAction('suggestion', idx, suggestion)}
+            >
+              {suggestion.title}
+              {convertToLightDomNode(<t-icon-arrow-right class={`${className}__suggestion-arrow`} />)}
+            </div>
+          ) : null,
+        )}
+      </div>
+    );
+  }
+
   private renderAttachments() {
     if (!isUserMessage(this.props.message)) return null;
     const findAttachment = (this.props.message.content as UserMessageContent[]).find(
@@ -320,6 +361,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
         if (renderer) {
           const config = renderer(content);
           return <slot name={config?.slotName || `${content.type}-${index}`}></slot>;
+        }
+        if (isSearchContent(content)) {
+          return this.renderSearch(content);
+        }
+        if (isSuggestionContent(content)) {
+          return this.renderSuggestion(content);
         }
         if (isThinkingContent(content)) {
           // 思考
@@ -378,7 +425,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  private handleAction = (action: string, index: number) => {
-    this.fire('action', { action, index });
+  private handleAction = (action: string, index: number, data?: any) => {
+    this.fire('action', { action, index, data });
   };
 }

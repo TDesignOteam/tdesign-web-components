@@ -65,8 +65,44 @@ const mockData: TdChatItemProps[] = [
           },
         },
         {
+          type: 'search',
+          status: 'complete',
+          data: [
+            {
+              title: '百度',
+              icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
+            },
+            {
+              title: '1点',
+              icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
+            },
+            {
+              title: '搜狐',
+              icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
+            },
+          ],
+        },
+        {
           type: 'text',
           data: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
+        },
+        {
+          type: 'suggestion',
+          status: 'complete',
+          data: [
+            {
+              title: '《六姊妹》中有哪些观众喜欢的剧情点？',
+              url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
+            },
+            {
+              title: '两部剧在演员表现上有什么不同？',
+              url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
+            },
+            {
+              title: '《六姊妹》有哪些负面的评价？',
+              url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
+            },
+          ],
         },
       ],
     },

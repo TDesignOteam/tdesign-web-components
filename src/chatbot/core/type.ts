@@ -40,11 +40,11 @@ export type ImageContent = BaseContent<
 // 公共引用结构
 export type ReferenceItem = {
   title: string;
+  icon?: string;
   url?: string;
   detail?: string;
   source?: string;
   timestamp?: string;
-  onClick?: (content?: object) => void;
 };
 export type SearchContent = BaseContent<'search', ReferenceItem[]>;
 export type SuggestionContent = BaseContent<'suggestion', ReferenceItem[]>;
@@ -185,6 +185,10 @@ export function isAIMessage(message: Message) {
   return message.role === 'assistant';
 }
 
+export function isSearchgContent(content: AIMessageContent): content is SearchContent {
+  return content.type === 'search';
+}
+
 export function isThinkingContent(content: AIMessageContent): content is ThinkingContent {
   return content.type === 'thinking';
 }
@@ -203,4 +207,8 @@ export function isImageContent(content: AIMessageContent): content is ImageConte
 
 export function isSearchContent(content: AIMessageContent): content is SearchContent {
   return content.type === 'search';
+}
+
+export function isSuggestionContent(content: AIMessageContent): content is SuggestionContent {
+  return content.type === 'suggestion';
 }

@@ -285,4 +285,72 @@
     display: flex;
     gap: var(--t-chat-item-attachments-margin-top);
   }
+  &__search {
+    cursor: pointer;
+    font-size: var(--t-chat-search-font-size);
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    height: var(--t-chat-item-search-height);
+    border: solid 1px #E6E6E6;
+    border-radius: var(--t-chat-item-search-radius);
+    padding: var(--t-chat-item-search-padding);
+
+    &-icons {
+      display: flex;
+      margin-right: var(--t-chat-item-search-icons-margin-right);
+      overflow: visible;  // 允许子元素溢出
+    }
+
+    &-icon {
+      width: var(--t-chat-item-search-icon-width);
+      height: var(--t-chat-item-search-icon-width);
+      border-radius: var(--t-chat-item-search-icon-radius);
+      position: relative;
+      z-index: 1;
+      margin-left: var(--t-chat-item-search-icon-margin-left); 
+
+      &:first-child {
+        margin-left: 0;
+      }
+      
+      // 叠加时显示右侧白色圆弧
+      &:not(:first-child)::before {
+        content: '';
+        position: absolute;
+        left: var(--t-chat-item-search-icon-before-left);
+        top: 0;
+        width: var(--t-chat-item-search-icon-before-width);
+        height: var(--t-chat-item-search-icon-before-height);
+        background: #fff;
+        border-radius: var(--t-chat-item-search-icon-before-radius);
+      }
+    }
+  }
+  &__suggestion {
+    display: flex;
+    flex-direction: column;
+    gap: var(--t-chat-item-suggestion-gap);
+    margin: var(--t-chat-item-suggestion-margin);
+    &-item {
+      display: flex;
+      font-size: var(--t-chat-item-suggestion-font-size);
+      width: fit-content;
+      height: var(--t-chat-item-suggestion-height);
+      align-items: center;
+      padding-right: var(--t-chat-item-suggestion-padding);
+      padding-left: var(--t-chat-item-suggestion-padding);
+      border-radius: var(--t-chat-item-suggestion-radius);
+      border: var(--t-chat-item-suggestion-border);
+      background-color: var(--t-chat-item-suggestion-background);
+      color: var(--t-chat-item-suggestion-color);
+      cursor: pointer;
+    }
+
+    &-arrow {
+      color: var(--t-chat-item-suggestion-arrow-color);
+      margin-left: var(--t-chat-item-suggestion-arrow-margin);
+    }
+
+  }
 }
