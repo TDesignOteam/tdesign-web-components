@@ -174,16 +174,12 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   };
 
-  render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
+  render({ layout, clearHistory }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     // console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
-        {this.messages && (
-          <t-chat-list ref={this.listRef} messages={this.messages} reverse={reverse}>
-            {this.renderItems()}
-          </t-chat-list>
-        )}
+        {this.messages && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
         {clearHistory && (
           <div className={`${className}-clear`}>
             <t-button type="text" onClick={this.handleClear}>

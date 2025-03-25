@@ -1,7 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/arrow-down';
 import './chat-item';
 
-import { debounce } from 'lodash-es';
+import { debounce, throttle } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
@@ -16,45 +16,68 @@ export default class Chatlist extends Component<TdChatListProps> {
   static css = [styles];
 
   static propTypes = {
-    messages: Array,
-    textLoading: Boolean,
-    autoScroll: [Boolean, Number],
+    autoScroll: Boolean,
     scrollToBottom: Boolean,
   };
 
   static defaultProps = {
-    messages: [],
     autoScroll: true,
     scrollToBottom: true,
   };
 
-  listRef = createRef<HTMLDivElement>();
+  private listRef = createRef<HTMLDivElement>();
+
+  private scrollTopTmp = 0;
+
+  private scrollHeightTmp = 0;
+
+  private observer: MutationObserver = null;
+
+  /** 主动滚动产生的阻止自动滚动标记 */
+  private preventAutoScroll = false;
+
+  /** 当前是否自动滚动 */
+  private isAutoScrollEnabled = true;
 
   scrollButtonVisible = signal(false);
 
-  /** 检测并滚动到底部 */
-  checkAndScrollToBottom = () => {
-    const { messages, autoScroll } = this.props;
-    if (typeof autoScroll === 'boolean' && !autoScroll) {
+  /** 触发自动滚动 */
+  private handleAutoScroll = throttle(() => {
+    const { autoScroll } = this.props;
+    if (!autoScroll || !this.isAutoScrollEnabled) {
       return;
     }
-    const lastData = messages.at(-1);
-    // 消息生成中 / 发送消息时自动滚到底部
-    if (lastData?.status === 'pending' || lastData?.status === 'streaming' || lastData?.role !== 'assistant') {
-      // 传入阈值时，滚动高度小于阈值时才自动滚动
-      if (typeof autoScroll === 'number') {
-        const list = this.listRef.current;
-        if (list.scrollHeight - list.clientHeight - list.scrollTop <= autoScroll) {
-          this.scrollToBottom();
+    this.scrollToBottom();
+  }, 50);
+
+  /** 检测自动滚动是否触发 */
+  private checkAutoScroll = throttle(() => {
+    const { scrollTop, scrollHeight, clientHeight } = this.listRef.current;
+    const upScroll = scrollTop <= this.scrollTopTmp ? true : false;
+
+    // 用户主动上滚，取消自动滚动，标记为手动阻止
+    if (upScroll) {
+      this.isAutoScrollEnabled = false;
+      this.preventAutoScroll = true;
+    } else {
+      const threshold = 50;
+      const isNearBottom = scrollHeight - (scrollTop + clientHeight) <= threshold;
+      // 如果手动阻止，必须滚动至底部阈值内才可恢复自动滚动
+      if (this.preventAutoScroll) {
+        if (isNearBottom) {
+          this.isAutoScrollEnabled = true;
+          this.preventAutoScroll = false;
         }
+        // 未手动阻止，可触发自动滚动
       } else {
-        this.scrollToBottom();
+        this.isAutoScrollEnabled = true;
       }
     }
-  };
+    this.scrollTopTmp = scrollTop;
+  }, 100);
 
   /** 检测并显示滚到底部按钮 */
-  checkAndShowScrollButton = debounce(() => {
+  private checkAndShowScrollButton = debounce(() => {
     const { scrollToBottom } = this.props;
     if (!scrollToBottom) {
       this.scrollButtonVisible.value = false;
@@ -67,18 +90,34 @@ export default class Chatlist extends Component<TdChatListProps> {
     } else {
       this.scrollButtonVisible.value = false;
     }
-  }, 100);
+  }, 70);
 
-  installed(): void {
+  private handleScroll = (e) => {
+    this.checkAutoScroll();
     this.checkAndShowScrollButton();
+    this.fire('scroll', e);
+  };
+
+  ready(): void {
+    const list = this.listRef.current;
+    this.observer = new MutationObserver(() => {
+      // 高度变化，触发滚动校验
+      if (list?.scrollHeight !== this.scrollHeightTmp) {
+        this.handleAutoScroll();
+        this.checkAndShowScrollButton();
+      }
+      this.scrollHeightTmp = list?.scrollHeight;
+    });
+    if (list) {
+      this.observer.observe(this.listRef.current, {
+        subtree: true,
+        childList: true,
+      });
+    }
   }
 
-  updated() {
-    // 下个循环触发滚动，否则滚动高度取不到最新
-    setTimeout(() => {
-      this.checkAndScrollToBottom();
-      this.checkAndShowScrollButton();
-    }, 0);
+  uninstall(): void {
+    this.observer.disconnect();
   }
 
   render() {
@@ -99,11 +138,6 @@ export default class Chatlist extends Component<TdChatListProps> {
       </div>
     );
   }
-
-  private handleScroll = (e: Event) => {
-    this.checkAndShowScrollButton();
-    this.fire('scroll', e);
-  };
 
   // 暴露给父组件的方法
   scrollToBottom(options: { behavior?: 'auto' | 'smooth' } = {}) {
