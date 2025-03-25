@@ -40,7 +40,7 @@ export type ImageContent = BaseContent<
 // 公共引用结构
 export type ReferenceItem = {
   title: string;
-  icon?: string;
+  type?: string;
   url?: string;
   detail?: string;
   source?: string;

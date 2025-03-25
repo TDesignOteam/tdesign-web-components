@@ -13,7 +13,7 @@ import 'tdesign-icons-web-components/esm/components/share-1';
 import 'tdesign-icons-web-components/esm/components/arrow-right';
 
 import { isString } from 'lodash-es';
-import { Component, OmiProps, tag } from 'omi';
+import { Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
@@ -66,6 +66,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private messageId!: string;
 
   inject = ['chatEngine'];
+
+  searchExpand = signal(false);
 
   ready() {
     this.messageId = this.props.message.id!;
@@ -282,10 +284,45 @@ export default class ChatItem extends Component<TdChatItemProps> {
         )}
       </div>
     );
-    return (
-      <div className={`${className}__search`} onClick={() => this.handleAction('search', 0, {})}>
+    const header = (
+      <div className={`${className}__search__header`}>
         {imgs}
         {data.length}个网页
+      </div>
+    );
+    return (
+      <div
+        className={`${className}__search__wrapper`}
+        onClick={() => {
+          this.searchExpand.value = !this.searchExpand.value;
+          this.handleAction('searchExpand', 0, {});
+        }}
+      >
+        {this.searchExpand.value ? (
+          <t-collapse
+            className={`${className}__search`}
+            expandIconPlacement="right"
+            value={[1]}
+            onChange={() => {
+              this.searchExpand.value = !this.searchExpand.value;
+            }}
+          >
+            <t-collapse-panel className={`${className}__search__content`}>
+              <div className={`${className}__search-links`}>
+                {data.map((content, idx) => (
+                  <a target="_blank" href={content.url} className={`${className}__search-link`}>
+                    {idx + 1}. {content.title}
+                  </a>
+                ))}
+              </div>
+              <div slot="header" className={`${className}__search__header__content`}>
+                引用{data.length}个网页
+              </div>
+            </t-collapse-panel>
+          </t-collapse>
+        ) : (
+          header
+        )}
       </div>
     );
   }
