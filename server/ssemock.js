@@ -55,6 +55,13 @@ app.post('/sse/normal', (req, res) => {
           type: 'image',
           content: chunk.content,
         })}\n\n`;
+
+      case 'weather':
+        return `event: custom\ndata: ${JSON.stringify({
+          type: 'weather',
+          id: chunk.id,
+          content: chunk.content,
+        })}\n\n`;
     }
   });
 

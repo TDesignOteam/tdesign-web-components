@@ -6,7 +6,6 @@ import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';
 import { TdAttachmentsProps } from './type';
 
@@ -28,16 +27,18 @@ export default class Attachments extends Component<AttachmentsProps> {
 
   installed() {
     // 添加延迟确保DOM完全渲染
-    setTimeout(() => {
-      this.updateButtonVisibility();
-      // 添加尺寸变化监听
-      const resizeObserver = new ResizeObserver(() => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
         this.updateButtonVisibility();
+        // 添加尺寸变化监听
+        const resizeObserver = new ResizeObserver(() => {
+          this.updateButtonVisibility();
+        });
+        if (this.containerRef.current) {
+          resizeObserver.observe(this.containerRef.current);
+        }
       });
-      if (this.containerRef.current) {
-        resizeObserver.observe(this.containerRef.current);
-      }
-    }, 200);
+    });
 
     // 监听手动滚动事件
     this.containerRef.current?.addEventListener('scroll', () => {
@@ -167,12 +168,12 @@ export default class Attachments extends Component<AttachmentsProps> {
 
         {overflow === 'scrollX' && this.showPrevButton && (
           <div class={`${listCls}-prev-btn`} onClick={() => this.onScrollOffset(-1)}>
-            {convertToLightDomNode(<t-icon-chevron-left />)}
+            <t-icon name="chevron-left" size="16px" />
           </div>
         )}
         {overflow === 'scrollX' && this.showNextButton && (
           <div class={`${listCls}-next-btn`} onClick={() => this.onScrollOffset(1)}>
-            {convertToLightDomNode(<t-icon-chevron-right />)}
+            <t-icon name="chevron-right" size="16px" />
           </div>
         )}
       </div>

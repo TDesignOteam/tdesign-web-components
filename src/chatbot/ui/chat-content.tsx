@@ -143,57 +143,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
     this.md = md;
     this.isMarkdownInit.value = true;
-    const newHTML = this.getTextInfo() || '';
-    this.processContentUpdate(newHTML);
   };
-
-  // 生命周期 - 组件更新时处理内容变化
-  updated() {
-    const newHTML = this.getTextInfo() || '';
-    this.processContentUpdate(newHTML);
-  }
-
-  // 处理内容更新（流式或全量）
-  private processContentUpdate(newHTML: string) {
-    if (!this.markdownContainer.current) return;
-
-    // 避免重复渲染
-    if (this.lastHTML.length === newHTML.length) return;
-    // 初次渲染或内容重置时全量更新
-    if (!this.lastHTML || !newHTML.startsWith(this.lastHTML)) {
-      this.lastHTML = newHTML;
-      this.markdownContainer.current.innerHTML = newHTML;
-      return;
-    }
-
-    // 提取增量内容
-    const diff = this.findAppendedContent(this.lastHTML, newHTML);
-    if (diff) {
-      this.appendPartialContent(diff);
-      this.lastHTML = newHTML;
-    }
-  }
-
-  private findAppendedContent(oldHTML: string, newHTML: string): string | null {
-    return newHTML.startsWith(oldHTML) ? newHTML.slice(oldHTML.length) : null;
-  }
-
-  // 增量插入内容
-  private appendPartialContent(partialHTML: string) {
-    if (this.appendLock || !this.markdownContainer.current) return;
-
-    this.appendLock = true;
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = partialHTML;
-
-    const fragment = document.createDocumentFragment();
-    Array.from(tempDiv.childNodes).forEach((node) => {
-      fragment.appendChild(node.cloneNode(true));
-    });
-
-    this.markdownContainer.current.appendChild(fragment);
-    this.appendLock = false;
-  }
 
   getTextInfo() {
     const { content } = this.props;
@@ -208,10 +158,10 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
   render({ role }: OmiProps<TdChatContentProps>) {
     const roleClass = `${baseClass}--${role}`;
-
+    const textContent = this.getTextInfo() || '';
     return (
       <div className={`${baseClass}`}>
-        <div className={`${baseClass}__markdown ${roleClass}`} ref={this.markdownContainer}></div>
+        <div className={`${baseClass}__markdown ${roleClass}`} unsafeHTML={{ html: textContent }}></div>
       </div>
     );
   }

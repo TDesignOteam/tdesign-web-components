@@ -10,9 +10,10 @@ import 'tdesign-icons-web-components/esm/components/copy';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
+import 'tdesign-icons-web-components/esm/components/arrow-right';
 
 import { isString } from 'lodash-es';
-import { Component, OmiProps, tag } from 'omi';
+import { Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
@@ -22,10 +23,14 @@ import {
   isAIMessage,
   isImageContent,
   isMarkdownContent,
+  isSearchContent,
+  isSuggestionContent,
   isTextContent,
   isThinkingContent,
   isUserMessage,
   MessageStatus,
+  SearchContent,
+  SuggestionContent,
   ThinkingContent,
   UserMessageContent,
 } from '../core/type';
@@ -63,6 +68,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private messageId!: string;
 
   inject = ['chatEngine'];
+
+  searchExpand = signal(false);
 
   ready() {
     this.messageId = this.props.message.id!;
@@ -270,6 +277,77 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  private renderSearch(content: SearchContent) {
+    const { data } = content;
+    const imgs = (
+      <div className={`${className}__search-icons`}>
+        {data.map((img) =>
+          img?.icon ? <img className={`${className}__search-icon`} alt={img.title} src={img.icon} /> : null,
+        )}
+      </div>
+    );
+    const header = (
+      <div className={`${className}__search__header`}>
+        {imgs}
+        {data.length}个网页
+      </div>
+    );
+    return (
+      <div
+        className={`${className}__search__wrapper`}
+        onClick={() => {
+          this.searchExpand.value = !this.searchExpand.value;
+          this.handleAction('searchExpand', 0, {});
+        }}
+      >
+        {this.searchExpand.value ? (
+          <t-collapse
+            className={`${className}__search`}
+            expandIconPlacement="right"
+            value={[1]}
+            onChange={() => {
+              this.searchExpand.value = !this.searchExpand.value;
+            }}
+          >
+            <t-collapse-panel className={`${className}__search__content`}>
+              <div className={`${className}__search-links`}>
+                {data.map((content, idx) => (
+                  <a target="_blank" href={content.url} className={`${className}__search-link`}>
+                    {idx + 1}. {content.title}
+                  </a>
+                ))}
+              </div>
+              <div slot="header" className={`${className}__search__header__content`}>
+                引用{data.length}个网页
+              </div>
+            </t-collapse-panel>
+          </t-collapse>
+        ) : (
+          header
+        )}
+      </div>
+    );
+  }
+
+  private renderSuggestion(content: SuggestionContent) {
+    const { data } = content;
+    return (
+      <div className={`${className}__suggestion`}>
+        {data.map((suggestion, idx) =>
+          suggestion?.title ? (
+            <div
+              className={`${className}__suggestion-item`}
+              onClick={() => this.handleAction('suggestion', idx, suggestion)}
+            >
+              {suggestion.title}
+              {convertToLightDomNode(<t-icon-arrow-right class={`${className}__suggestion-arrow`} />)}
+            </div>
+          ) : null,
+        )}
+      </div>
+    );
+  }
+
   private renderAttachments() {
     if (!isUserMessage(this.props.message)) return null;
     const findAttachment = (this.props.message.content as UserMessageContent[]).find(
@@ -304,15 +382,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
       const renderer = customRenderConfig?.[content?.type];
       // 用户和系统消息渲染
       if (role === 'user' || role === 'system') {
-        if (!message?.content) return null;
-        return (
+        if (!isTextContent(content) && !isMarkdownContent(content)) {
+          return null;
+        }
+        return convertToLightDomNode(
           <t-chat-content
             key={elementKey}
             className={`${className}__detail`}
             {...chatContentProps}
             content={content?.data || content}
             role={role}
-          ></t-chat-content>
+          ></t-chat-content>,
         );
       }
 
@@ -321,7 +401,15 @@ export default class ChatItem extends Component<TdChatItemProps> {
         // 自定义渲染
         if (renderer) {
           const config = renderer(content);
-          return <slot name={config?.slotName || `${content.type}-${index}`}></slot>;
+          return (
+            <slot key={elementKey} name={`${message.id}-${config?.slotName || `${content.type}-${index}`}`}></slot>
+          );
+        }
+        if (isSearchContent(content)) {
+          return this.renderSearch(content);
+        }
+        if (isSuggestionContent(content)) {
+          return this.renderSuggestion(content);
         }
         if (isThinkingContent(content)) {
           // 思考
@@ -331,20 +419,24 @@ export default class ChatItem extends Component<TdChatItemProps> {
           // 图片
           const { url, name } = content.data;
           return (
-            <div>
+            <div key={elementKey}>
               <img src={url} alt={name} width={200} height={200}></img>
             </div>
           );
         }
-        // 正文回答
-        return (
-          <t-chat-content
-            className={`${className}__detail`}
-            {...chatContentProps}
-            content={content.data}
-            role={role}
-          ></t-chat-content>
-        );
+        if (isTextContent(content) || isMarkdownContent(content)) {
+          // 正文回答
+          return convertToLightDomNode(
+            <t-chat-content
+              key={elementKey}
+              className={`${className}__detail`}
+              {...chatContentProps}
+              content={content.data}
+              role={role}
+            ></t-chat-content>,
+          );
+        }
+        return null;
       }
 
       return null;
@@ -380,7 +472,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  private handleAction = (action: string, index: number) => {
-    this.fire('action', { action, index });
+  private handleAction = (action: string, index: number, data?: any) => {
+    this.fire('action', { action, index, data });
   };
 }

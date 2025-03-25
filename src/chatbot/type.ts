@@ -19,6 +19,8 @@ export interface TdChatRenderConfig {
   slotName?: string;
 }
 
+export type TdChatCustomRenderConfig = Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
+
 export interface TdChatItemProps {
   /**
    * 操作
@@ -51,10 +53,11 @@ export interface TdChatItemProps {
   /** 透传chat-content参数 */
   chatContentProps?: Omit<TdChatContentProps, 'content' | 'role'>;
   /** 自定义消息体渲染配置 */
-  customRenderConfig?: Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
+  customRenderConfig?: TdChatCustomRenderConfig;
 }
 
 interface ChatProps {
+  children?: TNode;
   /**
    * 布局
    */
@@ -92,14 +95,6 @@ export interface TdChatProps extends ChatProps, StyledProps {}
 export type TdChatRolesConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
 
 export interface TdChatListProps {
-  /**
-   * 数据
-   */
-  messages?: Array<TdChatItemProps['message']>;
-  /**
-   * 流式消息加载中
-   */
-  textLoading?: boolean;
   /** 自动滚动底部 */
   autoScroll?: boolean;
   /** 滚动底部按钮 */
@@ -165,7 +160,7 @@ export interface TdChatItemMeta {
   role?: string;
   datetime?: string;
 }
-export type ModelRoleEnum = 'assistant' | 'user' | 'error' | 'model-change' | 'system';
+export type ModelRoleEnum = 'assistant' | 'user' | 'system';
 
 export type Variant = 'base' | 'text' | 'outline';
 export type Layout = 'single' | 'both';
