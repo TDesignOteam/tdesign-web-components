@@ -7,6 +7,7 @@ export * from './badge';
 export * from './breadcrumb';
 export * from './button';
 export * from './card';
+export * from './chat-input';
 export * from './chatbot';
 export * from './checkbox';
 export * from './collapse';
