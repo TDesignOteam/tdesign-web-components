@@ -319,7 +319,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
         // 自定义渲染
         if (renderer) {
           const config = renderer(content);
-          return <slot name={config?.slotName || `${content.type}-${index}`}></slot>;
+          return (
+            <slot key={elementKey} name={`${message.id}-${config?.slotName || `${content.type}-${index}`}`}></slot>
+          );
         }
         if (isThinkingContent(content)) {
           // 思考
@@ -329,7 +331,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
           // 图片
           const { url, name } = content.data;
           return (
-            <div>
+            <div key={elementKey}>
               <img src={url} alt={name} width={200} height={200}></img>
             </div>
           );
@@ -337,6 +339,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         // 正文回答
         return (
           <t-chat-content
+            key={elementKey}
             className={`${className}__detail`}
             {...chatContentProps}
             content={content.data}

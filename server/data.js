@@ -11,11 +11,23 @@ const chunks = [
   { type: 'think', title: '思考中...', content: '这是个mock，' },
   { type: 'think', title: '思考中...', content: '这是个mock，' },
   { type: 'think', title: '思考完成（耗时4秒）', content: '重要的事情说三遍' },
+  // 自定义插件测试1
+  {
+    type: 'weather',
+    id: 'w11',
+    content: '{"temp": 1,"city": "北京","conditions": "多云"}',
+  },
   // 图片测试
   {
     type: 'image',
     content:
       '{"url":"https://tdesign.gtimg.com/site/avatar.jpg","format":"png","width":1204,"height":1024,"size":1032}',
+  },
+  // 自定义插件测试2
+  {
+    type: 'weather',
+    id: 'w22',
+    content: '{"temp": 1,"city": "深圳","conditions": "晴"}',
   },
   // 测试用例1 - 标题开头被截断
   {

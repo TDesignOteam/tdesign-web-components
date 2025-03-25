@@ -18,6 +18,10 @@ spline: base
 
 {{ markdown }}
 
+### 自定义chat渲染
+
+{{ customRender }}
+
 ### 自定义item渲染
 
 {{ customRenderItem }}
