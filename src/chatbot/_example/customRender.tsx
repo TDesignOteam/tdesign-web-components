@@ -197,10 +197,6 @@ export default class BasicChat extends Component {
   chatRef = createRef();
 
   render() {
-    setTimeout(() => {
-      console.log('chatRef', this.chatRef.current.messages);
-    }, 0);
-
     return (
       <t-chatbot
         ref={this.chatRef}
@@ -211,7 +207,7 @@ export default class BasicChat extends Component {
       >
         <div slot="input-header">我是input头部</div>
         {/* 自定义渲染-植入插槽 */}
-        {this.chatRef.current?.messages
+        {mockData
           ?.map((data) =>
             data.message.content.map((item) => {
               switch (item.type) {

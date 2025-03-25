@@ -5,6 +5,7 @@ import '../button';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
@@ -37,7 +38,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   listRef = createRef<TdChatListProps>();
 
-  private messages: Message[] = [];
+  public messages: Message[] = [];
 
   private chatStatus: ChatStatus = 'idle';
 
@@ -105,9 +106,7 @@ export default class Chatbot extends Component<TdChatProps> {
       avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       actions: (preset) => preset,
     },
-    error: {},
     system: {},
-    'model-change': {},
   };
 
   rolesConfig = this.presetRoleConfig;
@@ -156,16 +155,28 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   private renderItems = () => {
+    const slotNames: string[] = getSlotNodes(this.props.children).reduce(
+      (prev, curr) => prev.concat(curr.attributes.slot),
+      [],
+    );
     const items = this.props.reverse ? [...this.messages].reverse() : this.messages;
     return items.map((item) => {
       const { role, id } = item;
-      return <t-chat-item {...this.rolesConfig?.[role]} message={item} key={id} />;
+      const itemSlotNames = slotNames.filter((key) => key.includes(id));
+      return (
+        <t-chat-item key={id} {...this.rolesConfig?.[role]} message={item}>
+          {/* 根据id筛选item应该分配的slot */}
+          {itemSlotNames.map((slotName) => (
+            <slot name={slotName} slot={slotName}></slot>
+          ))}
+        </t-chat-item>
+      );
     });
   };
 
   render({ layout, clearHistory, reverse }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
-    console.log('====render chat', this.messages);
+    // console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
         {this.messages && (
