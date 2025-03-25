@@ -125,10 +125,10 @@ export interface LLMConfig {
   retryInterval?: number;
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
-  onMessage?: (chunk: SSEChunkData) => AIMessageContent;
+  onMessage?: (chunk: SSEChunkData) => AIMessageContent | null;
   onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
   onAbort?: () => void;
-  onError?: (error: Error, params: RequestParams) => void;
+  onError?: (error: Error | Response) => void;
 }
 
 // 消息相关状态

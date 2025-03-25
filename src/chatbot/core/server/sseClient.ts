@@ -13,7 +13,7 @@ export default class SSEClient {
     private url: string,
     private handlers: {
       onMessage?: (data: any) => void;
-      onError?: (error: Error) => void;
+      onError?: (error: Error | Response) => void;
       onComplete?: (isAborted: boolean) => void;
     },
     private options: {
@@ -27,20 +27,24 @@ export default class SSEClient {
   async connect(config: RequestInit) {
     try {
       this.controller = new AbortController();
+      const { method, headers, body, ...rest } = config || {};
       this.config = {
-        method: config.method || 'POST',
+        ...rest,
+        method: method || 'POST',
         headers: {
-          'Content-Type': 'text/event-stream',
-          ...config.headers,
+          'Content-Type': 'application/json',
+          ...headers,
         },
-        body: config.body,
+        body,
         signal: this.controller.signal,
       };
 
+      console.log('====this.config', this.config);
       const response = await fetch(this.url, this.config);
 
       if (!response.ok || !response.body) {
-        throw new Error(`SSE连接失败，状态码：${response.status}`);
+        this.handleError(response);
+        return;
       }
 
       this.reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
@@ -48,7 +52,6 @@ export default class SSEClient {
       await this.readStream();
     } catch (err) {
       this.handleError(err);
-      this.reconnect();
     }
   }
 
@@ -78,53 +81,43 @@ export default class SSEClient {
       }
     } catch (err) {
       this.handleError(err);
-      this.reconnect();
+      // this.reconnect();
     }
   }
 
   private parseChunk(chunk: string): Array<SSEChunkData> {
     // 分割多个SSE事件（按两个换行符分割）
-    return chunk
-      .split('\n\n')
-      .map((eventChunk) => {
-        let eventType: string | undefined;
-        const dataLines: string[] = [];
+    return chunk.split(/(?:\r?\n){2,}/).flatMap((eventChunk) => {
+      let eventType: string | undefined;
+      const results: SSEChunkData[] = [];
 
-        // 解析每个事件块
-        eventChunk.split('\n').forEach((line) => {
-          if (line.startsWith('event:')) {
-            eventType = line.replace(/^event:\s*/, '').trim();
-          } else if (line.startsWith('data:')) {
-            dataLines.push(line.replace(/^data:\s*/, '').trim());
+      console.log('====eventChunk', eventChunk);
+      // 解析每个事件块
+      eventChunk.split('\n').forEach((line) => {
+        if (line.startsWith('event:')) {
+          eventType = line.replace(/^event:\s*/, '').trim();
+        } else if (line.startsWith('data:')) {
+          const dataContent = line.replace(/^data:\s*/, '').trim();
+          try {
+            results.push({
+              event: eventType || '',
+              data: dataContent ? JSON.parse(dataContent) : {},
+            });
+          } catch (e) {
+            results.push({
+              event: eventType || '',
+              data: dataContent,
+            });
           }
-        });
-
-        try {
-          // 合并多行data内容并解析JSON
-          const jsonData = dataLines.length > 0 ? JSON.parse(dataLines.join('\n')) : {};
-          return {
-            event: eventType || '',
-            data: jsonData,
-          };
-        } catch (e) {
-          console.warn('SSE数据解析失败，返回原始数据');
-          return {
-            event: eventType || '',
-            data: dataLines.join('\n'),
-          };
         }
-      })
-      .filter((result) => {
-        // 过滤空数据（包括纯换行符的情况）
-        if (typeof result.data === 'string') {
-          return result.data.trim() !== '';
-        }
-        return Object.keys(result.data).length > 0;
       });
+
+      return results;
+    });
   }
 
   private handleError(error: unknown) {
-    if (error instanceof Error) {
+    if (error instanceof Error || error instanceof Response) {
       this.handlers.onError?.(error);
     } else {
       this.handlers.onError?.(new Error('未知的SSE连接错误'));

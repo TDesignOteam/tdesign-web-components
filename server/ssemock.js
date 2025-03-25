@@ -10,6 +10,7 @@ app.use(express.json()); // 添加JSON解析中间件
 // 统一SSE响应头设置
 const setSSEHeaders = (res) => {
   res.writeHead(200, {
+    'Access-Control-Allow-Origin': '*',
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',

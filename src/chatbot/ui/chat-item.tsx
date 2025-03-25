@@ -58,6 +58,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
     placement: 'left',
   };
 
+  // static isLightDOM = true;
+
   private messageId!: string;
 
   inject = ['chatEngine'];

@@ -116,12 +116,14 @@ export default class ChatEngine implements IChatEngine {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
         const parsed = this.config?.onMessage?.(chunk);
-        this.processContentUpdate(id, parsed);
+        if (parsed) {
+          this.processContentUpdate(id, parsed);
+        }
         return parsed;
       },
       onError: (error) => {
         this.setMessageStatus(id, 'error');
-        this.config.onError?.(error, params);
+        this.config.onError?.(error);
       },
       onComplete: (isAborted) => {
         this.setMessageStatus(id, isAborted ? 'stop' : 'complete');
