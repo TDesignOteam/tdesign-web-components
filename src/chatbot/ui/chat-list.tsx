@@ -130,7 +130,7 @@ export default class Chatlist extends Component<TdChatListProps> {
               [`${className}__scroll__button--hide`]: !this.scrollButtonVisible.value,
             },
           ])}
-          onClick={() => this.scrollToBottom()}
+          onClick={() => this.scrollToBottom({ behavior: 'smooth' })}
         >
           {convertToLightDomNode(<t-icon-arrow-down />)}
         </div>
@@ -145,7 +145,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     if (list) {
       list.scrollTo({
         top: list.scrollHeight,
-        behavior: options.behavior || 'smooth',
+        behavior: options.behavior || 'auto',
       });
     }
   }

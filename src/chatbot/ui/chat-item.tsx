@@ -343,15 +343,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
       const renderer = customRenderConfig?.[content?.type];
       // 用户和系统消息渲染
       if (role === 'user' || role === 'system') {
-        if (!message?.content) return null;
-        return (
+        if (!isTextContent(content) && !isMarkdownContent(content)) {
+          return null;
+        }
+        return convertToLightDomNode(
           <t-chat-content
             key={elementKey}
             className={`${className}__detail`}
             {...chatContentProps}
             content={content?.data || content}
             role={role}
-          ></t-chat-content>
+          ></t-chat-content>,
         );
       }
 
@@ -383,16 +385,19 @@ export default class ChatItem extends Component<TdChatItemProps> {
             </div>
           );
         }
-        // 正文回答
-        return (
-          <t-chat-content
-            key={elementKey}
-            className={`${className}__detail`}
-            {...chatContentProps}
-            content={content.data}
-            role={role}
-          ></t-chat-content>
-        );
+        if (isTextContent(content) || isMarkdownContent(content)) {
+          // 正文回答
+          return convertToLightDomNode(
+            <t-chat-content
+              key={elementKey}
+              className={`${className}__detail`}
+              {...chatContentProps}
+              content={content.data}
+              role={role}
+            ></t-chat-content>,
+          );
+        }
+        return null;
       }
 
       return null;

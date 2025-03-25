@@ -154,7 +154,7 @@ export default class ChatContent extends Component<TdChatContentProps> {
 
     return (
       <div className={`${baseClass}`}>
-        <div className={`${baseClass}__markdown ${roleClass}`} innerHTML={textContent}></div>
+        <div className={`${baseClass}__markdown ${roleClass}`} unsafeHTML={{ html: textContent }}></div>
       </div>
     );
   }
