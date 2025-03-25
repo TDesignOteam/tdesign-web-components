@@ -1,4 +1,4 @@
-import { ComponentChildren } from 'omi';
+import { ComponentChildren, VNode } from 'omi';
 
 /**
  * 将Component的children转换为数组
@@ -31,3 +31,12 @@ export function hasSlot(name: string, children?: ComponentChildren) {
     return false;
   });
 }
+
+/** 获取children中的slot元素集合 */
+export const getSlotNodes = (children?: ComponentChildren): VNode[] =>
+  getChildrenArray(children).filter((node) => {
+    if (node && typeof node === 'object') {
+      return node.attributes?.slot;
+    }
+    return null;
+  });

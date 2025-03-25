@@ -66,7 +66,7 @@ export default class CustomRenderExample extends Component {
           switch (item.type) {
             case 'weather':
               return (
-                <div id={item.data.city} slot={`${item.type}-${item.id}`} className="weather">
+                <div slot={`${this.props.message.id}-${item.type}-${item.id}`} className="weather">
                   今天{item.data.city}天气{item.data.conditions}
                 </div>
               );
