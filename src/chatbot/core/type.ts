@@ -40,13 +40,20 @@ export type ImageContent = BaseContent<
 // 公共引用结构
 export type ReferenceItem = {
   title: string;
+  icon?: string;
   type?: string;
   url?: string;
   detail?: string;
   source?: string;
   timestamp?: string;
 };
-export type SearchContent = BaseContent<'search', ReferenceItem[]>;
+export type SearchContent = BaseContent<
+  'search',
+  {
+    title?: string;
+    references?: ReferenceItem[];
+  }
+>;
 export type SuggestionContent = BaseContent<'suggestion', ReferenceItem[]>;
 
 // 附件消息

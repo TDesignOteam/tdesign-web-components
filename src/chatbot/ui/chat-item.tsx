@@ -23,11 +23,13 @@ import {
   isAIMessage,
   isImageContent,
   isMarkdownContent,
+  isSearchContent,
   isSuggestionContent,
   isTextContent,
   isThinkingContent,
   isUserMessage,
   MessageStatus,
+  SearchContent,
   SuggestionContent,
   ThinkingContent,
   UserMessageContent,
@@ -275,57 +277,57 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  // private renderSearch(content: SearchContent) {
-  //   const { data } = content;
-  //   const imgs = (
-  //     <div className={`${className}__search-icons`}>
-  //       {data.map((img) =>
-  //         img?.icon ? <img className={`${className}__search-icon`} alt={img.title} src={img.icon} /> : null,
-  //       )}
-  //     </div>
-  //   );
-  //   const header = (
-  //     <div className={`${className}__search__header`}>
-  //       {imgs}
-  //       {data.length}个网页
-  //     </div>
-  //   );
-  //   return (
-  //     <div
-  //       className={`${className}__search__wrapper`}
-  //       onClick={() => {
-  //         this.searchExpand.value = !this.searchExpand.value;
-  //         this.handleAction('searchExpand', 0, {});
-  //       }}
-  //     >
-  //       {this.searchExpand.value ? (
-  //         <t-collapse
-  //           className={`${className}__search`}
-  //           expandIconPlacement="right"
-  //           value={[1]}
-  //           onChange={() => {
-  //             this.searchExpand.value = !this.searchExpand.value;
-  //           }}
-  //         >
-  //           <t-collapse-panel className={`${className}__search__content`}>
-  //             <div className={`${className}__search-links`}>
-  //               {data.map((content, idx) => (
-  //                 <a target="_blank" href={content.url} className={`${className}__search-link`}>
-  //                   {idx + 1}. {content.title}
-  //                 </a>
-  //               ))}
-  //             </div>
-  //             <div slot="header" className={`${className}__search__header__content`}>
-  //               引用{data.length}个网页
-  //             </div>
-  //           </t-collapse-panel>
-  //         </t-collapse>
-  //       ) : (
-  //         header
-  //       )}
-  //     </div>
-  //   );
-  // }
+  private renderSearch(content: SearchContent) {
+    const { references, title } = content.data;
+    const imgs = (
+      <div className={`${className}__search-icons`}>
+        {references.map((item) =>
+          item?.icon ? <img className={`${className}__search-icon`} alt={item.title} src={item.icon} /> : null,
+        )}
+      </div>
+    );
+    const header = (
+      <div className={`${className}__search__header`}>
+        {imgs}
+        {title}
+      </div>
+    );
+    return (
+      <div
+        className={`${className}__search__wrapper`}
+        onClick={() => {
+          this.searchExpand.value = !this.searchExpand.value;
+          this.handleAction('searchExpand', 0, {});
+        }}
+      >
+        {this.searchExpand.value ? (
+          <t-collapse
+            className={`${className}__search`}
+            expandIconPlacement="right"
+            value={[1]}
+            onChange={() => {
+              this.searchExpand.value = !this.searchExpand.value;
+            }}
+          >
+            <t-collapse-panel className={`${className}__search__content`}>
+              <div className={`${className}__search-links`}>
+                {references.map((content, idx) => (
+                  <a target="_blank" href={content.url} className={`${className}__search-link`}>
+                    {idx + 1}. {content.title}
+                  </a>
+                ))}
+              </div>
+              <div slot="header" className={`${className}__search__header__content`}>
+                {title || `找到${references.length}个结果`}
+              </div>
+            </t-collapse-panel>
+          </t-collapse>
+        ) : (
+          header
+        )}
+      </div>
+    );
+  }
 
   private renderSuggestion(content: SuggestionContent) {
     const { data } = content;
@@ -403,9 +405,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
             <slot key={elementKey} name={`${message.id}-${config?.slotName || `${content.type}-${index}`}`}></slot>
           );
         }
-        // if (isSearchContent(content)) {
-        //   return this.renderSearch(content);
-        // }
+        if (isSearchContent(content)) {
+          return this.renderSearch(content);
+        }
         if (isSuggestionContent(content)) {
           return this.renderSuggestion(content);
         }

@@ -9,6 +9,8 @@ export default class SSEClient {
 
   private config: RequestInit;
 
+  private buffer = '';
+
   constructor(
     private url: string,
     private handlers: {
@@ -86,31 +88,52 @@ export default class SSEClient {
   }
 
   private parseChunk(chunk: string): Array<SSEChunkData> {
-    // 分割多个SSE事件（按两个换行符分割）
-    return chunk.split(/(?:\r?\n){2,}/).flatMap((eventChunk) => {
+    // 合并缓冲区和新数据
+    const rawData = this.buffer + chunk;
+    this.buffer = ''; // 清空缓冲区
+
+    // 按SSE规范分割事件（两个换行符分隔）
+    const events = rawData.split(/(?:\r?\n){2}/);
+
+    // 如果最后一个事件块不完整，保留到缓冲区
+    const lastEvent = events[events.length - 1];
+    if (!lastEvent.endsWith('\n\n') && !lastEvent.includes('\n\ndata:')) {
+      this.buffer = events.pop() || '';
+    }
+
+    return events.flatMap((eventChunk) => {
       let eventType: string | undefined;
       const results: SSEChunkData[] = [];
+      let dataBuffer = '';
 
-      console.log('====eventChunk', eventChunk);
-      // 解析每个事件块
+      // 逐行处理事件内容
       eventChunk.split('\n').forEach((line) => {
+        line = line.trim();
+        if (!line) return;
+
         if (line.startsWith('event:')) {
           eventType = line.replace(/^event:\s*/, '').trim();
         } else if (line.startsWith('data:')) {
-          const dataContent = line.replace(/^data:\s*/, '').trim();
-          try {
-            results.push({
-              event: eventType || '',
-              data: dataContent ? JSON.parse(dataContent) : {},
-            });
-          } catch (e) {
-            results.push({
-              event: eventType || '',
-              data: dataContent,
-            });
-          }
+          // 处理多行data内容
+          dataBuffer += `${line.replace(/^data:\s*/, '')}\n`;
         }
       });
+
+      // 处理累积的data内容
+      if (dataBuffer) {
+        try {
+          const content = dataBuffer.trim();
+          results.push({
+            event: eventType || '',
+            data: content ? JSON.parse(content) : {},
+          });
+        } catch (e) {
+          results.push({
+            event: eventType || '',
+            data: dataBuffer.trim(),
+          });
+        }
+      }
 
       return results;
     });

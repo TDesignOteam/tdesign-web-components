@@ -57,51 +57,54 @@ const mockData: TdChatItemProps[] = [
       status: 'complete',
       content: [
         {
+          type: 'search',
+          status: 'complete',
+          data: {
+            title: '共找到10个相关内容',
+            references: [
+              {
+                title: '10本高口碑悬疑推理小说,情节高能刺激,看得让人汗毛直立!',
+                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=USoIrxrKY*KWNmBLZTGo-**yUaxdhqowiMPr0wsVhH*dOUB3GUjYcBVG86Dyg7-TkQVrr0efPvrqSa1GJFjUQgQMtZFX5wxjbf8TcWkoUxOrTA7NsjfNQQoVY5CckmJj&new=1',
+                type: 'mp',
+              },
+              {
+                title: '悬疑小说下载:免费畅读最新悬疑大作!',
+                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=UCc6xbIGsYEyfytL2IC6b3vXlaBcbEJCi98ZVK38vdoFEEulJ3J-95bNkE8Fiv5-pJ5iH75DfJAz6kGX2TSscSisBNW1u6nCPbP-Ue4HxCAfjU8DpUwaOXkFz3*T71rU&new=1',
+                type: 'mp',
+              },
+              {
+                title: '悬疑推理类小说五本 22',
+                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUgW8QyEwPwoBFQzrfsWP9UCN0T6Zpfg5rMYSqKvrkP6Njp-ggxnym8YOSbDYLFB4uqMH14FDcq7*aAmN*8C3aSL&new=1',
+                type: 'mp',
+              },
+              {
+                title: '悬疑推理类小说五本 25',
+                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUiBG0KD-41hoa2HJm1CC7*ueTzp3loaKojnUO1JR3KD7bh1EgWwTmOIDum3aYtrN1EYDXF9jTh1KNJsalAXHeQI&new=1',
+                type: 'mp',
+              },
+
+              // {
+              //   title: '百度',
+              //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
+              // },
+              // {
+              //   title: '1点',
+              //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
+              // },
+              // {
+              //   title: '搜狐',
+              //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
+              // },
+            ],
+          },
+        },
+        {
           type: 'thinking',
           status: 'complete',
           data: {
             title: '思考完成（耗时3s）',
             text: 'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
           },
-        },
-        {
-          type: 'search',
-          status: 'complete',
-          data: [
-            {
-              title: '10本高口碑悬疑推理小说,情节高能刺激,看得让人汗毛直立!',
-              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=USoIrxrKY*KWNmBLZTGo-**yUaxdhqowiMPr0wsVhH*dOUB3GUjYcBVG86Dyg7-TkQVrr0efPvrqSa1GJFjUQgQMtZFX5wxjbf8TcWkoUxOrTA7NsjfNQQoVY5CckmJj&new=1',
-              type: 'mp',
-            },
-            {
-              title: '悬疑小说下载:免费畅读最新悬疑大作!',
-              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=UCc6xbIGsYEyfytL2IC6b3vXlaBcbEJCi98ZVK38vdoFEEulJ3J-95bNkE8Fiv5-pJ5iH75DfJAz6kGX2TSscSisBNW1u6nCPbP-Ue4HxCAfjU8DpUwaOXkFz3*T71rU&new=1',
-              type: 'mp',
-            },
-            {
-              title: '悬疑推理类小说五本 22',
-              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUgW8QyEwPwoBFQzrfsWP9UCN0T6Zpfg5rMYSqKvrkP6Njp-ggxnym8YOSbDYLFB4uqMH14FDcq7*aAmN*8C3aSL&new=1',
-              type: 'mp',
-            },
-            {
-              title: '悬疑推理类小说五本 25',
-              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUiBG0KD-41hoa2HJm1CC7*ueTzp3loaKojnUO1JR3KD7bh1EgWwTmOIDum3aYtrN1EYDXF9jTh1KNJsalAXHeQI&new=1',
-              type: 'mp',
-            },
-
-            // {
-            //   title: '百度',
-            //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
-            // },
-            // {
-            //   title: '1点',
-            //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
-            // },
-            // {
-            //   title: '搜狐',
-            //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
-            // },
-          ],
         },
         {
           type: 'text',

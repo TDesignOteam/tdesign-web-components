@@ -139,10 +139,7 @@ export default class MessageProcessor {
   private registerSearchHandler() {
     this.registerHandler<SearchContent>(
       'search',
-      this.createContentHandler((existing, incoming) => [
-        ...existing,
-        ...incoming.filter((newItem) => !existing.some((existingItem) => existingItem.url === newItem.url)),
-      ]),
+      this.createContentHandler((existing, incoming) => ({ ...existing, ...incoming })),
     );
   }
 }
