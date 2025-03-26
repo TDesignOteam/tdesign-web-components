@@ -301,7 +301,7 @@
       align-items: center;
       width: fit-content;
       height: var(--t-chat-item-search-height);
-      border: solid 1px #E6E6E6;
+      border: var(--t-chat-item-suggestion-border);
       border-radius: var(--t-chat-item-search-radius);
       padding: var(--t-chat-item-search-padding);
     }
@@ -312,7 +312,7 @@
     }
 
     &-link {
-      color: #145CFF;
+      color: var(--t-chat-item-search-link-color);
     }
 
     &::part(@{prefix}-collapse) {
