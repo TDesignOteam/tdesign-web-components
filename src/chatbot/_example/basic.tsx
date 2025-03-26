@@ -5,7 +5,9 @@ import { Component } from 'omi';
 import type { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
-import type { AIMessageContent, BaseContent, ModelServiceState, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ModelServiceState, SSEChunkData } from '../core/type';
+
+import css from './style/test.less';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -381,6 +383,7 @@ export default class BasicChat extends Component {
         items={mockData}
         modelConfig={mockModels}
         attachmentProps={attachmentProps}
+        inputCSS={css}
       ></t-chatbot>
     );
   }

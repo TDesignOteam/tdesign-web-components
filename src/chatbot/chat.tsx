@@ -27,6 +27,7 @@ export default class Chatbot extends Component<TdChatProps> {
     modelConfig: Object,
     rolesConfig: Object,
     attachmentProps: Object,
+    inputCSS: String,
   };
 
   static defaultProps = {
