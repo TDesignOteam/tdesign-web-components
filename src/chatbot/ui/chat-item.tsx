@@ -99,9 +99,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   renderAvatar() {
-    if (!this.props.avatar) {
-      return null;
-    }
     return (
       <div class={`${className}__avatar`}>
         <div class={`${className}__avatar__box`}>
@@ -452,9 +449,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime } = props;
+    const { message, variant, placement, name, datetime, avatar } = props;
     if (!message?.content) return;
-    console.log('===item render', this.messageId);
+    console.log('===item render', avatar);
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;

@@ -22,7 +22,10 @@ export default class Chatbot extends Component<TdChatProps> {
 
   static propTypes = {
     clearHistory: Boolean,
-    messageList: Object,
+    layout: String,
+    reverse: Boolean,
+    messages: Array,
+    rolesConfig: Object,
     input: Object,
     chatService: Object,
     injectCSS: Object,
@@ -30,12 +33,9 @@ export default class Chatbot extends Component<TdChatProps> {
 
   static defaultProps = {
     clearHistory: false,
-    messageList: {
-      layout: 'both',
-      reverse: false,
-      messages: [],
-      itemProps: {},
-    },
+    layout: 'both',
+    reverse: false,
+    messages: [],
   };
 
   listRef = createRef<TdChatListProps>();
@@ -63,8 +63,8 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { messages, itemProps } = this.props.messageList;
-    this.rolesConfig = merge(this.presetRoleConfig, itemProps);
+    const { messages, rolesConfig } = this.props;
+    this.rolesConfig = merge(this.presetRoleConfig, rolesConfig);
     this.chatEngine = new ChatService(this.props.chatService, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
@@ -150,7 +150,7 @@ export default class Chatbot extends Component<TdChatProps> {
       (prev, curr) => prev.concat(curr.attributes.slot),
       [],
     );
-    const items = this.props.messageList.reverse ? [...this.messages].reverse() : this.messages;
+    const items = this.props.reverse ? [...this.messages].reverse() : this.messages;
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
