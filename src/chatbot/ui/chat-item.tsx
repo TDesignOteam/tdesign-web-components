@@ -363,12 +363,20 @@ export default class ChatItem extends Component<TdChatItemProps> {
           <div className={`${className}__image-grid`}>
             {attachments.map(({ url, name }, index) => (
               <div className={`${className}__image-wrapper`} key={index}>
-                <t-image src={url} alt={name} className={`${className}__preview-image`} shape="round" loading="lazy" />
+                {convertToLightDomNode(
+                  <t-image
+                    src={url}
+                    alt={name}
+                    className={`${className}__preview-image`}
+                    shape="round"
+                    loading="lazy"
+                  />,
+                )}
               </div>
             ))}
           </div>
         ) : (
-          <t-attachments items={attachments} />
+          convertToLightDomNode(<t-attachments items={attachments} />)
         )}
       </div>
     );
@@ -444,12 +452,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime, role } = props;
+    const { message, variant, placement, name, datetime } = props;
     if (!message?.content) return;
     console.log('===item render', this.messageId);
 
     const baseClass = `${className}__inner`;
-    const roleClass = `${className}__role--${role}`;
+    const roleClass = `${className}__role--${message.role}`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
     const placementClass = placement;
 

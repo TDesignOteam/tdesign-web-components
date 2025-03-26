@@ -72,6 +72,7 @@ interface ChatProps {
    * 数据
    */
   items?: Array<TdChatItemProps>;
+  inputCSS?: string;
   /**
    * 接口请求中
    */

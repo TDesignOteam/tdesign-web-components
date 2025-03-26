@@ -8,6 +8,7 @@
 .@{prefix}-chat__item {
   &__inner {
     display: flex;
+    width: 100%;
     margin-bottom: var(--t-chat-item-gap);
     font-size: var(--t-chat-font-size);
 
@@ -62,6 +63,10 @@
       .@{prefix}-chat__item__name {
         order: 2;
         padding: var(--t-chat-item-name-padding-right);
+      }
+
+      .@{prefix}-attachment-list {
+        justify-content: flex-end;
       }
     }
   }
@@ -274,10 +279,10 @@
 
   &__attachments {
     margin-top: var(--t-chat-item-attachments-margin-top);
-    ::part(t-image) {
+    .@{prefix}-image {
       max-width: var(--t-chat-item-image-max-width);
     }
-    ::part(t-image__wrapper) {
+    .@{prefix}-image__wrapper {
       background: none;
     }
   }
@@ -306,7 +311,7 @@
     }
 
     &-link {
-      color: #145CFF;
+      color: var(--t-chat-item-search-link-color);
     }
 
     &::part(@{prefix}-collapse) {
