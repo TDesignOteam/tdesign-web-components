@@ -174,7 +174,7 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   };
 
-  render({ layout, clearHistory }: OmiProps<TdChatProps>) {
+  render({ layout, clearHistory, inputCSS }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     // console.log('====render chat', this.messages);
     return (
@@ -188,6 +188,8 @@ export default class Chatbot extends Component<TdChatProps> {
           </div>
         )}
         <t-chat-input
+          className={`${className}-input-wrapper`}
+          css={inputCSS}
           actions
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
