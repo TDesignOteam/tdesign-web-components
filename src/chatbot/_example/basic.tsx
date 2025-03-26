@@ -152,10 +152,22 @@ const mockData: TdChatItemProps[] = [
               size: 12312,
             },
             {
+              fileType: 'doc',
+              name: 'demo2.docx',
+              url: 'https://tdesign.gtimg.com/site/demo.docx',
+              size: 12312,
+            },
+            {
               fileType: 'pdf',
               name: 'demo.pdf',
+              url: 'https://tdesign.gtimg.com/site/demo.docx',
+              size: 123121,
+            },
+            {
+              fileType: 'pdf',
+              name: 'demo2.pdf',
               url: 'https://tdesign.gtimg.com/site/demo.pdf',
-              size: 3433,
+              size: 34333,
             },
           ],
         },
