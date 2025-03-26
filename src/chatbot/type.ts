@@ -1,12 +1,11 @@
 import MarkdownIt from 'markdown-it';
 
+import { TdChatInputProps } from '../chat-input';
 import type { StyledProps, TNode } from '../common';
-import type { Attachment } from '../filecard';
-import type { MessageRole, ModelServiceState } from './core/type';
+import type { ChatServiceConfig, MessageRole } from './core/type';
 import type { Message } from './core/type';
 
 export type TdChatItemActionName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
-
 export interface TdChatItemAction {
   name: TdChatItemActionName;
   render: TNode;
@@ -56,44 +55,33 @@ export interface TdChatItemProps {
   customRenderConfig?: TdChatCustomRenderConfig;
 }
 
-interface ChatProps {
+export interface TdChatProps extends StyledProps {
   children?: TNode;
-  /**
-   * 布局
-   */
-  layout?: Layout;
-  /**
-   * 倒序渲染
-   */
-  reverse?: boolean;
-  /** role对应的item配置 */
-  rolesConfig?: TdChatRolesConfig;
-  /**
-   * 数据
-   */
-  items?: Array<TdChatItemProps>;
-  inputCSS?: string;
-  /**
-   * 接口请求中
-   */
-  textLoading?: boolean;
-  /** 清空历史按钮，值为 true 显示默认操作按钮，值为 false 不显示任何内容，值类型为 Function 表示自定义 */
-  clearHistory?: boolean | TNode;
-  /** 点赞差评复制重新生成按钮集合，值为true显示默认操作按钮 */
-  actions?: boolean | TNode;
-  // 流式数据加载中
-  isStreamLoad?: boolean;
-  modelConfig: ModelServiceState;
-  attachmentProps?: {
-    onFileSelected?: (files: File[]) => Promise<Attachment[]>;
-    onFileRemove?: (file: Attachment) => void;
+  injectCSS?: {
+    chatInput?: string;
+    chatList?: string;
+    chatItem?: string;
   };
-  onClear?: (context: { e: MouseEvent }) => void;
+  /** 消息列表配置（部分透传至t-chat-list） */
+  messageList?: TdChatListProps & {
+    /** 布局模式 */
+    layout?: 'single' | 'both';
+    /** 倒序渲染 */
+    reverse?: boolean;
+    /** 消息数据源 */
+    messages: Array<Message>;
+    /** 角色配置 */
+    itemProps?: TdChatRolesConfig;
+  };
+  /** 输入框配置（透传至t-chat-input） */
+  input?: TdChatInputProps;
+  /** 模型服务配置 */
+  chatService?: ChatServiceConfig;
 }
 
-export interface TdChatProps extends ChatProps, StyledProps {}
-
-export type TdChatRolesConfig = Record<ModelRoleEnum, Partial<TdChatItemProps>>;
+export type TdChatRolesConfig = {
+  [key in ModelRoleEnum]?: Omit<TdChatItemProps, 'message'>;
+};
 
 export interface TdChatListProps {
   /** 自动滚动底部 */

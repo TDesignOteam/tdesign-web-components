@@ -2,12 +2,10 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component } from 'omi';
-import type { TdChatItemProps } from 'tdesign-web-components/chatbot';
+import type { TdChatRolesConfig } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
-import type { AIMessageContent, ModelServiceState, SSEChunkData } from '../core/type';
-
-import css from './style/test.less';
+import type { AIMessageContent, ChatServiceConfig, Message, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -23,211 +21,179 @@ declare module '../core/type' {
   }
 }
 
-const mockData: TdChatItemProps[] = [
+const mockData: Message[] = [
   {
-    message: {
-      id: 's1123',
-      role: 'system',
-      status: 'complete',
-      content: [
-        {
-          type: 'text',
-          data: '系统通知：初始化完成，样式看看怎么搞',
-        },
-      ],
-    },
+    id: 's1123',
+    role: 'system',
+    status: 'complete',
+    content: [
+      {
+        type: 'text',
+        data: '系统通知：初始化完成，样式看看怎么搞',
+      },
+    ],
   },
   {
-    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    message: {
-      id: '223',
-      role: 'user',
-      status: 'complete',
-      content: [
-        {
-          type: 'text',
-          data: '南极的自动提款机叫什么名字？',
-        },
-      ],
-    },
+    id: '223',
+    role: 'user',
+    status: 'complete',
+    content: [
+      {
+        type: 'text',
+        data: '南极的自动提款机叫什么名字？',
+      },
+    ],
   },
   {
-    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    message: {
-      id: '123',
-      role: 'assistant',
-      status: 'complete',
-      content: [
-        {
-          type: 'search',
-          status: 'complete',
-          data: {
-            title: '共找到10个相关内容',
-            references: [
-              {
-                title: '10本高口碑悬疑推理小说,情节高能刺激,看得让人汗毛直立!',
-                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=USoIrxrKY*KWNmBLZTGo-**yUaxdhqowiMPr0wsVhH*dOUB3GUjYcBVG86Dyg7-TkQVrr0efPvrqSa1GJFjUQgQMtZFX5wxjbf8TcWkoUxOrTA7NsjfNQQoVY5CckmJj&new=1',
-                type: 'mp',
-              },
-              {
-                title: '悬疑小说下载:免费畅读最新悬疑大作!',
-                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=UCc6xbIGsYEyfytL2IC6b3vXlaBcbEJCi98ZVK38vdoFEEulJ3J-95bNkE8Fiv5-pJ5iH75DfJAz6kGX2TSscSisBNW1u6nCPbP-Ue4HxCAfjU8DpUwaOXkFz3*T71rU&new=1',
-                type: 'mp',
-              },
-              {
-                title: '悬疑推理类小说五本 22',
-                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUgW8QyEwPwoBFQzrfsWP9UCN0T6Zpfg5rMYSqKvrkP6Njp-ggxnym8YOSbDYLFB4uqMH14FDcq7*aAmN*8C3aSL&new=1',
-                type: 'mp',
-              },
-              {
-                title: '悬疑推理类小说五本 25',
-                url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUiBG0KD-41hoa2HJm1CC7*ueTzp3loaKojnUO1JR3KD7bh1EgWwTmOIDum3aYtrN1EYDXF9jTh1KNJsalAXHeQI&new=1',
-                type: 'mp',
-              },
+    id: '123',
+    role: 'assistant',
+    status: 'complete',
+    content: [
+      {
+        type: 'search',
+        status: 'complete',
+        data: {
+          title: '共找到10个相关内容',
+          references: [
+            {
+              title: '10本高口碑悬疑推理小说,情节高能刺激,看得让人汗毛直立!',
+              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=USoIrxrKY*KWNmBLZTGo-**yUaxdhqowiMPr0wsVhH*dOUB3GUjYcBVG86Dyg7-TkQVrr0efPvrqSa1GJFjUQgQMtZFX5wxjbf8TcWkoUxOrTA7NsjfNQQoVY5CckmJj&new=1',
+              type: 'mp',
+            },
+            {
+              title: '悬疑小说下载:免费畅读最新悬疑大作!',
+              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=UCc6xbIGsYEyfytL2IC6b3vXlaBcbEJCi98ZVK38vdoFEEulJ3J-95bNkE8Fiv5-pJ5iH75DfJAz6kGX2TSscSisBNW1u6nCPbP-Ue4HxCAfjU8DpUwaOXkFz3*T71rU&new=1',
+              type: 'mp',
+            },
+            {
+              title: '悬疑推理类小说五本 22',
+              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUgW8QyEwPwoBFQzrfsWP9UCN0T6Zpfg5rMYSqKvrkP6Njp-ggxnym8YOSbDYLFB4uqMH14FDcq7*aAmN*8C3aSL&new=1',
+              type: 'mp',
+            },
+            {
+              title: '悬疑推理类小说五本 25',
+              url: 'http://mp.weixin.qq.com/s?src=11&timestamp=1742897036&ver=5890&signature=Fh*UdzlSG9IgB8U4n9t5qSWHA73Xat54ReUUgCZ5hUiBG0KD-41hoa2HJm1CC7*ueTzp3loaKojnUO1JR3KD7bh1EgWwTmOIDum3aYtrN1EYDXF9jTh1KNJsalAXHeQI&new=1',
+              type: 'mp',
+            },
 
-              // {
-              //   title: '百度',
-              //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
-              // },
-              // {
-              //   title: '1点',
-              //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
-              // },
-              // {
-              //   title: '搜狐',
-              //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
-              // },
-            ],
+            // {
+            //   title: '百度',
+            //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
+            // },
+            // {
+            //   title: '1点',
+            //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
+            // },
+            // {
+            //   title: '搜狐',
+            //   icon: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
+            // },
+          ],
+        },
+      },
+      {
+        type: 'thinking',
+        status: 'complete',
+        data: {
+          title: '思考完成（耗时3s）',
+          text: 'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
+        },
+      },
+      {
+        type: 'text',
+        data: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
+      },
+      {
+        type: 'suggestion',
+        status: 'complete',
+        data: [
+          {
+            title: '《六姊妹》中有哪些观众喜欢的剧情点？',
+            url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
           },
-        },
-        {
-          type: 'thinking',
-          status: 'complete',
-          data: {
-            title: '思考完成（耗时3s）',
-            text: 'mock分析语境，首先，Omi是一个基于Web Components的前端框架，和Vue的用法可能不太一样。Vue里的v-html指令用于将字符串作为HTML渲染，防止XSS攻击的话需要信任内容。Omi有没有类似的功能呢？',
+          {
+            title: '两部剧在演员表现上有什么不同？',
+            url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
           },
-        },
-        {
-          type: 'text',
-          data: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
-        },
-        {
-          type: 'suggestion',
-          status: 'complete',
-          data: [
-            {
-              title: '《六姊妹》中有哪些观众喜欢的剧情点？',
-              url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
-            },
-            {
-              title: '两部剧在演员表现上有什么不同？',
-              url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
-            },
-            {
-              title: '《六姊妹》有哪些负面的评价？',
-              url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
-            },
-          ],
-        },
-      ],
-    },
+          {
+            title: '《六姊妹》有哪些负面的评价？',
+            url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
+          },
+        ],
+      },
+    ],
   },
   {
-    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    message: {
-      id: '789',
-      role: 'user',
-      status: 'complete',
-      content: [
-        {
-          type: 'text',
-          data: '分析下以下内容，总结一篇广告策划方案',
-        },
-        {
-          type: 'attachment',
-          data: [
-            {
-              fileType: 'doc',
-              name: 'demo.docx',
-              url: 'https://tdesign.gtimg.com/site/demo.docx',
-              size: 12312,
-            },
-            {
-              fileType: 'doc',
-              name: 'demo2.docx',
-              url: 'https://tdesign.gtimg.com/site/demo.docx',
-              size: 12312,
-            },
-            {
-              fileType: 'pdf',
-              name: 'demo.pdf',
-              url: 'https://tdesign.gtimg.com/site/demo.docx',
-              size: 123121,
-            },
-            {
-              fileType: 'pdf',
-              name: 'demo2.pdf',
-              url: 'https://tdesign.gtimg.com/site/demo.pdf',
-              size: 34333,
-            },
-          ],
-        },
-      ],
-    },
+    id: '789',
+    role: 'user',
+    status: 'complete',
+    content: [
+      {
+        type: 'text',
+        data: '分析下以下内容，总结一篇广告策划方案',
+      },
+      {
+        type: 'attachment',
+        data: [
+          {
+            fileType: 'doc',
+            name: 'demo.docx',
+            url: 'https://tdesign.gtimg.com/site/demo.docx',
+            size: 12312,
+          },
+          {
+            fileType: 'pdf',
+            name: 'demo2.pdf',
+            url: 'https://tdesign.gtimg.com/site/demo.pdf',
+            size: 34333,
+          },
+        ],
+      },
+    ],
   },
   {
-    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    message: {
-      id: '34234',
-      status: 'error',
-      role: 'assistant',
-      content: [
-        {
-          type: 'text',
-          data: '出错了',
-        },
-      ],
-    },
+    id: '34234',
+    status: 'error',
+    role: 'assistant',
+    content: [
+      {
+        type: 'text',
+        data: '出错了',
+      },
+    ],
   },
   {
-    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    message: {
-      id: '7389',
-      role: 'user',
-      status: 'complete',
-      content: [
-        {
-          type: 'text',
-          data: '这张图里的帅哥是谁',
-        },
-        {
-          type: 'attachment',
-          data: [
-            {
-              fileType: 'image',
-              name: 'avatar.jpg',
-              size: 234234,
-              url: 'https://tdesign.gtimg.com/site/avatar.jpg',
-            },
-          ],
-        },
-      ],
-    },
+    id: '7389',
+    role: 'user',
+    status: 'complete',
+    content: [
+      {
+        type: 'text',
+        data: '这张图里的帅哥是谁',
+      },
+      {
+        type: 'attachment',
+        data: [
+          {
+            fileType: 'image',
+            name: 'avatar.jpg',
+            size: 234234,
+            url: 'https://tdesign.gtimg.com/site/avatar.jpg',
+          },
+        ],
+      },
+    ],
   },
   {
-    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    message: {
-      id: '3242',
-      role: 'assistant',
-      status: 'complete',
-      content: [
-        {
-          type: 'markdown',
-          data: '**tdesign** 团队的 *核心开发者*  `uyarnchen` 是也。',
-        },
-      ],
-    },
+    id: '3242',
+    role: 'assistant',
+    status: 'complete',
+    content: [
+      {
+        type: 'markdown',
+        data: '**tdesign** 团队的 *核心开发者*  `uyarnchen` 是也。',
+      },
+    ],
   },
 ];
 
@@ -295,43 +261,38 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
   }
 }
 
-const mockModels: ModelServiceState = {
-  model: 'hunyuan',
-  useThink: true,
-  useSearch: false,
-  config: {
-    endpoint: 'http://localhost:3000/sse/normal',
-    stream: true,
-    onComplete: () => {
-      console.log('onComplete');
-    },
-    onError: (err) => {
-      console.log('onError', err);
-    },
-    onMessage: defaultChunkParser,
-    onRequest: (params) => {
-      const { prompt, messageID, attachments = [] } = params;
-      return {
-        headers: {
-          'X-Mock-Key': 'test123',
-          'Content-Type': 'text/event-stream',
-          'X-Requested-With': 'XMLHttpRequest',
-        },
-        body: JSON.stringify({
-          session_id: 'session_123456789',
-          question: [
-            {
-              id: messageID,
-              content: prompt,
-              create_at: Date.now(),
-              role: 'user',
-            },
-          ],
-          attachments,
-          is_search_net: 1,
-        }),
-      };
-    },
+const mockModels: ChatServiceConfig = {
+  endpoint: 'http://localhost:3000/sse/normal',
+  stream: true,
+  onComplete: () => {
+    console.log('onComplete');
+  },
+  onError: (err) => {
+    console.log('onError', err);
+  },
+  onMessage: defaultChunkParser,
+  onRequest: (params) => {
+    const { prompt, messageID, attachments = [] } = params;
+    return {
+      headers: {
+        'X-Mock-Key': 'test123',
+        'Content-Type': 'text/event-stream',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      body: JSON.stringify({
+        session_id: 'session_123456789',
+        question: [
+          {
+            id: messageID,
+            content: prompt,
+            create_at: Date.now(),
+            role: 'user',
+          },
+        ],
+        attachments,
+        is_search_net: 1,
+      }),
+    };
   },
 };
 
@@ -375,15 +336,28 @@ const attachmentProps = {
   onFileRemove: () => {},
 };
 
+const rolesConfig: TdChatRolesConfig = {
+  user: {
+    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+  },
+  assistant: {
+    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+  },
+};
+
 export default class BasicChat extends Component {
   render() {
     return (
       <t-chatbot
         style={{ display: 'block', height: '80vh' }}
-        items={mockData}
-        modelConfig={mockModels}
-        attachmentProps={attachmentProps}
-        inputCSS={css}
+        messageList={{
+          messages: mockData,
+          itemProps: rolesConfig,
+        }}
+        input={{
+          attachmentProps,
+        }}
+        chatService={mockModels}
       ></t-chatbot>
     );
   }

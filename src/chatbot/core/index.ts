@@ -4,10 +4,9 @@ import MessageProcessor from './processor';
 import {
   type AIMessageContent,
   type AttachmentItem,
+  type ChatServiceConfig,
   isAIMessage,
-  type LLMConfig,
   type Message,
-  type ModelServiceState,
   type RequestParams,
   type SSEChunkData,
 } from './type';
@@ -24,13 +23,13 @@ export default class ChatEngine implements IChatEngine {
 
   private llmService: LLMService;
 
-  private config: LLMConfig;
+  private config: ChatServiceConfig;
 
   private lastRequestParams: RequestParams | undefined;
 
-  constructor(initialModelState: ModelServiceState, initialMessages?: Message[]) {
+  constructor(initialModelState: ChatServiceConfig, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.config = initialModelState?.config || {};
+    this.config = initialModelState || {};
     this.llmService = new LLMService();
     this.processor = new MessageProcessor();
   }

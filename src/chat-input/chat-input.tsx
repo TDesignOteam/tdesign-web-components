@@ -27,25 +27,30 @@ export default class ChatInput extends Component<TdChatInputProps> {
     disabled: Boolean,
     value: String,
     actions: [Array, Function, Boolean],
-    attachments: Array,
     defaultValue: String,
     status: String,
     allowStop: Boolean,
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
+    onFileSelect: Function,
+    onSend: Function,
+    onStop: Function,
+    onChange: Function,
+    onBlur: Function,
+    onFocus: Function,
   };
 
   static defaultProps: Partial<TdChatInputProps> = {
     status: 'idle',
     allowStop: true,
     attachmentsProps: {
+      items: [],
       overflow: 'scrollX',
     },
     textareaProps: {
       autosize: { minRows: 2 },
     },
-    uploadProps: {},
   };
 
   pValue: Omi.SignalValue<string | number> = signal('');
@@ -63,10 +68,10 @@ export default class ChatInput extends Component<TdChatInputProps> {
   modelValue = signal(''); // 新增模型值信号
 
   ready() {
-    const { value, defaultValue, attachments } = this.props;
+    const { value, defaultValue, attachmentsProps } = this.props;
 
     this.pValue.value = value || defaultValue;
-    attachments && (this.pAttachments.value = attachments);
+    attachmentsProps?.items && (this.pAttachments.value = attachmentsProps.items);
     this.update();
   }
 
@@ -76,7 +81,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
   }
 
   get attachmentsValue() {
-    if (this.props.attachments !== undefined) return this.props.attachments;
+    if (this.props?.attachmentsProps?.items) return this.props.attachmentsProps.items;
     return this.pAttachments.value;
   }
 

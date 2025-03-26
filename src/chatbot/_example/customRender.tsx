@@ -2,9 +2,9 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, createRef } from 'omi';
-import type { TdChatCustomRenderConfig, TdChatItemProps, TdChatRolesConfig } from 'tdesign-web-components/chatbot';
+import type { TdChatCustomRenderConfig, TdChatRolesConfig } from 'tdesign-web-components/chatbot';
 
-import type { AIMessageContent, ModelServiceState, SSEChunkData } from '../core/type';
+import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -20,38 +20,35 @@ declare module '../core/type' {
   }
 }
 
-const mockData: TdChatItemProps[] = [
+const mockData: Message[] = [
   {
-    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    message: {
-      id: '123',
-      role: 'assistant',
-      status: 'complete',
-      content: [
-        {
-          type: 'weather',
-          id: 'w1',
-          data: {
-            temp: 1,
-            city: '北京',
-            conditions: '多云',
-          },
+    id: '123',
+    role: 'assistant',
+    status: 'complete',
+    content: [
+      {
+        type: 'weather',
+        id: 'w1',
+        data: {
+          temp: 1,
+          city: '北京',
+          conditions: '多云',
         },
-        {
-          type: 'text',
-          data: '我是文本',
+      },
+      {
+        type: 'text',
+        data: '我是文本',
+      },
+      {
+        type: 'weather',
+        id: 'w2',
+        data: {
+          temp: 1,
+          city: '上海',
+          conditions: '小雨',
         },
-        {
-          type: 'weather',
-          id: 'w2',
-          data: {
-            temp: 1,
-            city: '上海',
-            conditions: '小雨',
-          },
-        },
-      ],
-    },
+      },
+    ],
   },
 ];
 
@@ -142,42 +139,37 @@ const rolesConfig: TdChatRolesConfig = {
   },
 };
 
-const mockModels: ModelServiceState = {
-  model: 'hunyuan',
-  useThink: true,
-  useSearch: false,
-  config: {
-    endpoint: 'http://localhost:3000/sse/normal',
-    stream: true,
-    onComplete: () => {
-      console.log('onComplete');
-    },
-    onError: (err) => {
-      console.log('onError', err);
-    },
-    onMessage: defaultChunkParser,
-    onRequest: (params) => {
-      const { prompt, messageID, attachments = [] } = params;
-      return {
-        credentials: 'include',
-        headers: {
-          'X-Mock-Key': 'test123',
-        },
-        body: JSON.stringify({
-          session_id: 'session_123456789',
-          question: [
-            {
-              id: messageID,
-              content: prompt,
-              create_at: Date.now(),
-              role: 'user',
-            },
-          ],
-          attachments,
-          is_search_net: 1,
-        }),
-      };
-    },
+const mockModels = {
+  endpoint: 'http://localhost:3000/sse/normal',
+  stream: true,
+  onComplete: () => {
+    console.log('onComplete');
+  },
+  onError: (err) => {
+    console.log('onError', err);
+  },
+  onMessage: defaultChunkParser,
+  onRequest: (params) => {
+    const { prompt, messageID, attachments = [] } = params;
+    return {
+      credentials: 'include',
+      headers: {
+        'X-Mock-Key': 'test123',
+      },
+      body: JSON.stringify({
+        session_id: 'session_123456789',
+        question: [
+          {
+            id: messageID,
+            content: prompt,
+            create_at: Date.now(),
+            role: 'user',
+          },
+        ],
+        attachments,
+        is_search_net: 1,
+      }),
+    };
   },
 };
 
@@ -201,19 +193,18 @@ export default class BasicChat extends Component {
       <t-chatbot
         ref={this.chatRef}
         style={{ display: 'block', height: '500px' }}
-        items={mockData}
-        modelConfig={mockModels}
-        rolesConfig={rolesConfig}
+        messageList={{ messages: mockData, itemProps: rolesConfig }}
+        chatService={mockModels}
       >
         <div slot="input-header">我是input头部</div>
         {/* 自定义渲染-植入插槽 */}
         {mockData
           ?.map((data) =>
-            data.message.content.map((item) => {
+            data.content.map((item) => {
               switch (item.type) {
                 case 'weather':
                   return (
-                    <div slot={`${data.message.id}-${item.type}-${item.id}`} className="weather">
+                    <div slot={`${data.id}-${item.type}-${item.id}`} className="weather">
                       今天{item.data.city}天气{item.data.conditions}
                     </div>
                   );

@@ -111,7 +111,10 @@ export default class ChatInput extends Component {
         placeholder="请输入内容"
         status={this.status.value}
         actions
-        attachments={this.files.value}
+        attachments={{
+          items: this.files.value,
+          onRemove: this.onAttachmentsRemove,
+        }}
         textareaProps={{
           autosize: { minRows: 2 },
         }}
@@ -119,8 +122,7 @@ export default class ChatInput extends Component {
           multiple: true,
           accept: 'image/*',
         }}
-        onAttachmentsSelect={this.onAttachmentsSelect}
-        onAttachmentsRemove={this.onAttachmentsRemove}
+        onFileSelect={this.onAttachmentsSelect}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}

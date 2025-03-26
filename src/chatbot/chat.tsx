@@ -2,6 +2,7 @@ import './ui/chat-list';
 import '../chat-input';
 import '../button';
 
+import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
@@ -21,29 +22,29 @@ export default class Chatbot extends Component<TdChatProps> {
 
   static propTypes = {
     clearHistory: Boolean,
-    layout: String,
-    items: Array,
-    reverse: Boolean,
-    modelConfig: Object,
-    rolesConfig: Object,
-    attachmentProps: Object,
-    inputCSS: String,
+    messageList: Object,
+    input: Object,
+    chatService: Object,
+    injectCSS: Object,
   };
 
   static defaultProps = {
     clearHistory: false,
-    layout: 'both',
-    reverse: false,
-    items: [],
+    messageList: {
+      layout: 'both',
+      reverse: false,
+      messages: [],
+      itemProps: {},
+    },
   };
 
   listRef = createRef<TdChatListProps>();
 
   public messages: Message[] = [];
 
-  private chatStatus: ChatStatus = 'idle';
+  public chatEngine: ChatService;
 
-  private chatEngine: ChatService;
+  private chatStatus: ChatStatus = 'idle';
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -62,13 +63,9 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { items, rolesConfig } = this.props;
-    this.rolesConfig = {
-      ...this.presetRoleConfig,
-      ...rolesConfig,
-    };
-    const initialMessages = items.map(({ message }) => message);
-    this.chatEngine = new ChatService(this.props.modelConfig, initialMessages);
+    const { messages, itemProps } = this.props.messageList;
+    this.rolesConfig = merge(this.presetRoleConfig, itemProps);
+    this.chatEngine = new ChatService(this.props.chatService, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
@@ -99,12 +96,10 @@ export default class Chatbot extends Component<TdChatProps> {
     user: {
       variant: 'text',
       placement: 'right',
-      avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     },
     assistant: {
       variant: 'text',
       placement: 'left',
-      avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       actions: (preset) => preset,
     },
     system: {},
@@ -120,16 +115,11 @@ export default class Chatbot extends Component<TdChatProps> {
     this.fire('submit', value, {
       composed: true,
     });
-    // this.listRef.current?.scrollToBottom();
   };
 
   private handleStop = () => {
     this.chatEngine.abortChat();
     this.fire('stop');
-  };
-
-  private handleClear = (e: Event) => {
-    this.fire('clear', e);
   };
 
   private onAttachmentsRemove = (e: CustomEvent<File[]>) => {
@@ -138,7 +128,7 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
-    const uploadedResult = await this.props?.attachmentProps?.onFileSelected?.(e.detail);
+    const uploadedResult = await this.props?.input?.onFileSelect?.(e.detail);
     if (uploadedResult.length > 0) {
       // 使用不可变方式更新数组
       const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
@@ -160,7 +150,7 @@ export default class Chatbot extends Component<TdChatProps> {
       (prev, curr) => prev.concat(curr.attributes.slot),
       [],
     );
-    const items = this.props.reverse ? [...this.messages].reverse() : this.messages;
+    const items = this.props.messageList.reverse ? [...this.messages].reverse() : this.messages;
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
@@ -175,30 +165,26 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   };
 
-  render({ layout, clearHistory, inputCSS }: OmiProps<TdChatProps>) {
+  render({ layout, injectCSS, input }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     // console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
         {this.messages && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
-        {clearHistory && (
-          <div className={`${className}-clear`}>
-            <t-button type="text" onClick={this.handleClear}>
-              清空历史记录
-            </t-button>
-          </div>
-        )}
         <t-chat-input
           className={`${className}-input-wrapper`}
-          css={inputCSS}
+          css={injectCSS?.chatInput}
+          status={this.chatStatus}
           actions
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
-          status={this.chatStatus}
           onStop={this.handleStop}
-          attachments={this.files.value}
-          onAttachmentsSelect={this.onAttachmentsSelect}
-          onAttachmentsRemove={this.onAttachmentsRemove}
+          attachmentsProps={{
+            items: this.files.value,
+            onRemove: this.onAttachmentsRemove,
+          }}
+          onFileSelect={this.onAttachmentsSelect}
+          {...input}
         >
           <slot name="input-header" slot="header"></slot>
           <slot name="input-footer-left" slot="footer-left"></slot>

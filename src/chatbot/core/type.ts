@@ -138,7 +138,7 @@ export interface RequestParams extends ModelParams {
   attachments?: AttachmentContent['data'];
 }
 
-export interface LLMConfig {
+export interface ChatServiceConfig {
   endpoint?: string;
   stream?: boolean;
   retryInterval?: number;
@@ -164,7 +164,7 @@ export interface ModelParams {
 }
 
 export interface ModelServiceState extends ModelParams {
-  config: LLMConfig;
+  config: ChatServiceConfig;
 }
 
 // 聚合根状态

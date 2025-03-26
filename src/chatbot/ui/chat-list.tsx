@@ -95,7 +95,8 @@ export default class Chatlist extends Component<TdChatListProps> {
   private handleScroll = (e) => {
     this.checkAutoScroll();
     this.checkAndShowScrollButton();
-    this.fire('scroll', e);
+    this.props?.onScroll?.(e);
+    this.fire('list_scroll', e);
   };
 
   ready(): void {

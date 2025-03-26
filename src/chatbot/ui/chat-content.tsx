@@ -1,7 +1,7 @@
 import '../../message';
 
 import markdownIt from 'markdown-it';
-import { Component, createRef, OmiProps, signal, tag } from 'omi';
+import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import type { TdChatContentMDPluginConfig, TdChatContentMDPresetConfig, TdChatContentProps } from '../type';
@@ -60,12 +60,6 @@ export default class ChatContent extends Component<TdChatContentProps> {
   md: markdownIt | null = null;
 
   isMarkdownInit = signal(false);
-
-  private lastHTML = '';
-
-  private appendLock = false;
-
-  private markdownContainer = createRef<HTMLElement>();
 
   install() {
     this.initMarkdown();
