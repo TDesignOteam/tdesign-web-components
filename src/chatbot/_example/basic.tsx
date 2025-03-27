@@ -350,9 +350,11 @@ export default class BasicChat extends Component {
     return (
       <t-chatbot
         style={{ display: 'block', height: '80vh' }}
-        messages={mockData}
+        data={{
+          messages: mockData,
+        }}
         rolesConfig={rolesConfig}
-        input={{
+        senderProps={{
           attachmentProps,
         }}
         chatService={mockModels}

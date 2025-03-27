@@ -9,8 +9,8 @@ import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
-import ChatService from './core';
+import type { AttachmentItem, AttachmentType, ChatServiceConfig, ChatStatus, Message } from './core/type';
+import ChatEngine from './core';
 import type { TdChatListProps, TdChatProps, TdChatRolesConfig } from './type';
 
 import styles from './style/chat.less';
@@ -24,9 +24,9 @@ export default class Chatbot extends Component<TdChatProps> {
     clearHistory: Boolean,
     layout: String,
     reverse: Boolean,
-    messages: Array,
+    data: Object,
     rolesConfig: Object,
-    input: Object,
+    senderProps: Object,
     chatService: Object,
     injectCSS: Object,
   };
@@ -35,14 +35,16 @@ export default class Chatbot extends Component<TdChatProps> {
     clearHistory: false,
     layout: 'both',
     reverse: false,
-    messages: [],
+    data: {
+      messages: [],
+    },
   };
 
   listRef = createRef<TdChatListProps>();
 
   public messages: Message[] = [];
 
-  public chatEngine: ChatService;
+  public chatEngine: ChatEngine;
 
   private chatStatus: ChatStatus = 'idle';
 
@@ -51,6 +53,8 @@ export default class Chatbot extends Component<TdChatProps> {
   private unsubscribeMsg?: () => void;
 
   private files = signal<Attachment[]>([]);
+
+  private config = signal<ChatServiceConfig>({});
 
   provide = {
     messageStore: {},
@@ -63,9 +67,9 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { messages, rolesConfig } = this.props;
+    const { data, rolesConfig, chatService: config } = this.props;
     this.rolesConfig = merge(this.presetRoleConfig, rolesConfig);
-    this.chatEngine = new ChatService(this.props.chatService, messages);
+    this.chatEngine = new ChatEngine(config, data.messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
@@ -73,6 +77,7 @@ export default class Chatbot extends Component<TdChatProps> {
       this.chatStatus = messageStore.currentMessage.status;
     }
     this.messages = messageStore.getState().messages;
+    console.log('====initChat', data, config, this.chatStatus);
     this.subscribeToChat();
   }
 
@@ -85,7 +90,8 @@ export default class Chatbot extends Component<TdChatProps> {
     this.unsubscribeMsg = this.chatEngine.messageStore.subscribe(
       (state) => {
         this.messages = state.messages;
-        this.chatStatus = this.messages.at(-1)?.status;
+        this.chatStatus = this.messages.at(-1)?.status || 'idle';
+        console.log('====subscribeToChat', this.chatStatus, this.messages);
         this.update();
       },
       // ['messageIds'],
@@ -128,7 +134,7 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
-    const uploadedResult = await this.props?.input?.onFileSelect?.(e.detail);
+    const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e.detail);
     if (uploadedResult.length > 0) {
       // 使用不可变方式更新数组
       const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
@@ -165,7 +171,7 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   };
 
-  render({ layout, injectCSS, input }: OmiProps<TdChatProps>) {
+  render({ layout, injectCSS, senderProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     // console.log('====render chat', this.messages);
     return (
@@ -184,7 +190,7 @@ export default class Chatbot extends Component<TdChatProps> {
             onRemove: this.onAttachmentsRemove,
           }}
           onFileSelect={this.onAttachmentsSelect}
-          {...input}
+          {...senderProps}
         >
           <slot name="input-header" slot="header"></slot>
           <slot name="input-footer-left" slot="footer-left"></slot>
