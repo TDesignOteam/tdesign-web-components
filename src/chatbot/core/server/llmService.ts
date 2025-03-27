@@ -35,7 +35,7 @@ export class LLMService implements ILLMService {
       }
 
       const data = await response.json();
-      return config.onComplete?.(false, params, data);
+      return config.onComplete?.(false, req, data);
     } catch (error) {
       config.onError?.(error);
       throw error;
@@ -56,7 +56,7 @@ export class LLMService implements ILLMService {
         config.onError?.(error);
       },
       onComplete: (isAborted) => {
-        config.onComplete?.(isAborted, params);
+        config.onComplete?.(isAborted, req);
       },
     });
 

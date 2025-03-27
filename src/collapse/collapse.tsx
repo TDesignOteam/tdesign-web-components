@@ -84,17 +84,6 @@ export default class Collapse extends Component<TdCollapseProps> {
     }
   }
 
-  receiveProps(newProps) {
-    const { value, borderless, defaultExpandAll, expandIconPlacement, expandOnRowClick, disabled } = newProps;
-    value !== undefined && (this.collapseValue.value = value || []);
-    borderless !== undefined && (this.innerBorderless.value = borderless);
-    defaultExpandAll !== undefined && (this.innerDefaultExpandAll.value = defaultExpandAll);
-    disabled !== undefined && (this.innerDisabled.value = disabled);
-    expandIconPlacement !== undefined && (this.innerExpandIconPlacement.value = expandIconPlacement || 'left');
-    expandOnRowClick !== undefined && (this.innerExpandOnRowClick.value = expandOnRowClick);
-    return true;
-  }
-
   render(props: OmiProps<CollapseProps>): TNode {
     const { innerClass, innerStyle, borderless } = props;
 

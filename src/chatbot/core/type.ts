@@ -132,12 +132,13 @@ export type SSEChunkData = {
   data: any;
 };
 
-export interface RequestParams extends ModelParams {
+export interface RequestParams extends RequestInit {
   messageID: string;
   prompt: string;
   attachments?: AttachmentContent['data'];
 }
 
+// 基础配置类型
 export interface ChatServiceConfig {
   endpoint?: string;
   stream?: boolean;
@@ -145,10 +146,13 @@ export interface ChatServiceConfig {
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
   onMessage?: (chunk: SSEChunkData) => AIMessageContent | null;
-  onComplete?: (isAborted: Boolean, params: RequestParams, result?: any) => void;
+  onComplete?: (isAborted: Boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => void;
   onError?: (error: Error | Response) => void;
 }
+
+// 联合类型支持静态配置和动态生成
+export type ChatServiceConfigSetter = ChatServiceConfig | ((params?: any) => ChatServiceConfig);
 
 // 消息相关状态
 export interface MessageState {

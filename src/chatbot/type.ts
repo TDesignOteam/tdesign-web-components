@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it';
 
 import { TdChatInputProps } from '../chat-input';
 import type { StyledProps, TNode } from '../common';
-import type { ChatServiceConfig, MessageRole } from './core/type';
+import type { ChatServiceConfigSetter, MessageRole } from './core/type';
 import type { Message } from './core/type';
 
 export type TdChatItemActionName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
@@ -69,15 +69,13 @@ export interface TdChatProps extends StyledProps {
   /** 消息列表配置（透传至t-chat-list） */
   listProps?: TdChatListProps;
   /** 消息数据源 */
-  data?: {
-    messages: Array<Message>;
-  };
+  messages: Array<Message>;
   /** 角色配置 */
   rolesConfig?: TdChatRolesConfig;
   /** 输入框配置（透传至t-chat-input） */
   senderProps?: TdChatInputProps;
   /** 模型服务配置 */
-  chatService?: ChatServiceConfig;
+  chatService?: ChatServiceConfigSetter;
 }
 
 export type TdChatRolesConfig = {

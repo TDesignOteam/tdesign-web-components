@@ -5,7 +5,7 @@ import { Component } from 'omi';
 import type { TdChatRolesConfig } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
-import type { AIMessageContent, ChatServiceConfig, Message, SSEChunkData } from '../core/type';
+import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -261,7 +261,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
   }
 }
 
-const mockModels: ChatServiceConfig = {
+const mockModels = {
   endpoint: 'http://localhost:3000/sse/normal',
   stream: true,
   onComplete: () => {
@@ -338,10 +338,10 @@ const attachmentProps = {
 
 const rolesConfig: TdChatRolesConfig = {
   user: {
-    avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    // avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
   },
   assistant: {
-    avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+    // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
   },
 };
 
@@ -350,9 +350,7 @@ export default class BasicChat extends Component {
     return (
       <t-chatbot
         style={{ display: 'block', height: '80vh' }}
-        data={{
-          messages: mockData,
-        }}
+        messages={mockData}
         rolesConfig={rolesConfig}
         senderProps={{
           attachmentProps,

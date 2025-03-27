@@ -5,6 +5,7 @@ import {
   type AIMessageContent,
   type AttachmentItem,
   type ChatServiceConfig,
+  type ChatServiceConfigSetter,
   isAIMessage,
   type Message,
   type RequestParams,
@@ -27,9 +28,9 @@ export default class ChatEngine implements IChatEngine {
 
   private lastRequestParams: RequestParams | undefined;
 
-  constructor(initialModelState: ChatServiceConfig, initialMessages?: Message[]) {
+  constructor(configSetter: ChatServiceConfigSetter, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.config = initialModelState || {};
+    this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
     this.llmService = new LLMService();
     this.processor = new MessageProcessor();
   }

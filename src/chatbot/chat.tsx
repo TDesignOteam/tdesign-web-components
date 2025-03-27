@@ -9,7 +9,7 @@ import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatServiceConfig, ChatStatus, Message } from './core/type';
+import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
 import ChatEngine from './core';
 import type { TdChatListProps, TdChatProps, TdChatRolesConfig } from './type';
 
@@ -24,7 +24,7 @@ export default class Chatbot extends Component<TdChatProps> {
     clearHistory: Boolean,
     layout: String,
     reverse: Boolean,
-    data: Object,
+    messages: Array,
     rolesConfig: Object,
     senderProps: Object,
     chatService: Object,
@@ -35,14 +35,12 @@ export default class Chatbot extends Component<TdChatProps> {
     clearHistory: false,
     layout: 'both',
     reverse: false,
-    data: {
-      messages: [],
-    },
+    messages: [],
   };
 
   listRef = createRef<TdChatListProps>();
 
-  public messages: Message[] = [];
+  public chatMessages: Message[] = [];
 
   public chatEngine: ChatEngine;
 
@@ -53,8 +51,6 @@ export default class Chatbot extends Component<TdChatProps> {
   private unsubscribeMsg?: () => void;
 
   private files = signal<Attachment[]>([]);
-
-  private config = signal<ChatServiceConfig>({});
 
   provide = {
     messageStore: {},
@@ -67,17 +63,17 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { data, rolesConfig, chatService: config } = this.props;
+    const { messages, rolesConfig, chatService: config } = this.props;
     this.rolesConfig = merge(this.presetRoleConfig, rolesConfig);
-    this.chatEngine = new ChatEngine(config, data.messages);
+    this.chatEngine = new ChatEngine(config, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
     if (messageStore.currentMessage) {
       this.chatStatus = messageStore.currentMessage.status;
     }
-    this.messages = messageStore.getState().messages;
-    console.log('====initChat', data, config, this.chatStatus);
+    this.chatMessages = messageStore.getState().messages;
+    console.log('====initChat', messages, config, this.rolesConfig, this.chatStatus);
     this.subscribeToChat();
   }
 
@@ -89,9 +85,9 @@ export default class Chatbot extends Component<TdChatProps> {
   private subscribeToChat() {
     this.unsubscribeMsg = this.chatEngine.messageStore.subscribe(
       (state) => {
-        this.messages = state.messages;
-        this.chatStatus = this.messages.at(-1)?.status || 'idle';
-        console.log('====subscribeToChat', this.chatStatus, this.messages);
+        this.chatMessages = state.messages;
+        this.chatStatus = this.chatMessages.at(-1)?.status || 'idle';
+        console.log('====subscribeToChat', this.chatStatus, this.chatMessages);
         this.update();
       },
       // ['messageIds'],
@@ -156,7 +152,7 @@ export default class Chatbot extends Component<TdChatProps> {
       (prev, curr) => prev.concat(curr.attributes.slot),
       [],
     );
-    const items = this.props.reverse ? [...this.messages].reverse() : this.messages;
+    const items = this.props.reverse ? [...this.chatMessages].reverse() : this.chatMessages;
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
@@ -176,7 +172,7 @@ export default class Chatbot extends Component<TdChatProps> {
     // console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
-        {this.messages && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
+        {this.chatMessages && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
         <t-chat-input
           className={`${className}-input-wrapper`}
           css={injectCSS?.chatInput}
