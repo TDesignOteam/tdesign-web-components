@@ -8,7 +8,7 @@ import '../button';
 import '../tooltip';
 import '../dropdown';
 
-import { Component, createRef, signal, tag } from 'omi';
+import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
@@ -94,6 +94,16 @@ export default class ChatInput extends Component<TdChatInputProps> {
       composed: true,
     });
   };
+
+  receiveProps(
+    props: TdChatInputProps | OmiProps<TdChatInputProps, any>,
+    oldProps: TdChatInputProps | OmiProps<TdChatInputProps, any>,
+  ) {
+    if (props.status !== oldProps.status) return true;
+    if (props.allowStop !== oldProps.allowStop) return true;
+
+    return false;
+  }
 
   private handleFileSelected = () => {
     const files = Array.from(this.uploadRef.current?.files || []);

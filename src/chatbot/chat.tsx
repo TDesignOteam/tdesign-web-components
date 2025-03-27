@@ -182,6 +182,7 @@ export default class Chatbot extends Component<TdChatProps> {
           css={injectCSS?.chatInput}
           status={this.chatStatus}
           actions
+          allowStop
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
           onStop={this.handleStop}
