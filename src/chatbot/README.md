@@ -22,6 +22,10 @@ spline: base
 
 {{ customRender }}
 
+### 自定义markdown渲染
+
+{{ customMDRender }}
+
 ### 自定义item渲染
 
 {{ customRenderItem }}

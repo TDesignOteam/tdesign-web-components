@@ -161,7 +161,7 @@ export default class Chatbot extends Component<TdChatProps> {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
       return (
-        <t-chat-item key={id} {...this.rolesConfig?.[role]} message={item}>
+        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.rolesConfig?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => (
             <slot name={slotName} slot={slotName}></slot>
