@@ -267,7 +267,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
           {data?.text || ''}
           <div slot="header" className={`${className}__think__header__content`}>
             {(status === 'streaming' || status === 'complete') && this.renderThinkingStatus(status)}
-            {status === 'stop' ? '思考终止' : data?.title}
+            {status === 'stop' ? '思考已终止' : data?.title}
           </div>
         </t-collapse-panel>
       </t-collapse>
@@ -276,7 +276,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private renderSearch(content: SearchContent) {
     const { references, title } = content.data;
-    const titleText = content?.status === 'stop' ? '搜索终止' : title;
+    const titleText = content?.status === 'stop' ? '搜索已终止' : title;
     const imgs = (
       <div className={`${className}__search-icons`}>
         {references.map((item) =>

@@ -63,9 +63,19 @@ export class MessageStore extends ReactiveState<MessageState> {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
         message.status = status;
-        message.content.forEach((content) => {
-          content.status = status;
-        });
+        if (isAIMessage(message) && message.content.length > 0) {
+          message.content.at(-1).status = status;
+        }
+      }
+    });
+  }
+
+  // 为消息设置扩展属性
+  setMessageExt(messageId: string, attr = {}) {
+    this.setState((draft) => {
+      const message = draft.messages.find((m) => m.id === messageId);
+      if (message) {
+        message.ext = { ...message.ext, ...attr };
       }
     });
   }

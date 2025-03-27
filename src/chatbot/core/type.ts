@@ -85,6 +85,7 @@ interface BaseMessage {
   id: string;
   status?: MessageStatus;
   timestamp?: string;
+  ext?: any;
 }
 
 // 类型扩展机制
@@ -133,8 +134,8 @@ export type SSEChunkData = {
 };
 
 export interface RequestParams extends RequestInit {
-  messageID: string;
   prompt: string;
+  messageID?: string;
   attachments?: AttachmentContent['data'];
 }
 
@@ -147,7 +148,7 @@ export interface ChatServiceConfig {
   onRequest?: (params: RequestParams) => RequestInit;
   onMessage?: (chunk: SSEChunkData) => AIMessageContent | null;
   onComplete?: (isAborted: Boolean, params: RequestInit, result?: any) => void;
-  onAbort?: () => void;
+  onAbort?: () => Promise<void>;
   onError?: (error: Error | Response) => void;
 }
 

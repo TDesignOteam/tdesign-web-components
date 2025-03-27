@@ -111,7 +111,10 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
-    await this.chatEngine.sendMessage(value, this.uploadedAttachments);
+    await this.chatEngine.sendMessage({
+      prompt: value,
+      attachments: this.uploadedAttachments,
+    });
     this.uploadedAttachments = [];
     this.files.value = [];
     this.fire('submit', value, {

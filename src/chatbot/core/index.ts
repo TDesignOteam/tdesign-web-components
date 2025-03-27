@@ -3,7 +3,6 @@ import { MessageStore } from './store/message';
 import MessageProcessor from './processor';
 import {
   type AIMessageContent,
-  type AttachmentItem,
   type ChatServiceConfig,
   type ChatServiceConfigSetter,
   isAIMessage,
@@ -13,8 +12,8 @@ import {
 } from './type';
 
 export interface IChatEngine {
-  sendMessage(prompt: string, attachments?: AttachmentItem[]): Promise<void>;
-  abortChat(): void;
+  sendMessage(requestParams: RequestParams): Promise<void>;
+  abortChat(): Promise<void>;
 }
 
 export default class ChatEngine implements IChatEngine {
@@ -28,6 +27,8 @@ export default class ChatEngine implements IChatEngine {
 
   private lastRequestParams: RequestParams | undefined;
 
+  private stopReceive = false;
+
   constructor(configSetter: ChatServiceConfigSetter, initialMessages?: Message[]) {
     this.messageStore = new MessageStore(this.convertMessages(initialMessages));
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
@@ -35,7 +36,8 @@ export default class ChatEngine implements IChatEngine {
     this.processor = new MessageProcessor();
   }
 
-  public async sendMessage(prompt: string, attachments?: AttachmentItem[]) {
+  public async sendMessage(requestParams: RequestParams) {
+    const { prompt, attachments } = requestParams;
     const userMessage = this.processor.createUserMessage(prompt, attachments);
     const aiMessage = this.processor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
@@ -47,9 +49,12 @@ export default class ChatEngine implements IChatEngine {
     this.sendReuqest(params);
   }
 
-  public abortChat() {
+  public async abortChat() {
+    this.stopReceive = true;
+    if (this.config?.onAbort) {
+      await this.config.onAbort();
+    }
     this.llmService.closeSSE();
-    this.config?.onAbort && this.config.onAbort();
   }
 
   // 用户触发重新生成 -> 检查最后一条AI消息 ->
@@ -86,6 +91,7 @@ export default class ChatEngine implements IChatEngine {
       if (this.config.stream) {
         // 处理sse流式响应模式
         this.setMessageStatus(id, 'streaming');
+        this.stopReceive = false;
         await this.handleStreamRequest(params);
       } else {
         // 处理批量响应模式
@@ -111,10 +117,10 @@ export default class ChatEngine implements IChatEngine {
   private async handleStreamRequest(params: RequestParams) {
     const id = params.messageID;
     this.setMessageStatus(id, 'pending');
-
     await this.llmService.handleStreamRequest(params, {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
+        if (this.stopReceive) return null;
         const parsed = this.config?.onMessage?.(chunk);
         if (parsed) {
           this.processContentUpdate(id, parsed);
@@ -151,7 +157,7 @@ export default class ChatEngine implements IChatEngine {
     if (!message || !isAIMessage(message)) return;
 
     // 只需要处理最后一个内容快
-    const lastContent = message.content[message.content.length - 1];
+    const lastContent = message.content.at(-1);
     const processed = this.processor.processContentUpdate(lastContent, rawChunk);
     this.messageStore.appendContent(messageId, processed);
   }
