@@ -8,7 +8,7 @@ import '../button';
 import '../tooltip';
 import '../dropdown';
 
-import { Component, createRef, signal, tag } from 'omi';
+import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
@@ -34,6 +34,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     textareaProps: Object,
     uploadProps: Object,
     onFileSelect: Function,
+    onFileRemove: Function,
     onSend: Function,
     onStop: Function,
     onChange: Function,
@@ -89,17 +90,27 @@ export default class ChatInput extends Component<TdChatInputProps> {
     const removed = e.detail;
     const rest = this.attachmentsValue.filter((item) => item !== removed);
     this.pAttachments.value = rest;
-    this.fire('attachmentsRemove', rest, {
+    this.fire('fileRemove', rest, {
       composed: true,
     });
   };
+
+  receiveProps(
+    props: TdChatInputProps | OmiProps<TdChatInputProps, any>,
+    oldProps: TdChatInputProps | OmiProps<TdChatInputProps, any>,
+  ) {
+    if (props.status !== oldProps.status) return true;
+    if (props.allowStop !== oldProps.allowStop) return true;
+
+    return false;
+  }
 
   private handleFileSelected = () => {
     const files = Array.from(this.uploadRef.current?.files || []);
     if (!files.length) {
       return;
     }
-    this.fire('attachmentsSelect', files, {
+    this.fire('fileSelect', files, {
       composed: true,
     });
     this.uploadRef.current.value = '';

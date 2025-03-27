@@ -157,7 +157,7 @@ export default class Chatbot extends Component<TdChatProps> {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
       return (
-        <t-chat-item key={id} {...this.rolesConfig?.[role]} message={item}>
+        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.rolesConfig?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => (
             <slot name={slotName} slot={slotName}></slot>
@@ -178,14 +178,15 @@ export default class Chatbot extends Component<TdChatProps> {
           css={injectCSS?.chatInput}
           status={this.chatStatus}
           actions
+          allowStop
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
           onStop={this.handleStop}
           attachmentsProps={{
             items: this.files.value,
-            onRemove: this.onAttachmentsRemove,
           }}
           onFileSelect={this.onAttachmentsSelect}
+          onFileRemove={this.onAttachmentsRemove}
           {...senderProps}
         >
           <slot name="input-header" slot="header"></slot>
