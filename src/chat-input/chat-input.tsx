@@ -34,6 +34,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     textareaProps: Object,
     uploadProps: Object,
     onFileSelect: Function,
+    onFileRemove: Function,
     onSend: Function,
     onStop: Function,
     onChange: Function,
@@ -89,7 +90,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     const removed = e.detail;
     const rest = this.attachmentsValue.filter((item) => item !== removed);
     this.pAttachments.value = rest;
-    this.fire('attachmentsRemove', rest, {
+    this.fire('fileRemove', rest, {
       composed: true,
     });
   };
@@ -99,7 +100,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     if (!files.length) {
       return;
     }
-    this.fire('attachmentsSelect', files, {
+    this.fire('fileSelect', files, {
       composed: true,
     });
     this.uploadRef.current.value = '';

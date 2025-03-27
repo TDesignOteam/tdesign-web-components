@@ -187,9 +187,9 @@ export default class Chatbot extends Component<TdChatProps> {
           onStop={this.handleStop}
           attachmentsProps={{
             items: this.files.value,
-            onRemove: this.onAttachmentsRemove,
           }}
           onFileSelect={this.onAttachmentsSelect}
+          onFileRemove={this.onAttachmentsRemove}
           {...senderProps}
         >
           <slot name="input-header" slot="header"></slot>

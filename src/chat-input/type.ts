@@ -36,4 +36,5 @@ export interface TdChatInputProps {
   onBlur?: (value: string, context: { e: FocusEvent }) => void;
   onFocus?: (value: string, context: { e: FocusEvent }) => void;
   onFileSelect?: (files: File[]) => Promise<Attachment[]>;
+  onFileRemove?: (files: File[]) => Promise<Attachment[]>;
 }

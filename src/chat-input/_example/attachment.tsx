@@ -61,13 +61,16 @@ export default class AttachmentExample extends Component {
         placeholder="请输入内容"
         status={this.status.value}
         actions
-        attachments={this.files.value}
         uploadProps={{
           multiple: true,
           accept: 'image/*',
         }}
-        onAttachmentsSelect={this.onAttachmentsSelect}
-        onAttachmentsRemove={this.onAttachmentsRemove}
+        attachmentsProps={{
+          items: this.files.value,
+          overflow: 'scrollX',
+        }}
+        onFileSelect={this.onAttachmentsSelect}
+        onFileRemove={this.onAttachmentsRemove}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}
