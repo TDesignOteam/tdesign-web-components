@@ -1,4 +1,5 @@
 import './index.css';
+import './pages/test';
 import './pages/layout/component-layout';
 
 import sidebar from './sidebar.config';
@@ -22,6 +23,12 @@ export const routes = [
     redirect: '/webcomponents/getting-started',
   },
   ...createComponentRoutes(sidebar),
+  {
+    path: '/webcomponents/test',
+    render() {
+      return <test-parent-component />;
+    },
+  },
   {
     path: '/before-enter/test',
     beforeEnter: () =>
