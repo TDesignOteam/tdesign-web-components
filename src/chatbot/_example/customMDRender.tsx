@@ -73,9 +73,10 @@ const mockModels = {
   onRequest: (params) => {
     const { prompt, messageID, attachments = [] } = params;
     return {
-      credentials: 'include',
       headers: {
         'X-Mock-Key': 'test123',
+        'Content-Type': 'text/event-stream',
+        'X-Requested-With': 'XMLHttpRequest',
       },
       body: JSON.stringify({
         session_id: 'session_123456789',
@@ -212,9 +213,7 @@ export default class BasicChat extends Component {
           }
         `}
         style={{ display: 'block', height: '500px' }}
-        data={{
-          messages: mockData,
-        }}
+        messages={mockData}
         rolesConfig={rolesConfig}
         chatService={mockModels}
       ></t-chatbot>

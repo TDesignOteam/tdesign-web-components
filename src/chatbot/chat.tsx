@@ -65,7 +65,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private initChat() {
     const { messages, rolesConfig, chatService: config, autoSendPrompt } = this.props;
-    this.rolesConfig = merge(this.presetRoleConfig, rolesConfig);
+    this.roles = merge(this.presetRoleConfig, rolesConfig);
     this.chatEngine = new ChatEngine(config, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
@@ -74,7 +74,7 @@ export default class Chatbot extends Component<TdChatProps> {
       this.chatStatus = messageStore.currentMessage.status;
     }
     this.chatMessages = messageStore.getState().messages;
-    console.log('====initChat', messages, config, this.rolesConfig, this.chatStatus);
+    console.log('====initChat', messages, config, this.roles, this.chatStatus);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
     if (autoSendPrompt) {
@@ -114,7 +114,7 @@ export default class Chatbot extends Component<TdChatProps> {
     system: {},
   };
 
-  rolesConfig = this.presetRoleConfig;
+  private roles = this.presetRoleConfig;
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
@@ -167,7 +167,7 @@ export default class Chatbot extends Component<TdChatProps> {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
       return (
-        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.rolesConfig?.[role]} message={item}>
+        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.roles?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => (
             <slot name={slotName} slot={slotName}></slot>
