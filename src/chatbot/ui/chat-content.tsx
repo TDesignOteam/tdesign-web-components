@@ -103,11 +103,13 @@ export default class ChatContent extends Component<TdChatContentProps> {
       const codeHighlightConfig = enabledPresetPlugins.find((item) => item.preset === 'code');
       let codeHighlight;
       if (codeHighlightConfig) {
-        codeHighlight = (code: string, lang: string) => {
-          import('./md/chat-md-code');
+        await import('./md/chat-md-code');
+        const codeStyles = await import('../style/md/chat-md-code.less');
+        ChatContent.css.push(codeStyles.default);
+
+        codeHighlight = (code: string, lang: string) =>
           // 传参注意转义
-          return `<t-chat-md-code lang="${lang}" code="${md.utils.escapeHtml(code)}"></t-chat-md-code>`;
-        };
+          `<t-chat-md-code lang="${lang}" code="${md.utils.escapeHtml(code)}"></t-chat-md-code>`;
       }
       md.options.highlight = codeHighlight;
     }
