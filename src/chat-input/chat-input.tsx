@@ -99,9 +99,10 @@ export default class ChatInput extends Component<TdChatInputProps> {
     props: TdChatInputProps | OmiProps<TdChatInputProps, any>,
     oldProps: TdChatInputProps | OmiProps<TdChatInputProps, any>,
   ) {
+    if (props.disabled !== oldProps.disabled) return true;
+    if (props.value !== oldProps.value) return true;
+    if (props.attachmentsProps.items !== oldProps.attachmentsProps.items) return true;
     if (props.status !== oldProps.status) return true;
-    if (props.allowStop !== oldProps.allowStop) return true;
-
     return false;
   }
 
