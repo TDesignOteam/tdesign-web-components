@@ -54,7 +54,12 @@ export type SearchContent = BaseContent<
     references?: ReferenceItem[];
   }
 >;
-export type SuggestionContent = BaseContent<'suggestion', ReferenceItem[]>;
+
+export type SuggestionItem = {
+  title: string;
+  prompt?: string;
+};
+export type SuggestionContent = BaseContent<'suggestion', SuggestionItem[]>;
 
 // 附件消息
 export type AttachmentItem = {

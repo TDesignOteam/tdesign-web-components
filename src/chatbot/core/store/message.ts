@@ -152,6 +152,6 @@ export class MessageStore extends ReactiveState<MessageState> {
 // 订阅消息列表变化
 // useEffect(() => {
 //   return service.messageStore.subscribe(state => {
-//     setMessages(state.messageIds.map(id => state.messages[id]));
-//   }, ['messages']);
+//     setMessages(state.messages);
+//   });
 // }, []);

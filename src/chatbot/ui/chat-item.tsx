@@ -1,4 +1,4 @@
-import './chat-content';
+import './chat-markdown-content';
 import '../../collapse';
 import '../../skeleton';
 import '../../attachments';
@@ -34,7 +34,7 @@ import {
   ThinkingContent,
   UserMessageContent,
 } from '../core/type';
-import type { TdChatItemAction, TdChatItemProps } from '../type';
+import type { TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../type';
 import { markdownToTextWithParser } from './md/utils';
 
 import styles from '../style/chat-item.less';
@@ -56,6 +56,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     variant: String,
     chatContentProps: Object,
     customRenderConfig: Object,
+    onActions: Function,
   };
 
   static defaultProps = {
@@ -63,17 +64,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
     placement: 'left',
   };
 
-  // static isLightDOM = true;
-
-  private messageId!: string;
-
   inject = ['chatEngine'];
 
   searchExpand = signal(false);
-
-  ready() {
-    this.messageId = this.props.message.id!;
-  }
 
   receiveProps(
     props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
@@ -98,7 +91,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     return true;
   }
 
-  renderAvatar() {
+  private renderAvatar() {
     return (
       <div class={`${className}__avatar`}>
         <div class={`${className}__avatar__box`}>
@@ -112,15 +105,30 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  clickRefreshHandler = () => {
+  private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
+    if (this.props?.onActions?.[action]) {
+      this.props.onActions[action](data, callback);
+    } else {
+      callback?.();
+      this.fire(
+        'message_action',
+        { action, data },
+        {
+          composed: true,
+        },
+      );
+    }
+  };
+
+  private clickRefreshHandler = () => {
     if (!isAIMessage(this.props.message)) {
       return;
     }
-    this.injection.chatEngine.regenerateAIMessage();
+    this.handleClickAction('replay', this.props.message, () => this.injection.chatEngine.regenerateAIMessage());
   };
 
-  clickCopyHandler = () => {
-    if (this.props.message?.role !== 'assistant') {
+  private clickCopyHandler = () => {
+    if (!isAIMessage(this.props.message)) {
       return;
     }
     const copyContent = this.props.message.content.reduce((pre, item) => {
@@ -133,18 +141,19 @@ export default class ChatItem extends Component<TdChatItemProps> {
       }
       return pre + item.data;
     }, '');
-
-    navigator.clipboard
-      .writeText(copyContent.toString())
-      .then(() => {
-        MessagePlugin.success('复制成功');
-      })
-      .catch(() => {
-        MessagePlugin.success('复制失败，请手动复制');
-      });
+    this.handleClickAction('copy', copyContent.toString(), () => {
+      navigator.clipboard
+        .writeText(copyContent.toString())
+        .then(() => {
+          MessagePlugin.success('复制成功');
+        })
+        .catch(() => {
+          MessagePlugin.success('复制失败，请手动复制');
+        });
+    });
   };
 
-  presetActions: TdChatItemAction[] = [
+  private presetActions: TdChatItemAction[] = [
     {
       name: 'replay',
       render: (
@@ -174,7 +183,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
       name: 'good',
       render: (
         <t-tooltip content="点赞">
-          <div class={`${className}__actions__preset__wrapper`}>
+          <div
+            class={`${className}__actions__preset__wrapper`}
+            onClick={() => this.handleClickAction('good', this.props.message)}
+          >
             <t-icon-thumb-up />
           </div>
         </t-tooltip>
@@ -184,7 +196,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
       name: 'bad',
       render: (
         <t-tooltip content="点踩">
-          <div class={`${className}__actions__preset__wrapper`}>
+          <div
+            class={`${className}__actions__preset__wrapper`}
+            onClick={() => this.handleClickAction('bad', this.props.message)}
+          >
             <t-icon-thumb-down />
           </div>
         </t-tooltip>
@@ -194,7 +209,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
       name: 'share',
       render: (
         <t-tooltip content="分享">
-          <div class={`${className}__actions__preset__wrapper`}>
+          <div
+            class={`${className}__actions__preset__wrapper`}
+            onClick={() => this.handleClickAction('share', this.props.message)}
+          >
             <t-icon-share-1 />
           </div>
         </t-tooltip>
@@ -202,17 +220,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
     },
   ];
 
-  renderActions() {
+  private renderActions() {
     const { actions, message } = this.props;
     if (!actions) {
       return null;
     }
     let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
     if (typeof actions === 'function') {
-      arrayActions = actions(this.presetActions);
+      arrayActions = actions(this.presetActions, message);
     }
 
-    return arrayActions.map((item, idx) => {
+    return arrayActions.map((item) => {
       // 默认消息完成时才展示action
       if (message.status !== 'complete') {
         return null;
@@ -221,11 +239,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         return null;
       }
       return (
-        <span
-          key={item.name}
-          class={`${className}__actions__item__wrapper`}
-          onClick={() => this.handleAction(item.name, idx)}
-        >
+        <span key={item.name} class={`${className}__actions__item__wrapper`}>
           {item.render}
         </span>
       );
@@ -234,8 +248,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return;
-    const { status, id, content = [] } = this.props.message;
-    console.log('===status', id, status);
+    const { status, content = [] } = this.props.message;
     // 如果有任一内容，就不用展示message整体状态
     if (content.length > 0) {
       return null;
@@ -261,6 +274,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   private renderThinking(content: ThinkingContent) {
+    // const height = this.props?.chatContentProps?.['thinking']?.height;
     const { data, status } = content;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
@@ -276,6 +290,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   private renderSearch(content: SearchContent) {
+    const { chatContentProps } = this.props;
     const { references, title } = content.data;
     const titleText = content?.status === 'stop' ? '搜索已终止' : title;
     const imgs = (
@@ -295,8 +310,10 @@ export default class ChatItem extends Component<TdChatItemProps> {
       <div
         className={`${className}__search__wrapper`}
         onClick={() => {
-          this.searchExpand.value = !this.searchExpand.value;
-          this.handleAction('searchExpand', 0, {});
+          if (chatContentProps.search.expandable) {
+            this.searchExpand.value = !this.searchExpand.value;
+          }
+          this.handleClickAction('searchResult', content);
         }}
       >
         {this.searchExpand.value ? (
@@ -309,7 +326,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
             }}
           >
             <t-collapse-panel className={`${className}__search__content`}>
-              <div className={`${className}__search-links`}>
+              <div
+                className={`${className}__search-links`}
+                onClick={() => {
+                  this.handleClickAction('searchItem', content);
+                }}
+              >
                 {references.map((content, idx) => (
                   <a target="_blank" href={content.url} className={`${className}__search-link`}>
                     {idx + 1}. {content.title}
@@ -335,8 +357,15 @@ export default class ChatItem extends Component<TdChatItemProps> {
         {data.map((suggestion, idx) =>
           suggestion?.title ? (
             <div
+              key={idx}
               className={`${className}__suggestion-item`}
-              onClick={() => this.handleAction('suggestion', idx, suggestion)}
+              onClick={() => {
+                this.handleClickAction('suggestion', suggestion, () => {
+                  this.injection.chatEngine.sendMessage({
+                    prompt: suggestion.prompt,
+                  });
+                });
+              }}
             >
               {suggestion.title}
               {convertToLightDomNode(<t-icon-arrow-right class={`${className}__suggestion-arrow`} />)}
@@ -393,13 +422,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
           return null;
         }
         return convertToLightDomNode(
-          <t-chat-content
+          <t-chat-md-content
             key={elementKey}
             className={`${className}__detail`}
-            {...chatContentProps}
+            {...chatContentProps?.markdown}
             content={content?.data || content}
             role={role}
-          ></t-chat-content>,
+          ></t-chat-md-content>,
         );
       }
 
@@ -434,13 +463,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
           return convertToLightDomNode(
-            <t-chat-content
+            <t-chat-md-content
               key={elementKey}
               className={`${className}__detail`}
-              {...chatContentProps}
+              {...chatContentProps?.markdown}
               content={content.data}
               role={role}
-            ></t-chat-content>,
+            ></t-chat-md-content>,
           );
         }
         return null;
@@ -478,8 +507,4 @@ export default class ChatItem extends Component<TdChatItemProps> {
       </div>
     );
   }
-
-  private handleAction = (action: string, index: number, data?: any) => {
-    this.fire('action', { action, index, data });
-  };
 }

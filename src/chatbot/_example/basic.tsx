@@ -1,10 +1,11 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import { Component } from 'omi';
-import type { TdChatRolesConfig } from 'tdesign-web-components/chatbot';
+import { Component, createRef } from 'omi';
+import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
+import Chatbot from '../chat';
 import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
@@ -109,15 +110,15 @@ const mockData: Message[] = [
         data: [
           {
             title: '《六姊妹》中有哪些观众喜欢的剧情点？',
-            url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_u7V4BL0GqFgDFAwvzR345RxrLo3Gdv5m.png',
+            prompt: '《六姊妹》中有哪些观众喜欢的剧情点？',
           },
           {
             title: '两部剧在演员表现上有什么不同？',
-            url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_LMDUO7DWP3cXGdOauIE8adfCwYWtvIqJ.png',
+            prompt: '两部剧在演员表现上有什么不同？',
           },
           {
             title: '《六姊妹》有哪些负面的评价？',
-            url: 'https://vfiles.gtimg.cn/wupload/creator_center.assets/45d68c02_GZEZ-r0UNhXci32OHT4BVjork53AlucQ.png',
+            prompt: '《六姊妹》有哪些负面的评价？',
           },
         ],
       },
@@ -336,27 +337,52 @@ const attachmentProps = {
   onFileRemove: () => {},
 };
 
-const rolesConfig: TdChatRolesConfig = {
-  user: {
-    // avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-  },
+const messageProps: TdChatMessageConfig = {
+  // user: {
+  //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+  // },
   assistant: {
     // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+    // actions: (preset) => {
+    //   return preset.filter(({ name }) => name !== 'share');
+    // },
+    onActions: {
+      replay: (data, callback) => {
+        console.log('自定义重新回复', data);
+        callback?.();
+      },
+      good: (msg) => {
+        console.log('点赞', msg.id);
+      },
+    },
+    chatContentProps: {
+      thinking: {
+        height: 200,
+      },
+    },
   },
 };
 
 export default class BasicChat extends Component {
+  chatRef = createRef<Chatbot>();
+
+  ready() {
+    this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
+      console.log('message_action', e.detail);
+    });
+  }
+
   render() {
     return (
       <t-chatbot
+        ref={this.chatRef}
         style={{ display: 'block', height: '80vh' }}
-        autoSendPrompt={'自动发出的提问'}
         messages={mockData}
-        rolesConfig={rolesConfig}
+        messageProps={messageProps}
         senderProps={{
           attachmentProps,
         }}
-        chatService={mockModels}
+        chatServiceConfig={mockModels}
       ></t-chatbot>
     );
   }

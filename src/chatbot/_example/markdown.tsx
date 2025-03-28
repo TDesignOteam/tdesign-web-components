@@ -34,7 +34,7 @@ export default class MarkdownExample extends Component {
         role: 'assistant',
       },
       chatContentProps: {
-        markdownProps: {
+        markdown: {
           options: {
             html: true,
             breaks: true,

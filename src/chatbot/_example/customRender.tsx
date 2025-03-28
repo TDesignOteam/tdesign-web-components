@@ -2,7 +2,7 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, createRef } from 'omi';
-import type { TdChatCustomRenderConfig, TdChatRolesConfig } from 'tdesign-web-components/chatbot';
+import type { TdChatCustomRenderConfig, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
@@ -120,7 +120,7 @@ const customRenderConfig: TdChatCustomRenderConfig = {
   }),
 };
 
-const rolesConfig: TdChatRolesConfig = {
+const messageProps: TdChatMessageConfig = {
   user: {
     variant: 'text',
     placement: 'right',
@@ -193,11 +193,9 @@ export default class BasicChat extends Component {
       <t-chatbot
         ref={this.chatRef}
         style={{ display: 'block', height: '500px' }}
-        data={{
-          messages: mockData,
-        }}
-        rolesConfig={rolesConfig}
-        chatService={mockModels}
+        messages={mockData}
+        messageProps={messageProps}
+        chatServiceConfig={mockModels}
       >
         <div slot="input-header">我是input头部</div>
         {/* 自定义渲染-植入插槽 */}

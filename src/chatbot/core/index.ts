@@ -61,9 +61,18 @@ export default class ChatEngine implements IChatEngine {
   // -> keepVersion=false: 删除旧消息 -> 创建新消息 -> 重新请求
   // -> keepVersion=true: 保留旧消息 -> 创建分支消息 -> 重新请求
   public async regenerateAIMessage(keepVersion: boolean = false) {
-    const { lastAIMessage } = this.messageStore;
-    if (!lastAIMessage || !this.lastRequestParams) return;
+    const { lastAIMessage, lastUserMessage } = this.messageStore;
+    if (!lastAIMessage) return;
 
+    if (!this.lastRequestParams) {
+      // 应对历史消息也有重新生成的情况
+      const { content, id } = lastUserMessage;
+      this.lastRequestParams = {
+        prompt: content.filter((c) => c.type === 'text')[0].data,
+        attachments: content.filter((c) => c.type === 'attachment')[0].data,
+        messageID: id,
+      };
+    }
     if (!keepVersion) {
       // 删除最后一条AI消息
       this.messageStore.removeMessage(lastAIMessage.id);

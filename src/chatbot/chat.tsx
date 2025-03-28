@@ -11,7 +11,7 @@ import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
 import ChatEngine from './core';
-import type { TdChatListProps, TdChatProps, TdChatRolesConfig } from './type';
+import type { TdChatListProps, TdChatMessageConfig,TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
@@ -26,9 +26,9 @@ export default class Chatbot extends Component<TdChatProps> {
     autoSendPrompt: String,
     reverse: Boolean,
     messages: Array,
-    rolesConfig: Object,
+    messageProps: Object,
     senderProps: Object,
-    chatService: Object,
+    chatServiceConfig: Object,
     injectCSS: Object,
   };
 
@@ -41,17 +41,30 @@ export default class Chatbot extends Component<TdChatProps> {
 
   listRef = createRef<TdChatListProps>();
 
-  public chatMessages: Message[] = [];
-
   public chatEngine: ChatEngine;
 
   private chatStatus: ChatStatus = 'idle';
+
+  private chatMessages: Message[] = [];
 
   private uploadedAttachments: AttachmentItem[] = [];
 
   private unsubscribeMsg?: () => void;
 
   private files = signal<Attachment[]>([]);
+
+  private messageRoleProps: TdChatMessageConfig = {
+    user: {
+      variant: 'text',
+      placement: 'right',
+    },
+    assistant: {
+      variant: 'text',
+      placement: 'left',
+      actions: (preset) => preset,
+    },
+    system: {},
+  };
 
   provide = {
     messageStore: {},
@@ -64,8 +77,8 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { messages, rolesConfig, chatService: config, autoSendPrompt } = this.props;
-    this.rolesConfig = merge(this.presetRoleConfig, rolesConfig);
+    const { messages, messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
+    this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     this.chatEngine = new ChatEngine(config, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
@@ -74,7 +87,7 @@ export default class Chatbot extends Component<TdChatProps> {
       this.chatStatus = messageStore.currentMessage.status;
     }
     this.chatMessages = messageStore.getState().messages;
-    console.log('====initChat', messages, config, this.rolesConfig, this.chatStatus);
+    console.log('====initChat', messages, config, this.messageRoleProps, this.chatStatus);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
     if (autoSendPrompt) {
@@ -100,21 +113,6 @@ export default class Chatbot extends Component<TdChatProps> {
       // ['messageIds'],
     );
   }
-
-  private presetRoleConfig: TdChatRolesConfig = {
-    user: {
-      variant: 'text',
-      placement: 'right',
-    },
-    assistant: {
-      variant: 'text',
-      placement: 'left',
-      actions: (preset) => preset,
-    },
-    system: {},
-  };
-
-  rolesConfig = this.presetRoleConfig;
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
@@ -167,7 +165,7 @@ export default class Chatbot extends Component<TdChatProps> {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
       return (
-        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.rolesConfig?.[role]} message={item}>
+        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => (
             <slot name={slotName} slot={slotName}></slot>

@@ -2,10 +2,18 @@ import MarkdownIt from 'markdown-it';
 
 import { TdChatInputProps } from '../chat-input';
 import type { StyledProps, TNode } from '../common';
-import type { ChatServiceConfigSetter, MessageRole } from './core/type';
+import type { ChatServiceConfigSetter, ContentType, MessageRole } from './core/type';
 import type { Message } from './core/type';
 
-export type TdChatItemActionName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
+export type TdChatItemActionName =
+  | 'copy'
+  | 'good'
+  | 'bad'
+  | 'replay'
+  | 'share'
+  | 'searchResult'
+  | 'searchItem'
+  | 'suggestion';
 export interface TdChatItemAction {
   name: TdChatItemActionName;
   render: TNode;
@@ -24,7 +32,8 @@ export interface TdChatItemProps {
   /**
    * 操作
    */
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[]) => TdChatItemAction[]) | boolean;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[], message: Message) => TdChatItemAction[]) | boolean;
+  onActions?: Partial<Record<TdChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
   /**
    * 作者
    */
@@ -50,7 +59,15 @@ export interface TdChatItemProps {
   /** 消息体 */
   message: Message;
   /** 透传chat-content参数 */
-  chatContentProps?: Omit<TdChatContentProps, 'content' | 'role'>;
+  chatContentProps?: {
+    [key in ContentType]?: key extends 'markdown'
+      ? Omit<TdChatContentMDProps, 'content' | 'role'>
+      : key extends 'search'
+      ? TdChatContentSearchProps
+      : key extends 'thinking'
+      ? TdChatContentThinkProps
+      : any;
+  };
   /** 自定义消息体渲染配置 */
   customRenderConfig?: TdChatCustomRenderConfig;
 }
@@ -71,15 +88,15 @@ export interface TdChatProps extends StyledProps {
   /** 消息数据源 */
   autoSendPrompt?: string;
   messages: Array<Message>;
-  /** 角色配置 */
-  rolesConfig?: TdChatRolesConfig;
+  /** 角色消息配置 */
+  messageProps?: TdChatMessageConfig;
   /** 输入框配置（透传至t-chat-input） */
   senderProps?: TdChatInputProps;
   /** 模型服务配置 */
-  chatService?: ChatServiceConfigSetter;
+  chatServiceConfig?: ChatServiceConfigSetter;
 }
 
-export type TdChatRolesConfig = {
+export type TdChatMessageConfig = {
   [key in ModelRoleEnum]?: Omit<TdChatItemProps, 'message'>;
 };
 
@@ -110,15 +127,19 @@ export type TdChatContentMDPluginConfig =
   | MarkdownIt.PluginWithParams
   | MarkdownIt.PluginWithOptions;
 
-export interface TdChatContentMDProps {
-  options?: MarkdownIt.Options;
-  pluginConfig?: Array<TdChatContentMDPluginConfig>;
+export interface TdChatContentSearchProps {
+  expandable?: boolean;
 }
 
-export interface TdChatContentProps {
+export interface TdChatContentThinkProps {
+  height?: number;
+}
+
+export interface TdChatContentMDProps {
   content?: string;
   role?: string;
-  markdownProps?: TdChatContentMDProps;
+  options?: MarkdownIt.Options;
+  pluginConfig?: Array<TdChatContentMDPluginConfig>;
 }
 
 export interface TdChatCodeProps {

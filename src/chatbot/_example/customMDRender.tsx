@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component } from 'omi';
-import type { TdChatContentMDProps, TdChatItemProps, TdChatRolesConfig } from 'tdesign-web-components/chatbot';
+import type { TdChatContentMDOptions, TdChatItemProps, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
@@ -157,7 +157,7 @@ const colorTextPlugin = (md: MarkdownIt) => {
   };
 };
 
-const mdConfig: TdChatContentMDProps = {
+const mdConfig: TdChatContentMDOptions = {
   options: {
     html: true, // 允许HTML标签
     breaks: true, // 自动换行
@@ -168,10 +168,12 @@ const mdConfig: TdChatContentMDProps = {
 
 const commonRoleConfig: Partial<TdChatItemProps> = {
   chatContentProps: {
-    markdownProps: mdConfig,
+    markdown: {
+      ...mdConfig,
+    },
   },
 };
-const rolesConfig: TdChatRolesConfig = {
+const messageProps: TdChatMessageConfig = {
   user: {
     ...commonRoleConfig,
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
@@ -212,11 +214,9 @@ export default class BasicChat extends Component {
           }
         `}
         style={{ display: 'block', height: '500px' }}
-        data={{
-          messages: mockData,
-        }}
-        rolesConfig={rolesConfig}
-        chatService={mockModels}
+        messages={mockData}
+        messageProps={messageProps}
+        chatServiceConfig={mockModels}
       ></t-chatbot>
     );
   }
