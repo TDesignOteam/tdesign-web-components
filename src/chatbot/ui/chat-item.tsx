@@ -234,7 +234,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return;
-    const { status, content = [] } = this.props.message;
+    const { status, id, content = [] } = this.props.message;
+    console.log('===status', id, status);
     // 如果有任一内容，就不用展示message整体状态
     if (content.length > 0) {
       return null;

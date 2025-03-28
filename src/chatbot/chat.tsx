@@ -23,6 +23,7 @@ export default class Chatbot extends Component<TdChatProps> {
   static propTypes = {
     clearHistory: Boolean,
     layout: String,
+    autoSendPrompt: String,
     reverse: Boolean,
     messages: Array,
     rolesConfig: Object,
@@ -63,7 +64,7 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private initChat() {
-    const { messages, rolesConfig, chatService: config } = this.props;
+    const { messages, rolesConfig, chatService: config, autoSendPrompt } = this.props;
     this.rolesConfig = merge(this.presetRoleConfig, rolesConfig);
     this.chatEngine = new ChatEngine(config, messages);
     const { messageStore } = this.chatEngine;
@@ -75,10 +76,17 @@ export default class Chatbot extends Component<TdChatProps> {
     this.chatMessages = messageStore.getState().messages;
     console.log('====initChat', messages, config, this.rolesConfig, this.chatStatus);
     this.subscribeToChat();
+    // 如果有传入autoSendPrompt，自动发起提问
+    if (autoSendPrompt) {
+      this.chatEngine.sendMessage({
+        prompt: autoSendPrompt,
+      });
+    }
   }
 
   uninstall() {
     this.unsubscribeMsg?.();
+    this.handleStop();
   }
 
   // 订阅聊天状态变化
@@ -87,7 +95,6 @@ export default class Chatbot extends Component<TdChatProps> {
       (state) => {
         this.chatMessages = state.messages;
         this.chatStatus = this.chatMessages.at(-1)?.status || 'idle';
-        console.log('====subscribeToChat', this.chatStatus, this.chatMessages);
         this.update();
       },
       // ['messageIds'],

@@ -69,6 +69,7 @@ export interface TdChatProps extends StyledProps {
   /** 消息列表配置（透传至t-chat-list） */
   listProps?: TdChatListProps;
   /** 消息数据源 */
+  autoSendPrompt?: string;
   messages: Array<Message>;
   /** 角色配置 */
   rolesConfig?: TdChatRolesConfig;

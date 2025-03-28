@@ -350,6 +350,7 @@ export default class BasicChat extends Component {
     return (
       <t-chatbot
         style={{ display: 'block', height: '80vh' }}
+        autoSendPrompt={'自动发出的提问'}
         messages={mockData}
         rolesConfig={rolesConfig}
         senderProps={{
