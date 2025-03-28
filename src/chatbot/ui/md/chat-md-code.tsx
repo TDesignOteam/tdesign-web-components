@@ -9,13 +9,12 @@ import classname, { getClassPrefix } from '../../../_util/classname';
 import { MessagePlugin } from '../../../message';
 import type { TdChatCodeProps } from '../../type';
 
-import styles from '../../style/md/chat-md-code.less';
-
 const className = `${getClassPrefix()}-chat__text__markdown__code`;
 
 @tag('t-chat-md-code')
 export default class ChatMDCode extends Component<TdChatCodeProps> {
-  static css = [styles];
+  // lightDOM组件无法直接挂styleSheet，样式由chat-content异步加载
+  static isLightDOM = true;
 
   static propTypes = {
     lang: String,

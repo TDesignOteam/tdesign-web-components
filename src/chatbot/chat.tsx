@@ -11,7 +11,7 @@ import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
 import ChatEngine from './core';
-import type { TdChatListProps, TdChatMessageConfig,TdChatProps } from './type';
+import type { TdChatListProps, TdChatMessageConfig, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
@@ -186,7 +186,6 @@ export default class Chatbot extends Component<TdChatProps> {
           css={injectCSS?.chatInput}
           status={this.chatStatus}
           actions
-          allowStop
           autosize={{ minRows: 2 }}
           onSend={this.handleSend}
           onStop={this.handleStop}

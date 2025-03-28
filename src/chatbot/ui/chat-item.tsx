@@ -480,9 +480,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime, avatar } = props;
+    const { message, variant, placement, name, datetime } = props;
     if (!message?.content) return;
-    console.log('===item render', avatar);
+    console.log('==========item render', message.id);
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;

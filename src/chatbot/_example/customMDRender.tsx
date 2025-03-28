@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component } from 'omi';
-import type { TdChatContentMDOptions, TdChatItemProps, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type { TdChatContentMDProps, TdChatItemProps, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
@@ -73,9 +73,10 @@ const mockModels = {
   onRequest: (params) => {
     const { prompt, messageID, attachments = [] } = params;
     return {
-      credentials: 'include',
       headers: {
         'X-Mock-Key': 'test123',
+        'Content-Type': 'text/event-stream',
+        'X-Requested-With': 'XMLHttpRequest',
       },
       body: JSON.stringify({
         session_id: 'session_123456789',
@@ -157,7 +158,7 @@ const colorTextPlugin = (md: MarkdownIt) => {
   };
 };
 
-const mdConfig: TdChatContentMDOptions = {
+const mdConfig: TdChatContentMDProps = {
   options: {
     html: true, // 允许HTML标签
     breaks: true, // 自动换行

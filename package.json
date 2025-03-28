@@ -70,7 +70,7 @@
     "immer": "^10.1.1",
     "lodash-es": "^4.17.21",
     "nanostores": "^0.11.4",
-    "omi": "^7.7.11",
+    "omi": "^7.7.13",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
     "tdesign-icons-web-components": "^0.2.4"
