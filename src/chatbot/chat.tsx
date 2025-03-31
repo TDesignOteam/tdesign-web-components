@@ -30,7 +30,6 @@ export default class Chatbot extends Component<TdChatProps> {
     senderProps: Object,
     chatServiceConfig: Object,
     injectCSS: Object,
-    onMessagesChange: Function,
   };
 
   static defaultProps = {
@@ -88,10 +87,7 @@ export default class Chatbot extends Component<TdChatProps> {
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
-    if (messageStore.currentMessage) {
-      this.chatStatus = messageStore.currentMessage.status;
-    }
-    this.chatMessages = messageStore.getState().messages;
+    this.syncState(messageStore.getState().messages);
     console.log('====initChat', messages, config, this.messageRoleProps, this.chatStatus);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
@@ -102,6 +98,14 @@ export default class Chatbot extends Component<TdChatProps> {
     }
   }
 
+  private syncState(state) {
+    this.chatMessages = state;
+    this.chatStatus = state.at(-1)?.status || 'idle';
+    this.fire('message_change', state, {
+      composed: true,
+    });
+  }
+
   uninstall() {
     this.unsubscribeMsg?.();
     this.handleStop();
@@ -110,11 +114,7 @@ export default class Chatbot extends Component<TdChatProps> {
   // 订阅聊天状态变化
   private subscribeToChat() {
     this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
-      this.chatMessages = state.messages;
-      this.chatStatus = this.chatMessages.at(-1)?.status || 'idle';
-      if (this.props.onMessagesChange) {
-        this.props.onMessagesChange(this.chatMessages);
-      }
+      this.syncState(state.messages);
       this.update();
     });
   }
@@ -127,18 +127,23 @@ export default class Chatbot extends Component<TdChatProps> {
     });
     this.uploadedAttachments = [];
     this.files.value = [];
-    this.fire('submit', value, {
+    this.fire('chat_submit', value, {
       composed: true,
     });
   };
 
   private handleStop = () => {
     this.chatEngine.abortChat();
-    this.fire('stop');
+    this.fire(
+      'chat_stop',
+      {},
+      {
+        composed: true,
+      },
+    );
   };
 
   private onAttachmentsRemove = (e: CustomEvent<File[]>) => {
-    console.log('onAttachmentsRemove', e);
     this.files.value = e.detail;
   };
 

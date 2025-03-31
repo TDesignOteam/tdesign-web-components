@@ -175,3 +175,5 @@ export default class ChatEngine implements IChatEngine {
     this.messageStore.appendContent(messageId, processed);
   }
 }
+
+export * from './utils';

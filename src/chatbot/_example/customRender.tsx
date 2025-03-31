@@ -1,9 +1,10 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import { Component, createRef } from 'omi';
+import { Component, createRef, signal } from 'omi';
 import type { TdChatCustomRenderConfig, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
+import Chatbot from '../chat';
 import type { AIMessageContent, Message, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
@@ -187,7 +188,21 @@ export default class BasicChat extends Component {
     `,
   ];
 
-  chatRef = createRef();
+  chatRef = createRef<Chatbot>();
+
+  private mockMessage = signal([]);
+
+  install(): void {
+    this.mockMessage.value = mockData;
+  }
+
+  ready() {
+    this.chatRef.current.addEventListener('message_change', (e: CustomEvent) => {
+      console.log('message_change', e.detail);
+      this.mockMessage.value = e.detail;
+      // this.update();
+    });
+  }
 
   render() {
     return (
@@ -200,7 +215,7 @@ export default class BasicChat extends Component {
       >
         <div slot="input-header">我是input头部</div>
         {/* 自定义渲染-植入插槽 */}
-        {mockData
+        {this.mockMessage.value
           ?.map((data) =>
             data.content.map((item) => {
               switch (item.type) {

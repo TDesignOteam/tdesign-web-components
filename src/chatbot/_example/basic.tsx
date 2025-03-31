@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
-import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
 import Chatbot from '../chat';
@@ -340,9 +340,7 @@ const attachmentProps = {
 
 const resourceLinkPlugin = (md: MarkdownIt) => {
   // 保存原始链接渲染函数
-  const defaultRender =
-    md.renderer.rules.link_open?.bind(md.renderer) ||
-    ((tokens, idx, _options, _env, self) => self.renderToken(tokens, idx, {}));
+  const defaultRender = md.renderer.rules.link_open?.bind(md.renderer);
 
   // 覆盖链接渲染规则
   md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
@@ -352,12 +350,13 @@ const resourceLinkPlugin = (md: MarkdownIt) => {
     // 识别特殊资源链接
     if (href.startsWith('#promptId')) {
       // 返回自定义DOM结构
-      return `<a part="resource-link" 
-        onclick="this.dispatchEvent(new CustomEvent('resource-link-click', { 
-          bubbles: true, 
-          composed: true,
-          detail: { resourceId: '${id}'}
-        }))">`;
+      // return `<a part="resource-link"
+      //   onclick="this.dispatchEvent(new CustomEvent('resource-link-click', {
+      //     bubbles: true,
+      //     composed: true,
+      //     detail: { resourceId: '${id}'}
+      //   }))">`;
+      return `<a part="resource-link" data-resource="${id}">`;
     }
 
     // 普通链接保持默认渲染
@@ -401,8 +400,11 @@ export default class BasicChat extends Component {
     this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
       console.log('message_action', e.detail);
     });
-    document.addEventListener('resource-link-click', (e: CustomEvent) => {
-      console.log('resource-link-click', e.detail);
+    document.addEventListener('click', (e) => {
+      const target = findTargetElement(e, 'a[data-resource]');
+      if (target) {
+        console.log('捕获资源链接点击:', target.dataset);
+      }
     });
   }
 

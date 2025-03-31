@@ -23,12 +23,6 @@ const chunks = [
     content:
       '{"url":"https://tdesign.gtimg.com/site/avatar.jpg","format":"png","width":1204,"height":1024,"size":1032}',
   },
-  // 自定义插件测试2
-  {
-    type: 'weather',
-    id: 'w22',
-    content: '{"temp": 1,"city": "深圳","conditions": "晴"}',
-  },
   // 测试用例1 - 标题开头被截断
   {
     type: 'text',
@@ -144,6 +138,8 @@ const chunks = [
   { type: 'text', msg: '派' },
 
   { type: 'text', msg: '**' },
+
+  { type: 'weather', id: 'w3', content: '{"temp": 20,"city": "广州","conditions": "多云"}' },
 ];
 
 export { chunks };
