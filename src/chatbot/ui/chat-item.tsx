@@ -250,7 +250,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (!isAIMessage(this.props.message)) return;
     const { status, content = [] } = this.props.message;
     // 如果有任一内容，就不用展示message整体状态
-    if (content.length > 0) {
+    if (content.length > 0 || status === 'complete') {
       return null;
     }
     if (status === 'stop') {
@@ -310,7 +310,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       <div
         className={`${className}__search__wrapper`}
         onClick={() => {
-          if (chatContentProps.search.expandable) {
+          if (chatContentProps?.search?.expandable) {
             this.searchExpand.value = !this.searchExpand.value;
           }
           this.handleClickAction('searchResult', content);
@@ -481,7 +481,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
-    if (!message?.content) return;
+    if (!message?.content || message.content.length === 0) return;
     console.log('==========item render', message.id);
 
     const baseClass = `${className}__inner`;

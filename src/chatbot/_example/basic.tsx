@@ -396,16 +396,28 @@ const messageProps: TdChatMessageConfig = {
 export default class BasicChat extends Component {
   chatRef = createRef<Chatbot>();
 
+  clickHandler?: (e: MouseEvent) => void;
+
   ready() {
     this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
       console.log('message_action', e.detail);
     });
-    document.addEventListener('click', (e) => {
+    // 使用箭头函数保持this指向
+    this.clickHandler = (e) => {
       const target = findTargetElement(e, 'a[data-resource]');
       if (target) {
         console.log('捕获资源链接点击:', target.dataset);
       }
-    });
+    };
+
+    document.addEventListener('click', this.clickHandler);
+  }
+
+  uninstall(): void {
+    // 移除全局点击监听
+    if (this.clickHandler) {
+      document.removeEventListener('click', this.clickHandler);
+    }
   }
 
   render() {
