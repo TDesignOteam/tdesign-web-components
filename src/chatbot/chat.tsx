@@ -9,7 +9,7 @@ import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatStatus, Message } from './core/type';
+import type { AttachmentItem, AttachmentType, ChatStatus, Message, RequestParams } from './core/type';
 import ChatEngine from './core';
 import type { TdChatListProps, TdChatMessageConfig, TdChatProps } from './type';
 
@@ -88,12 +88,12 @@ export default class Chatbot extends Component<TdChatProps> {
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
     this.syncState(messageStore.getState().messages);
-    console.log('====initChat', messages, config, this.messageRoleProps, this.chatStatus);
+    console.log('====initChat', messages, autoSendPrompt);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
-    if (autoSendPrompt) {
+    if (this.props.autoSendPrompt) {
       this.chatEngine.sendMessage({
-        prompt: autoSendPrompt,
+        prompt: this.props.autoSendPrompt,
       });
     }
   }
@@ -109,6 +109,16 @@ export default class Chatbot extends Component<TdChatProps> {
   uninstall() {
     this.unsubscribeMsg?.();
     this.handleStop();
+  }
+
+  async sendMessage(requestParams: RequestParams) {
+    await this.chatEngine.sendMessage(requestParams);
+    this.update();
+  }
+
+  async abortChat() {
+    await this.chatEngine.abortChat();
+    this.update();
   }
 
   // 订阅聊天状态变化

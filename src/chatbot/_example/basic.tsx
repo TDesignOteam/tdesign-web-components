@@ -402,14 +402,12 @@ export default class BasicChat extends Component {
     this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
       console.log('message_action', e.detail);
     });
-    // 使用箭头函数保持this指向
     this.clickHandler = (e) => {
       const target = findTargetElement(e, 'a[data-resource]');
       if (target) {
         console.log('捕获资源链接点击:', target.dataset);
       }
     };
-
     document.addEventListener('click', this.clickHandler);
   }
 
@@ -425,7 +423,8 @@ export default class BasicChat extends Component {
       <t-chatbot
         ref={this.chatRef}
         style={{ display: 'block', height: '80vh' }}
-        messages={mockData}
+        messages={[mockData]}
+        // autoSendPrompt="自动发送问题"
         messageProps={messageProps}
         senderProps={{
           attachmentProps,

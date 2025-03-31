@@ -73,7 +73,7 @@ export default class ChatEngine implements IChatEngine {
       const { content, id } = lastUserMessage;
       this.lastRequestParams = {
         prompt: content.filter((c) => c.type === 'text')[0].data,
-        attachments: content.filter((c) => c.type === 'attachment')[0].data,
+        attachments: content.filter((c) => c.type === 'attachment')?.[0]?.data,
         messageID: id,
       };
     }
