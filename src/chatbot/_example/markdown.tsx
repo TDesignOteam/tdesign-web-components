@@ -47,21 +47,6 @@ export default class MarkdownExample extends Component {
               enabled: this.hasCode.value,
             },
             {
-              preset: 'link',
-              enabled: this.hasLink.value,
-              options: [
-                {
-                  matcher(href) {
-                    return href.match(/^https?:\/\//);
-                  },
-                  attrs: {
-                    target: '_blank',
-                    rel: 'noopener noreferrer',
-                  },
-                },
-              ],
-            },
-            {
               preset: 'katex',
               enabled: this.hasKatex.value,
             },
@@ -73,11 +58,6 @@ export default class MarkdownExample extends Component {
 
   changeCodeHandler = (e) => {
     this.hasCode.value = e;
-    this.rerenderKey.value += 1;
-  };
-
-  changeLinkHandler = (e) => {
-    this.hasLink.value = e;
     this.rerenderKey.value += 1;
   };
 
@@ -96,10 +76,6 @@ export default class MarkdownExample extends Component {
           <t-space>
             代码块
             <t-switch size="large" value={this.hasCode.value} onChange={this.changeCodeHandler} />
-          </t-space>
-          <t-space>
-            链接
-            <t-switch size="large" value={this.hasLink.value} onChange={this.changeLinkHandler} />
           </t-space>
           <t-space>
             公式

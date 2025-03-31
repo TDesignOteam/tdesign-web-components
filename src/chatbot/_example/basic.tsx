@@ -1,6 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
+import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
 import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
@@ -102,7 +103,7 @@ const mockData: Message[] = [
       },
       {
         type: 'text',
-        data: '它叫 McMurdo Station ATM，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
+        data: '它叫 [McMurdo Station ATM](#promptId=atm)，是美国富国银行安装在南极洲最大科学中心麦克默多站的一台自动提款机。',
       },
       {
         type: 'suggestion',
@@ -337,6 +338,33 @@ const attachmentProps = {
   onFileRemove: () => {},
 };
 
+const resourceLinkPlugin = (md: MarkdownIt) => {
+  // 保存原始链接渲染函数
+  const defaultRender =
+    md.renderer.rules.link_open?.bind(md.renderer) ||
+    ((tokens, idx, _options, _env, self) => self.renderToken(tokens, idx, {}));
+
+  // 覆盖链接渲染规则
+  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
+    const token = tokens[idx];
+    const href = token.attrGet('href') || '';
+    const id = href.split('#promptId=')[1];
+    // 识别特殊资源链接
+    if (href.startsWith('#promptId')) {
+      // 返回自定义DOM结构
+      return `<a part="resource-link" 
+        onclick="this.dispatchEvent(new CustomEvent('resource-link-click', { 
+          bubbles: true, 
+          composed: true,
+          detail: { resourceId: '${id}'}
+        }))">`;
+    }
+
+    // 普通链接保持默认渲染
+    return defaultRender(tokens, idx, options, env, self);
+  };
+};
+
 const messageProps: TdChatMessageConfig = {
   // user: {
   //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
@@ -359,6 +387,9 @@ const messageProps: TdChatMessageConfig = {
       thinking: {
         height: 200,
       },
+      markdown: {
+        pluginConfig: [resourceLinkPlugin],
+      },
     },
   },
 };
@@ -369,6 +400,9 @@ export default class BasicChat extends Component {
   ready() {
     this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
       console.log('message_action', e.detail);
+    });
+    document.addEventListener('resource-link-click', (e: CustomEvent) => {
+      console.log('resource-link-click', e.detail);
     });
   }
 

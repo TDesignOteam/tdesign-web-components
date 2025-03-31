@@ -64,10 +64,29 @@ const chunks = [
     type: 'text',
     msg: '是脚注内容\n\n✅ 任务列表：\n- [ ] 未完成任务\n- [x] 已完成任务\n\nHTML混合测试：\n<br>（需要开启html选项）\n<small>辅助文',
   },
-  // 测试用例7 - 最终结束段
+  // 测试用例7 - 链接测试（基本链接）
   {
     type: 'text',
-    msg: '字</small>',
+    msg: '### 链接功能测试### \n普通链接示例：\n[【百度】](#promptId=baidu) 是一个常用搜索引擎\n\n带标题链接：\n[【谷歌】](',
+  },
+  {
+    type: 'text',
+    msg: '#promptId=google)搜索引擎\n',
+  },
+  // 测试用例8 - 链接分块测试（链接被截断）
+  {
+    type: 'text',
+    msg: '分块链接测试：\n点击查看[【TDesign】](',
+  },
+  {
+    type: 'text',
+    msg: 'http://tdesign.tencent.com) 设计系统',
+  },
+
+  // 测试用例10 - 最终结束段
+  {
+    type: 'text',
+    msg: '字</small>\n',
   },
   { type: 'text', msg: '(' },
   { type: 'text', msg: '截至' },

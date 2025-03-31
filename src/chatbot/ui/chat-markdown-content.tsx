@@ -1,6 +1,7 @@
 import '../../message';
 
 import markdownIt from 'markdown-it';
+import linkPlugin from 'markdown-it-link-attributes';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
@@ -31,22 +32,7 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
     pluginConfig: [
       {
         preset: 'code',
-        enabled: true,
-      },
-      {
-        preset: 'link',
-        enabled: true,
-        options: [
-          {
-            matcher(href) {
-              return href.match(/^https?:\/\//);
-            },
-            attrs: {
-              target: '_blank',
-              rel: 'noopener noreferrer',
-            },
-          },
-        ],
+        enabled: false,
       },
       {
         preset: 'katex',
@@ -76,6 +62,12 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
       .use((md) => {
         md.renderer.rules.table_open = () => `<div class=${baseClass}__markdown__table__wrapper>\n<table>\n`;
         md.renderer.rules.table_close = () => '</table>\n</div>';
+      })
+      .use(linkPlugin, {
+        attrs: {
+          target: '_blank',
+          rel: 'noopener',
+        },
       });
 
     // 筛选生效的预设插件
@@ -146,7 +138,7 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
   }
 
   parseMarkdown(markdown: string) {
-    if (!this.isMarkdownInit.value || !markdown) return '<div class="waiting">...</div>';
+    if (!this.isMarkdownInit.value || !markdown) return null;
     return this.md?.render(markdown);
   }
 
