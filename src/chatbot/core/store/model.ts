@@ -3,8 +3,8 @@ import ReactiveState from './reactiveState';
 
 // 专注模型状态和运行时管理
 export class ModelStore extends ReactiveState<ModelServiceState> {
-  constructor(initialState?: ModelServiceState) {
-    super({
+  initialize(initialState?: ModelServiceState) {
+    super.initialize({
       useSearch: false,
       useThink: false,
       model: '',

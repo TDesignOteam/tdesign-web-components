@@ -17,7 +17,7 @@ export interface IChatEngine {
 }
 
 export default class ChatEngine implements IChatEngine {
-  public readonly messageStore: MessageStore;
+  public messageStore: MessageStore;
 
   private processor: MessageProcessor;
 
@@ -29,11 +29,15 @@ export default class ChatEngine implements IChatEngine {
 
   private stopReceive = false;
 
-  constructor(configSetter: ChatServiceConfigSetter, initialMessages?: Message[]) {
-    this.messageStore = new MessageStore(this.convertMessages(initialMessages));
-    this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
+  constructor() {
     this.llmService = new LLMService();
     this.processor = new MessageProcessor();
+    this.messageStore = new MessageStore();
+  }
+
+  public init(configSetter: ChatServiceConfigSetter, initialMessages?: Message[]) {
+    this.messageStore.initialize(this.convertMessages(initialMessages));
+    this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
   }
 
   public async sendMessage(requestParams: RequestParams) {
@@ -46,7 +50,7 @@ export default class ChatEngine implements IChatEngine {
       attachments,
       messageID: aiMessage.id,
     };
-    this.sendReuqest(params);
+    this.sendRequest(params);
   }
 
   public async abortChat() {
@@ -91,10 +95,10 @@ export default class ChatEngine implements IChatEngine {
       messageID: newAIMessage.id,
     };
 
-    await this.sendReuqest(params);
+    await this.sendRequest(params);
   }
 
-  private async sendReuqest(params: RequestParams) {
+  private async sendRequest(params: RequestParams) {
     const { messageID: id } = params;
     try {
       if (this.config.stream) {

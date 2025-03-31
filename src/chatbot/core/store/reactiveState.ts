@@ -30,7 +30,7 @@ export default class ReactiveState<T extends object> {
    * 初始化响应式状态
    * @param initialState 初始状态（会自动冻结）
    */
-  constructor(initialState: T) {
+  public initialize(initialState: T) {
     this.currentState = Object.freeze(initialState);
   }
 

@@ -11,8 +11,8 @@ import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
 export class MessageStore extends ReactiveState<MessageState> {
-  constructor(initialState?: Partial<MessageState>) {
-    super({
+  initialize(initialState?: Partial<MessageState>) {
+    super.initialize({
       messageIds: [],
       messages: [],
       ...initialState,

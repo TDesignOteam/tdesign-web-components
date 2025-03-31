@@ -94,6 +94,7 @@ export interface TdChatProps extends StyledProps {
   senderProps?: TdChatInputProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
+  onMessagesChange?: (messages: Message[]) => void;
 }
 
 export type TdChatMessageConfig = {

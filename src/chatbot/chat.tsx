@@ -30,6 +30,7 @@ export default class Chatbot extends Component<TdChatProps> {
     senderProps: Object,
     chatServiceConfig: Object,
     injectCSS: Object,
+    onMessagesChange: Function,
   };
 
   static defaultProps = {
@@ -43,9 +44,9 @@ export default class Chatbot extends Component<TdChatProps> {
 
   public chatEngine: ChatEngine;
 
-  private chatStatus: ChatStatus = 'idle';
+  public chatStatus: ChatStatus = 'idle';
 
-  private chatMessages: Message[] = [];
+  public chatMessages: Message[] = [];
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -71,6 +72,10 @@ export default class Chatbot extends Component<TdChatProps> {
     chatEngine: null,
   };
 
+  install() {
+    this.chatEngine = new ChatEngine();
+  }
+
   ready(): void {
     this.initChat();
     this.update();
@@ -79,7 +84,7 @@ export default class Chatbot extends Component<TdChatProps> {
   private initChat() {
     const { messages, messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
     this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
-    this.chatEngine = new ChatEngine(config, messages);
+    this.chatEngine.init(config, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
@@ -104,14 +109,14 @@ export default class Chatbot extends Component<TdChatProps> {
 
   // 订阅聊天状态变化
   private subscribeToChat() {
-    this.unsubscribeMsg = this.chatEngine.messageStore.subscribe(
-      (state) => {
-        this.chatMessages = state.messages;
-        this.chatStatus = this.chatMessages.at(-1)?.status || 'idle';
-        this.update();
-      },
-      // ['messageIds'],
-    );
+    this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
+      this.chatMessages = state.messages;
+      this.chatStatus = this.chatMessages.at(-1)?.status || 'idle';
+      if (this.props.onMessagesChange) {
+        this.props.onMessagesChange(this.chatMessages);
+      }
+      this.update();
+    });
   }
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
