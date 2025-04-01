@@ -145,7 +145,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     const list = this.listRef.current;
     if (list) {
       list.scrollTo({
-        top: list.scrollHeight,
+        top: list.scrollHeight - list.clientHeight,
         behavior: options.behavior || 'auto',
       });
     }

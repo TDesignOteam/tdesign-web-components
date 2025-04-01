@@ -7,9 +7,36 @@ const chunks = [
   { type: 'think', title: '思考中...', content: '要帮用' },
   { type: 'think', title: '思考中...', content: '户说明一下，' },
   { type: 'think', title: '思考中...', content: '让我先仔细想想，' },
-  { type: 'think', title: '思考中...', content: '这是个mock，' },
-  { type: 'think', title: '思考中...', content: '这是个mock，' },
-  { type: 'think', title: '思考中...', content: '这是个mock，' },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
   { type: 'think', title: '思考完成（耗时4秒）', content: '重要的事情说三遍' },
   // 自定义插件测试1
   {
