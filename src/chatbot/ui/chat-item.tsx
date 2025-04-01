@@ -280,7 +280,16 @@ export default class ChatItem extends Component<TdChatItemProps> {
       <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
         <t-collapse-panel className={`${className}__think__content`}>
           <t-auto-scroll maxHeight={this.props?.chatContentProps?.thinking?.height}>
-            <div className={`${className}__think__inner`}>{data?.text || ''}</div>
+            <div className={`${className}__think__inner`}>
+              {/* 上下阴影 */}
+              {this.props?.chatContentProps?.thinking?.height ? (
+                <div className={`${className}__think__shadow__top`}></div>
+              ) : null}
+              {data?.text || ''}
+              {this.props?.chatContentProps?.thinking?.height ? (
+                <div className={`${className}__think__shadow__bottom`}></div>
+              ) : null}
+            </div>
           </t-auto-scroll>
           <div slot="header" className={`${className}__think__header__content`}>
             {(status === 'streaming' || status === 'complete') && this.renderThinkingStatus(status)}

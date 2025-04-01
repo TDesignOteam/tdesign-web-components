@@ -22,6 +22,7 @@ export default class ChatThinking extends Component<TdAutoScrollProps> {
 
   static propTypes = {
     maxHeight: [Number, String],
+    defaultScrollToBottom: Boolean,
   };
 
   private scrollRef = createRef<HTMLDivElement>();

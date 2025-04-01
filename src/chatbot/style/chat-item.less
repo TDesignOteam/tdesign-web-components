@@ -175,7 +175,7 @@
 
     &__content {
       &::part(@{prefix}-collapse-panel__header) {
-        padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr) 0 var(--t-chat-item-think-padding-lr);
+        padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr);
         border: var(--t-chat-item-think-header-border);
       }
   
@@ -196,7 +196,23 @@
     }
 
     &__inner {
+      position: relative;
       padding: var(--t-chat-item-think-inner-padding);
+    }
+
+    &__shadow__top {
+      position: sticky;
+      top: -5px;
+      margin-top: -10px;
+      height: 15px;
+      background: linear-gradient(var(--t-chat-item-think-bg), transparent);
+    }
+    &__shadow__bottom {
+      position: sticky;
+      bottom: 0;
+      margin-bottom: -10px;
+      height: 12px;
+      background: linear-gradient(to top, var(--t-chat-item-think-bg), transparent);
     }
 
     &__header__content {
