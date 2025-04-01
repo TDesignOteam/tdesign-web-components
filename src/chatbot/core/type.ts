@@ -123,6 +123,8 @@ export interface UserMessage extends BaseMessage {
 export interface AIMessage extends BaseMessage {
   role: 'assistant';
   content: AIMessageContent[];
+  isGood?: boolean;
+  isBad?: boolean;
 }
 
 export interface SystemMessage extends BaseMessage {

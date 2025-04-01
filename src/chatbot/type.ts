@@ -8,7 +8,9 @@ import type { ChatMessage } from './core/type';
 export type TdChatItemActionName =
   | 'copy'
   | 'good'
+  | 'goodActived'
   | 'bad'
+  | 'badActived'
   | 'replay'
   | 'share'
   | 'searchResult'

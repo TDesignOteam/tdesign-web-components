@@ -8,6 +8,8 @@ import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
+import 'tdesign-icons-web-components/esm/components/thumb-up-filled';
+import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
@@ -69,6 +71,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   searchExpand = signal(false);
 
+  /** 点赞点踩目前做成非受控，点了就生效 */
+  pIsGood = signal(false);
+
+  pIsBad = signal(false);
+
   receiveProps(
     props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
     oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
@@ -90,6 +97,14 @@ export default class ChatItem extends Component<TdChatItemProps> {
     }
 
     return true;
+  }
+
+  ready() {
+    const { message } = this.props;
+    if (message && isAIMessage(message)) {
+      this.pIsGood.value = message.isGood;
+      this.pIsBad.value = message.isBad;
+    }
   }
 
   private renderAvatar() {
@@ -154,6 +169,48 @@ export default class ChatItem extends Component<TdChatItemProps> {
     });
   };
 
+  private renderComment = (type: 'good' | 'bad', isActive: boolean) => {
+    const config = {
+      label: '点赞',
+      icon: <t-icon-thumb-up />,
+      clickCallback: () => {
+        this.pIsGood.value = !this.pIsGood.value;
+        this.handleClickAction('good', this.props.message);
+      },
+    };
+    if (type === 'good') {
+      if (isActive) {
+        config.icon = <t-icon-thumb-up-filled />;
+        config.clickCallback = () => {
+          this.pIsGood.value = !this.pIsGood.value;
+          this.handleClickAction('goodActived', this.props.message);
+        };
+      }
+    } else {
+      config.label = '点踩';
+      if (isActive) {
+        config.icon = <t-icon-thumb-down-filled />;
+        config.clickCallback = () => {
+          this.pIsBad.value = !this.pIsBad.value;
+          this.handleClickAction('badActived', this.props.message);
+        };
+      } else {
+        config.icon = <t-icon-thumb-down />;
+        config.clickCallback = () => {
+          this.pIsBad.value = !this.pIsBad.value;
+          this.handleClickAction('bad', this.props.message);
+        };
+      }
+    }
+    return (
+      <t-tooltip content={config.label}>
+        <div class={`${className}__actions__preset__wrapper`} onClick={config.clickCallback}>
+          {config.icon}
+        </div>
+      </t-tooltip>
+    );
+  };
+
   private presetActions: TdChatItemAction[] = [
     {
       name: 'replay',
@@ -181,30 +238,24 @@ export default class ChatItem extends Component<TdChatItemProps> {
       ),
     },
     {
+      name: 'goodActived',
+      condition: () => this.pIsGood.value,
+      render: this.renderComment('good', true),
+    },
+    {
       name: 'good',
-      render: (
-        <t-tooltip content="点赞">
-          <div
-            class={`${className}__actions__preset__wrapper`}
-            onClick={() => this.handleClickAction('good', this.props.message)}
-          >
-            <t-icon-thumb-up />
-          </div>
-        </t-tooltip>
-      ),
+      condition: () => !this.pIsGood.value,
+      render: this.renderComment('good', false),
+    },
+    {
+      name: 'badActived',
+      condition: () => this.pIsBad.value,
+      render: this.renderComment('bad', true),
     },
     {
       name: 'bad',
-      render: (
-        <t-tooltip content="点踩">
-          <div
-            class={`${className}__actions__preset__wrapper`}
-            onClick={() => this.handleClickAction('bad', this.props.message)}
-          >
-            <t-icon-thumb-down />
-          </div>
-        </t-tooltip>
-      ),
+      condition: () => !this.pIsBad.value,
+      render: this.renderComment('bad', false),
     },
     {
       name: 'share',
