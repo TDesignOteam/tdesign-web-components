@@ -18,8 +18,7 @@ export default class CustomExample extends Component {
     }
 
     .panel {
-      position: absolute;
-      bottom: 26px;
+      margin-bottom: 12px;
       height: 200px;
       width: 100%;
       padding: 16px;

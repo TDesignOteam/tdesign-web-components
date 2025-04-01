@@ -196,8 +196,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
     return (
       <div className={`${className}`}>
         <input {...this.props.uploadProps} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />
+        <slot name="header"></slot>
         <div className={`${className}__header`}>
-          <slot name="header"></slot>
           {this.attachmentsValue?.length ? (
             <t-attachments
               className={`${className}__attachments`}

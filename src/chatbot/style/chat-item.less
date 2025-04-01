@@ -167,7 +167,6 @@
 
     &::part(@{prefix}-collapse) {
       width: 100%;
-      padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr);
       border: var(--t-chat-item-think-border);
       border-radius: var(--t-chat-item-think-radius);
       background-color: var(--t-chat-item-think-bg);
@@ -176,7 +175,7 @@
 
     &__content {
       &::part(@{prefix}-collapse-panel__header) {
-        padding: 0;
+        padding: var(--t-chat-item-think-padding-tb) var(--t-chat-item-think-padding-lr);
         border: var(--t-chat-item-think-header-border);
       }
   
@@ -194,6 +193,26 @@
           display: none;
         }
       }
+    }
+
+    &__inner {
+      position: relative;
+      padding: var(--t-chat-item-think-inner-padding);
+    }
+
+    &__shadow__top {
+      position: sticky;
+      top: var(--t-chat-item-think-shadow-top);
+      margin-top: var(--t-chat-item-think-shadow-margin-top);
+      height: var(--t-chat-item-think-shadow-top-height);
+      background: linear-gradient(var(--t-chat-item-think-bg), transparent);
+    }
+    &__shadow__bottom {
+      position: sticky;
+      bottom: var(--t-chat-item-think-shadow-bottom);
+      margin-bottom: var(--t-chat-item-think-shadow-margin-bottom);
+      height: var(--t-chat-item-think-shadow-bottom-height);
+      background: linear-gradient(to top, var(--t-chat-item-think-bg), transparent);
     }
 
     &__header__content {
