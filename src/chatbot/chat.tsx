@@ -9,7 +9,7 @@ import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-input';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatStatus, Message, RequestParams } from './core/type';
+import type { AttachmentItem, AttachmentType, ChatMessage, ChatStatus, RequestParams } from './core/type';
 import ChatEngine from './core';
 import type { TdChatListProps, TdChatMessageConfig, TdChatProps } from './type';
 
@@ -23,7 +23,7 @@ export default class Chatbot extends Component<TdChatProps> {
   static propTypes = {
     clearHistory: Boolean,
     layout: String,
-    autoSendPrompt: String,
+    autoSendPrompt: Object,
     reverse: Boolean,
     messages: Array,
     messageProps: Object,
@@ -33,6 +33,7 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   static defaultProps = {
+    autoSendPrompt: '',
     clearHistory: false,
     layout: 'both',
     reverse: false,
@@ -45,7 +46,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   public chatStatus: ChatStatus = 'idle';
 
-  public chatMessages: Message[] = [];
+  public chatMessages: ChatMessage[] = [];
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -91,9 +92,9 @@ export default class Chatbot extends Component<TdChatProps> {
     console.log('====initChat', messages, autoSendPrompt);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
-    if (this.props.autoSendPrompt) {
+    if (autoSendPrompt !== '' && autoSendPrompt !== 'undefined') {
       this.chatEngine.sendMessage({
-        prompt: this.props.autoSendPrompt,
+        prompt: autoSendPrompt,
       });
     }
   }

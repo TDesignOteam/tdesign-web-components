@@ -130,7 +130,7 @@ export interface SystemMessage extends BaseMessage {
   content: TextContent[];
 }
 
-export type Message = UserMessage | AIMessage | SystemMessage;
+export type ChatMessage = UserMessage | AIMessage | SystemMessage;
 
 // 回答消息体配置
 export type SSEChunkData = {
@@ -163,7 +163,7 @@ export type ChatServiceConfigSetter = ChatServiceConfig | ((params?: any) => Cha
 // 消息相关状态
 export interface MessageState {
   messageIds: string[];
-  messages: Message[];
+  messages: ChatMessage[];
 }
 
 // 模型服务相关状态
@@ -194,11 +194,11 @@ export interface ContentTypeDefinition<T extends string = string, D = any> {
 export type ContentRenderer<T extends BaseContent<any, any>> = (content: T) => unknown;
 
 // 类型守卫函数
-export function isUserMessage(message: Message) {
+export function isUserMessage(message: ChatMessage) {
   return message.role === 'user' && 'content' in message;
 }
 
-export function isAIMessage(message: Message) {
+export function isAIMessage(message: ChatMessage) {
   return message.role === 'assistant';
 }
 

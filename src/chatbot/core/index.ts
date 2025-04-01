@@ -3,10 +3,10 @@ import { MessageStore } from './store/message';
 import MessageProcessor from './processor';
 import {
   type AIMessageContent,
+  type ChatMessage,
   type ChatServiceConfig,
   type ChatServiceConfigSetter,
   isAIMessage,
-  type Message,
   type RequestParams,
   type SSEChunkData,
 } from './type';
@@ -35,7 +35,7 @@ export default class ChatEngine implements IChatEngine {
     this.messageStore = new MessageStore();
   }
 
-  public init(configSetter: ChatServiceConfigSetter, initialMessages?: Message[]) {
+  public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessage[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
   }
@@ -151,7 +151,7 @@ export default class ChatEngine implements IChatEngine {
     });
   }
 
-  private convertMessages(messages?: Message[]) {
+  private convertMessages(messages?: ChatMessage[]) {
     if (!messages) return { messageIds: [], messages: [] };
 
     return {
@@ -160,7 +160,7 @@ export default class ChatEngine implements IChatEngine {
     };
   }
 
-  private setMessageStatus(messageId: string, status: Message['status']) {
+  private setMessageStatus(messageId: string, status: ChatMessage['status']) {
     this.messageStore.setMessageStatus(messageId, status);
   }
 

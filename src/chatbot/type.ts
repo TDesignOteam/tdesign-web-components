@@ -3,7 +3,7 @@ import MarkdownIt from 'markdown-it';
 import { TdChatInputProps } from '../chat-input';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ContentType, MessageRole } from './core/type';
-import type { Message } from './core/type';
+import type { ChatMessage } from './core/type';
 
 export type TdChatItemActionName =
   | 'copy'
@@ -18,7 +18,7 @@ export interface TdChatItemAction {
   name: TdChatItemActionName;
   render: TNode;
   // 满足条件才展示
-  condition?: (message: Message) => boolean;
+  condition?: (message: ChatMessage) => boolean;
 }
 
 export interface TdChatRenderConfig {
@@ -32,7 +32,7 @@ export interface TdChatItemProps {
   /**
    * 操作
    */
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[], message: Message) => TdChatItemAction[]) | boolean;
+  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[], message: ChatMessage) => TdChatItemAction[]) | boolean;
   onActions?: Partial<Record<TdChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
   /**
    * 作者
@@ -57,7 +57,7 @@ export interface TdChatItemProps {
   /** 气泡方向 */
   placement?: 'left' | 'right';
   /** 消息体 */
-  message: Message;
+  message: ChatMessage;
   /** 透传chat-content参数 */
   chatContentProps?: {
     [key in ContentType]?: key extends 'markdown'
@@ -87,14 +87,14 @@ export interface TdChatProps extends StyledProps {
   listProps?: TdChatListProps;
   /** 消息数据源 */
   autoSendPrompt?: string;
-  messages: Array<Message>;
+  messages: Array<ChatMessage>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig;
   /** 输入框配置（透传至t-chat-input） */
   senderProps?: TdChatInputProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
-  onMessagesChange?: (messages: Message[]) => void;
+  onMessagesChange?: (messages: ChatMessage[]) => void;
 }
 
 export type TdChatMessageConfig = {
@@ -187,3 +187,5 @@ export interface SSEEvent {
 export interface BackBottomParams {
   behavior?: 'auto' | 'smooth';
 }
+
+export type * from './core/type';
