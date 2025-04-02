@@ -378,8 +378,8 @@ const messageProps: TdChatMessageConfig = {
         console.log('自定义重新回复', data);
         callback?.();
       },
-      good: (msg) => {
-        console.log('点赞', msg.id);
+      good: (data) => {
+        console.log('点赞', data);
       },
     },
     chatContentProps: {
