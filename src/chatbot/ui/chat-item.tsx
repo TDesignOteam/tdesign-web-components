@@ -37,7 +37,7 @@ import {
   ThinkingContent,
   UserMessageContent,
 } from '../core/type';
-import type { TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../type';
+import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../type';
 
 import styles from '../style/chat-item.less';
 
@@ -71,9 +71,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   searchExpand = signal(false);
 
   /** 点赞点踩目前做成非受控，点了就生效 */
-  pIsGood = signal(false);
-
-  pIsBad = signal(false);
+  pComment = signal<ChatComment>(undefined);
 
   receiveProps(
     props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
@@ -101,8 +99,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   ready() {
     const { message } = this.props;
     if (message && isAIMessage(message)) {
-      this.pIsGood.value = message.isGood;
-      this.pIsBad.value = message.isBad;
+      this.pComment.value = message.comment;
     }
   }
 
@@ -147,10 +144,16 @@ export default class ChatItem extends Component<TdChatItemProps> {
       return;
     }
     const copyContent = this.props.message.content.reduce((pre, item) => {
-      if (!isTextContent(item) && !isMarkdownContent(item)) {
-        return pre;
+      let append = '';
+      if (isTextContent(item) || isMarkdownContent(item)) {
+        append = item.data;
+      } else if (isThinkingContent(item)) {
+        append = item.data.text;
       }
-      return pre + item.data;
+      if (!pre) {
+        return append;
+      }
+      return `${pre}\n${append}`;
     }, '');
     this.handleClickAction('copy', copyContent.toString(), () => {
       navigator.clipboard
@@ -169,16 +172,25 @@ export default class ChatItem extends Component<TdChatItemProps> {
       label: '点赞',
       icon: <t-icon-thumb-up />,
       clickCallback: () => {
-        this.pIsGood.value = !this.pIsGood.value;
-        this.handleClickAction('good', this.props.message);
+        // 仅有未赋值才能点赞
+        if (!this.pComment.value) {
+          this.pComment.value = 'good';
+        }
+        this.handleClickAction('good', {
+          message: this.props.message,
+          active: true,
+        });
       },
     };
     if (type === 'good') {
       if (isActive) {
         config.icon = <t-icon-thumb-up-filled />;
         config.clickCallback = () => {
-          this.pIsGood.value = !this.pIsGood.value;
-          this.handleClickAction('goodActived', this.props.message);
+          this.pComment.value = undefined;
+          this.handleClickAction('good', {
+            message: this.props.message,
+            active: false,
+          });
         };
       }
     } else {
@@ -186,14 +198,23 @@ export default class ChatItem extends Component<TdChatItemProps> {
       if (isActive) {
         config.icon = <t-icon-thumb-down-filled />;
         config.clickCallback = () => {
-          this.pIsBad.value = !this.pIsBad.value;
-          this.handleClickAction('badActived', this.props.message);
+          this.pComment.value = undefined;
+          this.handleClickAction('bad', {
+            message: this.props.message,
+            active: false,
+          });
         };
       } else {
         config.icon = <t-icon-thumb-down />;
         config.clickCallback = () => {
-          this.pIsBad.value = !this.pIsBad.value;
-          this.handleClickAction('bad', this.props.message);
+          // 仅有未赋值才能点踩
+          if (!this.pComment.value) {
+            this.pComment.value = 'bad';
+          }
+          this.handleClickAction('bad', {
+            message: this.props.message,
+            active: true,
+          });
         };
       }
     }
@@ -228,22 +249,22 @@ export default class ChatItem extends Component<TdChatItemProps> {
     },
     {
       name: 'goodActived',
-      condition: () => this.pIsGood.value,
+      condition: () => this.pComment.value === 'good',
       render: this.renderComment('good', true),
     },
     {
       name: 'good',
-      condition: () => !this.pIsGood.value,
+      condition: () => this.pComment.value !== 'good',
       render: this.renderComment('good', false),
     },
     {
       name: 'badActived',
-      condition: () => this.pIsBad.value,
+      condition: () => this.pComment.value === 'bad',
       render: this.renderComment('bad', true),
     },
     {
       name: 'bad',
-      condition: () => !this.pIsBad.value,
+      condition: () => this.pComment.value !== 'bad',
       render: this.renderComment('bad', false),
     },
     {

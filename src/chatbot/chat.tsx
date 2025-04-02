@@ -72,6 +72,10 @@ export default class Chatbot extends Component<TdChatProps> {
     chatEngine: null,
   };
 
+  get slotNames() {
+    return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
+  }
+
   install() {
     this.chatEngine = new ChatEngine();
   }
@@ -183,14 +187,10 @@ export default class Chatbot extends Component<TdChatProps> {
   };
 
   private renderItems = () => {
-    const slotNames: string[] = getSlotNodes(this.props.children).reduce(
-      (prev, curr) => prev.concat(curr.attributes.slot),
-      [],
-    );
     const items = this.props.reverse ? [...this.chatMessageValue].reverse() : this.chatMessageValue;
     return items.map((item) => {
       const { role, id } = item;
-      const itemSlotNames = slotNames.filter((key) => key.includes(id));
+      const itemSlotNames = this.slotNames.filter((key) => key.includes(id));
       return (
         <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
@@ -199,6 +199,15 @@ export default class Chatbot extends Component<TdChatProps> {
           ))}
         </t-chat-item>
       );
+    });
+  };
+
+  private renderInputSlots = () => {
+    // input-header、input-footer-left、input-actions、input-sender
+    const itemSlotNames = this.slotNames.filter((key) => key.includes('input-'));
+    return itemSlotNames.map((slotName) => {
+      const str = slotName.replace(/^input-/, '');
+      return <slot name={slotName} slot={str}></slot>;
     });
   };
 
@@ -212,7 +221,6 @@ export default class Chatbot extends Component<TdChatProps> {
           className={`${className}-input-wrapper`}
           css={injectCSS?.chatInput}
           status={this.chatStatus}
-          actions
           autosize={{ minRows: 2 }}
           attachmentsProps={{
             items: this.files.value,
@@ -223,9 +231,8 @@ export default class Chatbot extends Component<TdChatProps> {
           onFileSelect={this.onAttachmentsSelect}
           onFileRemove={this.onAttachmentsRemove}
         >
-          <slot name="input-header" slot="header"></slot>
-          <slot name="input-footer-left" slot="footer-left"></slot>
-          <slot name="input-actions" slot="actions"></slot>
+          {/* 如不使用动态渲染slot，input中的默认slot会被置空 */}
+          {this.renderInputSlots()}
         </t-chat-input>
       </div>
     );
