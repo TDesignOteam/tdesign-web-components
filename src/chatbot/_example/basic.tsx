@@ -299,7 +299,7 @@ const mockModels = {
 };
 
 const attachmentProps = {
-  onFileSelected: async (files: File[]): Promise<Attachment[]> => {
+  onFileSelect: async (files: File[]): Promise<Attachment[]> => {
     const attachments: Attachment[] = [];
 
     // 串行处理每个文件
@@ -427,6 +427,7 @@ export default class BasicChat extends Component {
         // autoSendPrompt="自动发送问题"
         messageProps={messageProps}
         senderProps={{
+          actions: true,
           attachmentProps,
         }}
         chatServiceConfig={mockModels}
