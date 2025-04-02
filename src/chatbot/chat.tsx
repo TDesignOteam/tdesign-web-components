@@ -81,7 +81,6 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   get chatMessageValue() {
-    // if (this.props.messages !== undefined) return this.props.messages;
     return this.chatMessages.value;
   }
 
@@ -92,7 +91,7 @@ export default class Chatbot extends Component<TdChatProps> {
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
-    this.syncState(messageStore.getState().messages);
+    this.syncState(messages);
     console.log('====initChat', messages, autoSendPrompt);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
@@ -129,6 +128,7 @@ export default class Chatbot extends Component<TdChatProps> {
   // 订阅聊天状态变化
   private subscribeToChat() {
     this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
+      console.log('====subscribeToChat', state);
       this.syncState(state.messages);
       this.update();
     });

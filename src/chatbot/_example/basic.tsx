@@ -396,8 +396,6 @@ const messageProps: TdChatMessageConfig = {
 export default class BasicChat extends Component {
   chatRef = createRef<Chatbot>();
 
-  mockMsg = [];
-
   clickHandler?: (e: MouseEvent) => void;
 
   ready() {
@@ -411,11 +409,6 @@ export default class BasicChat extends Component {
       }
     };
     document.addEventListener('click', this.clickHandler);
-
-    setTimeout(() => {
-      this.mockMsg = mockData;
-      this.update();
-    }, 1000);
   }
 
   uninstall(): void {
@@ -430,7 +423,7 @@ export default class BasicChat extends Component {
       <t-chatbot
         ref={this.chatRef}
         style={{ display: 'block', height: '80vh' }}
-        messages={this.mockMsg}
+        messages={mockData}
         // autoSendPrompt="自动发送问题"
         messageProps={messageProps}
         senderProps={{
