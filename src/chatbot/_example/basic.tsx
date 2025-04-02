@@ -430,6 +430,9 @@ export default class BasicChat extends Component {
           attachmentProps,
         }}
         chatServiceConfig={mockModels}
+        onPromptSend={async (params) => {
+          console.log('====onSend', params);
+        }}
       ></t-chatbot>
     );
   }

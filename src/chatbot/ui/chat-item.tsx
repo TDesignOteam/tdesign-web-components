@@ -90,7 +90,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (
       isAIMessage(newMsg) &&
       isAIMessage(oldMsg) &&
-      JSON.stringify(newMsg.content) === JSON.stringify(oldMsg.content)
+      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
     ) {
       return false;
     }
@@ -198,11 +198,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
       }
     }
     return (
-      <t-tooltip content={config.label}>
-        <div class={`${className}__actions__preset__wrapper`} onClick={config.clickCallback}>
-          {config.icon}
-        </div>
-      </t-tooltip>
+      <div class={`${className}__actions__preset__wrapper`} onClick={config.clickCallback}>
+        {config.icon}
+      </div>
     );
   };
 
@@ -210,11 +208,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
     {
       name: 'replay',
       render: (
-        <t-tooltip content="重新生成">
-          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
-            <t-icon-refresh />
-          </div>
-        </t-tooltip>
+        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
+          <t-icon-refresh />
+        </div>
       ),
       // 条件：最后一条AI消息才可以重新生成
       condition: (message) => {
@@ -225,11 +221,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
     {
       name: 'copy',
       render: (
-        <t-tooltip content="复制">
-          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
-            <t-icon-copy />
-          </div>
-        </t-tooltip>
+        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
+          <t-icon-copy />
+        </div>
       ),
     },
     {
@@ -255,14 +249,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
     {
       name: 'share',
       render: (
-        <t-tooltip content="分享">
-          <div
-            class={`${className}__actions__preset__wrapper`}
-            onClick={() => this.handleClickAction('share', this.props.message)}
-          >
-            <t-icon-share-1 />
-          </div>
-        </t-tooltip>
+        <div
+          class={`${className}__actions__preset__wrapper`}
+          onClick={() => this.handleClickAction('share', this.props.message)}
+        >
+          <t-icon-share-1 />
+        </div>
       ),
     },
   ];
@@ -349,6 +341,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private renderSearch(content: SearchContent) {
     const { chatContentProps } = this.props;
     const { references, title } = content.data;
+    if (content.status === 'complete' && references?.length === 0) return null;
     const titleText = content?.status === 'stop' ? '搜索已终止' : title;
     const imgs = (
       <div className={`${className}__search-icons`}>
@@ -539,7 +532,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
     if (!message?.content || message.content.length === 0) return;
-    console.log('==========item render', message.id);
+    // console.log('==========item render', message.id);
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;

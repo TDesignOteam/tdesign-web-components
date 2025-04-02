@@ -30,6 +30,7 @@ export default class Chatbot extends Component<TdChatProps> {
     senderProps: Object,
     chatServiceConfig: Object,
     injectCSS: Object,
+    onSend: Function,
   };
 
   static defaultProps = {
@@ -92,7 +93,6 @@ export default class Chatbot extends Component<TdChatProps> {
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
     this.syncState(messages);
-    console.log('====initChat', messages, autoSendPrompt);
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
     if (autoSendPrompt !== '' && autoSendPrompt !== 'undefined') {
@@ -117,7 +117,11 @@ export default class Chatbot extends Component<TdChatProps> {
 
   async sendMessage(requestParams: RequestParams) {
     await this.chatEngine.sendMessage(requestParams);
-    this.update();
+    this.uploadedAttachments = [];
+    this.files.value = [];
+    this.fire('chat_submit', requestParams, {
+      composed: true,
+    });
   }
 
   async abortChat() {
@@ -128,7 +132,6 @@ export default class Chatbot extends Component<TdChatProps> {
   // 订阅聊天状态变化
   private subscribeToChat() {
     this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
-      console.log('====subscribeToChat', state);
       this.syncState(state.messages);
       this.update();
     });
@@ -136,15 +139,14 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
-    await this.chatEngine.sendMessage({
+    const params = {
       prompt: value,
       attachments: this.uploadedAttachments,
-    });
-    this.uploadedAttachments = [];
-    this.files.value = [];
-    this.fire('chat_submit', value, {
-      composed: true,
-    });
+    };
+    if (this.props?.senderProps?.onSend) {
+      await this.props.senderProps.onSend(e);
+    }
+    await this.sendMessage(params);
   };
 
   private handleStop = () => {
@@ -212,14 +214,14 @@ export default class Chatbot extends Component<TdChatProps> {
           status={this.chatStatus}
           actions
           autosize={{ minRows: 2 }}
-          onSend={this.handleSend}
-          onStop={this.handleStop}
           attachmentsProps={{
             items: this.files.value,
           }}
+          {...senderProps}
+          onSend={this.handleSend}
+          onStop={this.handleStop}
           onFileSelect={this.onAttachmentsSelect}
           onFileRemove={this.onAttachmentsRemove}
-          {...senderProps}
         >
           <slot name="input-header" slot="header"></slot>
           <slot name="input-footer-left" slot="footer-left"></slot>
