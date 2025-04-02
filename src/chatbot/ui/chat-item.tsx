@@ -38,7 +38,6 @@ import {
   UserMessageContent,
 } from '../core/type';
 import type { TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../type';
-import { markdownToTextWithParser } from './md/utils';
 
 import styles from '../style/chat-item.less';
 
@@ -150,10 +149,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     const copyContent = this.props.message.content.reduce((pre, item) => {
       if (!isTextContent(item) && !isMarkdownContent(item)) {
         return pre;
-      }
-      // markdown文本去除语法符号
-      if (isMarkdownContent(item)) {
-        return pre + markdownToTextWithParser(item.data);
       }
       return pre + item.data;
     }, '');
