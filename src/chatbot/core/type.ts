@@ -43,9 +43,9 @@ export type ReferenceItem = {
   icon?: string;
   type?: string;
   url?: string;
-  detail?: string;
-  source?: string;
-  timestamp?: string;
+  content?: string;
+  site?: string;
+  date?: string;
 };
 export type SearchContent = BaseContent<
   'search',
