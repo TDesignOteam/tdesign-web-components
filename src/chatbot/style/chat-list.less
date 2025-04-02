@@ -21,10 +21,20 @@
     display: none; /* Chrome/Safari/Opera */
   }
 
-  &__scroll__button {
-    box-sizing: border-box;
+  &__scroll__button__container {
     position: sticky;
     top: var(--t-chat-list-scroll-button-top);
+    left: var(--t-chat-list-scroll-button-left);
+
+    &--hide {
+      display: none;
+    }
+  }
+
+  &__scroll__button {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
     left: var(--t-chat-list-scroll-button-left);
     display: flex;
     align-items: center;
@@ -40,9 +50,5 @@
     transform: var(--t-chat-list-scroll-button-transform);
     box-shadow: var(--t-chat-list-scroll-button-shadow);
     cursor: pointer;
-
-    &--hide {
-      visibility: hidden;
-    }
   }
 }

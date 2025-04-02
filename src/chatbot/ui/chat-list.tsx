@@ -126,14 +126,18 @@ export default class Chatlist extends Component<TdChatListProps> {
       <div ref={this.listRef} className={className} onScroll={this.handleScroll}>
         <div
           className={classname([
-            `${className}__scroll__button`,
+            `${className}__scroll__button__container`,
             {
-              [`${className}__scroll__button--hide`]: !this.scrollButtonVisible.value,
+              [`${className}__scroll__button__container--hide`]: !this.scrollButtonVisible.value,
             },
           ])}
-          onClick={() => this.scrollToBottom({ behavior: 'smooth' })}
         >
-          {convertToLightDomNode(<t-icon-arrow-down />)}
+          <div
+            className={classname([`${className}__scroll__button`])}
+            onClick={() => this.scrollToBottom({ behavior: 'smooth' })}
+          >
+            {convertToLightDomNode(<t-icon-arrow-down />)}
+          </div>
         </div>
         <slot></slot>
       </div>
