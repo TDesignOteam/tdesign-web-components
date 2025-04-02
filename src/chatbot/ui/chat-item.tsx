@@ -147,10 +147,16 @@ export default class ChatItem extends Component<TdChatItemProps> {
       return;
     }
     const copyContent = this.props.message.content.reduce((pre, item) => {
-      if (!isTextContent(item) && !isMarkdownContent(item)) {
-        return pre;
+      let append = '';
+      if (isTextContent(item) || isMarkdownContent(item)) {
+        append = item.data;
+      } else if (isThinkingContent(item)) {
+        append = item.data.text;
       }
-      return pre + item.data;
+      if (!pre) {
+        return append;
+      }
+      return `${pre}\n${append}`;
     }, '');
     this.handleClickAction('copy', copyContent.toString(), () => {
       navigator.clipboard
