@@ -343,7 +343,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
             </div>
           </t-auto-scroll>
           <div slot="header" className={`${className}__think__header__content`}>
-            {(status === 'streaming' || status === 'complete') && this.renderThinkingStatus(status)}
+            {status !== 'stop' && this.renderThinkingStatus(status)}
             {status === 'stop' ? '思考已终止' : data?.title}
           </div>
         </t-collapse-panel>

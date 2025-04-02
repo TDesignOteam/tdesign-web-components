@@ -37,7 +37,6 @@ export default class Chatbot extends Component<TdChatProps> {
     clearHistory: false,
     layout: 'both',
     reverse: false,
-    messages: [],
   };
 
   listRef = createRef<TdChatListProps>();
@@ -46,7 +45,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   public chatStatus: ChatStatus = 'idle';
 
-  public chatMessages: ChatMessage[] = [];
+  private chatMessages: Omi.SignalValue<ChatMessage[]> = signal(undefined);
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -81,6 +80,11 @@ export default class Chatbot extends Component<TdChatProps> {
     this.update();
   }
 
+  get chatMessageValue() {
+    // if (this.props.messages !== undefined) return this.props.messages;
+    return this.chatMessages.value;
+  }
+
   private initChat() {
     const { messages, messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
     this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
@@ -100,7 +104,7 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   private syncState(state) {
-    this.chatMessages = state;
+    this.chatMessages.value = state;
     this.chatStatus = state.at(-1)?.status || 'idle';
     this.fire('message_change', state, {
       composed: true,
@@ -181,7 +185,7 @@ export default class Chatbot extends Component<TdChatProps> {
       (prev, curr) => prev.concat(curr.attributes.slot),
       [],
     );
-    const items = this.props.reverse ? [...this.chatMessages].reverse() : this.chatMessages;
+    const items = this.props.reverse ? [...this.chatMessageValue].reverse() : this.chatMessageValue;
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = slotNames.filter((key) => key.includes(id));
@@ -201,7 +205,7 @@ export default class Chatbot extends Component<TdChatProps> {
     // console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
-        {this.chatMessages && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
+        {this.chatMessageValue && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
         <t-chat-input
           className={`${className}-input-wrapper`}
           css={injectCSS?.chatInput}

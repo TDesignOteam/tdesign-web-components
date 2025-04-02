@@ -43,7 +43,7 @@ export class MessageStore extends ReactiveState<MessageState> {
 
       message.status = 'streaming';
       // 总是操作最后一个内容块
-      const lastContent = message.content[message.content.length - 1];
+      const lastContent = message.content.at(-1);
 
       if (lastContent?.type === processedContent.type) {
         // 合并到最后一个同类型内容块
@@ -134,6 +134,15 @@ export class MessageStore extends ReactiveState<MessageState> {
 
   // 更新消息整体状态
   private updateMessageStatusByContent(message: AIMessage) {
+    // 非最后一个内容块如果不是error则设为complete
+    message.content
+      .slice(0, -1) // 获取除最后一个元素外的所有内容
+      .forEach((content) => {
+        if (content.status !== 'error' && content.status !== 'stop') {
+          content.status = 'complete';
+        }
+      });
+
     // 优先处理错误状态
     if (message.content.some((c) => c.status === 'error')) {
       message.status = 'error';
