@@ -105,6 +105,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   private renderAvatar() {
+    if (!this.props.avatar) {
+      return null;
+    }
     return (
       <div class={`${className}__avatar`}>
         <div class={`${className}__avatar__box`}>
