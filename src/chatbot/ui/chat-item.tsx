@@ -172,10 +172,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       label: '点赞',
       icon: <t-icon-thumb-up />,
       clickCallback: () => {
-        // 仅有未赋值才能点赞
-        if (!this.pComment.value) {
-          this.pComment.value = 'good';
-        }
+        this.pComment.value = 'good';
         this.handleClickAction('good', {
           message: this.props.message,
           active: true,
@@ -207,10 +204,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       } else {
         config.icon = <t-icon-thumb-down />;
         config.clickCallback = () => {
-          // 仅有未赋值才能点踩
-          if (!this.pComment.value) {
-            this.pComment.value = 'bad';
-          }
+          this.pComment.value = 'bad';
           this.handleClickAction('bad', {
             message: this.props.message,
             active: true,
