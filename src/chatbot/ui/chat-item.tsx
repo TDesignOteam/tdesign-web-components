@@ -8,6 +8,7 @@ import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
+import 'tdesign-icons-web-components/esm/components/jump';
 import 'tdesign-icons-web-components/esm/components/thumb-up-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
@@ -356,6 +357,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   private renderSearch(content: SearchContent) {
     const { chatContentProps } = this.props;
     const { references, title } = content.data;
+    const expandable = chatContentProps?.search?.expandable;
     if (content.status === 'complete' && references?.length === 0) return null;
     const titleText = content?.status === 'stop' ? '搜索已终止' : title;
     const imgs = (
@@ -381,11 +383,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
           this.handleClickAction('searchResult', content);
         }}
       >
-        {this.searchExpand.value ? (
+        {expandable ? (
           <t-collapse
             className={`${className}__search`}
             expandIconPlacement="right"
-            value={[1]}
+            value={[0]}
             onChange={() => {
               this.searchExpand.value = !this.searchExpand.value;
             }}
@@ -398,9 +400,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
                 }}
               >
                 {references.map((content, idx) => (
-                  <a target="_blank" href={content.url} className={`${className}__search-link`}>
-                    {idx + 1}. {content.title}
-                  </a>
+                  <span className={`${className}__search-link-wrapper`}>
+                    <a target="_blank" href={content.url} className={`${className}__search-link`}>
+                      {idx + 1}. {content.title}
+                    </a>
+                    <t-icon-jump />
+                  </span>
                 ))}
               </div>
               <div slot="header" className={`${className}__search__header__content`}>
@@ -545,7 +550,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime } = props;
+    const { message, variant, placement, name, datetime, avatar } = props;
     if (!message?.content || message.content.length === 0) return;
     // console.log('==========item render', message.id);
 
@@ -556,7 +561,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
     return (
       <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
-        {this.renderAvatar()}
+        {avatar && this.renderAvatar()}
         {this.renderMessageStatus}
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>

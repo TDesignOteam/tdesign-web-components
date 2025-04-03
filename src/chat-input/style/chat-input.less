@@ -7,7 +7,7 @@
 .@{prefix}-chat__input {
   position: relative;
   width: 100%;
-
+  box-sizing: border-box;
   // 附件区
   &__header {
     position: relative;
@@ -33,6 +33,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
+    box-sizing: border-box;
     padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
     border: 1px solid var(--t-chat-input-content-default-border);
     border-radius: var(--t-chat-input-radius);

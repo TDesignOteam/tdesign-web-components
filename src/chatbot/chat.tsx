@@ -28,9 +28,8 @@ export default class Chatbot extends Component<TdChatProps> {
     messages: Array,
     messageProps: Object,
     senderProps: Object,
-    chatServiceConfig: Object,
+    chatServiceConfig: [Object, Function],
     injectCSS: Object,
-    onSend: Function,
   };
 
   static defaultProps = {

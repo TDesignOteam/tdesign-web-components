@@ -330,9 +330,19 @@
       flex-direction: column;
     }
 
-    &-link {
+    &-link-wrapper {
+      display: flex;
+      align-items: center;
+      line-height: var(--t-chat-item-search-link-line-height);
       color: var(--t-chat-item-search-link-color);
+    }
+    &-link {
       text-decoration: none;
+      align-items: center;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      margin-right: 2px;
     }
 
     &::part(@{prefix}-collapse) {

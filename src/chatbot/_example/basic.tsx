@@ -383,6 +383,9 @@ const messageProps: TdChatMessageConfig = {
       },
     },
     chatContentProps: {
+      search: {
+        expandable: true,
+      },
       thinking: {
         height: 100,
       },
@@ -408,13 +411,13 @@ export default class BasicChat extends Component {
         console.log('捕获资源链接点击:', target.dataset);
       }
     };
-    document.addEventListener('click', this.clickHandler);
+    document.addEventListener('mousedown', this.clickHandler);
   }
 
   uninstall(): void {
     // 移除全局点击监听
     if (this.clickHandler) {
-      document.removeEventListener('click', this.clickHandler);
+      document.removeEventListener('mousedown', this.clickHandler);
     }
   }
 
