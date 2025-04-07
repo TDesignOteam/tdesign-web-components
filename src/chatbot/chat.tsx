@@ -8,10 +8,12 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-input';
+import type ChatInput from '../chat-input/chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatMessage, ChatStatus, RequestParams } from './core/type';
+import type Chatlist from './ui/chat-list';
 import ChatEngine from './core';
-import type { TdChatListProps, TdChatMessageConfig, TdChatProps } from './type';
+import type { TdChatMessageConfig, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
@@ -39,7 +41,9 @@ export default class Chatbot extends Component<TdChatProps> {
     reverse: false,
   };
 
-  listRef = createRef<TdChatListProps>();
+  listRef = createRef<Chatlist>();
+
+  chatInputRef = createRef<ChatInput>();
 
   public chatEngine: ChatEngine;
 
@@ -122,6 +126,7 @@ export default class Chatbot extends Component<TdChatProps> {
     await this.chatEngine.sendMessage(requestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
+    this.scrollToBottom();
     this.fire('chat_submit', requestParams, {
       composed: true,
     });
@@ -130,6 +135,15 @@ export default class Chatbot extends Component<TdChatProps> {
   async abortChat() {
     await this.chatEngine.abortChat();
     this.update();
+  }
+
+  addPrompt(prompt: string) {
+    this.chatInputRef.current.pValue.value = prompt;
+    this.chatInputRef.current.inputRef.current.focus();
+  }
+
+  scrollToBottom() {
+    this.listRef.current?.scrollToBottom();
   }
 
   // 订阅聊天状态变化
@@ -150,6 +164,7 @@ export default class Chatbot extends Component<TdChatProps> {
       await this.props.senderProps.onSend(e);
     }
     await this.sendMessage(params);
+    this.scrollToBottom();
   };
 
   private handleStop = () => {
@@ -217,6 +232,7 @@ export default class Chatbot extends Component<TdChatProps> {
       <div className={`${className} ${layoutClass}`}>
         {this.chatMessageValue && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
         <t-chat-input
+          ref={this.chatInputRef}
           className={`${className}-input-wrapper`}
           css={injectCSS?.chatInput}
           status={this.chatStatus}

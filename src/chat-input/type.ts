@@ -17,8 +17,8 @@ export interface TdChatInputSend {
 export interface TdChatInputProps {
   placeholder?: string;
   disabled?: boolean;
-  value: string | number;
-  defaultValue: string | number;
+  value: string;
+  defaultValue: string;
   actions?: TdChatInputAction[] | ((preset: TdChatInputAction[]) => TdChatInputAction[]) | boolean;
   /** 生成状态 */
   status?: ChatStatus;

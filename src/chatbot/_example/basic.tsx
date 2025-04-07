@@ -190,6 +190,7 @@ const mockData: ChatMessage[] = [
     id: '3242',
     role: 'assistant',
     status: 'complete',
+    comment: 'good',
     content: [
       {
         type: 'markdown',
@@ -364,42 +365,45 @@ const resourceLinkPlugin = (md: MarkdownIt) => {
   };
 };
 
-const messageProps: TdChatMessageConfig = {
-  // user: {
-  //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-  // },
-  assistant: {
-    // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    // actions: (preset) => {
-    //   return preset.filter(({ name }) => name !== 'share');
-    // },
-    onActions: {
-      replay: (data, callback) => {
-        console.log('自定义重新回复', data);
-        callback?.();
-      },
-      good: (data) => {
-        console.log('点赞', data);
-      },
-    },
-    chatContentProps: {
-      search: {
-        expandable: true,
-      },
-      thinking: {
-        height: 100,
-      },
-      markdown: {
-        pluginConfig: [resourceLinkPlugin],
-      },
-    },
-  },
-};
-
 export default class BasicChat extends Component {
   chatRef = createRef<Chatbot>();
 
   clickHandler?: (e: MouseEvent) => void;
+
+  messageProps: TdChatMessageConfig = {
+    // user: {
+    //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
+    // },
+    assistant: {
+      // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+      // actions: (preset) => {
+      //   return preset.filter(({ name }) => name !== 'share');
+      // },
+      onActions: {
+        replay: (data, callback) => {
+          console.log('自定义重新回复', data);
+          callback?.();
+        },
+        good: (data) => {
+          console.log('点赞', data);
+        },
+        suggestion: ({ prompt }) => {
+          this.chatRef.current.addPrompt(prompt);
+        },
+      },
+      chatContentProps: {
+        search: {
+          expandable: true,
+        },
+        thinking: {
+          height: 100,
+        },
+        markdown: {
+          pluginConfig: [resourceLinkPlugin],
+        },
+      },
+    },
+  };
 
   ready() {
     this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
@@ -428,7 +432,7 @@ export default class BasicChat extends Component {
         style={{ display: 'block', height: '80vh' }}
         messages={mockData}
         // autoSendPrompt="自动发送问题"
-        messageProps={messageProps}
+        messageProps={this.messageProps}
         senderProps={{
           actions: true,
           attachmentProps,

@@ -88,6 +88,11 @@ export default class Textarea extends Component<TdTextareaProps> {
     this.adjustTextareaHeight();
   }
 
+  // 暴露聚焦方法
+  focus = () => {
+    this.textArea.current?.focus();
+  };
+
   countCharacters(text: string) {
     // 按照一个中文汉字等于一个字符长度计算
     const chineseCharacterRegex = /[\u4e00-\u9fa5]/g;

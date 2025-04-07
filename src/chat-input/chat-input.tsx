@@ -54,7 +54,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     },
   };
 
-  pValue: Omi.SignalValue<string | number> = signal('');
+  pValue: Omi.SignalValue<string> = signal('');
 
   pAttachments: Omi.SignalValue<Attachment[]> = signal([]);
 

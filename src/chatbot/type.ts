@@ -68,6 +68,8 @@ export interface TdChatItemProps {
       ? TdChatContentSearchProps
       : key extends 'thinking'
       ? TdChatContentThinkProps
+      : key extends 'suggestion'
+      ? TdChatContentSuggestionProps
       : any;
   };
   /** 自定义消息体渲染配置 */
@@ -106,8 +108,6 @@ export type TdChatMessageConfig = {
 export interface TdChatListProps {
   /** 自动滚动底部 */
   autoScroll?: boolean;
-  /** 滚动底部按钮 */
-  scrollToBottom?: boolean;
   onScroll?: (e: Event) => void;
 }
 
@@ -136,6 +136,10 @@ export interface TdChatContentSearchProps {
 
 export interface TdChatContentThinkProps {
   height?: number;
+}
+
+export interface TdChatContentSuggestionProps {
+  directSend?: boolean;
 }
 
 export interface TdChatContentMDProps {

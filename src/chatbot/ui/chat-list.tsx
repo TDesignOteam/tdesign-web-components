@@ -17,12 +17,10 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   static propTypes = {
     autoScroll: Boolean,
-    scrollToBottom: Boolean,
   };
 
   static defaultProps = {
     autoScroll: true,
-    scrollToBottom: true,
   };
 
   private listRef = createRef<HTMLDivElement>();
@@ -78,11 +76,6 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   /** 检测并显示滚到底部按钮 */
   private checkAndShowScrollButton = debounce(() => {
-    const { scrollToBottom } = this.props;
-    if (!scrollToBottom) {
-      this.scrollButtonVisible.value = false;
-      return;
-    }
     const list = this.listRef.current;
     // 距离底部大于阈值 展示按钮
     if (list && list.scrollHeight - list.clientHeight - list.scrollTop > 140) {
