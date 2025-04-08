@@ -1,4 +1,14 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/file-excel-filled';
+import 'tdesign-icons-web-components/esm/components/file-image-filled';
+import 'tdesign-icons-web-components/esm/components/file-code-1-filled';
+import 'tdesign-icons-web-components/esm/components/file-pdf-filled';
+import 'tdesign-icons-web-components/esm/components/file-powerpoint-filled';
+import 'tdesign-icons-web-components/esm/components/file-word-filled';
+import 'tdesign-icons-web-components/esm/components/file-zip-filled';
+import 'tdesign-icons-web-components/esm/components/video-filled';
+import 'tdesign-icons-web-components/esm/components/file-music-filled';
+import 'tdesign-icons-web-components/esm/components/loading';
+import 'tdesign-icons-web-components/esm/components/file';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
 import { Component, tag } from 'omi';
@@ -25,48 +35,48 @@ export default class FileCard extends Component<FileCardProps> {
 
   PRESET_FILE_ICONS = [
     {
-      icon: <t-icon name="file-excel-filled" size="24px" />,
+      icon: <t-icon-file-excel-filled size="24px" />,
       color: '#2BA471',
       ext: ['xlsx', 'xls'],
     },
     {
-      icon: <t-icon name="file-image-filled" size="24px" />,
+      icon: <t-icon-file-image-filled size="24px" />,
       color: this.DEFAULT_ICON_COLOR,
       ext: this.IMG_EXTS,
     },
 
     {
-      icon: <t-icon name="file-code-1-filled" size="24px" />,
+      icon: <t-icon-file-code-1-filled size="24px" />,
       color: this.DEFAULT_ICON_COLOR,
       ext: ['md', 'mdx'],
     },
     {
-      icon: <t-icon name="file-pdf-filled" size="24px" />,
+      icon: <t-icon-file-pdf-filled size="24px" />,
       color: '#D54941',
       ext: ['pdf'],
     },
     {
-      icon: <t-icon name="file-powerpoint-filled" size="24px" />,
+      icon: <t-icon-file-powerpoint-filled size="24px" />,
       color: '#E37318',
       ext: ['ppt', 'pptx'],
     },
     {
-      icon: <t-icon name="file-word-filled" size="24px" />,
+      icon: <t-icon-file-word-filled size="24px" />,
       color: '#0052D9',
       ext: ['doc', 'docx'],
     },
     {
-      icon: <t-icon name="file-zip-filled" size="24px" />,
+      icon: <t-icon-file-zip-filled size="24px" />,
       color: '#E37318',
       ext: ['zip', 'rar', '7z', 'tar', 'gz'],
     },
     {
-      icon: <t-icon name="video-filled" size="24px" />,
+      icon: <t-icon-video-filled size="24px" />,
       color: '#D54941',
       ext: ['mp4', 'avi', 'mov', 'wmv', 'flv', 'mkv'],
     },
     {
-      icon: <t-icon name="file-music-filled" size="24px" />,
+      icon: <t-icon-file-music-filled size="24px" />,
       color: '#D54941',
       ext: ['mp3', 'wav', 'flac', 'ape', 'aac', 'ogg'],
     },
@@ -133,7 +143,7 @@ export default class FileCard extends Component<FileCardProps> {
     const { nameSuffix } = this.state;
     const { status = 'done' } = item;
     if (status === 'progress') {
-      this.state.icon = <t-icon name="loading" size="24px" />;
+      this.state.icon = <t-icon-loading size="24px" />;
       this.state.iconColor = '#0052D9';
       this.update();
       return;
@@ -146,7 +156,7 @@ export default class FileCard extends Component<FileCardProps> {
         return;
       }
     }
-    this.state.icon = <t-icon name="file" size="24px" />;
+    this.state.icon = <t-icon-file size="24px" />;
     this.state.iconColor = this.DEFAULT_ICON_COLOR;
     this.update();
   }
@@ -177,7 +187,7 @@ export default class FileCard extends Component<FileCardProps> {
               this.fire('remove', item);
             }}
           >
-            <t-icon name="close-circle-filled" size="15px" />
+            <t-icon-close-circle-filled size="15px" />
           </div>
         )}
       </div>

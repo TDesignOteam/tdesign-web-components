@@ -1,4 +1,4 @@
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '../input';
 import './RangeInputInner';
 
@@ -168,7 +168,7 @@ export default class RangeInput extends Component<RangeInputProps> {
           this.handleChange(undefined, 'clear', '');
         }}
       >
-        <t-icon name="close-circle-filled" className={`${name}__suffix-clear ${classPrefix}-icon`} />
+        <t-icon-close-circle-filled className={`${name}__suffix-clear ${classPrefix}-icon`} />
       </span>
     ) : null;
 

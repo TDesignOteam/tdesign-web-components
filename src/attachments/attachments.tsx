@@ -168,12 +168,12 @@ export default class Attachments extends Component<AttachmentsProps> {
 
         {overflow === 'scrollX' && this.showPrevButton && (
           <div class={`${listCls}-prev-btn`} onClick={() => this.onScrollOffset(-1)}>
-            <t-icon name="chevron-left" size="16px" />
+            <t-icon-chevron-left size="16px" />
           </div>
         )}
         {overflow === 'scrollX' && this.showNextButton && (
           <div class={`${listCls}-next-btn`} onClick={() => this.onScrollOffset(1)}>
-            <t-icon name="chevron-right" size="16px" />
+            <t-icon-chevron-right size="16px" />
           </div>
         )}
       </div>
