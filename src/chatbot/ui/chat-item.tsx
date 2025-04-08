@@ -340,9 +340,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
           <t-auto-scroll maxHeight={height}>
             <div className={`${className}__think__inner`}>
               {/* 上下阴影 */}
-              {height ? <div className={`${className}__think__shadow__top`}></div> : null}
+              {/* {height ? <div className={`${className}__think__shadow__top`}></div> : null} */}
               {data.text}
-              {height ? <div className={`${className}__think__shadow__bottom`}></div> : null}
+              {/* {height ? <div className={`${className}__think__shadow__bottom`}></div> : null} */}
             </div>
           </t-auto-scroll>
           <div slot="header" className={`${className}__think__header__content`}>
