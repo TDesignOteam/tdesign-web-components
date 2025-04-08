@@ -328,7 +328,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
     if (status === 'error')
       return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
-    return <div class={`${className}__think__status--pending`}>...</div>;
+    return <div class={`${className}__think__status--pending`} />;
   }
 
   private renderThinking(content: ThinkingContent) {
