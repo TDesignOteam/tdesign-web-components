@@ -20,7 +20,17 @@ const chunks = [
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '这是个mock这是个mock，这是个mock，这是个mock这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，',
   },
   {
     type: 'think',
@@ -30,7 +40,17 @@ const chunks = [
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，',
+  },
+  {
+    type: 'think',
+    title: '思考中...',
+    content: '这是个mock这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
   },
   {
     type: 'think',

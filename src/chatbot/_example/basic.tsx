@@ -436,6 +436,7 @@ export default class BasicChat extends Component {
         senderProps={{
           actions: true,
           attachmentProps,
+          placeholder: '请输入问题',
         }}
         chatServiceConfig={mockModels}
         onPromptSend={async (params) => {

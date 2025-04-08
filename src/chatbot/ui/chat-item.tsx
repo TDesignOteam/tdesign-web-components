@@ -333,22 +333,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private renderThinking(content: ThinkingContent) {
     const { data, status } = content;
+    const height = this.props?.chatContentProps?.thinking?.height;
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
         <t-collapse-panel className={`${className}__think__content`}>
-          <t-auto-scroll maxHeight={this.props?.chatContentProps?.thinking?.height}>
-            {data?.text && (
-              <div className={`${className}__think__inner`}>
-                {/* 上下阴影 */}
-                {this.props?.chatContentProps?.thinking?.height ? (
-                  <div className={`${className}__think__shadow__top`}></div>
-                ) : null}
-                {data.text}
-                {this.props?.chatContentProps?.thinking?.height ? (
-                  <div className={`${className}__think__shadow__bottom`}></div>
-                ) : null}
-              </div>
-            )}
+          <t-auto-scroll maxHeight={height}>
+            <div className={`${className}__think__inner`}>
+              {/* 上下阴影 */}
+              {height ? <div className={`${className}__think__shadow__top`}></div> : null}
+              {data.text}
+              {height ? <div className={`${className}__think__shadow__bottom`}></div> : null}
+            </div>
           </t-auto-scroll>
           <div slot="header" className={`${className}__think__header__content`}>
             {status !== 'stop' && this.renderThinkingStatus(status)}
