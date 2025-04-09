@@ -9,6 +9,7 @@
 
 // 聊天列表
 .@{prefix}-chat__list {
+  box-sizing: border-box;
   position: relative;
   flex: 1;
   min-height: 0;
@@ -20,6 +21,10 @@
   -ms-overflow-style: none; /* IE/Edge */
   &::-webkit-scrollbar {
     display: none; /* Chrome/Safari/Opera */
+  }
+
+  & *, *::before, *::after {
+    box-sizing: border-box;
   }
 
   &__scroll__button__container {

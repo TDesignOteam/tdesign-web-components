@@ -1,11 +1,16 @@
 @import "./import.less";
 
 .@{prefix}-chat {
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   height: 100%;
   width: 100%;
   color: @comment-text-color-default;
+
+  & *, *::before, *::after {
+    box-sizing: border-box;
+  }
 
   // chat布局
   &--normal {

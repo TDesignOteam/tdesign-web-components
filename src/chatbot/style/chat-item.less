@@ -7,10 +7,15 @@
 
 .@{prefix}-chat__item {
   &__inner {
+    box-sizing: border-box;
     display: flex;
     width: 100%;
     margin-bottom: var(--t-chat-item-gap);
     font-size: var(--t-chat-font-size);
+
+    & *, *::before, *::after {
+      box-sizing: border-box;
+    }
 
     .@{prefix}-chat__item__avatar {
       flex: 0 0 auto;

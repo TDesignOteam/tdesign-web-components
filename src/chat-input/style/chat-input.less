@@ -8,6 +8,11 @@
   position: relative;
   width: 100%;
   box-sizing: border-box;
+
+  & *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
   // 附件区
   &__header {
     position: relative;
