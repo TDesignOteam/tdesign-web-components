@@ -123,6 +123,7 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   async sendMessage(requestParams: RequestParams) {
+    console.log('=====sendMessage', requestParams);
     await this.chatEngine.sendMessage(requestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
@@ -138,6 +139,7 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   addPrompt(prompt: string) {
+    console.log('=====addprompt', prompt);
     this.chatInputRef.current.pValue.value = prompt;
     this.chatInputRef.current.inputRef.current.focus();
   }

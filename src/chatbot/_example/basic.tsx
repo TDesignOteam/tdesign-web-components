@@ -222,6 +222,12 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 
   const { type, ...rest } = chunk.data;
   switch (type) {
+    case 'error':
+      return {
+        type: 'text',
+        status: 'error',
+        data: rest.content,
+      };
     case 'think':
       return {
         type: 'thinking',

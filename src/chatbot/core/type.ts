@@ -158,7 +158,7 @@ export interface ChatServiceConfig {
   onMessage?: (chunk: SSEChunkData) => AIMessageContent | null;
   onComplete?: (isAborted: Boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => Promise<void>;
-  onError?: (error: Error | Response) => void;
+  onError?: (err: Error | Response) => void;
 }
 
 // 联合类型支持静态配置和动态生成

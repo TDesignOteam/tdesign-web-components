@@ -63,9 +63,6 @@ export class MessageStore extends ReactiveState<MessageState> {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
         message.status = status;
-        if (isAIMessage(message) && message.content.length > 0) {
-          message.content.at(-1).status = status;
-        }
       }
     });
   }
@@ -115,6 +112,10 @@ export class MessageStore extends ReactiveState<MessageState> {
     this.createMessage(branchedMessage);
   }
 
+  get messages() {
+    return this.getState().messages;
+  }
+
   get currentMessage(): ChatMessage {
     const { messages } = this.getState();
     return messages.at(-1);
@@ -134,7 +135,7 @@ export class MessageStore extends ReactiveState<MessageState> {
 
   // 更新消息整体状态
   private updateMessageStatusByContent(message: AIMessage) {
-    // 非最后一个内容块如果不是error则设为complete
+    // 非最后一个内容块如果不是error|stop, 则设为complete
     message.content
       .slice(0, -1) // 获取除最后一个元素外的所有内容
       .forEach((content) => {

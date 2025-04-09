@@ -62,6 +62,12 @@ app.post('/sse/normal', (req, res) => {
           id: chunk.id,
           content: chunk.content,
         })}\n\n`;
+
+      case 'error':
+        return `event: error\ndata: ${JSON.stringify({
+          type: 'error',
+          content: chunk.content,
+        })}\n\n`;
     }
   });
 

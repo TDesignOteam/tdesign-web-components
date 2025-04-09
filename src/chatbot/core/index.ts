@@ -145,7 +145,10 @@ export default class ChatEngine implements IChatEngine {
         this.config.onError?.(error);
       },
       onComplete: (isAborted) => {
-        this.setMessageStatus(id, isAborted ? 'stop' : 'complete');
+        // 所有消息内容块都失败才算消息体失败
+        const allContentFailed = this.messageStore.messages.every((content) => content.status === 'error');
+        // eslint-disable-next-line no-nested-ternary
+        this.setMessageStatus(id, isAborted ? 'stop' : allContentFailed ? 'error' : 'complete');
         this.config.onComplete?.(isAborted, params);
       },
     });

@@ -482,7 +482,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   renderMessage() {
     const { message, chatContentProps, customRenderConfig } = this.props;
-    const { role } = message;
+    const { role, status } = message;
+    console.log('=====status', status);
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
       const renderer = customRenderConfig?.[content?.type];
@@ -552,7 +553,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
     if (!message?.content || message.content.length === 0) return;
-    // console.log('==========item render', message.id);
+    // console.log('==========item render', message.id, message.status);
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;

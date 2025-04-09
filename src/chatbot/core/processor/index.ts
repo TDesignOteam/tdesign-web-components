@@ -61,7 +61,7 @@ export default class MessageProcessor {
     return {
       ...(lastContent || {}),
       ...newChunk,
-      status: 'streaming',
+      status: newChunk?.status || 'streaming',
     };
   }
 
