@@ -156,7 +156,7 @@ export interface ChatServiceConfig {
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
   onMessage?: (chunk: SSEChunkData) => AIMessageContent | null;
-  onComplete?: (isAborted: Boolean, params: RequestInit, result?: any) => void;
+  onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => Promise<void>;
   onError?: (err: Error | Response) => void;
 }
