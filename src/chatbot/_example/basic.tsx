@@ -23,6 +23,21 @@ declare module '../core/type' {
   }
 }
 
+// function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string }> {
+//   const linkRegex = /\[(.*?)\]\(#prompt:(.*?)\)/g;
+//   const matches = [];
+//   let match;
+
+//   while ((match = linkRegex.exec(msg)) !== null) {
+//     matches.push({
+//       title: match[1].trim(),
+//       prompt: match[2].trim(),
+//     });
+//   }
+
+//   return matches;
+// }
+
 const mockData: ChatMessage[] = [
   {
     id: 's1123',
@@ -251,6 +266,13 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       };
     }
 
+    // case 'suggestion':
+    //   return {
+    //     type: 'suggestion',
+    //     // title: '是不是想提问：',
+    //     data: extractMarkdownLinks(rest.content),
+    //   };
+
     case 'weather': {
       return {
         type: 'weather',
@@ -396,6 +418,11 @@ export default class BasicChat extends Component {
         suggestion: ({ prompt }) => {
           this.chatRef.current.addPrompt(prompt);
         },
+        searchItem: ({ content, event }) => {
+          event.preventDefault();
+          event.stopPropagation();
+          console.log('searchItem', content);
+        },
       },
       chatContentProps: {
         search: {
@@ -445,9 +472,6 @@ export default class BasicChat extends Component {
           placeholder: '请输入问题',
         }}
         chatServiceConfig={mockModels}
-        onPromptSend={async (params) => {
-          console.log('====onSend', params);
-        }}
       ></t-chatbot>
     );
   }
