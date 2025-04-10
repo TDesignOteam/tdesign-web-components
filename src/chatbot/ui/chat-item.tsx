@@ -304,7 +304,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   get renderMessageStatus() {
-    if (!isAIMessage(this.props.message)) return;
+    if (!isAIMessage(this.props.message)) return null;
     const { status, content = [] } = this.props.message;
     // 如果有任一内容，就不用展示message整体状态
     if (content.length > 0 || status === 'complete') {
@@ -336,14 +336,16 @@ export default class ChatItem extends Component<TdChatItemProps> {
     return (
       <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
         <t-collapse-panel className={`${className}__think__content`}>
-          <t-auto-scroll maxHeight={height}>
-            <div className={`${className}__think__inner`}>
-              {/* 上下阴影 */}
-              {/* {height ? <div className={`${className}__think__shadow__top`}></div> : null} */}
-              {data.text}
-              {/* {height ? <div className={`${className}__think__shadow__bottom`}></div> : null} */}
-            </div>
-          </t-auto-scroll>
+          {data.text ? (
+            <t-auto-scroll maxHeight={height}>
+              <div className={`${className}__think__inner`}>
+                {/* 上下阴影 */}
+                {/* {height ? <div className={`${className}__think__shadow__top`}></div> : null} */}
+                {data.text}
+                {/* {height ? <div className={`${className}__think__shadow__bottom`}></div> : null} */}
+              </div>
+            </t-auto-scroll>
+          ) : null}
           <div slot="header" className={`${className}__think__header__content`}>
             {status !== 'stop' && this.renderThinkingStatus(status)}
             {status === 'stop' ? '思考已终止' : data?.title}
@@ -563,7 +565,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
     return (
       <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
-        {/* {avatar && this.renderAvatar()} */}
+        {/* {avatar ? this.Avatar : null} */}
         {this.renderMessageStatus}
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>
