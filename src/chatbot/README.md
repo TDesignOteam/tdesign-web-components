@@ -43,9 +43,9 @@ spline: base
 | `autoSendPrompt` | Object/String | `''` | 自动发送的提示内容 |
 | `reverse` | Boolean | `false` | 是否反转消息显示顺序 |
 | `messages` | `Array<ChatMessage>` | - | 初始化的聊天消息数组 |
-| `messageProps` | TdChatMessageConfig | - | 消息角色配置，它是一个键值对对象，键为角色类型（`assistant` | `user` | `system`），值为对应角色的消息配置 `TdChatItemProps` |
+| `messageProps` | `{ ModelRoleEnum: TdChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TdChatItemProps` |
 | `senderProps` | TdChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，包含`onSend`、`onFileSelect`等回调函数 |
-| `chatServiceConfig` | ChatServiceConfig | Function | - | 聊天服务配置，用于初始化ChatEngine |
+| `chatServiceConfig` | ChatServiceConfig/() => ChatServiceConfig | - | 聊天服务配置，用于初始化ChatEngine |
 | `injectCSS` | Object | - | 注入的自定义CSS样式 |
 
 ## 事件
@@ -79,7 +79,7 @@ spline: base
 | `role` | `MessageRole` | 消息角色类型 |
 | `variant` | `'base'` \| `'text'` \| `'outline'` | 消息气泡样式变体 |
 | `placement` | `'left'` \| `'right'` | 消息气泡位置 |
-| `chatContentProps` | `Object` | 不同类型消息的内容配置 |
+| `chatContentProps` | `{[key in ContentType]?: {}}` | 可以针对不同内容类型进行定制化配置。ContentType类型有`text`、`markdown`、`search`、`thinking`、`suggestion`，|
 | `customRenderConfig` | `TdChatCustomRenderConfig` | 自定义消息渲染配置 |
 
 ## TdChatInputProps属性
