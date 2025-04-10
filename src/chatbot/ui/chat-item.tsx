@@ -287,7 +287,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (typeof actions === 'function') {
       arrayActions = actions(this.presetActions, message);
     }
-
     return arrayActions.map((item) => {
       // 默认消息完成时才展示action
       if (message.status !== 'complete') {
@@ -393,16 +392,19 @@ export default class ChatItem extends Component<TdChatItemProps> {
             }}
           >
             <t-collapse-panel className={`${className}__search__content`}>
-              <div
-                className={`${className}__search-links`}
-                onClick={() => {
-                  this.handleClickAction('searchItem', content);
-                }}
-              >
-                {references.map((content, idx) => (
-                  <span className={`${className}__search-link-wrapper`}>
+              <div className={`${className}__search-links`}>
+                {references.map((content, index) => (
+                  <span
+                    className={`${className}__search-link-wrapper`}
+                    onClick={(event) => {
+                      this.handleClickAction('searchItem', {
+                        event,
+                        content,
+                      });
+                    }}
+                  >
                     <a target="_blank" href={content.url} className={`${className}__search-link`}>
-                      {idx + 1}. {content.title}
+                      {index + 1}. {content.title}
                     </a>
                     <t-icon-jump />
                   </span>
@@ -482,8 +484,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   renderMessage() {
     const { message, chatContentProps, customRenderConfig } = this.props;
-    const { role, status } = message;
-    console.log('=====status', status);
+    const { role } = message;
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;
       const renderer = customRenderConfig?.[content?.type];

@@ -41,7 +41,6 @@ export class MessageStore extends ReactiveState<MessageState> {
       const message = draft.messages.find((m) => m.id === messageId);
       if (!message || !isAIMessage(message)) return;
 
-      message.status = 'streaming';
       // 总是操作最后一个内容块
       const lastContent = message.content.at(-1);
 
@@ -63,6 +62,9 @@ export class MessageStore extends ReactiveState<MessageState> {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
         message.status = status;
+        if (isAIMessage(message) && message.content.length > 0) {
+          message.content.at(-1).status = status;
+        }
       }
     });
   }

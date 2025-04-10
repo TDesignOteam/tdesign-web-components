@@ -63,6 +63,11 @@ app.post('/sse/normal', (req, res) => {
           content: chunk.content,
         })}\n\n`;
 
+      case 'suggestion':
+        return `event: suggestion\ndata: ${JSON.stringify({
+          type: 'suggestion',
+          content: chunk.content,
+        })}\n\n`;
       case 'error':
         return `event: error\ndata: ${JSON.stringify({
           type: 'error',
