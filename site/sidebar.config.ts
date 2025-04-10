@@ -66,16 +66,22 @@ export default [
     type: 'component', // 组件文档
     children: [
       {
-        title: 'Chatbot 智能聊天',
+        title: 'Chatbot 智能对话',
         name: 'chatbot',
         path: '/webcomponents/components/chatbot',
         component: () => import('tdesign-web-components/chatbot/README.md'),
       },
       {
-        title: 'ChatInput 聊天输入框',
-        name: 'chat-input',
+        title: 'ChatSender 对话输入框',
+        name: 'chat-sender',
         path: '/webcomponents/components/chat-input',
         component: () => import('tdesign-web-components/chat-input/README.md'),
+      },
+      {
+        title: 'ChatMessage 对话消息体',
+        name: 'chat-message',
+        path: '/webcomponents/components/chat-message',
+        component: () => import('tdesign-web-components/chat-message/README.md'),
       },
       {
         title: 'Filecard 文件缩略卡片',
