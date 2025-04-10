@@ -44,7 +44,7 @@ spline: base
 | `reverse` | Boolean | `false` | 是否反转消息显示顺序 |
 | `messages` | `Array<ChatMessage>` | - | 初始化的聊天消息数组 |
 | `messageProps` | `{ ModelRoleEnum: TdChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TdChatItemProps` |
-| `senderProps` | TdChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，包含`onSend`、`onFileSelect`等回调函数 |
+| `senderProps` | TdChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatInput组件` |
 | `chatServiceConfig` | ChatServiceConfig/() => ChatServiceConfig | - | 聊天服务配置，用于初始化ChatEngine |
 | `injectCSS` | Object | - | 注入的自定义CSS样式 |
 
@@ -81,28 +81,6 @@ spline: base
 | `placement` | `'left'` \| `'right'` | 消息气泡位置 |
 | `chatContentProps` | `{[key in ContentType]?: {}}` | 可以针对不同内容类型进行定制化配置。ContentType类型有`text`、`markdown`、`search`、`thinking`、`suggestion`，|
 | `customRenderConfig` | `TdChatCustomRenderConfig` | 自定义消息渲染配置 |
-
-## TdChatInputProps属性
-
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `placeholder` | `string` | - | 输入框占位文本 |
-| `disabled` | `boolean` | `false` | 是否禁用输入框 |
-| `value` | `string` | - | 输入框当前值（受控属性） |
-| `defaultValue` | `string` | - | 输入框默认值（非受控属性） |
-| `status` | `ChatStatus` | - | 聊天状态，控制生成/停止按钮的显示 |
-| `allowStop` | `boolean` | - | 生成状态下是否允许停止操作 |
-| `actions` | `TdChatInputAction[]` \| `Function` \| `boolean` | 操作按钮配置，可以是数组、生成函数或布尔值 |
-| `attachmentsProps` | `TdAttachmentsProps` | 附件列表的配置属性 |
-| `textareaProps` | `Partial<TdTextareaProps>` | 文本输入框的配置属性 |
-| `uploadProps` | `Omit<JSX.HTMLAttributes, 'onChange' \| 'ref' \| 'type' \| 'hidden'>` | 文件上传的配置属性 |
-| `onSend` | `CustomEvent<TdChatInputSend>` | 发送消息时触发 |
-| `onStop` | `(value: string, context: { e: MouseEvent })` | 停止生成时触发 |
-| `onChange` | `(value: string, context: { e: InputEvent \| MouseEvent \| KeyboardEvent })` | 输入内容变化时触发 |
-| `onBlur` | `(value: string, context: { e: FocusEvent })` | 输入框失去焦点时触发 |
-| `onFocus` | `(value: string, context: { e: FocusEvent })` | 输入框获得焦点时触发 |
-| `onFileSelect` | `(files: File[]) => Promise<Attachment[]>` | 选择文件时触发 |
-| `onFileRemove` | `(files: File[]) => Promise<Attachment[]>` | 移除文件时触发 |
 
 ## ChatServiceConfig属性
 
