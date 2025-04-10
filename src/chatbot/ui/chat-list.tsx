@@ -51,7 +51,8 @@ export default class Chatlist extends Component<TdChatListProps> {
   /** 检测自动滚动是否触发 */
   private checkAutoScroll = throttle(() => {
     const { scrollTop, scrollHeight, clientHeight } = this.listRef.current;
-    const upScroll = scrollTop < this.scrollTopTmp ? true : false;
+    // 上滚检测给一个小阈值，避免生成过程中样式变更造成误触
+    const upScroll = this.scrollTopTmp - scrollTop >= 10 ? true : false;
 
     // 用户主动上滚，取消自动滚动，标记为手动阻止
     if (upScroll) {
