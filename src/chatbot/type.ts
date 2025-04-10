@@ -2,7 +2,7 @@ import MarkdownIt from 'markdown-it';
 
 import { TdChatInputProps } from '../chat-input';
 import type { StyledProps, TNode } from '../common';
-import type { ChatServiceConfigSetter, ContentType, MessageRole } from './core/type';
+import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
 import type { ChatMessage } from './core/type';
 
 export type TdChatItemActionName =
@@ -99,6 +99,46 @@ export interface TdChatProps extends StyledProps {
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
   // onMessagesChange?: (messages: ChatMessage[]) => void;
+}
+
+export interface TdChatbotApi {
+  /**
+   * 发送用户消息
+   * @param params - 请求参数
+   */
+  sendUserMessage: (params: RequestParams) => Promise<void>;
+
+  /**
+   * 发送系统消息
+   * @param msg - 系统消息内容
+   */
+  sendSystemMessage: (msg: string) => void;
+
+  /**
+   * 中止当前聊天
+   */
+  abortChat: () => Promise<void>;
+
+  /**
+   * 添加提示信息到输入框
+   * @param prompt - 提示文本
+   */
+  addPrompt: (prompt: string) => void;
+
+  /**
+   * 滚动到消息列表底部
+   */
+  scrollToBottom: () => void;
+
+  /**
+   * 获取当前消息列表
+   */
+  readonly chatMessageValue: ChatMessage[];
+
+  /**
+   * 当前聊天状态
+   */
+  readonly chatStatus: ChatStatus;
 }
 
 export type TdChatMessageConfig = {

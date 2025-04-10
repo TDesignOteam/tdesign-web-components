@@ -435,7 +435,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
               className={`${className}__suggestion-item`}
               onClick={() => {
                 this.handleClickAction('suggestion', suggestion, () => {
-                  this.injection.chatEngine.sendMessage({
+                  this.injection.chatEngine.sendUserMessage({
                     prompt: suggestion.prompt,
                   });
                 });

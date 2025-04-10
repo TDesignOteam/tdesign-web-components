@@ -9,10 +9,11 @@ import {
   isAIMessage,
   type RequestParams,
   type SSEChunkData,
+  type SystemMessage,
 } from './type';
 
 export interface IChatEngine {
-  sendMessage(requestParams: RequestParams): Promise<void>;
+  sendUserMessage(requestParams: RequestParams): Promise<void>;
   abortChat(): Promise<void>;
 }
 
@@ -40,7 +41,7 @@ export default class ChatEngine implements IChatEngine {
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
   }
 
-  public async sendMessage(requestParams: RequestParams) {
+  public async sendUserMessage(requestParams: RequestParams) {
     const { prompt, attachments } = requestParams;
     const userMessage = this.processor.createUserMessage(prompt, attachments);
     const aiMessage = this.processor.createAssistantMessage();
@@ -51,6 +52,18 @@ export default class ChatEngine implements IChatEngine {
       messageID: aiMessage.id,
     };
     this.sendRequest(params);
+  }
+
+  public async sendSystemMessage(msg: string) {
+    this.messageStore.createMessage({
+      role: 'system',
+      content: [
+        {
+          type: 'text',
+          data: msg,
+        },
+      ],
+    } as SystemMessage);
   }
 
   public async abortChat() {

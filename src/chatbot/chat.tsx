@@ -57,6 +57,9 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private files = signal<Attachment[]>([]);
 
+  /**
+   * 默认消息角色配置
+   */
   private messageRoleProps: TdChatMessageConfig = {
     user: {
       variant: 'text',
@@ -75,6 +78,9 @@ export default class Chatbot extends Component<TdChatProps> {
     chatEngine: null,
   };
 
+  /**
+   * 获取插槽名称列表
+   */
   get slotNames() {
     return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
   }
@@ -88,10 +94,18 @@ export default class Chatbot extends Component<TdChatProps> {
     this.update();
   }
 
+  /**
+   * 获取当前聊天消息值
+   * @returns {Array<ChatMessage>} 当前聊天消息数组
+   */
   get chatMessageValue() {
     return this.chatMessages.value;
   }
 
+  /**
+   * 初始化聊天
+   * 合并消息配置、初始化引擎、同步状态、订阅聊天
+   */
   private initChat() {
     const { messages, messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
     this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
@@ -103,12 +117,16 @@ export default class Chatbot extends Component<TdChatProps> {
     this.subscribeToChat();
     // 如果有传入autoSendPrompt，自动发起提问
     if (autoSendPrompt !== '' && autoSendPrompt !== 'undefined') {
-      this.chatEngine.sendMessage({
+      this.chatEngine.sendUserMessage({
         prompt: autoSendPrompt,
       });
     }
   }
 
+  /**
+   * 同步聊天状态
+   * @param {ChatMessage[]} state - 新的状态值
+   */
   private syncState(state) {
     this.chatMessages.value = state;
     this.chatStatus = state.at(-1)?.status || 'idle';
@@ -122,9 +140,11 @@ export default class Chatbot extends Component<TdChatProps> {
     this.handleStop();
   }
 
-  async sendMessage(requestParams: RequestParams) {
-    console.log('=====sendMessage', requestParams);
-    await this.chatEngine.sendMessage(requestParams);
+  /**
+   * 发送用户消息
+   */
+  async sendUserMessage(requestParams: RequestParams) {
+    await this.chatEngine.sendUserMessage(requestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollToBottom();
@@ -133,22 +153,39 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   }
 
+  /**
+   * 发送系统消息
+   */
+  sendSystemMessage(msg: string) {
+    this.chatEngine.sendSystemMessage(msg);
+  }
+
+  /**
+   * 中止聊天
+   */
   async abortChat() {
     await this.chatEngine.abortChat();
     this.update();
   }
 
+  /**
+   * 添加提示信息到输入框
+   */
   addPrompt(prompt: string) {
-    console.log('=====addprompt', prompt);
     this.chatInputRef.current.pValue.value = prompt;
     this.chatInputRef.current.inputRef.current.focus();
   }
 
+  /**
+   * 滚动到底部
+   */
   scrollToBottom() {
     this.listRef.current?.scrollToBottom();
   }
 
-  // 订阅聊天状态变化
+  /**
+   * 订阅聊天状态变化
+   */
   private subscribeToChat() {
     this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
       this.syncState(state.messages);
@@ -156,6 +193,9 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   }
 
+  /**
+   * 处理发送消息事件
+   */
   private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
     const params = {
@@ -165,10 +205,13 @@ export default class Chatbot extends Component<TdChatProps> {
     if (this.props?.senderProps?.onSend) {
       await this.props.senderProps.onSend(e);
     }
-    await this.sendMessage(params);
+    await this.sendUserMessage(params);
     this.scrollToBottom();
   };
 
+  /**
+   * 处理停止聊天事件
+   */
   private handleStop = () => {
     this.chatEngine.abortChat();
     this.fire(
@@ -180,10 +223,16 @@ export default class Chatbot extends Component<TdChatProps> {
     );
   };
 
+  /**
+   * 处理附件移除事件
+   */
   private onAttachmentsRemove = (e: CustomEvent<File[]>) => {
     this.files.value = e.detail;
   };
 
+  /**
+   * 处理附件选择事件
+   */
   private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
     const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e.detail);
     if (uploadedResult.length > 0) {
@@ -202,6 +251,9 @@ export default class Chatbot extends Component<TdChatProps> {
     }
   };
 
+  /**
+   * 渲染消息项
+   */
   private renderItems = () => {
     const items = this.props.reverse ? [...this.chatMessageValue].reverse() : this.chatMessageValue;
     return items.map((item) => {
@@ -218,6 +270,9 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   };
 
+  /**
+   * 渲染输入框插槽
+   */
   private renderInputSlots = () => {
     // input-header、input-footer-left、input-actions、input-sender
     const itemSlotNames = this.slotNames.filter((key) => key.includes('input-'));
