@@ -66,13 +66,14 @@ export default class CustomRenderExample extends Component {
           switch (item.type) {
             case 'weather':
               return (
-                <div slot={`${this.props.message.id}-${item.type}-${item.id}`} className="weather">
+                <div slot={`${item.type}-${item.id}`} className="weather">
                   今天{item.data.city}天气{item.data.conditions}
                 </div>
               );
           }
           return null;
         })}
+        <div slot="actions">自定义actions</div>
       </t-chat-item>
     );
   }

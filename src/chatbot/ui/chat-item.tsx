@@ -106,7 +106,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private renderAvatar() {
     if (!this.props.avatar) {
-      return null;
+      // 不要返回null，有抖动问题
+      return <div hidden />;
     }
     return (
       <div class={`${className}__avatar`}>
@@ -511,9 +512,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         // 自定义渲染
         if (renderer) {
           const config = renderer(content);
-          return (
-            <slot key={elementKey} name={`${message.id}-${config?.slotName || `${content.type}-${index}`}`}></slot>
-          );
+          return <slot key={elementKey} name={`${config?.slotName || `${content.type}-${index}`}`}></slot>;
         }
         if (isSearchContent(content)) {
           return this.renderSearch(content);
@@ -565,7 +564,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
     return (
       <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
-        {/* {avatar ? this.Avatar : null} */}
+        {this.renderAvatar()}
         {this.renderMessageStatus}
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>
@@ -575,7 +574,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
             </div>
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachments()}
-            <div className={`${className}__actions`}>{this.renderActions()}</div>
+            <slot name="actions">
+              <div className={`${className}__actions`}>{this.renderActions()}</div>
+            </slot>
           </div>
         ) : null}
       </div>

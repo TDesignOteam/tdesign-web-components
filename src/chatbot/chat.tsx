@@ -262,9 +262,10 @@ export default class Chatbot extends Component<TdChatProps> {
       return (
         <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
-          {itemSlotNames.map((slotName) => (
-            <slot name={slotName} slot={slotName}></slot>
-          ))}
+          {itemSlotNames.map((slotName) => {
+            const str = slotName.replace(RegExp(`^${id}-`), '');
+            return <slot name={slotName} slot={str}></slot>;
+          })}
         </t-chat-item>
       );
     });
