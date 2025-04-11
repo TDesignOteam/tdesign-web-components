@@ -106,7 +106,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private renderAvatar() {
     if (!this.props.avatar) {
-      return null;
+      // 不要返回null，有抖动问题
+      return <div hidden />;
     }
     return (
       <div class={`${className}__avatar`}>
@@ -564,7 +565,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
     return (
       <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
-        {/* {avatar ? this.Avatar : null} */}
+        {this.renderAvatar()}
         {this.renderMessageStatus}
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>
