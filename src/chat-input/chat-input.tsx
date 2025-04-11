@@ -18,6 +18,7 @@ import { TdChatInputAction, TdChatInputProps } from './type';
 import styles from './style/chat-input.less';
 
 const className = `${getClassPrefix()}-chat__input`;
+
 @tag('t-chat-input')
 export default class ChatInput extends Component<TdChatInputProps> {
   static css = [styles];
@@ -221,6 +222,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
             placeholder={props.placeholder}
             disabled={props.disabled}
             value={this.inputValue}
+            enterkeyhint="send"
             onChange={this.handleChange}
             onKeyDown={this.handleKeyDown}
             onKeyUp={this.handleKeyUp}

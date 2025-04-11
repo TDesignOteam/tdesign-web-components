@@ -486,7 +486,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   renderMessage() {
     const { message, chatContentProps, customRenderConfig } = this.props;
-    console.log('====message, chatContentProps, customRenderConfig', message, chatContentProps);
     const { role } = message;
     return message.content.map((content, index) => {
       const elementKey = `${message.id}-${index}`;

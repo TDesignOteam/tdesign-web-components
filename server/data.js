@@ -34,9 +34,14 @@ const chunks = [
     content: '这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，',
   },
   {
+    type: 'searchResult',
+    content:
+      '  \n**是不是想提问：**  \n- [技术理想国项目的叙事设计特点是什么](#prompt:技术理想国项目的叙事设计特点是什么)  \n- [资本媾和地项目的技术应用有哪些](#prompt:资本媾和地项目的技术应用有哪些)  \n- [如影中还有哪些项目结合了技术创新](#prompt:如影中还有哪些项目结合了技术创新)  \n- [突破性叙事设计对项目的影响如何](#prompt:突破性叙事设计对项目的影响如何)  \n',
+  },
+  {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '继续思考，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
   },
   {
     type: 'think',
@@ -44,9 +49,14 @@ const chunks = [
     content: '这是个mock，这是个mock，这是个mock，这是个mock这是个mock，这是个mock，',
   },
   {
+    type: 'searchResult',
+    content:
+      '  \n**是不是想提问：**  \n- [技术理想国项目的叙事设计特点是什么](#prompt:技术理想国项目的叙事设计特点是什么)  \n- [资本媾和地项目的技术应用有哪些](#prompt:资本媾和地项目的技术应用有哪些)  \n- [如影中还有哪些项目结合了技术创新](#prompt:如影中还有哪些项目结合了技术创新)  \n- [突破性叙事设计对项目的影响如何](#prompt:突破性叙事设计对项目的影响如何)  \n',
+  },
+  {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '继续思考，这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，',
   },
   {
     type: 'think',

@@ -25,6 +25,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     tips: Object,
     value: String,
     defaultValue: String,
+    enterkeyhint: String,
   };
 
   constructor() {
@@ -177,6 +178,7 @@ export default class Textarea extends Component<TdTextareaProps> {
       maxcharacter,
       innerClass,
       innerStyle,
+      enterkeyhint,
     } = props;
 
     return (
@@ -201,6 +203,7 @@ export default class Textarea extends Component<TdTextareaProps> {
             onChange={this.onChange}
             onInput={this.onChange}
             ref={this.textArea}
+            enterkeyhint={enterkeyhint}
           />
           {tips && (
             <div

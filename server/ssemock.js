@@ -73,6 +73,8 @@ app.post('/sse/normal', (req, res) => {
           type: 'error',
           content: chunk.content,
         })}\n\n`;
+      default:
+        return `event: ${chunk.type}\ndata: ${chunk.content}\n\n`;
     }
   });
 
