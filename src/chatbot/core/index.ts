@@ -185,10 +185,24 @@ export default class ChatEngine implements IChatEngine {
     const message = this.messageStore.getState().messages.find((m) => m.id === messageId);
     if (!message || !isAIMessage(message)) return;
 
-    // 只需要处理最后一个内容快
-    const lastContent = message.content.at(-1);
-    const processed = this.processor.processContentUpdate(lastContent, rawChunk);
-    this.messageStore.appendContent(messageId, processed);
+    // 统一处理默认逻辑的函数
+    const getDefaultProcessResult = () => {
+      const index = message.content.findLastIndex((content) => content.type === rawChunk.type);
+      return [
+        index,
+        this.processor.processContentUpdate(index !== -1 ? message.content[index] : undefined, rawChunk),
+      ] as [number, AIMessageContent];
+    };
+
+    // 获取合并策略（优先使用消息级配置，其次使用全局配置）
+    const mergeStrategy = message.ext?.mergeStrategy || this.config.contentMergeStrategy;
+
+    // 执行合并策略
+    const [targetIndex, processed] =
+      typeof mergeStrategy === 'function'
+        ? mergeStrategy({ currentContent: message.content, incomingChunk: rawChunk })
+        : getDefaultProcessResult();
+    this.messageStore.appendContent(messageId, processed, targetIndex);
   }
 }
 

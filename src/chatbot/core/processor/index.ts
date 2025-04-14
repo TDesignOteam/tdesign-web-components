@@ -51,7 +51,7 @@ export default class MessageProcessor {
   }
 
   // 处理内容更新
-  public processContentUpdate(lastContent: AIMessageContent | undefined, newChunk: AIMessageContent) {
+  public processContentUpdate(lastContent: AIMessageContent | undefined, newChunk: AIMessageContent): AIMessageContent {
     const handler = this.contentHandlers.get(newChunk.type);
     // 如果有注册的处理器且类型匹配
     if (handler && lastContent?.type === newChunk.type) {
@@ -94,13 +94,13 @@ export default class MessageProcessor {
         return {
           ...existing,
           data: mergeData(existing.data, chunk.data),
-          status: 'streaming',
+          status: chunk.status || 'streaming',
         };
       }
       return {
         ...chunk,
         data: chunk.data,
-        status: 'streaming',
+        status: chunk.status || 'streaming',
       };
     };
   }
@@ -139,7 +139,10 @@ export default class MessageProcessor {
   private registerSearchHandler() {
     this.registerHandler<SearchContent>(
       'search',
-      this.createContentHandler((existing, incoming) => ({ ...existing, ...incoming })),
+      this.createContentHandler((existing, incoming) => ({
+        ...existing,
+        ...incoming,
+      })),
     );
   }
 }

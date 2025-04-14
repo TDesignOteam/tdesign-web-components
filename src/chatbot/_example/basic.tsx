@@ -23,20 +23,21 @@ declare module '../core/type' {
   }
 }
 
-// function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string }> {
-//   const linkRegex = /\[(.*?)\]\(#prompt:(.*?)\)/g;
-//   const matches = [];
-//   let match;
+function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string }> {
+  const linkRegex = /\[(.*?)\]\(#prompt:(.*?)\)/g;
+  const matches = [];
+  let match;
 
-//   while ((match = linkRegex.exec(msg)) !== null) {
-//     matches.push({
-//       title: match[1].trim(),
-//       prompt: match[2].trim(),
-//     });
-//   }
+  // eslint-disable-next-line no-cond-assign
+  while ((match = linkRegex.exec(msg)) !== null) {
+    matches.push({
+      title: match[1].trim(),
+      prompt: match[2].trim(),
+    });
+  }
 
-//   return matches;
-// }
+  return matches;
+}
 
 const mockData: ChatMessage[] = [
   {
@@ -244,8 +245,18 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
         data: rest.content,
       };
     case 'think':
+      if (rest.step === 'web_search' && rest.docs.length > 0) {
+        return {
+          type: 'search',
+          data: {
+            title: `共找到${rest.docs.length}个相关内容`,
+            references: rest.docs,
+          },
+        };
+      }
       return {
         type: 'thinking',
+        status: /耗时/.test(rest.title) ? 'complete' : 'streaming',
         data: {
           title: rest.title || '思考中...',
           text: rest.content || '',
@@ -266,12 +277,12 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       };
     }
 
-    // case 'suggestion':
-    //   return {
-    //     type: 'suggestion',
-    //     // title: '是不是想提问：',
-    //     data: extractMarkdownLinks(rest.content),
-    //   };
+    case 'suggestion':
+      return {
+        type: 'suggestion',
+        // title: '是不是想提问：',
+        data: extractMarkdownLinks(rest.content),
+      };
 
     case 'weather': {
       return {

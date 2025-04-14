@@ -36,17 +36,14 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  appendContent(messageId: string, processedContent: AIMessageContent) {
+  appendContent(messageId: string, processedContent: AIMessageContent, targetIndex: number = -1) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
       if (!message || !isAIMessage(message)) return;
 
-      // 总是操作最后一个内容块
-      const lastContent = message.content.at(-1);
-
-      if (lastContent?.type === processedContent.type) {
-        // 合并到最后一个同类型内容块
-        message.content[message.content.length - 1] = processedContent;
+      if (targetIndex >= 0 && targetIndex < message.content.length) {
+        // 合并到指定位置
+        message.content[targetIndex] = processedContent;
       } else {
         // 添加新内容块
         message.content.push(processedContent);
@@ -118,6 +115,10 @@ export class MessageStore extends ReactiveState<MessageState> {
     return this.getState().messages;
   }
 
+  getMessageByID(id: string) {
+    return this.getState().messages.find((m) => m.id === id);
+  }
+
   get currentMessage(): ChatMessage {
     const { messages } = this.getState();
     return messages.at(-1);
@@ -137,18 +138,21 @@ export class MessageStore extends ReactiveState<MessageState> {
 
   // 更新消息整体状态
   private updateMessageStatusByContent(message: AIMessage) {
-    // 非最后一个内容块如果不是error|stop, 则设为complete
+    // 非最后一个内容块如果不是error|stop, 则设为content.status｜complete
     message.content
       .slice(0, -1) // 获取除最后一个元素外的所有内容
       .forEach((content) => {
         if (content.status !== 'error' && content.status !== 'stop') {
-          content.status = 'complete';
+          content.status = content.status || 'complete';
         }
       });
 
     // 优先处理错误状态
     if (message.content.some((c) => c.status === 'error')) {
       message.status = 'error';
+      message.content.forEach((content) => {
+        content.status = content.status === 'streaming' ? 'stop' : content.status;
+      });
       return;
     }
 

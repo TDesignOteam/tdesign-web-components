@@ -124,7 +124,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
 
   get hasStop() {
     const { status, allowStop } = this.props;
-    return allowStop && status !== 'complete' && status !== 'stop' && status !== 'idle';
+    return allowStop && (status === 'streaming' || status === 'pending');
   }
 
   /** 上传附件按钮 */

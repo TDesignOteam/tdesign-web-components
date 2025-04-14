@@ -154,6 +154,11 @@ export interface ChatServiceConfig {
   stream?: boolean;
   retryInterval?: number;
   maxRetries?: number;
+  // 自定义合并策略函数
+  contentMergeStrategy?: (params: {
+    currentContent: AIMessageContent[];
+    incomingChunk: AIMessageContent;
+  }) => [number, AIMessageContent]; // 返回目标索引和合并后的内容
   onRequest?: (params: RequestParams) => RequestInit;
   onMessage?: (chunk: SSEChunkData) => AIMessageContent | null;
   onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;

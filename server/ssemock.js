@@ -44,11 +44,7 @@ app.post('/sse/normal', (req, res) => {
         })}\n\n`;
 
       case 'think':
-        return `event: message\ndata: ${JSON.stringify({
-          type: 'think',
-          title: chunk.title,
-          content: chunk.content,
-        })}\n\n`;
+        return `event: message\ndata: ${JSON.stringify(chunk)}\n\n`;
 
       case 'image':
         return `event: media\ndata: ${JSON.stringify({
@@ -78,7 +74,7 @@ app.post('/sse/normal', (req, res) => {
     }
   });
 
-  sendStream(res, messages, 200, req);
+  sendStream(res, messages, 300, req);
 });
 
 // 带鉴权的POST请求
