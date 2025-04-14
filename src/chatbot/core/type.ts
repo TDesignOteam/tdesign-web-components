@@ -17,7 +17,8 @@ export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt'
 export interface BaseContent<T extends string, TData> {
   type: T;
   data: TData;
-  status?: MessageStatus;
+  // status?: MessageStatus;
+  status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
   id?: string;
 }
 

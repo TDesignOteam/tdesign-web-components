@@ -348,7 +348,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
             </t-auto-scroll>
           ) : null}
           <div slot="header" className={`${className}__think__header__content`}>
-            {status !== 'stop' && this.renderThinkingStatus(status)}
+            {status !== 'stop' && this.renderThinkingStatus(status as MessageStatus)}
             {status === 'stop' ? '思考已终止' : data?.title}
           </div>
         </t-collapse-panel>
@@ -358,7 +358,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   private renderSearch(content: SearchContent) {
     const { chatContentProps } = this.props;
-    const { references, title } = content.data;
+    const { references = [], title } = content.data;
     const expandable = chatContentProps?.search?.expandable;
     if (content.status === 'complete' && references?.length === 0) return null;
     const titleText = content?.status === 'stop' ? '搜索已终止' : title;

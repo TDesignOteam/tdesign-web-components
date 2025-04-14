@@ -40,7 +40,7 @@ app.post('/sse/normal', (req, res) => {
         return `event: message\ndata: ${JSON.stringify({
           type: 'search',
           title: chunk.title,
-          content: chunk.content || [],
+          content: chunk.content,
         })}\n\n`;
 
       case 'think':

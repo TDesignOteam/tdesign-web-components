@@ -244,6 +244,15 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
         status: 'error',
         data: rest.content,
       };
+    case 'search':
+      return {
+        type: 'search',
+        status: (status) => (rest.content ? status : 'complete'),
+        data: {
+          title: rest.title,
+          references: rest.content,
+        },
+      };
     case 'think':
       if (rest.step === 'web_search' && rest.docs.length > 0) {
         return {
@@ -256,7 +265,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       }
       return {
         type: 'thinking',
-        status: /耗时/.test(rest.title) ? 'complete' : 'streaming',
+        status: (status) => (/耗时/.test(rest.title) ? 'complete' : status),
         data: {
           title: rest.title || '思考中...',
           text: rest.content || '',

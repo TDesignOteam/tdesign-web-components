@@ -5,6 +5,7 @@ import {
   isAIMessage,
   isUserMessage,
   type MessageState,
+  MessageStatus,
   UserMessage,
 } from '../type';
 import ReactiveState from './reactiveState';
@@ -136,6 +137,10 @@ export class MessageStore extends ReactiveState<MessageState> {
     return userMessages.at(-1);
   }
 
+  private resolvedStatus(content: AIMessageContent, status: MessageStatus): MessageStatus {
+    return typeof content.status === 'function' ? content.status(status) : content.status;
+  }
+
   // 更新消息整体状态
   private updateMessageStatusByContent(message: AIMessage) {
     // 非最后一个内容块如果不是error|stop, 则设为content.status｜complete
@@ -143,7 +148,7 @@ export class MessageStore extends ReactiveState<MessageState> {
       .slice(0, -1) // 获取除最后一个元素外的所有内容
       .forEach((content) => {
         if (content.status !== 'error' && content.status !== 'stop') {
-          content.status = content.status || 'complete';
+          content.status = this.resolvedStatus(content, 'complete');
         }
       });
 

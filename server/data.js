@@ -1,7 +1,13 @@
 const chunks = [
-  // { type: 'search', title: '开始获取资料…' },
-  // { type: 'search', title: '找到 12 篇相关资料...', content: [{ title: 'AI推理模式研究', url: 'https://example.com/ref1' },{ title: 'SSE协议规范', url: 'https://example.com/ref2' }] },
-  // { type: 'search', title: '找到 21 篇相关资料...', content: [] },
+  { type: 'search', title: '开始获取资料…' },
+  {
+    type: 'search',
+    title: '找到 2 篇相关资料...',
+    content: [
+      { title: 'AI推理模式研究', url: 'https://example.com/ref1' },
+      { title: 'SSE协议规范', url: 'https://example.com/ref2' },
+    ],
+  },
   // { type: 'error', content: '系统错误' },
   { type: 'think', title: '思考中...', content: '嗯，' },
   { type: 'think', title: '思考中...', content: '我现在需' },
