@@ -37,6 +37,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
+  // 追加内容到指定类型的content
   appendContent(messageId: string, processedContent: AIMessageContent, targetIndex: number = -1) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
@@ -51,6 +52,15 @@ export class MessageStore extends ReactiveState<MessageState> {
       }
 
       this.updateMessageStatusByContent(message);
+    });
+  }
+
+  // 完整替换消息的content数组
+  replaceContent(messageId: string, processedContent: AIMessageContent[]) {
+    this.setState((draft) => {
+      const message = draft.messages.find((m) => m.id === messageId);
+      if (!message || !isAIMessage(message)) return;
+      message.content = processedContent;
     });
   }
 

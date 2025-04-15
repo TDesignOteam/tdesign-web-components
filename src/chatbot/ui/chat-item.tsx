@@ -342,7 +342,12 @@ export default class ChatItem extends Component<TdChatItemProps> {
               <div className={`${className}__think__inner`}>
                 {/* 上下阴影 */}
                 {/* {height ? <div className={`${className}__think__shadow__top`}></div> : null} */}
-                {data.text}
+                {data.text
+                  .split('\n')
+                  .filter(Boolean)
+                  .map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ))}
                 {/* {height ? <div className={`${className}__think__shadow__bottom`}></div> : null} */}
               </div>
             </t-auto-scroll>
@@ -360,6 +365,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     const { chatContentProps } = this.props;
     const { references = [], title } = content.data;
     const expandable = chatContentProps?.search?.expandable;
+    if (references === null) return null;
     if (content.status === 'complete' && references?.length === 0) return null;
     const titleText = content?.status === 'stop' ? '搜索已终止' : title;
     const imgs = (
@@ -487,9 +493,9 @@ export default class ChatItem extends Component<TdChatItemProps> {
 
   renderMessage() {
     const { message, chatContentProps, customRenderConfig } = this.props;
-    const { role } = message;
+    const { role, id } = message;
     return message.content.map((content, index) => {
-      const elementKey = `${message.id}-${index}`;
+      const elementKey = `${id}-${index}`;
       const renderer = customRenderConfig?.[content?.type];
       // 用户和系统消息渲染
       if (role === 'user' || role === 'system') {

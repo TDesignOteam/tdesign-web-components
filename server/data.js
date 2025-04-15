@@ -8,7 +8,6 @@ const chunks = [
       { title: 'SSE协议规范', url: 'https://example.com/ref2' },
     ],
   },
-  // { type: 'error', content: '系统错误' },
   { type: 'think', title: '思考中...', content: '嗯，' },
   { type: 'think', title: '思考中...', content: '我现在需' },
   { type: 'think', title: '思考中...', content: '要帮用' },
@@ -17,27 +16,27 @@ const chunks = [
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，\n',
   },
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，这是个mock，\n',
   },
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock这是个mock，这是个mock，这是个mock这是个mock，这是个mock，',
+    content: '这是个mock这是个mock，这是个mock，这是个mock这是个mock，这是个mock，\n',
   },
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock，这是个mock，这是个mock这是个mock，这是个mock，',
+    content: '这是个mock，这是个mock，这是个mock，这是个mock这是个mock，这是个mock，\n',
   },
   {
     type: 'think',
     title: '思考中...',
-    content: '这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，',
+    content: '这是个mock，这是个mock这是个mock，这是个mock，这是个mock，这是个mock，\n',
   },
   {
     type: 'think',
@@ -311,7 +310,6 @@ const chunks = [
     type: 'text',
     msg: 'http://tdesign.tencent.com) 设计系统',
   },
-
   // 测试用例10 - 最终结束段
   {
     type: 'text',

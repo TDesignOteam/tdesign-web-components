@@ -41,7 +41,6 @@ export default class SSEClient {
         signal: this.controller.signal,
       };
 
-      console.log('====this.config', this.config);
       const response = await fetch(this.url, this.config);
 
       if (!response.ok || !response.body) {
