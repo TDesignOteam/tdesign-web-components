@@ -257,6 +257,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       if (rest.step === 'web_search' && rest.docs.length > 0) {
         return {
           type: 'search',
+          status: 'complete',
           data: {
             title: `共找到${rest.docs.length}个相关内容`,
             references: rest.docs,

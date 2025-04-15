@@ -153,6 +153,15 @@ export class MessageStore extends ReactiveState<MessageState> {
 
   // 更新消息整体状态
   private updateMessageStatusByContent(message: AIMessage) {
+    // 优先处理错误状态
+    if (message.content.some((c) => c.status === 'error')) {
+      message.status = 'error';
+      message.content.forEach((content) => {
+        content.status = this.resolvedStatus(content, 'streaming') ? 'stop' : content.status;
+      });
+      return;
+    }
+
     // 非最后一个内容块如果不是error|stop, 则设为content.status｜complete
     message.content
       .slice(0, -1) // 获取除最后一个元素外的所有内容
@@ -161,15 +170,6 @@ export class MessageStore extends ReactiveState<MessageState> {
           content.status = this.resolvedStatus(content, 'complete');
         }
       });
-
-    // 优先处理错误状态
-    if (message.content.some((c) => c.status === 'error')) {
-      message.status = 'error';
-      message.content.forEach((content) => {
-        content.status = content.status === 'streaming' ? 'stop' : content.status;
-      });
-      return;
-    }
 
     // 检查是否全部完成
     const allComplete = message.content.every(
