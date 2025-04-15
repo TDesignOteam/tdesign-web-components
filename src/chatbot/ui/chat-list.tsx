@@ -25,11 +25,13 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   private listRef = createRef<HTMLDivElement>();
 
+  private innerRef = createRef<HTMLDivElement>();
+
   private scrollTopTmp = 0;
 
   private scrollHeightTmp = 0;
 
-  private observer: MutationObserver = null;
+  private observer: ResizeObserver = null;
 
   /** 主动滚动产生的阻止自动滚动标记 */
   private preventAutoScroll = false;
@@ -95,7 +97,8 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   ready(): void {
     const list = this.listRef.current;
-    this.observer = new MutationObserver(() => {
+    const inner = this.innerRef.current;
+    this.observer = new ResizeObserver(() => {
       // 高度变化，触发滚动校验
       if (list?.scrollHeight !== this.scrollHeightTmp) {
         this.handleAutoScroll();
@@ -103,11 +106,8 @@ export default class Chatlist extends Component<TdChatListProps> {
       }
       this.scrollHeightTmp = list?.scrollHeight;
     });
-    if (list) {
-      this.observer.observe(this.listRef.current, {
-        subtree: true,
-        childList: true,
-      });
+    if (inner) {
+      this.observer.observe(inner);
     }
   }
 
@@ -133,7 +133,9 @@ export default class Chatlist extends Component<TdChatListProps> {
             {convertToLightDomNode(<t-icon-arrow-down />)}
           </div>
         </div>
-        <slot></slot>
+        <div ref={this.innerRef}>
+          <slot></slot>
+        </div>
       </div>
     );
   }
