@@ -39,7 +39,7 @@ spline: base
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | clearHistory | Boolean | false | 是否清除聊天历史记录 |
-| layout | String | 'both' | 布局方式，可选值：'both'(聊天列表和输入框同时显示)、'single'(仅显示聊天列表或输入框) |
+| layout | String | 'both' | 布局方式，可选值：'both'、'single' |
 | autoSendPrompt | Object/String | '' | 配置后会自动触发提问 |
 | reverse | Boolean | false | 是否反转消息显示顺序 |
 | messages | ChatMessage[] | - | 初始化的聊天消息数组 |

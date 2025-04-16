@@ -110,9 +110,11 @@ type AIContentTypeMap = {
 
 // 自动生成联合类型
 // export type AIMessageContent = AIContentTypeMap[keyof AIContentTypeMap];
-export type AIMessageContent = {
-  [K in keyof AIContentTypeMap]: AIContentTypeMap[K];
-}[keyof AIContentTypeMap];
+// export type AIMessageContent = {
+//   [K in keyof AIContentTypeMap]: AIContentTypeMap[K];
+// }[keyof AIContentTypeMap];
+
+export type AIMessageContent = AIContentTypeMap[keyof AIContentTypeMap];
 export type UserMessageContent = TextContent | AttachmentContent;
 
 export interface UserMessage extends BaseMessage {
@@ -204,10 +206,6 @@ export function isUserMessage(message: ChatMessage) {
 
 export function isAIMessage(message: ChatMessage) {
   return message.role === 'assistant';
-}
-
-export function isSearchgContent(content: AIMessageContent): content is SearchContent {
-  return content.type === 'search';
 }
 
 export function isThinkingContent(content: AIMessageContent): content is ThinkingContent {
