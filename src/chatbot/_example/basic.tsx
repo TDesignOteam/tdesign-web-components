@@ -266,7 +266,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       }
       return {
         type: 'thinking',
-        status: (status) => (/耗时/.test(rest.title) ? 'complete' : status),
+        status: () => (/耗时/.test(rest.title) ? 'complete' : undefined),
         data: {
           title: rest.title || '思考中...',
           text: rest.content || '',

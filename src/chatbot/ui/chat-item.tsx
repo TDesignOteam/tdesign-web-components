@@ -289,8 +289,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
       arrayActions = actions(this.presetActions, message);
     }
     return arrayActions.map((item) => {
-      // 默认消息完成时才展示action
-      if (message.status !== 'complete') {
+      // 默认消息完成/暂停时才展示action
+      if (message.status !== 'complete' && message.status !== 'stop') {
         return null;
       }
       if (item.condition && !item.condition(message)) {
