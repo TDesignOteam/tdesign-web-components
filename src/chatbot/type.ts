@@ -35,6 +35,7 @@ export interface TdChatItemProps {
    * 操作
    */
   actions?: TdChatItemAction[] | ((preset: TdChatItemAction[], message: ChatMessage) => TdChatItemAction[]) | boolean;
+  animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
   onActions?: Partial<Record<TdChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
   /**
    * 作者

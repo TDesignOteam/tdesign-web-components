@@ -307,6 +307,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return null;
     const { status, content = [] } = this.props.message;
+    const { animation = 'skeleton' } = this.props;
     // 如果有任一内容，就不用展示message整体状态
     if (content.length > 0 || status === 'complete') {
       return null;
@@ -316,6 +317,18 @@ export default class ChatItem extends Component<TdChatItemProps> {
     }
     if (status === 'error') {
       return <div className={`${className}__detail`}>出错了</div>;
+    }
+    if (['gradient', 'circle'].includes(animation)) {
+      return <div class={`${className}__animation__${animation}`} />;
+    }
+    if (animation === 'moving') {
+      return (
+        <div class={`${className}__animation__moving`}>
+          <div class={`${className}__animation__moving--top`} />
+          <div class={`${className}__animation__moving--left`} />
+          <div class={`${className}__animation__moving--right`} />
+        </div>
+      );
     }
     return (
       <t-skeleton class={`${className}__skeleton`} loading={true} theme="paragraph" animation="gradient"></t-skeleton>
