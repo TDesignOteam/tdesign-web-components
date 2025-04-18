@@ -34,7 +34,7 @@ export default class MessageProcessor {
       id: this.generateID(),
       role: 'user',
       status: 'complete',
-      timestamp: `${Date.now()}`,
+      datetime: `${Date.now()}`,
       content: messageContent,
     };
   }
@@ -45,7 +45,7 @@ export default class MessageProcessor {
       id: this.generateID(),
       role: 'assistant',
       status: 'pending',
-      timestamp: `${Date.now()}`,
+      datetime: `${Date.now()}`,
       content: [],
     };
   }
