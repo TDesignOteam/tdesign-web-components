@@ -1,14 +1,14 @@
 import 'tdesign-icons-web-components/esm/components/arrow-down';
-import './chat-item';
+import '../chat-message';
 
 import { debounce, throttle } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../../_util/classname';
-import { convertToLightDomNode } from '../../_util/lightDom';
-import type { TdChatListProps } from '../type';
+import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
+import type { TdChatListProps } from './type';
 
-import styles from '../style/chat-list.less';
+import styles from './style/chat-list.less';
 
 const className = `${getClassPrefix()}-chat__list`;
 @tag('t-chat-list')

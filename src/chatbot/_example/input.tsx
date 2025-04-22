@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 import { Component, signal } from 'omi';
 
 import classname from '../../_util/classname';
-import { TdChatInputSend } from '../../chat-input';
+import { TdChatInputSend } from '../../chat-sender';
 import { Attachment } from '../../filecard';
 import { ChatStatus } from '../core/type';
 

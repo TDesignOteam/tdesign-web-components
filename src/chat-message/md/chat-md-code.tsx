@@ -1,13 +1,13 @@
 import 'tdesign-icons-web-components/esm/components/file-copy';
-import '../../../message';
+import '../../message';
 
 import hljs from 'highlight.js';
 import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
 import { Component, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../../../_util/classname';
-import { MessagePlugin } from '../../../message';
-import type { TdChatCodeProps } from '../../type';
+import classname, { getClassPrefix } from '../../_util/classname';
+import type { TdChatCodeProps } from '../../chatbot/type';
+import { MessagePlugin } from '../../message';
 
 const className = `${getClassPrefix()}-chat__text__markdown__code`;
 

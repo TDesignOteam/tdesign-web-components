@@ -74,8 +74,8 @@ export default [
       {
         title: 'ChatSender 对话输入框',
         name: 'chat-sender',
-        path: '/webcomponents/components/chat-input',
-        component: () => import('tdesign-web-components/chat-input/README.md'),
+        path: '/webcomponents/components/chat-sender',
+        component: () => import('tdesign-web-components/chat-sender/README.md'),
       },
       {
         title: 'ChatMessage 对话消息体',

@@ -4,9 +4,9 @@ import 'tdesign-icons-web-components/esm/components/close-circle';
 import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
+import { getClassPrefix } from '../_util/classname';
 
-import styles from '../style/auto-scroll.less';
+import styles from '../chatbot/style/auto-scroll.less';
 
 const className = `${getClassPrefix()}-scroll`;
 

@@ -5,9 +5,13 @@ import linkPlugin from 'markdown-it-link-attributes';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import type { TdChatContentMDPluginConfig, TdChatContentMDPresetConfig, TdChatContentMDProps } from '../type';
+import type {
+  TdChatContentMDPluginConfig,
+  TdChatContentMDPresetConfig,
+  TdChatContentMDProps,
+} from '../../chatbot/type';
 
-import styles from '../style/chat-content.less';
+import styles from '../../chatbot/style/chat-content.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
@@ -93,8 +97,8 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
       const codeHighlightConfig = enabledPresetPlugins.find((item) => item.preset === 'code');
       let codeHighlight;
       if (codeHighlightConfig) {
-        await import('./md/chat-md-code');
-        const codeStyles = await import('../style/md/chat-md-code.less');
+        await import('../md/chat-md-code');
+        const codeStyles = await import('../../chatbot/style/md/chat-md-code.less');
         ChatMDContent.css.push(codeStyles.default);
 
         codeHighlight = (code: string, lang: string) =>

@@ -1,2 +1,2 @@
-export * from './chat-input';
+export * from './chat-sender';
 export * from './chatbot';

@@ -1,9 +1,9 @@
-import './chat-markdown-content';
+import './content/chat-markdown-content';
 import './auto-scroll';
-import '../../collapse';
-import '../../skeleton';
-import '../../attachments';
-import '../../image';
+import '../collapse';
+import '../skeleton';
+import '../attachments';
+import '../image';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
@@ -19,9 +19,8 @@ import 'tdesign-icons-web-components/esm/components/arrow-right';
 import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../../_util/classname';
-import { convertToLightDomNode } from '../../_util/lightDom';
-import { MessagePlugin } from '../../message';
+import classname, { getClassPrefix } from '../_util/classname';
+import { convertToLightDomNode } from '../_util/lightDom';
 import {
   AttachmentItem,
   isAIMessage,
@@ -37,10 +36,11 @@ import {
   SuggestionContent,
   ThinkingContent,
   UserMessageContent,
-} from '../core/type';
-import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../type';
+} from '../chatbot/core/type';
+import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
+import { MessagePlugin } from '../message';
 
-import styles from '../style/chat-item.less';
+import styles from '../chatbot/style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 

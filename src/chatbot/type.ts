@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it';
 
-import { TdChatInputProps } from '../chat-input';
+import { TdChatInputProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
 import type { ChatMessage } from './core/type';

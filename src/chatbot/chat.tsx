@@ -1,5 +1,5 @@
-import './ui/chat-list';
-import '../chat-input';
+import './chat-list';
+import '../chat-sender';
 import '../button';
 
 import { merge } from 'lodash-es';
@@ -7,11 +7,11 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
-import { TdChatInputSend } from '../chat-input';
-import type ChatInput from '../chat-input/chat-input';
+import { TdChatInputSend } from '../chat-sender';
+import type ChatInput from '../chat-sender/chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatMessage, ChatStatus, RequestParams } from './core/type';
-import type Chatlist from './ui/chat-list';
+import type Chatlist from './chat-list';
 import ChatEngine from './core';
 import type { TdChatMessageConfig, TdChatProps } from './type';
 
