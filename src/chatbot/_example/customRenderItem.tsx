@@ -2,7 +2,7 @@ import 'tdesign-web-components/chatbot';
 import 'tdesign-web-components/space';
 
 import { Component } from 'omi';
-import { TDChatItemProps } from 'tdesign-web-components/chatbot';
+import { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 export default class CustomRenderExample extends Component {
   static css = [
@@ -17,7 +17,7 @@ export default class CustomRenderExample extends Component {
     `,
   ];
 
-  props: TDChatItemProps = {
+  props: TdChatItemProps = {
     variant: 'text',
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',

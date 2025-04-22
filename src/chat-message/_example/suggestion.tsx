@@ -20,7 +20,7 @@ export default class BasicExample extends Component {
             prompt: '《六姊妹》有哪些负面的评价？',
           },
         ]}
-        handlePromptClick={({ content }) => {
+        onPromptClick={({ content }) => {
           console.log('点击', content);
         }}
       ></t-chat-suggestion-content>

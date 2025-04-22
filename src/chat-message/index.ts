@@ -10,9 +10,9 @@ export const ChatMarkdownContent = _MarkdownContent;
 export const ChatSearchContent = _SearchContent;
 export const ChatMessage = _ChatItem;
 
-export type { TDChatThinkContentProps } from './content/thinking-content';
-export type { TDChatSearchContentProps } from './content/search-content';
-export type { TDChatSuggestionContentProps } from './content/suggestion-content';
+export type { TdChatThinkContentProps } from './content/thinking-content';
+export type { TdChatSearchContentProps } from './content/search-content';
+export type { TdChatSuggestionContentProps } from './content/suggestion-content';
 export type * from './content/markdown-content';
 
 export default ChatMessage;

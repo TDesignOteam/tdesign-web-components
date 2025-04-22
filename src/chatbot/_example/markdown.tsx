@@ -3,7 +3,7 @@ import 'tdesign-web-components/space';
 import 'tdesign-web-components/switch';
 
 import { Component, signal } from 'omi';
-import { TDChatItemProps } from 'tdesign-web-components/chatbot';
+import { TdChatItemProps } from 'tdesign-web-components/chatbot';
 
 import mdContent from '../mock/testMarkdown.md?raw';
 
@@ -16,7 +16,7 @@ export default class MarkdownExample extends Component {
 
   rerenderKey = signal(1);
 
-  get itemProps(): TDChatItemProps {
+  get itemProps(): TdChatItemProps {
     return {
       variant: 'outline',
       placement: 'left',

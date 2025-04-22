@@ -7,19 +7,19 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { getSlotNodes } from '../_util/component';
-import { TDChatInputSend } from '../chat-sender';
+import { TdChatInputSend } from '../chat-sender';
 import type ChatInput from '../chat-sender/chat-input';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatMessageType, ChatStatus, RequestParams } from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
-import type { TDChatMessageConfig, TDChatProps } from './type';
+import type { TdChatMessageConfig, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chatbot')
-export default class Chatbot extends Component<TDChatProps> {
+export default class Chatbot extends Component<TdChatProps> {
   static css = [styles];
 
   static propTypes = {
@@ -60,7 +60,7 @@ export default class Chatbot extends Component<TDChatProps> {
   /**
    * 默认消息角色配置
    */
-  private messageRoleProps: TDChatMessageConfig = {
+  private messageRoleProps: TdChatMessageConfig = {
     user: {
       variant: 'text',
       placement: 'right',
@@ -196,7 +196,7 @@ export default class Chatbot extends Component<TDChatProps> {
   /**
    * 处理发送消息事件
    */
-  private handleSend = async (e: CustomEvent<TDChatInputSend>) => {
+  private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
     const { value } = e.detail;
     const params = {
       prompt: value,
@@ -283,7 +283,7 @@ export default class Chatbot extends Component<TDChatProps> {
     });
   };
 
-  render({ layout, injectCSS, senderProps }: OmiProps<TDChatProps>) {
+  render({ layout, injectCSS, senderProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     // console.log('====render chat', this.messages);
     return (

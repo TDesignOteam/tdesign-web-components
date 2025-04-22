@@ -18,12 +18,16 @@ export default class ChatAction extends Component {
     share: (data) => {
       console.log('分享', data);
     },
-  }
+  };
+
   render() {
     return (
       <>
         <t-space>
-            <t-chat-action actionBar={['replay', 'good', 'bad', 'copy', 'share']} onActions={this.onActions}></t-chat-action>
+          <t-chat-action
+            actionBar={['replay', 'good', 'bad', 'copy', 'share']}
+            onActions={this.onActions}
+          ></t-chat-action>
         </t-space>
       </>
     );

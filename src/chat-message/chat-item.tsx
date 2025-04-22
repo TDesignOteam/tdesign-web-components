@@ -28,7 +28,7 @@ import {
   isUserMessage,
   UserMessageContent,
 } from '../chatbot/core/type';
-import type { ChatComment, TDChatItemAction, TDChatItemActionName, TDChatItemProps } from '../chatbot/type';
+import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { MessagePlugin } from '../message';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
@@ -39,7 +39,7 @@ import styles from '../chatbot/style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 @tag('t-chat-item')
-export default class ChatItem extends Component<TDChatItemProps> {
+export default class ChatItem extends Component<TdChatItemProps> {
   static css = [styles];
 
   static propTypes = {
@@ -69,8 +69,8 @@ export default class ChatItem extends Component<TDChatItemProps> {
   pComment = signal<ChatComment>(undefined);
 
   receiveProps(
-    props: TDChatItemProps | OmiProps<TDChatItemProps, any>,
-    oldProps: TDChatItemProps | OmiProps<TDChatItemProps, any>,
+    props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
+    oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
   ) {
     const newMsg = props?.message;
     const oldMsg = oldProps?.message;
@@ -116,7 +116,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
     );
   }
 
-  private handleClickAction = (action: TDChatItemActionName, data?: any, callback?: Function) => {
+  private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
     if (this.props?.onActions?.[action]) {
       this.props.onActions[action](data, callback);
     } else {
@@ -218,7 +218,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
     );
   };
 
-  private presetActions: TDChatItemAction[] = [
+  private presetActions: TdChatItemAction[] = [
     {
       name: 'replay',
       render: (
@@ -282,7 +282,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
     if (message.status !== 'complete' && message.status !== 'stop') {
       return null;
     }
-    let arrayActions: TDChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
+    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
     if (typeof actions === 'function') {
       arrayActions = actions(this.presetActions, message);
     }
@@ -387,15 +387,15 @@ export default class ChatItem extends Component<TDChatItemProps> {
             content: content.data,
             status: content.status,
             expandable: chatContentProps?.search?.expandable,
-            handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
-            handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
+            onSearchItemClick: (data) => this.handleClickAction('searchItem', data),
+            onSearchResultClick: (data) => this.handleClickAction('searchResult', data),
           });
         }
 
         if (isSuggestionContent(content)) {
           return renderSuggestion({
             content: content.data,
-            handlePromptClick: (data) =>
+            onPromptClick: (data) =>
               this.handleClickAction('suggestion', data, () => {
                 this.injection.chatEngine.sendUserMessage({
                   prompt: data.content,
@@ -439,7 +439,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
     });
   }
 
-  render(props: TDChatItemProps) {
+  render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
     if (!message?.content || message.content.length === 0) return;
     // console.log('==========item render', message.id, message.status);

@@ -10,13 +10,13 @@ import styles from '../../chatbot/style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-export type TDChatSuggestionContentProps = {
+export type TdChatSuggestionContentProps = {
   content?: SuggestionItem[];
-  handlePromptClick?: ({ event, content }: { event: MouseEvent; content: SuggestionItem }) => void;
+  onPromptClick?: ({ event, content }: { event: MouseEvent; content: SuggestionItem }) => void;
 };
 
 // 纯函数渲染器
-export const renderSuggestion = ({ content, handlePromptClick }: TDChatSuggestionContentProps) => (
+export const renderSuggestion = ({ content, onPromptClick }: TdChatSuggestionContentProps) => (
   <div className={`${className}__suggestion`}>
     {content.map(
       (s, i) =>
@@ -24,7 +24,7 @@ export const renderSuggestion = ({ content, handlePromptClick }: TDChatSuggestio
           <div
             key={i}
             className={`${className}__suggestion-item`}
-            onClick={(event) => handlePromptClick?.({ event, content: s })}
+            onClick={(event) => onPromptClick?.({ event, content: s })}
           >
             {s.title}
             {convertToLightDomNode(<t-icon-arrow-right class={`${className}__suggestion-arrow`} />)}
@@ -36,7 +36,7 @@ export const renderSuggestion = ({ content, handlePromptClick }: TDChatSuggestio
 
 // Web Component版本
 @tag('t-chat-suggestion-content')
-export default class SuggestionContentComponent extends Component<TDChatSuggestionContentProps> {
+export default class SuggestionContentComponent extends Component<TdChatSuggestionContentProps> {
   static css = styles;
 
   static propTypes = {
@@ -45,6 +45,7 @@ export default class SuggestionContentComponent extends Component<TDChatSuggesti
   };
 
   render(props) {
+    if (!props?.content) return;
     return renderSuggestion(props);
   }
 }
