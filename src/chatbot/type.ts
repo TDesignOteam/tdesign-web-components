@@ -1,3 +1,4 @@
+import { TDChatMarkdownContentProps } from '../chat-message';
 import { TDChatInputProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
