@@ -10,7 +10,7 @@ export default class ChatLoading extends Component {
     return (
       <>
         <t-space>
-          <div style={{ width: 800, height: 150 }}><t-chat-loading></t-chat-loading></div>
+          <div style={{ width: 800, height: 150 }}><t-chat-loading animation="skeleton"></t-chat-loading></div>
         </t-space>
         <t-space  size={60}>
           <t-chat-loading animation="moving"></t-chat-loading>

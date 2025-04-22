@@ -4,6 +4,7 @@ import '../../collapse';
 import '../../skeleton';
 import '../../attachments';
 import '../../image';
+import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
@@ -318,20 +319,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (status === 'error') {
       return <div className={`${className}__detail`}>出错了</div>;
     }
-    if (['gradient', 'circle'].includes(animation)) {
-      return <div class={`${className}__animation__${animation}`} />;
-    }
-    if (animation === 'moving') {
-      return (
-        <div class={`${className}__animation__moving`}>
-          <div class={`${className}__animation__moving--top`} />
-          <div class={`${className}__animation__moving--left`} />
-          <div class={`${className}__animation__moving--right`} />
-        </div>
-      );
-    }
     return (
-      <t-skeleton class={`${className}__skeleton`} loading={true} theme="paragraph" animation="gradient"></t-skeleton>
+      <t-chat-loading animation={animation}></t-chat-loading>
     );
   }
 

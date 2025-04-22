@@ -47,7 +47,7 @@ export default class Loading extends Component<LoadingProps> {
   }
 
   render(props: LoadingProps) {
-    const { text, animation = 'skeleton' } = props;
+    const { text = '', animation = 'skeleton' } = props;
 
     return (
       <div class={classname(`${className}`,animation === 'skeleton' && `${className}__skeleton`)}>
