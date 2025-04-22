@@ -26,7 +26,7 @@ export default class Loading extends Component<LoadingProps> {
   installed() {}
 
   get renderIcon() {
-    const { animation = 'skeleton' } = this.props;
+    const { animation = 'moving' } = this.props;
     if (['gradient', 'circle'].includes(animation)) {
       return <div class={`${className}__${animation}`} />;
     }
@@ -45,7 +45,7 @@ export default class Loading extends Component<LoadingProps> {
   }
 
   render(props: LoadingProps) {
-    const { text = '', animation = 'skeleton' } = props;
+    const { text = '', animation = 'moving' } = props;
 
     return (
       <div class={classname(`${className}`, animation === 'skeleton' && `${className}__skeleton`)}>

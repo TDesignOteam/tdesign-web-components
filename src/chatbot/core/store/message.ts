@@ -1,7 +1,7 @@
 import {
   type AIMessage,
   type AIMessageContent,
-  type ChatMessage,
+  type ChatMessageType,
   isAIMessage,
   isUserMessage,
   type MessageState,
@@ -20,7 +20,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  createMessage(message: ChatMessage) {
+  createMessage(message: ChatMessageType) {
     const { id } = message;
     this.setState((draft) => {
       draft.messageIds.push(id);
@@ -28,7 +28,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  createMultiMessages(messages: ChatMessage[]) {
+  createMultiMessages(messages: ChatMessageType[]) {
     this.setState((draft) => {
       messages.forEach((msg) => {
         draft.messageIds.push(msg.id);
@@ -65,7 +65,7 @@ export class MessageStore extends ReactiveState<MessageState> {
   }
 
   // 更新消息整体状态
-  setMessageStatus(messageId: string, status: ChatMessage['status']) {
+  setMessageStatus(messageId: string, status: ChatMessageType['status']) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
@@ -130,7 +130,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     return this.getState().messages.find((m) => m.id === id);
   }
 
-  get currentMessage(): ChatMessage {
+  get currentMessage(): ChatMessageType {
     const { messages } = this.getState();
     return messages.at(-1);
   }

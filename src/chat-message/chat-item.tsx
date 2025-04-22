@@ -1,11 +1,8 @@
 import './content/chat-markdown-content';
-import './auto-scroll';
 import '../collapse';
 import '../skeleton';
 import '../attachments';
 import '../image';
-import 'tdesign-icons-web-components/esm/components/check-circle';
-import 'tdesign-icons-web-components/esm/components/close-circle';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
 import 'tdesign-icons-web-components/esm/components/jump';
@@ -31,14 +28,13 @@ import {
   isTextContent,
   isThinkingContent,
   isUserMessage,
-  MessageStatus,
   SearchContent,
   SuggestionContent,
-  ThinkingContent,
   UserMessageContent,
 } from '../chatbot/core/type';
 import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { MessagePlugin } from '../message';
+import { renderThinking } from './content/thinking-content';
 
 import styles from '../chatbot/style/chat-item.less';
 
@@ -325,45 +321,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  // 思维链
-  private renderThinkingStatus(status: MessageStatus) {
-    if (status === 'complete' || status === 'stop')
-      return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
-    if (status === 'error')
-      return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
-    return <div class={`${className}__think__status--pending`} />;
-  }
-
-  private renderThinking(content: ThinkingContent) {
-    const { data, status } = content;
-    const height = this.props?.chatContentProps?.thinking?.height;
-    return (
-      <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
-        <t-collapse-panel className={`${className}__think__content`}>
-          {data.text ? (
-            <t-auto-scroll maxHeight={height}>
-              <div className={`${className}__think__inner`}>
-                {/* 上下阴影 */}
-                {/* {height ? <div className={`${className}__think__shadow__top`}></div> : null} */}
-                {data.text
-                  .split('\n')
-                  .filter(Boolean)
-                  .map((paragraph, index) => (
-                    <p key={index}>{paragraph}</p>
-                  ))}
-                {/* {height ? <div className={`${className}__think__shadow__bottom`}></div> : null} */}
-              </div>
-            </t-auto-scroll>
-          ) : null}
-          <div slot="header" className={`${className}__think__header__content`}>
-            {status !== 'stop' && this.renderThinkingStatus(status as MessageStatus)}
-            {status === 'stop' ? '思考已终止' : data?.title}
-          </div>
-        </t-collapse-panel>
-      </t-collapse>
-    );
-  }
-
   private renderSearch(content: SearchContent) {
     const { chatContentProps } = this.props;
     const { references = [], title } = content.data;
@@ -531,7 +488,11 @@ export default class ChatItem extends Component<TdChatItemProps> {
         }
         if (isThinkingContent(content)) {
           // 思考
-          return this.renderThinking(content);
+          return renderThinking({
+            content: content.data,
+            status: content.status,
+            maxHeight: this.props.chatContentProps?.thinking?.maxHeight,
+          });
         }
         if (isImageContent(content)) {
           // 图片

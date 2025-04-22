@@ -42,7 +42,7 @@ spline: base
 | layout | String | 'both' | 布局方式，可选值：'both'、'single' |
 | autoSendPrompt | Object/String | '' | 配置后会自动触发提问 |
 | reverse | Boolean | false | 是否反转消息显示顺序 |
-| messages | ChatMessage[] | - | 初始化的聊天消息数组 |
+| messages | ChatMessageType[] | - | 初始化的聊天消息数组 |
 | messageProps | `{ ModelRoleEnum: TdChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TdChatItemProps` |
 | senderProps | TdChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatInput组件` |
 | chatServiceConfig | ChatServiceConfig/() => ChatServiceConfig | - | 聊天服务配置，用于初始化ChatEngine |
@@ -116,12 +116,12 @@ spline: base
 | chatList | string | 应用于聊天列表组件的自定义 CSS 样式 |
 | chatItem | string | 应用于单个聊天消息项的自定义 CSS 样式 |
 
-### ChatMessage 属性说明
+### ChatMessageType 属性说明
 
-`ChatMessage` 是聊天消息的基础类型，它是一个联合类型，包含三种不同角色的消息类型。 基础结构：
+`ChatMessageType` 是聊天消息的基础类型，它是一个联合类型，包含三种不同角色的消息类型。 基础结构：
 
 ```typescript
-type ChatMessage = UserMessage | AIMessage | SystemMessage;
+type ChatMessageType = UserMessage | AIMessage | SystemMessage;
 ```
 
 ## 角色消息类型

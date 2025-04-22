@@ -3,7 +3,7 @@ import MarkdownIt from 'markdown-it';
 import { TdChatInputProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
-import type { ChatMessage } from './core/type';
+import type { ChatMessageType } from './core/type';
 
 export type TdChatItemActionName =
   | 'copy'
@@ -20,7 +20,7 @@ export interface TdChatItemAction {
   name: TdChatItemActionName;
   render: TNode;
   // 满足条件才展示
-  condition?: (message: ChatMessage) => boolean;
+  condition?: (message: ChatMessageType) => boolean;
 }
 
 export interface TdChatRenderConfig {
@@ -34,7 +34,10 @@ export interface TdChatItemProps {
   /**
    * 操作
    */
-  actions?: TdChatItemAction[] | ((preset: TdChatItemAction[], message: ChatMessage) => TdChatItemAction[]) | boolean;
+  actions?:
+    | TdChatItemAction[]
+    | ((preset: TdChatItemAction[], message: ChatMessageType) => TdChatItemAction[])
+    | boolean;
   animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
   onActions?: Partial<Record<TdChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
   /**
@@ -60,7 +63,7 @@ export interface TdChatItemProps {
   /** 气泡方向 */
   placement?: 'left' | 'right';
   /** 消息体 */
-  message: ChatMessage;
+  message: ChatMessageType;
   /** 透传chat-content参数 */
   chatContentProps?: {
     [key in ContentType]?: key extends 'markdown'
@@ -92,14 +95,14 @@ export interface TdChatProps extends StyledProps {
   listProps?: TdChatListProps;
   /** 消息数据源 */
   autoSendPrompt?: string;
-  messages: Array<ChatMessage>;
+  messages: Array<ChatMessageType>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig;
   /** 输入框配置（透传至t-chat-input） */
   senderProps?: TdChatInputProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
-  // onMessagesChange?: (messages: ChatMessage[]) => void;
+  // onMessagesChange?: (messages: ChatMessageType[]) => void;
 }
 
 export interface TdChatbotApi {
@@ -134,7 +137,7 @@ export interface TdChatbotApi {
   /**
    * 获取当前消息列表
    */
-  readonly chatMessageValue: ChatMessage[];
+  readonly chatMessageValue: ChatMessageType[];
 
   /**
    * 当前聊天状态
@@ -176,7 +179,7 @@ export interface TdChatContentSearchProps {
 }
 
 export interface TdChatContentThinkProps {
-  height?: number;
+  maxHeight?: number;
 }
 
 export interface TdChatContentSuggestionProps {

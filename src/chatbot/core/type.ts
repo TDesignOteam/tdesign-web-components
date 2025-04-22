@@ -136,7 +136,7 @@ export interface SystemMessage extends BaseMessage {
   content: TextContent[];
 }
 
-export type ChatMessage = UserMessage | AIMessage | SystemMessage;
+export type ChatMessageType = UserMessage | AIMessage | SystemMessage;
 
 // 回答消息体配置
 export type SSEChunkData = {
@@ -157,7 +157,7 @@ export interface ChatServiceConfig {
   retryInterval?: number;
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
-  onMessage?: (chunk: SSEChunkData, message?: ChatMessage) => AIMessageContent | AIMessageContent[] | null;
+  onMessage?: (chunk: SSEChunkData, message?: ChatMessageType) => AIMessageContent | AIMessageContent[] | null;
   onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => Promise<void>;
   onError?: (err: Error | Response) => void;
@@ -169,7 +169,7 @@ export type ChatServiceConfigSetter = ChatServiceConfig | ((params?: any) => Cha
 // 消息相关状态
 export interface MessageState {
   messageIds: string[];
-  messages: ChatMessage[];
+  messages: ChatMessageType[];
 }
 
 // 模型服务相关状态
@@ -200,11 +200,11 @@ export interface ContentTypeDefinition<T extends string = string, D = any> {
 export type ContentRenderer<T extends BaseContent<any, any>> = (content: T) => unknown;
 
 // 类型守卫函数
-export function isUserMessage(message: ChatMessage) {
+export function isUserMessage(message: ChatMessageType) {
   return message.role === 'user' && 'content' in message;
 }
 
-export function isAIMessage(message: ChatMessage) {
+export function isAIMessage(message: ChatMessageType) {
   return message.role === 'assistant';
 }
 

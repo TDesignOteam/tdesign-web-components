@@ -5,7 +5,7 @@ import { Component, createRef } from 'omi';
 import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import Chatbot from '../chat';
-import type { AIMessageContent, ChatMessage, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -21,7 +21,7 @@ declare module '../core/type' {
   }
 }
 
-const initData: ChatMessage[] = [
+const initData: ChatMessageType[] = [
   {
     id: '123123123',
     role: 'user',

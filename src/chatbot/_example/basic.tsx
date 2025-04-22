@@ -7,7 +7,7 @@ import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-compone
 
 import type { Attachment } from '../../filecard';
 import Chatbot from '../chat';
-import type { AIMessageContent, ChatMessage, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -39,7 +39,7 @@ function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string 
   return matches;
 }
 
-const mockData: ChatMessage[] = [
+const mockData: ChatMessageType[] = [
   {
     id: 's1123',
     role: 'system',
@@ -450,7 +450,7 @@ export default class BasicChat extends Component {
           expandable: true,
         },
         thinking: {
-          height: 100,
+          maxHeight: 100,
         },
         markdown: {
           pluginConfig: [resourceLinkPlugin],

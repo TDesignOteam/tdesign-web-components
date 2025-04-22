@@ -17,6 +17,6 @@ spline: base
 
 名称 | 类型 | 默认值 | 说明 | 必传
 -- | -- | -- | -- | --
-animation | `skeleton/moving/gradient/circle` | `skeleton` | 动画效果 | N
+animation | `skeleton/moving/gradient/circle` | `circle` | 动画效果 | N
 text | `string / TNode` | - | 加载提示文案 | N
 

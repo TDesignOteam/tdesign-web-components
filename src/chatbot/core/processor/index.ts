@@ -1,4 +1,4 @@
-import type { AIMessage, AttachmentItem, ChatMessage, UserMessage } from '../type';
+import type { AIMessage, AttachmentItem, ChatMessageType, UserMessage } from '../type';
 import {
   type AIMessageContent,
   type ImageContent,
@@ -15,7 +15,7 @@ export default class MessageProcessor {
     this.registerDefaultHandlers();
   }
 
-  public createUserMessage(content: string, attachments?: AttachmentItem[]): ChatMessage {
+  public createUserMessage(content: string, attachments?: AttachmentItem[]): ChatMessageType {
     const messageContent: UserMessage['content'] = [
       {
         type: 'text',

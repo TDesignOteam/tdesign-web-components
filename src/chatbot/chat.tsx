@@ -10,7 +10,7 @@ import { getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-sender';
 import type ChatInput from '../chat-sender/chat-input';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatMessage, ChatStatus, RequestParams } from './core/type';
+import type { AttachmentItem, AttachmentType, ChatMessageType, ChatStatus, RequestParams } from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
 import type { TdChatMessageConfig, TdChatProps } from './type';
@@ -49,7 +49,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   public chatStatus: ChatStatus = 'idle';
 
-  private chatMessages: Omi.SignalValue<ChatMessage[]> = signal(undefined);
+  private chatMessages: Omi.SignalValue<ChatMessageType[]> = signal(undefined);
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -96,7 +96,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   /**
    * 获取当前聊天消息值
-   * @returns {Array<ChatMessage>} 当前聊天消息数组
+   * @returns {Array<ChatMessageType>} 当前聊天消息数组
    */
   get chatMessageValue() {
     return this.chatMessages.value;
@@ -125,7 +125,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   /**
    * 同步聊天状态
-   * @param {ChatMessage[]} state - 新的状态值
+   * @param {ChatMessageType[]} state - 新的状态值
    */
   private syncState(state) {
     this.chatMessages.value = state;
