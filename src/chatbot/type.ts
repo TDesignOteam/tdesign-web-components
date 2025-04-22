@@ -1,5 +1,3 @@
-import MarkdownIt from 'markdown-it';
-
 import { TDChatInputProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
@@ -156,25 +154,6 @@ export interface TDChatListProps {
   onScroll?: (e: Event) => void;
 }
 
-/** markdown插件预设 */
-export type TDChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
-
-export interface TDChatContentMDPresetConfig {
-  preset: TDChatContentMDPresetPlugin;
-  /** 是否开启 */
-  enabled?: boolean;
-  /** 插件参数 */
-  options?: any;
-}
-
-export type TDChatContentMDPluginConfig =
-  /** 预设插件配置 */
-  | TDChatContentMDPresetConfig
-  /** markdownIt原生插件配置 */
-  | MarkdownIt.PluginSimple
-  | MarkdownIt.PluginWithParams
-  | MarkdownIt.PluginWithOptions;
-
 type TDChatContentSearchProps = {
   expandable?: boolean;
 };
@@ -186,13 +165,6 @@ type TDChatContentThinkProps = {
 type TDChatContentSuggestionProps = {
   directSend?: boolean;
 };
-
-export interface TDChatMarkdownContentProps {
-  content?: string;
-  role?: string;
-  options?: MarkdownIt.Options;
-  pluginConfig?: Array<TDChatContentMDPluginConfig>;
-}
 
 export interface TDChatCodeProps {
   lang: string;
