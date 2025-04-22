@@ -12,15 +12,18 @@ export default class ChatAction extends Component {
     good: (data) => {
       console.log('点赞', data);
     },
-    bakd: (data) => {
+    bad: (data) => {
       console.log('点踩', data);
+    },
+    share: (data) => {
+      console.log('分享', data);
     },
   }
   render() {
     return (
       <>
         <t-space>
-            <t-chat-action actionBar={['copy', 'good', 'bad', 'replay']} onActions={this.onActions}></t-chat-action>
+            <t-chat-action actionBar={['replay', 'good', 'bad', 'copy', 'share']} onActions={this.onActions}></t-chat-action>
         </t-space>
       </>
     );
