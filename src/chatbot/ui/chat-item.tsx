@@ -1,7 +1,6 @@
 import './chat-markdown-content';
 import './auto-scroll';
 import '../../collapse';
-import '../../skeleton';
 import '../../attachments';
 import '../../image';
 import '../../chat-loading';
@@ -320,7 +319,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       return <div className={`${className}__detail`}>出错了</div>;
     }
     return (
-      <t-chat-loading animation={animation}></t-chat-loading>
+      <div class={`${className}-chat-loading`}><t-chat-loading animation={animation}></t-chat-loading></div>
     );
   }
 

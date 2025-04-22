@@ -75,10 +75,6 @@
       }
     }
 
-    t-chat-loading {
-      display: block;
-      width: 100%;
-    }
   }
 
   // variant
@@ -118,8 +114,9 @@
     }
   }
 
-  &__skeleton {
+  &-chat-loading {
     width: 100%;
+    padding: @pop-padding-xxl;
   }
 
   &__main {
@@ -164,10 +161,6 @@
       display: none;
     }
 
-    .@{prefix}-skeleton {
-      width: 100%;
-      padding: @pop-padding-xxl;
-    }
   }
 
   &__think {
