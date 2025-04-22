@@ -5,7 +5,6 @@ import '../attachments';
 import '../image';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
-import 'tdesign-icons-web-components/esm/components/jump';
 import 'tdesign-icons-web-components/esm/components/thumb-up-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
@@ -28,12 +27,12 @@ import {
   isTextContent,
   isThinkingContent,
   isUserMessage,
-  SearchContent,
   SuggestionContent,
   UserMessageContent,
 } from '../chatbot/core/type';
 import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { MessagePlugin } from '../message';
+import { renderSearch } from './content/search-content';
 import { renderThinking } from './content/thinking-content';
 
 import styles from '../chatbot/style/chat-item.less';
@@ -119,6 +118,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
+    console.log('handleClickAction', action, data);
     if (this.props?.onActions?.[action]) {
       this.props.onActions[action](data, callback);
     } else {
@@ -321,76 +321,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  private renderSearch(content: SearchContent) {
-    const { chatContentProps } = this.props;
-    const { references = [], title } = content.data;
-    const expandable = chatContentProps?.search?.expandable;
-    if (references === null) return null;
-    if (content.status === 'complete' && references?.length === 0) return null;
-    const titleText = content?.status === 'stop' ? '搜索已终止' : title;
-    const imgs = (
-      <div className={`${className}__search-icons`}>
-        {references.map((item) =>
-          item?.icon ? <img className={`${className}__search-icon`} alt={item.title} src={item.icon} /> : null,
-        )}
-      </div>
-    );
-    const header = (
-      <div className={`${className}__search__header`}>
-        {imgs}
-        {titleText}
-      </div>
-    );
-    return (
-      <div
-        className={`${className}__search__wrapper`}
-        onClick={() => {
-          if (chatContentProps?.search?.expandable) {
-            this.searchExpand.value = !this.searchExpand.value;
-          }
-          this.handleClickAction('searchResult', content);
-        }}
-      >
-        {expandable ? (
-          <t-collapse
-            className={`${className}__search`}
-            expandIconPlacement="right"
-            value={[0]}
-            onChange={() => {
-              this.searchExpand.value = !this.searchExpand.value;
-            }}
-          >
-            <t-collapse-panel className={`${className}__search__content`}>
-              <div className={`${className}__search-links`}>
-                {references.map((content, index) => (
-                  <span
-                    className={`${className}__search-link-wrapper`}
-                    onClick={(event) => {
-                      this.handleClickAction('searchItem', {
-                        event,
-                        content,
-                      });
-                    }}
-                  >
-                    <a target="_blank" href={content.url} className={`${className}__search-link`}>
-                      {index + 1}. {content.title}
-                    </a>
-                    <t-icon-jump />
-                  </span>
-                ))}
-              </div>
-              <div slot="header" className={`${className}__search__header__content`}>
-                {titleText}
-              </div>
-            </t-collapse-panel>
-          </t-collapse>
-        ) : (
-          header
-        )}
-      </div>
-    );
-  }
-
   private renderSuggestion(content: SuggestionContent) {
     const { data } = content;
     return (
@@ -481,7 +411,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
           return <slot key={elementKey} name={`${config?.slotName || `${content.type}-${index}`}`}></slot>;
         }
         if (isSearchContent(content)) {
-          return this.renderSearch(content);
+          return renderSearch({
+            content: content.data,
+            status: content.status,
+            expandable: chatContentProps?.search?.expandable,
+            handleSearchItemClick: this.handleClickAction.bind(this, 'searchItem'),
+            handleSearchResultClick: this.handleClickAction.bind(this, 'searchResult'),
+          });
         }
         if (isSuggestionContent(content)) {
           return this.renderSuggestion(content);

@@ -158,7 +158,7 @@ const messageProps: TdChatMessageConfig = {
     },
     chatContentProps: {
       thinking: {
-        height: 200,
+        maxHeight: 200,
       },
       search: {
         expandable: false,

@@ -439,6 +439,9 @@ export default class BasicChat extends Component {
         suggestion: ({ prompt }) => {
           this.chatRef.current.addPrompt(prompt);
         },
+        searchResult: ({ content }) => {
+          console.log('searchResult', content);
+        },
         searchItem: ({ content, event }) => {
           event.preventDefault();
           event.stopPropagation();
@@ -447,7 +450,7 @@ export default class BasicChat extends Component {
       },
       chatContentProps: {
         search: {
-          expandable: true,
+          expandable: false,
         },
         thinking: {
           maxHeight: 100,

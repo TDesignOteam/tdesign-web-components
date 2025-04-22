@@ -30,6 +30,17 @@ export interface TdChatRenderConfig {
 
 export type TdChatCustomRenderConfig = Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
 
+export type TDChatContentProps = {
+  [key in ContentType]?: key extends 'markdown'
+    ? Omit<TdChatContentMDProps, 'content' | 'role'>
+    : key extends 'search'
+    ? TdChatContentSearchProps
+    : key extends 'thinking'
+    ? TdChatContentThinkProps
+    : key extends 'suggestion'
+    ? TdChatContentSuggestionProps
+    : any;
+};
 export interface TdChatItemProps {
   /**
    * 操作
@@ -65,17 +76,7 @@ export interface TdChatItemProps {
   /** 消息体 */
   message: ChatMessageType;
   /** 透传chat-content参数 */
-  chatContentProps?: {
-    [key in ContentType]?: key extends 'markdown'
-      ? Omit<TdChatContentMDProps, 'content' | 'role'>
-      : key extends 'search'
-      ? TdChatContentSearchProps
-      : key extends 'thinking'
-      ? TdChatContentThinkProps
-      : key extends 'suggestion'
-      ? TdChatContentSuggestionProps
-      : any;
-  };
+  chatContentProps?: TDChatContentProps;
   /** 自定义消息体渲染配置 */
   customRenderConfig?: TdChatCustomRenderConfig;
 }
@@ -174,17 +175,17 @@ export type TdChatContentMDPluginConfig =
   | MarkdownIt.PluginWithParams
   | MarkdownIt.PluginWithOptions;
 
-export interface TdChatContentSearchProps {
+type TdChatContentSearchProps = {
   expandable?: boolean;
-}
+};
 
-export interface TdChatContentThinkProps {
+type TdChatContentThinkProps = {
   maxHeight?: number;
-}
+};
 
-export interface TdChatContentSuggestionProps {
+type TdChatContentSuggestionProps = {
   directSend?: boolean;
-}
+};
 
 export interface TdChatContentMDProps {
   content?: string;
