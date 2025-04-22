@@ -10,7 +10,6 @@ import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
-import 'tdesign-icons-web-components/esm/components/arrow-right';
 
 import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
@@ -27,12 +26,12 @@ import {
   isTextContent,
   isThinkingContent,
   isUserMessage,
-  SuggestionContent,
   UserMessageContent,
 } from '../chatbot/core/type';
-import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
+import type { ChatComment, TDChatItemAction, TDChatItemActionName, TDChatItemProps } from '../chatbot/type';
 import { MessagePlugin } from '../message';
 import { renderSearch } from './content/search-content';
+import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
 
 import styles from '../chatbot/style/chat-item.less';
@@ -40,7 +39,7 @@ import styles from '../chatbot/style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 @tag('t-chat-item')
-export default class ChatItem extends Component<TdChatItemProps> {
+export default class ChatItem extends Component<TDChatItemProps> {
   static css = [styles];
 
   static propTypes = {
@@ -70,8 +69,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   pComment = signal<ChatComment>(undefined);
 
   receiveProps(
-    props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
-    oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
+    props: TDChatItemProps | OmiProps<TDChatItemProps, any>,
+    oldProps: TDChatItemProps | OmiProps<TDChatItemProps, any>,
   ) {
     const newMsg = props?.message;
     const oldMsg = oldProps?.message;
@@ -117,8 +116,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
-    console.log('handleClickAction', action, data);
+  private handleClickAction = (action: TDChatItemActionName, data?: any, callback?: Function) => {
     if (this.props?.onActions?.[action]) {
       this.props.onActions[action](data, callback);
     } else {
@@ -220,7 +218,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   };
 
-  private presetActions: TdChatItemAction[] = [
+  private presetActions: TDChatItemAction[] = [
     {
       name: 'replay',
       render: (
@@ -284,7 +282,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (message.status !== 'complete' && message.status !== 'stop') {
       return null;
     }
-    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
+    let arrayActions: TDChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
     if (typeof actions === 'function') {
       arrayActions = actions(this.presetActions, message);
     }
@@ -317,32 +315,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     return (
       <div class={`${className}-chat-loading`}>
         <t-chat-loading animation={animation}></t-chat-loading>
-      </div>
-    );
-  }
-
-  private renderSuggestion(content: SuggestionContent) {
-    const { data } = content;
-    return (
-      <div className={`${className}__suggestion`}>
-        {data.map((suggestion, idx) =>
-          suggestion?.title ? (
-            <div
-              key={idx}
-              className={`${className}__suggestion-item`}
-              onClick={() => {
-                this.handleClickAction('suggestion', suggestion, () => {
-                  this.injection.chatEngine.sendUserMessage({
-                    prompt: suggestion.prompt,
-                  });
-                });
-              }}
-            >
-              {suggestion.title}
-              {convertToLightDomNode(<t-icon-arrow-right class={`${className}__suggestion-arrow`} />)}
-            </div>
-          ) : null,
-        )}
       </div>
     );
   }
@@ -415,12 +387,21 @@ export default class ChatItem extends Component<TdChatItemProps> {
             content: content.data,
             status: content.status,
             expandable: chatContentProps?.search?.expandable,
-            handleSearchItemClick: this.handleClickAction.bind(this, 'searchItem'),
-            handleSearchResultClick: this.handleClickAction.bind(this, 'searchResult'),
+            handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
+            handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
           });
         }
+
         if (isSuggestionContent(content)) {
-          return this.renderSuggestion(content);
+          return renderSuggestion({
+            content: content.data,
+            handlePromptClick: (data) =>
+              this.handleClickAction('suggestion', data, () => {
+                this.injection.chatEngine.sendUserMessage({
+                  prompt: data.content,
+                });
+              }),
+          });
         }
         if (isThinkingContent(content)) {
           // 思考
@@ -458,7 +439,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     });
   }
 
-  render(props: TdChatItemProps) {
+  render(props: TDChatItemProps) {
     const { message, variant, placement, name, datetime } = props;
     if (!message?.content || message.content.length === 0) return;
     // console.log('==========item render', message.id, message.status);

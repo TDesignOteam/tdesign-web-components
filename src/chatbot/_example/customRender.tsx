@@ -2,7 +2,7 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, createRef, signal } from 'omi';
-import type { TdChatCustomRenderConfig, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type { TDChatCustomRenderConfig, TDChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import Chatbot from '../chat';
 import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
@@ -115,13 +115,13 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 }
 
 // 自定义渲染-注册插槽规则
-const customRenderConfig: TdChatCustomRenderConfig = {
+const customRenderConfig: TDChatCustomRenderConfig = {
   weather: (content) => ({
     slotName: `${content.type}-${content.id}`,
   }),
 };
 
-const messageProps: TdChatMessageConfig = {
+const messageProps: TDChatMessageConfig = {
   user: {
     variant: 'text',
     placement: 'right',

@@ -13,14 +13,14 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { Attachment } from '../filecard';
-import { TdChatInputAction, TdChatInputProps } from './type';
+import { TDChatInputAction, TDChatInputProps } from './type';
 
 import styles from './style/chat-input.less';
 
 const className = `${getClassPrefix()}-chat__input`;
 
 @tag('t-chat-input')
-export default class ChatInput extends Component<TdChatInputProps> {
+export default class ChatInput extends Component<TDChatInputProps> {
   static css = [styles];
 
   static propTypes = {
@@ -43,7 +43,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     onFocus: Function,
   };
 
-  static defaultProps: Partial<TdChatInputProps> = {
+  static defaultProps: Partial<TDChatInputProps> = {
     status: 'idle',
     allowStop: true,
     attachmentsProps: {
@@ -97,8 +97,8 @@ export default class ChatInput extends Component<TdChatInputProps> {
   };
 
   receiveProps(
-    props: TdChatInputProps | OmiProps<TdChatInputProps, any>,
-    oldProps: TdChatInputProps | OmiProps<TdChatInputProps, any>,
+    props: TDChatInputProps | OmiProps<TDChatInputProps, any>,
+    oldProps: TDChatInputProps | OmiProps<TDChatInputProps, any>,
   ) {
     if (props.disabled !== oldProps.disabled) return true;
     if (props.value !== oldProps.value) return true;
@@ -171,7 +171,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     );
   };
 
-  presetActions: TdChatInputAction[] = [
+  presetActions: TDChatInputAction[] = [
     {
       name: 'uploadAttachment',
       render: this.renderUploadAttachment(),
@@ -183,7 +183,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     if (!actions) {
       return null;
     }
-    let arrayActions: TdChatInputAction[] = Array.isArray(actions) ? actions : this.presetActions;
+    let arrayActions: TDChatInputAction[] = Array.isArray(actions) ? actions : this.presetActions;
     if (typeof actions === 'function') {
       arrayActions = actions(this.presetActions);
     }
@@ -199,7 +199,7 @@ export default class ChatInput extends Component<TdChatInputProps> {
     ));
   };
 
-  render(props: TdChatInputProps) {
+  render(props: TDChatInputProps) {
     return (
       <div className={`${className}`}>
         <input {...this.props.uploadProps} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />

@@ -2,7 +2,7 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, createRef } from 'omi';
-import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type { TDChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import Chatbot from '../chat';
 import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
@@ -142,7 +142,7 @@ const mockLLMAgent = {
   },
 };
 
-const messageProps: TdChatMessageConfig = {
+const messageProps: TDChatMessageConfig = {
   assistant: {
     onActions: {
       replay: (data, callback) => {

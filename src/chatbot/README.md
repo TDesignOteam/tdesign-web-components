@@ -43,8 +43,8 @@ spline: base
 | autoSendPrompt | Object/String | '' | 配置后会自动触发提问 |
 | reverse | Boolean | false | 是否反转消息显示顺序 |
 | messages | ChatMessageType[] | - | 初始化的聊天消息数组 |
-| messageProps | `{ ModelRoleEnum: TdChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TdChatItemProps` |
-| senderProps | TdChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatInput组件` |
+| messageProps | `{ ModelRoleEnum: TDChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TDChatItemProps` |
+| senderProps | TDChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatInput组件` |
 | chatServiceConfig | ChatServiceConfig/() => ChatServiceConfig | - | 聊天服务配置，用于初始化ChatEngine |
 | injectCSS | Object | - | 注入的自定义CSS样式 |
 
@@ -78,12 +78,12 @@ spline: base
 
 ## 内置对象属性
 
-### TdChatItemProps角色配置属性
+### TDChatItemProps角色配置属性
 
 | 属性名 | 类型 | 说明 |
 |--------|------|------|
-| actions | `TdChatItemAction[]` \| `Function` \| `boolean` | 消息操作按钮配置，可以是预设数组、生成函数或布尔值(是否显示) |
-| onActions | `Record<TdChatItemActionName, Function>` | 操作按钮回调函数 |
+| actions | `TDChatItemAction[]` \| `Function` \| `boolean` | 消息操作按钮配置，可以是预设数组、生成函数或布尔值(是否显示) |
+| onActions | `Record<TDChatItemActionName, Function>` | 操作按钮回调函数 |
 | animation | `skeleton/moving/gradient/circle` | 动画效果 |
 | name | `string` \| `TNode` | 作者名称或自定义渲染节点 |
 | avatar | `string` \| `TNode` | 头像URL或自定义渲染节点 |
@@ -92,7 +92,7 @@ spline: base
 | variant | `'base'` \| `'text'` \| `'outline'` | 消息气泡样式变体 |
 | placement | `'left'` \| `'right'` | 消息气泡位置 |
 | chatContentProps | `{[key in ContentType]?: {}}` | 可以针对不同内容类型进行定制化配置。ContentType类型有`text`、`markdown`、`search`、`thinking`、`suggestion`，|
-| customRenderConfig | `TdChatCustomRenderConfig` | 自定义消息渲染配置 |
+| customRenderConfig | `TDChatCustomRenderConfig` | 自定义消息渲染配置 |
 
 ### ChatServiceConfig属性
 

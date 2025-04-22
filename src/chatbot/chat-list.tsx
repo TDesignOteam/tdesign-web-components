@@ -6,13 +6,13 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
-import type { TdChatListProps } from './type';
+import type { TDChatListProps } from './type';
 
 import styles from './style/chat-list.less';
 
 const className = `${getClassPrefix()}-chat__list`;
 @tag('t-chat-list')
-export default class Chatlist extends Component<TdChatListProps> {
+export default class Chatlist extends Component<TDChatListProps> {
   static css = [styles];
 
   static propTypes = {
