@@ -4,7 +4,7 @@ import { getClassPrefix } from '../_util/classname';
 import { MessagePlugin } from '../message';
 import type { StyledProps, TNode } from '../common';
 import { TdActionProps } from './type';
-import type { TdChatItemAction, TdChatItemActionName } from '../chatbot/type';
+import type { TDChatItemAction, TDChatItemActionName } from '../chatbot/type';
 
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
@@ -28,7 +28,7 @@ export default class ChatAction extends Component<TdActionProps> {
 
   installed() {}
 
-  actions: {name:TdChatItemActionName, icon: TNode}[] = [
+  actions: {name:TDChatItemActionName, icon: TNode}[] = [
     {name: 'replay', icon: <t-icon-refresh />},
     {name: 'copy', icon: <t-icon-copy />},
     {name: 'good', icon: <t-icon-thumb-up />},
@@ -38,7 +38,7 @@ export default class ChatAction extends Component<TdActionProps> {
     {name: 'share', icon: <t-icon-share-1 />},
   ]
 
-  private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
+  private handleClickAction = (action: TDChatItemActionName, data?: any, callback?: Function) => {
     if (this.props?.onActions?.[action]) {
       this.props.onActions[action](data, callback);
     } else {
@@ -49,7 +49,7 @@ export default class ChatAction extends Component<TdActionProps> {
     }
   };
 
-  presetActions: TdChatItemAction[] = this.actions.map((action) => ({
+  presetActions: TDChatItemAction[] = this.actions.map((action) => ({
       name: action.name,
       render: (
         <div class={`${className}__actions__preset__wrapper`} onClick={() => this.handleClickAction(action.name)}>

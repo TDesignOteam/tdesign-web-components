@@ -1,9 +1,9 @@
 
-import type { TdChatItemAction, TdChatItemProps, TdChatItemActionName } from '../chatbot/type';
+import type { TDChatItemAction, TDChatItemProps, TDChatItemActionName } from '../chatbot/type';
 
 export interface TdActionProps {
-  actionBar?: TdChatItemActionName[] | boolean;
-  onActions?: TdChatItemProps['onActions'];
-  presetActions?: TdChatItemAction[];
+  actionBar?: TDChatItemActionName[] | boolean;
+  onActions?: TDChatItemProps['onActions'];
+  presetActions?: TDChatItemAction[];
   
 }
