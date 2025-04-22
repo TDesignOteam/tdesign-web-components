@@ -1,4 +1,4 @@
-import 'tdesign-web-components/chatbot';
+import '../content/markdown-content';
 
 import { Component } from 'omi';
 
@@ -68,21 +68,6 @@ app.use(TDesignChat);
 
 export default class BasicExample extends Component {
   render() {
-    return (
-      <t-chat-item
-        variant="outline"
-        message={{
-          id: 123,
-          role: 'assistant',
-          status: 'complete',
-          content: [
-            {
-              type: 'markdown',
-              data: doc,
-            },
-          ],
-        }}
-      ></t-chat-item>
-    );
+    return <t-chat-md-content content={doc}></t-chat-md-content>;
   }
 }

@@ -1,4 +1,4 @@
-import './content/chat-markdown-content';
+import './content/markdown-content';
 import '../collapse';
 import '../chat-loading';
 import '../attachments';

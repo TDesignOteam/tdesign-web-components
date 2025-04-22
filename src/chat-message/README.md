@@ -10,9 +10,6 @@ spline: base
 {{ style }}
 
 ## 消息内容
-### 文本内容
-
-{{ text }}
 
 ### markdown内容
 
