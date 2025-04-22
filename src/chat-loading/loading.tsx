@@ -1,9 +1,9 @@
+import '../skeleton';
+
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
-
-import '../skeleton';
 import { StyledProps } from '../common';
 import { TdLoadingProps } from './type';
 
@@ -23,8 +23,7 @@ export default class Loading extends Component<LoadingProps> {
 
   containerRef = createRef<HTMLElement>();
 
-  installed() {
-  }
+  installed() {}
 
   get renderIcon() {
     const { animation = 'skeleton' } = this.props;
@@ -43,16 +42,17 @@ export default class Loading extends Component<LoadingProps> {
     return (
       <t-skeleton class={`${className}__skeleton`} loading={true} theme="paragraph" animation="gradient"></t-skeleton>
     );
-    
   }
 
   render(props: LoadingProps) {
     const { text, animation = 'skeleton' } = props;
 
     return (
-      <div class={classname(`${className}`,animation === 'skeleton' && `${className}__skeleton`)}>
+      <div class={classname(`${className}`, animation === 'skeleton' && `${className}__skeleton`)}>
         {this.renderIcon}
-        {animation !== 'skeleton' && <div class={classname(`${className}__text`, `${className}__text__${animation}`)}>{text}</div>}
+        {animation !== 'skeleton' && (
+          <div class={classname(`${className}__text`, `${className}__text__${animation}`)}>{text}</div>
+        )}
       </div>
     );
   }
