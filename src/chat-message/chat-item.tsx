@@ -1,7 +1,7 @@
 import './content/chat-markdown-content';
 import './auto-scroll';
 import '../collapse';
-import '../skeleton';
+import '../chat-loading';
 import '../attachments';
 import '../image';
 import 'tdesign-icons-web-components/esm/components/check-circle';
