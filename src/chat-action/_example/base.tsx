@@ -3,7 +3,7 @@ import 'tdesign-web-components/space';
 
 import { Component } from 'omi';
 
-export default class ChatLoading extends Component {
+export default class ChatAction extends Component {
   onActions = {
     replay: (data, callback) => {
       console.log('自定义重新回复', data);
