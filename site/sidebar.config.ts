@@ -95,6 +95,12 @@ export default [
         path: '/webcomponents/components/attachments',
         component: () => import('tdesign-web-components/attachments/README.md'),
       },
+      {
+        title: 'ChatLoading 对话加载',
+        name: 'chat-loading',
+        path: '/webcomponents/components/chat-loading',
+        component: () => import('tdesign-web-components/chat-loading/README.md'),
+      },
     ],
     tag: '',
   },

@@ -134,7 +134,7 @@ type ChatMessage = UserMessage | AIMessage | SystemMessage;
 |--------|------|------|
 | id | string | 消息唯一标识符 |
 | status | `MessageStatus` | 消息状态：'pending'(等待中)、'streaming'(流式传输中)、'complete'(完成)、'stop'(停止)、'error'(错误) |
-| timestamp | string | 消息时间戳 (ISO 8601 格式) |
+| datetime | string | 消息时间戳 (ISO 8601 格式) |
 | ext | any | 扩展数据，可存放自定义业务数据 |
 
 ### 1. SystemMessage (系统消息)

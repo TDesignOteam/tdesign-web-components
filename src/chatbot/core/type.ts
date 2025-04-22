@@ -89,7 +89,7 @@ export type ThinkingContent = BaseContent<
 interface BaseMessage {
   id: string;
   status?: MessageStatus;
-  timestamp?: string;
+  datetime?: string;
   ext?: any;
 }
 
