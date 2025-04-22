@@ -1,11 +1,10 @@
-import MarkdownIt from 'markdown-it';
-
-import { TdChatInputProps } from '../chat-sender';
+import { TDChatMarkdownContentProps } from '../chat-message';
+import { TDChatInputProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
 import type { ChatMessageType } from './core/type';
 
-export type TdChatItemActionName =
+export type TDChatItemActionName =
   | 'copy'
   | 'good'
   | 'goodActived'
@@ -16,30 +15,41 @@ export type TdChatItemActionName =
   | 'searchResult'
   | 'searchItem'
   | 'suggestion';
-export interface TdChatItemAction {
-  name: TdChatItemActionName;
+export interface TDChatItemAction {
+  name: TDChatItemActionName;
   render: TNode;
   // 满足条件才展示
   condition?: (message: ChatMessageType) => boolean;
 }
 
-export interface TdChatRenderConfig {
+export interface TDChatRenderConfig {
   /** slot命名规则 */
   slotName?: string;
 }
 
-export type TdChatCustomRenderConfig = Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
+export type TDChatCustomRenderConfig = Record<string, (props: any) => TDChatRenderConfig | undefined | null>;
 
-export interface TdChatItemProps {
+export type TDChatContentProps = {
+  [key in ContentType]?: key extends 'markdown'
+    ? Omit<TDChatMarkdownContentProps, 'content' | 'role'>
+    : key extends 'search'
+    ? TDChatContentSearchProps
+    : key extends 'thinking'
+    ? TDChatContentThinkProps
+    : key extends 'suggestion'
+    ? TDChatContentSuggestionProps
+    : any;
+};
+export interface TDChatItemProps {
   /**
    * 操作
    */
   actions?:
-    | TdChatItemAction[]
-    | ((preset: TdChatItemAction[], message: ChatMessageType) => TdChatItemAction[])
+    | TDChatItemAction[]
+    | ((preset: TDChatItemAction[], message: ChatMessageType) => TDChatItemAction[])
     | boolean;
   animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
-  onActions?: Partial<Record<TdChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
+  onActions?: Partial<Record<TDChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
   /**
    * 作者
    */
@@ -65,22 +75,12 @@ export interface TdChatItemProps {
   /** 消息体 */
   message: ChatMessageType;
   /** 透传chat-content参数 */
-  chatContentProps?: {
-    [key in ContentType]?: key extends 'markdown'
-      ? Omit<TdChatContentMDProps, 'content' | 'role'>
-      : key extends 'search'
-      ? TdChatContentSearchProps
-      : key extends 'thinking'
-      ? TdChatContentThinkProps
-      : key extends 'suggestion'
-      ? TdChatContentSuggestionProps
-      : any;
-  };
+  chatContentProps?: TDChatContentProps;
   /** 自定义消息体渲染配置 */
-  customRenderConfig?: TdChatCustomRenderConfig;
+  customRenderConfig?: TDChatCustomRenderConfig;
 }
 
-export interface TdChatProps extends StyledProps {
+export interface TDChatProps extends StyledProps {
   children?: TNode;
   injectCSS?: {
     chatInput?: string;
@@ -92,20 +92,20 @@ export interface TdChatProps extends StyledProps {
   /** 倒序渲染 */
   reverse?: boolean;
   /** 消息列表配置（透传至t-chat-list） */
-  listProps?: TdChatListProps;
+  listProps?: TDChatListProps;
   /** 消息数据源 */
   autoSendPrompt?: string;
   messages: Array<ChatMessageType>;
   /** 角色消息配置 */
-  messageProps?: TdChatMessageConfig;
+  messageProps?: TDChatMessageConfig;
   /** 输入框配置（透传至t-chat-input） */
-  senderProps?: TdChatInputProps;
+  senderProps?: TDChatInputProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
   // onMessagesChange?: (messages: ChatMessageType[]) => void;
 }
 
-export interface TdChatbotApi {
+export interface TDChatbotApi {
   /**
    * 发送用户消息
    * @param params - 请求参数
@@ -145,55 +145,29 @@ export interface TdChatbotApi {
   readonly chatStatus: ChatStatus;
 }
 
-export type TdChatMessageConfig = {
-  [key in ModelRoleEnum]?: Omit<TdChatItemProps, 'message'>;
+export type TDChatMessageConfig = {
+  [key in ModelRoleEnum]?: Omit<TDChatItemProps, 'message'>;
 };
 
-export interface TdChatListProps {
+export interface TDChatListProps {
   /** 自动滚动底部 */
   autoScroll?: boolean;
   onScroll?: (e: Event) => void;
 }
 
-/** markdown插件预设 */
-export type TdChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
-
-export interface TdChatContentMDPresetConfig {
-  preset: TdChatContentMDPresetPlugin;
-  /** 是否开启 */
-  enabled?: boolean;
-  /** 插件参数 */
-  options?: any;
-}
-
-export type TdChatContentMDPluginConfig =
-  /** 预设插件配置 */
-  | TdChatContentMDPresetConfig
-  /** markdownIt原生插件配置 */
-  | MarkdownIt.PluginSimple
-  | MarkdownIt.PluginWithParams
-  | MarkdownIt.PluginWithOptions;
-
-export interface TdChatContentSearchProps {
+type TDChatContentSearchProps = {
   expandable?: boolean;
-}
+};
 
-export interface TdChatContentThinkProps {
+type TDChatContentThinkProps = {
   maxHeight?: number;
-}
+};
 
-export interface TdChatContentSuggestionProps {
+type TDChatContentSuggestionProps = {
   directSend?: boolean;
-}
+};
 
-export interface TdChatContentMDProps {
-  content?: string;
-  role?: string;
-  options?: MarkdownIt.Options;
-  pluginConfig?: Array<TdChatContentMDPluginConfig>;
-}
-
-export interface TdChatCodeProps {
+export interface TDChatCodeProps {
   lang: string;
   code: string;
 }
@@ -215,7 +189,7 @@ export interface MetaData {
    */
   [key: string]: any;
 }
-export interface TdChatItemMeta {
+export interface TDChatItemMeta {
   avatar?: string;
   name?: string;
   role?: string;

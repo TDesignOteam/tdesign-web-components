@@ -6,13 +6,13 @@ import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
-import type { TdChatCodeProps } from '../../chatbot/type';
+import type { TDChatCodeProps } from '../../chatbot/type';
 import { MessagePlugin } from '../../message';
 
 const className = `${getClassPrefix()}-chat__text__markdown__code`;
 
 @tag('t-chat-md-code')
-export default class ChatMDCode extends Component<TdChatCodeProps> {
+export default class ChatMDCode extends Component<TDChatCodeProps> {
   // lightDOM组件无法直接挂styleSheet，样式由chat-content异步加载
   static isLightDOM = true;
 
@@ -37,7 +37,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
     }
   }
 
-  render(props: OmiProps<TdChatCodeProps>) {
+  render(props: OmiProps<TDChatCodeProps>) {
     const { lang } = props;
 
     return (

@@ -4,7 +4,7 @@ import { Component, signal } from 'omi';
 
 import { ChatStatus } from '../../chatbot/core/type';
 import { Attachment } from '../../filecard';
-import { TdChatInputSend } from '../type';
+import { TDChatInputSend } from '../type';
 
 export default class AttachmentExample extends Component {
   inputValue = signal('输入内容');
@@ -42,7 +42,7 @@ export default class AttachmentExample extends Component {
     this.files.value = e.detail.concat(this.files.value);
   };
 
-  onSend = (e: CustomEvent<TdChatInputSend>) => {
+  onSend = (e: CustomEvent<TDChatInputSend>) => {
     console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];

@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
-import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import { findTargetElement, type TDChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
 import Chatbot from '../chat';
@@ -419,7 +419,7 @@ export default class BasicChat extends Component {
 
   clickHandler?: (e: MouseEvent) => void;
 
-  messageProps: TdChatMessageConfig = {
+  messageProps: TDChatMessageConfig = {
     // user: {
     //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     // },
@@ -439,6 +439,9 @@ export default class BasicChat extends Component {
         suggestion: ({ prompt }) => {
           this.chatRef.current.addPrompt(prompt);
         },
+        searchResult: ({ content }) => {
+          console.log('searchResult', content);
+        },
         searchItem: ({ content, event }) => {
           event.preventDefault();
           event.stopPropagation();
@@ -447,7 +450,7 @@ export default class BasicChat extends Component {
       },
       chatContentProps: {
         search: {
-          expandable: true,
+          expandable: false,
         },
         thinking: {
           maxHeight: 100,

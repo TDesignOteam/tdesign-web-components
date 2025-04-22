@@ -7,11 +7,19 @@ import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { MessageStatus } from '../../chatbot/core/type';
+import type { MessageStatus,TDChatContentProps } from '../../chatbot';
 
 import styles from '../../chatbot/style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
+
+export type TDChatThinkContentProps = {
+  content?: {
+    text?: string;
+    title?: string;
+  };
+  status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
+} & TDChatContentProps['thinking'];
 
 // 纯函数渲染器（无shadow root）
 export const renderThinking = ({ content, status, maxHeight }: TDChatThinkContentProps) => {
@@ -48,17 +56,8 @@ export const renderThinking = ({ content, status, maxHeight }: TDChatThinkConten
   );
 };
 
-export type TDChatThinkContentProps = {
-  content?: {
-    text?: string;
-    title?: string;
-  };
-  status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
-  maxHeight?: number;
-};
-
 // 独立组件（供外部使用）
-@tag('t-thinking-content')
+@tag('t-chat-thinking-content')
 export default class ThinkingContentComponent extends Component<TDChatThinkContentProps> {
   static css = styles;
 

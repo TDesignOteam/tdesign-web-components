@@ -1,22 +1,43 @@
 import '../../message';
 
-import markdownIt from 'markdown-it';
+import MarkdownIt from 'markdown-it';
 import linkPlugin from 'markdown-it-link-attributes';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import type {
-  TdChatContentMDPluginConfig,
-  TdChatContentMDPresetConfig,
-  TdChatContentMDProps,
-} from '../../chatbot/type';
 
 import styles from '../../chatbot/style/chat-content.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
+/** markdown插件预设 */
+export type TDChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
+
+export interface TDChatContentMDPresetConfig {
+  preset: TDChatContentMDPresetPlugin;
+  /** 是否开启 */
+  enabled?: boolean;
+  /** 插件参数 */
+  options?: any;
+}
+
+export type TDChatContentMDPluginConfig =
+  /** 预设插件配置 */
+  | TDChatContentMDPresetConfig
+  /** markdownIt原生插件配置 */
+  | MarkdownIt.PluginSimple
+  | MarkdownIt.PluginWithParams
+  | MarkdownIt.PluginWithOptions;
+
+export interface TDChatMarkdownContentProps {
+  content?: string;
+  role?: string;
+  options?: MarkdownIt.Options;
+  pluginConfig?: Array<TDChatContentMDPluginConfig>;
+}
+
 @tag('t-chat-md-content')
-export default class ChatMDContent extends Component<TdChatContentMDProps> {
+export default class ChatMDContent extends Component<TDChatMarkdownContentProps> {
   static css = [styles];
 
   static propTypes = {
@@ -46,7 +67,7 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
   };
 
   // TODO: md对象看看是不是直接provider传进来，否则每个content都要构造一个
-  md: markdownIt | null = null;
+  md: MarkdownIt | null = null;
 
   isMarkdownInit = signal(false);
 
@@ -59,7 +80,7 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
   initMarkdown = async () => {
     const { options, pluginConfig } = this.props;
 
-    const md = markdownIt({
+    const md = MarkdownIt({
       ...options,
     })
       // 表格
@@ -84,11 +105,11 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
           return false;
         }
         return true;
-      }) as TdChatContentMDPresetConfig[] | undefined) || [];
+      }) as TDChatContentMDPresetConfig[] | undefined) || [];
     // 筛选自定义插件
     const customPlugins =
       (pluginConfig?.filter((item) => typeof item !== 'object') as Array<
-        Exclude<TdChatContentMDPluginConfig, TdChatContentMDPresetConfig>
+        Exclude<TDChatContentMDPluginConfig, TDChatContentMDPresetConfig>
       >) || [];
 
     // 注入预设插件
@@ -146,7 +167,7 @@ export default class ChatMDContent extends Component<TdChatContentMDProps> {
     return this.md?.render(markdown);
   }
 
-  render({ role }: OmiProps<TdChatContentMDProps>) {
+  render({ role }: OmiProps<TDChatMarkdownContentProps>) {
     const roleClass = `${baseClass}--${role}`;
     const textContent = this.getTextInfo() || '';
     return (
