@@ -84,18 +84,6 @@ export default [
         component: () => import('tdesign-web-components/chat-message/README.md'),
       },
       {
-        title: 'Filecard 文件缩略卡片',
-        name: 'filecard',
-        path: '/webcomponents/components/filecard',
-        component: () => import('tdesign-web-components/filecard/README.md'),
-      },
-      {
-        title: 'Attachments 文件附件',
-        name: 'attachments',
-        path: '/webcomponents/components/attachments',
-        component: () => import('tdesign-web-components/attachments/README.md'),
-      },
-      {
         title: 'ChatAction 对话操作',
         name: 'chat-action',
         path: '/webcomponents/components/chat-action',
@@ -106,6 +94,18 @@ export default [
         name: 'chat-loading',
         path: '/webcomponents/components/chat-loading',
         component: () => import('tdesign-web-components/chat-loading/README.md'),
+      },
+      {
+        title: 'Filecard 文件缩略卡片',
+        name: 'filecard',
+        path: '/webcomponents/components/filecard',
+        component: () => import('tdesign-web-components/filecard/README.md'),
+      },
+      {
+        title: 'Attachments 文件附件',
+        name: 'attachments',
+        path: '/webcomponents/components/attachments',
+        component: () => import('tdesign-web-components/attachments/README.md'),
       },
     ],
     tag: '',
