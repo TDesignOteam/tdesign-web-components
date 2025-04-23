@@ -5,5 +5,5 @@ export interface TdActionProps {
   actionBar?: TDChatItemActionName[] | boolean;
   onActions?: TDChatItemProps['onActions'];
   presetActions?: TDChatItemAction[];
-  
+  message?: any;
 }

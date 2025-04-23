@@ -2,6 +2,7 @@ import './content/markdown-content';
 import '../collapse';
 import '../chat-loading';
 import '../attachments';
+import '../chat-action';
 import '../image';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
@@ -273,31 +274,6 @@ export default class ChatItem extends Component<TDChatItemProps> {
     },
   ];
 
-  private renderActions() {
-    const { actions, message } = this.props;
-    if (!actions) {
-      return null;
-    }
-    // 默认消息完成/暂停时才展示action
-    if (message.status !== 'complete' && message.status !== 'stop') {
-      return null;
-    }
-    let arrayActions: TDChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
-    if (typeof actions === 'function') {
-      arrayActions = actions(this.presetActions, message);
-    }
-    return arrayActions.map((item) => {
-      if (item.condition && !item.condition(message)) {
-        return null;
-      }
-      return (
-        <span key={item.name} class={`${className}__actions__item__wrapper`}>
-          {item.render}
-        </span>
-      );
-    });
-  }
-
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return null;
     const { status, content = [] } = this.props.message;
@@ -440,7 +416,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
   }
 
   render(props: TDChatItemProps) {
-    const { message, variant, placement, name, datetime } = props;
+    const { message, variant, placement, name, datetime, onActions } = props;
     if (!message?.content || message.content.length === 0) return;
     // console.log('==========item render', message.id, message.status);
 
@@ -462,7 +438,9 @@ export default class ChatItem extends Component<TDChatItemProps> {
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachments()}
             <slot name="actions">
-              <div className={`${className}__actions`}>{this.renderActions()}</div>
+            {message.status !== 'complete' && message.status !== 'stop' 
+              ? null 
+              : (<t-chat-action onActions={onActions} presetActions={this.presetActions}></t-chat-action>)}
             </slot>
           </div>
         ) : null}

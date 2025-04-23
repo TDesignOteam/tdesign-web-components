@@ -1,7 +1,6 @@
-import { Component, createRef, tag } from 'omi';
+import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import { MessagePlugin } from '../message';
 import type { StyledProps, TNode } from '../common';
 import { TdActionProps } from './type';
 import type { TDChatItemAction, TDChatItemActionName } from '../chatbot/type';
@@ -23,12 +22,7 @@ const className = `${getClassPrefix()}-chat-action`;
 export default class ChatAction extends Component<TdActionProps> {
   static css = [styles];
 
-
-  containerRef = createRef<HTMLElement>();
-
-  installed() {}
-
-  actions: {name:TDChatItemActionName, icon: TNode}[] = [
+  actions: {name:TDChatItemActionName, icon: TNode, condition?: (message: any) => boolean;}[] = [
     {name: 'replay', icon: <t-icon-refresh />},
     {name: 'copy', icon: <t-icon-copy />},
     {name: 'good', icon: <t-icon-thumb-up />},
@@ -43,9 +37,6 @@ export default class ChatAction extends Component<TdActionProps> {
       this.props.onActions[action](data, callback);
     } else {
       callback?.();
-      if (action === 'copy') {
-         MessagePlugin.success('复制成功');
-      }
     }
   };
 
@@ -56,19 +47,16 @@ export default class ChatAction extends Component<TdActionProps> {
           {action.icon}
         </div>
       ),
+      condition:action?.condition,
   }));
 
 
   render(props: ActionProps) {
-    const { actionBar = true, presetActions } = this.props;
+    const { actionBar = true, presetActions, message = {} } = this.props;
     if (!actionBar) {
       return null;
     }
-    // 默认消息完成/暂停时才展示action
-    // if (message.status !== 'complete' && message.status !== 'stop') {
-    //   return null;
-    // }
-    let arrayActions: TdChatItemAction[] = Array.isArray(actionBar) 
+    let arrayActions: TDChatItemAction[] = Array.isArray(actionBar) 
       ? actionBar.map((action)=>this.presetActions.find((item)=>item.name === action)) 
       : (presetActions || this.presetActions);
 
@@ -76,6 +64,9 @@ export default class ChatAction extends Component<TdActionProps> {
     return (
       <div className={`${className}`}>
         {arrayActions.map((item) => {
+          if (item.condition && !item.condition(message)) {
+            return null;
+          }
           return (
             <span key={item.name} class={`${className}__item__wrapper`}>
               {item.render}
