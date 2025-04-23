@@ -38,9 +38,6 @@ export default class ChatAction extends Component<TdActionProps> {
       this.props.onActions[action](data, callback);
     } else {
       callback?.();
-      if (action === 'copy') {
-         MessagePlugin.success('复制成功');
-      }
     }
   };
 
