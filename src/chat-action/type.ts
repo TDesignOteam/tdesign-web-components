@@ -4,4 +4,5 @@ export interface TdActionProps {
   actionBar?: TdChatItemActionName[] | boolean;
   onActions?: TdChatItemProps['onActions'];
   presetActions?: TdChatItemAction[];
+  message?: any;
 }
