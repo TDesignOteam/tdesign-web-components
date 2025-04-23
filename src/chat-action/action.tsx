@@ -40,7 +40,7 @@ export default class ChatAction extends Component<TdActionProps> {
     }
   };
 
-  presetActions: TdChatItemAction[] = this.actions.map((action) => ({
+  private defaultPresetActions: TdChatItemAction[] = this.actions.map((action) => ({
       name: action.name,
       render: (
         <div class={`${className}__actions__preset__wrapper`} onClick={() => this.handleClickAction(action.name, this.props?.message || {})}>
@@ -57,8 +57,8 @@ export default class ChatAction extends Component<TdActionProps> {
     }
 
     let arrayActions: TdChatItemAction[] = Array.isArray(actionBar) 
-      ? actionBar.map((action)=>this.presetActions.find((item)=>item.name === action)) 
-      : (presetActions || this.presetActions);
+      ? actionBar.map((action)=>this.defaultPresetActions.find((item)=>item.name === action)) 
+      : (presetActions || this.defaultPresetActions);
 
 
     return (
