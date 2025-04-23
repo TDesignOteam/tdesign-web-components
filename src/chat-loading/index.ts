@@ -2,8 +2,7 @@ import './style/index.js';
 
 import _Loading from './loading';
 
-export type { LoadingProps } from './loading';
 export const ChatLoading = _Loading;
 export default ChatLoading;
 
-export * from './type.js';
+export * from './type';

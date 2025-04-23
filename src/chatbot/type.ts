@@ -1,5 +1,6 @@
-import { TdChatMarkdownContentProps } from '../chat-message';
-import { TdChatInputProps } from '../chat-sender';
+import { type TdChatLoadingProps } from '../chat-loading';
+import { type TdChatMarkdownContentProps } from '../chat-message';
+import { type TdChatInputProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
 import type { ChatMessageType } from './core/type';
@@ -161,6 +162,7 @@ type TdChatContentSearchProps = {
 
 type TdChatContentThinkProps = {
   maxHeight?: number;
+  animation?: TdChatLoadingProps['animation'];
 };
 
 type TdChatContentSuggestionProps = {

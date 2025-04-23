@@ -1,8 +1,8 @@
 import 'tdesign-web-components/chat-action';
 import 'tdesign-web-components/space';
-import { MessagePlugin } from 'tdesign-web-components/message';
 
 import { Component } from 'omi';
+import { MessagePlugin } from 'tdesign-web-components/message';
 
 const onActions = {
   replay: (data, callback) => {
@@ -18,18 +18,21 @@ const onActions = {
   share: (data) => {
     console.log('分享', data);
   },
-  copy: () => { 
+  copy: () => {
     MessagePlugin.success('复制成功');
-  }
-}
+  },
+};
 export default class ChatAction extends Component {
-  
   render() {
     return (
       <>
         <t-space>
-            <t-chat-action actionBar={['replay', 'good', 'bad']} onActions={onActions} message={{id: 1}}></t-chat-action>
-            <t-chat-action></t-chat-action>
+          <t-chat-action
+            actionBar={['replay', 'good', 'bad']}
+            onActions={onActions}
+            message={{ id: 1 }}
+          ></t-chat-action>
+          <t-chat-action></t-chat-action>
         </t-space>
       </>
     );

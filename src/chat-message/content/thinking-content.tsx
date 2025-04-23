@@ -1,5 +1,6 @@
 import '../../collapse';
 import '../auto-scroll';
+import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 
@@ -22,13 +23,13 @@ export type TdChatThinkContentProps = {
 } & TdChatContentProps['thinking'];
 
 // 纯函数渲染器（无shadow root）
-export const renderThinking = ({ content, status, maxHeight }: TdChatThinkContentProps) => {
+export const renderThinking = ({ content, status, maxHeight, animation = 'circle' }: TdChatThinkContentProps) => {
   const renderThinkingStatus = (s: MessageStatus) => {
     if (s === 'complete' || s === 'stop')
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
     if (s === 'error')
       return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
-    return <div class={`${className}__think__status--pending`} />;
+    return <> {convertToLightDomNode(<t-chat-loading animation={animation}></t-chat-loading>)}</>;
   };
   const { text, title } = content;
 

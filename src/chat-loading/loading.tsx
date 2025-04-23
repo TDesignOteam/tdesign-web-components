@@ -4,16 +4,13 @@ import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
-import { StyledProps } from '../common';
-import { TdLoadingProps } from './type';
+import { TdChatLoadingProps } from './type';
 
 import styles from './style/loading.less';
 
-export interface LoadingProps extends TdLoadingProps, StyledProps {}
-
 const className = `${getClassPrefix()}-chat-loading`;
 @tag('t-chat-loading')
-export default class Loading extends Component<LoadingProps> {
+export default class Loading extends Component<TdChatLoadingProps> {
   static css = [styles];
 
   static propTypes = {
@@ -44,13 +41,13 @@ export default class Loading extends Component<LoadingProps> {
     );
   }
 
-  render(props: LoadingProps) {
+  render(props: TdChatLoadingProps) {
     const { text = '', animation = 'moving' } = props;
 
     return (
       <div class={classname(`${className}`, animation === 'skeleton' && `${className}__skeleton`)}>
         {this.renderIcon}
-        {animation !== 'skeleton' && (
+        {animation !== 'skeleton' && text !== '' && (
           <div class={classname(`${className}__text`, `${className}__text__${animation}`)}>{text}</div>
         )}
       </div>

@@ -290,7 +290,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
     }
     return (
       <div class={`${className}-chat-loading`}>
-        <t-chat-loading animation={animation}></t-chat-loading>
+        {convertToLightDomNode(<t-chat-loading animation={animation}></t-chat-loading>)}
       </div>
     );
   }
@@ -437,9 +437,13 @@ export default class ChatItem extends Component<TdChatItemProps> {
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachments()}
             <slot name="actions">
-            {message.status !== 'complete' && message.status !== 'stop' 
-              ? null 
-              : (<t-chat-action onActions={onActions} presetActions={this.presetActions} message={message}></t-chat-action>)}
+              {message.status !== 'complete' && message.status !== 'stop' ? null : (
+                <t-chat-action
+                  onActions={onActions}
+                  presetActions={this.presetActions}
+                  message={message}
+                ></t-chat-action>
+              )}
             </slot>
           </div>
         ) : null}
