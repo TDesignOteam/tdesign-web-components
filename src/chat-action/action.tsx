@@ -55,10 +55,11 @@ export default class ChatAction extends Component<TdActionProps> {
     if (!actionBar) {
       return null;
     }
+    const currentPresetActions = presetActions || this.defaultPresetActions;
 
-    let arrayActions: TdChatItemAction[] = Array.isArray(actionBar) 
-      ? actionBar.map((action)=>this.defaultPresetActions.find((item)=>item.name === action)) 
-      : (presetActions || this.defaultPresetActions);
+    let arrayActions: TdChatItemAction[] = Array.isArray(actionBar) && actionBar.length > 0
+      ? actionBar.map((action)=>currentPresetActions.find((item)=>item.name === action)) 
+      : currentPresetActions;
 
 
     return (
