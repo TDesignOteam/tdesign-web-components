@@ -63,7 +63,7 @@ export default class ChatAction extends Component<TdActionProps> {
 
 
     return (
-      <div className={`${className}`}>
+      <div className={className}>
         {arrayActions.map((item) => {
           if (item.condition && !item.condition(message)) {
             return null;
