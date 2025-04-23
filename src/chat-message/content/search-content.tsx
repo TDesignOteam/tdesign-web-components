@@ -4,7 +4,7 @@ import '../../collapse';
 import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import { TDChatContentProps } from '../../chatbot';
+import { TdChatContentProps } from '../../chatbot';
 import { MessageStatus, ReferenceItem } from '../../chatbot/core/type';
 
 import styles from '../../chatbot/style/chat-item.less';
@@ -15,21 +15,22 @@ type SearchContent = {
   title?: string;
   references?: ReferenceItem[];
 };
-export type TDChatSearchContentProps = {
+export type TdChatSearchContentProps = {
   content?: SearchContent;
   status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
-  handleSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
-  handleSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;
-} & TDChatContentProps['search'];
+  onSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
+  onSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;
+} & TdChatContentProps['search'];
 
 // 纯函数渲染器
 export const renderSearch = ({
   content,
   status,
   expandable,
-  handleSearchResultClick,
-  handleSearchItemClick,
-}: TDChatSearchContentProps) => {
+  onSearchResultClick,
+  onSearchItemClick,
+}: TdChatSearchContentProps) => {
+  if (!content) return;
   const searchExpand = signal(false);
   const { references = [], title } = content;
   const titleText = status === 'stop' ? '搜索已终止' : title;
@@ -61,7 +62,7 @@ export const renderSearch = ({
                   key={item.url}
                   className={`${className}__search-link-wrapper`}
                   onClick={(e) => {
-                    handleSearchItemClick?.({ event: e, content: item });
+                    onSearchItemClick?.({ event: e, content: item });
                   }}
                 >
                   <a target="_blank" href={item.url} className={`${className}__search-link`}>
@@ -80,7 +81,7 @@ export const renderSearch = ({
         <div
           className={`${className}__search__header`}
           onClick={(e) =>
-            handleSearchResultClick?.({
+            onSearchResultClick?.({
               event: e,
               content,
             })
@@ -96,7 +97,7 @@ export const renderSearch = ({
 
 // Web Component版本
 @tag('t-chat-search-content')
-export default class SearchContentComponent extends Component<TDChatSearchContentProps> {
+export default class SearchContentComponent extends Component<TdChatSearchContentProps> {
   static css = styles;
 
   static propTypes = {

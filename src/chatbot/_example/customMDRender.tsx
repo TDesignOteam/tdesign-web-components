@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component } from 'omi';
-import type { TDChatItemProps, TDChatMarkdownContentProps, TDChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type { TdChatItemProps, TdChatMarkdownContentProps, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
 
@@ -158,7 +158,7 @@ const colorTextPlugin = (md: MarkdownIt) => {
   };
 };
 
-const mdConfig: TDChatMarkdownContentProps = {
+const mdConfig: TdChatMarkdownContentProps = {
   options: {
     html: true, // 允许HTML标签
     breaks: true, // 自动换行
@@ -167,14 +167,14 @@ const mdConfig: TDChatMarkdownContentProps = {
   pluginConfig: [colorTextPlugin],
 };
 
-const commonRoleConfig: Partial<TDChatItemProps> = {
+const commonRoleConfig: Partial<TdChatItemProps> = {
   chatContentProps: {
     markdown: {
       ...mdConfig,
     },
   },
 };
-const messageProps: TDChatMessageConfig = {
+const messageProps: TdChatMessageConfig = {
   user: {
     ...commonRoleConfig,
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',

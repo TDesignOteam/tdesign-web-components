@@ -7,22 +7,22 @@ import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { MessageStatus,TDChatContentProps } from '../../chatbot';
+import type { MessageStatus, TdChatContentProps } from '../../chatbot';
 
 import styles from '../../chatbot/style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-export type TDChatThinkContentProps = {
+export type TdChatThinkContentProps = {
   content?: {
     text?: string;
     title?: string;
   };
   status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
-} & TDChatContentProps['thinking'];
+} & TdChatContentProps['thinking'];
 
 // 纯函数渲染器（无shadow root）
-export const renderThinking = ({ content, status, maxHeight }: TDChatThinkContentProps) => {
+export const renderThinking = ({ content, status, maxHeight }: TdChatThinkContentProps) => {
   const renderThinkingStatus = (s: MessageStatus) => {
     if (s === 'complete' || s === 'stop')
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
@@ -58,7 +58,7 @@ export const renderThinking = ({ content, status, maxHeight }: TDChatThinkConten
 
 // 独立组件（供外部使用）
 @tag('t-chat-thinking-content')
-export default class ThinkingContentComponent extends Component<TDChatThinkContentProps> {
+export default class ThinkingContentComponent extends Component<TdChatThinkContentProps> {
   static css = styles;
 
   static propTypes = {
@@ -67,7 +67,8 @@ export default class ThinkingContentComponent extends Component<TDChatThinkConte
     maxHeight: Number,
   };
 
-  render(props: TDChatThinkContentProps) {
+  render(props: TdChatThinkContentProps) {
+    if (!props?.content) return;
     return renderThinking(props);
   }
 }

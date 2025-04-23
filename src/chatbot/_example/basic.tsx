@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
-import { findTargetElement, type TDChatMessageConfig } from 'tdesign-web-components/chatbot';
+import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import type { Attachment } from '../../filecard';
 import Chatbot from '../chat';
@@ -419,7 +419,7 @@ export default class BasicChat extends Component {
 
   clickHandler?: (e: MouseEvent) => void;
 
-  messageProps: TDChatMessageConfig = {
+  messageProps: TdChatMessageConfig = {
     // user: {
     //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
     // },

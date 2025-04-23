@@ -11,33 +11,33 @@ import styles from '../../chatbot/style/chat-content.less';
 const baseClass = `${getClassPrefix()}-chat__text`;
 
 /** markdown插件预设 */
-export type TDChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
+export type TdChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
 
-export interface TDChatContentMDPresetConfig {
-  preset: TDChatContentMDPresetPlugin;
+export interface TdChatContentMDPresetConfig {
+  preset: TdChatContentMDPresetPlugin;
   /** 是否开启 */
   enabled?: boolean;
   /** 插件参数 */
   options?: any;
 }
 
-export type TDChatContentMDPluginConfig =
+export type TdChatContentMDPluginConfig =
   /** 预设插件配置 */
-  | TDChatContentMDPresetConfig
+  | TdChatContentMDPresetConfig
   /** markdownIt原生插件配置 */
   | MarkdownIt.PluginSimple
   | MarkdownIt.PluginWithParams
   | MarkdownIt.PluginWithOptions;
 
-export interface TDChatMarkdownContentProps {
+export interface TdChatMarkdownContentProps {
   content?: string;
   role?: string;
   options?: MarkdownIt.Options;
-  pluginConfig?: Array<TDChatContentMDPluginConfig>;
+  pluginConfig?: Array<TdChatContentMDPluginConfig>;
 }
 
 @tag('t-chat-md-content')
-export default class ChatMDContent extends Component<TDChatMarkdownContentProps> {
+export default class ChatMDContent extends Component<TdChatMarkdownContentProps> {
   static css = [styles];
 
   static propTypes = {
@@ -105,11 +105,11 @@ export default class ChatMDContent extends Component<TDChatMarkdownContentProps>
           return false;
         }
         return true;
-      }) as TDChatContentMDPresetConfig[] | undefined) || [];
+      }) as TdChatContentMDPresetConfig[] | undefined) || [];
     // 筛选自定义插件
     const customPlugins =
       (pluginConfig?.filter((item) => typeof item !== 'object') as Array<
-        Exclude<TDChatContentMDPluginConfig, TDChatContentMDPresetConfig>
+        Exclude<TdChatContentMDPluginConfig, TdChatContentMDPresetConfig>
       >) || [];
 
     // 注入预设插件
@@ -167,7 +167,7 @@ export default class ChatMDContent extends Component<TDChatMarkdownContentProps>
     return this.md?.render(markdown);
   }
 
-  render({ role }: OmiProps<TDChatMarkdownContentProps>) {
+  render({ role }: OmiProps<TdChatMarkdownContentProps>) {
     const roleClass = `${baseClass}--${role}`;
     const textContent = this.getTextInfo() || '';
     return (

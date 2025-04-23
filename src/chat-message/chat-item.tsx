@@ -29,7 +29,7 @@ import {
   isUserMessage,
   UserMessageContent,
 } from '../chatbot/core/type';
-import type { ChatComment, TDChatItemAction, TDChatItemActionName, TDChatItemProps } from '../chatbot/type';
+import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { MessagePlugin } from '../message';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
@@ -40,7 +40,7 @@ import styles from '../chatbot/style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 @tag('t-chat-item')
-export default class ChatItem extends Component<TDChatItemProps> {
+export default class ChatItem extends Component<TdChatItemProps> {
   static css = [styles];
 
   static propTypes = {
@@ -70,8 +70,8 @@ export default class ChatItem extends Component<TDChatItemProps> {
   pComment = signal<ChatComment>(undefined);
 
   receiveProps(
-    props: TDChatItemProps | OmiProps<TDChatItemProps, any>,
-    oldProps: TDChatItemProps | OmiProps<TDChatItemProps, any>,
+    props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
+    oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
   ) {
     const newMsg = props?.message;
     const oldMsg = oldProps?.message;
@@ -117,7 +117,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
     );
   }
 
-  private handleClickAction = (action: TDChatItemActionName, data?: any, callback?: Function) => {
+  private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
     if (this.props?.onActions?.[action]) {
       this.props.onActions[action](data, callback);
     } else {
@@ -219,7 +219,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
     );
   };
 
-  private presetActions: TDChatItemAction[] = [
+  private presetActions: TdChatItemAction[] = [
     {
       name: 'replay',
       render: (
@@ -415,10 +415,9 @@ export default class ChatItem extends Component<TDChatItemProps> {
     });
   }
 
-  render(props: TDChatItemProps) {
+  render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime, onActions } = props;
     if (!message?.content || message.content.length === 0) return;
-    // console.log('==========item render', message.id, message.status);
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;
@@ -440,7 +439,7 @@ export default class ChatItem extends Component<TDChatItemProps> {
             <slot name="actions">
             {message.status !== 'complete' && message.status !== 'stop' 
               ? null 
-              : (<t-chat-action onActions={onActions} presetActions={this.presetActions}></t-chat-action>)}
+              : (<t-chat-action onActions={onActions} presetActions={this.presetActions} message={message}></t-chat-action>)}
             </slot>
           </div>
         ) : null}
