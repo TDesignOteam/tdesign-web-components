@@ -6,7 +6,7 @@ import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import { getSlotNodes } from '../_util/component';
+import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatInputSend } from '../chat-sender';
 import type ChatInput from '../chat-sender/chat-input';
 import { Attachment } from '../filecard';
@@ -82,7 +82,10 @@ export default class Chatbot extends Component<TdChatProps> {
    * 获取插槽名称列表
    */
   get slotNames() {
-    return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
+    return getSlotNodes(this.props.children).reduce((prev, curr) => {
+      console.log('======test', curr.attributes);
+      return prev.concat(curr.attributes.slot);
+    }, []);
   }
 
   install() {
@@ -282,6 +285,19 @@ export default class Chatbot extends Component<TdChatProps> {
       return <slot name={slotName} slot={str}></slot>;
     });
   };
+
+  // beforeRender(): void {
+  //   // 动态注入插槽需要每次render都更新children
+  //   this.props.children = convertNodeListToVNodes.call(this, this.childNodes);
+  // }
+
+  // 动态注入插槽需要每次render都更新children
+  beforeRender(): void {
+    // @ts-ignore
+    if (this.props?.ignoreAttrs) return;
+    // 使用缓存和差异检测优化DOM转换
+    this.props.children = convertNodeListToVNodes(this.childNodes);
+  }
 
   render({ layout, injectCSS, senderProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;

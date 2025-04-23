@@ -387,15 +387,15 @@ export default class ChatItem extends Component<TdChatItemProps> {
             content: content.data,
             status: content.status,
             expandable: chatContentProps?.search?.expandable,
-            onSearchItemClick: (data) => this.handleClickAction('searchItem', data),
-            onSearchResultClick: (data) => this.handleClickAction('searchResult', data),
+            handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
+            handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
           });
         }
 
         if (isSuggestionContent(content)) {
           return renderSuggestion({
             content: content.data,
-            onPromptClick: (data) =>
+            handlePromptClick: (data) =>
               this.handleClickAction('suggestion', data, () => {
                 this.injection.chatEngine.sendUserMessage({
                   prompt: data.content,

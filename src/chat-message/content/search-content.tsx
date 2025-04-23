@@ -18,8 +18,8 @@ type SearchContent = {
 export type TdChatSearchContentProps = {
   content?: SearchContent;
   status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
-  onSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
-  onSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;
+  handleSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
+  handleSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;
 } & TdChatContentProps['search'];
 
 // 纯函数渲染器
@@ -27,8 +27,8 @@ export const renderSearch = ({
   content,
   status,
   expandable,
-  onSearchResultClick,
-  onSearchItemClick,
+  handleSearchResultClick,
+  handleSearchItemClick,
 }: TdChatSearchContentProps) => {
   if (!content) return;
   const searchExpand = signal(false);
@@ -62,7 +62,7 @@ export const renderSearch = ({
                   key={item.url}
                   className={`${className}__search-link-wrapper`}
                   onClick={(e) => {
-                    onSearchItemClick?.({ event: e, content: item });
+                    handleSearchItemClick?.({ event: e, content: item });
                   }}
                 >
                   <a target="_blank" href={item.url} className={`${className}__search-link`}>
@@ -81,7 +81,7 @@ export const renderSearch = ({
         <div
           className={`${className}__search__header`}
           onClick={(e) =>
-            onSearchResultClick?.({
+            handleSearchResultClick?.({
               event: e,
               content,
             })
@@ -104,8 +104,8 @@ export default class SearchContentComponent extends Component<TdChatSearchConten
     content: Object,
     status: String,
     expandable: Boolean,
-    handleSearchItemClick: [Object, Function],
-    handleSearchResultClick: [Object, Function],
+    handleSearchItemClick: Object,
+    handleSearchResultClick: Object,
   };
 
   render(props) {

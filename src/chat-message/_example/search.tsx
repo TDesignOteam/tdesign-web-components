@@ -20,7 +20,7 @@ export default class BasicExample extends Component {
             },
           ],
         }}
-        onSearchItemClick={({ content, event }) => {
+        handleSearchItemClick={({ content, event }) => {
           event.preventDefault();
           event.stopPropagation();
           console.log('点击', content);
