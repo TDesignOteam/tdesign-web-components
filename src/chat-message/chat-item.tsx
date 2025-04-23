@@ -415,6 +415,31 @@ export default class ChatItem extends Component<TdChatItemProps> {
     });
   }
 
+  private renderActions() {
+    const { actions, message } = this.props;
+    if (!actions) {
+      return null;
+    }
+    // 默认消息完成/暂停时才展示action
+    if (message.status !== 'complete' && message.status !== 'stop') {
+      return null;
+    }
+    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
+    if (typeof actions === 'function') {
+      arrayActions = actions(this.presetActions, message);
+    }
+    return arrayActions.map((item) => {
+      if (item.condition && !item.condition(message)) {
+        return null;
+      }
+      return (
+        <span key={item.name} class={`${className}__actions__item__wrapper`}>
+          {item.render}
+        </span>
+      );
+    });
+  }
+
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime, onActions } = props;
     if (!message?.content || message.content.length === 0) return;

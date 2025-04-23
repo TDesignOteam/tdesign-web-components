@@ -1,8 +1,5 @@
-import type { TdChatItemAction, TdChatItemActionName,TdChatItemProps } from '../chatbot/type';
-
+export type TdChatActionsName = 'copy' | 'good' | 'goodActived' | 'bad' | 'badActived' | 'replay' | 'share';
 export interface TdActionProps {
-  actionBar?: TdChatItemActionName[] | boolean;
-  onActions?: TdChatItemProps['onActions'];
-  presetActions?: TdChatItemAction[];
-  message?: any;
+  actionBar?: TdChatActionsName[] | boolean;
+  onActions?: Partial<Record<TdChatActionsName, (event: MouseEvent) => void>>;
 }
