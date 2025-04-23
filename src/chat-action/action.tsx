@@ -6,7 +6,7 @@ import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
 
-import { Component, createRef, tag } from 'omi';
+import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import type { TdChatItemAction, TdChatItemActionName } from '../chatbot/type';
@@ -22,11 +22,6 @@ const className = `${getClassPrefix()}-chat-action`;
 @tag('t-chat-action')
 export default class ChatAction extends Component<TdActionProps> {
   static css = [styles];
-
-
-  containerRef = createRef<HTMLElement>();
-
-  installed() {}
 
   actions: {name: TdChatItemActionName, icon: TNode}[] = [
     {name: 'replay', icon: <t-icon-refresh />},
