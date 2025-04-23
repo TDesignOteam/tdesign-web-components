@@ -23,7 +23,13 @@ export type TdChatThinkContentProps = {
 } & TdChatContentProps['thinking'];
 
 // 纯函数渲染器（无shadow root）
-export const renderThinking = ({ content, status, maxHeight, animation = 'circle' }: TdChatThinkContentProps) => {
+export const renderThinking = ({
+  content,
+  status,
+  maxHeight,
+  animation = 'circle',
+  collapsed = false,
+}: TdChatThinkContentProps) => {
   const renderThinkingStatus = (s: MessageStatus) => {
     if (s === 'complete' || s === 'stop')
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
@@ -34,7 +40,7 @@ export const renderThinking = ({ content, status, maxHeight, animation = 'circle
   const { text, title } = content;
 
   return (
-    <t-collapse className={`${className}__think`} expandIconPlacement="right" value={[1]}>
+    <t-collapse className={`${className}__think`} expandIconPlacement="right" value={collapsed ? [0] : [1]}>
       <t-collapse-panel className={`${className}__think__content`}>
         {text && (
           <t-auto-scroll maxHeight={maxHeight}>

@@ -163,6 +163,7 @@ type TdChatContentSearchProps = {
 type TdChatContentThinkProps = {
   maxHeight?: number;
   animation?: TdChatLoadingProps['animation'];
+  collapsed?: boolean;
 };
 
 type TdChatContentSuggestionProps = {
