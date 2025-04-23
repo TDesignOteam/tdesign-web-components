@@ -54,7 +54,7 @@ export default class ChatAction extends Component<TdActionProps> {
   }));
 
   render(props: ActionProps) {
-    const { actionBar = true, presetActions, message = {} } = this.props;
+    const { actionBar = true, presetActions, message = {} } = props;
     if (!actionBar) {
       return null;
     }
