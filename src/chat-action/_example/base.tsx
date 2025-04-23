@@ -28,7 +28,7 @@ export default class ChatAction extends Component {
     return (
       <>
         <t-space>
-            <t-chat-action actionBar={['replay', 'good', 'bad']} onActions={onActions}></t-chat-action>
+            <t-chat-action actionBar={['replay', 'good', 'bad']} onActions={onActions} message={{id: 1}}></t-chat-action>
             <t-chat-action></t-chat-action>
         </t-space>
       </>
