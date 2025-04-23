@@ -219,60 +219,45 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   };
 
-  private presetActions: TdChatItemAction[] = [
-    {
-      name: 'replay',
-      render: (
-        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
-          <t-icon-refresh />
-        </div>
-      ),
-      // 条件：最后一条AI消息才可以重新生成
-      condition: (message) => {
-        const lastAIMessage = this.injection.chatEngine?.messageStore?.lastAIMessage;
-        return message.id === lastAIMessage?.id;
+  get presetActions(): TdChatItemAction[] {
+    return [
+      {
+        name: 'replay',
+        render: (
+          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
+            <t-icon-refresh />
+          </div>
+        ),
       },
-    },
-    {
-      name: 'copy',
-      render: (
-        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
-          <t-icon-copy />
-        </div>
-      ),
-    },
-    {
-      name: 'goodActived',
-      condition: () => this.pComment.value === 'good',
-      render: this.renderComment('good', true),
-    },
-    {
-      name: 'good',
-      condition: () => this.pComment.value !== 'good',
-      render: this.renderComment('good', false),
-    },
-    {
-      name: 'badActived',
-      condition: () => this.pComment.value === 'bad',
-      render: this.renderComment('bad', true),
-    },
-    {
-      name: 'bad',
-      condition: () => this.pComment.value !== 'bad',
-      render: this.renderComment('bad', false),
-    },
-    {
-      name: 'share',
-      render: (
-        <div
-          class={`${className}__actions__preset__wrapper`}
-          onClick={() => this.handleClickAction('share', this.props.message)}
-        >
-          <t-icon-share-1 />
-        </div>
-      ),
-    },
-  ];
+      {
+        name: 'copy',
+        render: (
+          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
+            <t-icon-copy />
+          </div>
+        ),
+      },
+      {
+        name: 'good',
+        render: this.renderComment('good', this.pComment.value === 'good'),
+      },
+      {
+        name: 'bad',
+        render: this.renderComment('bad', this.pComment.value === 'bad'),
+      },
+      {
+        name: 'share',
+        render: (
+          <div
+            class={`${className}__actions__preset__wrapper`}
+            onClick={() => this.handleClickAction('share', this.props.message)}
+          >
+            <t-icon-share-1 />
+          </div>
+        ),
+      },
+    ];
+  }
 
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return null;
@@ -415,31 +400,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     });
   }
 
-  private renderActions() {
-    const { actions, message } = this.props;
-    if (!actions) {
-      return null;
-    }
-    // 默认消息完成/暂停时才展示action
-    if (message.status !== 'complete' && message.status !== 'stop') {
-      return null;
-    }
-    let arrayActions: TdChatItemAction[] = Array.isArray(actions) ? actions : this.presetActions;
-    if (typeof actions === 'function') {
-      arrayActions = actions(this.presetActions, message);
-    }
-    return arrayActions.map((item) => {
-      if (item.condition && !item.condition(message)) {
-        return null;
-      }
-      return (
-        <span key={item.name} class={`${className}__actions__item__wrapper`}>
-          {item.render}
-        </span>
-      );
-    });
-  }
-
   render(props: TdChatItemProps) {
     const { message, variant, placement, name, datetime, onActions } = props;
     if (!message?.content || message.content.length === 0) return;
@@ -463,11 +423,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
             {this.renderAttachments()}
             <slot name="actions">
               {message.status !== 'complete' && message.status !== 'stop' ? null : (
-                <t-chat-action
-                  onActions={onActions}
-                  presetActions={this.presetActions}
-                  message={message}
-                ></t-chat-action>
+                <t-chat-action onActions={onActions} actionBar={this.presetActions}></t-chat-action>
               )}
             </slot>
           </div>

@@ -9,51 +9,49 @@ import 'tdesign-icons-web-components/esm/components/share-1';
 import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import type { ChatMessageType, TdChatItemAction } from '../chatbot/type';
-import type { StyledProps, TNode } from '../common';
-import { TdActionProps, TdChatActionsName } from './type';
+import { TdChatActionItem,TdChatActionProps, TdChatActionsName } from './type';
 
 import styles from './style/action.less';
-
-export interface ActionProps extends TdActionProps, StyledProps {}
 
 const className = `${getClassPrefix()}-chat-action`;
 
 @tag('t-chat-action')
-export default class ChatAction extends Component<TdActionProps> {
+export default class ChatAction extends Component<TdChatActionProps> {
   static css = [styles];
 
-  actions: { name: TdChatActionsName; icon: TNode; condition?: (message: ChatMessageType) => boolean }[] = [
-    { name: 'replay', icon: <t-icon-refresh /> },
-    { name: 'copy', icon: <t-icon-copy /> },
-    { name: 'good', icon: <t-icon-thumb-up /> },
-    { name: 'bad', icon: <t-icon-thumb-down /> },
-    { name: 'goodActived', icon: <t-icon-thumb-up-filled /> },
-    { name: 'badActived', icon: <t-icon-thumb-down-filled /> },
-    { name: 'share', icon: <t-icon-share-1 /> },
+  static propTypes = {
+    actionBar: Object,
+    onActions: Object,
+  };
+
+  private actions: TdChatActionItem[] = [
+    { name: 'replay', render: <t-icon-refresh /> },
+    { name: 'copy', render: <t-icon-copy /> },
+    { name: 'good', render: <t-icon-thumb-up /> },
+    { name: 'bad', render: <t-icon-thumb-down /> },
+    { name: 'share', render: <t-icon-share-1 /> },
   ];
 
   private handleClickAction = (action: TdChatActionsName, e: MouseEvent) => {
     this.props?.onActions?.[action](e);
   };
 
-  private defaultPresetActions: TdChatItemAction[] = this.actions.map((action) => ({
+  private defaultPresetActions: TdChatActionItem[] = this.actions.map((action) => ({
     name: action.name,
     render: (
       <div class={`${className}__actions__preset__wrapper`} onClick={(e) => this.handleClickAction(action.name, e)}>
-        {action.icon}
+        {action.render}
       </div>
     ),
-    condition: action?.condition,
   }));
 
-  render(props: ActionProps) {
+  render(props: TdChatActionProps) {
     const { actionBar = true } = props;
     if (!actionBar) {
       return null;
     }
 
-    const arrayActions: TdChatItemAction[] =
+    const arrayActions: TdChatActionItem[] =
       Array.isArray(actionBar) && actionBar.length > 0
         ? actionBar.map((action) => this.defaultPresetActions.find((item) => item.name === action))
         : this.defaultPresetActions;
@@ -61,10 +59,10 @@ export default class ChatAction extends Component<TdActionProps> {
     return (
       <div className={className}>
         {arrayActions.map((item) => (
-            <span key={item.name} class={`${className}__item__wrapper`}>
-              {item.render}
-            </span>
-          ))}
+          <span key={item.name} class={`${className}__item__wrapper`}>
+            {item.render}
+          </span>
+        ))}
       </div>
     );
   }

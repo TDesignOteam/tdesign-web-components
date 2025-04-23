@@ -1,3 +1,4 @@
+import { TdChatActionsName } from '../chat-action';
 import { type TdChatLoadingProps } from '../chat-loading';
 import { type TdChatMarkdownContentProps } from '../chat-message';
 import { type TdChatSenderProps } from '../chat-sender';
@@ -5,22 +6,10 @@ import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
 import type { ChatMessageType } from './core/type';
 
-export type TdChatItemActionName =
-  | 'copy'
-  | 'good'
-  | 'goodActived'
-  | 'bad'
-  | 'badActived'
-  | 'replay'
-  | 'share'
-  | 'searchResult'
-  | 'searchItem'
-  | 'suggestion';
+export type TdChatItemActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
 export interface TdChatItemAction {
   name: TdChatItemActionName;
   render: TNode;
-  // 满足条件才展示
-  condition?: (message: ChatMessageType) => boolean;
 }
 
 export interface TdChatRenderConfig {

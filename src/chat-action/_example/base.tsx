@@ -5,9 +5,8 @@ import { Component } from 'omi';
 import { MessagePlugin } from 'tdesign-web-components/message';
 
 const onActions = {
-  replay: (data, callback) => {
+  replay: (data) => {
     console.log('自定义重新回复', data);
-    callback?.();
   },
   good: (data) => {
     console.log('点赞', data);
@@ -27,11 +26,7 @@ export default class ChatAction extends Component {
     return (
       <>
         <t-space>
-          <t-chat-action
-            actionBar={['replay', 'good', 'bad']}
-            onActions={onActions}
-            message={{ id: 1 }}
-          ></t-chat-action>
+          <t-chat-action actionBar={['good', 'bad', 'replay']} onActions={onActions}></t-chat-action>
           <t-chat-action></t-chat-action>
         </t-space>
       </>
