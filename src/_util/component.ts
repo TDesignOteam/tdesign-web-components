@@ -45,21 +45,25 @@ function camelCase(str: string): string {
   return str.replace(/-(\w)/g, (_, $1) => $1.toUpperCase());
 }
 
+// WeakMap to cache VNodes for DOM nodes
+const nodeToVNodeCache = new WeakMap<Node, VNode | string>();
+
 /**
- * 将DOM NodeList转换为Omi VNode
+ * 将DOM NodeList转换为Omi VNode，带缓存优化
  * @param childNodes DOM NodeList
  * @returns Omi VNode[]
  */
-const vnodePool = new WeakMap<Node, VNode | string>();
 export function convertNodeListToVNodes(childNodes: NodeList): Array<VNode | string> {
   return Array.from(childNodes)
     .map((node): VNode | string => {
-      // 增加对象池复用机制
-      const cached = vnodePool.get(node);
+      const cached = nodeToVNodeCache.get(node);
       if (cached) return cached;
+
       // 处理文本节点
       if (node.nodeType === Node.TEXT_NODE) {
-        return node.textContent || '';
+        const textContent = node.textContent || '';
+        nodeToVNodeCache.set(node, textContent);
+        return textContent;
       }
 
       const element = node as Element;
@@ -82,8 +86,8 @@ export function convertNodeListToVNodes(childNodes: NodeList): Array<VNode | str
           children,
           key: attributes.key,
         };
-        // 在创建新VNode时更新缓存
-        vnodePool.set(node, vnode);
+
+        nodeToVNodeCache.set(element, vnode);
         return vnode;
       }
       // 其他类型节点（注释等）返回 null

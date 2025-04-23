@@ -82,10 +82,7 @@ export default class Chatbot extends Component<TdChatProps> {
    * 获取插槽名称列表
    */
   get slotNames() {
-    return getSlotNodes(this.props.children).reduce((prev, curr) => {
-      console.log('======test', curr.attributes);
-      return prev.concat(curr.attributes.slot);
-    }, []);
+    return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
   }
 
   install() {
