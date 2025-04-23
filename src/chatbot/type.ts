@@ -99,7 +99,7 @@ export interface TdChatProps extends StyledProps {
   messages: Array<ChatMessageType>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig;
-  /** 输入框配置（透传至t-chat-input） */
+  /** 输入框配置（透传至t-chat-sender） */
   senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;

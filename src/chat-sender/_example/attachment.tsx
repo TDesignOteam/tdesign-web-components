@@ -56,7 +56,7 @@ export default class AttachmentExample extends Component {
 
   render() {
     return (
-      <t-chat-input
+      <t-chat-sender
         value={this.inputValue.value}
         placeholder="请输入内容"
         status={this.status.value}
@@ -74,7 +74,7 @@ export default class AttachmentExample extends Component {
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}
-      ></t-chat-input>
+      ></t-chat-sender>
     );
   }
 }

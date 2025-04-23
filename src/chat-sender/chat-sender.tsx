@@ -19,7 +19,7 @@ import styles from './style/chat-sender.less';
 
 const className = `${getClassPrefix()}-chat__input`;
 
-@tag('t-chat-input')
+@tag('t-chat-sender')
 export default class ChatSender extends Component<TdChatSenderProps> {
   static css = [styles];
 

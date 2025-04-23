@@ -81,7 +81,7 @@ export default class CustomExample extends Component {
   render() {
     return (
       <div style={{ display: 'flex', alignItems: 'end', height: 300 }}>
-        <t-chat-input
+        <t-chat-sender
           className="input"
           value={this.inputValue.value}
           placeholder="请输入内容"
@@ -99,7 +99,7 @@ export default class CustomExample extends Component {
               唤起面板
             </t-button>
           </div>
-        </t-chat-input>
+        </t-chat-sender>
       </div>
     );
   }

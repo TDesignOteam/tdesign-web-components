@@ -11,7 +11,7 @@ export default class BasicExample extends Component {
 
   render() {
     return (
-      <t-chat-input value={this.inputValue.value} placeholder="请输入内容" status={this.status.value}></t-chat-input>
+      <t-chat-sender value={this.inputValue.value} placeholder="请输入内容" status={this.status.value}></t-chat-sender>
     );
   }
 }

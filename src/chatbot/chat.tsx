@@ -302,7 +302,7 @@ export default class Chatbot extends Component<TdChatProps> {
     return (
       <div className={`${className} ${layoutClass}`}>
         {this.chatMessageValue && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
-        <t-chat-input
+        <t-chat-sender
           ref={this.ChatSenderRef}
           className={`${className}-input-wrapper`}
           css={injectCSS?.ChatSender}
@@ -319,7 +319,7 @@ export default class Chatbot extends Component<TdChatProps> {
         >
           {/* 如不使用动态渲染slot，input中的默认slot会被置空 */}
           {this.renderInputSlots()}
-        </t-chat-input>
+        </t-chat-sender>
       </div>
     );
   }

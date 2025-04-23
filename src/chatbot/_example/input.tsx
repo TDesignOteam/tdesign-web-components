@@ -106,7 +106,7 @@ export default class ChatSender extends Component {
 
   render() {
     return (
-      <t-chat-input
+      <t-chat-sender
         value={this.inputValue.value}
         placeholder="请输入内容"
         status={this.status.value}
@@ -129,7 +129,7 @@ export default class ChatSender extends Component {
         onStop={this.onStop}
       >
         {this.renderModel()}
-      </t-chat-input>
+      </t-chat-sender>
     );
   }
 }
