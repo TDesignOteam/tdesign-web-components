@@ -1,8 +1,8 @@
 import './style/index.js';
 
-import _ChatInput from './chat-input';
+import _ChatSender from './chat-sender.jsx';
 
-export const ChatInput = _ChatInput;
-export default ChatInput;
+export const ChatSender = _ChatSender;
+export default ChatSender;
 
 export * from './type';

@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 import { Component, signal } from 'omi';
 
 import { ChatStatus } from '../../chatbot/core/type';
-import { TdChatInputSend } from '../type';
+import { TdChatSenderSend } from '../type';
 
 export default class BasicExample extends Component {
   inputValue = signal('输入内容');
@@ -15,7 +15,7 @@ export default class BasicExample extends Component {
     this.inputValue.value = e.detail;
   };
 
-  onSend = (e: CustomEvent<TdChatInputSend>) => {
+  onSend = (e: CustomEvent<TdChatSenderSend>) => {
     console.log('提交', e);
     this.inputValue.value = '';
     this.status.value = 'pending';

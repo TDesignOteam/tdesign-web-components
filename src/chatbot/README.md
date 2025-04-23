@@ -44,7 +44,7 @@ spline: base
 | reverse | Boolean | false | 是否反转消息显示顺序 |
 | messages | ChatMessageType[] | - | 初始化的聊天消息数组 |
 | messageProps | `{ ModelRoleEnum: TdChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TdChatItemProps` |
-| senderProps | TdChatInputProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatInput组件` |
+| senderProps | TdChatSenderProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatSender组件` |
 | chatServiceConfig | ChatServiceConfig/() => ChatServiceConfig | - | 聊天服务配置，用于初始化ChatEngine |
 | injectCSS | Object | - | 注入的自定义CSS样式 |
 
@@ -112,7 +112,7 @@ spline: base
 
 | 属性名 | 类型 | 说明 |
 |--------|------|------|
-| chatInput | string | 应用于聊天输入框组件的自定义 CSS 样式 |
+| ChatSender | string | 应用于聊天输入框组件的自定义 CSS 样式 |
 | chatList | string | 应用于聊天列表组件的自定义 CSS 样式 |
 | chatItem | string | 应用于单个聊天消息项的自定义 CSS 样式 |
 

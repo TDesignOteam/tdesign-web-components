@@ -1,6 +1,6 @@
 import { type TdChatLoadingProps } from '../chat-loading';
 import { type TdChatMarkdownContentProps } from '../chat-message';
-import { type TdChatInputProps } from '../chat-sender';
+import { type TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
 import type { ChatMessageType } from './core/type';
@@ -84,7 +84,7 @@ export interface TdChatItemProps {
 export interface TdChatProps extends StyledProps {
   children?: TNode;
   injectCSS?: {
-    chatInput?: string;
+    ChatSender?: string;
     chatList?: string;
     chatItem?: string;
   };
@@ -100,7 +100,7 @@ export interface TdChatProps extends StyledProps {
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig;
   /** 输入框配置（透传至t-chat-input） */
-  senderProps?: TdChatInputProps;
+  senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
   // onMessagesChange?: (messages: ChatMessageType[]) => void;

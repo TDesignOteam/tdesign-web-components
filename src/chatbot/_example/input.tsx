@@ -3,14 +3,14 @@ import 'tdesign-web-components/chatbot';
 import { Component, signal } from 'omi';
 
 import classname from '../../_util/classname';
-import { TdChatInputSend } from '../../chat-sender';
+import { TdChatSenderSend } from '../../chat-sender';
 import { Attachment } from '../../filecard';
 import { ChatStatus } from '../core/type';
 
 import styles from './style/chat-model.less';
 
 const className = `t-chat__input`;
-export default class ChatInput extends Component {
+export default class ChatSender extends Component {
   static css = [styles];
 
   inputValue = signal('传入内容');
@@ -51,7 +51,7 @@ export default class ChatInput extends Component {
     this.files.value = e.detail.concat(this.files.value);
   };
 
-  onSend = (e: CustomEvent<TdChatInputSend>) => {
+  onSend = (e: CustomEvent<TdChatSenderSend>) => {
     console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];

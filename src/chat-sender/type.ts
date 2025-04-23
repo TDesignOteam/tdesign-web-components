@@ -4,22 +4,22 @@ import { TNode } from '../common';
 import { Attachment } from '../filecard';
 import { TdTextareaProps } from '../textarea';
 
-export interface TdChatInputAction {
+export interface TdChatSenderAction {
   name: string;
   render: TNode;
 }
 
-export interface TdChatInputSend {
+export interface TdChatSenderSend {
   value: string;
   attachments?: Attachment[];
 }
 
-export interface TdChatInputProps {
+export interface TdChatSenderProps {
   placeholder?: string;
   disabled?: boolean;
   value: string;
   defaultValue: string;
-  actions?: TdChatInputAction[] | ((preset: TdChatInputAction[]) => TdChatInputAction[]) | boolean;
+  actions?: TdChatSenderAction[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
   /** 生成状态 */
   status?: ChatStatus;
   /** 生成时是否允许停止 */
@@ -30,7 +30,7 @@ export interface TdChatInputProps {
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
   /** 透传input-file参数 */
   uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
-  onSend?: (e: CustomEvent<TdChatInputSend>) => void;
+  onSend?: (e: CustomEvent<TdChatSenderSend>) => void;
   onStop?: (value: string, context: { e: MouseEvent }) => void;
   onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
   onBlur?: (value: string, context: { e: FocusEvent }) => void;

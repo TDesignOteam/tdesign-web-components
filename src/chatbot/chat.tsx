@@ -7,8 +7,8 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
-import { TdChatInputSend } from '../chat-sender';
-import type ChatInput from '../chat-sender/chat-input';
+import { TdChatSenderSend } from '../chat-sender';
+import type ChatSender from '../chat-sender/chat-sender';
 import { Attachment } from '../filecard';
 import type { AttachmentItem, AttachmentType, ChatMessageType, ChatStatus, RequestParams } from './core/type';
 import type Chatlist from './chat-list';
@@ -43,7 +43,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   listRef = createRef<Chatlist>();
 
-  chatInputRef = createRef<ChatInput>();
+  ChatSenderRef = createRef<ChatSender>();
 
   public chatEngine: ChatEngine;
 
@@ -172,8 +172,8 @@ export default class Chatbot extends Component<TdChatProps> {
    * 添加提示信息到输入框
    */
   addPrompt(prompt: string) {
-    this.chatInputRef.current.pValue.value = prompt;
-    this.chatInputRef.current.inputRef.current.focus();
+    this.ChatSenderRef.current.pValue.value = prompt;
+    this.ChatSenderRef.current.inputRef.current.focus();
   }
 
   /**
@@ -196,7 +196,7 @@ export default class Chatbot extends Component<TdChatProps> {
   /**
    * 处理发送消息事件
    */
-  private handleSend = async (e: CustomEvent<TdChatInputSend>) => {
+  private handleSend = async (e: CustomEvent<TdChatSenderSend>) => {
     const { value } = e.detail;
     const params = {
       prompt: value,
@@ -303,9 +303,9 @@ export default class Chatbot extends Component<TdChatProps> {
       <div className={`${className} ${layoutClass}`}>
         {this.chatMessageValue && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
         <t-chat-input
-          ref={this.chatInputRef}
+          ref={this.ChatSenderRef}
           className={`${className}-input-wrapper`}
-          css={injectCSS?.chatInput}
+          css={injectCSS?.ChatSender}
           status={this.chatStatus}
           autosize={{ minRows: 2 }}
           attachmentsProps={{

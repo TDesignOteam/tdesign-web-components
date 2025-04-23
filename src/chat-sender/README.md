@@ -1,5 +1,5 @@
 ---
-title: ChatInput 聊天输入框
+title: ChatSender 聊天输入框
 description: xxx
 isComponent: true
 usage: { title: '', description: '' }
@@ -37,7 +37,7 @@ spline: base
 
 | 属性名 | 类型 | 说明 |
 |--------|------|------|
-| `actions` | `TdChatInputAction[]` \| `Function` \| `boolean` | 操作按钮配置： - 数组：自定义操作按钮列表 - 函数：(preset) => 操作按钮数组 - 布尔值：是否显示默认操作按钮 |
+| `actions` | `TdChatSenderAction[]` \| `Function` \| `boolean` | 操作按钮配置： - 数组：自定义操作按钮列表 - 函数：(preset) => 操作按钮数组 - 布尔值：是否显示默认操作按钮 |
 
 ## 透传属性
 
@@ -51,7 +51,7 @@ spline: base
 
 | 事件名 | 参数类型 | 说明 |
 |--------|----------|------|
-| `onSend` | `CustomEvent<TdChatInputSend>` | 点击发送按钮时触发 |
+| `onSend` | `CustomEvent<TdChatSenderSend>` | 点击发送按钮时触发 |
 | `onStop` | `(value: string, context: { e: MouseEvent })` | 点击停止按钮时触发 |
 | `onChange` | `(value: string, context: { e: InputEvent \| MouseEvent \| KeyboardEvent })` | 输入内容变化时触发 |
 | `onBlur` | `(value: string, context: { e: FocusEvent })` | 输入框失去焦点时触发 |
