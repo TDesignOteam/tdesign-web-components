@@ -168,6 +168,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   };
 
   private renderComment = (type: 'good' | 'bad', isActive: boolean) => {
+    console.log('查看渲染', type, isActive);
     const config = {
       label: '点赞',
       icon: <t-icon-thumb-up />,
@@ -219,60 +220,50 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   };
 
-  private presetActions: TdChatItemAction[] = [
-    {
-      name: 'replay',
-      render: (
-        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
-          <t-icon-refresh />
-        </div>
-      ),
-      // 条件：最后一条AI消息才可以重新生成
-      condition: (message) => {
-        const lastAIMessage = this.injection.chatEngine?.messageStore?.lastAIMessage;
-        return message.id === lastAIMessage?.id;
+  get presetActions(): TdChatItemAction[] {
+    return [
+      {
+        name: 'replay',
+        render: (
+          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
+            <t-icon-refresh />
+          </div>
+        ),
+        // 条件：最后一条AI消息才可以重新生成
+        condition: (message) => {
+          const lastAIMessage = this.injection.chatEngine?.messageStore?.lastAIMessage;
+          return message.id === lastAIMessage?.id;
+        },
       },
-    },
-    {
-      name: 'copy',
-      render: (
-        <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
-          <t-icon-copy />
-        </div>
-      ),
-    },
-    {
-      name: 'goodActived',
-      condition: () => this.pComment.value === 'good',
-      render: this.renderComment('good', true),
-    },
-    {
-      name: 'good',
-      condition: () => this.pComment.value !== 'good',
-      render: this.renderComment('good', false),
-    },
-    {
-      name: 'badActived',
-      condition: () => this.pComment.value === 'bad',
-      render: this.renderComment('bad', true),
-    },
-    {
-      name: 'bad',
-      condition: () => this.pComment.value !== 'bad',
-      render: this.renderComment('bad', false),
-    },
-    {
-      name: 'share',
-      render: (
-        <div
-          class={`${className}__actions__preset__wrapper`}
-          onClick={() => this.handleClickAction('share', this.props.message)}
-        >
-          <t-icon-share-1 />
-        </div>
-      ),
-    },
-  ];
+      {
+        name: 'copy',
+        render: (
+          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
+            <t-icon-copy />
+          </div>
+        ),
+      },
+      {
+        name: 'good',
+        render: this.renderComment('good', this.pComment.value === 'good'),
+      },
+      {
+        name: 'bad',
+        render: this.renderComment('bad', this.pComment.value === 'bad'),
+      },
+      {
+        name: 'share',
+        render: (
+          <div
+            class={`${className}__actions__preset__wrapper`}
+            onClick={() => this.handleClickAction('share', this.props.message)}
+          >
+            <t-icon-share-1 />
+          </div>
+        ),
+      },
+    ];
+  }
 
   get renderMessageStatus() {
     if (!isAIMessage(this.props.message)) return null;
