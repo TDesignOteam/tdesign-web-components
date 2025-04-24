@@ -22,8 +22,6 @@ export interface TdChatSenderProps {
   actions?: TdChatSenderAction[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
   /** 生成状态 */
   status?: ChatStatus;
-  /** 生成时是否允许停止 */
-  allowStop?: boolean;
   /** 透传attachment参数 */
   attachmentsProps?: TdAttachmentsProps;
   /** 透传textarea参数 */

@@ -30,7 +30,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     actions: [Array, Function, Boolean],
     defaultValue: String,
     status: String,
-    allowStop: Boolean,
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
@@ -45,7 +44,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   static defaultProps: Partial<TdChatSenderProps> = {
     status: 'idle',
-    allowStop: true,
     attachmentsProps: {
       items: [],
       overflow: 'scrollX',
@@ -64,10 +62,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   inputRef = createRef<HTMLTextAreaElement>();
 
   shiftDown = false;
-
-  deepThinkActive = signal(false);
-
-  modelValue = signal(''); // 新增模型值信号
 
   ready() {
     const { value, defaultValue, attachmentsProps } = this.props;
@@ -123,8 +117,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   get hasStop() {
-    const { status, allowStop } = this.props;
-    return allowStop && (status === 'streaming' || status === 'pending');
+    const { status, onStop } = this.props;
+    return onStop && (status === 'streaming' || status === 'pending');
   }
 
   /** 上传附件按钮 */
@@ -299,11 +293,9 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleStop = () => {
-    if (this.props.allowStop) {
-      this.fire('stop', this.inputValue, {
-        composed: true,
-      });
-    }
+    this.fire('stop', this.inputValue, {
+      composed: true,
+    });
   };
 
   private clickSend = () => (this.hasStop ? this.handleStop() : this.handleSend());
