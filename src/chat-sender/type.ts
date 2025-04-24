@@ -1,6 +1,6 @@
 import { TdAttachmentsProps } from '../attachments';
 import { TNode } from '../common';
-import { Attachment } from '../filecard';
+import { TdAttachmentItem } from '../filecard';
 import { TdTextareaProps } from '../textarea';
 
 export interface TdChatSenderAction {
@@ -10,7 +10,7 @@ export interface TdChatSenderAction {
 
 export interface TdChatSenderSend {
   value: string;
-  attachments?: Attachment[];
+  attachments?: TdAttachmentItem[];
 }
 
 export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {

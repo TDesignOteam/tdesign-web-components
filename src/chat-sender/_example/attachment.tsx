@@ -2,7 +2,7 @@ import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
 
-import { Attachment } from '../../filecard';
+import { TdAttachmentItem } from '../../filecard';
 import { TdChatSenderSend } from '../type';
 
 export default class AttachmentExample extends Component {
@@ -10,7 +10,7 @@ export default class AttachmentExample extends Component {
 
   loading = signal<Boolean>(false);
 
-  files = signal<Attachment[]>([
+  files = signal<TdAttachmentItem[]>([
     {
       name: 'excel-file.xlsx',
       size: 111111,
@@ -30,12 +30,12 @@ export default class AttachmentExample extends Component {
     this.inputValue.value = e.detail;
   };
 
-  onAttachmentsRemove = (e: CustomEvent<Attachment[]>) => {
+  onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onAttachmentsRemove', e);
     this.files.value = e.detail;
   };
 
-  onAttachmentsSelect = (e: CustomEvent<Attachment[]>) => {
+  onAttachmentsSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onAttachmentsSelect', e);
     // 这里处理自己业务的上传逻辑
     this.files.value = e.detail.concat(this.files.value);

@@ -9,7 +9,7 @@ import { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatSenderSend } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
-import { Attachment } from '../filecard';
+import { TdAttachmentItem } from '../filecard';
 import type {
   AttachmentItem,
   AttachmentType,
@@ -62,7 +62,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   private unsubscribeMsg?: () => void;
 
-  private files = signal<Attachment[]>([]);
+  private files = signal<TdAttachmentItem[]>([]);
 
   /**
    * 默认消息角色配置

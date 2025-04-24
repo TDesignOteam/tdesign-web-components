@@ -12,7 +12,7 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
-import { Attachment } from '../filecard';
+import { TdAttachmentItem } from '../filecard';
 import { TdChatSenderAction, TdChatSenderProps } from './type';
 
 import styles from './style/chat-sender.less';
@@ -55,7 +55,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   pValue: Omi.SignalValue<string> = signal('');
 
-  pAttachments: Omi.SignalValue<Attachment[]> = signal([]);
+  pAttachments: Omi.SignalValue<TdAttachmentItem[]> = signal([]);
 
   uploadRef = createRef<HTMLInputElement>();
 

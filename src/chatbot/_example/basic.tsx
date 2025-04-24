@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
 import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
-import type { Attachment } from '../../filecard';
+import type { TdAttachmentItem } from '../../filecard';
 import Chatbot from '../chat';
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
@@ -350,7 +350,7 @@ const mockModels = {
 
 const attachmentProps = {
   onFileSelect: async (files: File[]): Promise<Attachment[]> => {
-    const attachments: Attachment[] = [];
+    const attachments: TdAttachmentItem[] = [];
 
     // 串行处理每个文件
     for (const file of files) {

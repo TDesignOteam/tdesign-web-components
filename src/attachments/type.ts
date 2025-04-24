@@ -1,7 +1,7 @@
-import { Attachment } from '../filecard';
+import { TdAttachmentItem } from '../filecard';
 
 export interface TdAttachmentsProps {
-  items: Attachment[];
+  items: TdAttachmentItem[];
   overflow?: 'scrollX' | 'scrollY' | 'wrap';
   onRemove?: (event: CustomEvent<Attachment>) => void;
 }

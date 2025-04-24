@@ -4,7 +4,7 @@ import { Component, signal } from 'omi';
 
 import classname from '../../_util/classname';
 import { TdChatSenderSend } from '../../chat-sender';
-import { Attachment } from '../../filecard';
+import { TdAttachmentItem } from '../../filecard';
 
 import styles from './style/chat-model.less';
 
@@ -16,7 +16,7 @@ export default class ChatSender extends Component {
 
   loading = signal<boolean>(false);
 
-  files = signal<Attachment[]>([
+  files = signal<TdAttachmentItem[]>([
     {
       name: 'excel-file.xlsx',
       size: 111111,
@@ -40,12 +40,12 @@ export default class ChatSender extends Component {
     this.inputValue.value = e.detail;
   };
 
-  onAttachmentsRemove = (e: CustomEvent<Attachment[]>) => {
+  onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onAttachmentsRemove', e);
     this.files.value = e.detail;
   };
 
-  onAttachmentsSelect = (e: CustomEvent<Attachment[]>) => {
+  onAttachmentsSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onAttachmentsSelect', e);
     this.files.value = e.detail.concat(this.files.value);
   };
