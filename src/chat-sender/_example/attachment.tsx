@@ -2,14 +2,13 @@ import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
 
-import { ChatStatus } from '../../chatbot/core/type';
 import { Attachment } from '../../filecard';
 import { TdChatSenderSend } from '../type';
 
 export default class AttachmentExample extends Component {
   inputValue = signal('输入内容');
 
-  status = signal<ChatStatus>('idle');
+  loading = signal<Boolean>(false);
 
   files = signal<Attachment[]>([
     {
@@ -46,12 +45,12 @@ export default class AttachmentExample extends Component {
     console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];
-    this.status.value = 'pending';
+    this.loading.value = true;
   };
 
   onStop = () => {
     console.log('停止');
-    this.status.value = 'idle';
+    this.loading.value = false;
   };
 
   render() {
@@ -59,7 +58,7 @@ export default class AttachmentExample extends Component {
       <t-chat-sender
         value={this.inputValue.value}
         placeholder="请输入内容"
-        status={this.status.value}
+        loading={this.loading.value}
         actions
         uploadProps={{
           multiple: true,

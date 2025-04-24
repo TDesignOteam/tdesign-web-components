@@ -1,5 +1,4 @@
 import { TdAttachmentsProps } from '../attachments';
-import { ChatStatus } from '../chatbot/core/type';
 import { TNode } from '../common';
 import { Attachment } from '../filecard';
 import { TdTextareaProps } from '../textarea';
@@ -20,8 +19,8 @@ export interface TdChatSenderProps {
   value: string;
   defaultValue: string;
   actions?: TdChatSenderAction[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
-  /** 生成状态 */
-  status?: ChatStatus;
+  /** 是否加载中 */
+  loading?: boolean;
   /** 透传attachment参数 */
   attachmentsProps?: TdAttachmentsProps;
   /** 透传textarea参数 */

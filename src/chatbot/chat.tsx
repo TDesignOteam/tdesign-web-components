@@ -85,6 +85,13 @@ export default class Chatbot extends Component<TdChatProps> {
     return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
   }
 
+  get inputLoading() {
+    if (this.chatStatus === 'pending' || this.chatStatus === 'streaming') {
+      return true;
+    }
+    return false;
+  }
+
   install() {
     this.chatEngine = new ChatEngine();
   }
@@ -306,7 +313,7 @@ export default class Chatbot extends Component<TdChatProps> {
           ref={this.ChatSenderRef}
           className={`${className}-input-wrapper`}
           css={injectCSS?.ChatSender}
-          status={this.chatStatus}
+          loading={this.inputLoading}
           autosize={{ minRows: 2 }}
           attachmentsProps={{
             items: this.files.value,

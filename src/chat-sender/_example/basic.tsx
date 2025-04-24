@@ -2,13 +2,12 @@ import 'tdesign-web-components/chatbot';
 
 import { Component, signal } from 'omi';
 
-import { ChatStatus } from '../../chatbot/core/type';
 import { TdChatSenderSend } from '../type';
 
 export default class BasicExample extends Component {
   inputValue = signal('输入内容');
 
-  status = signal<ChatStatus>('idle');
+  loading = signal<boolean>(false);
 
   onChange = (e: CustomEvent) => {
     console.log('onChange', e);
@@ -18,12 +17,12 @@ export default class BasicExample extends Component {
   onSend = (e: CustomEvent<TdChatSenderSend>) => {
     console.log('提交', e);
     this.inputValue.value = '';
-    this.status.value = 'pending';
+    this.loading.value = true;
   };
 
   onStop = () => {
     console.log('停止');
-    this.status.value = 'idle';
+    this.loading.value = false;
   };
 
   render() {
@@ -31,7 +30,7 @@ export default class BasicExample extends Component {
       <t-chat-sender
         value={this.inputValue.value}
         placeholder="请输入内容"
-        status={this.status.value}
+        loading={this.loading.value}
         textareaProps={{
           autosize: { minRows: 2 },
         }}

@@ -7,7 +7,6 @@ import 'tdesign-web-components/space';
 import { Component, signal } from 'omi';
 
 import { convertToLightDomNode } from '../../_util/lightDom';
-import { ChatStatus } from '../../chatbot/core/type';
 
 export default class CustomExample extends Component {
   static css = [
@@ -31,8 +30,6 @@ export default class CustomExample extends Component {
   inputValue = signal('输入内容');
 
   panel = signal(false);
-
-  status = signal<ChatStatus>('idle');
 
   onChange = (e: CustomEvent) => {
     this.inputValue.value = e.detail;

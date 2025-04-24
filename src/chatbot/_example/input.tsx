@@ -5,7 +5,6 @@ import { Component, signal } from 'omi';
 import classname from '../../_util/classname';
 import { TdChatSenderSend } from '../../chat-sender';
 import { Attachment } from '../../filecard';
-import { ChatStatus } from '../core/type';
 
 import styles from './style/chat-model.less';
 
@@ -15,7 +14,7 @@ export default class ChatSender extends Component {
 
   inputValue = signal('传入内容');
 
-  status = signal<ChatStatus>('idle');
+  loading = signal<boolean>(false);
 
   files = signal<Attachment[]>([
     {
@@ -55,12 +54,12 @@ export default class ChatSender extends Component {
     console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];
-    this.status.value = 'pending';
+    this.loading.value = true;
   };
 
   onStop = () => {
     console.log('停止');
-    this.status.value = 'idle';
+    this.loading.value = false;
   };
 
   renderModel = () => (
@@ -109,7 +108,7 @@ export default class ChatSender extends Component {
       <t-chat-sender
         value={this.inputValue.value}
         placeholder="请输入内容"
-        status={this.status.value}
+        loading={this.loading.value}
         actions
         attachmentsProps={{
           items: this.files.value,

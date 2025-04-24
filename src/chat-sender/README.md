@@ -30,7 +30,7 @@ spline: base
 | `disabled` | `boolean` | `false` | 是否禁用整个输入组件 |
 | `value` | `string` | - | 输入框当前值（受控模式） |
 | `defaultValue` | `string` | - | 输入框默认值（非受控模式） |
-| `status` | `ChatStatus` | `'idle'` | 聊天状态，可选值：'idle'(空闲)、'pending'(等待中)、'streaming'(流式传输中)、'complete'(完成)、'stop'(停止)、'error'(错误) |
+| `loading` | `boolean` | `false` | 是否加载中 |
 
 ## 操作按钮配置
 

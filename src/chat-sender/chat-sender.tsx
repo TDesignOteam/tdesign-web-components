@@ -29,7 +29,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     value: String,
     actions: [Array, Function, Boolean],
     defaultValue: String,
-    status: String,
+    loading: Boolean,
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
@@ -43,7 +43,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   static defaultProps: Partial<TdChatSenderProps> = {
-    status: 'idle',
+    loading: false,
     attachmentsProps: {
       items: [],
       overflow: 'scrollX',
@@ -101,7 +101,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       return true;
     }
     if (props.attachmentsProps.items !== oldProps.attachmentsProps.items) return true;
-    if (props.status !== oldProps.status) return true;
+    if (props.loading !== oldProps.loading) return true;
     return false;
   }
 
@@ -115,11 +115,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     });
     this.uploadRef.current.value = '';
   };
-
-  get hasStop() {
-    const { status, onStop } = this.props;
-    return onStop && (status === 'streaming' || status === 'pending');
-  }
 
   /** 上传附件按钮 */
   renderUploadAttachment = () => (
@@ -147,14 +142,14 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           className={classname([
             `${className}__button`,
             {
-              [`${className}__button--focus`]: this.inputValue || this.hasStop,
+              [`${className}__button--focus`]: this.inputValue || this.props.loading,
             },
           ])}
           onClick={this.clickSend}
           disabled={disabled}
         >
           {convertToLightDomNode(
-            this.hasStop ? (
+            this.props.loading ? (
               <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
             ) : (
               <t-icon-send className={`${className}__button__icon`} />
@@ -298,5 +293,5 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     });
   };
 
-  private clickSend = () => (this.hasStop ? this.handleStop() : this.handleSend());
+  private clickSend = () => (this.props.loading ? this.handleStop() : this.handleSend());
 }
