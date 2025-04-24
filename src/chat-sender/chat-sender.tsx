@@ -59,7 +59,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   uploadRef = createRef<HTMLInputElement>();
 
-  private inputRef = createRef<HTMLTextAreaElement>();
+  inputRef = createRef<HTMLTextAreaElement>();
 
   private shiftDown = false;
 
