@@ -6,15 +6,133 @@ import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
 
-import { Component, tag } from 'omi';
+import { Component, signal,tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-import { TdChatActionItem,TdChatActionProps, TdChatActionsName } from './type';
+import { type ChatComment } from '../chatbot';
+import { MessagePlugin } from '../message';
+import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
 
 import styles from './style/action.less';
 
-const className = `${getClassPrefix()}-chat-action`;
+const className = `${getClassPrefix()}-chat-actions`;
 
+export const renderActions = (
+  { actionBar, onActions, copyText }: TdChatActionProps,
+  pComment: Omi.SignalValue<ChatComment>,
+) => {
+  if (!actionBar) {
+    return null;
+  }
+  const clickCopyHandler = () => {
+    const text = copyText.toString();
+    if (!text) return;
+    navigator.clipboard
+      .writeText(copyText.toString())
+      .then(() => {
+        MessagePlugin.success('复制成功');
+      })
+      .catch(() => {
+        MessagePlugin.success('复制失败，请手动复制');
+      });
+  };
+
+  const handleClickAction = (action: TdChatActionsName, data: any) => {
+    if (action === 'copy') {
+      clickCopyHandler();
+    }
+    onActions?.[action]?.(data);
+  };
+
+  const renderComment = (type: 'good' | 'bad', isActive: boolean) => {
+    const config = {
+      label: '点赞',
+      icon: <t-icon-thumb-up />,
+      clickCallback: (e) => {
+        pComment.value = 'good';
+        handleClickAction('good', {
+          event: e,
+          active: true,
+        });
+      },
+    };
+    if (type === 'good') {
+      if (isActive) {
+        config.icon = <t-icon-thumb-up-filled />;
+        config.clickCallback = (e) => {
+          pComment.value = undefined;
+          handleClickAction('good', {
+            event: e,
+            active: false,
+          });
+        };
+      }
+    } else {
+      config.label = '点踩';
+      if (isActive) {
+        config.icon = <t-icon-thumb-down-filled />;
+        config.clickCallback = (e) => {
+          pComment.value = undefined;
+          handleClickAction('bad', {
+            event: e,
+            active: false,
+          });
+        };
+      } else {
+        config.icon = <t-icon-thumb-down />;
+        config.clickCallback = (e) => {
+          pComment.value = 'bad';
+          handleClickAction('bad', {
+            event: e,
+            active: true,
+          });
+        };
+      }
+    }
+    return (
+      <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
+        {config.icon}
+      </span>
+    );
+  };
+
+  const defaultPresetActions = (name, icon) => (
+    <span
+      class={`${className}__item__wrapper`}
+      onClick={(e) =>
+        handleClickAction(name, {
+          event: e,
+        })
+      }
+    >
+      {icon}
+    </span>
+  );
+
+  const presetActions = () =>
+    [
+      { name: 'replay', render: defaultPresetActions('replay', <t-icon-refresh />) },
+      { name: 'copy', render: defaultPresetActions('copy', <t-icon-copy />) },
+      {
+        name: 'good',
+        render: renderComment('good', pComment.value === 'good'),
+      },
+      {
+        name: 'bad',
+        render: renderComment('bad', pComment.value === 'bad'),
+      },
+      { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 />) },
+    ] as TdChatActionItem[];
+
+  const arrayActions: TdChatActionItem[] =
+    Array.isArray(actionBar) && actionBar.length > 0
+      ? actionBar.map((action) => presetActions().find((item) => item.name === action))
+      : presetActions();
+
+  return <div className={className}>{arrayActions.map((item) => item.render)}</div>;
+};
+
+// Web Component版本
 @tag('t-chat-action')
 export default class ChatAction extends Component<TdChatActionProps> {
   static css = [styles];
@@ -22,48 +140,23 @@ export default class ChatAction extends Component<TdChatActionProps> {
   static propTypes = {
     actionBar: Object,
     onActions: Object,
+    comment: String,
+    copyText: String,
   };
 
-  private actions: TdChatActionItem[] = [
-    { name: 'replay', render: <t-icon-refresh /> },
-    { name: 'copy', render: <t-icon-copy /> },
-    { name: 'good', render: <t-icon-thumb-up /> },
-    { name: 'bad', render: <t-icon-thumb-down /> },
-    { name: 'share', render: <t-icon-share-1 /> },
-  ];
-
-  private handleClickAction = (action: TdChatActionsName, e: MouseEvent) => {
-    this.props?.onActions?.[action](e);
+  static defaultProps: Partial<TdChatActionProps> = {
+    actionBar: true,
+    copyText: '',
+    comment: '',
   };
 
-  private defaultPresetActions: TdChatActionItem[] = this.actions.map((action) => ({
-    name: action.name,
-    render: (
-      <div class={`${className}__actions__preset__wrapper`} onClick={(e) => this.handleClickAction(action.name, e)}>
-        {action.render}
-      </div>
-    ),
-  }));
+  private pComment = signal<ChatComment>(this.props.comment);
 
-  render(props: TdChatActionProps) {
-    const { actionBar = true } = props;
-    if (!actionBar) {
-      return null;
-    }
+  installed(): void {
+    this.pComment.value = this.props.comment;
+  }
 
-    const arrayActions: TdChatActionItem[] =
-      Array.isArray(actionBar) && actionBar.length > 0
-        ? actionBar.map((action) => this.defaultPresetActions.find((item) => item.name === action))
-        : this.defaultPresetActions;
-
-    return (
-      <div className={className}>
-        {arrayActions.map((item) => (
-          <span key={item.name} class={`${className}__item__wrapper`}>
-            {item.render}
-          </span>
-        ))}
-      </div>
-    );
+  render(props) {
+    return renderActions(props, this.pComment);
   }
 }

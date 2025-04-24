@@ -35,7 +35,7 @@ export const renderThinking = ({
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
     if (s === 'error')
       return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
-    return <> {convertToLightDomNode(<t-chat-loading animation={animation}></t-chat-loading>)}</>;
+    return <t-chat-loading animation={animation}></t-chat-loading>;
   };
   const { text, title } = content;
 

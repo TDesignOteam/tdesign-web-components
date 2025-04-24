@@ -1,3 +1,4 @@
+import { type ChatComment } from '../chatbot';
 import { StyledProps, TNode } from '../common';
 
 export type TdChatActionsName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
@@ -10,6 +11,8 @@ export type TdChatActionItem = {
 interface ChatActionProps {
   actionBar?: TdChatActionsName[] | boolean;
   onActions?: Partial<Record<TdChatActionsName, (event: MouseEvent) => void>>;
+  comment?: ChatComment;
+  copyText?: string;
 }
 
 export interface TdChatActionProps extends ChatActionProps, StyledProps {}

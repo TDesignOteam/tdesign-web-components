@@ -122,7 +122,7 @@ export interface UserMessage extends BaseMessage {
   content: UserMessageContent[];
 }
 
-export type ChatComment = 'good' | 'bad';
+export type ChatComment = 'good' | 'bad' | '';
 
 export interface AIMessage extends BaseMessage {
   role: 'assistant';

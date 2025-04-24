@@ -17,6 +17,8 @@ import { Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
+import { TdChatActionsName } from '../chat-action';
+import { renderActions } from '../chat-action/action';
 import {
   AttachmentItem,
   isAIMessage,
@@ -29,8 +31,7 @@ import {
   isUserMessage,
   UserMessageContent,
 } from '../chatbot/core/type';
-import type { ChatComment, TdChatItemAction, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
-import { MessagePlugin } from '../message';
+import type { ChatComment, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
@@ -61,8 +62,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
     variant: 'text',
     placement: 'left',
   };
-
-  inject = ['chatEngine'];
 
   searchExpand = signal(false);
 
@@ -117,33 +116,24 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  private handleClickAction = (action: TdChatItemActionName, data?: any, callback?: Function) => {
+  private handleClickAction = (action: TdChatItemActionName, data?: any) => {
     if (this.props?.onActions?.[action]) {
-      this.props.onActions[action](data, callback);
-    } else {
-      callback?.();
-      this.fire(
-        'message_action',
-        { action, data },
-        {
-          composed: true,
-        },
-      );
+      this.props.onActions[action](data);
     }
+    this.fire(
+      'chat_message_action',
+      { action, data },
+      {
+        composed: true,
+      },
+    );
   };
 
-  private clickRefreshHandler = () => {
+  get copyContent() {
     if (!isAIMessage(this.props.message)) {
-      return;
+      return '';
     }
-    this.handleClickAction('replay', this.props.message, () => this.injection.chatEngine.regenerateAIMessage());
-  };
-
-  private clickCopyHandler = () => {
-    if (!isAIMessage(this.props.message)) {
-      return;
-    }
-    const copyContent = this.props.message.content.reduce((pre, item) => {
+    return this.props.message.content.reduce((pre, item) => {
       let append = '';
       if (isTextContent(item) || isMarkdownContent(item)) {
         append = item.data;
@@ -155,108 +145,6 @@ export default class ChatItem extends Component<TdChatItemProps> {
       }
       return `${pre}\n${append}`;
     }, '');
-    this.handleClickAction('copy', copyContent.toString(), () => {
-      navigator.clipboard
-        .writeText(copyContent.toString())
-        .then(() => {
-          MessagePlugin.success('复制成功');
-        })
-        .catch(() => {
-          MessagePlugin.success('复制失败，请手动复制');
-        });
-    });
-  };
-
-  private renderComment = (type: 'good' | 'bad', isActive: boolean) => {
-    const config = {
-      label: '点赞',
-      icon: <t-icon-thumb-up />,
-      clickCallback: () => {
-        this.pComment.value = 'good';
-        this.handleClickAction('good', {
-          message: this.props.message,
-          active: true,
-        });
-      },
-    };
-    if (type === 'good') {
-      if (isActive) {
-        config.icon = <t-icon-thumb-up-filled />;
-        config.clickCallback = () => {
-          this.pComment.value = undefined;
-          this.handleClickAction('good', {
-            message: this.props.message,
-            active: false,
-          });
-        };
-      }
-    } else {
-      config.label = '点踩';
-      if (isActive) {
-        config.icon = <t-icon-thumb-down-filled />;
-        config.clickCallback = () => {
-          this.pComment.value = undefined;
-          this.handleClickAction('bad', {
-            message: this.props.message,
-            active: false,
-          });
-        };
-      } else {
-        config.icon = <t-icon-thumb-down />;
-        config.clickCallback = () => {
-          this.pComment.value = 'bad';
-          this.handleClickAction('bad', {
-            message: this.props.message,
-            active: true,
-          });
-        };
-      }
-    }
-    return (
-      <div class={`${className}__actions__preset__wrapper`} onClick={config.clickCallback}>
-        {config.icon}
-      </div>
-    );
-  };
-
-  get presetActions(): TdChatItemAction[] {
-    return [
-      {
-        name: 'replay',
-        render: (
-          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickRefreshHandler}>
-            <t-icon-refresh />
-          </div>
-        ),
-      },
-      {
-        name: 'copy',
-        render: (
-          <div class={`${className}__actions__preset__wrapper`} onClick={this.clickCopyHandler}>
-            <t-icon-copy />
-          </div>
-        ),
-      },
-      {
-        name: 'good',
-        render: this.renderComment('good', this.pComment.value === 'good'),
-      },
-      {
-        name: 'bad',
-        render: this.renderComment('bad', this.pComment.value === 'bad'),
-      },
-      {
-        name: 'share',
-        render: (
-          <div
-            class={`${className}__actions__preset__wrapper`}
-            onClick={() => this.handleClickAction('share', this.props.message)}
-          >
-            <t-icon-share-1 />
-          </div>
-        ),
-      },
-    ];
   }
 
   get renderMessageStatus() {
@@ -356,12 +244,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
         if (isSuggestionContent(content)) {
           return renderSuggestion({
             content: content.data,
-            handlePromptClick: (data) =>
-              this.handleClickAction('suggestion', data, () => {
-                this.injection.chatEngine.sendUserMessage({
-                  prompt: data.content,
-                });
-              }),
+            handlePromptClick: (data) => this.handleClickAction('suggestion', data),
           });
         }
         if (isThinkingContent(content)) {
@@ -401,7 +284,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
   }
 
   render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime, onActions } = props;
+    const { message, variant, placement, name, datetime, actions, onActions } = props;
     if (!message?.content || message.content.length === 0) return;
 
     const baseClass = `${className}__inner`;
@@ -422,9 +305,16 @@ export default class ChatItem extends Component<TdChatItemProps> {
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachments()}
             <slot name="actions">
-              {message.status !== 'complete' && message.status !== 'stop' ? null : (
-                <t-chat-action onActions={onActions} actionBar={this.presetActions}></t-chat-action>
-              )}
+              {message.status !== 'complete' && message.status !== 'stop'
+                ? null
+                : renderActions(
+                    {
+                      actionBar: actions as boolean | TdChatActionsName[],
+                      onActions,
+                      copyText: this.copyContent,
+                    },
+                    this.pComment,
+                  )}
             </slot>
           </div>
         ) : null}
