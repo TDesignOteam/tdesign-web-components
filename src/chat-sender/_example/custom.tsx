@@ -1,17 +1,19 @@
 import 'tdesign-icons-web-components/esm/components/clear';
+import 'tdesign-icons-web-components/esm/components/focus';
 import 'tdesign-web-components/chatbot';
 import 'tdesign-web-components/tooltip';
 import 'tdesign-web-components/button';
 import 'tdesign-web-components/space';
 
-import { Component, signal } from 'omi';
+import { Component, createRef, signal } from 'omi';
 
 import { convertToLightDomNode } from '../../_util/lightDom';
 
 export default class CustomExample extends Component {
   static css = [
     `
-    .input::part(icon) {
+    .input::part(icon),
+    .icon {
       cursor: pointer;
       color: var(--t-chat-input-actions-item-color);
     }
@@ -30,6 +32,8 @@ export default class CustomExample extends Component {
   inputValue = signal('输入内容');
 
   panel = signal(false);
+
+  senderRef = createRef();
 
   onChange = (e: CustomEvent) => {
     this.inputValue.value = e.detail;
@@ -79,6 +83,7 @@ export default class CustomExample extends Component {
     return (
       <div style={{ display: 'flex', alignItems: 'end', height: 300 }}>
         <t-chat-sender
+          ref={this.senderRef}
           className="input"
           value={this.inputValue.value}
           placeholder="请输入内容"
@@ -87,6 +92,9 @@ export default class CustomExample extends Component {
           onSend={this.onSend}
         >
           {this.renderPanel()}
+          <div slot="prefix" className="prefix" onClick={() => this.senderRef.current?.focus()}>
+            <t-icon-focus className="icon" />
+          </div>
           <div slot="footer-left">
             <t-button
               onClick={() => {

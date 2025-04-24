@@ -170,12 +170,18 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     );
   };
 
-  private presetActions: TdChatSenderAction[] = [
-    {
-      name: 'uploadAttachment',
-      render: this.renderUploadAttachment(),
-    },
-  ];
+  get presetActions(): TdChatSenderAction[] {
+    return [
+      {
+        name: 'uploadAttachment',
+        render: this.renderUploadAttachment(),
+      },
+      {
+        name: 'sendButton',
+        render: this.renderButton(),
+      },
+    ];
+  }
 
   private renderActions = () => {
     const { actions } = this.props;
@@ -214,21 +220,24 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           ) : null}
         </div>
         <div className={`${className}__content`}>
-          <t-textarea
-            ref={this.inputRef}
-            className={`${className}__textarea`}
-            {...this.props.textareaProps}
-            placeholder={props.placeholder}
-            disabled={props.disabled}
-            autosize={props.autosize}
-            value={this.inputValue}
-            enterkeyhint="send"
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
-            onKeyUp={this.handleKeyUp}
-            onCompositionStart={this.handleCompositionStart}
-            onCompositionEnd={this.handleCompositionEnd}
-          ></t-textarea>
+          <div className={`${className}__textarea__wrapper`}>
+            <slot name="prefix"></slot>
+            <t-textarea
+              ref={this.inputRef}
+              className={`${className}__textarea`}
+              {...this.props.textareaProps}
+              placeholder={props.placeholder}
+              disabled={props.disabled}
+              autosize={props.autosize}
+              value={this.inputValue}
+              enterkeyhint="send"
+              onChange={this.handleChange}
+              onKeyDown={this.handleKeyDown}
+              onKeyUp={this.handleKeyUp}
+              onCompositionStart={this.handleCompositionStart}
+              onCompositionEnd={this.handleCompositionEnd}
+            />
+          </div>
           <div className={`${className}__footer`}>
             <div className={`${className}__footer__left`}>
               <slot name="footer-left"></slot>
@@ -237,7 +246,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
               <div className={`${className}__actions`}>
                 <slot name="actions">{this.renderActions()}</slot>
               </div>
-              {this.renderButton()}
             </div>
           </div>
         </div>
