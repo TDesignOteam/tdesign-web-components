@@ -51,6 +51,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     },
     autosize: { minRows: 2 },
     textareaProps: {},
+    actions: true,
   };
 
   pValue: Omi.SignalValue<string> = signal('');

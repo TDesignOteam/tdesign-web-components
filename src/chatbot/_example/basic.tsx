@@ -348,44 +348,41 @@ const mockModels = {
   },
 };
 
-const attachmentProps = {
-  onFileSelect: async (files: File[]): Promise<Attachment[]> => {
-    const attachments: TdAttachmentItem[] = [];
+const onFileSelect = async (files: File[]): Promise<TdAttachmentItem[]> => {
+  const attachments: TdAttachmentItem[] = [];
 
-    // 串行处理每个文件
-    for (const file of files) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        // 上传单个文件
-        const response = await fetch(`http://localhost:3000/file/upload`, {
-          method: 'POST',
-          body: formData,
-        });
+  // 串行处理每个文件
+  for (const file of files) {
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      // 上传单个文件
+      const response = await fetch(`http://localhost:3000/file/upload`, {
+        method: 'POST',
+        body: formData,
+      });
 
-        if (!response.ok) continue; // 跳过失败文件
+      if (!response.ok) continue; // 跳过失败文件
 
-        const data = await response.json();
+      const data = await response.json();
 
-        // 构造附件对象
-        const { name, size, type } = file;
-        attachments.push({
-          url: data.result.cdnurl,
-          status: 'success',
-          name,
-          type,
-          size,
-          raw: file,
-        });
-      } catch (error) {
-        console.error(`${file.name} 上传失败:`, error);
-        // 可选：记录失败文件信息到错误日志
-      }
+      // 构造附件对象
+      const { name, size, type } = file;
+      attachments.push({
+        url: data.result.cdnurl,
+        status: 'success',
+        name,
+        type,
+        size,
+        raw: file,
+      });
+    } catch (error) {
+      console.error(`${file.name} 上传失败:`, error);
+      // 可选：记录失败文件信息到错误日志
     }
+  }
 
-    return attachments;
-  },
-  onFileRemove: () => {},
+  return attachments;
 };
 
 const resourceLinkPlugin = (md: MarkdownIt) => {
@@ -498,9 +495,8 @@ export default class BasicChat extends Component {
         // autoSendPrompt="自动发送问题"
         messageProps={this.messageProps}
         senderProps={{
-          actions: true,
-          attachmentProps,
           placeholder: '请输入问题',
+          onFileSelect,
         }}
         chatServiceConfig={mockModels}
       ></t-chatbot>
