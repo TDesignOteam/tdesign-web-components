@@ -1,18 +1,18 @@
 import {
   type AIMessage,
   type AIMessageContent,
-  type ChatMessageType,
+  type ChatMessagesData,
+  type ChatMessageStore,
   isAIMessage,
   isUserMessage,
-  type MessageState,
   MessageStatus,
   UserMessage,
 } from '../type';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理
-export class MessageStore extends ReactiveState<MessageState> {
-  initialize(initialState?: Partial<MessageState>) {
+export class MessageStore extends ReactiveState<ChatMessageStore> {
+  initialize(initialState?: Partial<ChatMessageStore>) {
     super.initialize({
       messageIds: [],
       messages: [],
@@ -20,7 +20,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  createMessage(message: ChatMessageType) {
+  createMessage(message: ChatMessagesData) {
     const { id } = message;
     this.setState((draft) => {
       draft.messageIds.push(id);
@@ -28,7 +28,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     });
   }
 
-  createMultiMessages(messages: ChatMessageType[]) {
+  createMultiMessages(messages: ChatMessagesData[]) {
     this.setState((draft) => {
       messages.forEach((msg) => {
         draft.messageIds.push(msg.id);
@@ -65,7 +65,7 @@ export class MessageStore extends ReactiveState<MessageState> {
   }
 
   // 更新消息整体状态
-  setMessageStatus(messageId: string, status: ChatMessageType['status']) {
+  setMessageStatus(messageId: string, status: ChatMessagesData['status']) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
@@ -130,7 +130,7 @@ export class MessageStore extends ReactiveState<MessageState> {
     return this.getState().messages.find((m) => m.id === id);
   }
 
-  get currentMessage(): ChatMessageType {
+  get currentMessage(): ChatMessagesData {
     const { messages } = this.getState();
     return messages.at(-1);
   }

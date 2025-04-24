@@ -5,7 +5,7 @@ import MarkdownIt from 'markdown-it';
 import { Component } from 'omi';
 import type { TdChatItemProps, TdChatMarkdownContentProps, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
-import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
 const defaultChunkParser = (chunk): AIMessageContent => {
   try {
@@ -96,7 +96,7 @@ const mockModels = {
 };
 // =========上方不重要===========
 
-const mockData: ChatMessageType[] = [
+const mockData: ChatMessagesData[] = [
   {
     id: '123',
     role: 'assistant',

@@ -3,7 +3,7 @@ import { MessageStore } from './store/message';
 import MessageProcessor from './processor';
 import {
   type AIMessageContent,
-  type ChatMessageType,
+  type ChatMessagesData,
   type ChatServiceConfig,
   type ChatServiceConfigSetter,
   isAIMessage,
@@ -36,7 +36,7 @@ export default class ChatEngine implements IChatEngine {
     this.messageStore = new MessageStore();
   }
 
-  public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessageType[]) {
+  public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
   }
@@ -170,7 +170,7 @@ export default class ChatEngine implements IChatEngine {
     });
   }
 
-  private convertMessages(messages?: ChatMessageType[]) {
+  private convertMessages(messages?: ChatMessagesData[]) {
     if (!messages) return { messageIds: [], messages: [] };
 
     return {
@@ -179,7 +179,7 @@ export default class ChatEngine implements IChatEngine {
     };
   }
 
-  private setMessageStatus(messageId: string, status: ChatMessageType['status']) {
+  private setMessageStatus(messageId: string, status: ChatMessagesData['status']) {
     this.messageStore.setMessageStatus(messageId, status);
   }
 

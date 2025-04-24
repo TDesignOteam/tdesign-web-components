@@ -38,10 +38,6 @@ spline: base
 {{ custom }}
 
 
-### 操作组
-
-{{ actions }}
-
 ## API
 
 ### ChatItem Props

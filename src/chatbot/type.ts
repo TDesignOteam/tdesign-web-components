@@ -4,7 +4,7 @@ import { type TdChatMarkdownContentProps } from '../chat-message';
 import { type TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
-import type { ChatMessageType } from './core/type';
+import type { ChatMessagesData } from './core/type';
 
 export type TdChatItemActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
 export interface TdChatItemAction {
@@ -35,8 +35,8 @@ export interface TdChatItemProps {
    * 操作
    */
   actions?:
-    | TdChatItemAction[]
-    // | ((preset: TdChatItemAction[], message: ChatMessageType) => TdChatItemAction[])
+    | TdChatItemActionName[]
+    // | ((preset: TdChatItemAction[], message: ChatMessagesData) => TdChatItemAction[])
     | boolean;
   animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
   onActions?: Partial<Record<TdChatItemActionName, (data?: any, innerFunc?: Function) => void>>;
@@ -63,7 +63,7 @@ export interface TdChatItemProps {
   /** 气泡方向 */
   placement?: 'left' | 'right';
   /** 消息体 */
-  message: ChatMessageType;
+  message: ChatMessagesData;
   /** 透传chat-content参数 */
   chatContentProps?: TdChatContentProps;
   /** 自定义消息体渲染配置 */
@@ -85,14 +85,14 @@ export interface TdChatProps extends StyledProps {
   listProps?: TdChatListProps;
   /** 消息数据源 */
   autoSendPrompt?: string;
-  messages: Array<ChatMessageType>;
+  messages: Array<ChatMessagesData>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig;
   /** 输入框配置（透传至t-chat-sender） */
   senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
-  // onMessagesChange?: (messages: ChatMessageType[]) => void;
+  // onMessagesChange?: (messages: ChatMessagesData[]) => void;
 }
 
 export interface TdChatbotApi {
@@ -127,7 +127,7 @@ export interface TdChatbotApi {
   /**
    * 获取当前消息列表
    */
-  readonly chatMessageValue: ChatMessageType[];
+  readonly chatMessageValue: ChatMessagesData[];
 
   /**
    * 当前聊天状态

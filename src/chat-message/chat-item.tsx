@@ -18,7 +18,7 @@ import { Component, OmiProps, signal, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { TdChatActionsName } from '../chat-action';
-import { renderActions } from '../chat-action/action';
+import { DefaultChatMessageActionsName, renderActions } from '../chat-action/action';
 import {
   AttachmentItem,
   isAIMessage,
@@ -40,8 +40,11 @@ import styles from './style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
+type ChatMessageProps = TdChatItemProps & {
+  isLast: boolean;
+};
 @tag('t-chat-item')
-export default class ChatItem extends Component<TdChatItemProps> {
+export default class ChatItem extends Component<ChatMessageProps> {
   static css = [styles];
 
   static propTypes = {
@@ -56,11 +59,14 @@ export default class ChatItem extends Component<TdChatItemProps> {
     chatContentProps: Object,
     customRenderConfig: Object,
     onActions: Function,
+    isLast: Boolean,
   };
 
   static defaultProps = {
+    actions: DefaultChatMessageActionsName,
     variant: 'text',
     placement: 'left',
+    isLast: true,
   };
 
   searchExpand = signal(false);
@@ -69,8 +75,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
   pComment = signal<ChatComment>(undefined);
 
   receiveProps(
-    props: TdChatItemProps | OmiProps<TdChatItemProps, any>,
-    oldProps: TdChatItemProps | OmiProps<TdChatItemProps, any>,
+    props: ChatMessageProps | OmiProps<ChatMessageProps, any>,
+    oldProps: ChatMessageProps | OmiProps<ChatMessageProps, any>,
   ) {
     const newMsg = props?.message;
     const oldMsg = oldProps?.message;
@@ -83,7 +89,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
     if (
       isAIMessage(newMsg) &&
       isAIMessage(oldMsg) &&
-      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
+      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length &&
+      props.isLast === oldProps.isLast
     ) {
       return false;
     }
@@ -116,13 +123,17 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
-  private handleClickAction = (action: TdChatItemActionName, data?: any) => {
+  private handleClickAction = (action: Partial<TdChatItemActionName>, data?: any) => {
+    const toData = {
+      ...data,
+      message: this.props.message,
+    };
     if (this.props?.onActions?.[action]) {
-      this.props.onActions[action](data);
+      this.props.onActions[action](toData);
     }
     this.fire(
       'chat_message_action',
-      { action, data },
+      { action, data: toData },
       {
         composed: true,
       },
@@ -168,6 +179,18 @@ export default class ChatItem extends Component<TdChatItemProps> {
     );
   }
 
+  get actionBar() {
+    const { actions, isLast, message } = this.props;
+    if (!isAIMessage(message) || !actions) return false;
+    let filterdActions = actions;
+    if (actions) filterdActions = DefaultChatMessageActionsName;
+    if (Array.isArray(filterdActions) && !isLast) {
+      // 只有最后一条AI消息才能重新生成
+      filterdActions = filterdActions.filter((item) => item !== 'replay');
+    }
+    return filterdActions;
+  }
+
   private renderAttachments() {
     if (!isUserMessage(this.props.message)) return null;
     const findAttachment = (this.props.message.content as UserMessageContent[]).find(
@@ -209,7 +232,7 @@ export default class ChatItem extends Component<TdChatItemProps> {
       const elementKey = `${id}-${index}`;
       const renderer = customRenderConfig?.[content?.type];
       // 用户和系统消息渲染
-      if (role === 'user' || role === 'system') {
+      if (!isAIMessage(message)) {
         if (!isTextContent(content) && !isMarkdownContent(content)) {
           return null;
         }
@@ -283,15 +306,14 @@ export default class ChatItem extends Component<TdChatItemProps> {
     });
   }
 
-  render(props: TdChatItemProps) {
-    const { message, variant, placement, name, datetime, actions, onActions } = props;
+  render(props) {
+    const { message, variant, placement, name, datetime } = props;
     if (!message?.content || message.content.length === 0) return;
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
     const placementClass = placement;
-
     return (
       <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
         {this.renderAvatar()}
@@ -309,8 +331,8 @@ export default class ChatItem extends Component<TdChatItemProps> {
                 ? null
                 : renderActions(
                     {
-                      actionBar: actions as boolean | TdChatActionsName[],
-                      onActions,
+                      actionBar: this.actionBar as TdChatActionsName[] | boolean,
+                      handleAction: this.handleClickAction,
                       copyText: this.copyContent,
                     },
                     this.pComment,

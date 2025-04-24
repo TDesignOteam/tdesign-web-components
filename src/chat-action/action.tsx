@@ -6,7 +6,7 @@ import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
 
-import { Component, signal,tag } from 'omi';
+import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { type ChatComment } from '../chatbot';
@@ -17,8 +17,9 @@ import styles from './style/action.less';
 
 const className = `${getClassPrefix()}-chat-actions`;
 
+export const DefaultChatMessageActionsName = ['replay', 'copy', 'good', 'bad', 'share'] as TdChatActionsName[];
 export const renderActions = (
-  { actionBar, onActions, copyText }: TdChatActionProps,
+  { actionBar, handleAction, copyText }: TdChatActionProps,
   pComment: Omi.SignalValue<ChatComment>,
 ) => {
   if (!actionBar) {
@@ -41,7 +42,7 @@ export const renderActions = (
     if (action === 'copy') {
       clickCopyHandler();
     }
-    onActions?.[action]?.(data);
+    handleAction?.(action, data);
   };
 
   const renderComment = (type: 'good' | 'bad', isActive: boolean) => {
@@ -50,7 +51,7 @@ export const renderActions = (
       icon: <t-icon-thumb-up />,
       clickCallback: (e) => {
         pComment.value = 'good';
-        handleClickAction('good', {
+        handleAction('good', {
           event: e,
           active: true,
         });
@@ -61,7 +62,7 @@ export const renderActions = (
         config.icon = <t-icon-thumb-up-filled />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
-          handleClickAction('good', {
+          handleAction('good', {
             event: e,
             active: false,
           });
@@ -73,7 +74,7 @@ export const renderActions = (
         config.icon = <t-icon-thumb-down-filled />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
-          handleClickAction('bad', {
+          handleAction('bad', {
             event: e,
             active: false,
           });
@@ -82,7 +83,7 @@ export const renderActions = (
         config.icon = <t-icon-thumb-down />;
         config.clickCallback = (e) => {
           pComment.value = 'bad';
-          handleClickAction('bad', {
+          handleAction('bad', {
             event: e,
             active: true,
           });
@@ -139,7 +140,7 @@ export default class ChatAction extends Component<TdChatActionProps> {
 
   static propTypes = {
     actionBar: Object,
-    onActions: Object,
+    handleAction: Object,
     comment: String,
     copyText: String,
   };

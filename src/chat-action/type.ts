@@ -10,7 +10,7 @@ export type TdChatActionItem = {
 
 interface ChatActionProps {
   actionBar?: TdChatActionsName[] | boolean;
-  onActions?: Partial<Record<TdChatActionsName, (event: MouseEvent) => void>>;
+  handleAction?: (name: TdChatActionsName, data: any) => void;
   comment?: ChatComment;
   copyText?: string;
 }

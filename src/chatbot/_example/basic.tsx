@@ -7,7 +7,7 @@ import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-compone
 
 import type { Attachment } from '../../filecard';
 import Chatbot from '../chat';
-import type { AIMessageContent, ChatMessageType, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -39,7 +39,7 @@ function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string 
   return matches;
 }
 
-const mockData: ChatMessageType[] = [
+const mockData: ChatMessagesData[] = [
   {
     id: 's1123',
     role: 'system',
@@ -425,19 +425,26 @@ export default class BasicChat extends Component {
     // },
     assistant: {
       // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-      // actions: (preset) => {
-      //   return preset.filter(({ name }) => name !== 'share');
-      // },
+      actions: ['replay', 'copy', 'good', 'bad'],
       onActions: {
-        replay: (data, callback) => {
+        replay: (data) => {
           console.log('自定义重新回复', data);
-          callback?.();
+          this.chatRef.current.regenerate();
         },
         good: (data) => {
           console.log('点赞', data);
         },
-        suggestion: ({ prompt }) => {
-          this.chatRef.current.addPrompt(prompt);
+        bad: (data) => {
+          console.log('点踩', data);
+        },
+        share: (data) => {
+          console.log('分享', data);
+        },
+        copy: (data) => {
+          console.log('复制', data);
+        },
+        suggestion: ({ content }) => {
+          this.chatRef.current.addPrompt(content.prompt);
         },
         searchResult: ({ content }) => {
           console.log('searchResult', content);

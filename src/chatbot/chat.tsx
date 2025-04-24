@@ -10,7 +10,14 @@ import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatSenderSend } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { Attachment } from '../filecard';
-import type { AttachmentItem, AttachmentType, ChatMessageType, ChatStatus, RequestParams } from './core/type';
+import type {
+  AttachmentItem,
+  AttachmentType,
+  ChatMessagesData,
+  ChatMessageStore,
+  ChatStatus,
+  RequestParams,
+} from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
 import type { TdChatMessageConfig, TdChatProps } from './type';
@@ -49,7 +56,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   public chatStatus: ChatStatus = 'idle';
 
-  private chatMessages: Omi.SignalValue<ChatMessageType[]> = signal(undefined);
+  private chatMessages: Omi.SignalValue<ChatMessagesData[]> = signal(undefined);
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -68,7 +75,6 @@ export default class Chatbot extends Component<TdChatProps> {
     assistant: {
       variant: 'text',
       placement: 'left',
-      actions: (preset) => preset,
     },
     system: {},
   };
@@ -103,7 +109,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   /**
    * 获取当前聊天消息值
-   * @returns {Array<ChatMessageType>} 当前聊天消息数组
+   * @returns {Array<ChatMessagesData>} 当前聊天消息数组
    */
   get chatMessageValue() {
     return this.chatMessages.value;
@@ -132,7 +138,7 @@ export default class Chatbot extends Component<TdChatProps> {
 
   /**
    * 同步聊天状态
-   * @param {ChatMessageType[]} state - 新的状态值
+   * @param {ChatMessagesData[]} state - 新的状态值
    */
   private syncState(state) {
     this.chatMessages.value = state;
@@ -161,6 +167,13 @@ export default class Chatbot extends Component<TdChatProps> {
   }
 
   /**
+   * 重新回答
+   */
+  async regenerate(keepVersion: boolean = false) {
+    await this.chatEngine.regenerateAIMessage(keepVersion);
+  }
+
+  /**
    * 发送系统消息
    */
   sendSystemMessage(msg: string) {
@@ -181,6 +194,13 @@ export default class Chatbot extends Component<TdChatProps> {
   addPrompt(prompt: string) {
     this.ChatSenderRef.current.pValue.value = prompt;
     this.ChatSenderRef.current.inputRef.current.focus();
+  }
+
+  /**
+   * 最后一条AI消息
+   */
+  get messagesStore(): ChatMessageStore {
+    return this.chatEngine?.messageStore.getState();
   }
 
   /**
@@ -266,8 +286,15 @@ export default class Chatbot extends Component<TdChatProps> {
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = this.slotNames.filter((key) => key.includes(id));
+      const isLast = id === this.messagesStore.messageIds.at(-1);
       return (
-        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
+        <t-chat-item
+          key={id}
+          className={`${className}-item-wrapper`}
+          {...this.messageRoleProps?.[role]}
+          message={item}
+          isLast={isLast}
+        >
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => {
             const str = slotName.replace(RegExp(`^${id}-`), '');
@@ -290,11 +317,6 @@ export default class Chatbot extends Component<TdChatProps> {
     });
   };
 
-  // beforeRender(): void {
-  //   // 动态注入插槽需要每次render都更新children
-  //   this.props.children = convertNodeListToVNodes.call(this, this.childNodes);
-  // }
-
   // 动态注入插槽需要每次render都更新children
   beforeRender(): void {
     // @ts-ignore
@@ -305,7 +327,6 @@ export default class Chatbot extends Component<TdChatProps> {
 
   render({ layout, injectCSS, senderProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
-    // console.log('====render chat', this.messages);
     return (
       <div className={`${className} ${layoutClass}`}>
         {this.chatMessageValue && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
