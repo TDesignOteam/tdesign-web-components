@@ -59,9 +59,9 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   uploadRef = createRef<HTMLInputElement>();
 
-  inputRef = createRef<HTMLTextAreaElement>();
+  private inputRef = createRef<HTMLTextAreaElement>();
 
-  shiftDown = false;
+  private shiftDown = false;
 
   ready() {
     const { value, defaultValue, attachmentsProps } = this.props;
@@ -105,6 +105,16 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     return false;
   }
 
+  /** 获取焦点 */
+  focus = (options?: FocusOptions) => {
+    this.inputRef.current?.focus(options);
+  };
+
+  /** 取消焦点 */
+  blur = () => {
+    this.inputRef.current?.blur();
+  };
+
   private handleFileSelected = () => {
     const files = Array.from(this.uploadRef.current?.files || []);
     if (!files.length) {
@@ -117,7 +127,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   /** 上传附件按钮 */
-  renderUploadAttachment = () => (
+  private renderUploadAttachment = () => (
     <t-tooltip content="上传附件" className={`${className}__actions__tooltip`}>
       <span
         className={`${className}__actions__item`}
@@ -130,7 +140,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     </t-tooltip>
   );
 
-  renderButton = () => {
+  private renderButton = () => {
     const { disabled } = this.props;
 
     return (
@@ -160,14 +170,14 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     );
   };
 
-  presetActions: TdChatSenderAction[] = [
+  private presetActions: TdChatSenderAction[] = [
     {
       name: 'uploadAttachment',
       render: this.renderUploadAttachment(),
     },
   ];
 
-  renderActions = () => {
+  private renderActions = () => {
     const { actions } = this.props;
     if (!actions) {
       return null;

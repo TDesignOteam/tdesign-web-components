@@ -58,3 +58,10 @@ spline: base
 | `onFocus` | `(value: string, context: { e: FocusEvent })` | 输入框获得焦点时触发 |
 | `onFileSelect` | `(files: File[]) => Promise<Attachment[]>` | 选择文件时触发 |
 | `onFileRemove` | `(files: File[]) => Promise<Attachment[]>` | 移除文件时触发 |
+
+## Ref
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `focus` | `(option?: { preventScroll?: boolean; }) => void` | - | 获取焦点 |
+| `blur` | `() => void` | - | 取消焦点 |
