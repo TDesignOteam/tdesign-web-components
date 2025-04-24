@@ -30,6 +30,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     actions: [Array, Function, Boolean],
     defaultValue: String,
     loading: Boolean,
+    autosize: Object,
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
@@ -48,9 +49,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       items: [],
       overflow: 'scrollX',
     },
-    textareaProps: {
-      autosize: { minRows: 2 },
-    },
+    autosize: { minRows: 2 },
+    textareaProps: {},
   };
 
   pValue: Omi.SignalValue<string> = signal('');
@@ -210,6 +210,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
             {...this.props.textareaProps}
             placeholder={props.placeholder}
             disabled={props.disabled}
+            autosize={props.autosize}
             value={this.inputValue}
             enterkeyhint="send"
             onChange={this.handleChange}

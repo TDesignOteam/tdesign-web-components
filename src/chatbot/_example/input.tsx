@@ -114,9 +114,7 @@ export default class ChatSender extends Component {
           items: this.files.value,
           overflow: 'scrollX',
         }}
-        textareaProps={{
-          autosize: { minRows: 2 },
-        }}
+        autosize={{ minRows: 2 }}
         uploadProps={{
           multiple: true,
           accept: 'image/*',

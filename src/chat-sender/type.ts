@@ -13,7 +13,7 @@ export interface TdChatSenderSend {
   attachments?: Attachment[];
 }
 
-export interface TdChatSenderProps {
+export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   placeholder?: string;
   disabled?: boolean;
   value: string;
@@ -24,7 +24,7 @@ export interface TdChatSenderProps {
   /** 透传attachment参数 */
   attachmentsProps?: TdAttachmentsProps;
   /** 透传textarea参数 */
-  textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled'>>;
+  textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
   /** 透传input-file参数 */
   uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
   onSend?: (e: CustomEvent<TdChatSenderSend>) => void;

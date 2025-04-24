@@ -31,6 +31,7 @@ spline: base
 | `value` | `string` | - | 输入框当前值（受控模式） |
 | `defaultValue` | `string` | - | 输入框默认值（非受控模式） |
 | `loading` | `boolean` | `false` | 是否加载中 |
+| `autosize` | `boolean \| { minRows?: number; maxRows?: number }` | `{ minRows: 2 }` | 高度自动撑开 |
 
 ## 操作按钮配置
 
@@ -43,7 +44,7 @@ spline: base
 | 属性名 | 类型 | 默认值 | 说明 |
 |--------|------|--------|------|
 | `attachmentsProps` | `TdAttachmentsProps` | `{ items: [], overflow: 'scrollX' }` | 附件列表配置属性 |
-| `textareaProps` | `Partial<TdTextareaProps>` | `{ autosize: { minRows: 2 } }` | 文本输入框配置属性 |
+| `textareaProps` | `Partial<TdTextareaProps>` | `{}` | 文本输入框配置属性 |
 | `uploadProps` | `Omit<JSX.HTMLAttributes, 'onChange' \| 'ref' \| 'type' \| 'hidden'>` | - | 文件上传输入框的HTML属性 |
 
 ## 事件回调

@@ -31,9 +31,7 @@ export default class BasicExample extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         loading={this.loading.value}
-        textareaProps={{
-          autosize: { minRows: 2 },
-        }}
+        autosize={{ minRows: 2 }}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}
