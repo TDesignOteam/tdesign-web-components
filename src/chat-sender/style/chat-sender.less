@@ -64,10 +64,18 @@
     padding: 12px;
   }
 
+  &__textarea__wrapper {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    width: 100%;
+  }
+
   // 输入框
   &__textarea {
     flex: 1;
-    min-height: 0;
+    min-width: 0;
     max-height: var(--t-chat-input-textarea-max-height);
     display: flex;
     flex-direction: column;
