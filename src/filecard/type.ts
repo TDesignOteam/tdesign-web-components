@@ -1,12 +1,12 @@
 import { type UploadFile } from '../_common/js/upload/types';
 
-export interface Attachment extends UploadFile {
+export interface TdAttachmentItemProps extends UploadFile {
   description?: string;
+  extension?: string;
 }
 
 export interface TdFileCardProps {
-  item: Attachment;
-  onRemove?: (event: CustomEvent<Attachment>) => void;
+  item: TdAttachmentItemProps;
+  onRemove?: (event: CustomEvent<TdAttachmentItemProps>) => void;
   disabled?: boolean;
-  class?: string;
 }

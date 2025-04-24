@@ -26,6 +26,13 @@ export default class Button extends Component {
       size: 444444,
     },
     {
+      uid: '4',
+      name: 'pdf-file.pdf',
+      size: 444444,
+      extension: '.docx',
+      description: 'Custom extension',
+    },
+    {
       uid: '5',
       name: 'ppt-file.pptx',
       size: 555555,

@@ -141,7 +141,7 @@ export default class FileCard extends Component<FileCardProps> {
   processIcon() {
     const { item } = this.props;
     const { nameSuffix } = this.state;
-    const { status = 'done' } = item;
+    const { status = 'done', extension } = item;
     if (status === 'progress') {
       this.state.icon = <t-icon-loading size="24px" />;
       this.state.iconColor = '#0052D9';
@@ -149,7 +149,7 @@ export default class FileCard extends Component<FileCardProps> {
       return;
     }
     for (const { ext, icon, color } of this.PRESET_FILE_ICONS) {
-      if (this.matchExt(nameSuffix, ext)) {
+      if (this.matchExt(extension || nameSuffix, ext)) {
         this.state.icon = icon;
         this.state.iconColor = color;
         this.update();
@@ -166,13 +166,13 @@ export default class FileCard extends Component<FileCardProps> {
   }
 
   render(props: FileCardProps) {
-    const { item, disabled, class: classNames } = props;
+    const { item, disabled } = props;
     const { status = 'done' } = item;
     const { desc, icon, iconColor, namePrefix, nameSuffix } = this.state;
 
     return (
       <div
-        class={classname(classNames, `${className}-overview`, {
+        class={classname(`${className}-overview`, {
           [`${className}-status-uploading`]: status === 'progress',
           [`${className}-status-error`]: status === 'fail',
         })}
