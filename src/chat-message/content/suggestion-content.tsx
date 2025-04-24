@@ -6,7 +6,7 @@ import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
 import { type SuggestionItem } from '../../chatbot/type';
 
-import styles from '../../chatbot/style/chat-item.less';
+import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 

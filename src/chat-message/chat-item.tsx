@@ -35,7 +35,7 @@ import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
 
-import styles from '../chatbot/style/chat-item.less';
+import styles from './style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 

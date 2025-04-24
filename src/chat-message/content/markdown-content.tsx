@@ -1,12 +1,12 @@
-import '../../message';
-
 import MarkdownIt from 'markdown-it';
 import linkPlugin from 'markdown-it-link-attributes';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 
-import styles from '../../chatbot/style/chat-content.less';
+import styles from '../style/chat-content.less';
+// 单独用该组件时，发现动态加载样式不生效，目前直接引入
+import codeStyles from '../style/md/chat-md-code.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
@@ -38,7 +38,7 @@ export interface TdChatMarkdownContentProps {
 
 @tag('t-chat-md-content')
 export default class ChatMDContent extends Component<TdChatMarkdownContentProps> {
-  static css = [styles];
+  static css = [styles, codeStyles];
 
   static propTypes = {
     content: String,
@@ -74,8 +74,6 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
   install() {
     this.initMarkdown();
   }
-
-  // static isLightDOM = true;
 
   initMarkdown = async () => {
     const { options, pluginConfig } = this.props;
@@ -119,8 +117,6 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
       let codeHighlight;
       if (codeHighlightConfig) {
         await import('../md/chat-md-code');
-        const codeStyles = await import('../../chatbot/style/md/chat-md-code.less');
-        ChatMDContent.css.push(codeStyles.default);
 
         codeHighlight = (code: string, lang: string) =>
           // 传参注意转义

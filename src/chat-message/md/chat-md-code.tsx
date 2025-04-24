@@ -13,7 +13,7 @@ const className = `${getClassPrefix()}-chat__text__markdown__code`;
 
 @tag('t-chat-md-code')
 export default class ChatMDCode extends Component<TdChatCodeProps> {
-  // lightDOM组件无法直接挂styleSheet，样式由chat-content异步加载
+  // lightDOM组件无法直接挂styleSheet，样式由chat-content加载
   static isLightDOM = true;
 
   static propTypes = {

@@ -7,7 +7,7 @@ import { getClassPrefix } from '../../_util/classname';
 import { TdChatContentProps } from '../../chatbot';
 import { MessageStatus, ReferenceItem } from '../../chatbot/core/type';
 
-import styles from '../../chatbot/style/chat-item.less';
+import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
