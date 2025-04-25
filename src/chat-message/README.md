@@ -75,5 +75,5 @@ spline: base
 | `onChange` | `(value: string, context: { e: InputEvent \| MouseEvent \| KeyboardEvent })` | 输入内容变化时触发 |
 | `onBlur` | `(value: string, context: { e: FocusEvent })` | 输入框失去焦点时触发 |
 | `onFocus` | `(value: string, context: { e: FocusEvent })` | 输入框获得焦点时触发 |
-| `onFileSelect` | `(files: File[]) => Promise<Attachment[]>` | 选择文件时触发 |
-| `onFileRemove` | `(files: File[]) => Promise<Attachment[]>` | 移除文件时触发 |
+| `onFileSelect` | `(files: File[]) => Promise< TdAttachmentItem[]>` | 选择文件时触发 |
+| `onFileRemove` | `(files: File[]) => Promise< TdAttachmentItem[]>` | 移除文件时触发 |

@@ -82,7 +82,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     return this.pAttachments.value;
   }
 
-  private handleAttachmentsRemove = (e: CustomEvent<Attachment>) => {
+  private handleAttachmentsRemove = (e: CustomEvent<TdAttachmentItem>) => {
     const removed = e.detail;
     const rest = this.attachmentsValue.filter((item) => item !== removed);
     this.pAttachments.value = rest;
