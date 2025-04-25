@@ -193,7 +193,7 @@ export default class Chatbot extends Component<TdChatProps> {
    */
   addPrompt(prompt: string) {
     this.ChatSenderRef.current.pValue.value = prompt;
-    this.ChatSenderRef.current.inputRef.current.focus();
+    this.ChatSenderRef.current.focus();
   }
 
   /**
