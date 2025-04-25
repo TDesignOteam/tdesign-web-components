@@ -95,6 +95,7 @@ export default class CustomExample extends Component {
           <div slot="prefix" className="prefix" onClick={() => this.senderRef.current?.focus()}>
             <t-icon-focus className="icon" />
           </div>
+          <div slot="inner-header">我是innerHeader</div>
           <div slot="footer-left">
             <t-button
               onClick={() => {

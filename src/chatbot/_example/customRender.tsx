@@ -213,7 +213,7 @@ export default class BasicChat extends Component {
         messageProps={messageProps}
         chatServiceConfig={mockModels}
       >
-        <div slot="input-header">我是input头部</div>
+        <div slot="sender-header">我是input头部</div>
         {/* 自定义渲染-植入插槽 */}
         {this.mockMessage.value
           ?.map((data) =>
