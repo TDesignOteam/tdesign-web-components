@@ -39,8 +39,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     onSend: Function,
     onStop: Function,
     onChange: Function,
-    onBlur: Function,
-    onFocus: Function,
   };
 
   static defaultProps: Partial<TdChatSenderProps> = {

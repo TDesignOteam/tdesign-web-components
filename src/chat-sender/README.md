@@ -51,13 +51,11 @@ spline: base
 
 | 事件名 | 参数类型 | 说明 |
 |--------|----------|------|
-| `onSend` | `CustomEvent<TdChatSenderSend>` | 点击发送按钮时触发 |
-| `onStop` | `(value: string, context: { e: MouseEvent })` | 点击停止按钮时触发 |
-| `onChange` | `(value: string, context: { e: InputEvent \| MouseEvent \| KeyboardEvent })` | 输入内容变化时触发 |
-| `onBlur` | `(value: string, context: { e: FocusEvent })` | 输入框失去焦点时触发 |
-| `onFocus` | `(value: string, context: { e: FocusEvent })` | 输入框获得焦点时触发 |
-| `onFileSelect` | `(files: File[]) => Promise< TdAttachmentItem[]>` | 选择文件时触发 |
-| `onFileRemove` | `(files: File[]) => Promise< TdAttachmentItem[]>` | 移除文件时触发 |
+| `onSend` | `(e: CustomEvent<TdChatSenderSend>) => void` | 点击发送按钮时触发 |
+| `onStop` | `(e: CustomEvent<string>) => void` | 点击停止按钮时触发 |
+| `onChange` | `(e: CustomEvent<string>) => void` | 输入内容变化时触发 |
+| `onFileSelect` | `(e: CustomEvent<File[]>) => Promise<TdAttachmentItem[]>` | 选择文件时触发 |
+| `onFileRemove` | `(e: CustomEvent<File[]>) => Promise<TdAttachmentItem[]>` | 移除文件时触发 |
 
 ## Ref
 

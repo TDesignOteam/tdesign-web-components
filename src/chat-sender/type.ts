@@ -28,10 +28,8 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   /** 透传input-file参数 */
   uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
   onSend?: (e: CustomEvent<TdChatSenderSend>) => void;
-  onStop?: (value: string, context: { e: MouseEvent }) => void;
-  onChange?: (value: string, context: { e: InputEvent | MouseEvent | KeyboardEvent }) => void;
-  onBlur?: (value: string, context: { e: FocusEvent }) => void;
-  onFocus?: (value: string, context: { e: FocusEvent }) => void;
-  onFileSelect?: (files: File[]) => Promise<TdAttachmentItem[]>;
-  onFileRemove?: (files: File[]) => Promise<TdAttachmentItem[]>;
+  onStop?: (e: CustomEvent<string>) => void;
+  onChange?: (e: CustomEvent<string>) => void;
+  onFileSelect?: (e: CustomEvent<File[]>) => Promise<TdAttachmentItem[]>;
+  onFileRemove?: (e: CustomEvent<File[]>) => Promise<TdAttachmentItem[]>;
 }

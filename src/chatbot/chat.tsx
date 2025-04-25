@@ -261,7 +261,7 @@ export default class Chatbot extends Component<TdChatProps> {
    * 处理附件选择事件
    */
   private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
-    const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e.detail);
+    const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e);
     if (uploadedResult.length > 0) {
       // 使用不可变方式更新数组
       const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
