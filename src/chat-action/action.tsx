@@ -157,7 +157,7 @@ export default class ChatAction extends Component<TdChatActionProps> {
     this.pComment.value = this.props.comment;
   }
 
-  render(props) {
+  render(props: TdChatActionProps) {
     return renderActions(props, this.pComment);
   }
 }

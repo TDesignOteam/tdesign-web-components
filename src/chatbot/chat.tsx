@@ -20,13 +20,13 @@ import type {
 } from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
-import type { TdChatMessageConfig, TdChatProps } from './type';
+import type { TdChatbotApi, TdChatMessageConfig, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chatbot')
-export default class Chatbot extends Component<TdChatProps> {
+export default class Chatbot extends Component<TdChatProps> implements TdChatbotApi {
   static css = [styles];
 
   static propTypes = {

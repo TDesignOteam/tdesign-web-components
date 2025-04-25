@@ -133,6 +133,11 @@ export interface TdChatbotApi {
    * 当前聊天状态
    */
   readonly chatStatus: ChatStatus;
+  /**
+   * 重新发送消息
+   * * @param keepVersion - 是否保留之前版本（默认false)
+   */
+  regenerate: (keepVersion?: boolean) => Promise<void>;
 }
 
 export type TdChatMessageConfig = {

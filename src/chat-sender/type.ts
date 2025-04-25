@@ -14,10 +14,10 @@ export interface TdChatSenderSend {
 }
 
 export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
+  value: string;
   placeholder?: string;
   disabled?: boolean;
-  value: string;
-  defaultValue: string;
+  defaultValue?: string;
   actions?: TdChatSenderAction[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
   /** 是否加载中 */
   loading?: boolean;
