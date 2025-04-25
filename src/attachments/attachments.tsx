@@ -6,23 +6,26 @@ import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
-import { StyledProps } from '../common';
 import { TdAttachmentsProps } from './type';
 
 import styles from './style/attachments.less';
 
-export interface AttachmentsProps extends TdAttachmentsProps, StyledProps {}
-
 const className = `${getClassPrefix()}-attachment`;
 @tag('t-attachments')
-export default class Attachments extends Component<AttachmentsProps> {
+export default class Attachments extends Component<TdAttachmentsProps> {
   static css = [styles];
 
   static propTypes = {
     items: Array,
     overflow: String,
     onRemove: Function,
+    removable: Boolean,
     imageViewer: Boolean,
+  };
+
+  static defaultProps: Partial<TdAttachmentsProps> = {
+    removable: true,
+    imageViewer: true,
   };
 
   containerRef = createRef<HTMLElement>();
@@ -141,8 +144,8 @@ export default class Attachments extends Component<AttachmentsProps> {
     setTimeout(() => this.updateButtonVisibility(), 500);
   };
 
-  render(props: AttachmentsProps) {
-    const { items, overflow, onRemove, innerClass, imageViewer = true } = props;
+  render(props: TdAttachmentsProps) {
+    const { items, overflow, removable, innerClass, imageViewer = true } = props;
 
     const listCls = `${className}-list`;
     return (
@@ -159,14 +162,13 @@ export default class Attachments extends Component<AttachmentsProps> {
               key={item.name || `filecard-${index}`}
               item={item}
               class="t-filecard-item"
-              {...(onRemove && {
-                onRemove: () => {
-                  // 触发删除事件让父组件更新数据源
-                  this.fire('remove', item, {
-                    composed: true,
-                  });
-                },
-              })}
+              removable={removable}
+              onRemove={() => {
+                // 触发删除事件让父组件更新数据源
+                this.fire('remove', item, {
+                  composed: true,
+                });
+              }}
             ></t-filecard>
           ))}
         </o-transition-group>

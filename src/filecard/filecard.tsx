@@ -15,22 +15,27 @@ import { Component, tag } from 'omi';
 
 import classname from '../_util/classname';
 import { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
 import { TdFileCardProps } from './type';
 
 import styles from './style/filecard.less';
 
-export interface FileCardProps extends TdFileCardProps, StyledProps {}
 const className = `${getClassPrefix()}-filecard`;
 @tag('t-filecard')
-export default class FileCard extends Component<FileCardProps> {
+export default class FileCard extends Component<TdFileCardProps> {
   static css = [styles];
 
   static propTypes = {
     item: Object,
     disabled: Boolean,
     onRemove: Function,
+    removable: Boolean,
     imageViewer: Boolean,
+  };
+
+  static defaultProps: Partial<TdFileCardProps> = {
+    removable: true,
+    imageViewer: true,
+    disabled: false,
   };
 
   // 预览状态
@@ -194,14 +199,13 @@ export default class FileCard extends Component<FileCardProps> {
   }
 
   render() {
-    const { item, disabled } = this.props;
+    const { item, disabled, removable } = this.props;
     if (!item) return;
     const { status = 'done' } = item;
     const { desc, icon, iconColor, namePrefix, nameSuffix } = this.state;
-
     return (
       <div
-        class={classname(`${className}-overview`, {
+        className={classname(`${className}-overview`, {
           [`${className}-status-uploading`]: status === 'progress',
           [`${className}-status-error`]: status === 'fail',
         })}
@@ -209,12 +213,12 @@ export default class FileCard extends Component<FileCardProps> {
       >
         {/* 图片预览蒙层 */}
         {this.previewVisible && (
-          <div class={`${className}-preview`}>
-            <div class={`${className}-preview-mask`}></div>
-            <div class={`${className}-preview-content`}>
+          <div className={`${className}-preview`}>
+            <div className={`${className}-preview-mask`}></div>
+            <div className={`${className}-preview-content`}>
               <img src={item.url} alt={item.name} />
               <t-icon-close-circle-filled
-                class={`${className}-preview-close`}
+                className={`${className}-preview-close`}
                 size="24px"
                 onClick={this.closePreview}
               />
@@ -222,10 +226,9 @@ export default class FileCard extends Component<FileCardProps> {
           </div>
         )}
         {this.renderFileOverview(namePrefix, nameSuffix, icon, iconColor, desc)}
-
-        {!disabled && this.props.onRemove && (
+        {!disabled && removable && (
           <div
-            class={`${className}-remove`}
+            className={`${className}-remove`}
             onClick={(e: Event) => {
               e.stopPropagation();
               this.fire('remove', item, {
@@ -243,15 +246,15 @@ export default class FileCard extends Component<FileCardProps> {
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
     return (
       <>
-        <div class={`${className}-icon`} style={{ color: iconColor }}>
+        <div className={`${className}-icon`} style={{ color: iconColor }}>
           {icon}
         </div>
-        <div class={`${className}-content`}>
-          <div class={`${className}-name`}>
-            <span class={`${className}-name-prefix`}>{namePrefix || this.EMPTY}</span>
-            <span class={`${className}-name-suffix`}>{nameSuffix}</span>
+        <div className={`${className}-content`}>
+          <div className={`${className}-name`}>
+            <span className={`${className}-name-prefix`}>{namePrefix || this.EMPTY}</span>
+            <span className={`${className}-name-suffix`}>{nameSuffix}</span>
           </div>
-          <div class={`${className}-desc`}>{desc}</div>
+          <div className={`${className}-desc`}>{desc}</div>
         </div>
       </>
     );
