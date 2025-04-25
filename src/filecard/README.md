@@ -24,5 +24,6 @@ class | String | - | 类名 | N
 onRemove | (item:  TdAttachmentItem) => void | - | 附件移除时的回调函数 | N
 item |  TdAttachmentItem | false | 附件，同 Upload UploadFile | Y
 disabled | Boolean | false | 禁用状态 | N
+imageViewer | Boolean | true | 图片预览开关 | N
 
 

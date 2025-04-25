@@ -32,6 +32,27 @@ export default class FileCard extends Component<FileCardProps> {
     onRemove: Function,
   };
 
+  // 预览状态
+  previewVisible = false;
+
+  // 切换预览状态
+  togglePreview = () => {
+    const { item, imageViewer = true } = this.props;
+    if (!imageViewer) return;
+    const ext = item.extension || this.state.nameSuffix;
+    if (this.IMG_EXTS.some((e) => ext.toLowerCase().includes(e))) {
+      this.previewVisible = !this.previewVisible;
+      this.update();
+    }
+  };
+
+  // 关闭预览
+  closePreview = (e: Event) => {
+    e.stopPropagation();
+    this.previewVisible = false;
+    this.update();
+  };
+
   // 常量定义
   EMPTY = '\u00A0';
 
@@ -183,7 +204,22 @@ export default class FileCard extends Component<FileCardProps> {
           [`${className}-status-uploading`]: status === 'progress',
           [`${className}-status-error`]: status === 'fail',
         })}
+        onClick={this.togglePreview}
       >
+        {/* 图片预览蒙层 */}
+        {this.previewVisible && (
+          <div class={`${className}-preview`}>
+            <div class={`${className}-preview-mask`}></div>
+            <div class={`${className}-preview-content`}>
+              <img src={item.url} alt={item.name} />
+              <t-icon-close-circle-filled
+                class={`${className}-preview-close`}
+                size="24px"
+                onClick={this.closePreview}
+              />
+            </div>
+          </div>
+        )}
         {this.renderFileOverview(namePrefix, nameSuffix, icon, iconColor, desc)}
 
         {!disabled && this.props.onRemove && (

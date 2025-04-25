@@ -141,7 +141,7 @@ export default class Attachments extends Component<AttachmentsProps> {
   };
 
   render(props: AttachmentsProps) {
-    const { items, overflow, onRemove, innerClass } = props;
+    const { items, overflow, onRemove, innerClass, imageViewer = true } = props;
 
     const listCls = `${className}-list`;
     return (
@@ -154,6 +154,7 @@ export default class Attachments extends Component<AttachmentsProps> {
         >
           {items.map((item, index) => (
             <t-filecard
+              imageViewer={imageViewer}
               key={item.name || `filecard-${index}`}
               item={item}
               class="t-filecard-item"

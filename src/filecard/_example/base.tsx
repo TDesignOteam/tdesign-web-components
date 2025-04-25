@@ -19,6 +19,7 @@ export default class Button extends Component {
       uid: '3',
       name: 'image-file.png',
       size: 333333,
+      url: 'https://tdesign.gtimg.com/site/avatar.jpg',
     },
     {
       uid: '4',

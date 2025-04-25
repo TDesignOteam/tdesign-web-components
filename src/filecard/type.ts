@@ -9,4 +9,5 @@ export interface TdFileCardProps {
   item: TdAttachmentItem;
   onRemove?: (event: CustomEvent<TdAttachmentItem>) => void;
   disabled?: boolean;
+  imageViewer?: boolean;
 }
