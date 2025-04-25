@@ -21,6 +21,7 @@ export default class Attachments extends Component<AttachmentsProps> {
   static propTypes = {
     items: Array,
     overflow: String,
+    onRemove: Function,
   };
 
   containerRef = createRef<HTMLElement>();
@@ -159,7 +160,9 @@ export default class Attachments extends Component<AttachmentsProps> {
               {...(onRemove && {
                 onRemove: () => {
                   // 触发删除事件让父组件更新数据源
-                  this.fire('remove', item);
+                  this.fire('remove', item, {
+                    composed: true,
+                  });
                 },
               })}
             ></t-filecard>

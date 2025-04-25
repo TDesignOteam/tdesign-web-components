@@ -26,6 +26,12 @@ const className = `${getClassPrefix()}-filecard`;
 export default class FileCard extends Component<FileCardProps> {
   static css = [styles];
 
+  static propTypes = {
+    item: Object,
+    disabled: Boolean,
+    onRemove: Function,
+  };
+
   // 常量定义
   EMPTY = '\u00A0';
 
@@ -90,7 +96,7 @@ export default class FileCard extends Component<FileCardProps> {
     iconColor: '#8c8c8c',
   };
 
-  installed() {
+  ready() {
     this.processFileName();
     this.processDescription();
     this.processIcon();
@@ -165,8 +171,9 @@ export default class FileCard extends Component<FileCardProps> {
     return ext.some((e) => suffix.toLowerCase() === `.${e}`);
   }
 
-  render(props: FileCardProps) {
-    const { item, disabled } = props;
+  render() {
+    const { item, disabled } = this.props;
+    if (!item) return;
     const { status = 'done' } = item;
     const { desc, icon, iconColor, namePrefix, nameSuffix } = this.state;
 
@@ -184,7 +191,9 @@ export default class FileCard extends Component<FileCardProps> {
             class={`${className}-remove`}
             onClick={(e: Event) => {
               e.stopPropagation();
-              this.fire('remove', item);
+              this.fire('remove', item, {
+                composed: true,
+              });
             }}
           >
             <t-icon-close-circle-filled size="15px" />
