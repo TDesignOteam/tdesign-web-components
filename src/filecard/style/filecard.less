@@ -62,4 +62,50 @@
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  // 预览样式
+  &-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: @file-card-preview-width;
+    height: @file-card-preview-width;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-mask {
+      position: absolute;
+      width: @file-card-preview-width;
+      height: @file-card-preview-width;
+      background: @file-card-preview-mask-bg;
+    }
+
+    &-content {
+      position: relative;
+      max-width: @file-card-preview-content-maxwidth;
+      max-height: @file-card-preview-content-maxwidth;
+
+      img {
+        max-width: @file-card-preview-img-maxwidth;
+        max-height: @file-card-preview-img-maxheight;
+        display: block;
+      }
+    }
+
+    &-close {
+      position: fixed;
+      top: @file-card-preview-close-top;
+      right: @file-card-preview-close-top;
+      color: #fff;
+      cursor: pointer;
+      padding: @file-card-preview-close-padding;
+      z-index: 10000;
+      transition: all 0.3s;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
 }

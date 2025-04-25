@@ -28,4 +28,5 @@ class | String | - | 类名 | N
 onRemove | (item:  TdAttachmentItem) => void / undefined | - | 附件移除时的回调函数 | N
 items |  TdAttachmentItem[] | false | 附件列表，同 Upload UploadFile | Y
 overflow | 'wrap'/'scrollX'/'scrollY' | 'wrap' | 文件列表超出时样式 | N
+imageViewer | Boolean | true | 图片预览开关 | N
 
