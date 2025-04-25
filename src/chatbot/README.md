@@ -70,10 +70,10 @@ spline: base
 
 | 插槽名 | 说明 |
 |--------|------|
-| `input-header` | 输入框头部内容 |
-| `input-footer-left` | 输入框底部左侧内容 |
-| `input-actions` | 输入框操作按钮 |
-| `input-sender` | 输入框发送按钮区域 |
+| `sender-header` | 输入框头部内容 |
+| `sender-inner-header` | 输入框边框内头部内容 |
+| `sender-footer-left` | 输入框底部左侧内容 |
+| `sender-actions` | 输入框操作按钮 |
 | `[message-id]` | 特定消息ID的自定义内容 |
 
 ## 内置对象属性

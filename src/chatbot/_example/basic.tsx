@@ -348,11 +348,11 @@ const mockModels = {
   },
 };
 
-const onFileSelect = async (files: File[]): Promise<TdAttachmentItem[]> => {
+const onFileSelect = async (e: CustomEvent<File[]>): Promise<TdAttachmentItem[]> => {
   const attachments: TdAttachmentItem[] = [];
 
   // 串行处理每个文件
-  for (const file of files) {
+  for (const file of e.detail) {
     try {
       const formData = new FormData();
       formData.append('file', file);

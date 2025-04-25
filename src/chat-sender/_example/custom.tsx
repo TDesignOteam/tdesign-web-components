@@ -8,6 +8,7 @@ import 'tdesign-web-components/space';
 import { Component, createRef, signal } from 'omi';
 
 import { convertToLightDomNode } from '../../_util/lightDom';
+import ChatSender from '../chat-sender';
 
 export default class CustomExample extends Component {
   static css = [
@@ -33,7 +34,7 @@ export default class CustomExample extends Component {
 
   panel = signal(false);
 
-  senderRef = createRef();
+  senderRef = createRef<ChatSender>();
 
   onChange = (e: CustomEvent) => {
     this.inputValue.value = e.detail;
@@ -95,6 +96,7 @@ export default class CustomExample extends Component {
           <div slot="prefix" className="prefix" onClick={() => this.senderRef.current?.focus()}>
             <t-icon-focus className="icon" />
           </div>
+          <div slot="inner-header">我是innerHeader</div>
           <div slot="footer-left">
             <t-button
               onClick={() => {

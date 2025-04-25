@@ -39,8 +39,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     onSend: Function,
     onStop: Function,
     onChange: Function,
-    onBlur: Function,
-    onFocus: Function,
   };
 
   static defaultProps: Partial<TdChatSenderProps> = {
@@ -51,7 +49,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     },
     autosize: { minRows: 2 },
     textareaProps: {},
-    actions: true,
+    actions: (presets) => [presets[presets.length - 1]],
   };
 
   pValue: Omi.SignalValue<string> = signal('');
@@ -221,6 +219,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           ) : null}
         </div>
         <div className={`${className}__content`}>
+          <slot name="inner-header"></slot>
           <div className={`${className}__textarea__wrapper`}>
             <slot name="prefix"></slot>
             <t-textarea

@@ -193,7 +193,7 @@ export default class Chatbot extends Component<TdChatProps> {
    */
   addPrompt(prompt: string) {
     this.ChatSenderRef.current.pValue.value = prompt;
-    this.ChatSenderRef.current.inputRef.current.focus();
+    this.ChatSenderRef.current.focus();
   }
 
   /**
@@ -261,7 +261,7 @@ export default class Chatbot extends Component<TdChatProps> {
    * 处理附件选择事件
    */
   private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
-    const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e.detail);
+    const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e);
     if (uploadedResult.length > 0) {
       // 使用不可变方式更新数组
       const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
@@ -309,10 +309,10 @@ export default class Chatbot extends Component<TdChatProps> {
    * 渲染输入框插槽
    */
   private renderInputSlots = () => {
-    // input-header、input-footer-left、input-actions、input-sender
-    const itemSlotNames = this.slotNames.filter((key) => key.includes('input-'));
+    // sender-header、sender-footer-left、sender-actions、sender-sender
+    const itemSlotNames = this.slotNames.filter((key) => key.includes('sender-'));
     return itemSlotNames.map((slotName) => {
-      const str = slotName.replace(/^input-/, '');
+      const str = slotName.replace(/^sender-/, '');
       return <slot name={slotName} slot={str}></slot>;
     });
   };
