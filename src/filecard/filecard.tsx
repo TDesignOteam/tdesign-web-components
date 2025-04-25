@@ -30,6 +30,7 @@ export default class FileCard extends Component<FileCardProps> {
     item: Object,
     disabled: Boolean,
     onRemove: Function,
+    imageViewer: Boolean,
   };
 
   // 预览状态

@@ -22,6 +22,7 @@ export default class Attachments extends Component<AttachmentsProps> {
     items: Array,
     overflow: String,
     onRemove: Function,
+    imageViewer: Boolean,
   };
 
   containerRef = createRef<HTMLElement>();
