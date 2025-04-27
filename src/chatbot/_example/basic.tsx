@@ -495,6 +495,7 @@ export default class BasicChat extends Component {
         // autoSendPrompt="自动发送问题"
         messageProps={this.messageProps}
         senderProps={{
+          actions: true,
           placeholder: '请输入问题',
           onFileSelect,
         }}

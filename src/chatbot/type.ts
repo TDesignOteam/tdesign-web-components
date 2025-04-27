@@ -52,7 +52,7 @@ export interface TdChatItemProps {
   /**
    * 消息类型
    */
-  role?: ModelRoleEnum;
+  // role?: ModelRoleEnum; // 统一用message里的role
   /**
    * 消息样式，是否有边框，背景色等
    */

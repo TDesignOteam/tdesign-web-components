@@ -146,7 +146,6 @@ export default class Attachments extends Component<TdAttachmentsProps> {
 
   render(props: TdAttachmentsProps) {
     const { items, overflow, removable, innerClass, imageViewer = true } = props;
-
     const listCls = `${className}-list`;
     return (
       <div class={classname(`${listCls}-wrap`, innerClass)}>
@@ -159,7 +158,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
           {items.map((item, index) => (
             <t-filecard
               imageViewer={imageViewer}
-              key={item.name || `filecard-${index}`}
+              key={`${item.key || item.name}-${index}-${item.percent}-${item.status}` || `filecard-${index}`}
               item={item}
               class="t-filecard-item"
               removable={removable}

@@ -1,6 +1,6 @@
 ---
 title: ChatSender 聊天输入框
-description: xxx
+description: 用于构建智能对话场景下的输入框组件
 isComponent: true
 usage: { title: '', description: '' }
 spline: base

@@ -10,14 +10,7 @@ import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatSenderSend } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
-import type {
-  AttachmentItem,
-  AttachmentType,
-  ChatMessagesData,
-  ChatMessageStore,
-  ChatStatus,
-  RequestParams,
-} from './core/type';
+import type { AttachmentItem, ChatMessagesData, ChatMessageStore, ChatStatus, RequestParams } from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
 import type { TdChatbotApi, TdChatMessageConfig, TdChatProps } from './type';
@@ -251,34 +244,6 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   };
 
   /**
-   * 处理附件移除事件
-   */
-  private onAttachmentsRemove = (e: CustomEvent<File[]>) => {
-    this.files.value = e.detail;
-  };
-
-  /**
-   * 处理附件选择事件
-   */
-  private onAttachmentsSelect = async (e: CustomEvent<File[]>) => {
-    const uploadedResult = await this.props?.senderProps?.onFileSelect?.(e);
-    if (uploadedResult.length > 0) {
-      // 使用不可变方式更新数组
-      const newAttachments = uploadedResult.map(({ name, url, type, size }) => ({
-        name,
-        url,
-        fileType: type as AttachmentType,
-        size,
-        isReference: false,
-      }));
-
-      // 使用扩展运算符创建新数组
-      this.uploadedAttachments = [...this.uploadedAttachments, ...newAttachments];
-      this.files.value = this.files.value.concat(uploadedResult);
-    }
-  };
-
-  /**
    * 渲染消息项
    */
   private renderItems = () => {
@@ -342,8 +307,6 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
           {...senderProps}
           onSend={this.handleSend}
           onStop={this.handleStop}
-          onFileSelect={this.onAttachmentsSelect}
-          onFileRemove={this.onAttachmentsRemove}
         >
           {/* 如不使用动态渲染slot，input中的默认slot会被置空 */}
           {this.renderInputSlots()}

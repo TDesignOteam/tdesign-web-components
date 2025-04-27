@@ -61,7 +61,7 @@ export default class AttachmentExample extends Component {
         loading={this.loading.value}
         actions
         uploadProps={{
-          multiple: true,
+          multiple: false,
           accept: 'image/*',
         }}
         attachmentsProps={{

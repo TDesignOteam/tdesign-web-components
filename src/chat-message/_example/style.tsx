@@ -4,12 +4,24 @@ import { Component, signal } from 'omi';
 
 import { ChatStatus } from '../../chatbot/core/type';
 
-const msg = {
+const userMsg = {
   id: (Math.random() * 10000).toString(),
+  role: 'user',
   content: [
     {
       type: 'text',
-      data: '这是用来展示各种消息样式的测试内容',
+      data: '这是用来展示提问的测试内容',
+    },
+  ],
+};
+
+const AIMsg = {
+  id: (Math.random() * 10000).toString(),
+  role: 'assistant',
+  content: [
+    {
+      type: 'text',
+      data: '这是用来展示回答的测试内容',
     },
   ],
 };
@@ -24,13 +36,33 @@ export default class BasicExample extends Component {
       <>
         <t-chat-item
           variant="base"
-          role="user"
           avatar="https://tdesign.gtimg.com/site/avatar.jpg"
           name="张三"
-          message={msg}
+          placement="right"
+          message={userMsg}
         ></t-chat-item>
-        <t-chat-item variant="text" message={msg}></t-chat-item>
-        <t-chat-item variant="outline" message={msg}></t-chat-item>
+        <t-chat-item
+          variant="text"
+          placement="left"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="张三"
+          message={AIMsg}
+        ></t-chat-item>
+        <t-chat-item message={{ role: 'system', content: [{ type: 'text', data: '这是系统消息' }] }}></t-chat-item>
+        <t-chat-item
+          variant="base"
+          avatar="https://tdesign.gtimg.com/site/avatar.jpg"
+          name="张三"
+          placement="right"
+          message={userMsg}
+        ></t-chat-item>
+        <t-chat-item
+          variant="outline"
+          placement="left"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="张三"
+          message={AIMsg}
+        ></t-chat-item>
       </>
     );
   }
