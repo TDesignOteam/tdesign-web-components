@@ -6,7 +6,6 @@ import { ChatStatus } from '../../chatbot/core/type';
 
 const msg = {
   id: (Math.random() * 10000).toString(),
-  role: 'user',
   content: [
     {
       type: 'text',
@@ -23,7 +22,13 @@ export default class BasicExample extends Component {
   render() {
     return (
       <>
-        <t-chat-item variant="base" message={msg}></t-chat-item>
+        <t-chat-item
+          variant="base"
+          role="user"
+          avatar="https://tdesign.gtimg.com/site/avatar.jpg"
+          name="张三"
+          message={msg}
+        ></t-chat-item>
         <t-chat-item variant="text" message={msg}></t-chat-item>
         <t-chat-item variant="outline" message={msg}></t-chat-item>
       </>

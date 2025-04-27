@@ -106,6 +106,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   private renderAvatar() {
+    console.log('====avatar', this.props.avatar, this.props.name);
     if (!this.props.avatar) {
       // 不要返回null，有抖动问题
       return <div hidden />;
@@ -219,7 +220,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
             ))}
           </div>
         ) : (
-          convertToLightDomNode(<t-attachments items={attachments} />)
+          convertToLightDomNode(<t-attachments items={attachments} removable={false} />)
         )}
       </div>
     );

@@ -3,7 +3,7 @@ import { type TdChatLoadingProps } from '../chat-loading';
 import { type TdChatMarkdownContentProps } from '../chat-message';
 import { type TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
-import type { ChatServiceConfigSetter, ChatStatus, ContentType, MessageRole, RequestParams } from './core/type';
+import type { ChatServiceConfigSetter, ChatStatus, ContentType, RequestParams } from './core/type';
 import type { ChatMessagesData } from './core/type';
 
 export type TdChatItemActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
@@ -20,16 +20,13 @@ export interface TdChatRenderConfig {
 export type TdChatCustomRenderConfig = Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
 
 export type TdChatContentProps = {
-  [key in ContentType]?: key extends 'markdown'
-    ? Omit<TdChatMarkdownContentProps, 'content' | 'role'>
-    : key extends 'search'
-    ? TdChatContentSearchProps
-    : key extends 'thinking'
-    ? TdChatContentThinkProps
-    : key extends 'suggestion'
-    ? TdChatContentSuggestionProps
-    : any;
-};
+  markdown?: Omit<TdChatMarkdownContentProps, 'content' | 'role'>;
+  search?: TdChatContentSearchProps;
+  thinking?: TdChatContentThinkProps;
+  suggestion?: TdChatContentSuggestionProps;
+  [key: string]: any; // 处理其他ContentType情况
+} & Partial<Record<Exclude<ContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
+
 export interface TdChatItemProps {
   /**
    * 操作
@@ -55,7 +52,7 @@ export interface TdChatItemProps {
   /**
    * 消息类型
    */
-  role?: MessageRole;
+  role?: ModelRoleEnum;
   /**
    * 消息样式，是否有边框，背景色等
    */
@@ -186,12 +183,7 @@ export interface MetaData {
    */
   [key: string]: any;
 }
-export interface TdChatItemMeta {
-  avatar?: string;
-  name?: string;
-  role?: string;
-  datetime?: string;
-}
+
 export type ModelRoleEnum = 'assistant' | 'user' | 'system';
 
 export type Variant = 'base' | 'text' | 'outline';
