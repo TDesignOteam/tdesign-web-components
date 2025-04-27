@@ -105,6 +105,19 @@ export default class ChatItem extends Component<ChatMessageProps> {
     }
   }
 
+  private renderMessageHeader() {
+    const { name, datetime } = this.props;
+    if (!name && !datetime) {
+      return <div hidden />;
+    }
+    return (
+      <div class={`${className}__header`}>
+        {!!name && <span class={`${className}__name`}>{name}</span>}
+        {!!datetime && <span class={`${className}__time`}>{datetime}</span>}
+      </div>
+    );
+  }
+
   private renderAvatar() {
     console.log('====avatar', this.props.avatar, this.props.name);
     if (!this.props.avatar) {
@@ -307,24 +320,25 @@ export default class ChatItem extends Component<ChatMessageProps> {
     });
   }
 
-  render(props) {
-    const { message, variant, placement, name, datetime } = props;
+  render(props: ChatMessageProps) {
+    const { message, variant, placement } = props;
     if (!message?.content || message.content.length === 0) return;
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
     const placementClass = placement;
+
     return (
-      <div className={classname(baseClass, roleClass, variantClass, placementClass)}>
+      <div
+        className={classname(baseClass, roleClass, variantClass, placementClass)}
+        data-has-header={!!this.renderMessageHeader()}
+      >
         {this.renderAvatar()}
         {this.renderMessageStatus}
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>
-            <div class={`${className}__header`}>
-              {name && <span class={`${className}__name`}>{name}</span>}
-              {datetime && <span class={`${className}__time`}>{datetime}</span>}
-            </div>
+            {this.renderMessageHeader()}
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachments()}
             <slot name="actions">

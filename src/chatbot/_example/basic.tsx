@@ -47,7 +47,7 @@ const mockData: ChatMessagesData[] = [
     content: [
       {
         type: 'text',
-        data: '系统通知：初始化完成，样式看看怎么搞',
+        data: '系统通知：初始化完成',
       },
     ],
   },

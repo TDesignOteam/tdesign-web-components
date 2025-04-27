@@ -52,6 +52,32 @@
       }
     }
 
+    // 存在name、datetime等header区域时
+    &[data-has-header="true"] {
+      .@{prefix}-chat__item__avatar {
+        padding: var(--t-chat-item-avatar-has-header-padding);
+      }
+    }
+
+    &.@{prefix}-chat__item__role-- {
+      // system渲染固定样式
+      &system {
+        .@{prefix}-chat__item__main {
+          align-items: center;
+        }
+        .@{prefix}-chat__item__detail {
+          margin: var(--t-chat-item-system-margin);
+          padding: var(--t-chat-item-system-padding);
+          border-radius: var(--t-chat-item-system-radius);
+          background-color: var(--t-chat-item-system-bg-color);
+          font-size: var(--t-chat-item-system-font-size);
+        }
+        .@{prefix}-chat__text__markdown {
+          color: var(--t-chat-item-system-color);
+        }
+      }
+    }
+
     // 右侧对齐
     &.right {
       .@{prefix}-chat__item__avatar {
@@ -60,6 +86,10 @@
 
       .@{prefix}-chat__item__main {
         align-items: flex-end;
+      }
+
+      .@{prefix}-chat__item__content {
+        text-align: right;
       }
 
       .@{prefix}-chat__item__header {
@@ -315,7 +345,7 @@
   }
   &__search {
     &__wrapper {
-      margin: var(--t-chat-item-text-detail-margin);
+      margin: var(--t-chat-item-search-wrapper-margin);
     }
     &__header {
       cursor: pointer;
