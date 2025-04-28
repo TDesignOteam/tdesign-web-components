@@ -38,14 +38,15 @@
   --t-chat-list-scroll-button-transform: translate(-50%, 0);
 
   --t-chat-item-gap: 38px;
-  --t-chat-item-header-padding: 0 0 0 @pop-padding-xxl;
+  --t-chat-item-header-padding: 0;
   --t-chat-item-text-header-padding: 0;
-  --t-chat-item-header-padding-right: 0 @pop-padding-xxl 0 0;
+  --t-chat-item-header-padding-right: 0;
   --t-chat-item-name-padding: 0 @comp-margin-s 0 0;
   --t-chat-item-name-padding-right: 0 0 0 @pop-padding-xxl;
+  --t-chat-item-name-font: 400 14px/22px;
   --t-chat-item-content-max-width: 800px;
   --t-chat-item-content-padding: @pop-padding-xl @pop-padding-xxl;
-  --t-chat-item-text-content-padding: 0;
+  --t-chat-item-text-content-padding: @pop-padding-xl 0;
   --t-chat-item-text-detail-margin: 10px 0;
   --t-chat-item-content-border: 1px solid transparent;
   --t-chat-item-content-radius: @border-radius-extraLarge;
@@ -55,9 +56,10 @@
   --t-chat-item-system-bg-color: #f3f3f3;
   --t-chat-item-system-font-size: 12px;
   --t-chat-item-system-color: #afafaf;
-  --t-chat-item-avatar-margin: 0 @comp-margin-xs;
+  --t-chat-item-left-avatar-margin: 0 20px 0 4px;
+  --t-chat-item-right-avatar-margin: 0 4px 0 20px;
   --t-chat-item-avatar-padding: 6px 0 0 0;
-  --t-chat-item-avatar-has-header-padding: 30px 0 0 0;
+  --t-chat-item-avatar-has-header-padding: 34px 0 0 0;
   --t-chat-item-search-wrapper-margin: 10px 0;
   --t-chat-item-think-margin-bottom: 12px;
   --t-chat-item-think-gap-p: 0 0 8px 0;
@@ -80,8 +82,8 @@
   --t-chat-item-think-shadow-top-height: 24px;
   --t-chat-item-think-shadow-bottom-height: 24px;
   --t-chat-item-think-inner-padding: 0 12px 8px 12px;
-  --t-chat-item-actions-list-margin: 4px 0 0 16px;
-  --t-chat-item-text-actions-list-margin: 4px 0 0;
+  --t-chat-item-actions-list-margin: 4px 0;
+  --t-chat-item-text-actions-list-margin: 4px 0 0 16px;
   --t-chat-item-actions-list-gap: 8px;
   --t-chat-item-actions-list-padding: 4px;
   --t-chat-item-actions-list-radius: 6px;
@@ -125,6 +127,7 @@
     0px 8px 10px -5px rgba(0, 0, 0, 0.08),
     0px 16px 24px 2px rgba(0, 0, 0, 0.04),
     0px 6px 30px 5px rgba(0, 0, 0, 0.05);
+  --t-chat-item-error-color: #d54941;
 
   --t-chat-item-primary-bg: @bg-color-secondarycontainer;
   --t-chat-item-default-bg: #fff;
