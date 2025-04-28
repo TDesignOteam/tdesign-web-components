@@ -59,10 +59,6 @@
       }
     }
 
-    &[data-hidden-avatar="true"] {
-
-    }
-
     &.@{prefix}-chat__item__role-- {
       // system渲染固定样式
       &system {
@@ -146,11 +142,6 @@
         padding: var(--t-chat-item-text-content-padding);
       }
     }
-  }
-
-  &-chat-loading {
-    width: 100%;
-    padding: @pop-padding-xxl;
   }
 
   &__main {
@@ -312,6 +303,12 @@
 
   &__detail {
     display: block;
+  }
+
+  &__error, &-chat-loading {
+    display: flex;
+    align-items: center;
+    color: var(--t-chat-item-error-color);
   }
 
   &__header {

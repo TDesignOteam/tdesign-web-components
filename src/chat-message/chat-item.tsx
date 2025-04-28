@@ -107,7 +107,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   private renderMessageHeader() {
     const { name, datetime } = this.props;
-    if (!name && !datetime) {
+    if (this.renderMessageStatus || (!name && !datetime)) {
       return null;
     }
     return (
@@ -177,6 +177,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     const { status, content = [] } = this.props.message;
     const { animation = 'skeleton' } = this.props;
     // 如果有任一内容，就不用展示message整体状态
+    console.log('查看转台', status);
     if (content.length > 0 || status === 'complete') {
       return null;
     }
@@ -184,7 +185,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
       return <div className={`${className}__detail`}>已终止</div>;
     }
     if (status === 'error') {
-      return <div className={`${className}__detail`}>出错了</div>;
+      return <div className={`${className}__error`}>！！！请求出错</div>;
     }
     return (
       <div class={`${className}-chat-loading`}>
@@ -321,7 +322,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   render(props: ChatMessageProps) {
-    const { message, variant, placement, avatar } = props;
+    const { message, variant, placement } = props;
     // if (!message?.content || message.content.length === 0) return;
 
     const baseClass = `${className}__inner`;
@@ -333,7 +334,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
       <div
         className={classname(baseClass, roleClass, variantClass, placementClass)}
         data-has-header={!!this.renderMessageHeader()}
-        data-hidden-avatar={!avatar}
       >
         {this.renderAvatar()}
         {this.renderMessageStatus}
