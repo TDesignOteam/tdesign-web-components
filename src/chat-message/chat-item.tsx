@@ -60,6 +60,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     customRenderConfig: Object,
     onActions: Function,
     isLast: Boolean,
+    animation: String,
   };
 
   static defaultProps = {
