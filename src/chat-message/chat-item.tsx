@@ -119,7 +119,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   private renderAvatar() {
-    console.log('====avatar', this.props.avatar, this.props.name);
     if (!this.props.avatar) {
       // 不要返回null，有抖动问题
       return <div hidden />;
@@ -173,7 +172,8 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   get renderMessageStatus() {
-    if (!isAIMessage(this.props.message)) return null;
+    // console.log('=====renderMessageStatus', isAIMessage(this.props.message));
+    // if (!isAIMessage(this.props.message)) return null;
     const { status, content = [] } = this.props.message;
     const { animation = 'skeleton' } = this.props;
     // 如果有任一内容，就不用展示message整体状态
@@ -322,7 +322,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   render(props: ChatMessageProps) {
     const { message, variant, placement } = props;
-    if (!message?.content || message.content.length === 0) return;
+    // if (!message?.content || message.content.length === 0) return;
 
     const baseClass = `${className}__inner`;
     const roleClass = `${className}__role--${message.role}`;

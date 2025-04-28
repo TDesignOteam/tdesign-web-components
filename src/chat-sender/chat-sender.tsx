@@ -149,29 +149,27 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     const { disabled } = this.props;
 
     return (
-      <slot name="sender">
-        <t-button
-          theme="default"
-          size="small"
-          variant="text"
-          className={classname([
-            `${className}__button`,
-            {
-              [`${className}__button--focus`]: this.inputValue || this.props.loading,
-            },
-          ])}
-          onClick={this.clickSend}
-          disabled={disabled}
-        >
-          {convertToLightDomNode(
-            this.props.loading ? (
-              <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
-            ) : (
-              <t-icon-send className={`${className}__button__icon`} />
-            ),
-          )}
-        </t-button>
-      </slot>
+      <t-button
+        theme="default"
+        size="small"
+        variant="text"
+        className={classname([
+          `${className}__button`,
+          {
+            [`${className}__button--focus`]: this.inputValue || this.props.loading,
+          },
+        ])}
+        onClick={this.clickSend}
+        disabled={disabled}
+      >
+        {convertToLightDomNode(
+          this.props.loading ? (
+            <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
+          ) : (
+            <t-icon-send className={`${className}__button__icon`} />
+          ),
+        )}
+      </t-button>
     );
   };
 

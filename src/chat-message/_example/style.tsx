@@ -18,6 +18,7 @@ const userMsg = {
 const AIMsg = {
   id: (Math.random() * 10000).toString(),
   role: 'assistant',
+  status: 'pending',
   content: [
     {
       type: 'text',
@@ -43,9 +44,10 @@ export default class BasicExample extends Component {
         ></t-chat-item>
         <t-chat-item
           variant="text"
+          animation="circle"
           placement="left"
           avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-          name="张三"
+          name="DeepSeek"
           message={AIMsg}
         ></t-chat-item>
         <t-chat-item message={{ role: 'system', content: [{ type: 'text', data: '这是系统消息' }] }}></t-chat-item>
@@ -60,8 +62,19 @@ export default class BasicExample extends Component {
           variant="outline"
           placement="left"
           avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-          name="张三"
+          name="DeepSeek"
           message={AIMsg}
+        ></t-chat-item>
+        <t-chat-item
+          variant="outline"
+          placement="left"
+          animation="circle"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="DeepSeek"
+          message={{
+            role: 'assistant',
+            status: 'pending',
+          }}
         ></t-chat-item>
       </>
     );
