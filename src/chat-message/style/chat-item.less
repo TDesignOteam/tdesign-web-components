@@ -59,6 +59,10 @@
       }
     }
 
+    &[data-hidden-avatar="true"] {
+
+    }
+
     &.@{prefix}-chat__item__role-- {
       // system渲染固定样式
       &system {
@@ -82,14 +86,24 @@
     &.right {
       .@{prefix}-chat__item__avatar {
         order: 2;
+        margin: var(--t-chat-item-right-avatar-margin);
       }
 
       .@{prefix}-chat__item__main {
         align-items: flex-end;
-      }
 
-      .@{prefix}-chat__item__content {
-        text-align: right;
+        .@{prefix}-chat__item__content {
+          text-align: right;
+        }
+  
+        .@{prefix}-chat__item__name {
+          order: 2;
+          padding: var(--t-chat-item-name-padding-right);
+        }
+  
+        .@{prefix}-attachment-list {
+          justify-content: flex-end;
+        }
       }
 
       .@{prefix}-chat__item__header {
@@ -104,11 +118,6 @@
         justify-content: flex-end;
       }
     }
-
-    .@{prefix}-chat__item__name, .@{prefix}-chat__item__time {
-      font-weight: normal;
-    }
-
   }
 
   // variant
@@ -132,19 +141,10 @@
 
   &--variant--text {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__item__header {
-        padding: var(--t-chat-item-text-header-padding);
-      }
       .@{prefix}-chat__item__content {
-        padding: var(--t-chat-item-text-content-padding);
         background-color: transparent;
+        padding: var(--t-chat-item-text-content-padding);
       }
-      .@{prefix}-chat__item__actions {
-        margin: var(--t-chat-item-text-actions-list-margin);
-      }
-    }
-    .@{prefix}-chat__item__detail {
-      margin: var(--t-chat-item-text-detail-margin);
     }
   }
 
@@ -169,7 +169,7 @@
     flex-shrink: 0;
     cursor: pointer;
     display: flex;
-    margin: var(--t-chat-item-avatar-margin);
+    margin: var(--t-chat-item-left-avatar-margin);
     padding: var(--t-chat-item-avatar-padding);
   
     &__box {
@@ -194,7 +194,6 @@
     &:empty {
       display: none;
     }
-
   }
 
   &__think {
@@ -320,7 +319,7 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: baseline;
-    font: @font-title-small;
+    font: var(--t-chat-item-name-font);
     color: @text-color-placeholder;
     padding: var(--t-chat-item-header-padding);
 
@@ -479,4 +478,8 @@
     }
 
   }
+}
+
+.@{prefix}-chat-actions {
+  margin: var(--t-chat-item-actions-list-margin);
 }

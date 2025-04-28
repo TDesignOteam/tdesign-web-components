@@ -108,7 +108,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   private renderMessageHeader() {
     const { name, datetime } = this.props;
     if (!name && !datetime) {
-      return <div hidden />;
+      return null;
     }
     return (
       <div class={`${className}__header`}>
@@ -321,7 +321,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   render(props: ChatMessageProps) {
-    const { message, variant, placement } = props;
+    const { message, variant, placement, avatar } = props;
     // if (!message?.content || message.content.length === 0) return;
 
     const baseClass = `${className}__inner`;
@@ -333,6 +333,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
       <div
         className={classname(baseClass, roleClass, variantClass, placementClass)}
         data-has-header={!!this.renderMessageHeader()}
+        data-hidden-avatar={!avatar}
       >
         {this.renderAvatar()}
         {this.renderMessageStatus}
