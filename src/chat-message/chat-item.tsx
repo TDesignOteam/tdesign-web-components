@@ -190,7 +190,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
     }
     return (
       <div class={`${className}-chat-loading`}>
-        {convertToLightDomNode(<t-chat-loading animation={animation}></t-chat-loading>)}
+        {convertToLightDomNode(
+          <t-chat-loading className={`${className}-chat-loading-light`} animation={animation}></t-chat-loading>,
+        )}
       </div>
     );
   }

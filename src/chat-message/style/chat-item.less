@@ -305,10 +305,20 @@
     display: block;
   }
 
-  &__error, &-chat-loading {
+  &__error {
     display: flex;
     align-items: center;
     color: var(--t-chat-item-error-color);
+  }
+
+  &-chat-loading {
+    width: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  &-chat-loading-light {
+    width: 100%;
   }
 
   &__header {
