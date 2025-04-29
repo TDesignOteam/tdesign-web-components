@@ -68,7 +68,7 @@ export default class BasicExample extends Component {
         <t-chat-item
           variant="outline"
           placement="left"
-          animation="circle"
+          animation="skeleton"
           avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
           name="DeepSeek"
           message={{

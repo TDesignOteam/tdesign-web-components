@@ -126,7 +126,7 @@ export type ChatComment = 'good' | 'bad' | '';
 
 export interface AIMessage extends BaseMessage {
   role: 'assistant';
-  content: AIMessageContent[];
+  content?: AIMessageContent[];
   /** 点赞点踩 */
   comment?: ChatComment;
 }
