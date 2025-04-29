@@ -266,11 +266,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
       // AI消息渲染
       if (role === 'assistant') {
-        // 自定义渲染
-        if (renderer) {
-          const config = renderer(content);
-          return <slot key={elementKey} name={`${config?.slotName || `${content.type}-${index}`}`}></slot>;
-        }
         if (isSearchContent(content)) {
           return renderSearch({
             content: content.data,
@@ -317,7 +312,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
             ></t-chat-md-content>,
           );
         }
-        return null;
+        // 自定义渲染slot
+        const config = renderer?.(content);
+        return <slot key={elementKey} name={`${config?.slotName || `${content.type}-${index}`}`}></slot>;
       }
 
       return null;

@@ -3,6 +3,10 @@
 .@{prefix}-chat-loading {
   display: flex;
   align-items: center;
+
+  & *, *::before, *::after {
+    box-sizing: border-box;
+  }
   
   &__skeleton {
     display: block;

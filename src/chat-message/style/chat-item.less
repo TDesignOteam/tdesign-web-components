@@ -192,6 +192,10 @@
     width: 100%;
     margin-bottom: var(--t-chat-item-think-margin-bottom);
 
+    & *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     &::part(@{prefix}-collapse) {
       width: 100%;
       border: var(--t-chat-item-think-border);
@@ -353,6 +357,10 @@
     gap: var(--t-chat-item-attachments-margin-top);
   }
   &__search {
+    & *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     &__wrapper {
       margin: var(--t-chat-item-search-wrapper-margin);
     }
@@ -465,6 +473,11 @@
     flex-direction: column;
     gap: var(--t-chat-item-suggestion-gap);
     margin: var(--t-chat-item-suggestion-margin);
+
+    & *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
     &-item {
       display: flex;
       font-size: var(--t-chat-item-suggestion-font-size);
