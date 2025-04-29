@@ -53,6 +53,12 @@ export default class MessageProcessor {
   // 处理内容更新
   public processContentUpdate(lastContent: AIMessageContent | undefined, newChunk: AIMessageContent): AIMessageContent {
     const handler = this.contentHandlers.get(newChunk.type);
+    if (!lastContent) {
+      return {
+        ...newChunk,
+        status: newChunk?.status || 'streaming',
+      };
+    }
     // 如果有注册的处理器且类型匹配
     if (handler && lastContent?.type === newChunk.type) {
       return handler(newChunk, lastContent);
@@ -66,7 +72,7 @@ export default class MessageProcessor {
   }
 
   // 通用处理器注册方法
-  private registerHandler<T extends AIMessageContent>(
+  public registerHandler<T extends AIMessageContent>(
     type: T['type'], // 使用类型中定义的type字段作为参数类型
     handler: (chunk: T, existing?: T) => T,
   ) {

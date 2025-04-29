@@ -154,18 +154,19 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
   getTextInfo() {
     const { content } = this.props;
-    if (typeof content !== 'string') return;
+    if (typeof content !== 'string') return '';
     return this.parseMarkdown(content);
   }
 
   parseMarkdown(markdown: string) {
-    if (!this.isMarkdownInit.value || !markdown) return null;
+    if (!this.isMarkdownInit.value || !markdown) return '';
     return this.md?.render(markdown);
   }
 
   render({ role }: OmiProps<TdChatMarkdownContentProps>) {
     const roleClass = `${baseClass}--${role}`;
     const textContent = this.getTextInfo() || '';
+    if (!textContent) return;
     return (
       <div className={`${baseClass}`}>
         <div className={`${baseClass}__markdown ${roleClass}`} unsafeHTML={{ html: textContent }}></div>
