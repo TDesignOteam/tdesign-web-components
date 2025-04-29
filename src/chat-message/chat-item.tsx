@@ -17,8 +17,7 @@ import { Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
-import { TdChatActionsName } from '../chat-action';
-import { DefaultChatMessageActionsName, renderActions } from '../chat-action/action';
+import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
   AttachmentItem,
   isAIMessage,
@@ -31,7 +30,7 @@ import {
   isUserMessage,
   UserMessageContent,
 } from '../chatbot/core/type';
-import type { ChatComment, TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
+import type { TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
@@ -40,9 +39,7 @@ import styles from './style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-type ChatMessageProps = TdChatItemProps & {
-  isLast: boolean;
-};
+type ChatMessageProps = TdChatItemProps;
 @tag('t-chat-item')
 export default class ChatItem extends Component<ChatMessageProps> {
   static css = [styles];
@@ -59,7 +56,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
     chatContentProps: Object,
     customRenderConfig: Object,
     handleActions: Object,
-    isLast: Boolean,
     animation: String,
   };
 
@@ -67,13 +63,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
     actions: DefaultChatMessageActionsName,
     variant: 'text',
     placement: 'left',
-    isLast: true,
   };
 
   searchExpand = signal(false);
-
-  /** 点赞点踩目前做成非受控，点了就生效 */
-  pComment = signal<ChatComment>(undefined);
 
   receiveProps(
     props: ChatMessageProps | OmiProps<ChatMessageProps, any>,
@@ -90,20 +82,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
     if (
       isAIMessage(newMsg) &&
       isAIMessage(oldMsg) &&
-      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length &&
-      props.isLast === oldProps.isLast
+      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
     ) {
       return false;
     }
 
     return true;
-  }
-
-  ready() {
-    const { message } = this.props;
-    if (message && isAIMessage(message)) {
-      this.pComment.value = message.comment;
-    }
   }
 
   private renderMessageHeader() {
@@ -154,24 +138,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
     );
   };
 
-  get copyContent() {
-    if (!isAIMessage(this.props.message)) {
-      return '';
-    }
-    return this.props.message.content.reduce((pre, item) => {
-      let append = '';
-      if (isTextContent(item) || isMarkdownContent(item)) {
-        append = item.data;
-      } else if (isThinkingContent(item)) {
-        append = item.data.text;
-      }
-      if (!pre) {
-        return append;
-      }
-      return `${pre}\n${append}`;
-    }, '');
-  }
-
   get renderMessageStatus() {
     // console.log('=====renderMessageStatus', isAIMessage(this.props.message));
     // if (!isAIMessage(this.props.message)) return null;
@@ -194,18 +160,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
         )}
       </div>
     );
-  }
-
-  get actionBar() {
-    const { actions, isLast, message } = this.props;
-    if (!isAIMessage(message) || !actions) return false;
-    let filterdActions = actions;
-    if (actions) filterdActions = DefaultChatMessageActionsName;
-    if (Array.isArray(filterdActions) && !isLast) {
-      // 只有最后一条AI消息才能重新生成
-      filterdActions = filterdActions.filter((item) => item !== 'replay');
-    }
-    return filterdActions;
   }
 
   private renderAttachments() {
@@ -342,18 +296,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
             {this.renderMessageHeader()}
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachments()}
-            <slot name="actions">
-              {message.status !== 'complete' && message.status !== 'stop'
-                ? null
-                : renderActions(
-                    {
-                      actionBar: this.actionBar as TdChatActionsName[] | boolean,
-                      handleAction: this.handleClickAction,
-                      copyText: this.copyContent,
-                    },
-                    this.pComment,
-                  )}
-            </slot>
+            <slot name="actionbar"></slot>
           </div>
         ) : null}
       </div>

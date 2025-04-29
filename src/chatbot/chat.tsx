@@ -7,13 +7,25 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
+import { TdChatActionsName } from '../chat-action';
+import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { TdChatSenderSend } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
-import type { AttachmentItem, ChatMessagesData, ChatMessageStore, ChatStatus, RequestParams } from './core/type';
+import {
+  type AttachmentItem,
+  type ChatMessagesData,
+  type ChatMessageStore,
+  type ChatStatus,
+  isAIMessage,
+  isMarkdownContent,
+  isTextContent,
+  isThinkingContent,
+  type RequestParams,
+} from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
-import type { TdChatbotApi, TdChatMessageConfig, TdChatProps } from './type';
+import type { TdChatbotApi, TdChatItemActionName, TdChatItemProps, TdChatMessageConfig, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 
@@ -243,6 +255,30 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     );
   };
 
+  private handleClickAction = (
+    action: Partial<TdChatItemActionName>,
+    opts: {
+      messageProps: TdChatItemProps;
+      data?: any;
+    },
+  ) => {
+    const { messageProps, data } = opts;
+    const toData = {
+      ...data,
+      message: messageProps.message,
+    };
+    if (messageProps?.handleActions?.[action]) {
+      messageProps.handleActions[action](toData);
+    }
+    this.fire(
+      'chat_message_action',
+      { action, data: toData },
+      {
+        composed: true,
+      },
+    );
+  };
+
   /**
    * 渲染消息项
    */
@@ -252,19 +288,33 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       const { role, id } = item;
       const itemSlotNames = this.slotNames.filter((key) => key.includes(id));
       const isLast = id === this.messagesStore.messageIds.at(-1);
+      const itemProps = {
+        ...this.messageRoleProps?.[role],
+        message: item,
+        isLast,
+      };
       return (
-        <t-chat-item
-          key={id}
-          className={`${className}-item-wrapper`}
-          {...this.messageRoleProps?.[role]}
-          message={item}
-          isLast={isLast}
-        >
+        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => {
             const str = slotName.replace(RegExp(`^${id}-`), '');
             return <slot name={slotName} slot={str}></slot>;
           })}
+          {/* 渲染actionBar */}
+          {item.status !== 'complete' && item.status !== 'stop' ? null : (
+            <t-chat-action
+              slot="actionbar"
+              actionBar={getChatActionBar(itemProps) as TdChatActionsName[]}
+              handleAction={(action, data) =>
+                this.handleClickAction(action, {
+                  messageProps: itemProps,
+                  data,
+                })
+              }
+              copyText={getCopyContent(item)}
+              comment={isAIMessage(item) ? item.comment : false}
+            />
+          )}
         </t-chat-item>
       );
     });
@@ -314,4 +364,38 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       </div>
     );
   }
+}
+
+function getChatActionBar(
+  messageProps: TdChatItemProps & {
+    isLast: boolean;
+  },
+) {
+  const { actions, isLast, message } = messageProps;
+  if (!isAIMessage(message) || !actions) return false;
+  let filterActions = actions;
+  if (actions) filterActions = DefaultChatMessageActionsName;
+  if (Array.isArray(filterActions) && !isLast) {
+    // 只有最后一条AI消息才能重新生成
+    filterActions = filterActions.filter((item) => item !== 'replay');
+  }
+  return filterActions;
+}
+
+function getCopyContent(message: ChatMessagesData) {
+  if (!isAIMessage(message)) {
+    return '';
+  }
+  return message.content.reduce((pre, item) => {
+    let append = '';
+    if (isTextContent(item) || isMarkdownContent(item)) {
+      append = item.data;
+    } else if (isThinkingContent(item)) {
+      append = item.data.text;
+    }
+    if (!pre) {
+      return append;
+    }
+    return `${pre}\n${append}`;
+  }, '');
 }
