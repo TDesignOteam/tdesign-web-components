@@ -144,10 +144,9 @@ const mockLLMAgent = {
 
 const messageProps: TdChatMessageConfig = {
   assistant: {
-    onActions: {
-      replay: (data, callback) => {
+    handleActions: {
+      replay: (data) => {
         console.log('自定义重新回复', data);
-        callback?.();
       },
       good: (data) => {
         console.log('点赞', data);

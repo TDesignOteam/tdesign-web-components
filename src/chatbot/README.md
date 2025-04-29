@@ -83,7 +83,7 @@ spline: base
 | 属性名 | 类型 | 说明 |
 |--------|------|------|
 | actions | `TdChatItemAction[]` \| `Function` \| `boolean` | 消息操作按钮配置，可以是预设数组、生成函数或布尔值(是否显示) |
-| onActions | `Record<TdChatItemActionName, Function>` | 操作按钮回调函数 |
+| handleActions | `Record<TdChatItemActionName, Function>` | 操作按钮回调函数 |
 | animation | `skeleton/moving/gradient/circle` | 动画效果 |
 | name | `string` \| `TNode` | 作者名称或自定义渲染节点 |
 | avatar | `string` \| `TNode` | 头像URL或自定义渲染节点 |
