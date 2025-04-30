@@ -18,12 +18,17 @@ export default class Loading extends Component<TdChatLoadingProps> {
     text: String,
   };
 
+  static defaultProps: Partial<TdChatLoadingProps> = {
+    text: '',
+    animation: 'moving',
+  };
+
   containerRef = createRef<HTMLElement>();
 
   installed() {}
 
   get renderIcon() {
-    const { animation = 'moving' } = this.props;
+    const { animation } = this.props;
     if (['gradient', 'circle'].includes(animation)) {
       return <div class={`${className}__${animation}`} />;
     }
@@ -42,7 +47,7 @@ export default class Loading extends Component<TdChatLoadingProps> {
   }
 
   render(props: TdChatLoadingProps) {
-    const { text = '', animation = 'moving' } = props;
+    const { text, animation } = props;
 
     return (
       <div class={classname(`${className}`, animation === 'skeleton' && `${className}__skeleton`)}>
