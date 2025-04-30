@@ -1,4 +1,13 @@
-import { ChatMessagesData, isAIMessage, isMarkdownContent, isTextContent, isThinkingContent } from '../type';
+import {
+  AIMessageContent,
+  ChatMessagesData,
+  ImageContent,
+  MarkdownContent,
+  SearchContent,
+  SuggestionContent,
+  TextContent,
+  ThinkingContent,
+} from '../type';
 
 export function findTargetElement(event: MouseEvent, selector: string | string[]): HTMLElement | null {
   // 统一处理选择器输入格式（支持字符串或数组）
@@ -21,7 +30,41 @@ export function findTargetElement(event: MouseEvent, selector: string | string[]
   return null; // 未找到返回null
 }
 
-export function getMessageContentForCopy(message: ChatMessagesData) {
+// 类型守卫函数
+export function isUserMessage(message: ChatMessagesData) {
+  return message.role === 'user' && 'content' in message;
+}
+
+export function isAIMessage(message: ChatMessagesData) {
+  return message.role === 'assistant';
+}
+
+export function isThinkingContent(content: AIMessageContent): content is ThinkingContent {
+  return content.type === 'thinking';
+}
+
+export function isTextContent(content: AIMessageContent): content is TextContent {
+  return content.type === 'text';
+}
+
+export function isMarkdownContent(content: AIMessageContent): content is MarkdownContent {
+  return content.type === 'markdown';
+}
+
+export function isImageContent(content: AIMessageContent): content is ImageContent {
+  return content.type === 'image';
+}
+
+export function isSearchContent(content: AIMessageContent): content is SearchContent {
+  return content.type === 'search';
+}
+
+export function isSuggestionContent(content: AIMessageContent): content is SuggestionContent {
+  return content.type === 'suggestion';
+}
+
+/** 提取消息复制内容 */
+export function getMessageContentForCopy(message: ChatMessagesData): string {
   if (!isAIMessage(message)) {
     return '';
   }

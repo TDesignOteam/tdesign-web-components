@@ -17,11 +17,10 @@ import {
   type ChatMessagesData,
   type ChatMessageStore,
   type ChatStatus,
-  isAIMessage,
   type RequestParams,
 } from './core/type';
 import type Chatlist from './chat-list';
-import ChatEngine, { getMessageContentForCopy } from './core';
+import ChatEngine, { getMessageContentForCopy, isAIMessage } from './core';
 import type {
   AIMessageContent,
   TdChatbotApi,

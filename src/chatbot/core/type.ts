@@ -198,36 +198,3 @@ export interface ContentTypeDefinition<T extends string = string, D = any> {
 }
 
 export type ContentRenderer<T extends BaseContent<any, any>> = (content: T) => unknown;
-
-// 类型守卫函数
-export function isUserMessage(message: ChatMessagesData) {
-  return message.role === 'user' && 'content' in message;
-}
-
-export function isAIMessage(message: ChatMessagesData) {
-  return message.role === 'assistant';
-}
-
-export function isThinkingContent(content: AIMessageContent): content is ThinkingContent {
-  return content.type === 'thinking';
-}
-
-export function isTextContent(content: AIMessageContent): content is TextContent {
-  return content.type === 'text';
-}
-
-export function isMarkdownContent(content: AIMessageContent): content is MarkdownContent {
-  return content.type === 'markdown';
-}
-
-export function isImageContent(content: AIMessageContent): content is ImageContent {
-  return content.type === 'image';
-}
-
-export function isSearchContent(content: AIMessageContent): content is SearchContent {
-  return content.type === 'search';
-}
-
-export function isSuggestionContent(content: AIMessageContent): content is SuggestionContent {
-  return content.type === 'suggestion';
-}

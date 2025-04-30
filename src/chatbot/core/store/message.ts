@@ -3,11 +3,10 @@ import {
   type AIMessageContent,
   type ChatMessagesData,
   type ChatMessageStore,
-  isAIMessage,
-  isUserMessage,
   MessageStatus,
   UserMessage,
 } from '../type';
+import { isAIMessage, isUserMessage } from '../utils';
 import ReactiveState from './reactiveState';
 
 // 专注消息生命周期管理

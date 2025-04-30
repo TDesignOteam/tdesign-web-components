@@ -19,7 +19,6 @@ import classname, { getClassPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
-  AttachmentItem,
   isAIMessage,
   isImageContent,
   isMarkdownContent,
@@ -28,8 +27,8 @@ import {
   isTextContent,
   isThinkingContent,
   isUserMessage,
-  UserMessageContent,
-} from '../chatbot/core/type';
+} from '../chatbot';
+import { AttachmentItem, UserMessageContent } from '../chatbot/core/type';
 import type { TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';

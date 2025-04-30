@@ -142,9 +142,15 @@ export type TdChatMessageConfig = {
 };
 
 export interface TdChatListProps {
+  children?: TNode;
   /** 自动滚动底部 */
   autoScroll?: boolean;
   onScroll?: (e: Event) => void;
+}
+
+export interface TdChatListApi {
+  /** 滚动到底部 */
+  scrollToBottom: (opts?: ScrollOptions) => void;
 }
 
 type TdChatContentSearchProps = {

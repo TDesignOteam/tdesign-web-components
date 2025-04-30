@@ -6,11 +6,11 @@ import {
   type ChatMessagesData,
   type ChatServiceConfig,
   type ChatServiceConfigSetter,
-  isAIMessage,
   type RequestParams,
   type SSEChunkData,
   type SystemMessage,
 } from './type';
+import { isAIMessage } from './utils';
 
 export interface IChatEngine {
   sendUserMessage(requestParams: RequestParams): Promise<void>;
