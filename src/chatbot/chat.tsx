@@ -25,7 +25,14 @@ import {
 } from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine from './core';
-import type { TdChatbotApi, TdChatItemActionName, TdChatItemProps, TdChatMessageConfig, TdChatProps } from './type';
+import type {
+  AIMessageContent,
+  TdChatbotApi,
+  TdChatItemActionName,
+  TdChatItemProps,
+  TdChatMessageConfig,
+  TdChatProps,
+} from './type';
 
 import styles from './style/chat.less';
 
@@ -191,6 +198,16 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   async abortChat() {
     await this.chatEngine.abortChat();
     this.update();
+  }
+
+  /**
+   * 注册自定义消息内容合并策略
+   */
+  public registerMergeStrategy<T extends AIMessageContent>(
+    type: T['type'], // 使用类型中定义的type字段作为参数类型
+    handler: (chunk: T, existing?: T) => T,
+  ) {
+    this.chatEngine.registerMergeStrategy(type, handler);
   }
 
   /**

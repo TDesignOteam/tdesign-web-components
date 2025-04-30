@@ -410,7 +410,7 @@ export default class BasicChat extends Component {
     assistant: {
       // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       actions: ['replay', 'copy', 'good', 'bad'],
-      onActions: {
+      handleActions: {
         replay: (data) => {
           console.log('自定义重新回复', data);
           this.chatRef.current.regenerate();
