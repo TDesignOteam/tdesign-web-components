@@ -1,6 +1,7 @@
 import cors from 'cors';
 import express from 'express';
 
+import { agentChunks } from './agent.js';
 import { chunks } from './data.js';
 
 const app = express();
@@ -21,7 +22,36 @@ const setSSEHeaders = (res) => {
 app.post('/sse/test', (req, res) => {
   res.send('Hello sse!');
 });
+app.post('/sse/agent', (req, res) => {
+  console.log('Received POST body:', req.body); // 打印请求体
+  setSSEHeaders(res);
 
+  // 将chunks转换为SSE格式消息
+  const messages = agentChunks.map((chunk) => {
+    switch (chunk.type) {
+      case 'text':
+        return `event: message\ndata: ${JSON.stringify({
+          type: 'text',
+          msg: chunk.msg,
+        })}\n\n`;
+      case 'agent':
+        return `event: ${chunk.type}\ndata: ${JSON.stringify({
+          type: 'agent',
+          id: chunk.id,
+          state: chunk.state,
+          content: chunk.content,
+        })}\n\n`;
+      default:
+        return `event: ${chunk.type}\ndata: ${JSON.stringify({
+          type: '',
+          id: chunk.id,
+          content: chunk.content,
+        })}\n\n`;
+    }
+  });
+
+  sendStream(res, messages, 300, req);
+});
 // 支持POST请求的SSE端点
 app.post('/sse/normal', (req, res) => {
   console.log('Received POST body:', req.body); // 打印请求体

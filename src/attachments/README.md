@@ -24,8 +24,9 @@ spline: base
 
 名称 | 类型 | 默认值 | 说明 | 必传
 -- | -- | -- | -- | --
-onRemove | (item:  TdAttachmentItem) => void / undefined | - | 附件移除时的回调函数 | N
 items |  TdAttachmentItem[] | false | 附件列表，同 Upload UploadFile | Y
+onRemove | (item:  TdAttachmentItem) => void / undefined | - | 附件移除时的回调函数 | N
+removable | boolean | true | 是否显示删除按钮 | N
 overflow | 'wrap'/'scrollX'/'scrollY' | 'wrap' | 文件列表超出时样式 | N
 imageViewer | Boolean | true | 图片预览开关 | N
 
