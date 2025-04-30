@@ -19,6 +19,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
     items: Array,
     overflow: String,
     onRemove: Function,
+    onFileClick: Function,
     removable: Boolean,
     imageViewer: Boolean,
   };
@@ -162,6 +163,11 @@ export default class Attachments extends Component<TdAttachmentsProps> {
               item={item}
               class="t-filecard-item"
               removable={removable}
+              onFileClick={() => {
+                this.fire('file-click', item, {
+                  composed: true,
+                });
+              }}
               onRemove={() => {
                 // 触发删除事件让父组件更新数据源
                 this.fire('remove', item, {

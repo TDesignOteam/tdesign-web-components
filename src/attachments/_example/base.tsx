@@ -63,11 +63,17 @@ export default class Button extends Component {
 
   render() {
     return (
-      <>
-        <t-space>
-          <t-attachments items={this.filesList}></t-attachments>
-        </t-space>
-      </>
+      <t-space>
+        <t-attachments
+          items={this.filesList}
+          onFileClick={(e) => {
+            console.log('clickfile', e.detail);
+          }}
+          onRemove={(e) => {
+            console.log('removefile', e.detail);
+          }}
+        ></t-attachments>
+      </t-space>
     );
   }
 }

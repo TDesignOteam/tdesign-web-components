@@ -73,7 +73,13 @@ export default class Button extends Component {
       <>
         <t-space breakLine>
           {this.filesList.map((file, index) => (
-            <t-filecard key={index} item={file}></t-filecard>
+            <t-filecard
+              key={index}
+              item={file}
+              onFileClick={(e) => {
+                console.log('fileclick', e.detail);
+              }}
+            ></t-filecard>
           ))}
         </t-space>
       </>

@@ -30,6 +30,7 @@ import {
 } from '../chatbot';
 import { AttachmentItem, UserMessageContent } from '../chatbot/core/type';
 import type { TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
+import { renderAttachments } from './content/attachment-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
@@ -161,38 +162,14 @@ export default class ChatItem extends Component<ChatMessageProps> {
     );
   }
 
-  private renderAttachments() {
+  private renderAttachmentPart() {
     if (!isUserMessage(this.props.message)) return null;
     const findAttachment = (this.props.message.content as UserMessageContent[]).find(
       ({ type, data = [] }) => type === 'attachment' && data.length,
     );
     if (!findAttachment) return;
     const attachments = findAttachment.data as AttachmentItem[];
-    // 判断是否全部是图片类型
-    const isAllImages = attachments.every((att) => /image/.test(att.fileType));
-    return (
-      <div className={`${className}__attachments`}>
-        {isAllImages ? (
-          <div className={`${className}__image-grid`}>
-            {attachments.map(({ url, name }, index) => (
-              <div className={`${className}__image-wrapper`} key={index}>
-                {convertToLightDomNode(
-                  <t-image
-                    src={url}
-                    alt={name}
-                    className={`${className}__preview-image`}
-                    shape="round"
-                    loading="lazy"
-                  />,
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          convertToLightDomNode(<t-attachments items={attachments} removable={false} />)
-        )}
-      </div>
-    );
+    return renderAttachments({ content: attachments }, this);
   }
 
   renderMessage() {
@@ -294,7 +271,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
           <div class={`${className}__main`}>
             {this.renderMessageHeader()}
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
-            {this.renderAttachments()}
+            {this.renderAttachmentPart()}
             <slot name="actionbar"></slot>
           </div>
         ) : null}

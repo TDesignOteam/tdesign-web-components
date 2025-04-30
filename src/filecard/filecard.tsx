@@ -29,6 +29,7 @@ export default class FileCard extends Component<TdFileCardProps> {
     disabled: Boolean,
     onRemove: Function,
     removable: Boolean,
+    onFileClick: Function,
     imageViewer: Boolean,
   };
 
@@ -41,8 +42,8 @@ export default class FileCard extends Component<TdFileCardProps> {
   // 预览状态
   previewVisible = false;
 
-  // 切换预览状态
-  togglePreview = () => {
+  private togglePreview = () => {
+    // 切换预览状态
     const { item, imageViewer = true } = this.props;
     if (!imageViewer) return;
     const ext = item.extension || this.state.nameSuffix;
@@ -53,7 +54,7 @@ export default class FileCard extends Component<TdFileCardProps> {
   };
 
   // 关闭预览
-  closePreview = (e: Event) => {
+  private closePreview = (e: Event) => {
     e.stopPropagation();
     this.previewVisible = false;
     this.update();
@@ -209,7 +210,13 @@ export default class FileCard extends Component<TdFileCardProps> {
           [`${className}-status-uploading`]: status === 'progress',
           [`${className}-status-error`]: status === 'fail',
         })}
-        onClick={this.togglePreview}
+        onClick={(e: Event) => {
+          e.stopPropagation();
+          this.fire('file-click', item, {
+            composed: true,
+          });
+          this.togglePreview();
+        }}
       >
         {/* 图片预览蒙层 */}
         {this.previewVisible && (

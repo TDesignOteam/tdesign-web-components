@@ -10,6 +10,7 @@ export interface TdAttachmentItem extends UploadFile {
 export interface TdFileCardProps extends StyledProps {
   item: TdAttachmentItem;
   removable?: boolean;
+  onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
   onRemove?: (event: CustomEvent<TdAttachmentItem>) => void;
   disabled?: boolean;
   imageViewer?: boolean;
