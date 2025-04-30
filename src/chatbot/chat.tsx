@@ -18,13 +18,10 @@ import {
   type ChatMessageStore,
   type ChatStatus,
   isAIMessage,
-  isMarkdownContent,
-  isTextContent,
-  isThinkingContent,
   type RequestParams,
 } from './core/type';
 import type Chatlist from './chat-list';
-import ChatEngine from './core';
+import ChatEngine, { getMessageContentForCopy } from './core';
 import type {
   AIMessageContent,
   TdChatbotApi,
@@ -328,7 +325,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
                   data,
                 })
               }
-              copyText={getCopyContent(item)}
+              copyText={getMessageContentForCopy(item)}
               comment={isAIMessage(item) ? item.comment : false}
             />
           )}
@@ -397,22 +394,4 @@ function getChatActionBar(
     filterActions = filterActions.filter((item) => item !== 'replay');
   }
   return filterActions;
-}
-
-function getCopyContent(message: ChatMessagesData) {
-  if (!isAIMessage(message)) {
-    return '';
-  }
-  return message.content.reduce((pre, item) => {
-    let append = '';
-    if (isTextContent(item) || isMarkdownContent(item)) {
-      append = item.data;
-    } else if (isThinkingContent(item)) {
-      append = item.data.text;
-    }
-    if (!pre) {
-      return append;
-    }
-    return `${pre}\n${append}`;
-  }, '');
 }
