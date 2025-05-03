@@ -387,7 +387,7 @@ function getChatActionBar(
   const { actions, isLast, message } = messageProps;
   if (!isAIMessage(message) || !actions) return false;
   let filterActions = actions;
-  if (actions) filterActions = DefaultChatMessageActionsName;
+  if (!actions) filterActions = DefaultChatMessageActionsName;
   if (Array.isArray(filterActions) && !isLast) {
     // 只有最后一条AI消息才能重新生成
     filterActions = filterActions.filter((item) => item !== 'replay');
