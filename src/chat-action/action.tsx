@@ -51,7 +51,7 @@ export const renderActions = (
       icon: <t-icon-thumb-up />,
       clickCallback: (e) => {
         pComment.value = 'good';
-        handleAction('good', {
+        handleAction?.('good', {
           event: e,
           active: true,
         });
@@ -62,7 +62,7 @@ export const renderActions = (
         config.icon = <t-icon-thumb-up-filled />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
-          handleAction('good', {
+          handleAction?.('good', {
             event: e,
             active: false,
           });
@@ -74,7 +74,7 @@ export const renderActions = (
         config.icon = <t-icon-thumb-down-filled />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
-          handleAction('bad', {
+          handleAction?.('bad', {
             event: e,
             active: false,
           });
@@ -83,7 +83,7 @@ export const renderActions = (
         config.icon = <t-icon-thumb-down />;
         config.clickCallback = (e) => {
           pComment.value = 'bad';
-          handleAction('bad', {
+          handleAction?.('bad', {
             event: e,
             active: true,
           });

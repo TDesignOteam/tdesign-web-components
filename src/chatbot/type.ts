@@ -3,7 +3,7 @@ import { type TdChatLoadingProps } from '../chat-loading';
 import { type TdChatMarkdownContentProps } from '../chat-message';
 import { type TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
-import type { ChatServiceConfigSetter, ChatStatus, ContentType, RequestParams } from './core/type';
+import type { AIMessageContent, ChatServiceConfigSetter, ChatStatus, ContentType, RequestParams } from './core/type';
 import type { ChatMessagesData } from './core/type';
 
 export type TdChatItemActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
@@ -135,6 +135,13 @@ export interface TdChatbotApi {
    * * @param keepVersion - 是否保留之前版本（默认false)
    */
   regenerate: (keepVersion?: boolean) => Promise<void>;
+  /**
+   * 注册自定义消息内容合并策略
+   */
+  registerMergeStrategy: <T extends AIMessageContent>(
+    type: T['type'], // 使用类型中定义的type字段作为参数类型
+    handler: (chunk: T, existing?: T) => T,
+  ) => void;
 }
 
 export type TdChatMessageConfig = {
