@@ -481,6 +481,7 @@ export default class BasicChat extends Component {
         messages={mockData}
         // autoSendPrompt="自动发送问题"
         messageProps={this.messageProps}
+        listProps={{ defaultScrollPosition: 'top' }}
         senderProps={{
           actions: true,
           placeholder: '请输入问题',

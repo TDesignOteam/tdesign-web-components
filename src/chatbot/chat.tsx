@@ -44,6 +44,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     reverse: Boolean,
     messages: Array,
     messageProps: Object,
+    listProps: Object,
     senderProps: Object,
     chatServiceConfig: [Object, Function],
     injectCSS: Object,
