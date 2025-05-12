@@ -240,6 +240,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
               onKeyUp={this.handleKeyUp}
               onCompositionStart={this.handleCompositionStart}
               onCompositionEnd={this.handleCompositionEnd}
+              onFocus={this.handleFocus}
+              onBlur={this.handleBlur}
             />
           </div>
           <div className={`${className}__footer`}>
@@ -282,6 +284,18 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   private handleCompositionEnd = () => {
     this.shiftDown = false;
+  };
+
+  private handleFocus = () => {
+    this.fire('focus', this.inputValue, {
+      composed: true,
+    });
+  };
+
+  private handleBlur = () => {
+    this.fire('blur', this.inputValue, {
+      composed: true,
+    });
   };
 
   private handleAction = (action: string, index: number) => {
