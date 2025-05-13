@@ -114,7 +114,8 @@ type AIContentTypeMap = {
 //   [K in keyof AIContentTypeMap]: AIContentTypeMap[K];
 // }[keyof AIContentTypeMap];
 
-export type AIMessageContent = AIContentTypeMap[keyof AIContentTypeMap];
+export type AIContentType = keyof AIContentTypeMap;
+export type AIMessageContent = AIContentTypeMap[AIContentType];
 export type UserMessageContent = TextContent | AttachmentContent;
 
 export interface UserMessage extends BaseMessage {

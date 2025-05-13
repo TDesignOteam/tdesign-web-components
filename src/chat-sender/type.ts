@@ -14,7 +14,7 @@ export interface TdChatSenderSend {
 }
 
 export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
-  value: string;
+  value?: string;
   placeholder?: string;
   disabled?: boolean;
   defaultValue?: string;

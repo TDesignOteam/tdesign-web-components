@@ -128,7 +128,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 合并消息配置、初始化引擎、同步状态、订阅聊天
    */
   private initChat() {
-    const { messages, messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
+    const { messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
     this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     this.chatEngine.init(config, messages);
     const { messageStore } = this.chatEngine;
@@ -148,7 +148,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 同步聊天状态
    * @param {ChatMessagesData[]} state - 新的状态值
    */
-  private syncState(state) {
+  private syncState(state: ChatMessagesData[]) {
     this.chatMessages.value = state;
     this.chatStatus = state.at(-1)?.status || 'idle';
     this.fire('message_change', state, {

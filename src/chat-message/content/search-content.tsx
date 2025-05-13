@@ -26,7 +26,7 @@ export type TdChatSearchContentProps = {
 export const renderSearch = ({
   content,
   status,
-  expandable,
+  expandable = true,
   handleSearchResultClick,
   handleSearchItemClick,
 }: TdChatSearchContentProps) => {
