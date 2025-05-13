@@ -301,11 +301,9 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = this.slotNames.filter((key) => key.includes(id));
-      const isLast = id === this.messagesStore.messageIds.at(-1);
       const itemProps = {
         ...this.messageRoleProps?.[role],
         message: item,
-        isLast,
       };
       return (
         <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
@@ -318,7 +316,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
           {item.status !== 'complete' && item.status !== 'stop' ? null : (
             <t-chat-action
               slot="actionbar"
-              actionBar={getChatActionBar(itemProps) as TdChatActionsName[]}
+              actionBar={this.getChatActionBar(itemProps) as TdChatActionsName[]}
               handleAction={(action, data) =>
                 this.handleClickAction(action, {
                   messageProps: itemProps,
@@ -344,6 +342,21 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       const str = slotName.replace(/^sender-/, '');
       return <slot name={slotName} slot={str}></slot>;
     });
+  };
+
+  private getChatActionBar = (messageProps: TdChatItemProps) => {
+    const { actions, message } = messageProps;
+    const ids = this.messagesStore.messageIds;
+    const isLast = message.id === ids.at(-1);
+    const isFirstAI = isAIMessage(message) && message.id === ids[0];
+    if (!isAIMessage(message) || !actions || isFirstAI || ids.length === 1) return false;
+    let filterActions = actions;
+    if (actions === true) filterActions = DefaultChatMessageActionsName;
+    if (Array.isArray(filterActions) && !isLast) {
+      // 只有最后一条AI消息才能重新生成
+      filterActions = filterActions.filter((item) => item !== 'replay');
+    }
+    return filterActions;
   };
 
   // 动态注入插槽需要每次render都更新children
@@ -382,20 +395,4 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       </div>
     );
   }
-}
-
-function getChatActionBar(
-  messageProps: TdChatItemProps & {
-    isLast: boolean;
-  },
-) {
-  const { actions, isLast, message } = messageProps;
-  if (!isAIMessage(message) || !actions) return false;
-  let filterActions = actions;
-  if (!actions) filterActions = DefaultChatMessageActionsName;
-  if (Array.isArray(filterActions) && !isLast) {
-    // 只有最后一条AI消息才能重新生成
-    filterActions = filterActions.filter((item) => item !== 'replay');
-  }
-  return filterActions;
 }
