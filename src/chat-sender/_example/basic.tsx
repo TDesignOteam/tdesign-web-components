@@ -23,6 +23,14 @@ export default class BasicExample extends Component {
     this.loading.value = false;
   };
 
+  onFocus = (e) => {
+    console.log('focus', e);
+  };
+
+  onBlur = (e) => {
+    console.log('blur', e);
+  };
+
   render() {
     return (
       <t-chat-sender
@@ -33,6 +41,8 @@ export default class BasicExample extends Component {
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}
+        onFocus={this.onFocus}
+        onBlur={this.onBlur}
       ></t-chat-sender>
     );
   }

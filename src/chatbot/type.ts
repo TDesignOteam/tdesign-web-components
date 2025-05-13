@@ -148,10 +148,14 @@ export type TdChatMessageConfig = {
   [key in ModelRoleEnum]?: Omit<TdChatItemProps, 'message'>;
 };
 
+export type ScrollPosition = 'top' | 'bottom';
+
 export interface TdChatListProps {
   children?: TNode;
   /** 自动滚动底部 */
   autoScroll?: boolean;
+  /** 初始滚动条停留的位置 */
+  defaultScrollPosition?: ScrollPosition;
   onScroll?: (e: Event) => void;
 }
 

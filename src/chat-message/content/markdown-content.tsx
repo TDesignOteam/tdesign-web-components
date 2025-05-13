@@ -71,13 +71,14 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
   isMarkdownInit = signal(false);
 
-  install() {
+  ready() {
     this.initMarkdown();
   }
 
   initMarkdown = async () => {
     const { options, pluginConfig } = this.props;
 
+    this.isMarkdownInit.value = false;
     const md = MarkdownIt({
       ...options,
     })

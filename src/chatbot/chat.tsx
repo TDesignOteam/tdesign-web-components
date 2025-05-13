@@ -44,6 +44,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     reverse: Boolean,
     messages: Array,
     messageProps: Object,
+    listProps: Object,
     senderProps: Object,
     chatServiceConfig: [Object, Function],
     injectCSS: Object,
@@ -353,11 +354,15 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     this.props.children = convertNodeListToVNodes(this.childNodes);
   }
 
-  render({ layout, injectCSS, senderProps }: OmiProps<TdChatProps>) {
+  render({ layout, injectCSS, senderProps, listProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     return (
       <div className={`${className} ${layoutClass}`}>
-        {this.chatMessageValue && <t-chat-list ref={this.listRef}>{this.renderItems()}</t-chat-list>}
+        {this.chatMessageValue && (
+          <t-chat-list ref={this.listRef} {...listProps}>
+            {this.renderItems()}
+          </t-chat-list>
+        )}
         <t-chat-sender
           ref={this.ChatSenderRef}
           className={`${className}-input-wrapper`}

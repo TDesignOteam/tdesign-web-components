@@ -17,10 +17,12 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   static propTypes = {
     autoScroll: Boolean,
+    defaultScrollPosition: String,
   };
 
   static defaultProps = {
     autoScroll: true,
+    defaultScrollPosition: 'bottom',
   };
 
   private listRef = createRef<HTMLDivElement>();
@@ -36,8 +38,11 @@ export default class Chatlist extends Component<TdChatListProps> {
   /** 主动滚动产生的阻止自动滚动标记 */
   private preventAutoScroll = false;
 
-  /** 当前是否自动滚动 */
-  private isAutoScrollEnabled = true;
+  /**
+   * 当前是否自动滚动
+   * 设为false初始化数据不触发滚动，否则进来就滚到底部了
+   */
+  private isAutoScrollEnabled = false;
 
   scrollButtonVisible = signal(false);
 
@@ -96,6 +101,9 @@ export default class Chatlist extends Component<TdChatListProps> {
   };
 
   ready(): void {
+    const { defaultScrollPosition } = this.props;
+    defaultScrollPosition === 'bottom' && (this.isAutoScrollEnabled = true);
+
     const list = this.listRef.current;
     const inner = this.innerRef.current;
     this.observer = new ResizeObserver(() => {

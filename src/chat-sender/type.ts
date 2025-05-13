@@ -32,6 +32,8 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   onChange?: (e: CustomEvent<string>) => void;
   onFileSelect?: (e: CustomEvent<TdAttachmentItem[]>) => void;
   onFileRemove?: (e: CustomEvent<TdAttachmentItem[]>) => void;
+  onFocus?: (e: CustomEvent<string>) => void;
+  onBlur?: (e: CustomEvent<string>) => void;
 }
 
 export interface TdChatSenderApi {
