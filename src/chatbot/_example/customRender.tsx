@@ -5,7 +5,7 @@ import { Component, createRef, signal } from 'omi';
 import type { TdChatCustomRenderConfig, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import Chatbot from '../chat';
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
+import type { AIContentChunkUpdate, AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
 declare module '../core/type' {
@@ -65,8 +65,7 @@ const defaultChunkParser = (chunk): AIMessageContent => {
   }
 };
 
-function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
-  console.log('chunk', chunk);
+function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
   if (!chunk?.data || typeof chunk === 'string') {
     return {
       type: 'markdown',
@@ -103,6 +102,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       return {
         ...chunk.data,
         data: { ...JSON.parse(chunk.data.content) },
+        strategy: 'append',
       };
     }
 
@@ -132,7 +132,7 @@ const messageProps: TdChatMessageConfig = {
     variant: 'text',
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    actions: (preset) => preset,
+    // actions: (preset) => preset,
     customRenderConfig,
   },
   system: {

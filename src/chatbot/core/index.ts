@@ -2,6 +2,7 @@ import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
 import MessageProcessor from './processor';
 import {
+  AIContentChunkUpdate,
   type AIMessageContent,
   type ChatMessagesData,
   type ChatServiceConfig,
@@ -191,7 +192,7 @@ export default class ChatEngine implements IChatEngine {
   }
 
   // 处理内容更新逻辑
-  private processContentUpdate(messageId: string, rawChunk: AIMessageContent) {
+  private processContentUpdate(messageId: string, rawChunk: AIContentChunkUpdate) {
     const message = this.messageStore.getState().messages.find((m) => m.id === messageId);
     if (!message || !isAIMessage(message)) return;
 
@@ -200,7 +201,15 @@ export default class ChatEngine implements IChatEngine {
     //  const processed = this.processor.processContentUpdate(lastContent, rawChunk);
     //  this.messageStore.appendContent(messageId, processed);
 
-    const targetIndex = message.content.findLastIndex((content) => content.type === rawChunk.type);
+    let targetIndex;
+    // 作为新的内容块追加
+    if (rawChunk?.strategy === 'append') {
+      targetIndex = -1;
+    } else {
+      // 合并/替换到现有同类型内容中
+      targetIndex = message.content.findLastIndex((content) => content.type === rawChunk.type);
+    }
+
     const processed = this.processor.processContentUpdate(
       targetIndex !== -1 ? message.content[targetIndex] : undefined,
       rawChunk,

@@ -17,7 +17,6 @@ export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt'
 export interface BaseContent<T extends string, TData> {
   type: T;
   data: TData;
-  // status?: MessageStatus;
   status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
   id?: string;
 }
@@ -86,7 +85,8 @@ export type ThinkingContent = BaseContent<
 
 // 消息主体
 // 基础消息结构
-interface BaseMessage {
+
+export interface BaseMessage {
   id: string;
   status?: MessageStatus;
   datetime?: string;
@@ -152,13 +152,18 @@ export interface RequestParams extends RequestInit {
 }
 
 // 基础配置类型
+
+export type AIContentChunkUpdate = AIMessageContent & {
+  // 将新内容块和入策略，merge表示和入到同类型内容中，append表示作为新的内容块，默认是merge
+  strategy?: 'merge' | 'append';
+};
 export interface ChatServiceConfig {
   endpoint?: string;
   stream?: boolean;
   retryInterval?: number;
   maxRetries?: number;
   onRequest?: (params: RequestParams) => RequestInit;
-  onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIMessageContent | AIMessageContent[] | null;
+  onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
   onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => Promise<void>;
   onError?: (err: Error | Response) => void;

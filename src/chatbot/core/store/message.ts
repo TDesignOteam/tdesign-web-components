@@ -54,6 +54,26 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
     });
   }
 
+  appendContent2(messageId: string, processedContent: AIMessageContent) {
+    this.setState((draft) => {
+      const message = draft.messages.find((m) => m.id === messageId);
+      if (!message || !isAIMessage(message)) return;
+
+      // 总是操作最后一个内容块
+      const lastContent = message.content.at(-1);
+
+      if (lastContent?.type === processedContent.type) {
+        // 合并到最后一个同类型内容块
+        message.content[message.content.length - 1] = processedContent;
+      } else {
+        // 添加新内容块
+        message.content.push(processedContent);
+      }
+
+      this.updateMessageStatusByContent(message);
+    });
+  }
+
   // 完整替换消息的content数组
   replaceContent(messageId: string, processedContent: AIMessageContent[]) {
     this.setState((draft) => {
