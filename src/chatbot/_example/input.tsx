@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 import { Component, signal } from 'omi';
 
 import classname from '../../_util/classname';
-import { TdChatSenderSend } from '../../chat-sender';
+import { TdChatSenderParams } from '../../chat-sender';
 import { TdAttachmentItem } from '../../filecard';
 
 import styles from './style/chat-model.less';
@@ -50,7 +50,7 @@ export default class ChatSender extends Component {
     this.files.value = e.detail.concat(this.files.value);
   };
 
-  onSend = (e: CustomEvent<TdChatSenderSend>) => {
+  onSend = (e: CustomEvent<TdChatSenderParams>) => {
     console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];

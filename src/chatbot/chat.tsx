@@ -9,15 +9,15 @@ import { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
-import { TdChatSenderSend } from '../chat-sender';
+import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
 import {
   type AttachmentItem,
   type ChatMessagesData,
   type ChatMessageStore,
+  type ChatRequestParams,
   type ChatStatus,
-  type RequestParams,
 } from './core/type';
 import type Chatlist from './chat-list';
 import ChatEngine, { getMessageContentForCopy, isAIMessage } from './core';
@@ -168,7 +168,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   /**
    * 发送用户消息
    */
-  async sendUserMessage(requestParams: RequestParams) {
+  async sendUserMessage(requestParams: ChatRequestParams) {
     await this.chatEngine.sendUserMessage(requestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
@@ -219,6 +219,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
+   * 选择文件
+   */
+  selectFile() {
+    this.ChatSenderRef.current.selectFile();
+  }
+
+  /**
    * 最后一条AI消息
    */
   get messagesStore(): ChatMessageStore {
@@ -245,14 +252,18 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   /**
    * 处理发送消息事件
    */
-  private handleSend = async (e: CustomEvent<TdChatSenderSend>) => {
-    const { value } = e.detail;
-    const params = {
+  private handleSend = async (e: CustomEvent<TdChatSenderParams>) => {
+    const { value, attachments } = e.detail;
+    let params = {
       prompt: value,
-      attachments: this.uploadedAttachments,
-    };
+      attachments,
+    } as ChatRequestParams;
     if (this.props?.senderProps?.onSend) {
-      await this.props.senderProps.onSend(e);
+      const customParams = await this.props.senderProps.onSend(e);
+      // 这里允许用户修改生成消息的参数
+      if (customParams) {
+        params = customParams;
+      }
     }
     await this.sendUserMessage(params);
     this.scrollToBottom();

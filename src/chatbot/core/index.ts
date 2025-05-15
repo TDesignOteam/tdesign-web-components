@@ -5,16 +5,16 @@ import {
   AIContentChunkUpdate,
   type AIMessageContent,
   type ChatMessagesData,
+  type ChatRequestParams,
   type ChatServiceConfig,
   type ChatServiceConfigSetter,
-  type RequestParams,
   type SSEChunkData,
   type SystemMessage,
 } from './type';
 import { isAIMessage } from './utils';
 
 export interface IChatEngine {
-  sendUserMessage(requestParams: RequestParams): Promise<void>;
+  sendUserMessage(requestParams: ChatRequestParams): Promise<void>;
   abortChat(): Promise<void>;
 }
 
@@ -27,7 +27,7 @@ export default class ChatEngine implements IChatEngine {
 
   private config: ChatServiceConfig;
 
-  private lastRequestParams: RequestParams | undefined;
+  private lastRequestParams: ChatRequestParams | undefined;
 
   private stopReceive = false;
 
@@ -42,7 +42,7 @@ export default class ChatEngine implements IChatEngine {
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
   }
 
-  public async sendUserMessage(requestParams: RequestParams) {
+  public async sendUserMessage(requestParams: ChatRequestParams) {
     const { prompt, attachments } = requestParams;
     const userMessage = this.processor.createUserMessage(prompt, attachments);
     const aiMessage = this.processor.createAssistantMessage();
@@ -119,7 +119,7 @@ export default class ChatEngine implements IChatEngine {
     await this.sendRequest(params);
   }
 
-  private async sendRequest(params: RequestParams) {
+  private async sendRequest(params: ChatRequestParams) {
     const { messageID: id } = params;
     try {
       if (this.config.stream) {
@@ -140,7 +140,7 @@ export default class ChatEngine implements IChatEngine {
     }
   }
 
-  private async handleBatchRequest(params: RequestParams) {
+  private async handleBatchRequest(params: ChatRequestParams) {
     const id = params.messageID;
     this.setMessageStatus(id, 'pending');
     const result = await this.llmService.handleBatchRequest(params, this.config);
@@ -148,7 +148,7 @@ export default class ChatEngine implements IChatEngine {
     this.setMessageStatus(id, 'complete');
   }
 
-  private async handleStreamRequest(params: RequestParams) {
+  private async handleStreamRequest(params: ChatRequestParams) {
     const id = params.messageID;
     this.setMessageStatus(id, 'pending');
     await this.llmService.handleStreamRequest(params, {

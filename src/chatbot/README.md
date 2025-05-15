@@ -51,7 +51,7 @@ spline: base
 ### 实例方法
 | 方法名            | 类型                         | 说明                                                                 |
 |--------------------|-------------------------------|--------------------------------------------------------------------|
-| sendUserMessage    | `(params: RequestParams) => Promise<void>`  | 发送用户消息并自动清空附件，返回Promise等待操作完成          |
+| sendUserMessage    | `(params: ChatRequestParams) => Promise<void>`  | 发送用户消息并自动清空附件，返回Promise等待操作完成          |
 | sendSystemMessage  | `(msg: string) => void`                  | 发送系统通知类消息                     |
 | abortChat          | 无                            | 中止当前进行中的聊天请求，返回Promise等待操作完成                      |
 | addPrompt          | `(prompt: string) => void`     | 预填充输入框内容并自动聚焦到输入域                                     |
@@ -103,7 +103,7 @@ spline: base
 | stream | boolean| 是否使用流式传输 |
 | retryInterval | number| 重试间隔时间(毫秒) |
 | maxRetries | number | 最大重试次数 |
-| onRequest | `(params: RequestParams) => RequestInit` | 请求前的回调，可修改请求参数 |
+| onRequest | `(params: ChatRequestParams) => RequestInit` | 请求前的回调，可修改请求参数 |
 | onMessage | `(chunk: SSEChunkData) => AIMessageContent \| null` | 处理流式消息的回调 |
 | onComplete | `(isAborted: boolean, params: RequestInit, result?: any) => void` | 请求完成时的回调 |
 | onAbort | `() => Promise<void>` | 中止请求时的回调 |

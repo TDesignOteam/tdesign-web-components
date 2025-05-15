@@ -3,7 +3,13 @@ import { type TdChatLoadingProps } from '../chat-loading';
 import { type TdChatMarkdownContentProps } from '../chat-message';
 import { type TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
-import type { AIMessageContent, ChatServiceConfigSetter, ChatStatus, ContentType, RequestParams } from './core/type';
+import type {
+  AIMessageContent,
+  ChatRequestParams,
+  ChatServiceConfigSetter,
+  ChatStatus,
+  ContentType,
+} from './core/type';
 import type { ChatMessagesData } from './core/type';
 
 export type TdChatItemActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
@@ -89,6 +95,7 @@ export interface TdChatProps extends StyledProps {
   senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
+  /** 消息内容更新回调 */
   onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
 }
 
@@ -97,7 +104,7 @@ export interface TdChatbotApi {
    * 发送用户消息
    * @param params - 请求参数
    */
-  sendUserMessage: (params: RequestParams) => Promise<void>;
+  sendUserMessage: (params: ChatRequestParams) => Promise<void>;
 
   /**
    * 发送系统消息
@@ -142,6 +149,10 @@ export interface TdChatbotApi {
     type: T['type'], // 使用类型中定义的type字段作为参数类型
     handler: (chunk: T, existing?: T) => T,
   ) => void;
+  /**
+   * 触发选择文件
+   */
+  selectFile: () => void;
 }
 
 export type TdChatMessageConfigItem = Omit<TdChatItemProps, 'message'>;

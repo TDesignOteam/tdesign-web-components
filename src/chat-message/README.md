@@ -70,7 +70,7 @@ spline: base
 
 | 事件名 | 参数类型 | 说明 |
 |--------|----------|------|
-| `onSend` | `CustomEvent<TdChatSenderSend>` | 点击发送按钮时触发 |
+| `onSend` | `CustomEvent<TdChatSenderParams>` | 点击发送按钮时触发 |
 | `onStop` | `(value: string, context: { e: MouseEvent })` | 点击停止按钮时触发 |
 | `onChange` | `(value: string, context: { e: InputEvent \| MouseEvent \| KeyboardEvent })` | 输入内容变化时触发 |
 | `onBlur` | `(value: string, context: { e: FocusEvent })` | 输入框失去焦点时触发 |

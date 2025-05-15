@@ -120,7 +120,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleFileSelected = () => {
-    console.log('handleFileSelected');
     const files = Array.from(this.uploadRef.current?.files || []);
     if (!files.length) {
       return;
