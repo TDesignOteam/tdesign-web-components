@@ -2,7 +2,7 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, createRef, signal } from 'omi';
-import type { TdChatCustomRenderConfig, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
 
 import Chatbot from '../chat';
 import type { AIContentChunkUpdate, AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
@@ -115,28 +115,25 @@ function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
 }
 
 // 自定义渲染-注册插槽规则
-const customRenderConfig: TdChatCustomRenderConfig = {
-  weather: (content) => ({
-    slotName: `${content.type}-${content.id}`,
-  }),
-};
+// const customRenderConfig: TdChatCustomRenderConfig = {
+//   weather: (content) => ({
+//     slotName: `${content.type}-${content.id}`,
+//   }),
+// };
 
 const messageProps: TdChatMessageConfig = {
   user: {
     variant: 'text',
     placement: 'right',
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    customRenderConfig,
   },
   assistant: {
     variant: 'text',
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     // actions: (preset) => preset,
-    customRenderConfig,
-  },
-  system: {
-    customRenderConfig,
+    // 不传入默认插槽命名：`${content.type}-${index}`
+    // customRenderConfig,
   },
 };
 
@@ -217,11 +214,11 @@ export default class BasicChat extends Component {
         {/* 自定义渲染-植入插槽 */}
         {this.mockMessage.value
           ?.map((data) =>
-            data.content.map((item) => {
+            data.content.map((item, idx) => {
               switch (item.type) {
                 case 'weather':
                   return (
-                    <div slot={`${data.id}-${item.type}-${item.id}`} className="weather">
+                    <div slot={`${data.id}-${item.type}-${idx}`} className="weather">
                       今天{item.data.city}天气{item.data.conditions}
                     </div>
                   );
