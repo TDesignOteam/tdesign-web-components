@@ -193,13 +193,10 @@ export default class BasicChat extends Component {
     this.mockMessage.value = mockData;
   }
 
-  ready() {
-    this.chatRef.current.addEventListener('message_change', (e: CustomEvent) => {
-      console.log('message_change', e.detail);
-      this.mockMessage.value = e.detail;
-      // this.update();
-    });
-  }
+  messageChangeHandler = (e: CustomEvent) => {
+    console.log('message_change', e.detail);
+    this.mockMessage.value = e.detail;
+  };
 
   render() {
     return (
@@ -209,6 +206,7 @@ export default class BasicChat extends Component {
         messages={mockData}
         messageProps={messageProps}
         chatServiceConfig={mockModels}
+        onMessageChange={this.messageChangeHandler}
       >
         <div slot="sender-header">我是input头部</div>
         {/* 自定义渲染-植入插槽 */}

@@ -48,6 +48,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     senderProps: Object,
     chatServiceConfig: [Object, Function],
     injectCSS: Object,
+    onMessageChange: Function,
   };
 
   static defaultProps = {
@@ -154,7 +155,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   private syncState(state: ChatMessagesData[]) {
     this.chatMessages.value = state;
     this.chatStatus = state.at(-1)?.status || 'idle';
-    this.fire('message_change', state, {
+    this.fire('messageChange', state, {
       composed: true,
     });
   }

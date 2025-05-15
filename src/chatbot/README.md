@@ -93,6 +93,7 @@ spline: base
 | placement | `'left'` \| `'right'` | 消息气泡位置 |
 | chatContentProps | `{[key in ContentType]?: {}}` | 可以针对不同内容类型进行定制化配置。ContentType类型有`text`、`markdown`、`search`、`thinking`、`suggestion`，|
 | customRenderConfig | `TdChatCustomRenderConfig` | 自定义消息渲染配置 |
+| onMessageChange | `(e: CustomEvent<ChatMessagesData[]>) => void` | 消息更新时触发 |
 
 ### ChatServiceConfig属性
 

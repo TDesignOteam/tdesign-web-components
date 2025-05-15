@@ -44,6 +44,25 @@ def hello():
     print("Markdown 示例")
 ```
 
+```vue
+<template #prefix>
+  <div class="model-select">
+    <t-tooltip v-model:visible="allowToolTip" content="切换模型" trigger="hover">
+      <t-select
+        v-model="selectValue"
+        :options="selectOptions"
+        value-type="object"
+        @focus="allowToolTip = false"
+      ></t-select>
+    </t-tooltip>
+    <t-button class="check-box" :class="{ 'is-active': isChecked }" variant="text" @click="checkClick">
+      <SystemSumIcon />
+      <span>深度思考</span>
+    </t-button>
+  </div>
+</template>
+```
+
 ### 列表测试
 
 - 无序列表项1

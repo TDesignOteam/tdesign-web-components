@@ -72,7 +72,7 @@ export default class DropdownMenu extends Component<DropdownProps> {
     this.update();
   };
 
-  throttleUpdate = throttle(this.handleScroll, 10);
+  throttleUpdate: (e: MouseEvent, deep?: number) => void = throttle(this.handleScroll, 10);
 
   renderOptions = (data: Array<DropdownOption | TNode>, deep: number) => {
     const { minColumnWidth = 10, maxColumnWidth = 160 } = this.props;

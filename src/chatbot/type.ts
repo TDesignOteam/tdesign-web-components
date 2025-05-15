@@ -89,7 +89,7 @@ export interface TdChatProps extends StyledProps {
   senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
-  // onMessagesChange?: (messages: ChatMessagesData[]) => void;
+  onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
 }
 
 export interface TdChatbotApi {
