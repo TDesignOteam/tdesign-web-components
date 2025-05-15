@@ -84,7 +84,7 @@ export interface TdChatProps extends StyledProps {
   autoSendPrompt?: string;
   messages: Array<ChatMessagesData>;
   /** 角色消息配置 */
-  messageProps?: TdChatMessageConfig;
+  messageProps?: TdChatMessageConfig | ((msg: ChatMessagesData) => TdChatMessageConfigItem);
   /** 输入框配置（透传至t-chat-sender） */
   senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
@@ -144,8 +144,10 @@ export interface TdChatbotApi {
   ) => void;
 }
 
+export type TdChatMessageConfigItem = Omit<TdChatItemProps, 'message'>;
+
 export type TdChatMessageConfig = {
-  [key in ModelRoleEnum]?: Omit<TdChatItemProps, 'message'>;
+  [key in ModelRoleEnum]?: TdChatMessageConfigItem;
 };
 
 export type ScrollPosition = 'top' | 'bottom';

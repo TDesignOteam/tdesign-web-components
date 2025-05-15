@@ -1,6 +1,7 @@
 import 'tdesign-web-components/collapse';
 import 'tdesign-web-components/space';
-import 'tdesign-icons-web-components';
+import 'tdesign-icons-web-components/esm/components/user-checked';
+import 'tdesign-icons-web-components/esm/components/add';
 
 import { bind, Component, signal } from 'omi';
 
@@ -30,12 +31,12 @@ export default class Demo extends Component {
           />
           <t-collapse-panel
             header="自定义图标"
-            expandIcon={<t-icon name="user-checked"></t-icon>}
+            expandIcon={<t-icon-user-checked></t-icon-user-checked>}
             content="这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。"
           />
           <t-collapse-panel
             header="自定义图标"
-            expandIcon={<t-icon name="add"></t-icon>}
+            expandIcon={<t-icon-add></t-icon-add>}
             content="这部分是每个折叠面板折叠或展开的内容，可根据不同业务或用户的使用诉求，进行自定义填充。可以是纯文本、图文、子列表等内容形式。"
           />
         </t-collapse>

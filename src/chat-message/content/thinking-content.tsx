@@ -40,7 +40,13 @@ export const renderThinking = ({
   const { text, title } = content;
 
   return (
-    <t-collapse className={`${className}__think`} expandIconPlacement="right" value={collapsed ? [0] : [1]}>
+    <t-collapse
+      // collapsed做key可在更新时触发展开收起
+      key={collapsed}
+      className={`${className}__think`}
+      expandIconPlacement="right"
+      value={collapsed ? [0] : [1]}
+    >
       <t-collapse-panel className={`${className}__think__content`}>
         {text && (
           <t-auto-scroll maxHeight={maxHeight}>

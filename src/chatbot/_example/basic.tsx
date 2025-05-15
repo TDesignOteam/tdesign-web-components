@@ -3,7 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
-import { findTargetElement, type TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import { findTargetElement, TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
 
 import type { TdAttachmentItem } from '../../filecard';
 import Chatbot from '../chat';
@@ -403,54 +403,57 @@ export default class BasicChat extends Component {
 
   clickHandler?: (e: MouseEvent) => void;
 
-  messageProps: TdChatMessageConfig = {
-    // user: {
-    //   avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    // },
-    assistant: {
-      // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-      actions: ['replay', 'copy', 'good', 'bad'],
-      handleActions: {
-        replay: (data) => {
-          console.log('自定义重新回复', data);
-          this.chatRef.current.regenerate();
+  messagePropsFunc = (msg: ChatMessagesData): TdChatMessageConfigItem => {
+    const { role, content } = msg;
+    if (role === 'assistant') {
+      // 目前仅有单条thinking
+      const thinking = content.find((item) => item.type === 'thinking');
+      return {
+        // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+        actions: ['replay', 'copy', 'good', 'bad'],
+        handleActions: {
+          replay: (data) => {
+            console.log('自定义重新回复', data);
+            this.chatRef.current.regenerate();
+          },
+          good: (data) => {
+            console.log('点赞', data);
+          },
+          bad: (data) => {
+            console.log('点踩', data);
+          },
+          share: (data) => {
+            console.log('分享', data);
+          },
+          copy: (data) => {
+            console.log('复制', data);
+          },
+          suggestion: ({ content }) => {
+            this.chatRef.current.addPrompt(content.prompt);
+          },
+          searchResult: ({ content }) => {
+            console.log('searchResult', content);
+          },
+          searchItem: ({ content, event }) => {
+            event.preventDefault();
+            event.stopPropagation();
+            console.log('searchItem', content);
+          },
         },
-        good: (data) => {
-          console.log('点赞', data);
+        chatContentProps: {
+          search: {
+            expandable: false,
+          },
+          thinking: {
+            maxHeight: 100,
+            collapsed: thinking?.status === 'complete' ? true : false,
+          },
+          markdown: {
+            pluginConfig: [resourceLinkPlugin],
+          },
         },
-        bad: (data) => {
-          console.log('点踩', data);
-        },
-        share: (data) => {
-          console.log('分享', data);
-        },
-        copy: (data) => {
-          console.log('复制', data);
-        },
-        suggestion: ({ content }) => {
-          this.chatRef.current.addPrompt(content.prompt);
-        },
-        searchResult: ({ content }) => {
-          console.log('searchResult', content);
-        },
-        searchItem: ({ content, event }) => {
-          event.preventDefault();
-          event.stopPropagation();
-          console.log('searchItem', content);
-        },
-      },
-      chatContentProps: {
-        search: {
-          expandable: false,
-        },
-        thinking: {
-          maxHeight: 100,
-        },
-        markdown: {
-          pluginConfig: [resourceLinkPlugin],
-        },
-      },
-    },
+      };
+    }
   };
 
   ready() {
@@ -480,7 +483,7 @@ export default class BasicChat extends Component {
         style={{ display: 'block', height: '80vh' }}
         messages={mockData}
         // autoSendPrompt="自动发送问题"
-        messageProps={this.messageProps}
+        messageProps={this.messagePropsFunc}
         listProps={{ defaultScrollPosition: 'top' }}
         senderProps={{
           actions: true,

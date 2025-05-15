@@ -43,7 +43,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     autoSendPrompt: Object,
     reverse: Boolean,
     messages: Array,
-    messageProps: Object,
+    messageProps: [Object, Function],
     listProps: Object,
     senderProps: Object,
     chatServiceConfig: [Object, Function],
@@ -130,7 +130,9 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   private initChat() {
     const { messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
-    this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
+    if (typeof messageProps === 'object') {
+      this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
+    }
     this.chatEngine.init(config, messages);
     const { messageStore } = this.chatEngine;
     this.provide.messageStore = messageStore;
@@ -301,12 +303,15 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     return items.map((item) => {
       const { role, id } = item;
       const itemSlotNames = this.slotNames.filter((key) => key.includes(id));
-      const itemProps = {
+      let itemProps = {
         ...this.messageRoleProps?.[role],
         message: item,
       };
+      if (typeof this.props.messageProps === 'function') {
+        itemProps = merge({}, itemProps, this.props.messageProps(item) || {});
+      }
       return (
-        <t-chat-item key={id} className={`${className}-item-wrapper`} {...this.messageRoleProps?.[role]} message={item}>
+        <t-chat-item key={id} className={`${className}-item-wrapper`} {...itemProps} message={item}>
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => {
             const str = slotName.replace(RegExp(`^${id}-`), '');
