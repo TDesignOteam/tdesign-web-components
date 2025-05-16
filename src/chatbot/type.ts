@@ -88,7 +88,7 @@ export interface TdChatProps extends StyledProps {
   listProps?: TdChatListProps;
   /** 消息数据源 */
   autoSendPrompt?: string;
-  messages: Array<ChatMessagesData>;
+  defaultMessages: Array<ChatMessagesData>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig | ((msg: ChatMessagesData) => TdChatMessageConfigItem);
   /** 输入框配置（透传至t-chat-sender） */

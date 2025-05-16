@@ -42,7 +42,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     layout: String,
     autoSendPrompt: Object,
     reverse: Boolean,
-    messages: Array,
+    defaultMessages: Array,
     messageProps: [Object, Function],
     listProps: Object,
     senderProps: Object,
@@ -130,7 +130,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 合并消息配置、初始化引擎、同步状态、订阅聊天
    */
   private initChat() {
-    const { messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
+    const { defaultMessages: messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
     if (typeof messageProps === 'object') {
       this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     }

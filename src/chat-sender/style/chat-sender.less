@@ -16,14 +16,14 @@
   // 附件区
   &__header {
     position: relative;
-    bottom: calc(-1 * var(--t-chat-input-radius) - 1px);
-    margin-top: calc(-1 * var(--t-chat-input-radius));
-    padding-bottom: var(--t-chat-input-radius);
+    bottom: calc(-1 * var(--td-chat-input-radius) - 1px);
+    margin-top: calc(-1 * var(--td-chat-input-radius));
+    padding-bottom: var(--td-chat-input-radius);
     max-height: 1000px;
-    border: 1px solid var(--t-chat-input-content-default-border);
+    border: 1px solid var(--td-chat-input-content-default-border);
     border-bottom: none;
-    border-top-left-radius: var(--t-chat-input-radius);
-    border-top-right-radius: var(--t-chat-input-radius);
+    border-top-left-radius: var(--td-chat-input-radius);
+    border-top-right-radius: var(--td-chat-input-radius);
     transition: all 1s ease-in;
 
     &:empty {
@@ -40,12 +40,12 @@
     flex-direction: column;
     box-sizing: border-box;
     padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
-    border: 1px solid var(--t-chat-input-content-default-border);
-    border-radius: var(--t-chat-input-radius);
-    background: @bg-color-secondarycontainer;
+    border: 1px solid var(--td-chat-input-content-default-border);
+    border-radius: var(--td-chat-input-radius);
+    background: var(--td-chat-input-background);
     transition: all .3s;
     z-index: 1;
-    box-shadow: var(--t-chat-input-box-shadow);
+    box-shadow: var(--td-chat-input-box-shadow);
 
     &:focus-within {
       border-color: @brand-color;
@@ -76,7 +76,7 @@
   &__textarea {
     flex: 1;
     min-width: 0;
-    max-height: var(--t-chat-input-textarea-max-height);
+    max-height: var(--td-chat-input-textarea-max-height);
     display: flex;
     flex-direction: column;
 
@@ -87,22 +87,22 @@
       overflow-y: auto;
 
       &::-webkit-scrollbar {
-        width: var(--t-chat-input-textarea-scrollbar-width);
+        width: var(--td-chat-input-textarea-scrollbar-width);
       }
       &::-webkit-scrollbar-thumb {
-        border-radius: var(--t-chat-input-textarea-scrollbar-thumb-radius);
-        background-color: var(--t-chat-input-textarea-scrollbar-color);
+        border-radius: var(--td-chat-input-textarea-scrollbar-thumb-radius);
+        background-color: var(--td-chat-input-textarea-scrollbar-color);
         cursor: pointer;
       }
       &::-webkit-scrollbar-thumb:hover {
-        background-color: var(--t-chat-input-textarea-scrollbar-hover-color);
+        background-color: var(--td-chat-input-textarea-scrollbar-hover-color);
       }
     }
 
     &::part(@{prefix}-textarea__inner) {
       padding: 0 0 @comp-paddingTB-s 0;
       border: none;
-      font-size: var(--t-chat-input-font-size);
+      font-size: var(--td-chat-input-font-size);
       background: none;
       box-shadow: none;
     }
@@ -127,20 +127,20 @@
   &__actions {
     display: flex;
     align-items: center;
-    gap: var(--t-chat-input-actions-gap);
-    margin: var(--t-chat-input-actions-margin);
+    gap: var(--td-chat-input-actions-gap);
+    margin: var(--td-chat-input-actions-margin);
 
     &__item__wrapper {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: var(--t-chat-input-actions-item-wh);
-      height: var(--t-chat-input-actions-item-wh);
-      border-radius: var(--t-chat-input-actions-item-radius);
-      background: var(--t-chat-input-actions-item-bg);
+      width: var(--td-chat-input-actions-item-wh);
+      height: var(--td-chat-input-actions-item-wh);
+      border-radius: var(--td-chat-input-actions-item-radius);
+      background: var(--td-chat-input-actions-item-bg);
 
       &:hover {
-        background: var(--t-chat-input-actions-item-hover-bg);
+        background: var(--td-chat-input-actions-item-hover-bg);
       }
     }
 
@@ -152,7 +152,7 @@
 
     &__tooltip {
       display: flex;
-      color: var(--t-chat-input-actions-item-color);
+      color: var(--td-chat-input-actions-item-color);
       cursor: pointer;
     }
   }
@@ -171,8 +171,8 @@
       width: @comp-size-s;
       height: @comp-size-s;
       border-radius: @border-radius-circle;
-      background: var(--t-chat-input-button-default-bg);
-      color: var(--t-chat-input-button-default-color);
+      background: var(--td-chat-input-button-default-bg);
+      color: var(--td-chat-input-button-default-color);
     }
     
     &--focus::part(@{prefix}-button) {

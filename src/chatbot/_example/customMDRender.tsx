@@ -215,7 +215,7 @@ export default class BasicChat extends Component {
           }
         `}
         style={{ display: 'block', height: '500px' }}
-        messages={mockData}
+        defaultMessages={mockData}
         messageProps={messageProps}
         chatServiceConfig={mockModels}
       ></t-chatbot>
