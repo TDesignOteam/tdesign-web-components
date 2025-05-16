@@ -447,6 +447,7 @@ export default class BasicChat extends Component {
           thinking: {
             maxHeight: 100,
             collapsed: thinking?.status === 'complete' ? true : false,
+            layout: 'border',
           },
           markdown: {
             pluginConfig: [resourceLinkPlugin],

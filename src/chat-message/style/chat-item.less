@@ -175,6 +175,7 @@
 
   &__content {
     display: inline-block;
+    width: 100%;
     // less中同时使用min和var有bug，目前只能这么写 https://github.com/less/less.js/issues/3777
     max-width: e('min(100%, var(--t-chat-item-content-max-width))');
     padding: var(--t-chat-item-content-padding);
@@ -219,7 +220,7 @@
         margin-top: var(--t-chat-item-think-content-margin-top);
         padding: 0;
         color: var(--t-chat-item-think-content-color);
-  
+
         &:empty {
           display: none;
         }
@@ -237,6 +238,22 @@
         &:last-child {
           margin-bottom: 0;
           margin-block-end: 0;
+        }
+      }
+    }
+
+    &-layout-border {
+      &::part(@{prefix}-collapse) {
+        background: none;
+      }
+      .@{prefix}-chat__item__think__inner {
+        border-left: var(--t-chat-item-think-inner-border);
+        margin-left: var(--t-chat-item-think-inner-margin-left);
+      }
+      .@{prefix}-chat__item__think__content {
+        &::part(@{prefix}-collapse-panel__header--blank) {
+          flex: 0;
+          -webkit-box-flex: 0;
         }
       }
     }

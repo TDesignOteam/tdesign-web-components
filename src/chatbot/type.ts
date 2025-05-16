@@ -174,6 +174,7 @@ type TdChatContentThinkProps = {
   maxHeight?: number;
   animation?: TdChatLoadingProps['animation'];
   collapsed?: boolean;
+  layout?: 'block'|'border';
 };
 
 type TdChatContentSuggestionProps = {

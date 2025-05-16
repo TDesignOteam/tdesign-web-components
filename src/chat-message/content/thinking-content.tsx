@@ -29,6 +29,7 @@ export const renderThinking = ({
   maxHeight,
   animation = 'circle',
   collapsed = false,
+  layout = 'block',
 }: TdChatThinkContentProps) => {
   const renderThinkingStatus = (s: MessageStatus) => {
     if (s === 'complete' || s === 'stop')
@@ -38,16 +39,17 @@ export const renderThinking = ({
     return <t-chat-loading animation={animation || 'circle'}></t-chat-loading>;
   };
   const { text, title } = content;
-
+  const layoutClass = layout === 'border' ? `${className}__think-layout-border` : ``;
   return (
     <t-collapse
       // collapsed做key可在更新时触发展开收起
       key={collapsed}
-      className={`${className}__think`}
-      expandIconPlacement="right"
+      className={`${className}__think ${layoutClass}`}
+      expandIconPlacement={'right'}
       value={collapsed ? [0] : [1]}
     >
       <t-collapse-panel className={`${className}__think__content`}>
+        
         {text && (
           <t-auto-scroll maxHeight={maxHeight}>
             <div className={`${className}__think__inner`}>
@@ -80,6 +82,7 @@ export default class ThinkingContentComponent extends Component<TdChatThinkConte
     maxHeight: Number,
     animation: String,
     collapsed: Boolean,
+    layout: String,
   };
 
   static defaultProps: Partial<TdChatThinkContentProps> = {
