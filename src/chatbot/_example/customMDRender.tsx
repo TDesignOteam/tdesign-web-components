@@ -182,7 +182,6 @@ const messageProps: TdChatMessageConfig = {
   assistant: {
     ...commonRoleConfig,
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    actions: (preset) => preset,
   },
   system: {
     ...commonRoleConfig,
