@@ -1,23 +1,23 @@
-import type { AIMessageContent, ChatServiceConfig, RequestParams, SSEChunkData } from '../type';
+import type { AIMessageContent, ChatRequestParams, ChatServiceConfig, SSEChunkData } from '../type';
 import SSEClient from './sseClient';
 
 export interface ILLMService {
   /**
    * 处理批量请求（非流式）
    */
-  handleBatchRequest(params: RequestParams, config: ChatServiceConfig): Promise<AIMessageContent>;
+  handleBatchRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<AIMessageContent>;
 
   /**
    * 处理流式请求
    */
-  handleStreamRequest(params: RequestParams, config: ChatServiceConfig): Promise<void>;
+  handleStreamRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<void>;
 }
 
 // 默认的LLM服务实现（基于Fetch API和SSE）
 export class LLMService implements ILLMService {
   private sseClient: SSEClient;
 
-  async handleBatchRequest(params: RequestParams, config: ChatServiceConfig): Promise<any> {
+  async handleBatchRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<any> {
     const req = config.onRequest?.(params) || {};
 
     try {
@@ -46,7 +46,7 @@ export class LLMService implements ILLMService {
     this.sseClient?.close();
   }
 
-  async handleStreamRequest(params: RequestParams, config: ChatServiceConfig) {
+  async handleStreamRequest(params: ChatRequestParams, config: ChatServiceConfig) {
     const req = config.onRequest?.(params) || {};
     this.sseClient = new SSEClient(config.endpoint, {
       onMessage: (msg: SSEChunkData) => {

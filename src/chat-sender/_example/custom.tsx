@@ -16,7 +16,7 @@ export default class CustomExample extends Component {
     .input::part(icon),
     .icon {
       cursor: pointer;
-      color: var(--t-chat-input-actions-item-color);
+      color: var(--td-chat-input-actions-item-color);
     }
 
     .panel {

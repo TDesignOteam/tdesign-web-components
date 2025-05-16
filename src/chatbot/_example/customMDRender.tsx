@@ -182,7 +182,6 @@ const messageProps: TdChatMessageConfig = {
   assistant: {
     ...commonRoleConfig,
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    actions: (preset) => preset,
   },
   system: {
     ...commonRoleConfig,
@@ -215,7 +214,7 @@ export default class BasicChat extends Component {
           }
         `}
         style={{ display: 'block', height: '500px' }}
-        messages={mockData}
+        defaultMessages={mockData}
         messageProps={messageProps}
         chatServiceConfig={mockModels}
       ></t-chatbot>

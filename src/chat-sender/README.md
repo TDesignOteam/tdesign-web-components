@@ -51,7 +51,7 @@ spline: base
 
 | 事件名 | 参数类型 | 说明 |
 |--------|----------|------|
-| `onSend` | `(e: CustomEvent<TdChatSenderSend>) => void` | 点击发送按钮时触发 |
+| `onSend` | `(e: CustomEvent<TdChatSenderParams>) => void` | 点击发送按钮时触发 |
 | `onStop` | `(e: CustomEvent<string>) => void` | 点击停止按钮时触发 |
 | `onChange` | `(e: CustomEvent<string>) => void` | 输入内容变化时触发 |
 | `onFileSelect` | `(e: CustomEvent<File[]>) => Promise<TdAttachmentItem[]>` | 选择文件时触发 |

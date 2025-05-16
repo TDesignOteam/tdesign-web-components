@@ -482,7 +482,7 @@ export default class BasicChat extends Component {
       <t-chatbot
         ref={this.chatRef}
         style={{ display: 'block', height: '80vh' }}
-        messages={mockData}
+        defaultMessages={mockData}
         // autoSendPrompt="自动发送问题"
         messageProps={this.messagePropsFunc}
         listProps={{ defaultScrollPosition: 'top' }}

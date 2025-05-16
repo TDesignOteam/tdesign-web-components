@@ -1,14 +1,17 @@
 import { TdAttachmentsProps } from '../attachments';
+import { ChatRequestParams } from '../chatbot';
 import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
 import { TdTextareaProps } from '../textarea';
+
+export type TdChatSenderActionName = 'attachmentUploader' | 'sendButton';
 
 export interface TdChatSenderAction {
   name: string;
   render: TNode;
 }
 
-export interface TdChatSenderSend {
+export interface TdChatSenderParams {
   value: string;
   attachments?: TdAttachmentItem[];
 }
@@ -18,7 +21,7 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   placeholder?: string;
   disabled?: boolean;
   defaultValue?: string;
-  actions?: TdChatSenderAction[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
+  actions?: TdChatSenderActionName[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
   /** 是否加载中 */
   loading?: boolean;
   /** 透传attachment参数 */
@@ -27,7 +30,7 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
   /** 透传input-file参数 */
   uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
-  onSend?: (e: CustomEvent<TdChatSenderSend>) => void;
+  onSend?: (e: CustomEvent<TdChatSenderParams>) => ChatRequestParams | void;
   onStop?: (e: CustomEvent<string>) => void;
   onChange?: (e: CustomEvent<string>) => void;
   onFileSelect?: (e: CustomEvent<TdAttachmentItem[]>) => void;

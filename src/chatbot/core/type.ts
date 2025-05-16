@@ -145,7 +145,7 @@ export type SSEChunkData = {
   data: any;
 };
 
-export interface RequestParams extends RequestInit {
+export interface ChatRequestParams extends RequestInit {
   prompt: string;
   messageID?: string;
   attachments?: AttachmentContent['data'];
@@ -162,7 +162,7 @@ export interface ChatServiceConfig {
   stream?: boolean;
   retryInterval?: number;
   maxRetries?: number;
-  onRequest?: (params: RequestParams) => RequestInit;
+  onRequest?: (params: ChatRequestParams) => RequestInit;
   onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
   onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => Promise<void>;

@@ -42,7 +42,7 @@ spline: base
 | layout | String | 'both' | 布局方式，可选值：'both'、'single' |
 | autoSendPrompt | Object/String | '' | 配置后会自动触发提问 |
 | reverse | Boolean | false | 是否反转消息显示顺序 |
-| messages | ChatMessagesData[] | - | 初始化的聊天消息数组 |
+| defaultMessages | ChatMessagesData[] | - | 初始化的聊天消息数组 |
 | messageProps | `{ ModelRoleEnum: TdChatItemProps }` | - | 消息角色配置，它是一个键值对对象，键为角色类型`ModelRoleEnum`（`assistant`/`user`/`system`），值为对应角色的消息配置 `TdChatItemProps` |
 | senderProps | TdChatSenderProps | - | 是聊天输入框组件的属性配置，用于控制输入框的行为和外观，详细见`ChatSender组件` |
 | chatServiceConfig | ChatServiceConfig/() => ChatServiceConfig | - | 聊天服务配置，用于初始化ChatEngine |
@@ -51,7 +51,7 @@ spline: base
 ### 实例方法
 | 方法名            | 类型                         | 说明                                                                 |
 |--------------------|-------------------------------|--------------------------------------------------------------------|
-| sendUserMessage    | `(params: RequestParams) => Promise<void>`  | 发送用户消息并自动清空附件，返回Promise等待操作完成          |
+| sendUserMessage    | `(params: ChatRequestParams) => Promise<void>`  | 发送用户消息并自动清空附件，返回Promise等待操作完成          |
 | sendSystemMessage  | `(msg: string) => void`                  | 发送系统通知类消息                     |
 | abortChat          | 无                            | 中止当前进行中的聊天请求，返回Promise等待操作完成                      |
 | addPrompt          | `(prompt: string) => void`     | 预填充输入框内容并自动聚焦到输入域                                     |
@@ -103,7 +103,7 @@ spline: base
 | stream | boolean| 是否使用流式传输 |
 | retryInterval | number| 重试间隔时间(毫秒) |
 | maxRetries | number | 最大重试次数 |
-| onRequest | `(params: RequestParams) => RequestInit` | 请求前的回调，可修改请求参数 |
+| onRequest | `(params: ChatRequestParams) => RequestInit` | 请求前的回调，可修改请求参数 |
 | onMessage | `(chunk: SSEChunkData) => AIMessageContent \| null` | 处理流式消息的回调 |
 | onComplete | `(isAborted: boolean, params: RequestInit, result?: any) => void` | 请求完成时的回调 |
 | onAbort | `() => Promise<void>` | 中止请求时的回调 |

@@ -120,7 +120,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleFileSelected = () => {
-    console.log('handleFileSelected');
     const files = Array.from(this.uploadRef.current?.files || []);
     if (!files.length) {
       return;
@@ -176,7 +175,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   get presetActions(): TdChatSenderAction[] {
     return [
       {
-        name: 'uploadAttachment',
+        name: 'attachmentUploader',
         render: this.renderUploadAttachment(),
       },
       {
@@ -191,7 +190,10 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     if (!actions) {
       return null;
     }
-    let arrayActions: TdChatSenderAction[] = Array.isArray(actions) ? actions : this.presetActions;
+    let arrayActions: TdChatSenderAction[] = this.presetActions;
+    if (Array.isArray(actions)) {
+      arrayActions = (actions as string[]).map((name) => arrayActions.find((item) => item.name === name));
+    }
     if (typeof actions === 'function') {
       arrayActions = actions(this.presetActions);
     }

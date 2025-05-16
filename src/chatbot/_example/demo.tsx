@@ -174,7 +174,7 @@ export default class BasicChat extends Component {
       <t-chatbot
         ref={this.chatRef}
         style={{ display: 'block', height: '80vh' }}
-        messages={initData}
+        defaultMessages={initData}
         messageProps={messageProps}
         chatServiceConfig={mockLLMAgent}
       >
