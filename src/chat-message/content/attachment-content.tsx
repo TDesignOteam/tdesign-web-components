@@ -1,4 +1,3 @@
-import '../../image';
 import '../../attachments';
 
 import { Component, tag } from 'omi';
@@ -18,34 +17,9 @@ export type TdChatAttachmentContentProps = {
 };
 
 // 纯函数渲染器
-export const renderAttachments = ({ content }: TdChatAttachmentContentProps, self: any) => {
-  // 判断是否全部是图片类型
-  const isAllImages = content.every((att) => /image/.test(att.fileType));
-  return (
+export const renderAttachments = ({ content }: TdChatAttachmentContentProps, self: any) => (
     <div className={`${className}__attachments`}>
-      {isAllImages ? (
-        <div className={`${className}__image-grid`}>
-          {content.map((img, index) => (
-            <div
-              className={`${className}__image-wrapper`}
-              key={index}
-              onClick={() => {
-                self.fire('file-click', img, { composed: true });
-              }}
-            >
-              {convertToLightDomNode(
-                <t-image
-                  src={img.url}
-                  alt={img.name}
-                  className={`${className}__preview-image`}
-                  shape="round"
-                  loading="lazy"
-                />,
-              )}
-            </div>
-          ))}
-        </div>
-      ) : (
+      {
         convertToLightDomNode(
           <t-attachments
             items={content}
@@ -55,10 +29,9 @@ export const renderAttachments = ({ content }: TdChatAttachmentContentProps, sel
             }}
           />,
         )
-      )}
+      }
     </div>
   );
-};
 
 // Web Component版本
 @tag('t-chat-attachment-content')
