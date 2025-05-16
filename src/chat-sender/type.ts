@@ -4,6 +4,8 @@ import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
 import { TdTextareaProps } from '../textarea';
 
+export type TdChatSenderActionName = 'attachmentUploader' | 'sendButton';
+
 export interface TdChatSenderAction {
   name: string;
   render: TNode;
@@ -19,7 +21,7 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   placeholder?: string;
   disabled?: boolean;
   defaultValue?: string;
-  actions?: TdChatSenderAction[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
+  actions?: TdChatSenderActionName[] | ((preset: TdChatSenderAction[]) => TdChatSenderAction[]) | boolean;
   /** 是否加载中 */
   loading?: boolean;
   /** 透传attachment参数 */
