@@ -14,4 +14,5 @@ export interface TdFileCardProps extends StyledProps {
   onRemove?: (event: CustomEvent<TdAttachmentItem>) => void;
   disabled?: boolean;
   imageViewer?: boolean;
+  cardType?: 'file' | 'image';
 }

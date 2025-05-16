@@ -18,6 +18,10 @@ spline: base
 
 {{ scrollY }}
 
+### 图片
+
+{{ images }}
+
 ## API
 
 ### Attachments Props

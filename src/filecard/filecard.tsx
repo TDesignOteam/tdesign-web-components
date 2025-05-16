@@ -10,6 +10,7 @@ import 'tdesign-icons-web-components/esm/components/file-music-filled';
 import 'tdesign-icons-web-components/esm/components/loading';
 import 'tdesign-icons-web-components/esm/components/file';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import '../image';
 
 import { Component, tag } from 'omi';
 
@@ -31,12 +32,14 @@ export default class FileCard extends Component<TdFileCardProps> {
     removable: Boolean,
     onFileClick: Function,
     imageViewer: Boolean,
+    cardType: String,
   };
 
   static defaultProps: Partial<TdFileCardProps> = {
     removable: true,
     imageViewer: true,
     disabled: false,
+    cardType: 'file',
   };
 
   // 预览状态
@@ -200,13 +203,14 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   render() {
-    const { item, disabled, removable } = this.props;
+    const { item, disabled, removable, cardType = 'file' } = this.props;
     if (!item) return;
     const { status = 'done' } = item;
     const { desc, icon, iconColor, namePrefix, nameSuffix } = this.state;
     return (
       <div
         className={classname(`${className}-overview`, {
+          [`${className}-overview-image`]: cardType === 'image',
           [`${className}-status-uploading`]: status === 'progress',
           [`${className}-status-error`]: status === 'fail',
         })}
@@ -251,6 +255,12 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
+    const { cardType = 'file', item } = this.props;
+    if (cardType === 'image') {
+      return (
+        <t-image src={item.url} class={`${className}-image`}></t-image>
+      );
+    }
     return (
       <>
         <div className={`${className}-icon`} style={{ color: iconColor }}>

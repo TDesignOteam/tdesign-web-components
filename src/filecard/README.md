@@ -25,6 +25,7 @@ removable | boolean | true | 是否显示删除按钮 | N
 onRemove | (item:  TdAttachmentItem) => void | - | 附件移除时的回调函数 | N
 disabled | Boolean | false | 禁用状态 | N
 imageViewer | Boolean | true | 图片预览开关 | N
+cardType | `file | image`  | file | 卡片类型 | N
 
 ## TdAttachmentItem 类型说明
 名称 | 类型 | 默认值 | 说明 | 必传
