@@ -260,9 +260,9 @@ export default class FileCard extends Component<TdFileCardProps> {
       return (
         <t-image src={item.url}
           shape="round"
-          loading="lazy" 
-          alt={item.name}
-          class={`${className}-image`}></t-image>
+          fit="cover"
+          loading="lazy"
+          className={`${className}-image`}></t-image>
       );
     }
     return (
