@@ -98,7 +98,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   onScrollOffset = (offset: -1 | 1) => {
     const containerEle = this.containerRef.current;
     if (!containerEle) return;
-    
+
     // 获取所有子元素
     const children = containerEle.querySelectorAll('t-filecard');
     if (!children.length) return;
@@ -174,7 +174,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
                 key={`${item.key || item.name}-${index}-${item.percent}-${item.status}` || `filecard-${index}`}
                 item={item}
                 cardType={allImages ? 'image' : 'file'}
-                class="t-filecard-item"
+                className={`t-filecard-item ${props?.className || ''}`}
                 removable={removable}
                 onFileClick={() => {
                   this.fire('file-click', item, {

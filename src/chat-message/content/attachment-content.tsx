@@ -22,6 +22,7 @@ export const renderAttachments = ({ content }: TdChatAttachmentContentProps, sel
       {
         convertToLightDomNode(
           <t-attachments
+            className={`${className}__attachments_image`}
             items={content}
             removable={false}
             onFileClick={(e) => {
