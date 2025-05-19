@@ -268,7 +268,7 @@ export default class FileCard extends Component<TdFileCardProps> {
           src={item.url}
           shape="round"
           fit="cover"
-          loading={item?.status === "progress" ? <t-loading size="small"></t-loading> : null}
+          loading={item?.status === "progress" ? <t-icon-loading size="24px" /> : null}
           className={`${className}-image`}
           style={newstyle}
           ></t-image>
