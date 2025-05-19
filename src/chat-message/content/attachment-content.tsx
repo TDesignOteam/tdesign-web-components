@@ -18,20 +18,19 @@ export type TdChatAttachmentContentProps = {
 
 // 纯函数渲染器
 export const renderAttachments = ({ content }: TdChatAttachmentContentProps, self: any) => (
-    <div className={`${className}__attachments`}>
-      {
-        convertToLightDomNode(
-          <t-attachments
-            items={content}
-            removable={false}
-            onFileClick={(e) => {
-              self.fire('file-click', e.detail, { composed: true });
-            }}
-          />,
-        )
-      }
-    </div>
-  );
+  <div className={`${className}__attachments`}>
+    {convertToLightDomNode(
+      <t-attachments
+        className={`${className}__attachments_image`}
+        items={content}
+        removable={false}
+        onFileClick={(e) => {
+          self.fire('file-click', e.detail, { composed: true });
+        }}
+      />,
+    )}
+  </div>
+);
 
 // Web Component版本
 @tag('t-chat-attachment-content')

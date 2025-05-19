@@ -45,6 +45,10 @@ export interface TdCollapseProps {
    */
   value?: CollapseValue;
   /**
+   * 展开的面板集合，非受控属性
+   */
+  defaultValue?: CollapseValue;
+  /**
    * 切换面板时触发，返回变化的值
    */
   onChange?: (value: CollapseValue) => void;

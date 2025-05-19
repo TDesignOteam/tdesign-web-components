@@ -366,8 +366,11 @@
   
   &__attachments {
     margin-top: var(--td-chat-item-attachments-margin-top);
-    .@{prefix}-image {
-      max-width: var(--td-chat-item-image-max-width);
+    &_image {
+      &::part(t-filecard-overview) {
+        width: var(--td-chat-item-image-max-width);
+        height: var(--td-chat-item-image-max-width);
+      }
     }
   }
 

@@ -30,7 +30,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   };
 
   IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
-  
+
   containerRef = createRef<HTMLElement>();
 
   installed() {
@@ -98,7 +98,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   onScrollOffset = (offset: -1 | 1) => {
     const containerEle = this.containerRef.current;
     if (!containerEle) return;
-    
+
     // 获取所有子元素
     const children = containerEle.querySelectorAll('t-filecard');
     if (!children.length) return;
@@ -149,9 +149,9 @@ export default class Attachments extends Component<TdAttachmentsProps> {
 
   // 检查是否所有附件都是图片类型
   isAllImages(items: TdAttachmentsProps['items']) {
-    return items?.every(item => 
-      item.type?.startsWith('image/') || 
-      this.IMG_EXTS.includes(item.name?.split('.').pop()?.toLowerCase() || '')
+    return items?.every(
+      (item) =>
+        item.type?.startsWith('image/') || this.IMG_EXTS.includes(item.name?.split('.').pop()?.toLowerCase() || ''),
     );
   }
 
@@ -167,28 +167,26 @@ export default class Attachments extends Component<TdAttachmentsProps> {
             [`${listCls}-overflow-${overflow}`]: overflow,
           })}
         >
-          {
-            items.map((item, index) => (
-              <t-filecard
-                imageViewer={imageViewer}
-                key={`${item.key || item.name}-${index}-${item.percent}-${item.status}` || `filecard-${index}`}
-                item={item}
-                cardType={allImages ? 'image' : 'file'}
-                class="t-filecard-item"
-                removable={removable}
-                onFileClick={() => {
-                  this.fire('file-click', item, {
-                    composed: true,
-                  });
-                }}
-                onRemove={() => {
-                  this.fire('remove', item, {
-                    composed: true,
-                  });
-                }}
-              ></t-filecard>
-            ))
-          }
+          {items.map((item, index) => (
+            <t-filecard
+              imageViewer={imageViewer}
+              key={`${item.key || item.name}-${index}-${item.percent}-${item.status}` || `filecard-${index}`}
+              item={item}
+              cardType={allImages ? 'image' : 'file'}
+              className={`t-filecard-item ${props?.className || ''}`}
+              removable={removable}
+              onFileClick={() => {
+                this.fire('file-click', item, {
+                  composed: true,
+                });
+              }}
+              onRemove={() => {
+                this.fire('remove', item, {
+                  composed: true,
+                });
+              }}
+            ></t-filecard>
+          ))}
         </o-transition-group>
 
         {overflow === 'scrollX' && this.showPrevButton && (
