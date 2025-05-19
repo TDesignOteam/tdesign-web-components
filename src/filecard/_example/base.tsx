@@ -18,6 +18,7 @@ export default class Button extends Component {
     {
       uid: '3',
       name: 'image-file.png',
+      status: 'progress',
       size: 333333,
       url: 'https://tdesign.gtimg.com/site/avatar.jpg',
     },
@@ -81,6 +82,7 @@ export default class Button extends Component {
               }}
             ></t-filecard>
           ))}
+          <t-filecard cardType="image" item={this.filesList[2]}></t-filecard>
         </t-space>
       </>
     );

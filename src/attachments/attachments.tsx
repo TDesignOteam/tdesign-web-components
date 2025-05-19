@@ -30,7 +30,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   };
 
   IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
-  
+
   containerRef = createRef<HTMLElement>();
 
   installed() {
@@ -149,9 +149,9 @@ export default class Attachments extends Component<TdAttachmentsProps> {
 
   // 检查是否所有附件都是图片类型
   isAllImages(items: TdAttachmentsProps['items']) {
-    return items?.every(item => 
-      item.type?.startsWith('image/') || 
-      this.IMG_EXTS.includes(item.name?.split('.').pop()?.toLowerCase() || '')
+    return items?.every(
+      (item) =>
+        item.type?.startsWith('image/') || this.IMG_EXTS.includes(item.name?.split('.').pop()?.toLowerCase() || ''),
     );
   }
 
