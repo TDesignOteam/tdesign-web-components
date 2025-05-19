@@ -59,7 +59,7 @@ export default class AttachmentExample extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         loading={this.loading.value}
-        actions={['attachmentUploader', 'sendButton']}
+        actions={['attachment', 'send']}
         uploadProps={{
           multiple: false,
           accept: 'image/*',

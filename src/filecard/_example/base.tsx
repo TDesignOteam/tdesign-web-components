@@ -18,7 +18,6 @@ export default class Button extends Component {
     {
       uid: '3',
       name: 'image-file.png',
-      status: 'progress',
       size: 333333,
       url: 'https://tdesign.gtimg.com/site/avatar.jpg',
     },
@@ -28,44 +27,50 @@ export default class Button extends Component {
       size: 444444,
     },
     {
-      uid: '4',
+      uid: '5',
       name: 'pdf-file.pdf',
       size: 444444,
       extension: '.docx',
       description: 'Custom extension',
     },
     {
-      uid: '5',
+      uid: '6',
       name: 'ppt-file.pptx',
       size: 555555,
     },
     {
-      uid: '6',
+      uid: '7',
       name: 'video-file.mp4',
       size: 666666,
     },
     {
-      uid: '7',
+      uid: '8',
       name: 'audio-file.mp3',
       size: 777777,
     },
     {
-      uid: '8',
+      uid: '9',
       name: 'zip-file.zip',
       size: 888888,
     },
     {
-      uid: '9',
+      uid: '10',
       name: 'markdown-file.md',
       size: 999999,
       description: 'Custom description',
     },
     {
-      uid: '10',
+      uid: '11',
       name: 'word-markdown-file.doc',
       size: 99899,
       status: 'progress',
       percent: '50',
+    },
+    {
+      uid: '12',
+      name: 'image-file.png',
+      status: 'progress',
+      size: 333333,
     },
   ];
 
@@ -82,7 +87,6 @@ export default class Button extends Component {
               }}
             ></t-filecard>
           ))}
-          <t-filecard cardType="image" item={this.filesList[2]}></t-filecard>
         </t-space>
       </>
     );

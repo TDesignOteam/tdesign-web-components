@@ -11,6 +11,7 @@ import 'tdesign-icons-web-components/esm/components/loading';
 import 'tdesign-icons-web-components/esm/components/file';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '../image';
+import '../loading';
 
 import { Component, tag } from 'omi';
 
@@ -78,13 +79,13 @@ export default class FileCard extends Component<TdFileCardProps> {
     },
     {
       icon: <t-icon-file-image-filled size="24px" />,
-      color: this.DEFAULT_ICON_COLOR,
+      // color: this.DEFAULT_ICON_COLOR,
       ext: this.IMG_EXTS,
     },
 
     {
       icon: <t-icon-file-code-1-filled size="24px" />,
-      color: this.DEFAULT_ICON_COLOR,
+      // color: this.DEFAULT_ICON_COLOR,
       ext: ['md', 'mdx'],
     },
     {
@@ -124,7 +125,7 @@ export default class FileCard extends Component<TdFileCardProps> {
     nameSuffix: '',
     desc: '',
     icon: null,
-    iconColor: '#8c8c8c',
+    iconColor: null,
   };
 
   ready() {
@@ -181,7 +182,6 @@ export default class FileCard extends Component<TdFileCardProps> {
     const { status = 'done', extension } = item;
     if (status === 'progress') {
       this.state.icon = <t-icon-loading size="24px" />;
-      this.state.iconColor = '#0052D9';
       this.update();
       return;
     }
@@ -194,7 +194,6 @@ export default class FileCard extends Component<TdFileCardProps> {
       }
     }
     this.state.icon = <t-icon-file size="24px" />;
-    this.state.iconColor = this.DEFAULT_ICON_COLOR;
     this.update();
   }
 
@@ -257,19 +256,17 @@ export default class FileCard extends Component<TdFileCardProps> {
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
     const { cardType = 'file', item } = this.props;
     if (cardType === 'image') {
-      return (
-        <t-image
-          src={item.url}
-          shape="round"
-          fit="cover"
-          loading={item?.status === 'progress'}
-          className={`${className}-image`}
-        ></t-image>
+      return item.url ? (
+        <t-image src={item.url} shape="round" fit="cover" className={`${className}-image`}></t-image>
+      ) : (
+        <div className={`${className}-icon ${className}-icon__${item.status}`} style={{ flex: 1 }}>
+          <t-icon-loading size="24px" />
+        </div>
       );
     }
     return (
       <>
-        <div className={`${className}-icon`} style={{ color: iconColor }}>
+        <div className={`${className}-icon ${className}-icon__${item.status}`} style={{ color: iconColor }}>
           {icon}
         </div>
         <div className={`${className}-content`}>

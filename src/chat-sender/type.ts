@@ -4,7 +4,7 @@ import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
 import { TdTextareaProps } from '../textarea';
 
-export type TdChatSenderActionName = 'attachmentUploader' | 'sendButton';
+export type TdChatSenderActionName = 'attachment' | 'send';
 
 export interface TdChatSenderAction {
   name: string;

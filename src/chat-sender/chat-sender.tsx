@@ -175,11 +175,11 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   get presetActions(): TdChatSenderAction[] {
     return [
       {
-        name: 'attachmentUploader',
+        name: 'attachment',
         render: this.renderUploadAttachment(),
       },
       {
-        name: 'sendButton',
+        name: 'send',
         render: this.renderButton(),
       },
     ];
