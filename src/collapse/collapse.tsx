@@ -16,6 +16,7 @@ export default class Collapse extends Component<TdCollapseProps> {
     expandMutex: Boolean,
     expandOnRowClick: Boolean,
     value: Array,
+    defaultValue: Array,
     onChange: Function,
   };
 
@@ -25,10 +26,10 @@ export default class Collapse extends Component<TdCollapseProps> {
     expandIconPlacement: 'left',
     expandMutex: false,
     expandOnRowClick: true,
-    value: [],
+    defaultValue: [],
   };
 
-  collapseValue = signal([]);
+  pCollapseValue = signal([]);
 
   innerBorderless = signal(false);
 
@@ -40,10 +41,15 @@ export default class Collapse extends Component<TdCollapseProps> {
 
   innerExpandOnRowClick = signal(true);
 
+  get collapseValue() {
+    if (this.props.value) return this.props.value;
+    return this.pCollapseValue.value;
+  }
+
   @bind
   updateCollapseValue(value) {
-    const index = this.collapseValue.value.indexOf(value);
-    let newValue = [...this.collapseValue.value];
+    const index = this.collapseValue.indexOf(value);
+    let newValue = [...this.collapseValue];
     if (index >= 0) {
       newValue.splice(index, 1);
     } else if (this.props.expandMutex) {
@@ -51,7 +57,7 @@ export default class Collapse extends Component<TdCollapseProps> {
     } else {
       newValue.push(value);
     }
-    this.collapseValue.value = newValue;
+    this.pCollapseValue.value = newValue;
     this.props?.onChange?.(newValue);
   }
 
@@ -60,7 +66,7 @@ export default class Collapse extends Component<TdCollapseProps> {
       let index = 0;
       return () => (index += 1);
     })(),
-    collapseValue: this.collapseValue,
+    getCollapseValue: () => this.collapseValue,
     updateCollapseValue: this.updateCollapseValue,
     borderless: this.innerBorderless,
     defaultExpandAll: this.innerDefaultExpandAll,
@@ -73,8 +79,8 @@ export default class Collapse extends Component<TdCollapseProps> {
   innerChecked: any = signal(null);
 
   install(): void {
-    const { value, borderless, defaultExpandAll, disabled, expandIconPlacement, expandOnRowClick } = this.props;
-    this.collapseValue.value = value || [];
+    const { defaultValue, borderless, defaultExpandAll, disabled, expandIconPlacement, expandOnRowClick } = this.props;
+    this.pCollapseValue.value = defaultValue;
     this.innerBorderless.value = borderless;
     this.innerDefaultExpandAll.value = defaultExpandAll;
     this.innerDisabled.value = disabled;

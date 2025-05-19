@@ -60,7 +60,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
 
   inject = [
     'getUniqId',
-    'collapseValue',
+    'getCollapseValue',
     'updateCollapseValue',
     'borderless',
     'defaultExpandAll',
@@ -99,8 +99,8 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   }
 
   renderIcon() {
-    const { expandIconPlacement, collapseValue } = this.injection;
-    const isActive = collapseValue.value.includes(this.innerValue.value);
+    const { expandIconPlacement, getCollapseValue } = this.injection;
+    const isActive = getCollapseValue().includes(this.innerValue.value);
     if (this.props.expandIcon === false) {
       return null;
     }
@@ -150,7 +150,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   }
 
   renderBody() {
-    const isActive = this.injection.collapseValue?.value.includes(this.innerValue.value);
+    const isActive = this.injection.getCollapseValue().includes(this.innerValue.value);
     const { destroyOnCollapse } = this.props;
     if (this.afterLeaved.value === null && !isActive) {
       return null;
