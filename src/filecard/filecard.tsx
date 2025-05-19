@@ -11,6 +11,7 @@ import 'tdesign-icons-web-components/esm/components/loading';
 import 'tdesign-icons-web-components/esm/components/file';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '../image';
+import '../loading';
 
 import { Component, tag } from 'omi';
 
@@ -255,14 +256,20 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
-    const { cardType = 'file', item } = this.props;
+    const { cardType = 'file', item, style = {} } = this.props;
     if (cardType === 'image') {
+
+      const newstyle = { 
+        ...{ width: 'var(--t-attachment-image-width, 52px)', height: 'var(--t-attachment-image-width, 52px)' },
+        ...style
+      };
       return (
         <t-image src={item.url}
           shape="round"
           fit="cover"
-          loading="lazy"
-          className={`${className}-image`}></t-image>
+          loading={<t-loading size='small'></t-loading>}
+          className={`${className}-image`}
+          style={newstyle}></t-image>
       );
     }
     return (
