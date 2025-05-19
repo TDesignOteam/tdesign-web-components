@@ -258,11 +258,13 @@ export default class FileCard extends Component<TdFileCardProps> {
     const { cardType = 'file', item } = this.props;
     if (cardType === 'image') {
       return (
-        <t-image src={item.url}
+        <t-image
+          src={item.url}
           shape="round"
           fit="cover"
-          loading="lazy"
-          className={`${className}-image`}></t-image>
+          loading={item?.status === 'progress'}
+          className={`${className}-image`}
+        ></t-image>
       );
     }
     return (

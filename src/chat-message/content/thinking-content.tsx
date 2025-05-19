@@ -40,6 +40,7 @@ export const renderThinking = ({
   };
   const { text, title } = content;
   const layoutClass = layout === 'border' ? `${className}__think-layout-border` : ``;
+
   return (
     <t-collapse
       // collapsed做key可在更新时触发展开收起
@@ -49,7 +50,6 @@ export const renderThinking = ({
       value={collapsed ? [0] : [1]}
     >
       <t-collapse-panel className={`${className}__think__content`}>
-        
         {text && (
           <t-auto-scroll maxHeight={maxHeight}>
             <div className={`${className}__think__inner`}>
