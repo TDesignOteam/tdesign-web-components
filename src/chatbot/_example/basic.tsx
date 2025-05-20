@@ -185,6 +185,12 @@ const mockData: ChatMessagesData[] = [
             size: 234234,
             url: 'https://tdesign.gtimg.com/site/avatar.jpg',
           },
+          {
+            fileType: 'image',
+            name: 'avatar.jpg',
+            size: 234234,
+            url: 'https://tdesign.gtimg.com/demo/demo-image-1.png',
+          },
         ],
       },
     ],

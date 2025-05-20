@@ -254,12 +254,16 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
-    const { cardType = 'file', item } = this.props;
+    const { cardType = 'file', item, style = {} } = this.props;
     if (cardType === 'image') {
+      const newstyle = {
+        ...{ width: 'var(--t-attachment-image-width, 52px)', height: 'var(--t-attachment-image-width, 52px)' },
+        ...style,
+      };
       return item.url ? (
-        <t-image src={item.url} shape="round" fit="cover" className={`${className}-image`}></t-image>
+        <t-image src={item.url} shape="round" fit="cover" className={`${className}-image`} style={newstyle}></t-image>
       ) : (
-        <div className={`${className}-icon ${className}-icon__${item.status}`} style={{ flex: 1 }}>
+        <div className={`${className}-icon ${className}-icon__progress`} style={{ flex: 1, ...newstyle }}>
           <t-icon-loading size="24px" />
         </div>
       );
