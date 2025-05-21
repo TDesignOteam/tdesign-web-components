@@ -5,6 +5,7 @@ import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
+import '../../src/popup';
 
 import { Component, signal, tag } from 'omi';
 
@@ -59,7 +60,7 @@ export const renderActions = (
     };
     if (type === 'good') {
       if (isActive) {
-        config.icon = <t-icon-thumb-up-filled />;
+        config.icon = <t-icon-thumb-up-filled color={`var(--td-brand-color)`} />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
           handleAction?.('good', {
@@ -71,7 +72,7 @@ export const renderActions = (
     } else {
       config.label = '点踩';
       if (isActive) {
-        config.icon = <t-icon-thumb-down-filled />;
+        config.icon = <t-icon-thumb-down-filled color={`var(--td-brand-color)`} />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
           handleAction?.('bad', {
@@ -91,29 +92,33 @@ export const renderActions = (
       }
     }
     return (
-      <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
-        {config.icon}
-      </span>
+      <t-popup content={config.label} placement="top" showArrow>
+        <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
+          {config.icon}
+        </span>
+      </t-popup>
     );
   };
 
-  const defaultPresetActions = (name, icon) => (
-    <span
-      class={`${className}__item__wrapper`}
-      onClick={(e) =>
-        handleClickAction(name, {
-          event: e,
-        })
-      }
-    >
-      {icon}
-    </span>
+  const defaultPresetActions = (name, icon, label) => (
+    <t-popup content={label} placement="top" showArrow>
+      <span
+        class={`${className}__item__wrapper`}
+        onClick={(e) =>
+          handleClickAction(name, {
+            event: e,
+          })
+        }
+      >
+        {icon}
+      </span>
+    </t-popup>
   );
 
   const presetActions = () =>
     [
-      { name: 'replay', render: defaultPresetActions('replay', <t-icon-refresh />) },
-      { name: 'copy', render: defaultPresetActions('copy', <t-icon-copy />) },
+      { name: 'replay', render: defaultPresetActions('replay', <t-icon-refresh />, '重新生成') },
+      { name: 'copy', render: defaultPresetActions('copy', <t-icon-copy />, '复制') },
       {
         name: 'good',
         render: renderComment('good', pComment.value === 'good'),
@@ -122,7 +127,7 @@ export const renderActions = (
         name: 'bad',
         render: renderComment('bad', pComment.value === 'bad'),
       },
-      { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 />) },
+      { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 />, '分享') },
     ] as TdChatActionItem[];
 
   const arrayActions: TdChatActionItem[] =
