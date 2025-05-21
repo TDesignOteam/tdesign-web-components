@@ -91,18 +91,18 @@ export const renderActions = (
         };
       }
     }
+    const action = (<span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
+      {config.icon}
+    </span>);
     return (
-      <t-tooltip content={config.label} placement="top" showArrow {...tooltipProps}>
-        <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
-          {config.icon}
-        </span>
-      </t-tooltip>
+      config?.label ? <t-tooltip content={config.label} placement="top" showArrow {...tooltipProps}>
+        {action}
+      </t-tooltip> : action
     );
   };
 
-  const defaultPresetActions = (name, icon, label) => (
-    <t-tooltip content={label} placement="top" showArrow {...tooltipProps}>
-      <span
+  const defaultPresetActions = (name, icon, label = '') => {
+    const action = (<span
         class={`${className}__item__wrapper`}
         onClick={(e) =>
           handleClickAction(name, {
@@ -111,9 +111,12 @@ export const renderActions = (
         }
       >
         {icon}
-      </span>
-    </t-tooltip>
-  );
+      </span>);
+    return (
+      label ? <t-tooltip content={label} placement="top" showArrow {...tooltipProps}>
+      {action}
+    </t-tooltip> : action
+  )};
 
   const presetActions = () =>
     [
