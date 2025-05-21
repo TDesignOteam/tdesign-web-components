@@ -21,4 +21,5 @@ actionBar | `TdChatItemActionName[] / boolean` | true | 操作按钮配置项，
 onActions | `Record<TdChatItemActionName, (data?: any, callback?: Function) => void>` | - | 操作按钮回调函数 | N
 presetActions | `Record<{name: TdChatItemActionName, render: TNode, condition?: (message: ChatMessagesData) => boolean;}>` | - | 预制按钮 | N
 message | `any` | - | 对话数据信息 | N
+tooltipProps | `TooltipProps` | - | Tooltip Props  | N
 

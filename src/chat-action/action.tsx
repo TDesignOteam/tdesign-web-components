@@ -5,7 +5,7 @@ import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
-import '../../src/popup';
+import '../../src/tooltip';
 
 import { Component, signal, tag } from 'omi';
 
@@ -20,7 +20,7 @@ const className = `${getClassPrefix()}-chat-actions`;
 
 export const DefaultChatMessageActionsName = ['replay', 'copy', 'good', 'bad', 'share'] as TdChatActionsName[];
 export const renderActions = (
-  { actionBar, handleAction, copyText }: TdChatActionProps,
+  { actionBar, handleAction, copyText, tooltipProps }: TdChatActionProps,
   pComment: Omi.SignalValue<ChatComment>,
 ) => {
   if (!actionBar) {
@@ -92,28 +92,27 @@ export const renderActions = (
       }
     }
     return (
-      <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
-        <t-popup content={config.label} placement="top" showArrow style={{ height: '16px' }}>
+      <t-tooltip content={config.label} placement="top" showArrow {...tooltipProps}>
+        <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
           {config.icon}
-        </t-popup>
-      </span>
+        </span>
+      </t-tooltip>
     );
   };
 
   const defaultPresetActions = (name, icon, label) => (
-    <span
-      class={`${className}__item__wrapper`}
-      onClick={(e) =>
-        handleClickAction(name, {
-          event: e,
-        })
-      }
-    >
-      <t-popup content={label} placement="top" showArrow style={{ height: '16px' }}>
+    <t-tooltip content={label} placement="top" showArrow {...tooltipProps}>
+      <span
+        class={`${className}__item__wrapper`}
+        onClick={(e) =>
+          handleClickAction(name, {
+            event: e,
+          })
+        }
+      >
         {icon}
-      </t-popup>
-    </span>
-    
+      </span>
+    </t-tooltip>
   );
 
   const presetActions = () =>
@@ -149,12 +148,14 @@ export default class ChatAction extends Component<TdChatActionProps> {
     handleAction: Object,
     comment: String,
     copyText: String,
+    tooltipProps: Object,
   };
 
   static defaultProps: Partial<TdChatActionProps> = {
     actionBar: true,
     copyText: '',
     comment: '',
+    tooltipProps: {},
   };
 
   private pComment = signal<ChatComment>(this.props.comment);
