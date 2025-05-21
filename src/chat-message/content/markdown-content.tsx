@@ -3,6 +3,7 @@ import linkPlugin from 'markdown-it-link-attributes';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
+import markdownItCjFriendlyPlugin from '../md/markdownItCjkFriendly';
 
 import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
@@ -82,6 +83,7 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
     const md = MarkdownIt({
       ...options,
     })
+      .use(markdownItCjFriendlyPlugin)
       // 表格
       .use((md) => {
         md.renderer.rules.table_open = () => `<div class=${baseClass}__markdown__table__wrapper>\n<table>\n`;
