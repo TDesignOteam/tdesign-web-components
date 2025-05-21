@@ -25,7 +25,8 @@ export default class BasicExample extends Component {
           event.stopPropagation();
           console.log('点击', content);
         }}
-        expandable={true}
+        useCollapse={true}
+        collapsed={false}
       ></t-chat-search-content>
     );
   }

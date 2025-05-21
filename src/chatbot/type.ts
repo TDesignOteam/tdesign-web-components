@@ -18,13 +18,6 @@ export interface TdChatItemAction {
   render: TNode;
 }
 
-export interface TdChatRenderConfig {
-  /** slot命名规则 */
-  slotName?: string;
-}
-
-export type TdChatCustomRenderConfig = Record<string, (props: any) => TdChatRenderConfig | undefined | null>;
-
 export type TdChatContentProps = {
   markdown?: Omit<TdChatMarkdownContentProps, 'content' | 'role'>;
   search?: TdChatContentSearchProps;
@@ -69,8 +62,6 @@ export interface TdChatItemProps {
   message: ChatMessagesData;
   /** 透传chat-content参数 */
   chatContentProps?: TdChatContentProps;
-  /** 自定义消息体渲染配置 */
-  customRenderConfig?: TdChatCustomRenderConfig;
 }
 
 export interface TdChatProps extends StyledProps {
@@ -178,14 +169,15 @@ export interface TdChatListApi {
 }
 
 type TdChatContentSearchProps = {
-  expandable?: boolean;
+  useCollapse?: boolean;
+  collapsed?: boolean;
 };
 
 type TdChatContentThinkProps = {
   maxHeight?: number;
   animation?: TdChatLoadingProps['animation'];
   collapsed?: boolean;
-  layout?: 'block'|'border';
+  layout?: 'block' | 'border';
 };
 
 type TdChatContentSuggestionProps = {

@@ -1,11 +1,12 @@
 import 'tdesign-icons-web-components/esm/components/jump';
 import '../../collapse';
 
-import { Component, signal, tag } from 'omi';
+import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { TdChatContentProps } from '../../chatbot';
 import { MessageStatus, ReferenceItem } from '../../chatbot/core/type';
+import { CollapseValue } from '../../collapse';
 
 import styles from '../style/chat-item.less';
 
@@ -18,6 +19,7 @@ type SearchContent = {
 export type TdChatSearchContentProps = {
   content?: SearchContent;
   status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
+  onChange?: (value: CollapseValue) => void;
   handleSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
   handleSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;
 } & TdChatContentProps['search'];
@@ -26,12 +28,14 @@ export type TdChatSearchContentProps = {
 export const renderSearch = ({
   content,
   status,
-  expandable = true,
+  useCollapse = true,
+  collapsed = false,
   handleSearchResultClick,
   handleSearchItemClick,
+  onChange,
 }: TdChatSearchContentProps) => {
   if (!content) return;
-  const searchExpand = signal(false);
+  const defaultCollapsed = collapsed ? [] : [1];
   const { references = [], title } = content;
   const titleText = status === 'stop' ? '搜索已终止' : title;
 
@@ -48,12 +52,13 @@ export const renderSearch = ({
 
   return (
     <div className={`${className}__search__wrapper`}>
-      {expandable ? (
+      {useCollapse ? (
         <t-collapse
           className={`${className}__search`}
           expandIconPlacement="right"
-          value={[0]}
-          onChange={() => (searchExpand.value = !searchExpand.value)}
+          value={onChange ? defaultCollapsed : undefined}
+          defaultValue={onChange ? undefined : defaultCollapsed}
+          onChange={onChange}
         >
           <t-collapse-panel className={`${className}__search__content`}>
             <div className={`${className}__search-links`}>
@@ -103,12 +108,23 @@ export default class SearchContentComponent extends Component<TdChatSearchConten
   static propTypes = {
     content: Object,
     status: String,
-    expandable: Boolean,
+    useCollapse: Boolean,
+    collapsed: Boolean,
     handleSearchItemClick: Object,
     handleSearchResultClick: Object,
   };
 
+  pCollapsed = signal(false);
+
+  receiveProps(props: TdChatSearchContentProps | OmiProps<TdChatSearchContentProps, any>) {
+    this.pCollapsed.value = props.collapsed || false;
+  }
+
+  onCollapsedChange = (v: CollapseValue) => {
+    this.pCollapsed.value = !v.length;
+  };
+
   render(props) {
-    return renderSearch(props);
+    return renderSearch({ ...props, collapsed: this.pCollapsed.value, onChange: this.onCollapsedChange });
   }
 }
