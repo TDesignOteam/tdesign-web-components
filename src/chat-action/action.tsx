@@ -92,27 +92,28 @@ export const renderActions = (
       }
     }
     return (
-      <t-popup content={config.label} placement="top" showArrow>
-        <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
+      <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
+        <t-popup content={config.label} placement="top" showArrow style={{ height: '16px' }}>
           {config.icon}
-        </span>
-      </t-popup>
+        </t-popup>
+      </span>
     );
   };
 
   const defaultPresetActions = (name, icon, label) => (
-    <t-popup content={label} placement="top" showArrow>
-      <span
-        class={`${className}__item__wrapper`}
-        onClick={(e) =>
-          handleClickAction(name, {
-            event: e,
-          })
-        }
-      >
+    <span
+      class={`${className}__item__wrapper`}
+      onClick={(e) =>
+        handleClickAction(name, {
+          event: e,
+        })
+      }
+    >
+      <t-popup content={label} placement="top" showArrow style={{ height: '16px' }}>
         {icon}
-      </span>
-    </t-popup>
+      </t-popup>
+    </span>
+    
   );
 
   const presetActions = () =>
