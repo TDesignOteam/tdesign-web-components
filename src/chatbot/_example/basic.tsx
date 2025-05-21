@@ -12,14 +12,16 @@ import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/t
 // 天气扩展类型定义
 declare module '../core/type' {
   interface AIContentTypeOverrides {
-    weather: BaseContent<
-      'weather',
-      {
+    weather: {
+      type: 'weather';
+      data: {
         temp: number;
         city: string;
         conditions?: string;
-      }
-    >;
+      };
+      id?: string;
+      slotName?: string;
+    };
   }
 }
 
@@ -326,6 +328,8 @@ const mockModels = {
       },
       body: JSON.stringify({
         session_id: 'session_123456789',
+        search: true,
+        think: true,
         question: [
           {
             id: messageID,
@@ -414,6 +418,7 @@ export default class BasicChat extends Component {
     if (role === 'assistant') {
       // 目前仅有单条thinking
       const thinking = content.find((item) => item.type === 'thinking');
+      const search = content.find((item) => item.type === 'search');
       return {
         // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
         actions: ['replay', 'copy', 'good', 'bad'],
@@ -448,7 +453,7 @@ export default class BasicChat extends Component {
         },
         chatContentProps: {
           search: {
-            expandable: false,
+            collapsed: search?.status === 'complete' ? true : false,
           },
           thinking: {
             maxHeight: 100,

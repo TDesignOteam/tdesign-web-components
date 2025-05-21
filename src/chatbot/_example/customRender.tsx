@@ -10,17 +10,18 @@ import type { AIContentChunkUpdate, AIMessageContent, ChatMessagesData, SSEChunk
 // 天气扩展类型定义
 declare module '../core/type' {
   interface AIContentTypeOverrides {
-    weather: BaseContent<
-      'weather',
-      {
+    weather: {
+      type: 'weather';
+      data: {
         temp: number;
         city: string;
         conditions?: string;
-      }
-    >;
+      };
+      id?: string;
+      slotName?: string;
+    };
   }
 }
-
 const mockData: ChatMessagesData[] = [
   {
     id: '123',
@@ -30,6 +31,7 @@ const mockData: ChatMessagesData[] = [
       {
         type: 'weather',
         id: 'w1',
+        slotName: 'weather-w1',
         data: {
           temp: 1,
           city: '北京',
@@ -43,6 +45,7 @@ const mockData: ChatMessagesData[] = [
       {
         type: 'weather',
         id: 'w2',
+        slotName: 'weather-w2',
         data: {
           temp: 1,
           city: '上海',
@@ -101,6 +104,7 @@ function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
     case 'weather': {
       return {
         ...chunk.data,
+        slotName: `weather-${chunk.data.id}`,
         data: { ...JSON.parse(chunk.data.content) },
         strategy: 'append',
       };
@@ -114,13 +118,6 @@ function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
   }
 }
 
-// 自定义渲染-注册插槽规则
-// const customRenderConfig: TdChatCustomRenderConfig = {
-//   weather: (content) => ({
-//     slotName: `${content.type}-${content.id}`,
-//   }),
-// };
-
 const messageProps: TdChatMessageConfig = {
   user: {
     variant: 'text',
@@ -132,8 +129,6 @@ const messageProps: TdChatMessageConfig = {
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     // actions: (preset) => preset,
-    // 不传入默认插槽命名：`${content.type}-${index}`
-    // customRenderConfig,
   },
 };
 
@@ -212,11 +207,11 @@ export default class BasicChat extends Component {
         {/* 自定义渲染-植入插槽 */}
         {this.mockMessage.value
           ?.map((data) =>
-            data.content.map((item, idx) => {
+            data.content.map((item) => {
               switch (item.type) {
                 case 'weather':
                   return (
-                    <div slot={`${data.id}-${item.type}-${idx}`} className="weather">
+                    <div slot={`${data.id}-${item.type}-${item.id}`} className="weather">
                       今天{item.data.city}天气{item.data.conditions}
                     </div>
                   );

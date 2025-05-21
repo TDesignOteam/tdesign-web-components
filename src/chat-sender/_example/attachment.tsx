@@ -21,6 +21,7 @@ export default class AttachmentExample extends Component {
     },
     {
       name: 'image-file.png',
+      url: 'https://tdesign.gtimg.com/site/avatar.jpg',
       size: 333333,
     },
   ]);

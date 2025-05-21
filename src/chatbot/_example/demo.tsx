@@ -160,7 +160,7 @@ const messageProps: TdChatMessageConfig = {
         maxHeight: 200,
       },
       search: {
-        expandable: false,
+        useCollapse: false,
       },
     },
   },

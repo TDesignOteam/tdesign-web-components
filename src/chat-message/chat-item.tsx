@@ -54,7 +54,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
     role: String,
     variant: String,
     chatContentProps: Object,
-    customRenderConfig: Object,
     handleActions: Object,
     animation: String,
   };
@@ -173,11 +172,10 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   renderMessage() {
-    const { message, chatContentProps, customRenderConfig, animation } = this.props;
+    const { message, chatContentProps, animation } = this.props;
     const { role, id } = message;
     return message.content.map((content, index) => {
       const elementKey = `${id}-${index}`;
-      const renderer = customRenderConfig?.[content?.type];
       // 用户和系统消息渲染
       if (!isAIMessage(message)) {
         if (!isTextContent(content) && !isMarkdownContent(content)) {
@@ -200,7 +198,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
           return renderSearch({
             content: content.data,
             status: content.status,
-            expandable: chatContentProps?.search?.expandable,
+            useCollapse: chatContentProps?.search?.useCollapse,
             handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
             handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
           });
@@ -243,8 +241,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
           );
         }
         // 自定义渲染slot
-        const config = renderer?.(content);
-        return <slot key={elementKey} name={`${config?.slotName || `${content.type}-${index}`}`}></slot>;
+        return <slot key={elementKey} name={`${content?.slotName || `${content.type}-${index}`}`}></slot>;
       }
 
       return null;

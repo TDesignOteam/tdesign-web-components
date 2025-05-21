@@ -21,18 +21,13 @@ export default class CustomRenderExample extends Component {
     variant: 'text',
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    // 自定义渲染-注册插槽规则
-    customRenderConfig: {
-      weather: (content) => ({
-        slotName: `${content.type}-${content.id}`,
-      }),
-    },
     message: {
       id: '123',
       content: [
         {
           type: 'weather',
           id: 'w1',
+          slotName: 'weather-w1',
           data: {
             temp: 1,
             city: '北京',
@@ -45,6 +40,7 @@ export default class CustomRenderExample extends Component {
         },
         {
           type: 'weather',
+          slotName: 'weather-w2',
           id: 'w2',
           data: {
             temp: 1,
