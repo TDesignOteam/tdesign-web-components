@@ -139,7 +139,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           this.uploadRef.current?.click();
         }}
       >
-        {convertToLightDomNode(<t-icon-file-attachment />)}
+        {convertToLightDomNode(<t-icon-file-attachment className={`${className}__actions__icon`} />)}
       </span>
     </t-tooltip>
   );
