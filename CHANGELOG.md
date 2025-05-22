@@ -7,6 +7,16 @@ spline: explain
 
 ## 🌈 1.0.0 `2025-05-22` 
 ### 🚀 Features
+- `chatbot`: 新增Chat系列组件，用于搭建智能对话聊天应用，包括Chatbot, ChatSender等9个 @carolin913 ([#208](https://github.com/TDesignOteam/tdesign-web-components/pull/208))
+### 🚧 Others
+- Feature/chat engine 初步补充样式 @LzhengH ([#195](https://github.com/TDesignOteam/tdesign-web-components/pull/195))
+- Feature/新增attachments和filecard组件 @haishancai ([#201](https://github.com/TDesignOteam/tdesign-web-components/pull/201))
+- Fix/优化attachments组件滚动的问题 @haishancai ([#202](https://github.com/TDesignOteam/tdesign-web-components/pull/202))
+- fix(message): 修复打包后引用message报错问题 @LzhengH ([#205](https://github.com/TDesignOteam/tdesign-web-components/pull/205))
+- feat(chatbot): props and style rebuild @carolin913 ([#206](https://github.com/TDesignOteam/tdesign-web-components/pull/206))
+
+## 🌈 1.0.0 `2025-05-22` 
+### 🚀 Features
 - `chatbot`: 新增Chat系列组件 @carolin913 ([#208](https://github.com/TDesignOteam/tdesign-web-components/pull/208))
 ### 🚧 Others
 - Feature/chat engine 初步补充样式 @LzhengH ([#195](https://github.com/TDesignOteam/tdesign-web-components/pull/195))
