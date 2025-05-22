@@ -32,7 +32,7 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
 
   const renderMainContent = (file: UploadFile, index: number) => (
     <div className={`${classPrefix}-upload__card-content ${classPrefix}-upload__card-box`}>
-      <Image className={`${classPrefix}-upload__card-image`} src={file.url} error="" loading="" />
+      <Image src={file.url} error="" loading="" />
       {!disabled && (
         <div className={`${classPrefix}-upload__card-mask`}>
           <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
@@ -65,7 +65,7 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
   );
 
   const cardItemClasses = `${classPrefix}-upload__card-item ${classPrefix}-is-background`;
-
+  console.log('===displayFiles', displayFiles);
   return (
     <div>
       <ul className={`${classPrefix}-upload__card`}>

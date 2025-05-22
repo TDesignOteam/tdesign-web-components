@@ -3,6 +3,7 @@
   "compilerOptions": {
     "allowImportingTsExtensions": false,
     "noEmit": false,
+    "skipLibCheck": true
   },
   "include": ["./src", "typings.d.ts"],
   "exclude": [

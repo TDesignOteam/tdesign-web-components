@@ -8,13 +8,16 @@ import { ExtendedElement } from './common';
 
 const convertReactToOmi = (r: any): Omi.ComponentChild => {
   if (!r) return r;
+
   if (typeof r === 'string') return r;
+
   const {
     type,
     key,
     ref,
     props: { children, ...rest },
   } = r;
+
   const omiVNode = {
     nodeName: type,
     attributes: { ignoreAttrs: true, ref, ...rest },
@@ -51,9 +54,10 @@ const convertReactToOmi = (r: any): Omi.ComponentChild => {
  * @param reactVNode react的vnode结构
  * @param root 需要挂载的html
  */
-const renderReact = <T = any>(reactVNode: T, root: HTMLElement): ExtendedElement =>
-  render(convertReactToOmi(reactVNode), root);
+const renderReactToOmi = <T = any>(reactVNode: T, root: HTMLElement): ExtendedElement => {
+  const vnode = convertReactToOmi(reactVNode);
+  console.log('====vnode', vnode, root);
+  return render(convertReactToOmi(reactVNode), root);
+};
 
-export default renderReact;
-
-export { convertReactToOmi };
+export { renderReactToOmi, convertReactToOmi };

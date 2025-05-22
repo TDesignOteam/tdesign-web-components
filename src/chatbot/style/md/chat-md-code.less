@@ -1,0 +1,45 @@
+@import "../../style/import.less";
+// 代码高亮风格
+@import 'highlight.js/styles/atom-one-light.min.css';
+
+.@{prefix}-chat__text__markdown__code {
+  position: relative;
+  margin: var(--td-chat-md-code-margin);
+  border-radius: var(--td-chat-md-code-radius);
+  overflow: hidden;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: var(--td-chat-md-code-header-height);
+    padding: var(--td-chat-md-code-header-padding);
+    background: var(--td-chat-md-code-header-bg);
+
+    &__lang {
+      font: var(--td-chat-md-code-header-font);
+    }
+
+    &__copy__wrapper {
+      display: flex;
+    }
+
+    &__copy {
+      cursor: pointer;
+      color: var(--td-chat-md-code-header-copy-color);
+
+      &:hover {
+        color: var(--td-chat-md-code-header-copy-hover-color);
+      }
+    }
+  }
+
+  &__body {
+    padding: var(--td-chat-md-code-body-padding);
+    background-color: var(--td-chat-md-code-body-bg);
+
+    code {
+      font-size: var(--td-chat-md-code-body-code-font-size);
+    }
+  }
+}

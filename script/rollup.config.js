@@ -6,6 +6,7 @@ import nodeResolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import url from '@rollup/plugin-url';
 import { resolve } from 'path';
+import atImport from 'postcss-import';
 import analyzer from 'rollup-plugin-analyzer';
 import esbuild from 'rollup-plugin-esbuild';
 import ignoreImport from 'rollup-plugin-ignore-import';
@@ -52,6 +53,9 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
       jsxFactory: 'Component.h',
       jsxFragment: 'Component.f',
       tsconfig: resolve(__dirname, '../tsconfig.build.json'),
+      loaders: {
+        '.less': 'css',
+      },
     }),
     babel({
       babelHelpers: 'runtime',
@@ -76,6 +80,7 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
         sourceMap: !isProd,
         inject: false,
         extensions: ['.sass', '.scss', '.css', '.less'],
+        plugins: [atImport()],
       }),
     );
   } else {
@@ -86,6 +91,17 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
       ignoreImport({
         include: ['src/*/style/*'],
         body: 'import "./style/index.js";',
+      }),
+      styles({
+        mode: 'extract',
+        extensions: ['.less', '.css'],
+        use: ['less', 'css-loader'],
+        less: {
+          javascriptEnabled: true,
+        },
+        url: {
+          inline: true,
+        },
       }),
     );
   }
@@ -197,6 +213,8 @@ const umdConfig = {
     globals: { omi: 'omi', lodash: '_' },
     sourcemap: true,
     file: `dist/${name}.js`,
+    // 禁止代码分割，内联所有动态导入
+    inlineDynamicImports: true,
   },
 };
 
@@ -215,6 +233,8 @@ const umdMinConfig = {
     globals: { omi: 'omi', lodash: '_' },
     sourcemap: true,
     file: `dist/${name}.min.js`,
+    // 禁止代码分割，内联所有动态导入
+    inlineDynamicImports: true,
   },
 };
 

@@ -1,0 +1,34 @@
+@import "./import.less";
+
+.@{prefix}-chat {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  color: @comment-text-color-default;
+
+  & *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  // chat布局
+  &--normal {
+    .@{prefix}-chat__inner.user {
+      flex-direction: row-reverse;
+      .@{prefix}-chat__avatar {
+        margin-right: 0;
+        // margin-left: @comment-avatar-margin-right;
+      }
+      .@{prefix}-chat__content {
+        align-items: flex-end;
+        .@{prefix}-chat__base {
+          justify-content: flex-end;
+        }
+      }
+    }
+    .@{prefix}-chat__detail {
+      max-width: ~"min(calc(100% - 40px), 800px)";
+    }
+  }
+}

@@ -30,7 +30,7 @@ export const LoadingPlugin: LoadingPluginMethod = (options) => {
 
   render(<Loading {...defaultProps} {...props} attach={null}></Loading>, div);
 
-  container.appendChild(div);
+  container?.appendChild(div);
 
   return {
     hide: () => {

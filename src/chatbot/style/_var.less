@@ -1,0 +1,209 @@
+// 组件变量
+// 名称可按如下规则定义：
+// <component>-[type]-[attrtype]-<attr>-[status]
+
+// component: 组件名，如 button
+// type: 组件类型，如 button 的次要按钮（line）
+// attrtype: 属性的具体应用场景。如颜色，用于背景（bg）、文本（text）、边框（border）等
+// attr: 属性名称，如 color、height、radius 等
+// status: 表示组件状态或尺寸，如 hover、disabled、s、l 等
+
+// 如：@button-line-bg-color-hover
+// 如：@button-line-height-s
+
+@import "../../_common/style/web/components/chat/_var.less";
+
+// :root[theme-mode="light"] {
+//   --td-code-bg-color-page: @gray-color-14;
+//   --td-code-font-base: @font-white-1;
+// }
+
+// :root[theme-mode="dark"] {
+//   --td-code-bg-color-page: @gray-color-14;
+//   --td-code-font-base: @font-white-1;
+// }
+
+:root {
+  // 盒模型
+  --td-chat-list-padding-bottom: 0;
+  --td-chat-list-scroll-button-top: calc(100% - 64px);
+  --td-chat-list-scroll-button-left: 50%;
+  --td-chat-list-scroll-button-index: 1;
+  --td-chat-list-scroll-button-w: 40px;
+  --td-chat-list-scroll-button-h: 40px;
+  --td-chat-list-scroll-button-padding: 0 0 4px 0;
+  --td-chat-list-scroll-button-border: 0.5px solid rgba(220, 220, 220, 1);
+  --td-chat-list-scroll-button-radius: 20px;
+  --td-chat-list-scroll-button-index: 50;
+  --td-chat-list-scroll-button-transform: translate(-50%, 0);
+
+  --td-chat-item-gap: 38px;
+  --td-chat-item-header-padding: 0;
+  --td-chat-item-text-header-padding: 0;
+  --td-chat-item-header-padding-right: 0;
+  --td-chat-item-name-padding: 0 @comp-margin-s 0 0;
+  --td-chat-item-name-padding-right: 0 0 0 @pop-padding-xxl;
+  --td-chat-item-name-font: 400 14px/22px;
+  --td-chat-item-content-max-width: 800px;
+  --td-chat-item-content-padding: @pop-padding-xl @pop-padding-xxl;
+  --td-chat-item-text-content-padding: @pop-padding-xl 0;
+  --td-chat-item-text-detail-margin: 10px 0;
+  --td-chat-item-content-border: 1px solid transparent;
+  --td-chat-item-content-radius: @border-radius-extraLarge;
+  --td-chat-item-system-margin: 0;
+  --td-chat-item-system-padding: 4px 8px;
+  --td-chat-item-system-radius: 6px;
+  --td-chat-item-system-bg-color: #f3f3f3;
+  --td-chat-item-system-font-size: 12px;
+  --td-chat-item-system-color: #afafaf;
+  --td-chat-item-left-avatar-margin: 0 20px 0 4px;
+  --td-chat-item-right-avatar-margin: 0 4px 0 20px;
+  --td-chat-item-avatar-padding: 6px 0 0 0;
+  --td-chat-item-avatar-has-header-padding: 34px 0 0 0;
+  --td-chat-item-search-wrapper-margin: 10px 0;
+  --td-chat-item-think-margin-bottom: 12px;
+  --td-chat-item-think-gap-p: 0 0 8px 0;
+  --td-chat-item-think-padding-tb: 8px;
+  --td-chat-item-think-padding-lr: 12px;
+  --td-chat-item-think-border: none;
+  --td-chat-item-think-radius: 6px;
+  --td-chat-item-think-title-gap: 6px;
+  --td-chat-item-think-status-wh: 16px;
+  --td-chat-item-think-pending-border-width: 2px;
+  --td-chat-item-think-pending-border-color: 2px;
+  --td-chat-item-think-header-border: none;
+  --td-chat-item-think-body-bg: none;
+  --td-chat-item-think-body-border: none;
+  --td-chat-item-think-content-margin-top: 2px;
+  --td-chat-item-think-shadow-top: 0;
+  --td-chat-item-think-shadow-bottom: 0;
+  --td-chat-item-think-shadow-margin-top: 0;
+  --td-chat-item-think-shadow-margin-bottom: 0;
+  --td-chat-item-think-shadow-top-height: 24px;
+  --td-chat-item-think-shadow-bottom-height: 24px;
+  --td-chat-item-think-inner-padding: 0 12px 8px 12px;
+  --t-chat-item-think-inner-border: solid 2px #e8e8e8;
+  --t-chat-item-think-inner-border-margin-left: 6px;
+  --td-chat-item-actions-list-margin: 4px 0;
+  --td-chat-item-text-actions-list-margin: 4px 0 0 16px;
+  --td-chat-item-actions-list-gap: 8px;
+  --td-chat-item-actions-list-padding: 4px;
+  --td-chat-item-actions-list-radius: 6px;
+  --td-chat-item-actions-list-border: 1px solid @border-level-2-color;
+  --td-chat-item-actions-item-padding: 4px;
+  --td-chat-item-actions-item-radius: 4px;
+  --td-chat-item-attachments-margin-top: 12px;
+  --td-chat-item-image-max-width: 150px; 
+  --t-attachment-image-width: 150px;
+  --td-chat-item-search-height: 36px;
+  --td-chat-item-search-padding: 8px;
+  --td-chat-item-search-radius: 20px;
+  --td-chat-item-search-icons-margin-right: 3px;
+  --td-chat-item-search-icon-width: 16px;
+  --td-chat-item-search-icon-radius: 50%;
+  --td-chat-item-search-icon-margin-left: -3px;
+  --td-chat-item-search-icon-before-left: -1px;
+  --td-chat-item-search-icon-before-width: 1px;
+  --td-chat-item-search-icon-before-height: 100%;
+  --td-chat-item-search-icon-before-radius: 1px;
+  --td-chat-item-search-link-color: var(--td-brand-color);
+  --td-chat-item-search-link-hov-color: var(--td-brand-color-hover);
+  --td-chat-item-search-link-line-height: 24px;
+  --td-chat-item-suggestion-gap: 4px;
+  --td-chat-item-suggestion-margin: 20px 0;
+  --td-chat-item-suggestion-height: 38px;
+  --td-chat-item-suggestion-padding: 6px 12px;
+  --td-chat-item-suggestion-radius: 8px;
+  --td-chat-item-suggestion-border: solid 1px #E6E6E6;
+  --td-chat-item-suggestion-arrow-margin: 6px;
+
+  // 字体尺寸、行高
+  --td-chat-search-font-size: 12px;
+  --td-chat-item-suggestion-font-size: 14px;
+  --td-chat-font-size: 16px;
+  --td-chat-list-scroll-button-font-size: 20px;
+  --td-chat-item-content-text-align: left;
+  --td-chat-item-right-content-text-align: left;
+
+  // 颜色
+  --td-chat-list-scroll-button-bg: #fff;
+  --td-chat-list-scroll-button-shadow: 
+    0px 8px 10px -5px rgba(0, 0, 0, 0.08),
+    0px 16px 24px 2px rgba(0, 0, 0, 0.04),
+    0px 6px 30px 5px rgba(0, 0, 0, 0.05);
+  --td-chat-item-error-color: #d54941;
+
+  --td-chat-item-primary-bg: @bg-color-secondarycontainer;
+  --td-chat-item-default-bg: #fff;
+  --td-chat-item-outline-border-color: @border-level-2-color;
+  --td-chat-item-think-bg: @bg-color-secondarycontainer;
+  --td-chat-item-think-pending-border-bg-color: #e0f0ff;
+  --td-chat-item-think-status-pending-color: @brand-color-7;
+  --td-chat-item-think-status-sent-color: @success-color-5;
+  --td-chat-item-think-status-error-color: @error-color-6;
+  --td-chat-item-think-content-color: #929292;
+  --td-chat-item-actions-list-bg: @bg-color-secondarycontainer;
+  --td-chat-item-actions-item-hover-bg: @gray-color-4;
+  --td-chat-item-suggestion-color: #111;
+  --td-chat-item-suggestion-background: #fff;
+  --td-chat-item-suggestion-arrow-color: #999;
+
+  // markdown相关
+  --td-chat-md-content-gap-main: 0 0 8px 0;
+  --td-chat-md-content-gap-t1: 24px 0 20px 0;
+  --td-chat-md-content-gap-t2: 20px 0 16px 0;
+  --td-chat-md-content-gap-t3: 16px 0 12px 0;
+  --td-chat-md-h1-font: 700 22px / 1.6 @font-family;
+  --td-chat-md-h2-font: 600 20px / 1.6 @font-family;
+  --td-chat-md-h3-font: 600 18px / 1.6 @font-family;
+
+  --td-chat-md-s-color: @gray-color-7;
+
+  --td-chat-md-list-margin: 0 0 8px 2em;
+  --td-chat-md-list-padding: 0;
+  --td-chat-md-ul-style: disc;
+  --td-chat-md-ol-style: decimal;
+  --td-chat-md-li-margin: 0.5em 0;
+
+  --td-chat-md-link-color: @brand-color-5;
+  --td-chat-md-link-decoration: none;
+  --td-chat-md-link-hover-color: @brand-color-6;
+
+  --td-chat-md-code-radius: 8px;
+  --td-chat-md-code-margin: 0 0 16px 0;
+  --td-chat-md-code-header-height: 36px;
+  --td-chat-md-code-header-padding: 0 16px 0 12px;
+  --td-chat-md-code-header-font: 500 14px / 1.6 @font-family;
+  --td-chat-md-code-header-bg: #f3f3f3;
+  --td-chat-md-code-header-copy-color: @gray-color-7;
+  --td-chat-md-code-header-copy-hover-color: @gray-color-9;
+  --td-chat-md-code-body-padding: 10px 16px !important;
+  --td-chat-md-code-body-bg: #f8f8f8;
+  --td-chat-md-code-body-code-font-size: 14px;
+
+  --td-chat-md-katex-block-margin: 1em 0;
+  --td-chat-md-katex-font: normal 1.21em / 1.2 KaTeX_Main, Times New Roman, serif;
+
+  --td-chat-md-blockquote-margin: 16px 0;
+  --td-chat-md-blockquote-padding: 0 0 0 12px;
+  --td-chat-md-blockquote-border-left: 4px solid #d9d9d9;
+  --td-chat-md-blockquote-color: rgba(0, 0, 0, 0.4);
+  
+  --td-chat-md-hr-margin: 16px 0;
+  --td-chat-md-hr-border: 1px solid rgba(0, 0, 0, 0.08);
+  
+  --td-chat-md-table-border: 1px solid rgba(0, 0, 0, 0.08);
+  --td-chat-md-table-radius: 8px;
+  --td-chat-md-table-margin: 8px 0;
+  --td-chat-md-table-font-size: 14px;
+  --td-chat-md-table-th-padding: 0.66em 1em;
+  --td-chat-md-table-th-max-width: 448px;
+  --td-chat-md-table-th-bg: #f5f5f5;
+  --td-chat-md-table-th-color: rgba(0, 0, 0, 0.9);
+  --td-chat-md-table-th-font: 700 14px / 1.6 @font-family;
+
+  --td-chat-md-table-td-bg-odd: #fff;
+  --td-chat-md-table-td-bg-even: #f5f5f5;
+  --td-chat-md-table-td-color: rgba(0, 0, 0, 0.6);
+  --td-chat-md-table-td-font: 400 14px / 1.6 @font-family;
+}

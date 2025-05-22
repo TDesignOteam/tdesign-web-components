@@ -1,0 +1,26 @@
+@import "./import.less";
+
+.@{prefix}-chat-actions {
+    display: flex;
+    gap: var(--td-chat-item-actions-list-gap);
+    padding: var(--td-chat-item-actions-list-padding);
+    border: var(--td-chat-item-actions-list-border);
+    border-radius: var(--td-chat-item-actions-list-radius);
+    background-color: var(--td-chat-item-actions-list-bg);
+    overflow: hidden;
+
+    &:empty {
+      display: none;
+    }
+
+    &__item__wrapper {
+      display: flex;
+      padding: var(--td-chat-item-actions-item-padding);
+      border-radius: var(--td-chat-item-actions-item-radius);
+      cursor: pointer;
+
+      &:hover, &:active {
+        background-color: var(--td-chat-item-actions-item-hover-bg);
+      }
+    }
+  }

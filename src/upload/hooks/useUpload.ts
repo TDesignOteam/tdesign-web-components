@@ -296,6 +296,8 @@ export default function useUpload(props: SignalValue<UploadProps>) {
   function onRemove(p: UploadRemoveContext) {
     sizeOverLimitMessage.value = '';
     p.e.stopPropagation?.();
+    toUploadFiles.value = [];
+    xhrReq.value = [];
     const changePrams: UploadChangeContext = {
       e: p.e,
       trigger: 'remove',
@@ -303,8 +305,6 @@ export default function useUpload(props: SignalValue<UploadProps>) {
       file: p.file,
     };
     setUploadValue([], changePrams);
-    toUploadFiles.value = [];
-    xhrReq.value = [];
     // props.onRemove?.(p);
   }
 

@@ -1,0 +1,79 @@
+@import "./import.less";
+.@{prefix}-attachment {
+
+  &-list-wrap {
+    position: relative;
+    overflow: visible;
+    &:hover {
+      .@{prefix}-attachment-list-prev-btn,
+      .@{prefix}-attachment-list-next-btn {
+        visibility: visible;
+      }
+    }
+  }
+  
+  &-list {
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 4px 0;
+
+    .@{prefix}-filecard-item {
+      flex: 0 0 auto;
+    }
+
+    &-overflow-scrollX {
+      overflow-x: auto;
+      flex-wrap: nowrap;
+      // 防止flex容器无限扩展
+      min-width: 0;
+      // 确保子元素不收缩
+      > * {
+        flex-shrink: 0;
+      }
+      width: '100%'; // 确保容器继承父级宽度
+    }
+
+    &-overflow-scrollY {
+      overflow-y: auto;
+      flex-wrap: wrap;
+      max-height: calc(@attachment-line-height * 2 + @attachment-line-gap);
+    }
+
+    &-prev-btn,
+    &-next-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--t-attachment-scroll-btn-wh);
+      height: var(--t-attachment-scroll-btn-wh);
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      border: var(--t-attachment-scroll-btn-border);
+      font-size: 14px;
+      z-index: 10;
+      background: var(--t-attachment-scroll-btn-bgc);
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: opacity 0.2s;
+      visibility: hidden;  
+    }
+
+    &-prev-btn {
+      left: @attachment-arrow-left;
+    }
+    
+    &-next-btn {
+      right: @attachment-arrow-left;
+    }
+  }
+}

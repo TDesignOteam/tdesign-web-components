@@ -40,6 +40,25 @@ export default ({ mode }) => {
       fs: {
         strict: false,
       },
+      proxy: {
+        '/api/sse': {
+          target: 'http://localhost:3000',
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/sse/, '/sse'),
+          // 允许POST请求代理，显式转发原始请求体
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              // 处理POST请求体转发
+              if (req.body) {
+                const bodyData = JSON.stringify(req.body);
+                proxyReq.setHeader('Content-Type', 'application/json');
+                proxyReq.setHeader('Content-Length', Buffer.byteLength(bodyData));
+                proxyReq.write(bodyData);
+              }
+            });
+          },
+        },
+      },
     },
     build: {
       outDir: '../_site',

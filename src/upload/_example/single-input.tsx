@@ -1,7 +1,9 @@
 import { Component, createRef, signal } from 'omi';
-import { Button, Space, Upload } from 'tdesign-web-components';
+import Button from 'tdesign-web-components/button';
 import { MessagePlugin } from 'tdesign-web-components/message/message';
+import Space from 'tdesign-web-components/space';
 import type { UploadProps } from 'tdesign-web-components/upload';
+import Upload from 'tdesign-web-components/upload';
 
 export default class UploadSingleInput extends Component {
   uploadRef = createRef<InstanceType<typeof Upload>>();
@@ -34,6 +36,7 @@ export default class UploadSingleInput extends Component {
   };
 
   render() {
+    console.log('===render');
     const Checkbox = ({ checked, onChange, children }) => {
       const handleChange = (event) => {
         if (onChange) {

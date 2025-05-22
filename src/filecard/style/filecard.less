@@ -1,0 +1,123 @@
+@import "./import.less";
+
+.@{prefix}-filecard {
+
+  &-overview {
+    box-sizing: border-box;
+    position: relative;
+    width: @file-card-item-width;
+    height: @file-card-item-height;
+    border-radius: @file-card-item-radius;
+    padding: @file-card-item-padding;
+    background: @file-card-item-bg;
+    display: flex;
+    align-items: center;
+    font-size: @file-card-item-size;
+    color: @file-card-item-color;
+
+    &:hover {
+      .@{prefix}-filecard-remove {
+        visibility: visible;
+      }
+    }
+    &-image { 
+      width: auto;
+      height: auto;
+      padding: 0px;
+    }
+    
+    
+  }
+  
+  &-remove {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1;
+    visibility: hidden;
+  }
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: @file-card-icon-width;
+    height: @file-card-icon-height;
+    color: @file-card-icon-default-color;
+    &__progress {
+      color: @file-card-icon-loading-color;
+    }
+  }
+  
+  &-content {
+    margin-left: @file-card-content-margin;
+    text-align: left;
+    line-height: @file-card-content-line-height;
+  }
+
+  &-name {
+    max-width: @file-card-name-width;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &-desc {
+    color: #9e9d9e;
+    font-size: @file-card-item-desc-size;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  // 预览样式
+  &-preview {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: @file-card-preview-width;
+    height: @file-card-preview-width;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &-mask {
+      position: absolute;
+      width: @file-card-preview-width;
+      height: @file-card-preview-width;
+      background: @file-card-preview-mask-bg;
+    }
+
+    &-content {
+      position: relative;
+      max-width: @file-card-preview-content-maxwidth;
+      max-height: @file-card-preview-content-maxwidth;
+
+      img {
+        max-width: @file-card-preview-img-maxwidth;
+        max-height: @file-card-preview-img-maxheight;
+        display: block;
+      }
+    }
+
+    &-close {
+      position: fixed;
+      top: @file-card-preview-close-top;
+      right: @file-card-preview-close-top;
+      color: #fff;
+      cursor: pointer;
+      padding: @file-card-preview-close-padding;
+      z-index: 10000;
+      transition: all 0.3s;
+      
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+  }
+}

@@ -1,0 +1,170 @@
+@import "./import.less";
+
+.@{prefix}-chat {
+  // 消息样式
+  &__text {
+    font: var(--td-chat-font-size);
+    word-break: break-all;
+
+    & *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    &--error {
+      color: @error-color;
+    }
+
+    & &__user pre {
+    }
+
+    &__assistant {
+    }
+
+    &__markdown {
+      color: @text-color-primary;
+
+      h1 {
+        font: var(--td-chat-md-h1-font);
+        margin: var(--td-chat-md-content-gap-t1);
+      }
+      h2 {
+        font: var(--td-chat-md-h2-font);
+        margin: var(--td-chat-md-content-gap-t2);
+      }
+      h3, h4, h5, h6 {
+        font: var(--td-chat-md-h3-font);
+        margin: var(--td-chat-md-content-gap-t3);
+      }
+
+      p {
+        margin: var(--td-chat-md-content-gap-main);
+        word-break: break-word;
+        overflow-wrap: break-word;
+        margin-block-start: 0;
+        &:last-child {
+          margin-bottom: 0;
+          margin-block-end: 0;
+        }
+      }
+      s {
+        color: var(--td-chat-md-s-color);
+      }
+      :where(code):not(:where(pre *)) {
+        color: @error-color;
+        background: @error-color-1;
+        border-radius: @border-radius-default;
+        padding: @comp-paddingTB-xxs @pop-padding-m;
+        font-size: @font-size-s;
+        word-break: break-word;
+        margin: 0 @comp-margin-xxs;
+      }
+
+      li {
+        word-break: break-word;
+        overflow-wrap: break-word;
+        margin: var(--td-chat-md-li-margin);
+
+        &:first-child {
+          margin-top: 0;
+        }
+      }
+      ul, ol {
+        margin: var(--td-chat-md-list-margin);
+        padding: var(--td-chat-md-list-padding);
+      }
+      ul {
+        list-style: var(--td-chat-md-ul-style);
+      }
+      ol {
+        list-style: var(--td-chat-md-ol-style);
+      }
+
+      a {
+        color: var(--td-chat-md-link-color);
+        font-weight: 500;
+        text-decoration: var(--td-chat-md-link-decoration);
+        cursor: pointer;
+
+        &:hover {
+          color: var(--td-chat-md-link-hover-color);
+        }
+      }
+
+      .katex-block {
+        margin: var(--td-chat-md-katex-block-margin);
+      }
+
+      .katex {
+        font: var(--td-chat-md-katex-font);
+      }
+
+      .katex-html {
+        display: none;
+      }
+
+      img {
+        max-width: 100%;
+        margin: @comp-margin-xs 0;
+        border-radius: @border-radius-default;
+      }
+
+      blockquote {
+        margin: var(--td-chat-md-blockquote-margin);
+        font-size: inherit;
+        border-left: var(--td-chat-md-blockquote-border-left);
+        padding: var(--td-chat-md-blockquote-padding);
+        color: var(--td-chat-md-blockquote-color);
+      }
+
+      hr {
+        margin: var(--td-chat-md-hr-margin);
+        border: none;
+        border-top: var(--td-chat-md-hr-border);
+        background: none;
+      }
+
+      &__table__wrapper {
+        overflow-x: auto;
+        white-space: nowrap;
+        border: var(--td-chat-md-table-border);
+        border-radius: var(--td-chat-md-table-radius);
+        margin: var(--td-chat-md-table-margin);
+      }
+      table {
+        font-size: var(--td-chat-md-table-font-size);
+        border-collapse: collapse;
+        border-spacing: 0;
+        min-width: 100%;
+        width: max-content;
+        max-width: max-content;
+      }
+      th, td {
+        box-sizing: border-box;
+        padding: var(--td-chat-md-table-th-padding);
+        vertical-align: middle;
+        text-align: center;
+        max-width: var(--td-chat-md-table-th-max-width);
+        white-space: normal;
+      }
+      th {
+        background-color: var(--td-chat-md-table-th-bg);
+        color: var(--td-chat-md-table-th-color);
+        font: var(--td-chat-md-table-th-font);
+        text-align: left !important;
+      }
+      td {
+        background-color: var(--td-chat-md-table-td-bg-odd);
+        color: var(--td-chat-md-table-td-color);
+        font: var(--td-chat-md-table-td-font);
+        text-align: left !important;
+      }
+      tbody tr:nth-child(2n) td {
+        background-color: var(--td-chat-md-table-td-bg-even);
+      }
+    }
+
+    &--user {
+      color: @text-color-secondary;
+    }
+  }
+}

@@ -1,15 +1,32 @@
-import { bind, classNames, Component, createRef, tag } from 'omi';
+import { classNames, Component, createRef, tag } from 'omi';
 
 import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
-import { getCharacterLength, limitUnicodeMaxLength } from '../_common/js/utils/helper';
 import { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
+import useLengthLimit from '../input/useLengthLimit';
 import { TdTextareaProps } from './type';
 
 export interface TextareaProps extends TdTextareaProps, StyledProps {}
 @tag('t-textarea')
 export default class Textarea extends Component<TdTextareaProps> {
   static css = [];
+
+  static propTypes = {
+    allowInputOverMax: Boolean,
+    autofocus: Boolean,
+    autosize: Boolean,
+    disabled: Boolean,
+    label: Object,
+    maxcharacter: Number,
+    maxlength: Number,
+    placeholder: String,
+    readonly: Boolean,
+    status: String,
+    tips: Object,
+    value: String,
+    defaultValue: String,
+    enterkeyhint: String,
+  };
 
   constructor() {
     super();
@@ -24,7 +41,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     };
   }
 
-  value = '';
+  private pValue = '';
 
   isFocused = false;
 
@@ -34,9 +51,14 @@ export default class Textarea extends Component<TdTextareaProps> {
 
   classPrefix = getClassPrefix();
 
+  get inputValue() {
+    if (this.props.value !== undefined) return this.props.value;
+    return this.pValue;
+  }
+
   installed() {
-    const { value, disabled, ...otherProps } = this.props;
-    this.value = value;
+    const { value, defaultValue, disabled, ...otherProps } = this.props;
+    this.pValue = value || defaultValue;
     this.eventPropsNames = Object.keys(otherProps).filter((key) => /^on[A-Z]/.test(key));
     this.eventProps = this.eventPropsNames.reduce((eventProps, key) => {
       Object.assign(eventProps, {
@@ -50,19 +72,27 @@ export default class Textarea extends Component<TdTextareaProps> {
             this.isFocused = false;
             this.update();
           }
-          this.props[key](e.currentTarget.value, { e });
+          this.props[key](e);
           e.stopPropagation();
         },
       });
       return eventProps;
     }, {});
 
-    this.update();
-
-    const node = this.textArea.current;
-    this.value = node.value;
-    this.onInput();
+    // 处理autosize初始化高度不准确
+    setTimeout(() => {
+      this.adjustTextareaHeight();
+    }, 0);
   }
+
+  updated(): void {
+    this.adjustTextareaHeight();
+  }
+
+  // 暴露聚焦方法
+  focus = () => {
+    this.textArea.current?.focus();
+  };
 
   countCharacters(text: string) {
     // 按照一个中文汉字等于一个字符长度计算
@@ -105,10 +135,9 @@ export default class Textarea extends Component<TdTextareaProps> {
     node.style.height = clacHeight;
   }
 
-  @bind
-  onInput() {
+  adjustTextareaHeight = () => {
     const node = this.textArea.current;
-    const { autosize, maxcharacter } = this.props;
+    const { autosize } = this.props;
     if (autosize === true) {
       const heightObj = calcTextareaHeight(node);
       this.setHeight(heightObj);
@@ -116,35 +145,26 @@ export default class Textarea extends Component<TdTextareaProps> {
       const heightObj = calcTextareaHeight(node, autosize?.minRows, autosize?.maxRows);
       this.setHeight(heightObj);
     }
-    if (maxcharacter) {
-      const text = node.value;
-      const length = this.countCharacters(text);
-      if (length > maxcharacter) {
-        if (text[text.length - 1].match('/[\u4e00-\u9fa5]/g')) {
-          node.value = text.slice(0, maxcharacter - 1);
-        } else {
-          node.value = text.slice(0, maxcharacter);
-        }
-      }
-    }
-  }
+  };
 
-  onChange(e) {
-    const { target } = e;
-    let val = (target as HTMLInputElement).value;
-    if (!this.props?.allowInputOverMax && !this.textArea.current) {
-      val = limitUnicodeMaxLength(val, this.props?.maxlength);
-      if (this.props?.maxcharacter && this.props?.maxcharacter >= 0) {
-        const stringInfo = getCharacterLength(val, this.props?.maxcharacter);
-        val = typeof stringInfo === 'object' && stringInfo.characters;
-      }
-    }
-    // setValue(val, { e });
-    this.value = val;
+  onChange = (e: Event) => {
+    const target = e.currentTarget as HTMLTextAreaElement;
+    const val = target.value;
 
-    this.props?.onChange(val, { e });
-    this.update();
-  }
+    const { getValueByLimitNumber } = useLengthLimit({
+      value: val ? String(val) : undefined,
+      status: 'default',
+      maxlength: this.props.maxlength,
+      maxcharacter: this.props.maxcharacter,
+      allowInputOverMax: this.props.allowInputOverMax,
+      onValidate: () => {},
+    });
+
+    const limitedValue = getValueByLimitNumber(target.value);
+    this.pValue = limitedValue;
+
+    this.fire('change', limitedValue);
+  };
 
   render(props: TextareaProps) {
     const {
@@ -158,26 +178,41 @@ export default class Textarea extends Component<TdTextareaProps> {
       maxcharacter,
       innerClass,
       innerStyle,
+      enterkeyhint,
     } = props;
 
     return (
       <>
-        <div class={classNames(`${this.classPrefix}-textarea`, innerClass)} style={innerStyle}>
+        <div
+          class={classNames(`${this.classPrefix}-textarea`, innerClass)}
+          part={`${this.classPrefix}-textarea`}
+          style={innerStyle}
+        >
           <textarea
             {...this.eventProps}
             class={this.cls()}
-            value={this.value}
+            part={`${this.textareaClassPrefix}__inner`}
+            value={this.inputValue}
             placeholder={placeholder}
             readonly={readonly}
             disabled={disabled}
             autofocus={autofocus}
             maxlength={maxlength}
             maxcharacter={maxcharacter}
-            onChange={(e) => this.onChange(e)}
-            onInput={this.onInput}
+            // 这个事件会在失焦前触发，必须加上否则会导致失焦时，textarea的value值为空
+            onChange={this.onChange}
+            onInput={this.onChange}
             ref={this.textArea}
-          ></textarea>
-          {tips && <div class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}>{tips}</div>}
+            enterkeyhint={enterkeyhint}
+          />
+          {tips && (
+            <div
+              class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}
+              part={`${this.classPrefix}-tips`}
+            >
+              {tips}
+            </div>
+          )}
         </div>
       </>
     );

@@ -1,0 +1,234 @@
+@import "../../_common/style/web/base.less";
+
+:host {
+  width: 100%;
+}
+
+.@{prefix}-chat__input {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+
+  & *, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  // 附件区
+  &__header {
+    position: relative;
+    bottom: calc(-1 * var(--td-chat-input-radius) - 1px);
+    margin-top: calc(-1 * var(--td-chat-input-radius));
+    padding-bottom: var(--td-chat-input-radius);
+    max-height: 1000px;
+    border: 1px solid var(--td-chat-input-content-default-border);
+    border-bottom: none;
+    border-top-left-radius: var(--td-chat-input-radius);
+    border-top-right-radius: var(--td-chat-input-radius);
+    transition: all 1s ease-in;
+
+    &:empty {
+      max-height: 0;
+      border: none;
+    }
+  }
+
+  // 主体区
+  &__content {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: @comp-paddingTB-m @comp-paddingLR-m @comp-paddingTB-m @comp-paddingLR-m;
+    border: 1px solid var(--td-chat-input-content-default-border);
+    border-radius: var(--td-chat-input-radius);
+    background: var(--td-chat-input-background);
+    transition: all .3s;
+    z-index: 1;
+    box-shadow: var(--td-chat-input-box-shadow);
+
+    &:focus-within {
+      border-color: @brand-color;
+      background: @bg-color-container;
+      box-shadow: 0px 0px 0px 2px @brand-color-2;
+    }
+
+    &:hover {
+      border-color: @brand-color;
+    }
+  }
+
+  // 附件区
+  &__attachments {
+    display: block;
+    padding: 12px;
+  }
+
+  &__textarea__wrapper {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    width: 100%;
+  }
+
+  // 输入框
+  &__textarea {
+    flex: 1;
+    min-width: 0;
+    max-height: var(--td-chat-input-textarea-max-height);
+    display: flex;
+    flex-direction: column;
+
+    &::part(@{prefix}-textarea) {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
+      overflow-y: auto;
+
+      &::-webkit-scrollbar {
+        width: var(--td-chat-input-textarea-scrollbar-width);
+      }
+      &::-webkit-scrollbar-thumb {
+        border-radius: var(--td-chat-input-textarea-scrollbar-thumb-radius);
+        background-color: var(--td-chat-input-textarea-scrollbar-color);
+        cursor: pointer;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--td-chat-input-textarea-scrollbar-hover-color);
+      }
+    }
+
+    &::part(@{prefix}-textarea__inner) {
+      padding: 0 0 @comp-paddingTB-s 0;
+      border: none;
+      font-size: var(--td-chat-input-font-size);
+      background: none;
+      box-shadow: none;
+    }
+
+    &::part(@{prefix}-textarea__inner):placeholder {
+      color: @text-color-secondary;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &__right {
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  // 功能区
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: var(--td-chat-input-actions-gap);
+    margin: var(--td-chat-input-actions-margin);
+
+    &__item__wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: var(--td-chat-input-actions-item-wh);
+      height: var(--td-chat-input-actions-item-wh);
+      border-radius: var(--td-chat-input-actions-item-radius);
+      font-size: var(--td-chat-input-actions-item-font-size);
+      background: var(--td-chat-input-actions-item-bg);
+
+      &:hover {
+        background: var(--td-chat-input-actions-item-hover-bg);
+      }
+    }
+
+    &__icon {
+      display: flex;
+    }
+
+    &__upload {
+      &::part(@{prefix}-upload__trigger) {
+        display: flex;
+      }
+    }
+
+    &__tooltip {
+      display: flex;
+      color: var(--td-chat-input-actions-item-color);
+      cursor: pointer;
+    }
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: @comp-size-s;
+    text-align: center;
+    cursor: pointer;
+
+    &::part(@{prefix}-button) {
+      transform: rotate(-90deg);
+      width: @comp-size-s;
+      height: @comp-size-s;
+      border-radius: @border-radius-circle;
+      background: var(--td-chat-input-button-default-bg);
+      color: var(--td-chat-input-button-default-color);
+    }
+    
+    &--focus::part(@{prefix}-button) {
+      background: @brand-color;
+      color: @text-color-anti;
+    }
+
+    &__icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .@{prefix}-icon {
+        font-size: @font-size-l;
+      }
+    }
+
+    &__stop {
+      .@{prefix}-icon {
+        font-size: 28px;
+      }
+    }
+  }
+
+  &__stopbtn {
+    flex: 0 0 auto;
+    margin-left: @comp-margin-l;
+
+    .@{prefix}-button {
+      width: 100px;
+      height: @comp-size-xxxxl;
+      border-radius: @border-radius-round;
+      background: @bg-color-secondarycontainer;
+      color: @text-color-primary;
+      font-size: @font-size-l;
+
+      &__text {
+        align-items: center;
+      }
+
+      .@{prefix}-icon {
+        font-size: @font-size-xl;
+        margin-right: @comp-margin-s;
+      }
+    }
+  }
+}
+
+
+.@{prefix}-portal-wrapper {
+  .@{prefix}-chat__input__model-dropdown {
+    border: none;
+  }
+}
