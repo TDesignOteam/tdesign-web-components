@@ -1,7 +1,7 @@
 {
   "name": "@tencent/tdesign-chatbot",
   "purename": "tdesign",
-  "version": "1.0.0-beta.60",
+  "version": "1.0.0-beta.61",
   "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.js",
