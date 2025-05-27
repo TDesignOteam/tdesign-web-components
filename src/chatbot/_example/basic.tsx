@@ -311,8 +311,8 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 const mockModels = {
   endpoint: 'http://localhost:3000/sse/normal',
   stream: true,
-  onComplete: () => {
-    console.log('onComplete');
+  onComplete: (isAborted) => {
+    console.log('onComplete', isAborted);
   },
   onError: (err) => {
     console.log('onError', err);
