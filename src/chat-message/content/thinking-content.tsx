@@ -8,7 +8,7 @@ import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { MessageStatus, TdChatContentProps } from '../../chatbot';
+import type { ChatMessageStatus, TdChatContentProps } from '../../chatbot';
 import { CollapseValue } from '../../collapse';
 
 import styles from '../style/chat-item.less';
@@ -20,7 +20,7 @@ export type TdChatThinkContentProps = {
     text?: string;
     title?: string;
   };
-  status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
+  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
 } & TdChatContentProps['thinking'];
 
 export interface IRenderThinking extends TdChatThinkContentProps {
@@ -38,7 +38,7 @@ export const renderThinking = ({
   onChange,
 }: IRenderThinking) => {
   const defaultCollapsed = collapsed ? [] : [1];
-  const renderThinkingStatus = (s: MessageStatus) => {
+  const renderThinkingStatus = (s: ChatMessageStatus) => {
     if (s === 'complete' || s === 'stop')
       return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
     if (s === 'error')
@@ -73,7 +73,7 @@ export const renderThinking = ({
           </t-auto-scroll>
         )}
         <div slot="header" className={`${className}__think__header__content`}>
-          {status !== 'stop' && renderThinkingStatus(status as MessageStatus)}
+          {status !== 'stop' && renderThinkingStatus(status as ChatMessageStatus)}
           {status === 'stop' ? '思考已终止' : title}
         </div>
       </t-collapse-panel>

@@ -63,7 +63,7 @@ export default class ChatSender extends Component {
   };
 
   renderModel = () => (
-    <div className={`${className}__model`} slot="footer-left">
+    <div className={`${className}__model`} slot="footer-prefix">
       <t-dropdown
         options={[
           { value: 'hunyuan', content: 'HunYuan' },

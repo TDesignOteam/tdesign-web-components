@@ -5,10 +5,10 @@ import { type TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';
 import type {
   AIMessageContent,
+  ChatContentType,
   ChatRequestParams,
   ChatServiceConfigSetter,
   ChatStatus,
-  ContentType,
 } from './core/type';
 import type { ChatMessagesData } from './core/type';
 
@@ -24,7 +24,7 @@ export type TdChatContentProps = {
   thinking?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;
   [key: string]: any; // 处理其他ContentType情况
-} & Partial<Record<Exclude<ContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
+} & Partial<Record<Exclude<ChatContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
 
 export interface TdChatItemProps {
   /**

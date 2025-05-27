@@ -2,8 +2,8 @@ import {
   type AIMessage,
   type AIMessageContent,
   type ChatMessagesData,
+  ChatMessageStatus,
   type ChatMessageStore,
-  MessageStatus,
   UserMessage,
 } from '../type';
 import { isAIMessage, isUserMessage } from '../utils';
@@ -166,7 +166,7 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
     return userMessages.at(-1);
   }
 
-  private resolvedStatus(content: AIMessageContent, status: MessageStatus): MessageStatus {
+  private resolvedStatus(content: AIMessageContent, status: ChatMessageStatus): ChatMessageStatus {
     return typeof content.status === 'function' ? content.status(status) : content.status;
   }
 
