@@ -1,7 +1,7 @@
-export type MessageRole = 'user' | 'assistant' | 'system';
-export type MessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
-export type ChatStatus = 'idle' | MessageStatus;
-export type ContentType =
+export type ChatMessageRole = 'user' | 'assistant' | 'system';
+export type ChatMessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
+export type ChatStatus = 'idle' | ChatMessageStatus;
+export type ChatContentType =
   | 'text'
   | 'markdown'
   | 'search'
@@ -17,7 +17,7 @@ export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt'
 export interface ChatBaseContent<T extends string, TData> {
   type: T;
   data: TData;
-  status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
+  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
   id?: string;
 }
 
@@ -86,9 +86,9 @@ export type ThinkingContent = ChatBaseContent<
 // 消息主体
 // 基础消息结构
 
-export interface BaseMessage {
+export interface ChatBaseMessage {
   id: string;
-  status?: MessageStatus;
+  status?: ChatMessageStatus;
   datetime?: string;
   ext?: any;
 }
@@ -118,21 +118,21 @@ export type AIContentType = keyof AIContentTypeMap;
 export type AIMessageContent = AIContentTypeMap[AIContentType];
 export type UserMessageContent = TextContent | AttachmentContent;
 
-export interface UserMessage extends BaseMessage {
+export interface UserMessage extends ChatBaseMessage {
   role: 'user';
   content: UserMessageContent[];
 }
 
 export type ChatComment = 'good' | 'bad' | '';
 
-export interface AIMessage extends BaseMessage {
+export interface AIMessage extends ChatBaseMessage {
   role: 'assistant';
   content?: AIMessageContent[];
   /** 点赞点踩 */
   comment?: ChatComment;
 }
 
-export interface SystemMessage extends BaseMessage {
+export interface SystemMessage extends ChatBaseMessage {
   role: 'system';
   content: TextContent[];
 }

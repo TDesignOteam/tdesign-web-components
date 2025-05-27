@@ -5,7 +5,7 @@ import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { TdChatContentProps } from '../../chatbot';
-import { MessageStatus, ReferenceItem } from '../../chatbot/core/type';
+import { ChatMessageStatus, ReferenceItem } from '../../chatbot/core/type';
 import { CollapseValue } from '../../collapse';
 
 import styles from '../style/chat-item.less';
@@ -18,7 +18,7 @@ type SearchContent = {
 };
 export type TdChatSearchContentProps = {
   content?: SearchContent;
-  status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
+  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
   onChange?: (value: CollapseValue) => void;
   handleSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
   handleSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;

@@ -94,11 +94,11 @@ export default class CustomExample extends Component {
           onSend={this.onSend}
         >
           {this.renderPanel()}
-          <div slot="prefix" className="prefix" onClick={() => this.senderRef.current?.selectFile()}>
+          <div slot="input-prefix" className="prefix" onClick={() => this.senderRef.current?.selectFile()}>
             <t-icon-focus className="icon" />
           </div>
           <div slot="inner-header">我是innerHeader</div>
-          <div slot="footer-left">
+          <div slot="footer-prefix">
             <t-button
               onClick={() => {
                 this.panel.value = true;

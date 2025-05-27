@@ -353,7 +353,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 渲染输入框插槽
    */
   private renderInputSlots = () => {
-    // sender-header、sender-footer-left、sender-actions、sender-sender
+    // sender-header、sender-footer-prefix、sender-actions、sender-sender
     const itemSlotNames = this.slotNames.filter((key) => key.includes('sender-'));
     return itemSlotNames.map((slotName) => {
       const str = slotName.replace(/^sender-/, '');
