@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.0.2 `2025-05-27` 
+### 🚧 Others
+- Feature/chatbot 修改类型定义，增加Chat前缀 @carolin913 ([#212](https://github.com/TDesignOteam/tdesign-web-components/pull/212))
+
 ## 🌈 1.0.1 `2025-05-27` 
 ### 🚧 Others
 - feat(chatbot): modify exported type @carolin913 ([#210](https://github.com/TDesignOteam/tdesign-web-components/pull/210))
