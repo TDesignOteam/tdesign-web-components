@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.0.1 `2025-05-27` 
+### 🚧 Others
+- feat(chatbot): modify exported type @carolin913 ([#210](https://github.com/TDesignOteam/tdesign-web-components/pull/210))
+- fix(chatbot): fix sseClient abort error @carolin913 ([#210](https://github.com/TDesignOteam/tdesign-web-components/pull/210))
+
 ## 🌈 1.0.0 `2025-05-22` 
 ### 🚀 Features
 - `chatbot`: 新增Chat系列组件 @carolin913 ([#208](https://github.com/TDesignOteam/tdesign-web-components/pull/208))
