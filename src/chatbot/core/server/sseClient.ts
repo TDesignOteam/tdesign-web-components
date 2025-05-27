@@ -11,6 +11,8 @@ export default class SSEClient {
 
   private buffer = '';
 
+  private isClosed = false;
+
   constructor(
     private url: string,
     private handlers: {
@@ -47,7 +49,6 @@ export default class SSEClient {
         this.handleError(response);
         return;
       }
-
       this.reader = response.body.pipeThrough(new TextDecoderStream()).getReader();
       // 直接开始读取流数据
       await this.readStream();
@@ -56,21 +57,31 @@ export default class SSEClient {
     }
   }
 
-  close() {
-    this.reader?.cancel().catch(() => {});
-    this.controller?.abort();
-    this.reader = null;
-    this.controller = null;
+  async close() {
+    if (this.isClosed) return;
+    this.isClosed = true;
+    // 先取消reader读取
+    if (this.reader) {
+      await this.reader.cancel().catch((err) => {
+        this.handlers.onError?.(err);
+      });
+      this.reader = null;
+    }
+
+    // 最后中止控制器
+    if (this.controller && !this.controller.signal.aborted) {
+      this.controller.abort();
+      this.controller = null;
+    }
   }
 
   private async readStream() {
     try {
-      while (true) {
+      while (!this.isClosed) {
         // eslint-disable-next-line no-await-in-loop
         const { done, value } = await this.reader!.read();
         if (done) {
-          const isAborted = this.reader === null;
-          this.handlers.onComplete?.(isAborted);
+          this.handlers.onComplete?.(this.isClosed);
           return;
         }
 
