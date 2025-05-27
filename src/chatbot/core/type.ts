@@ -14,7 +14,7 @@ export type ContentType =
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 
 // 基础类型
-export interface BaseContent<T extends string, TData> {
+export interface ChatBaseContent<T extends string, TData> {
   type: T;
   data: TData;
   status?: MessageStatus | ((currentStatus: MessageStatus | undefined) => MessageStatus);
@@ -22,11 +22,11 @@ export interface BaseContent<T extends string, TData> {
 }
 
 // 内容类型
-export type TextContent = BaseContent<'text', string>;
+export type TextContent = ChatBaseContent<'text', string>;
 
-export type MarkdownContent = BaseContent<'markdown', string>;
+export type MarkdownContent = ChatBaseContent<'markdown', string>;
 
-export type ImageContent = BaseContent<
+export type ImageContent = ChatBaseContent<
   'image',
   {
     name?: string;
@@ -47,7 +47,7 @@ export type ReferenceItem = {
   site?: string;
   date?: string;
 };
-export type SearchContent = BaseContent<
+export type SearchContent = ChatBaseContent<
   'search',
   {
     title?: string;
@@ -59,7 +59,7 @@ export type SuggestionItem = {
   title: string;
   prompt?: string;
 };
-export type SuggestionContent = BaseContent<'suggestion', SuggestionItem[]>;
+export type SuggestionContent = ChatBaseContent<'suggestion', SuggestionItem[]>;
 
 // 附件消息
 export type AttachmentItem = {
@@ -72,10 +72,10 @@ export type AttachmentItem = {
   height?: number;
   metadata?: Record<string, any>;
 };
-export type AttachmentContent = BaseContent<'attachment', AttachmentItem[]>;
+export type AttachmentContent = ChatBaseContent<'attachment', AttachmentItem[]>;
 
 // 思考过程
-export type ThinkingContent = BaseContent<
+export type ThinkingContent = ChatBaseContent<
   'thinking',
   {
     text?: string;
@@ -195,12 +195,12 @@ export interface ChatState {
   model: ModelServiceState;
 }
 
-export type AIContentHandler<T extends BaseContent<any, any>> = (chunk: T, existing?: T) => T;
+export type AIContentHandler<T extends ChatBaseContent<any, any>> = (chunk: T, existing?: T) => T;
 
 export interface ContentTypeDefinition<T extends string = string, D = any> {
   type: T;
-  handler?: AIContentHandler<BaseContent<T, D>>;
-  renderer?: ContentRenderer<BaseContent<T, D>>;
+  handler?: AIContentHandler<ChatBaseContent<T, D>>;
+  renderer?: ContentRenderer<ChatBaseContent<T, D>>;
 }
 
-export type ContentRenderer<T extends BaseContent<any, any>> = (content: T) => unknown;
+export type ContentRenderer<T extends ChatBaseContent<any, any>> = (content: T) => unknown;

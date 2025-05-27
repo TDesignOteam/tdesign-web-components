@@ -10,7 +10,7 @@ import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/t
 // 天气扩展类型定义
 declare module '../core/type' {
   interface AIContentTypeOverrides {
-    weather: BaseContent<
+    weather: ChatBaseContent<
       'weather',
       {
         temp: number;
