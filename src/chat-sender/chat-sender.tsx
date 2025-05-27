@@ -227,7 +227,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         <div className={`${className}__content`}>
           <slot name="inner-header"></slot>
           <div className={`${className}__textarea__wrapper`}>
-            <slot name="prefix"></slot>
+            <slot name="input-prefix"></slot>
             <t-textarea
               ref={this.inputRef}
               className={`${className}__textarea`}
@@ -248,7 +248,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           </div>
           <div className={`${className}__footer`}>
             <div className={`${className}__footer__left`}>
-              <slot name="footer-left"></slot>
+              <slot name="footer-prefix"></slot>
             </div>
             <div className={`${className}__footer__right`}>
               <div className={`${className}__actions`}>

@@ -72,7 +72,7 @@ spline: base
 |--------|------|
 | `sender-header` | 输入框头部内容 |
 | `sender-inner-header` | 输入框边框内头部内容 |
-| `sender-footer-left` | 输入框底部左侧内容 |
+| `sender-footer-prefix` | 输入框底部左侧内容 |
 | `sender-actions` | 输入框操作按钮 |
 | `[message-id]` | 特定消息ID的自定义内容 |
 
@@ -88,10 +88,10 @@ spline: base
 | name | `string` \| `TNode` | 作者名称或自定义渲染节点 |
 | avatar | `string` \| `TNode` | 头像URL或自定义渲染节点 |
 | datetime | `string` \| `TNode` | 时间显示或自定义渲染节点 |
-| role | `MessageRole` | 消息角色类型 |
+| role | `ChatMessageRole` | 消息角色类型 |
 | variant | `'base'` \| `'text'` \| `'outline'` | 消息气泡样式变体 |
 | placement | `'left'` \| `'right'` | 消息气泡位置 |
-| chatContentProps | `{[key in ContentType]?: {}}` | 可以针对不同内容类型进行定制化配置。ContentType类型有`text`、`markdown`、`search`、`thinking`、`suggestion`，|
+| chatContentProps | `{[key in ChatContentType]?: {}}` | 可以针对不同内容类型进行定制化配置。ContentType类型有`text`、`markdown`、`search`、`thinking`、`suggestion`，|
 | onMessageChange | `(e: CustomEvent<ChatMessagesData[]>) => void` | 消息更新时触发 |
 
 ### ChatServiceConfig属性
@@ -126,21 +126,21 @@ type ChatMessagesData = UserMessage | AIMessage | SystemMessage;
 
 ## 角色消息类型
 
-### 公共基础属性 (BaseMessage)
+### 公共基础属性 (ChatBaseMessage)
 
-所有消息类型都继承自 `BaseMessage`，包含以下公共属性：
+所有消息类型都继承自 `ChatBaseMessage`，包含以下公共属性：
 
 | 属性名 | 类型 | 说明 |
 |--------|------|------|
 | id | string | 消息唯一标识符 |
-| status | `MessageStatus` | 消息状态：'pending'(等待中)、'streaming'(流式传输中)、'complete'(完成)、'stop'(停止)、'error'(错误) |
+| status | `ChatMessageStatus` | 消息状态：'pending'(等待中)、'streaming'(流式传输中)、'complete'(完成)、'stop'(停止)、'error'(错误) |
 | datetime | string | 消息时间戳 (ISO 8601 格式) |
 | ext | any | 扩展数据，可存放自定义业务数据 |
 
 ### 1. SystemMessage (系统消息)
 
 ```typescript
-interface SystemMessage extends BaseMessage {
+interface SystemMessage extends ChatBaseMessage {
   role: 'system';  // 固定为'system'
   content: TextContent[];  // 仅支持纯文本内容
 }
@@ -149,7 +149,7 @@ interface SystemMessage extends BaseMessage {
 ### 2. UserMessage (用户消息)
 
 ```typescript
-interface UserMessage extends BaseMessage {
+interface UserMessage extends ChatBaseMessage {
   role: 'user';  // 固定为'user'
   content: UserMessageContent[];  // 消息内容数组
 }
@@ -162,7 +162,7 @@ interface UserMessage extends BaseMessage {
 ### 3. AIMessage (AI助手消息)
 
 ```typescript
-interface AIMessage extends BaseMessage {
+interface AIMessage extends ChatBaseMessage {
   role: 'assistant';  // 固定为'assistant'
   content: AIMessageContent[];  // 消息内容数组
   comment?: 'good' | 'bad';  // 用户反馈：'good'(点赞)、'bad'(点踩)
@@ -184,7 +184,7 @@ interface AIMessage extends BaseMessage {
 interface TextContent {
   type: 'text';  // 固定为'text'
   data: string;  // 文本内容
-  status?: MessageStatus;  // 内容状态
+  status?: ChatMessageStatus;  // 内容状态
   id?: string;  // 内容ID
 }
 ```
@@ -195,7 +195,7 @@ interface TextContent {
 interface AttachmentContent {
   type: 'attachment';  // 固定为'attachment'
   data: AttachmentItem[];  // 附件项数组
-  status?: MessageStatus;  // 内容状态
+  status?: ChatMessageStatus;  // 内容状态
   id?: string;  // 内容ID
 }
 
