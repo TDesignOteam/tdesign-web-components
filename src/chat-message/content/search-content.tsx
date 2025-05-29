@@ -29,7 +29,7 @@ export const renderSearch = ({
   content,
   status,
   useCollapse = true,
-  collapsed = false,
+  collapsed = true,
   handleSearchResultClick,
   handleSearchItemClick,
   onChange,
