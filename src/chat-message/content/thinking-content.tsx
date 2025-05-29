@@ -4,7 +4,7 @@ import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 
-import { Component, OmiProps, signal, tag } from 'omi';
+import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
@@ -101,11 +101,31 @@ export default class ThinkingContentComponent extends Component<TdChatThinkConte
 
   pCollapsed = signal(false);
 
-  receiveProps(props: TdChatThinkContentProps | OmiProps<TdChatThinkContentProps, any>) {
-    this.pCollapsed.value = props.collapsed || false;
+  /** 标志本次渲染是否触发了onCollapsedChange */
+  isCollapsedChange = false;
+
+  // 同步外部传入的折叠收起状态
+  syncCollapsed(): void {
+    this.pCollapsed.value = this.props.collapsed || false;
+  }
+
+  ready(): void {
+    this.syncCollapsed();
+  }
+
+  beforeUpdate(): void {
+    // 未主动更改收起状态，则使用外部传入状态
+    if (!this.isCollapsedChange && this.pCollapsed.value !== this.props.collapsed) {
+      this.syncCollapsed();
+    }
+  }
+
+  updated(): void {
+    this.isCollapsedChange = false;
   }
 
   onCollapsedChange = (v: CollapseValue) => {
+    this.isCollapsedChange = true;
     if (!v.length) {
       this.pCollapsed.value = true;
     } else {

@@ -1,8 +1,16 @@
 import '../content/thinking-content';
 
-import { Component } from 'omi';
+import { Component, signal } from 'omi';
 
 export default class BasicExample extends Component {
+  collapse = signal(false);
+
+  ready(): void {
+    setTimeout(() => {
+      this.collapse.value = true;
+    }, 1000);
+  }
+
   render() {
     return (
       <t-chat-thinking-content
@@ -13,7 +21,7 @@ export default class BasicExample extends Component {
         }}
         maxHeight={50}
         animation="moving"
-        collapsed={true}
+        collapsed={this.collapse.value}
       ></t-chat-thinking-content>
     );
   }
