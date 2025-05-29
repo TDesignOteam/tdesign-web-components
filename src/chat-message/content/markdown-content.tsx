@@ -1,6 +1,6 @@
 import MarkdownIt from 'markdown-it';
 import linkPlugin from 'markdown-it-link-attributes';
-import { Component, OmiProps, signal, tag } from 'omi';
+import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import markdownItCjFriendlyPlugin from '../md/markdownItCjkFriendly';
@@ -32,7 +32,6 @@ export type TdChatContentMDPluginConfig =
 
 export interface TdChatMarkdownContentProps {
   content?: string;
-  role?: string;
   options?: MarkdownIt.Options;
   pluginConfig?: Array<TdChatContentMDPluginConfig>;
 }
@@ -43,7 +42,6 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
   static propTypes = {
     content: String,
-    role: String,
     options: Object,
     pluginConfig: Object,
   };
@@ -166,13 +164,12 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
     return this.md?.render(markdown);
   }
 
-  render({ role }: OmiProps<TdChatMarkdownContentProps>) {
-    const roleClass = `${baseClass}--${role}`;
+  render() {
     const textContent = this.getTextInfo() || '';
     if (!textContent) return;
     return (
       <div className={`${baseClass}`}>
-        <div className={`${baseClass}__markdown ${roleClass}`} unsafeHTML={{ html: textContent }}></div>
+        <div className={`${baseClass}__markdown`} unsafeHTML={{ html: textContent }}></div>
       </div>
     );
   }

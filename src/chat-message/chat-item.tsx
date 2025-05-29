@@ -181,15 +181,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
         if (!isTextContent(content) && !isMarkdownContent(content)) {
           return null;
         }
-        return convertToLightDomNode(
-          <t-chat-md-content
-            key={elementKey}
-            className={`${className}__detail`}
-            {...chatContentProps?.markdown}
-            content={content?.data || content}
-            role={role}
-          ></t-chat-md-content>,
-        );
+        return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
       }
 
       // AI消息渲染
@@ -236,7 +228,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
               className={`${className}__detail`}
               {...chatContentProps?.markdown}
               content={content.data}
-              role={role}
             ></t-chat-md-content>,
           );
         }
