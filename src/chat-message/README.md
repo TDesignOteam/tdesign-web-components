@@ -7,6 +7,7 @@ spline: base
 ---
 
 ## 消息体样式
+
 {{ style }}
 
 ## 消息内容
@@ -14,6 +15,10 @@ spline: base
 ### markdown内容
 
 {{ markdown }}
+
+### cMarkdown内容
+
+{{ cherryMarkdown }}
 
 ### 思考内容
 

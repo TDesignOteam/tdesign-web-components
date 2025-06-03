@@ -65,6 +65,7 @@
     "@popperjs/core": "^2.11.8",
     "@types/markdown-it": "^13.0.7",
     "@vscode/markdown-it-katex": "^1.1.1",
+    "cherry-markdown": "^0.9.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
