@@ -13,8 +13,8 @@ export default class Demo extends Component {
   expandOnRowClick = signal(true);
 
   @bind
-  onChange(value) {
-    console.log('onChange.value', value);
+  onChange(e) {
+    console.log('onChange.value', e.detail);
   }
 
   render() {
