@@ -5,6 +5,11 @@ import { Component, signal } from 'omi';
 export default class BasicExample extends Component {
   collapse = signal(false);
 
+  collapsedChangeHandle = (e: CustomEvent<boolean>) => {
+    console.log(e);
+    this.collapse.value = e.detail;
+  };
+
   ready(): void {
     setTimeout(() => {
       this.collapse.value = true;
@@ -22,6 +27,7 @@ export default class BasicExample extends Component {
         maxHeight={50}
         animation="moving"
         collapsed={this.collapse.value}
+        onCollapsedChange={this.collapsedChangeHandle}
       ></t-chat-thinking-content>
     );
   }

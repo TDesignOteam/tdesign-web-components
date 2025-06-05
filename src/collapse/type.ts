@@ -51,7 +51,7 @@ export interface TdCollapseProps {
   /**
    * 切换面板时触发，返回变化的值
    */
-  onChange?: (value: CollapseValue) => void;
+  onChange?: (e: CustomEvent<CollapseValue>) => void;
   /**
    * 内容
    */

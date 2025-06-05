@@ -7,8 +7,8 @@ export default class Demo extends Component {
   currentItem = signal('[]');
 
   @bind
-  onChange(value) {
-    this.currentItem.value = value.valueOf();
+  onChange(e) {
+    this.currentItem.value = e.detail.valueOf();
     console.log('currentItem', this.currentItem);
   }
 
