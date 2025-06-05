@@ -4,6 +4,7 @@ import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 
+import { isNil } from 'lodash-es';
 import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
@@ -15,7 +16,7 @@ import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-export type TdChatThinkContentProps = {
+type TdChatThinkBaseProps = {
   content?: {
     text?: string;
     title?: string;
@@ -23,8 +24,13 @@ export type TdChatThinkContentProps = {
   status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
 } & TdChatContentProps['thinking'];
 
-export interface IRenderThinking extends TdChatThinkContentProps {
-  onChange?: (value: CollapseValue) => void;
+export type TdChatThinkContentProps = {
+  defaultCollapsed?: boolean;
+  onCollapsedChange?: (e: CustomEvent<boolean>) => void;
+} & TdChatThinkBaseProps;
+
+export interface IRenderThinking extends TdChatThinkBaseProps {
+  onChange?: (e: CustomEvent<CollapseValue>) => void;
 }
 
 // 纯函数渲染器（无shadow root）
@@ -92,49 +98,38 @@ export default class ThinkingContentComponent extends Component<TdChatThinkConte
     maxHeight: Number,
     animation: String,
     collapsed: Boolean,
+    defaultCollapsed: Boolean,
     layout: String,
+    onCollapsedChange: Function,
   };
 
   static defaultProps: Partial<TdChatThinkContentProps> = {
     animation: 'circle',
+    defaultCollapsed: false,
   };
 
   pCollapsed = signal(false);
 
-  /** 标志本次渲染是否触发了onCollapsedChange */
-  isCollapsedChange = false;
-
-  // 同步外部传入的折叠收起状态
-  syncCollapsed(): void {
-    this.pCollapsed.value = this.props.collapsed || false;
+  get collapsed() {
+    if (!isNil(this.props.collapsed)) return this.props.collapsed;
+    return this.pCollapsed.value;
   }
 
   ready(): void {
-    this.syncCollapsed();
+    this.pCollapsed.value = this.props.defaultCollapsed;
   }
 
-  beforeUpdate(): void {
-    // 未主动更改收起状态，则使用外部传入状态
-    if (!this.isCollapsedChange && this.pCollapsed.value !== this.props.collapsed) {
-      this.syncCollapsed();
-    }
-  }
-
-  updated(): void {
-    this.isCollapsedChange = false;
-  }
-
-  onCollapsedChange = (v: CollapseValue) => {
-    this.isCollapsedChange = true;
-    if (!v.length) {
+  onCollapsedChange = (e: CustomEvent<CollapseValue>) => {
+    if (!e.detail.length) {
       this.pCollapsed.value = true;
     } else {
       this.pCollapsed.value = false;
     }
+    this.fire('collapsedChange', this.pCollapsed.value);
   };
 
   render(props: TdChatThinkContentProps) {
     if (!props?.content) return;
-    return renderThinking({ ...props, collapsed: this.pCollapsed.value, onChange: this.onCollapsedChange });
+    return renderThinking({ ...props, collapsed: this.collapsed, onChange: this.onCollapsedChange });
   }
 }

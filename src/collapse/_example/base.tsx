@@ -6,8 +6,8 @@ export default class Demo extends Component {
   collapseValue = signal([1]);
 
   @bind
-  onChange(value) {
-    this.collapseValue.value = value;
+  onChange(e) {
+    this.collapseValue.value = e.detail;
   }
 
   render() {

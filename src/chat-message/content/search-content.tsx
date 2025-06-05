@@ -120,8 +120,8 @@ export default class SearchContentComponent extends Component<TdChatSearchConten
     this.pCollapsed.value = props.collapsed || false;
   }
 
-  onCollapsedChange = (v: CollapseValue) => {
-    this.pCollapsed.value = !v.length;
+  onCollapsedChange = (e: CustomEvent<CollapseValue>) => {
+    this.pCollapsed.value = !e.detail.length;
   };
 
   render(props) {
