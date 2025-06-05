@@ -58,7 +58,7 @@ export default class Collapse extends Component<TdCollapseProps> {
       newValue.push(value);
     }
     this.pCollapseValue.value = newValue;
-    this.props?.onChange?.(newValue);
+    this.fire('change', newValue);
   }
 
   provide = {
