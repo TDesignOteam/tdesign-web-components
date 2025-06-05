@@ -5,6 +5,12 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.0.4 `2025-06-05` 
+### 🚧 Others
+- Fix/filecard 描述文字超长省略 @carolin913 ([#218](https://github.com/TDesignOteam/tdesign-web-components/pull/218))
+- Fix/collapse 受控开合状态 @LzhengH  ([#218](https://github.com/TDesignOteam/tdesign-web-components/pull/218))
+- Feat/chatsender 增加textarea slot @LzhengH  ([#218](https://github.com/TDesignOteam/tdesign-web-components/pull/218))
+
 ## 🌈 1.0.2 `2025-05-27` 
 ### 🚧 Others
 - Feature/chatbot 修改类型定义，增加Chat前缀 @carolin913 ([#212](https://github.com/TDesignOteam/tdesign-web-components/pull/212))
