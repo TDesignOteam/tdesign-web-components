@@ -27,7 +27,7 @@ export class LLMService implements ILLMService {
           'Content-Type': 'application/json',
           ...req.headers,
         },
-        body: JSON.stringify(req.body),
+        body: req.body,
       });
 
       if (!response.ok) {
