@@ -102,7 +102,7 @@ spline: base
 | stream | boolean| 是否使用流式传输 |
 | retryInterval | number| 重试间隔时间(毫秒) |
 | maxRetries | number | 最大重试次数 |
-| onRequest | `(params: ChatRequestParams) => RequestInit` | 请求前的回调，可修改请求参数 |
+| onRequest | `(params: ChatRequestParams) => RequestInit \| Promise<RequestInit>` | 请求前的回调，可修改请求参数 |
 | onMessage | `(chunk: SSEChunkData) => AIMessageContent \| null` | 处理流式消息的回调 |
 | onComplete | `(isAborted: boolean, params: RequestInit, result?: any) => void` | 请求完成时的回调 |
 | onAbort | `() => Promise<void>` | 中止请求时的回调 |

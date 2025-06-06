@@ -113,18 +113,22 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
     // 注入预设插件
     // 代码块
-    if (!options?.highlight) {
-      const codeHighlightConfig = enabledPresetPlugins.find((item) => item.preset === 'code');
-      let codeHighlight;
-      if (codeHighlightConfig) {
-        await import('../md/chat-md-code');
+    const codeHighlightConfig = enabledPresetPlugins.find((item) => item.preset === 'code');
+    if (codeHighlightConfig) {
+      await import('../md/chat-md-code');
 
-        codeHighlight = (code: string, lang: string) =>
-          // 传参注意转义
-          `<t-chat-md-code lang="${lang}" code="${md.utils.escapeHtml(code)}"></t-chat-md-code>`;
-      }
+      const codeHighlight = (code: string, lang: string, attrs: string) => {
+        // 优先取用户自定义代码块渲染
+        const customHighlight = options?.highlight?.(code, lang, attrs);
+        if (customHighlight) {
+          return customHighlight;
+        }
+        // 传参注意转义
+        return `<t-chat-md-code lang="${lang}" code="${md.utils.escapeHtml(code)}"></t-chat-md-code>`;
+      };
       md.options.highlight = codeHighlight;
     }
+
     // 其他预设
     for await (const config of enabledPresetPlugins) {
       const { preset, options } = config;
