@@ -18,7 +18,7 @@ export class LLMService implements ILLMService {
   private sseClient: SSEClient;
 
   async handleBatchRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<any> {
-    const req = config.onRequest?.(params) || {};
+    const req = (await config.onRequest?.(params)) || {};
 
     try {
       const response = await fetch(config.endpoint, {
@@ -27,7 +27,7 @@ export class LLMService implements ILLMService {
           'Content-Type': 'application/json',
           ...req.headers,
         },
-        body: JSON.stringify(req.body),
+        body: req.body,
       });
 
       if (!response.ok) {
@@ -47,7 +47,7 @@ export class LLMService implements ILLMService {
   }
 
   async handleStreamRequest(params: ChatRequestParams, config: ChatServiceConfig) {
-    const req = config.onRequest?.(params) || {};
+    const req = (await config.onRequest?.(params)) || {};
     this.sseClient = new SSEClient(config.endpoint, {
       onMessage: (msg: SSEChunkData) => {
         config.onMessage?.(msg);
