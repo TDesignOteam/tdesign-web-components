@@ -4,7 +4,7 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 
-import styles from '../style/chat-content.less';
+import styles from '../style/cherry-chat-content.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
@@ -58,7 +58,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   mdRef = createRef<HTMLElement>();
 
-  // TODO: md对象看看是不是直接provider传进来，否则每个content都要构造一个
   md: Cherry | null = null;
 
   isMarkdownInit = signal(false);
@@ -70,10 +69,30 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   initMarkdown = async () => {
     const { options } = this.props;
 
-    // this.mdId.value = `${Date.now()}`;
     this.isMarkdownInit.value = false;
     const md = new Cherry({
       ...options,
+      engine: {
+        syntax: {
+          table: {
+            selfClosing: true,
+          },
+          link: {
+            target: '_blank',
+          },
+          codeBlock: {
+            copyCode: true,
+          },
+          mathBlock: {
+            engine: 'MathJax',
+            src: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
+            plugins: true,
+          },
+          inlineMath: {
+            engine: 'MathJax',
+          },
+        },
+      },
       el: this.mdRef.current,
       toolbars: {
         toolbar: false,
@@ -84,7 +103,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
         defaultModel: 'previewOnly',
         keepDocumentScrollAfterInit: true,
       },
-      autoScrollByHashAfterInit: true,
       previewer: {
         enablePreviewerBubble: false,
       },

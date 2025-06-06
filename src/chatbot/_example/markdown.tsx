@@ -8,11 +8,11 @@ import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
 import mdContent from '../mock/testMarkdown.md?raw';
 
 export default class MarkdownExample extends Component {
-  hasCode = signal(false);
+  hasCode = signal(true);
 
   hasLink = signal(false);
 
-  hasKatex = signal(false);
+  hasKatex = signal(true);
 
   rerenderKey = signal(1);
 

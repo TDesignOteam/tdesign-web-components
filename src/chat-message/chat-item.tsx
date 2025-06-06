@@ -1,4 +1,5 @@
 import './content/markdown-content';
+import './content/cherry-markdown-content';
 import '../collapse';
 import '../chat-loading';
 import '../attachments';
@@ -225,12 +226,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
           return convertToLightDomNode(
-            <t-chat-md-content
+            <t-chat-cherry-md-content
               key={elementKey}
               className={`${className}__detail`}
               {...chatContentProps?.markdown}
               content={content.data}
-            ></t-chat-md-content>,
+            ></t-chat-cherry-md-content>,
           );
         }
         // 自定义渲染slot
