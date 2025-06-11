@@ -136,10 +136,6 @@ const mockData: ChatMessagesData[] = [
     status: 'complete',
     content: [
       {
-        type: 'text',
-        data: '分析下以下内容，总结一篇广告策划方案',
-      },
-      {
         type: 'attachment',
         data: [
           {
@@ -156,14 +152,22 @@ const mockData: ChatMessagesData[] = [
           },
         ],
       },
+      {
+        type: 'text',
+        data: '分析下以下内容，总结一篇广告策划方案',
+      },
     ],
   },
   {
-    id: '8d51e238-wewrwer-35_6',
-    status: 'complete',
+    id: '34234',
+    status: 'error',
     role: 'assistant',
-    comment: '',
-    content: [],
+    content: [
+      {
+        type: 'text',
+        data: '出错了',
+      },
+    ],
   },
   {
     id: '7389',
@@ -194,11 +198,16 @@ const mockData: ChatMessagesData[] = [
     ],
   },
   {
-    id: '8d51e238-d1bd-49c8-a31e-b60ac324f235_6',
-    status: 'complete',
+    id: '3242',
     role: 'assistant',
-    comment: '',
-    content: [],
+    status: 'complete',
+    comment: 'good',
+    content: [
+      {
+        type: 'markdown',
+        data: '**tdesign** 团队的 *核心开发者*  `uyarnchen` 是也。',
+      },
+    ],
   },
 ];
 
@@ -404,12 +413,16 @@ export default class BasicChat extends Component {
 
   messagePropsFunc = (msg: ChatMessagesData): TdChatMessageConfigItem => {
     const { role, content } = msg;
+    if (role === 'user') {
+      return {
+        avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
+      };
+    }
     if (role === 'assistant') {
       // 目前仅有单条thinking
       const thinking = content.find((item) => item.type === 'thinking');
       const search = content.find((item) => item.type === 'search');
       return {
-        // avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
         actions: ['replay', 'copy', 'good', 'bad'],
         handleActions: {
           replay: (data) => {
