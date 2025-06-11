@@ -159,15 +159,11 @@ const mockData: ChatMessagesData[] = [
     ],
   },
   {
-    id: '34234',
-    status: 'error',
+    id: '8d51e238-wewrwer-35_6',
+    status: 'complete',
     role: 'assistant',
-    content: [
-      {
-        type: 'text',
-        data: '出错了',
-      },
-    ],
+    comment: '',
+    content: [],
   },
   {
     id: '7389',
@@ -198,16 +194,11 @@ const mockData: ChatMessagesData[] = [
     ],
   },
   {
-    id: '3242',
-    role: 'assistant',
+    id: '8d51e238-d1bd-49c8-a31e-b60ac324f235_6',
     status: 'complete',
-    comment: 'good',
-    content: [
-      {
-        type: 'markdown',
-        data: '**tdesign** 团队的 *核心开发者*  `uyarnchen` 是也。',
-      },
-    ],
+    role: 'assistant',
+    comment: '',
+    content: [],
   },
 ];
 
@@ -328,8 +319,6 @@ const mockModels = {
       },
       body: JSON.stringify({
         session_id: 'session_123456789',
-        search: true,
-        think: true,
         question: [
           {
             id: messageID,
