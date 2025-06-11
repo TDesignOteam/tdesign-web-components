@@ -204,7 +204,7 @@ export const isNodeOverflow = (ele: Element | Element[]): boolean => {
 
 /** 为当前组件添加exportparts，用于跨多级shadowDOM可自定义样式 */
 export const setExportparts = (that: Component, exts: string[] = []): void => {
-  if (!that?.rootElement || !that?.shadowRoot) {
+  if (!that.rootElement || !that.shadowRoot) {
     return;
   }
   const partsSet = new Set();
