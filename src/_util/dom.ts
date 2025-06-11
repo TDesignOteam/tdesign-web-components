@@ -221,8 +221,6 @@ export const setExportparts = (that: Component, exts: string[] = []): void => {
   });
 
   const parts = Array.from(partsSet).concat(exts);
-  console.log('parts', that.rootElement, parts);
-  console.log('生成字符串', parts.join(','));
   const { host } = that.shadowRoot;
   host.setAttribute('exportparts', parts.join(','));
 };
