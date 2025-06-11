@@ -162,7 +162,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   private renderAttachmentPart() {
-    if (!isUserMessage(this.props.message)) return null;
+    if (!isUserMessage(this.props.message)) return <div hidden />;
     const findAttachment = (this.props.message.content as UserMessageContent[]).find(
       ({ type, data = [] }) => type === 'attachment' && data.length,
     );

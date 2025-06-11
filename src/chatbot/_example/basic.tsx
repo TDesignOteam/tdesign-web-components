@@ -492,20 +492,23 @@ export default class BasicChat extends Component {
 
   render() {
     return (
-      <t-chatbot
-        ref={this.chatRef}
-        style={{ display: 'block', height: '80vh' }}
-        defaultMessages={mockData}
-        // autoSendPrompt="自动发送问题"
-        messageProps={this.messagePropsFunc}
-        listProps={{ defaultScrollPosition: 'top' }}
-        senderProps={{
-          actions: true,
-          placeholder: '请输入问题',
-          onFileSelect,
-        }}
-        chatServiceConfig={mockModels}
-      ></t-chatbot>
+      <>
+        <t-chatbot
+          ref={this.chatRef}
+          style={{ display: 'block', height: '80vh' }}
+          defaultMessages={mockData}
+          // autoSendPrompt="自动发送问题"
+          messageProps={this.messagePropsFunc}
+          listProps={{ defaultScrollPosition: 'top' }}
+          senderProps={{
+            actions: true,
+            placeholder: '请输入问题',
+            onFileSelect,
+          }}
+          chatServiceConfig={mockModels}
+        ></t-chatbot>
+        <button onClick={() => this.chatRef.current?.clearMessages()}>清空消息</button>
+      </>
     );
   }
 }

@@ -104,6 +104,11 @@ export interface TdChatbotApi {
   sendSystemMessage: (msg: string) => void;
 
   /**
+   * 清空消息列表
+   */
+  clearMessages: () => void;
+
+  /**
    * 中止当前聊天
    */
   abortChat: () => Promise<void>;
