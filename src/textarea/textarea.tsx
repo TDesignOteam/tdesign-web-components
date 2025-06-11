@@ -2,6 +2,7 @@ import { classNames, Component, createRef, tag } from 'omi';
 
 import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { StyledProps } from '../common';
 import useLengthLimit from '../input/useLengthLimit';
 import { TdTextareaProps } from './type';
@@ -83,6 +84,10 @@ export default class Textarea extends Component<TdTextareaProps> {
     setTimeout(() => {
       this.adjustTextareaHeight();
     }, 0);
+  }
+
+  ready(): void {
+    setExportparts(this);
   }
 
   updated(): void {

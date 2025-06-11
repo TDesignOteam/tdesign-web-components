@@ -480,6 +480,7 @@ export default class BasicChat extends Component {
   render() {
     return (
       <t-chatbot
+        class="chatbot"
         ref={this.chatRef}
         style={{ display: 'block', height: '80vh' }}
         defaultMessages={mockData}
