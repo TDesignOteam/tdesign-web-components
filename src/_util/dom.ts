@@ -1,4 +1,5 @@
 import { isString } from 'lodash-es';
+import { Component } from 'omi';
 import raf from 'raf';
 
 import { ScrollContainer, ScrollContainerElement } from '../common';
@@ -199,4 +200,29 @@ export function setStyle(style: CSSStyleDeclaration, key: string, value: string 
 export const isNodeOverflow = (ele: Element | Element[]): boolean => {
   const { clientWidth = 0, scrollWidth = 0 } = ele as Element;
   return scrollWidth > clientWidth;
+};
+
+/** 为当前组件添加exportparts，用于跨多级shadowDOM可自定义样式 */
+export const setExportparts = (that: Component, exts: string[] = []): void => {
+  if (!that?.rootElement || !that?.shadowRoot) {
+    return;
+  }
+  const partsSet = new Set();
+  const rootPart = that.rootElement.getAttribute('part');
+  rootPart && partsSet.add(rootPart);
+
+  const children = that.rootElement.querySelectorAll('*');
+  children.forEach((child) => {
+    const part = child.getAttribute('part');
+    part && partsSet.add(part);
+    // 子组件parts继续向上抛
+    const exportparts = child.getAttribute('exportparts');
+    exportparts && partsSet.add(exportparts);
+  });
+
+  const parts = Array.from(partsSet).concat(exts);
+  console.log('parts', that.rootElement, parts);
+  console.log('生成字符串', parts.join(','));
+  const { host } = that.shadowRoot;
+  host.setAttribute('exportparts', parts.join(','));
 };

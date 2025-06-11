@@ -10,6 +10,7 @@ import '../../src/tooltip';
 import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { type ChatComment } from '../chatbot';
 import { MessagePlugin } from '../message';
 import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
@@ -91,18 +92,23 @@ export const renderActions = (
         };
       }
     }
-    const action = (<span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
-      {config.icon}
-    </span>);
-    return (
-      config?.label ? <t-tooltip content={config.label} placement="top" showArrow {...tooltipProps}>
+    const action = (
+      <span class={`${className}__item__wrapper`} onClick={config.clickCallback}>
+        {config.icon}
+      </span>
+    );
+    return config?.label ? (
+      <t-tooltip content={config.label} placement="top" showArrow {...tooltipProps}>
         {action}
-      </t-tooltip> : action
+      </t-tooltip>
+    ) : (
+      action
     );
   };
 
   const defaultPresetActions = (name, icon, label = '') => {
-    const action = (<span
+    const action = (
+      <span
         class={`${className}__item__wrapper`}
         onClick={(e) =>
           handleClickAction(name, {
@@ -111,12 +117,16 @@ export const renderActions = (
         }
       >
         {icon}
-      </span>);
-    return (
-      label ? <t-tooltip content={label} placement="top" showArrow {...tooltipProps}>
-      {action}
-    </t-tooltip> : action
-  )};
+      </span>
+    );
+    return label ? (
+      <t-tooltip content={label} placement="top" showArrow {...tooltipProps}>
+        {action}
+      </t-tooltip>
+    ) : (
+      action
+    );
+  };
 
   const presetActions = () =>
     [
@@ -162,6 +172,14 @@ export default class ChatAction extends Component<TdChatActionProps> {
   };
 
   private pComment = signal<ChatComment>(this.props.comment);
+
+  ready() {
+    setExportparts(this);
+  }
+
+  updated() {
+    setExportparts(this);
+  }
 
   installed(): void {
     this.pComment.value = this.props.comment;

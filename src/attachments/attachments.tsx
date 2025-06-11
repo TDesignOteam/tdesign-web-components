@@ -6,6 +6,7 @@ import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { TdAttachmentsProps } from './type';
 
 import styles from './style/attachments.less';
@@ -54,6 +55,10 @@ export default class Attachments extends Component<TdAttachmentsProps> {
     });
   }
 
+  ready(): void {
+    setExportparts(this);
+  }
+
   updated() {
     // 在下一帧执行确保DOM更新完成
     requestAnimationFrame(() => {
@@ -67,6 +72,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
         this.update();
       }
     });
+    setExportparts(this);
   }
 
   showPrevButton = false;
