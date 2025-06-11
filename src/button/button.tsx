@@ -3,6 +3,7 @@ import 'tdesign-icons-web-components/esm/components/loading';
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import eventDispose from '../_util/eventDispose';
 import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
@@ -62,6 +63,14 @@ export default class Button extends Component<ButtonProps> {
       return 'default';
     }
     return theme;
+  }
+
+  ready() {
+    setExportparts(this);
+  }
+
+  updated() {
+    setExportparts(this);
   }
 
   clickHandle = (e: MouseEvent) => {

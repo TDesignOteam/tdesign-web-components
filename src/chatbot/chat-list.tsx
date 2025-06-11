@@ -5,6 +5,7 @@ import { debounce, throttle } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import type { TdChatListProps } from './type';
 
@@ -117,6 +118,11 @@ export default class Chatlist extends Component<TdChatListProps> {
     if (inner) {
       this.observer.observe(inner);
     }
+    setExportparts(this);
+  }
+
+  updated() {
+    setExportparts(this);
   }
 
   uninstall(): void {

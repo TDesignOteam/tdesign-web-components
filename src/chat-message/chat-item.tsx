@@ -16,6 +16,7 @@ import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
@@ -90,9 +91,11 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   ready(): void {
-    // const host = this.rootElement;
-    const { host } = this.shadowRoot;
-    host.setAttribute('exportparts', 't-chat__text--system, t-chat__text__markdown');
+    setExportparts(this);
+  }
+
+  updated() {
+    setExportparts(this);
   }
 
   private renderMessageHeader() {
@@ -228,13 +231,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
-          return (
+          return convertToLightDomNode(
             <t-chat-md-content
               key={elementKey}
               className={`${className}__detail`}
               {...chatContentProps?.markdown}
               content={content.data}
-            ></t-chat-md-content>
+            ></t-chat-md-content>,
           );
         }
         // 自定义渲染slot

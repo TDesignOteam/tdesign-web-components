@@ -407,17 +407,6 @@ const resourceLinkPlugin = (md: MarkdownIt) => {
 };
 
 export default class BasicChat extends Component {
-  static css = [
-    `
-      .chatbot::part(t-chat__text--system) {
-        color: red;
-      }
-      .chatbot::part(t-chat__text__markdown) {
-        color: red;
-      }
-    `,
-  ];
-
   chatRef = createRef<Chatbot>();
 
   clickHandler?: (e: MouseEvent) => void;
