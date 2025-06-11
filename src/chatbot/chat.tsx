@@ -193,6 +193,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
+   * 清空消息列表
+   */
+  clearMessages() {
+    this.chatEngine?.messageStore.clearHistory();
+  }
+
+  /**
    * 中止聊天
    */
   async abortChat() {
