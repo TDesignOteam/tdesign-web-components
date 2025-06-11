@@ -89,6 +89,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
     return true;
   }
 
+  ready(): void {
+    // const host = this.rootElement;
+    const { host } = this.shadowRoot;
+    host.setAttribute('exportparts', 't-chat__text--system, t-chat__text__markdown');
+  }
+
   private renderMessageHeader() {
     const { name, datetime } = this.props;
     if (this.renderMessageStatus || (!name && !datetime)) {
@@ -222,13 +228,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
-          return convertToLightDomNode(
+          return (
             <t-chat-md-content
               key={elementKey}
               className={`${className}__detail`}
               {...chatContentProps?.markdown}
               content={content.data}
-            ></t-chat-md-content>,
+            ></t-chat-md-content>
           );
         }
         // 自定义渲染slot

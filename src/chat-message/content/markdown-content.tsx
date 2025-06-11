@@ -72,6 +72,9 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
   ready() {
     this.initMarkdown();
+
+    const { host } = this.shadowRoot;
+    host.setAttribute('exportparts', 't-chat__text__markdown');
   }
 
   initMarkdown = async () => {
