@@ -39,6 +39,11 @@ export default class MarkdownExample extends Component {
             html: true,
             breaks: true,
             typographer: true,
+            highlight: (str, lang) => {
+              if (lang === 'javascript') {
+                return '<div>javascript自定义<div />';
+              }
+            },
           },
           pluginConfig: [
             // 预设插件

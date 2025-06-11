@@ -162,7 +162,7 @@ export interface ChatServiceConfig {
   stream?: boolean;
   retryInterval?: number;
   maxRetries?: number;
-  onRequest?: (params: ChatRequestParams) => RequestInit;
+  onRequest?: (params: ChatRequestParams) => RequestInit | Promise<RequestInit>;
   onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
   onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
   onAbort?: () => Promise<void>;
