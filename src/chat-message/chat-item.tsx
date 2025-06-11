@@ -258,8 +258,8 @@ export default class ChatItem extends Component<ChatMessageProps> {
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>
             {this.renderMessageHeader()}
-            <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             {this.renderAttachmentPart()}
+            <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             <slot name="actionbar"></slot>
           </div>
         ) : null}
