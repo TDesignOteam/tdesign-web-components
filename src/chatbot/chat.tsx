@@ -254,17 +254,10 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   private handleSend = async (e: CustomEvent<TdChatSenderParams>) => {
     const { value, attachments } = e.detail;
-    let params = {
+    const params = {
       prompt: value,
       attachments,
     } as ChatRequestParams;
-    if (this.props?.senderProps?.onSend) {
-      const customParams = await this.props.senderProps.onSend(e);
-      // 这里允许用户修改生成消息的参数
-      if (customParams) {
-        params = customParams;
-      }
-    }
     await this.sendUserMessage(params);
     this.scrollToBottom();
   };
@@ -313,7 +306,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   private renderItems = () => {
     const items = this.props.reverse ? [...this.chatMessageValue].reverse() : this.chatMessageValue;
     return items.map((item) => {
-      const { role, id } = item;
+      const { role, id, content } = item;
       const itemSlotNames = this.slotNames.filter((key) => key.includes(id));
       let itemProps = {
         ...this.messageRoleProps?.[role],
@@ -330,7 +323,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
             return <slot name={slotName} slot={str}></slot>;
           })}
           {/* 渲染actionBar */}
-          {item.status !== 'complete' && item.status !== 'stop' ? null : (
+          {content.length === 0 || (item.status !== 'complete' && item.status !== 'stop') ? null : (
             <t-chat-action
               slot="actionbar"
               actionBar={this.getChatActionBar(itemProps) as TdChatActionsName[]}
