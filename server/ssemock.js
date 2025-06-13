@@ -154,7 +154,7 @@ function sendStream(res, messages, interval, req) {
     req.on('close', () => {
       clearTimeout(firstTimer);
     });
-  }, 20000);
+  }, 1000);
 }
 
 // 模拟文件上传接口

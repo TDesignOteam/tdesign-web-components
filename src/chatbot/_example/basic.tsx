@@ -496,10 +496,10 @@ export default class BasicChat extends Component {
         <t-chatbot
           ref={this.chatRef}
           style={{ display: 'block', height: '80vh' }}
-          defaultMessages={mockData}
+          defaultMessages={[]}
           // autoSendPrompt="自动发送问题"
           messageProps={this.messagePropsFunc}
-          listProps={{ defaultScrollPosition: 'top' }}
+          listProps={{ defaultScrollTo: 'top' }}
           senderProps={{
             actions: true,
             placeholder: '请输入问题',
@@ -507,7 +507,7 @@ export default class BasicChat extends Component {
           }}
           chatServiceConfig={mockModels}
         ></t-chatbot>
-        <button onClick={() => this.chatRef.current?.clearMessages()}>清空消息</button>
+        <button onClick={() => this.chatRef.current?.setMessages(mockData, 'prepend')}>设置消息</button>
       </>
     );
   }

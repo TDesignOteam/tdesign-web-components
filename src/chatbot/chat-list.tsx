@@ -17,13 +17,13 @@ export default class Chatlist extends Component<TdChatListProps> {
 
   static propTypes = {
     autoScroll: Boolean,
-    defaultScrollPosition: String,
+    defaultScrollTo: String,
     onScroll: Function,
   };
 
   static defaultProps = {
     autoScroll: true,
-    defaultScrollPosition: 'bottom',
+    defaultScrollTo: 'bottom',
   };
 
   private listRef = createRef<HTMLDivElement>();
@@ -109,8 +109,8 @@ export default class Chatlist extends Component<TdChatListProps> {
   };
 
   ready(): void {
-    const { defaultScrollPosition } = this.props;
-    defaultScrollPosition === 'bottom' && (this.isAutoScrollEnabled = true);
+    const { defaultScrollTo } = this.props;
+    defaultScrollTo === 'bottom' && (this.isAutoScrollEnabled = true);
 
     const list = this.listRef.current;
     const inner = this.innerRef.current;

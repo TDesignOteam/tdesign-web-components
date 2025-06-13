@@ -106,6 +106,11 @@ export interface TdChatbotApi {
   /**
    * 清空消息列表
    */
+  setMessages: (messages: ChatMessagesData[]) => void;
+
+  /**
+   * 清空消息列表
+   */
   clearMessages: () => void;
 
   /**
@@ -164,8 +169,8 @@ export interface TdChatListProps {
   /** 自动滚动底部 */
   autoScroll?: boolean;
   /** 初始滚动条停留的位置 */
-  defaultScrollPosition?: ScrollPosition;
-  onScroll?: (e: Event) => void;
+  defaultScrollTo?: ScrollPosition;
+  onScroll?: (e: CustomEvent<{ scrollTop: number }>) => void;
 }
 
 export interface TdChatListApi {
