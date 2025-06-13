@@ -152,7 +152,6 @@ export interface ChatRequestParams extends RequestInit {
 }
 
 // 基础配置类型
-
 export type AIContentChunkUpdate = AIMessageContent & {
   // 将新内容块和入策略，merge表示和入到同类型内容中，append表示作为新的内容块，默认是merge
   strategy?: 'merge' | 'append';
@@ -194,6 +193,8 @@ export interface ChatState {
   message: ChatMessageStore;
   model: ModelServiceState;
 }
+
+export type ChatMessageSetterMode = 'replace' | 'prepend' | 'append';
 
 export type AIContentHandler<T extends ChatBaseContent<any, any>> = (chunk: T, existing?: T) => T;
 

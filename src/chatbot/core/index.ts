@@ -1,15 +1,15 @@
 import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
 import MessageProcessor from './processor';
-import {
+import type {
   AIContentChunkUpdate,
-  type AIMessageContent,
-  type ChatMessagesData,
-  type ChatRequestParams,
-  type ChatServiceConfig,
-  type ChatServiceConfigSetter,
-  type SSEChunkData,
-  type SystemMessage,
+  AIMessageContent,
+  ChatMessagesData,
+  ChatRequestParams,
+  ChatServiceConfig,
+  ChatServiceConfigSetter,
+  SSEChunkData,
+  SystemMessage,
 } from './type';
 import { isAIMessage } from './utils';
 
