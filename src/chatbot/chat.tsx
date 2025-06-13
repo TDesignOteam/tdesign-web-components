@@ -24,9 +24,9 @@ import ChatEngine, { getMessageContentForCopy, isAIMessage } from './core';
 import type {
   AIMessageContent,
   TdChatbotApi,
-  TdChatItemActionName,
-  TdChatItemProps,
+  TdChatMessageActionName,
   TdChatMessageConfig,
+  TdChatMessageProps,
   TdChatProps,
 } from './type';
 
@@ -284,9 +284,9 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   };
 
   private handleClickAction = (
-    action: Partial<TdChatItemActionName>,
+    action: Partial<TdChatMessageActionName>,
     opts: {
-      messageProps: TdChatItemProps;
+      messageProps: TdChatMessageProps;
       data?: any;
     },
   ) => {
@@ -361,7 +361,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     });
   };
 
-  private getChatActionBar = (messageProps: TdChatItemProps) => {
+  private getChatActionBar = (messageProps: TdChatMessageProps) => {
     const { actions, message } = messageProps;
     const ids = this.messagesStore.messageIds;
     const isLast = message.id === ids.at(-1);
