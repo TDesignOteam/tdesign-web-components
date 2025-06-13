@@ -23,6 +23,7 @@ import type Chatlist from './chat-list';
 import ChatEngine, { getMessageContentForCopy, isAIMessage } from './core';
 import type {
   AIMessageContent,
+  ChatMessageSetterMode,
   TdChatbotApi,
   TdChatMessageActionName,
   TdChatMessageConfig,
@@ -197,6 +198,22 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   clearMessages() {
     this.chatEngine?.messageStore.clearHistory();
+  }
+
+  /**
+   * 批量设置消息
+   * @param messages 要设置的消息数组
+   * @param mode 模式：
+   * - replace: 完全替换当前消息（默认）
+   * - prepend: 将消息添加到现有消息前面
+   * - append: 将消息追加到现有消息后面
+   */
+  public setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
+    if (messages.length === 0) {
+      this.clearMessages();
+      return;
+    }
+    this.chatEngine?.messageStore.setMessages(messages, mode);
   }
 
   /**

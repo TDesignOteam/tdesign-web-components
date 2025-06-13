@@ -1,15 +1,16 @@
 import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
 import MessageProcessor from './processor';
-import {
+import type {
   AIContentChunkUpdate,
-  type AIMessageContent,
-  type ChatMessagesData,
-  type ChatRequestParams,
-  type ChatServiceConfig,
-  type ChatServiceConfigSetter,
-  type SSEChunkData,
-  type SystemMessage,
+  AIMessageContent,
+  ChatMessagesData,
+  ChatRequestParams,
+  ChatServiceConfig,
+  ChatServiceConfigSetter,
+  SSEChunkData,
+  SystemMessage,
+  ChatMessageSetterMode,
 } from './type';
 import { isAIMessage } from './utils';
 
@@ -82,6 +83,11 @@ export default class ChatEngine implements IChatEngine {
     this.processor.registerHandler(type, handler);
   }
 
+  public setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
+    this.messageStore.setMessages(messages, mode);
+  }
+
+  
   // 用户触发重新生成 -> 检查最后一条AI消息 ->
   // -> keepVersion=false: 删除旧消息 -> 创建新消息 -> 重新请求
   // -> keepVersion=true: 保留旧消息 -> 创建分支消息 -> 重新请求

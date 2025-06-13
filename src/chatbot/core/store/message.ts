@@ -1,9 +1,10 @@
-import {
-  type AIMessage,
-  type AIMessageContent,
-  type ChatMessagesData,
+import type {
+  AIMessage,
+  AIMessageContent,
+  ChatMessagesData,
+  ChatMessageSetterMode,
   ChatMessageStatus,
-  type ChatMessageStore,
+  ChatMessageStore,
   UserMessage,
 } from '../type';
 import { isAIMessage, isUserMessage } from '../utils';
@@ -33,6 +34,21 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
         draft.messageIds.push(msg.id);
       });
       draft.messages.push(...messages);
+    });
+  }
+
+  setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
+    this.setState((draft) => {
+      if (mode === 'replace') {
+        draft.messageIds = messages.map((msg) => msg.id);
+        draft.messages = [...messages];
+      } else if (mode === 'prepend') {
+        draft.messageIds = [...messages.map((msg) => msg.id), ...draft.messageIds];
+        draft.messages = [...messages, ...draft.messages];
+      } else {
+        draft.messageIds.push(...messages.map((msg) => msg.id));
+        draft.messages.push(...messages);
+      }
     });
   }
 
