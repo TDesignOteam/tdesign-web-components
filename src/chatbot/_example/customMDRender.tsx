@@ -3,7 +3,11 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component } from 'omi';
-import type { TdChatItemProps, TdChatMarkdownContentProps, TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type {
+  TdChatMarkdownContentProps,
+  TdChatMessageConfig,
+  TdChatMessageProps,
+} from 'tdesign-web-components/chatbot';
 
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
@@ -167,7 +171,7 @@ const mdConfig: TdChatMarkdownContentProps = {
   pluginConfig: [colorTextPlugin],
 };
 
-const commonRoleConfig: Partial<TdChatItemProps> = {
+const commonRoleConfig: Partial<TdChatMessageProps> = {
   chatContentProps: {
     markdown: {
       ...mdConfig,

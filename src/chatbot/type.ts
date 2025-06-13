@@ -12,9 +12,9 @@ import type {
 } from './core/type';
 import type { ChatMessagesData } from './core/type';
 
-export type TdChatItemActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
-export interface TdChatItemAction {
-  name: TdChatItemActionName;
+export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
+export interface TdChatMessageAction {
+  name: TdChatMessageActionName;
   render: TNode;
 }
 
@@ -26,16 +26,16 @@ export type TdChatContentProps = {
   [key: string]: any; // 处理其他ContentType情况
 } & Partial<Record<Exclude<ChatContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
 
-export interface TdChatItemProps {
+export interface TdChatMessageProps {
   /**
    * 操作
    */
   actions?:
-    | TdChatItemActionName[]
-    // | ((preset: TdChatItemAction[], message: ChatMessagesData) => TdChatItemAction[])
+    | TdChatMessageActionName[]
+    // | ((preset: TdChatMessageAction[], message: ChatMessagesData) => TdChatMessageAction[])
     | boolean;
   animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
-  handleActions?: Partial<Record<TdChatItemActionName, (data?: any) => void>>;
+  handleActions?: Partial<Record<TdChatMessageActionName, (data?: any) => void>>;
   /**
    * 作者
    */
@@ -151,7 +151,7 @@ export interface TdChatbotApi {
   selectFile: () => void;
 }
 
-export type TdChatMessageConfigItem = Omit<TdChatItemProps, 'message'>;
+export type TdChatMessageConfigItem = Omit<TdChatMessageProps, 'message'>;
 
 export type TdChatMessageConfig = {
   [key in ModelRoleEnum]?: TdChatMessageConfigItem;
