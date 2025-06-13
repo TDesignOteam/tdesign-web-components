@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.0.9 `2025-06-13` 
+### 🚧 Others
+- feat(chatbot): 增加setmessages组件方法 @carolin913 ([#229](https://github.com/TDesignOteam/tdesign-web-components/pull/229))
+- feat(chatlist): 支持onscroll监听 @carolin913 ([#229](https://github.com/TDesignOteam/tdesign-web-components/pull/229))
+
 ## 🌈 1.0.4 `2025-06-05` 
 ### 🚧 Others
 - Fix/filecard 描述文字超长省略 @carolin913 ([#218](https://github.com/TDesignOteam/tdesign-web-components/pull/218))
