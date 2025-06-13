@@ -18,6 +18,7 @@ export default class Chatlist extends Component<TdChatListProps> {
   static propTypes = {
     autoScroll: Boolean,
     defaultScrollPosition: String,
+    onScroll: Function,
   };
 
   static defaultProps = {
@@ -96,8 +97,15 @@ export default class Chatlist extends Component<TdChatListProps> {
   private handleScroll = (e) => {
     this.checkAutoScroll();
     this.checkAndShowScrollButton();
-    this.props?.onScroll?.(e);
-    this.fire('list_scroll', e);
+    this.fire(
+      'scroll',
+      {
+        scrollTop: e.target.scrollTop,
+      },
+      {
+        composed: true,
+      },
+    );
   };
 
   ready(): void {
