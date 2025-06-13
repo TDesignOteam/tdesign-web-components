@@ -187,39 +187,37 @@ export default class Textarea extends Component<TdTextareaProps> {
     } = props;
 
     return (
-      <>
-        <div
-          class={classNames(`${this.classPrefix}-textarea`, innerClass)}
-          part={`${this.classPrefix}-textarea`}
-          style={innerStyle}
-        >
-          <textarea
-            {...this.eventProps}
-            class={this.cls()}
-            part={`${this.textareaClassPrefix}__inner`}
-            value={this.inputValue}
-            placeholder={placeholder}
-            readonly={readonly}
-            disabled={disabled}
-            autofocus={autofocus}
-            maxlength={maxlength}
-            maxcharacter={maxcharacter}
-            // 这个事件会在失焦前触发，必须加上否则会导致失焦时，textarea的value值为空
-            onChange={this.onChange}
-            onInput={this.onChange}
-            ref={this.textArea}
-            enterkeyhint={enterkeyhint}
-          />
-          {tips && (
-            <div
-              class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}
-              part={`${this.classPrefix}-tips`}
-            >
-              {tips}
-            </div>
-          )}
-        </div>
-      </>
+      <div
+        class={classNames(`${this.classPrefix}-textarea`, innerClass)}
+        part={`${this.classPrefix}-textarea`}
+        style={innerStyle}
+      >
+        <textarea
+          {...this.eventProps}
+          class={this.cls()}
+          part={`${this.textareaClassPrefix}__inner`}
+          value={this.inputValue}
+          placeholder={placeholder}
+          readonly={readonly}
+          disabled={disabled}
+          autofocus={autofocus}
+          maxlength={maxlength}
+          maxcharacter={maxcharacter}
+          // 这个事件会在失焦前触发，必须加上否则会导致失焦时，textarea的value值为空
+          onChange={this.onChange}
+          onInput={this.onChange}
+          ref={this.textArea}
+          enterkeyhint={enterkeyhint}
+        />
+        {tips && (
+          <div
+            class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}
+            part={`${this.classPrefix}-tips`}
+          >
+            {tips}
+          </div>
+        )}
+      </div>
     );
   }
 }
