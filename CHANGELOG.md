@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.0.10 `2025-06-13` 
+### 🚧 Others
+- Feature/chatbot：engine中增加setMessages @carolin913 ([#231](https://github.com/TDesignOteam/tdesign-web-components/pull/231))
+
 ## 🌈 1.0.9 `2025-06-13` 
 ### 🚧 Others
 - feat(chatbot): 增加setmessages组件方法 @carolin913 ([#229](https://github.com/TDesignOteam/tdesign-web-components/pull/229))
