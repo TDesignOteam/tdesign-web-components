@@ -29,7 +29,7 @@ import {
   isUserMessage,
 } from '../chatbot';
 import { AttachmentItem, UserMessageContent } from '../chatbot/core/type';
-import type { TdChatItemActionName, TdChatItemProps } from '../chatbot/type';
+import type { TdChatMessageActionName, TdChatMessageProps } from '../chatbot/type';
 import { renderAttachments } from './content/attachment-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
@@ -39,7 +39,7 @@ import styles from './style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-type ChatMessageProps = TdChatItemProps;
+type ChatMessageProps = TdChatMessageProps;
 @tag('t-chat-item')
 export default class ChatItem extends Component<ChatMessageProps> {
   static css = [styles];
@@ -120,7 +120,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     );
   }
 
-  private handleClickAction = (action: Partial<TdChatItemActionName>, data?: any) => {
+  private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {
     const toData = {
       ...data,
       message: this.props.message,
