@@ -499,7 +499,9 @@ export default class BasicChat extends Component {
           defaultMessages={[]}
           // autoSendPrompt="自动发送问题"
           messageProps={this.messagePropsFunc}
-          listProps={{ defaultScrollTo: 'top' }}
+          listProps={{
+            defaultScrollTo: 'top',
+          }}
           senderProps={{
             actions: true,
             placeholder: '请输入问题',

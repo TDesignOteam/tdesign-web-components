@@ -102,7 +102,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
   }
 
-  get inputLoading() {
+  get senderLoading() {
     if (this.chatStatus === 'pending' || this.chatStatus === 'streaming') {
       return true;
     }
@@ -174,7 +174,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollToBottom();
-    this.fire('chat_submit', requestParams, {
+    this.fire('chatSubmit', requestParams, {
       composed: true,
     });
   }
@@ -414,7 +414,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
           ref={this.ChatSenderRef}
           className={`${className}-input-wrapper`}
           css={injectCSS?.ChatSender}
-          loading={this.inputLoading}
+          loading={this.senderLoading}
           autosize={{ minRows: 2 }}
           attachmentsProps={{
             items: this.files.value,
