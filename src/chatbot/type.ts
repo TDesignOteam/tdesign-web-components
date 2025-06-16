@@ -151,6 +151,11 @@ export interface TdChatbotApi {
   readonly senderLoading: boolean;
 
   /**
+   * ChatEngine是否就绪
+   */
+  readonly isChatEngineReady: boolean;
+
+  /**
    * 重新发送消息
    * * @param keepVersion - 是否保留之前版本（默认false)
    */
