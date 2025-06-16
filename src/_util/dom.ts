@@ -256,6 +256,13 @@ export const setExportparts = (that: Component, exts: string[] = []): void => {
     childList: true,
   });
 
+  // 监听组件卸载事件
+  const disconnectObserver = () => {
+    observer.disconnect();
+    that.rootElement.removeEventListener('disconnectedCallback', disconnectObserver);
+  };
+  that.rootElement.addEventListener('disconnectedCallback', disconnectObserver);
+
   // 初始化exportparts
   const children = that.rootElement.querySelectorAll('*');
   children.forEach(appendNodePart);
