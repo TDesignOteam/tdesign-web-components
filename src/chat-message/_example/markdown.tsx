@@ -57,17 +57,25 @@ $ npm i tdesign-vue-next
 
 ---
 
-\`\`\`javascript
-import { createApp } from 'vue';
-import App from './app.vue';
-
-const app = createApp(App);
-app.use(TDesignChat);
+\`\`\`json
+{
+  "prompt": "mage_url(generated image URL):mage_url(generated image URL):mage_url(generated image URL):mage_url(generated image URL):mage_url(generated image URL):"
+}
 \`\`\`
 `;
 
 export default class BasicExample extends Component {
   render() {
-    return <t-chat-md-content content={doc}></t-chat-md-content>;
+    return (
+      <t-chat-md-content
+        content={doc}
+        pluginConfig={[
+          {
+            preset: 'code',
+            enabled: true,
+          },
+        ]}
+      ></t-chat-md-content>
+    );
   }
 }
