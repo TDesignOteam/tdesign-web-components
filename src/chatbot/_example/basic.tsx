@@ -508,6 +508,7 @@ export default class BasicChat extends Component {
             onFileSelect,
           }}
           chatServiceConfig={mockModels}
+          onChatReady={(e) => console.log('chatReady', e)}
         ></t-chatbot>
         <button onClick={() => this.chatRef.current?.setMessages(mockData, 'prepend')}>设置消息</button>
       </>
