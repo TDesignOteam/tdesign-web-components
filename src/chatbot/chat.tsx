@@ -5,7 +5,7 @@ import '../button';
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
+import classname, { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
@@ -67,6 +67,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   public chatStatus: ChatStatus = 'idle';
 
+  public isChatEngineReady = false;
+
   private chatMessages: Omi.SignalValue<ChatMessagesData[]> = signal(undefined);
 
   private uploadedAttachments: AttachmentItem[] = [];
@@ -102,7 +104,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     return getSlotNodes(this.props.children).reduce((prev, curr) => prev.concat(curr.attributes.slot), []);
   }
 
-  get inputLoading() {
+  get senderLoading() {
     if (this.chatStatus === 'pending' || this.chatStatus === 'streaming') {
       return true;
     }
@@ -147,6 +149,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
         prompt: autoSendPrompt,
       });
     }
+    this.isChatEngineReady = true;
   }
 
   /**
@@ -174,7 +177,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollToBottom();
-    this.fire('chat_submit', requestParams, {
+    this.fire('chatSubmit', requestParams, {
       composed: true,
     });
   }
@@ -197,6 +200,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 清空消息列表
    */
   clearMessages() {
+    if (!this.isChatEngineReady) return;
     this.chatEngine?.messageStore.clearHistory();
   }
 
@@ -209,6 +213,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * - append: 将消息追加到现有消息后面
    */
   public setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
+    if (!this.isChatEngineReady) return;
     if (messages.length === 0) {
       this.clearMessages();
       return;
@@ -404,7 +409,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   render({ layout, injectCSS, senderProps, listProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     return (
-      <div className={`${className} ${layoutClass}`}>
+      <div className={classname(className, layoutClass)}>
         {this.chatMessageValue && (
           <t-chat-list ref={this.listRef} {...listProps}>
             {this.renderItems()}
@@ -414,7 +419,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
           ref={this.ChatSenderRef}
           className={`${className}-input-wrapper`}
           css={injectCSS?.ChatSender}
-          loading={this.inputLoading}
+          loading={this.senderLoading}
           autosize={{ minRows: 2 }}
           attachmentsProps={{
             items: this.files.value,

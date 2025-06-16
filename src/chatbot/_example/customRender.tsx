@@ -177,6 +177,25 @@ export default class BasicChat extends Component {
         background: #ff650f;
         color: #fff;
       }
+
+      .chatbot::part(t-chat) {
+        padding: 12px;
+        border-radius: 12px;
+        background: #fafafa;
+      }
+
+      .chatbot::part(t-chat__input__content) {
+        border-color: red;
+      }
+
+      .chatbot::part(t-textarea__inner) {
+        padding: 12px;
+        border-radius: 8px;
+        background: #a2e8ff;
+      }
+      .chatbot::part(t-textarea__inner):hover {
+        background: #ffa2a2;
+      }
     `,
   ];
 
@@ -196,9 +215,13 @@ export default class BasicChat extends Component {
   render() {
     return (
       <t-chatbot
+        class="chatbot"
         ref={this.chatRef}
         style={{ display: 'block', height: '500px' }}
         defaultMessages={mockData}
+        senderProps={{
+          defaultValue: '自定义输入框样式',
+        }}
         messageProps={messageProps}
         chatServiceConfig={mockModels}
         onMessageChange={this.messageChangeHandler}
