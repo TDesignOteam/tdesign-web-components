@@ -75,6 +75,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   private files = signal<TdAttachmentItem[]>([]);
 
+  private isInitialized = false;
+
   /**
    * 默认消息角色配置
    */
@@ -147,6 +149,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
         prompt: autoSendPrompt,
       });
     }
+    this.isInitialized = true;
   }
 
   /**
@@ -197,6 +200,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 清空消息列表
    */
   clearMessages() {
+    if (!this.isInitialized) return;
     this.chatEngine?.messageStore.clearHistory();
   }
 
@@ -209,6 +213,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * - append: 将消息追加到现有消息后面
    */
   public setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
+    if (!this.isInitialized) return;
     if (messages.length === 0) {
       this.clearMessages();
       return;
