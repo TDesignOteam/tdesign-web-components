@@ -50,6 +50,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     chatServiceConfig: [Object, Function],
     injectCSS: Object,
     onMessageChange: Function,
+    onChatReady: Function,
   };
 
   static defaultProps = {
@@ -149,6 +150,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
         prompt: autoSendPrompt,
       });
     }
+    this.fire(
+      'chatReady',
+      {},
+      {
+        composed: true,
+      },
+    );
     this.isChatEngineReady = true;
   }
 
