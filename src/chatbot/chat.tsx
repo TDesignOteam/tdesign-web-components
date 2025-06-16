@@ -5,7 +5,7 @@ import '../button';
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
+import classname, { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
@@ -404,7 +404,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   render({ layout, injectCSS, senderProps, listProps }: OmiProps<TdChatProps>) {
     const layoutClass = layout === 'both' ? `${className}-layout-both` : `${className}-layout-single`;
     return (
-      <div className={`${className} ${layoutClass}`}>
+      <div className={classname(className, layoutClass)}>
         {this.chatMessageValue && (
           <t-chat-list ref={this.listRef} {...listProps}>
             {this.renderItems()}

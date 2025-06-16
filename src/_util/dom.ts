@@ -1,4 +1,5 @@
 import { isString } from 'lodash-es';
+import { Component } from 'omi';
 import raf from 'raf';
 
 import { ScrollContainer, ScrollContainerElement } from '../common';
@@ -199,4 +200,71 @@ export function setStyle(style: CSSStyleDeclaration, key: string, value: string 
 export const isNodeOverflow = (ele: Element | Element[]): boolean => {
   const { clientWidth = 0, scrollWidth = 0 } = ele as Element;
   return scrollWidth > clientWidth;
+};
+
+/** 为当前组件添加exportparts，用于跨多级shadowDOM可自定义样式 */
+export const setExportparts = (that: Component, exts: string[] = []): void => {
+  if (!that.rootElement || !that.shadowRoot) {
+    return;
+  }
+  const { host } = that.shadowRoot;
+  const partsSet = new Set();
+  const rootPart = that.rootElement.getAttribute('part');
+  rootPart && partsSet.add(rootPart);
+
+  const appendNodePart = (node: Element) => {
+    const part = node.getAttribute('part');
+    part && partsSet.add(part);
+    // 子组件parts继续向上抛
+    const exportparts = node.getAttribute('exportparts');
+    exportparts && partsSet.add(exportparts);
+  };
+
+  const updateParts = () => {
+    const parts = Array.from(partsSet).concat(exts);
+    host.setAttribute('exportparts', parts.join(','));
+  };
+
+  // 检测动态dom节点并添加part
+  const observer = new MutationObserver((mutationList) => {
+    for (const mutation of mutationList) {
+      // 检测属性变化（仅对omi组件宿主节点的exportparts生效，因为只对渲染完成后的属性更新生效，直接渲染出属性检测不到）
+      if (mutation.type === 'attributes') {
+        if (mutation.target instanceof Element) {
+          appendNodePart(mutation.target);
+          updateParts();
+        }
+      }
+      // 检测节点变更，针对新增节点的part做添加行为（仅对dom上的part生效，因为宿主节点上的exportparts是后渲染的属性，检测不到）
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            appendNodePart(node);
+            // 递归处理子节点
+            node.querySelectorAll('[part]').forEach(appendNodePart);
+
+            updateParts();
+          }
+        });
+      }
+    }
+  });
+  observer.observe(that.rootElement, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: ['exportparts', 'part'],
+    childList: true,
+  });
+
+  // 监听组件卸载事件
+  const disconnectObserver = () => {
+    observer.disconnect();
+    that.rootElement.removeEventListener('disconnectedCallback', disconnectObserver);
+  };
+  that.rootElement.addEventListener('disconnectedCallback', disconnectObserver);
+
+  // 初始化exportparts
+  const children = that.rootElement.querySelectorAll('*');
+  children.forEach(appendNodePart);
+  updateParts();
 };
