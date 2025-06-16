@@ -5,6 +5,13 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.0 `2025-06-16` 
+### 🚧 Feature:
+- feat(markdown): 支持代码块组件滚动 @LzhengH ([#234](https://github.com/TDesignOteam/tdesign-web-components/pull/234))
+- feat(exportparts): 添加exportparts逻辑，支持嵌套层级下的自定义样式 @LzhengH ([#223](https://github.com/TDesignOteam/tdesign-web-components/pull/223))
+- feat(chatbot): 增加setMessages方法 @carolin913 ([#235](https://github.com/TDesignOteam/tdesign-web-components/pull/235))
+- feat(chatbot): 增加获取状态api: isChatEngineReady，senderLoading @carolin913 ([#235](https://github.com/TDesignOteam/tdesign-web-components/pull/235))
+
 ## 🌈 1.0.10 `2025-06-13` 
 ### 🚧 Others
 - Feature/chatbot：engine中增加setMessages @carolin913 ([#231](https://github.com/TDesignOteam/tdesign-web-components/pull/231))
