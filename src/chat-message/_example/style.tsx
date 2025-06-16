@@ -35,49 +35,47 @@ export default class BasicExample extends Component {
   render() {
     return (
       <>
-        <t-chat-list>
-          <t-chat-item
-            variant="base"
-            avatar="https://tdesign.gtimg.com/site/avatar.jpg"
-            name="张三"
-            placement="right"
-            message={userMsg}
-          ></t-chat-item>
-          <t-chat-item
-            variant="text"
-            animation="circle"
-            placement="left"
-            avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-            name="DeepSeek"
-            message={AIMsg}
-          ></t-chat-item>
-          <t-chat-item message={{ role: 'system', content: [{ type: 'text', data: '这是系统消息' }] }}></t-chat-item>
-          <t-chat-item
-            variant="base"
-            avatar="https://tdesign.gtimg.com/site/avatar.jpg"
-            name="张三"
-            placement="right"
-            message={userMsg}
-          ></t-chat-item>
-          <t-chat-item
-            variant="outline"
-            placement="left"
-            avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-            name="DeepSeek"
-            message={AIMsg}
-          ></t-chat-item>
-          <t-chat-item
-            variant="outline"
-            placement="left"
-            animation="skeleton"
-            avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-            name="DeepSeek"
-            message={{
-              role: 'assistant',
-              status: 'pending',
-            }}
-          ></t-chat-item>
-        </t-chat-list>
+        <t-chat-item
+          variant="base"
+          avatar="https://tdesign.gtimg.com/site/avatar.jpg"
+          name="张三"
+          placement="right"
+          message={userMsg}
+        ></t-chat-item>
+        <t-chat-item
+          variant="text"
+          animation="circle"
+          placement="left"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="DeepSeek"
+          message={AIMsg}
+        ></t-chat-item>
+        <t-chat-item message={{ role: 'system', content: [{ type: 'text', data: '这是系统消息' }] }}></t-chat-item>
+        <t-chat-item
+          variant="base"
+          avatar="https://tdesign.gtimg.com/site/avatar.jpg"
+          name="张三"
+          placement="right"
+          message={userMsg}
+        ></t-chat-item>
+        <t-chat-item
+          variant="outline"
+          placement="left"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="DeepSeek"
+          message={AIMsg}
+        ></t-chat-item>
+        <t-chat-item
+          variant="outline"
+          placement="left"
+          animation="skeleton"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="DeepSeek"
+          message={{
+            role: 'assistant',
+            status: 'pending',
+          }}
+        ></t-chat-item>
       </>
     );
   }
