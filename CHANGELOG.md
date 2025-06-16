@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.1 `2025-06-16` 
+### 🚧 Others
+- feat(chatbot): add onchatready @carolin913 ([#237](https://github.com/TDesignOteam/tdesign-web-components/pull/237))
+
 ## 🌈 1.1.0 `2025-06-16` 
 ### 🚧 Feature:
 - feat(markdown): 支持代码块组件滚动 @LzhengH ([#234](https://github.com/TDesignOteam/tdesign-web-components/pull/234))
