@@ -69,10 +69,6 @@ export default class Button extends Component<ButtonProps> {
     setExportparts(this);
   }
 
-  updated() {
-    setExportparts(this);
-  }
-
   clickHandle = (e: MouseEvent) => {
     eventDispose.call(this, 'click', e, () => {
       const { disabled, loading } = this.props;

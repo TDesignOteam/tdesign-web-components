@@ -177,10 +177,6 @@ export default class ChatAction extends Component<TdChatActionProps> {
     setExportparts(this);
   }
 
-  updated() {
-    setExportparts(this);
-  }
-
   installed(): void {
     this.pComment.value = this.props.comment;
   }

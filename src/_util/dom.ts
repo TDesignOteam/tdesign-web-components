@@ -207,20 +207,55 @@ export const setExportparts = (that: Component, exts: string[] = []): void => {
   if (!that.rootElement || !that.shadowRoot) {
     return;
   }
+  const { host } = that.shadowRoot;
   const partsSet = new Set();
   const rootPart = that.rootElement.getAttribute('part');
   rootPart && partsSet.add(rootPart);
 
-  const children = that.rootElement.querySelectorAll('*');
-  children.forEach((child) => {
-    const part = child.getAttribute('part');
+  const appendNodePart = (node: Element) => {
+    const part = node.getAttribute('part');
     part && partsSet.add(part);
     // 子组件parts继续向上抛
-    const exportparts = child.getAttribute('exportparts');
+    const exportparts = node.getAttribute('exportparts');
     exportparts && partsSet.add(exportparts);
+  };
+
+  const updateParts = () => {
+    const parts = Array.from(partsSet).concat(exts);
+    host.setAttribute('exportparts', parts.join(','));
+  };
+
+  // 检测动态dom节点并添加part
+  const observer = new MutationObserver((mutationList) => {
+    for (const mutation of mutationList) {
+      if (mutation.type === 'attributes') {
+        if (mutation.target instanceof Element) {
+          appendNodePart(mutation.target);
+          updateParts();
+        }
+      }
+      if (mutation.type === 'childList') {
+        mutation.addedNodes.forEach((node) => {
+          if (node instanceof Element) {
+            appendNodePart(node);
+            // 递归处理子节点
+            node.querySelectorAll('[exportparts],[part]').forEach(appendNodePart);
+
+            updateParts();
+          }
+        });
+      }
+    }
+  });
+  observer.observe(that.rootElement, {
+    attributes: true,
+    subtree: true,
+    attributeFilter: ['exportparts', 'part'],
+    childList: true,
   });
 
-  const parts = Array.from(partsSet).concat(exts);
-  const { host } = that.shadowRoot;
-  host.setAttribute('exportparts', parts.join(','));
+  // 初始化exportparts
+  const children = that.rootElement.querySelectorAll('*');
+  children.forEach(appendNodePart);
+  updateParts();
 };

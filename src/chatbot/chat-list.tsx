@@ -121,10 +121,6 @@ export default class Chatlist extends Component<TdChatListProps> {
     setExportparts(this);
   }
 
-  updated() {
-    setExportparts(this);
-  }
-
   uninstall(): void {
     this.observer.disconnect();
   }

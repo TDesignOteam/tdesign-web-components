@@ -72,7 +72,6 @@ export default class Attachments extends Component<TdAttachmentsProps> {
         this.update();
       }
     });
-    setExportparts(this);
   }
 
   showPrevButton = false;

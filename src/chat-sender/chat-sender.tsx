@@ -73,10 +73,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     setExportparts(this);
   }
 
-  updated() {
-    setExportparts(this);
-  }
-
   get inputValue() {
     if (this.props.value !== undefined) return this.props.value;
     return this.pValue.value;

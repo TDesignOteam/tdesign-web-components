@@ -94,10 +94,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
     setExportparts(this);
   }
 
-  updated() {
-    setExportparts(this);
-  }
-
   private renderMessageHeader() {
     const { name, datetime } = this.props;
     if (this.renderMessageStatus || (!name && !datetime)) {

@@ -4,6 +4,7 @@ import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { TdChatLoadingProps } from './type';
 
 import styles from './style/loading.less';
@@ -25,7 +26,9 @@ export default class Loading extends Component<TdChatLoadingProps> {
 
   containerRef = createRef<HTMLElement>();
 
-  installed() {}
+  ready() {
+    setExportparts(this);
+  }
 
   get renderIcon() {
     const { animation } = this.props;
