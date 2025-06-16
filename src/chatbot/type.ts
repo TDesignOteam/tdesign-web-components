@@ -6,11 +6,12 @@ import type { StyledProps, TNode } from '../common';
 import type {
   AIMessageContent,
   ChatContentType,
+  ChatMessagesData,
+  ChatMessageSetterMode,
   ChatRequestParams,
   ChatServiceConfigSetter,
   ChatStatus,
 } from './core/type';
-import type { ChatMessagesData } from './core/type';
 
 export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
 export interface TdChatMessageAction {
@@ -104,9 +105,14 @@ export interface TdChatbotApi {
   sendSystemMessage: (msg: string) => void;
 
   /**
-   * 清空消息列表
+   * 批量设置消息
+   * @param messages 要设置的消息数组
+   * @param mode 模式：
+   * - replace: 完全替换当前消息（默认）
+   * - prepend: 将消息添加到现有消息前面
+   * - append: 将消息追加到现有消息后面
    */
-  setMessages: (messages: ChatMessagesData[]) => void;
+  setMessages: (messages: ChatMessagesData[], mode: ChatMessageSetterMode) => void;
 
   /**
    * 清空消息列表
@@ -138,6 +144,17 @@ export interface TdChatbotApi {
    * 当前聊天状态
    */
   readonly chatStatus: ChatStatus;
+
+  /**
+   * 当前输入框状态
+   */
+  readonly senderLoading: boolean;
+
+  /**
+   * ChatEngine是否就绪
+   */
+  readonly isChatEngineReady: boolean;
+
   /**
    * 重新发送消息
    * * @param keepVersion - 是否保留之前版本（默认false)
