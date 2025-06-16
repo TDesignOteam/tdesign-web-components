@@ -23,10 +23,11 @@ import type Chatlist from './chat-list';
 import ChatEngine, { getMessageContentForCopy, isAIMessage } from './core';
 import type {
   AIMessageContent,
+  ChatMessageSetterMode,
   TdChatbotApi,
-  TdChatItemActionName,
-  TdChatItemProps,
+  TdChatMessageActionName,
   TdChatMessageConfig,
+  TdChatMessageProps,
   TdChatProps,
 } from './type';
 
@@ -200,6 +201,22 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
+   * 批量设置消息
+   * @param messages 要设置的消息数组
+   * @param mode 模式：
+   * - replace: 完全替换当前消息（默认）
+   * - prepend: 将消息添加到现有消息前面
+   * - append: 将消息追加到现有消息后面
+   */
+  public setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
+    if (messages.length === 0) {
+      this.clearMessages();
+      return;
+    }
+    this.chatEngine?.messageStore.setMessages(messages, mode);
+  }
+
+  /**
    * 中止聊天
    */
   async abortChat() {
@@ -284,9 +301,9 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   };
 
   private handleClickAction = (
-    action: Partial<TdChatItemActionName>,
+    action: Partial<TdChatMessageActionName>,
     opts: {
-      messageProps: TdChatItemProps;
+      messageProps: TdChatMessageProps;
       data?: any;
     },
   ) => {
@@ -361,7 +378,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     });
   };
 
-  private getChatActionBar = (messageProps: TdChatItemProps) => {
+  private getChatActionBar = (messageProps: TdChatMessageProps) => {
     const { actions, message } = messageProps;
     const ids = this.messagesStore.messageIds;
     const isLast = message.id === ids.at(-1);

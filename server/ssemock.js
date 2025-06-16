@@ -121,21 +121,40 @@ app.post('/sse/auth', (req, res) => {
 
 // 流发送工具函数
 function sendStream(res, messages, interval, req) {
+  // 首token延迟400ms
   let index = 0;
-  const timer = setInterval(() => {
-    if (index < messages.length) {
-      res.write(messages[index]);
-      index++;
-    } else {
-      clearInterval(timer);
-      res.end();
-    }
-  }, interval);
+  setTimeout(() => {
+    res.write(': keep-alive\n\n');
 
-  req.on('close', () => {
-    clearInterval(timer);
-    res.end();
-  });
+    // 第一个消息延迟发送
+    const firstTimer = setTimeout(() => {
+      if (index < messages.length) {
+        res.write(messages[index]);
+        index++;
+
+        // 后续消息按正常间隔发送
+        const timer = setInterval(() => {
+          if (index < messages.length) {
+            res.write(messages[index]);
+            index++;
+          } else {
+            clearInterval(timer);
+            res.end();
+          }
+        }, interval);
+
+        req.on('close', () => {
+          clearInterval(timer);
+          res.end();
+        });
+      }
+    }, 100); // 首消息延迟1秒
+
+    // 处理连接关闭
+    req.on('close', () => {
+      clearTimeout(firstTimer);
+    });
+  }, 1000);
 }
 
 // 模拟文件上传接口

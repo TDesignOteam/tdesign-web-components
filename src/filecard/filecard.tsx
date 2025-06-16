@@ -257,7 +257,10 @@ export default class FileCard extends Component<TdFileCardProps> {
     const { cardType = 'file', item, style = {} } = this.props;
     if (cardType === 'image') {
       const newstyle = {
-        ...{ width: 'var(--td-attachment-image-width, 52px)', height: 'var(--td-attachment-image-width, 52px)' },
+        ...{
+          width: 'var(--td-attachment-image-width, 52px)',
+          height: 'var(--td-attachment-image-height, 52px)',
+        },
         ...style,
       };
       return item.url ? (
