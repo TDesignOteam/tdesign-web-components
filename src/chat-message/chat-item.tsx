@@ -16,6 +16,7 @@ import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
@@ -87,6 +88,10 @@ export default class ChatItem extends Component<ChatMessageProps> {
     }
 
     return true;
+  }
+
+  ready(): void {
+    setExportparts(this);
   }
 
   private renderMessageHeader() {
