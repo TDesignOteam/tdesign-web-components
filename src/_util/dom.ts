@@ -228,18 +228,20 @@ export const setExportparts = (that: Component, exts: string[] = []): void => {
   // 检测动态dom节点并添加part
   const observer = new MutationObserver((mutationList) => {
     for (const mutation of mutationList) {
+      // 检测属性变化（仅对omi组件宿主节点的exportparts生效，因为只对渲染完成后的属性更新生效，直接渲染出属性检测不到）
       if (mutation.type === 'attributes') {
         if (mutation.target instanceof Element) {
           appendNodePart(mutation.target);
           updateParts();
         }
       }
+      // 检测节点变更，针对新增节点的part做添加行为（仅对dom上的part生效，因为宿主节点上的exportparts是后渲染的属性，检测不到）
       if (mutation.type === 'childList') {
         mutation.addedNodes.forEach((node) => {
           if (node instanceof Element) {
             appendNodePart(node);
             // 递归处理子节点
-            node.querySelectorAll('[exportparts],[part]').forEach(appendNodePart);
+            node.querySelectorAll('[part]').forEach(appendNodePart);
 
             updateParts();
           }
