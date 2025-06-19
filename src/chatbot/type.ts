@@ -67,11 +67,6 @@ export interface TdChatMessageProps {
 
 export interface TdChatProps extends StyledProps {
   children?: TNode;
-  injectCSS?: {
-    ChatSender?: string;
-    chatList?: string;
-    chatItem?: string;
-  };
   /** 布局模式 */
   layout?: 'single' | 'both';
   /** 倒序渲染 */
@@ -91,6 +86,8 @@ export interface TdChatProps extends StyledProps {
   onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
   /** 消息引擎初始化完成回调 */
   onChatReady?: (e: CustomEvent) => void;
+  /** 消息发送回调 */
+  onChatSent?: (e: CustomEvent<ChatRequestParams>) => void;
 }
 
 export interface TdChatbotApi {
@@ -129,8 +126,9 @@ export interface TdChatbotApi {
   /**
    * 添加提示信息到输入框
    * @param prompt - 提示文本
+   * @param autoFocus - 是否自动聚焦到输入框
    */
-  addPrompt: (prompt: string) => void;
+  addPrompt: (prompt: string, autoFocus?: boolean) => void;
 
   /**
    * 滚动到消息列表底部

@@ -51,6 +51,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     injectCSS: Object,
     onMessageChange: Function,
     onChatReady: Function,
+    onChatSent: Function,
   };
 
   static defaultProps = {
@@ -185,7 +186,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollToBottom();
-    this.fire('chatSubmit', requestParams, {
+    this.fire('chatSent', requestParams, {
       composed: true,
     });
   }
@@ -250,9 +251,11 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   /**
    * 添加提示信息到输入框
    */
-  addPrompt(prompt: string) {
+  addPrompt(prompt: string, autoFocus = true) {
     this.ChatSenderRef.current.pValue.value = prompt;
-    this.ChatSenderRef.current.focus();
+    if (autoFocus) {
+      this.ChatSenderRef.current.focus();
+    }
   }
 
   /**
@@ -296,7 +299,6 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       attachments,
     } as ChatRequestParams;
     await this.sendUserMessage(params);
-    this.scrollToBottom();
   };
 
   /**

@@ -124,7 +124,7 @@ export default class ChatEngine implements IChatEngine {
     await this.sendRequest(params);
   }
 
-  private async sendRequest(params: ChatRequestParams) {
+  public async sendRequest(params: ChatRequestParams) {
     const { messageID: id } = params;
     try {
       if (this.config.stream) {
