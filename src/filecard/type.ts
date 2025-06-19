@@ -1,8 +1,10 @@
 import { type UploadFile } from '../_common/js/upload/types';
+import { AttachmentType } from '../chatbot';
 import { StyledProps } from '../common';
 
 export interface TdAttachmentItem extends UploadFile {
   key?: string;
+  fileType?: AttachmentType;
   description?: string;
   extension?: string;
 }

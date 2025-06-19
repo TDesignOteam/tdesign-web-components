@@ -21,6 +21,7 @@ import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
   isAIMessage,
+  isAttachmentContent,
   isImageContent,
   isMarkdownContent,
   isSearchContent,
@@ -29,7 +30,6 @@ import {
   isThinkingContent,
   isUserMessage,
 } from '../chatbot';
-import { AttachmentItem, UserMessageContent } from '../chatbot/core/type';
 import type { TdChatMessageActionName, TdChatMessageProps } from '../chatbot/type';
 import { renderAttachments } from './content/attachment-content';
 import { renderSearch } from './content/search-content';
@@ -166,27 +166,24 @@ export default class ChatItem extends Component<ChatMessageProps> {
     );
   }
 
-  private renderAttachmentPart() {
-    if (!isUserMessage(this.props.message)) return <div hidden />;
-    const findAttachment = (this.props.message.content as UserMessageContent[]).find(
-      ({ type, data = [] }) => type === 'attachment' && data.length,
-    );
-    if (!findAttachment) return;
-    const attachments = findAttachment.data as AttachmentItem[];
-    return renderAttachments({ content: attachments }, this);
-  }
-
   renderMessage() {
     const { message, chatContentProps, animation } = this.props;
     const { role, id } = message;
     return message.content.map((content, index) => {
       const elementKey = `${id}-${index}`;
-      // 用户和系统消息渲染
-      if (!isAIMessage(message)) {
-        if (!isTextContent(content) && !isMarkdownContent(content)) {
-          return null;
-        }
+      // 系统消息渲染
+      if (role === 'system') {
         return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
+      }
+      // 用户消息渲染
+      if (role === 'user') {
+        if (isAttachmentContent(content)) {
+          return renderAttachments({ content: content.data }, this);
+        }
+        if (isTextContent(content) || isMarkdownContent(content)) {
+          return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
+        }
+        return <slot key={elementKey} name={`${content?.slotName || `${content.type}-${index}`}`}></slot>;
       }
 
       // AI消息渲染
@@ -263,7 +260,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
         {!this.renderMessageStatus ? (
           <div class={`${className}__main`}>
             {this.renderMessageHeader()}
-            {this.renderAttachmentPart()}
             <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
             <slot name="actionbar"></slot>
           </div>

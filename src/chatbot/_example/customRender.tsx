@@ -24,6 +24,26 @@ declare module '../core/type' {
 }
 const mockData: ChatMessagesData[] = [
   {
+    id: '7389',
+    role: 'user',
+    status: 'complete',
+    content: [
+      {
+        type: 'text',
+        data: '这张图里的帅哥是谁',
+      },
+      {
+        type: 'videoAttachment',
+        data: {
+          fileType: 'video',
+          url: 'test.mp4',
+          cover:
+            'https://asset.gdtimg.com/muse_svp_0bc3viaacaaaweanalstw5ud3kweagvaaaka.f0.jpg?dis_k=bfc5cc81010a9d443e91ce45d4fbe774&dis_t=1750323484',
+        },
+      },
+    ],
+  },
+  {
     id: '123',
     role: 'assistant',
     status: 'complete',
@@ -230,7 +250,7 @@ export default class BasicChat extends Component {
         {/* 自定义渲染-植入插槽 */}
         {this.mockMessage.value
           ?.map((data) =>
-            data.content.map((item) => {
+            data.content.map((item, index) => {
               switch (item.type) {
                 case 'weather':
                   return (
@@ -238,6 +258,13 @@ export default class BasicChat extends Component {
                       今天{item.data.city}天气{item.data.conditions}
                     </div>
                   );
+                case 'videoAttachment': {
+                  return (
+                    <div slot={`${data.id}-${item.type}-${index}`} className="videoAttachment">
+                      <img src={item.data.cover} width={100} height={100} />
+                    </div>
+                  );
+                }
               }
               return null;
             }),

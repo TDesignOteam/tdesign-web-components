@@ -25,6 +25,7 @@ import type {
   AIMessageContent,
   ChatMessageSetterMode,
   TdChatbotApi,
+  TdChatListScrollToOptions,
   TdChatMessageActionName,
   TdChatMessageConfig,
   TdChatMessageProps,
@@ -51,6 +52,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     injectCSS: Object,
     onMessageChange: Function,
     onChatReady: Function,
+    onChatSent: Function,
   };
 
   static defaultProps = {
@@ -184,8 +186,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     await this.chatEngine.sendUserMessage(requestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
-    this.scrollToBottom();
-    this.fire('chatSubmit', requestParams, {
+    this.scrollList({ to: 'bottom' });
+    this.fire('chatSent', requestParams, {
       composed: true,
     });
   }
@@ -250,9 +252,11 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   /**
    * 添加提示信息到输入框
    */
-  addPrompt(prompt: string) {
+  addPrompt(prompt: string, autoFocus = true) {
     this.ChatSenderRef.current.pValue.value = prompt;
-    this.ChatSenderRef.current.focus();
+    if (autoFocus) {
+      this.ChatSenderRef.current.focus();
+    }
   }
 
   /**
@@ -270,10 +274,10 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
-   * 滚动到底部
+   * 受控滚动
    */
-  scrollToBottom() {
-    this.listRef.current?.scrollToBottom();
+  scrollList(options: TdChatListScrollToOptions) {
+    this.listRef.current?.scrollList(options);
   }
 
   /**
@@ -296,7 +300,6 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       attachments,
     } as ChatRequestParams;
     await this.sendUserMessage(params);
-    this.scrollToBottom();
   };
 
   /**

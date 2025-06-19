@@ -64,12 +64,13 @@ export type SuggestionContent = ChatBaseContent<'suggestion', SuggestionItem[]>;
 // 附件消息
 export type AttachmentItem = {
   fileType: AttachmentType;
-  name: string;
-  url: string;
-  size: number;
+  size?: number;
+  name?: string;
+  url?: string;
   isReference?: boolean; // 是否是引用
   width?: number;
   height?: number;
+  extension?: string; // 自定义文件后缀，默认按照name文件名后缀识别
   metadata?: Record<string, any>;
 };
 export type AttachmentContent = ChatBaseContent<'attachment', AttachmentItem[]>;

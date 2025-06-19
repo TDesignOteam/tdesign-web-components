@@ -5,6 +5,12 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.2 `2025-06-19` 
+### 🚧 Feature
+- Feat/chatMessage 支持自定义用户消息 @carolin913 ([#239](https://github.com/TDesignOteam/tdesign-web-components/pull/239))
+- Feat/chatBot 提供列表滚动api @carolin913 ([#239](https://github.com/TDesignOteam/tdesign-web-components/pull/239))
+- Feat/attachment 简化image渲染所需的属性 @carolin913 ([#239](https://github.com/TDesignOteam/tdesign-web-components/pull/239))
+
 ## 🌈 1.1.1 `2025-06-16` 
 ### 🚧 Others
 - feat(chatbot): add onchatready @carolin913 ([#237](https://github.com/TDesignOteam/tdesign-web-components/pull/237))

@@ -1,5 +1,6 @@
 import {
   AIMessageContent,
+  AttachmentContent,
   ChatMessagesData,
   ImageContent,
   MarkdownContent,
@@ -7,6 +8,7 @@ import {
   SuggestionContent,
   TextContent,
   ThinkingContent,
+  UserMessageContent,
 } from '../type';
 
 export function findTargetElement(event: MouseEvent, selector: string | string[]): HTMLElement | null {
@@ -61,6 +63,10 @@ export function isSearchContent(content: AIMessageContent): content is SearchCon
 
 export function isSuggestionContent(content: AIMessageContent): content is SuggestionContent {
   return content.type === 'suggestion';
+}
+
+export function isAttachmentContent(content: UserMessageContent): content is AttachmentContent {
+  return content.type === 'attachment';
 }
 
 /** 提取消息复制内容 */
