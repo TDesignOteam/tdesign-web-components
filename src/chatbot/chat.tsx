@@ -25,6 +25,7 @@ import type {
   AIMessageContent,
   ChatMessageSetterMode,
   TdChatbotApi,
+  TdChatListScrollToOptions,
   TdChatMessageActionName,
   TdChatMessageConfig,
   TdChatMessageProps,
@@ -185,7 +186,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     await this.chatEngine.sendUserMessage(requestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
-    this.scrollToBottom();
+    this.scrollList({ to: 'bottom' });
     this.fire('chatSent', requestParams, {
       composed: true,
     });
@@ -273,10 +274,10 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
-   * 滚动到底部
+   * 受控滚动
    */
-  scrollToBottom() {
-    this.listRef.current?.scrollToBottom();
+  scrollList(options: TdChatListScrollToOptions) {
+    this.listRef.current?.scrollList(options);
   }
 
   /**

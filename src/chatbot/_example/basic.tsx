@@ -512,6 +512,7 @@ export default class BasicChat extends Component {
           onChatReady={(e) => console.log('chatReady', e)}
         ></t-chatbot>
         <button onClick={() => this.chatRef.current?.setMessages(mockData, 'prepend')}>设置消息</button>
+        <button onClick={() => this.chatRef.current?.scrollList({ to: 'top' })}>滚动到上面</button>
       </>
     );
   }

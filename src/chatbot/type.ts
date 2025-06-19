@@ -90,6 +90,10 @@ export interface TdChatProps extends StyledProps {
   onChatSent?: (e: CustomEvent<ChatRequestParams>) => void;
 }
 
+export interface TdChatListScrollToOptions {
+  behavior?: 'auto' | 'smooth';
+  to?: 'top' | 'bottom';
+}
 export interface TdChatbotApi {
   /**
    * 发送用户消息
@@ -131,9 +135,9 @@ export interface TdChatbotApi {
   addPrompt: (prompt: string, autoFocus?: boolean) => void;
 
   /**
-   * 滚动到消息列表底部
+   * 受控滚动
    */
-  scrollToBottom: () => void;
+  scrollList: (opt?: TdChatListScrollToOptions) => void;
 
   /**
    * 获取当前消息列表
@@ -191,8 +195,12 @@ export interface TdChatListProps {
 }
 
 export interface TdChatListApi {
-  /** 滚动到底部 */
-  scrollToBottom: (opts?: ScrollOptions) => void;
+  /** 滚动到 */
+  scrollTo: (
+    opts?: ScrollOptions & {
+      to?: 'bottom' | 'top';
+    },
+  ) => void;
 }
 
 type TdChatContentSearchProps = {
