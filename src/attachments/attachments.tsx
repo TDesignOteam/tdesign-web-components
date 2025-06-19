@@ -156,7 +156,9 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   isAllImages(items: TdAttachmentsProps['items']) {
     return items?.every(
       (item) =>
-        item.type?.startsWith('image/') || this.IMG_EXTS.includes(item.name?.split('.').pop()?.toLowerCase() || ''),
+        item?.fileType === 'image' ||
+        item.type?.startsWith('image/') ||
+        this.IMG_EXTS.includes(item.name?.split('.').pop()?.toLowerCase() || ''),
     );
   }
 

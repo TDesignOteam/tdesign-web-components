@@ -183,15 +183,16 @@ const mockData: ChatMessagesData[] = [
         data: [
           {
             fileType: 'image',
-            name: 'avatar.jpg',
-            size: 234234,
+            // name: '',
+            // size: 234234,
+            // extension: '.doc',
             url: 'https://tdesign.gtimg.com/site/avatar.jpg',
           },
           {
             fileType: 'image',
-            name: 'avatar.jpg',
-            size: 234234,
-            url: 'https://tdesign.gtimg.com/demo/demo-image-1.png',
+            // name: 'avatar.jpg',
+            // size: 234234,
+            url: 'https://asset.gdtimg.com/muse_svp_0bc3viaacaaaweanalstw5ud3kweagvaaaka.f0.jpg?dis_k=bfc5cc81010a9d443e91ce45d4fbe774&dis_t=1750323484',
           },
         ],
       },
@@ -511,6 +512,7 @@ export default class BasicChat extends Component {
           onChatReady={(e) => console.log('chatReady', e)}
         ></t-chatbot>
         <button onClick={() => this.chatRef.current?.setMessages(mockData, 'prepend')}>设置消息</button>
+        <button onClick={() => this.chatRef.current?.scrollList({ to: 'top' })}>滚动到上面</button>
       </>
     );
   }

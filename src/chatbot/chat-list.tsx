@@ -7,7 +7,7 @@ import { Component, createRef, signal, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
-import type { TdChatListProps } from './type';
+import type { TdChatListProps, TdChatListScrollToOptions } from './type';
 
 import styles from './style/chat-list.less';
 
@@ -54,7 +54,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     if (!autoScroll || !this.isAutoScrollEnabled) {
       return;
     }
-    this.scrollToBottom();
+    this.scrollTo();
   }, 50);
 
   /** 检测自动滚动是否触发 */
@@ -146,7 +146,7 @@ export default class Chatlist extends Component<TdChatListProps> {
         >
           <div
             className={classname([`${className}__scroll__button`])}
-            onClick={() => this.scrollToBottom({ behavior: 'smooth' })}
+            onClick={() => this.scrollList({ behavior: 'smooth', to: 'bottom' })}
           >
             {convertToLightDomNode(<t-icon-arrow-down />)}
           </div>
@@ -158,14 +158,14 @@ export default class Chatlist extends Component<TdChatListProps> {
     );
   }
 
-  // 暴露给父组件的方法
-  scrollToBottom(options: { behavior?: 'auto' | 'smooth' } = {}) {
+  // 受控滚动，暴露给父组件的方法
+  scrollList(options?: TdChatListScrollToOptions) {
     const list = this.listRef.current;
-    if (list) {
-      list.scrollTo({
-        top: list.scrollHeight - list.clientHeight,
-        behavior: options.behavior || 'auto',
-      });
-    }
+    if (!list) return;
+    const { behavior, to } = options;
+    list.scrollTo({
+      top: to === 'bottom' ? list.scrollHeight - list.clientHeight : 0,
+      behavior,
+    });
   }
 }

@@ -67,11 +67,6 @@ export interface TdChatMessageProps {
 
 export interface TdChatProps extends StyledProps {
   children?: TNode;
-  injectCSS?: {
-    ChatSender?: string;
-    chatList?: string;
-    chatItem?: string;
-  };
   /** 布局模式 */
   layout?: 'single' | 'both';
   /** 倒序渲染 */
@@ -91,8 +86,14 @@ export interface TdChatProps extends StyledProps {
   onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
   /** 消息引擎初始化完成回调 */
   onChatReady?: (e: CustomEvent) => void;
+  /** 消息发送回调 */
+  onChatSent?: (e: CustomEvent<ChatRequestParams>) => void;
 }
 
+export interface TdChatListScrollToOptions {
+  behavior?: 'auto' | 'smooth';
+  to?: 'top' | 'bottom';
+}
 export interface TdChatbotApi {
   /**
    * 发送用户消息
@@ -129,13 +130,14 @@ export interface TdChatbotApi {
   /**
    * 添加提示信息到输入框
    * @param prompt - 提示文本
+   * @param autoFocus - 是否自动聚焦到输入框
    */
-  addPrompt: (prompt: string) => void;
+  addPrompt: (prompt: string, autoFocus?: boolean) => void;
 
   /**
-   * 滚动到消息列表底部
+   * 受控滚动
    */
-  scrollToBottom: () => void;
+  scrollList: (opt?: TdChatListScrollToOptions) => void;
 
   /**
    * 获取当前消息列表
@@ -193,8 +195,12 @@ export interface TdChatListProps {
 }
 
 export interface TdChatListApi {
-  /** 滚动到底部 */
-  scrollToBottom: (opts?: ScrollOptions) => void;
+  /** 滚动到 */
+  scrollTo: (
+    opts?: ScrollOptions & {
+      to?: 'bottom' | 'top';
+    },
+  ) => void;
 }
 
 type TdChatContentSearchProps = {
