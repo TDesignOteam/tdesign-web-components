@@ -416,7 +416,7 @@ export default class BasicChat extends Component {
     const { role, content } = msg;
     if (role === 'user') {
       return {
-        variant: 'outline',
+        variant: 'base',
         avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       };
     }
