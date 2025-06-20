@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.3 `2025-06-20` 
+### 🚧 Fix
+- Fix/chatmessage 修复加入attachment后消息体样式 @LzhengH ([#241](https://github.com/TDesignOteam/tdesign-web-components/pull/241))
+
 ## 🌈 1.1.2 `2025-06-19` 
 ### 🚧 Feature
 - Feat/chatMessage 支持自定义用户消息 @carolin913 ([#239](https://github.com/TDesignOteam/tdesign-web-components/pull/239))
