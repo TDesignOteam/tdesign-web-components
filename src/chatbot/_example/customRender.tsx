@@ -140,12 +140,12 @@ function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
 
 const messageProps: TdChatMessageConfig = {
   user: {
-    variant: 'text',
+    variant: 'base',
     placement: 'right',
     avatar: 'https://tdesign.gtimg.com/site/avatar.jpg',
   },
   assistant: {
-    variant: 'text',
+    variant: 'base',
     placement: 'left',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     // actions: (preset) => preset,
@@ -196,12 +196,6 @@ export default class BasicChat extends Component {
         border-radius: 8px;
         background: #ff650f;
         color: #fff;
-      }
-
-      .chatbot::part(t-chat) {
-        padding: 12px;
-        border-radius: 12px;
-        background: #fafafa;
       }
 
       .chatbot::part(t-chat__input__content) {

@@ -112,7 +112,7 @@
   // variant
   &--variant--base {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__item__content {
+      .@{prefix}-chat__text--user, .@{prefix}-chat__item__detail {
         background-color: var(--td-chat-item-primary-bg);
         border-color: transparent;
       }
@@ -121,7 +121,7 @@
   
   &--variant--outline {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__item__content {
+      .@{prefix}-chat__text--user, .@{prefix}-chat__item__detail {
         background-color: var(--td-chat-item-default-bg);
         border-color: var(--td-chat-item-outline-border-color);
       }
@@ -130,9 +130,13 @@
 
   &--variant--text {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__item__content {
-        background-color: transparent;
+      .@{prefix}-chat__text--user, .@{prefix}-chat__item__detail {
+        margin: var(--td-chat-item-text-detail-text-margin);
         padding: var(--td-chat-item-text-content-padding);
+        background-color: transparent;
+      }
+      .@{prefix}-chat__item__detail {
+        padding: var(--td-chat-item-text-detail-padding);
       }
     }
   }
@@ -176,6 +180,7 @@
     // less中同时使用min和var有bug，目前只能这么写 https://github.com/less/less.js/issues/3777
     max-width: e('min(100%, var(--td-chat-item-content-max-width))');
     padding: var(--td-chat-item-content-padding);
+    padding-top: 0;
     border: var(--td-chat-item-content-border);
     border-radius: var(--td-chat-item-content-radius);
     text-align: var(--td-chat-item-content-text-align);
@@ -323,7 +328,10 @@
   }
 
   &__detail {
-    display: block;
+    display: inline-block;
+    padding: var(--td-chat-item-text-padding);
+    border: var(--td-chat-item-text-border);
+    border-radius: var(--td-chat-item-text-radius);
   }
 
   &__error {
@@ -507,10 +515,20 @@
 
 .@{prefix}-chat__text {
   &--user {
-    color: @text-color-secondary;
+    display: inline-block;
+    margin: var(--td-chat-item-text-detail-margin);
+    padding: var(--td-chat-item-text-padding);
+    border: var(--td-chat-item-text-border);
+    border-radius: var(--td-chat-item-text-radius);
+    text-align: var(--td-chat-item-text-text-align);
+    color: var(--td-chat-item-user-text-color);
     word-break: break-all;
     word-wrap: break-word;
     white-space: pre-wrap;
+
+    &:first-child {
+      margin-top: 0;
+    }
   }
   &--system {
     margin: var(--td-chat-item-system-margin);
