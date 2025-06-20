@@ -176,7 +176,7 @@ const mockData: ChatMessagesData[] = [
     content: [
       {
         type: 'text',
-        data: '这张图里的帅哥是谁',
+        data: '这张图里的帅哥是谁，这张图里的帅哥是谁，这张图里的帅哥是谁，这张图里的帅哥是谁，这张图里的帅哥是谁',
       },
       {
         type: 'attachment',
@@ -416,6 +416,7 @@ export default class BasicChat extends Component {
     const { role, content } = msg;
     if (role === 'user') {
       return {
+        variant: 'outline',
         avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       };
     }
@@ -424,6 +425,8 @@ export default class BasicChat extends Component {
       const thinking = content.find((item) => item.type === 'thinking');
       const search = content.find((item) => item.type === 'search');
       return {
+        variant: 'outline',
+        avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
         actions: ['replay', 'copy', 'good', 'bad'],
         handleActions: {
           replay: (data) => {
