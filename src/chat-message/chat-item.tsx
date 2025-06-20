@@ -217,7 +217,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
           // 图片
           const { url, name } = content.data;
           return (
-            <div key={elementKey}>
+            <div key={elementKey} className={`${className}__image`}>
               <img src={url} alt={name} width={200} height={200}></img>
             </div>
           );

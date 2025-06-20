@@ -45,9 +45,15 @@
   --td-chat-item-name-padding-right: 0 0 0 @pop-padding-xxl;
   --td-chat-item-name-font: 400 14px/22px;
   --td-chat-item-content-max-width: 800px;
-  --td-chat-item-content-padding: @pop-padding-xl @pop-padding-xxl;
+  --td-chat-item-content-padding: @pop-padding-xl 0;
+  --td-chat-item-user-text-color: @text-color-secondary;
+  --td-chat-item-text-padding: @pop-padding-xl @pop-padding-xxl;
   --td-chat-item-text-content-padding: @pop-padding-xl 0;
-  --td-chat-item-text-detail-margin: 10px 0;
+  --td-chat-item-text-detail-padding: 6px 0 0;
+  --td-chat-item-text-detail-margin: @pop-padding-xl 0;
+  --td-chat-item-text-detail-text-margin: 0;
+  --td-chat-item-text-radius: @border-radius-extraLarge;
+  --td-chat-item-text-border: 1px solid transparent;
   --td-chat-item-content-border: 1px solid transparent;
   --td-chat-item-content-radius: @border-radius-extraLarge;
   --td-chat-item-system-margin: 0;
@@ -60,6 +66,7 @@
   --td-chat-item-right-avatar-margin: 0 4px 0 20px;
   --td-chat-item-avatar-padding: 6px 0 0 0;
   --td-chat-item-avatar-has-header-padding: 34px 0 0 0;
+  --td-chat-item-image-margin: 12px 0;
   --td-chat-item-search-wrapper-margin: 10px 0;
   --td-chat-item-think-margin-bottom: 12px;
   --td-chat-item-think-gap-p: 0 0 8px 0;
@@ -123,7 +130,8 @@
   --td-chat-font-size: 16px;
   --td-chat-list-scroll-button-font-size: 20px;
   --td-chat-item-content-text-align: left;
-  --td-chat-item-right-content-text-align: left;
+  --td-chat-item-right-content-text-align: right;
+  --td-chat-item-text-text-align: left;
 
   // 颜色
   --td-chat-list-scroll-button-bg: #fff;
