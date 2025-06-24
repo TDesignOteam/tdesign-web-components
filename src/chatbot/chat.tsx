@@ -187,6 +187,9 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollList({ to: 'bottom' });
+    if (this.ChatSenderRef.current) {
+      this.ChatSenderRef.current.blur();
+    }
     this.fire('chatSent', requestParams, {
       composed: true,
     });

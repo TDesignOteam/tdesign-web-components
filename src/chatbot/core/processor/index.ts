@@ -15,20 +15,20 @@ export default class MessageProcessor {
     this.registerDefaultHandlers();
   }
 
-  public createUserMessage(content: string, attachments?: AttachmentItem[]): ChatMessagesData {
-    const messageContent: UserMessage['content'] = [
-      {
-        type: 'text',
-        data: content,
-      },
-    ];
-
+  public createUserMessage(prompt: string, attachments?: AttachmentItem[]): ChatMessagesData {
+    const messageContent: UserMessage['content'] = [];
+    // 如果有附件，就在消息内容前面添加附件
     if (attachments?.length) {
       messageContent.push({
         type: 'attachment',
         data: attachments,
       });
     }
+
+    messageContent.push({
+      type: 'text',
+      data: prompt,
+    });
 
     return {
       id: this.generateID(),

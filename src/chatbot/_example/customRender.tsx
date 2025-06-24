@@ -264,6 +264,7 @@ export default class BasicChat extends Component {
             }),
           )
           .flat()}
+        <div slot="sender-textarea">我是textarea</div>
       </t-chatbot>
     );
   }

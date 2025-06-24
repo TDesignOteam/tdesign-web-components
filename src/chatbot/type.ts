@@ -115,7 +115,7 @@ export interface TdChatbotApi {
    * - prepend: 将消息添加到现有消息前面
    * - append: 将消息追加到现有消息后面
    */
-  setMessages: (messages: ChatMessagesData[], mode: ChatMessageSetterMode) => void;
+  setMessages: (messages: ChatMessagesData[], mode?: ChatMessageSetterMode) => void;
 
   /**
    * 清空消息列表
@@ -196,11 +196,7 @@ export interface TdChatListProps {
 
 export interface TdChatListApi {
   /** 滚动到 */
-  scrollTo: (
-    opts?: ScrollOptions & {
-      to?: 'bottom' | 'top';
-    },
-  ) => void;
+  scrollList: (options?: TdChatListScrollToOptions) => void;
 }
 
 type TdChatContentSearchProps = {
