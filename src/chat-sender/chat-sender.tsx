@@ -217,7 +217,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       <div className={`${className}`}>
         <input {...this.props.uploadProps} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />
         <slot name="header"></slot>
-        <div className={`${className}__header`}>
+        <div className={`${className}__content`}>
+          <slot name="inner-header"></slot>
           {this.attachmentsValue?.length ? (
             <t-attachments
               className={`${className}__attachments`}
@@ -226,9 +227,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
               onRemove={this.handleAttachmentsRemove}
             />
           ) : null}
-        </div>
-        <div className={`${className}__content`}>
-          <slot name="inner-header"></slot>
           <div className={`${className}__textarea__wrapper`}>
             <slot name="input-prefix"></slot>
             <slot name="textarea">

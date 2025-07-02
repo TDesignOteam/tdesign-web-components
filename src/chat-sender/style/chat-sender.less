@@ -12,25 +12,6 @@
   & *, *::before, *::after {
     box-sizing: border-box;
   }
-  
-  // 附件区
-  &__header {
-    position: relative;
-    bottom: calc(-1 * var(--td-chat-input-radius) - 1px);
-    margin-top: calc(-1 * var(--td-chat-input-radius));
-    padding-bottom: var(--td-chat-input-radius);
-    max-height: 1000px;
-    border: 1px solid var(--td-chat-input-content-default-border);
-    border-bottom: none;
-    border-top-left-radius: var(--td-chat-input-radius);
-    border-top-right-radius: var(--td-chat-input-radius);
-    transition: all 1s ease-in;
-
-    &:empty {
-      max-height: 0;
-      border: none;
-    }
-  }
 
   // 主体区
   &__content {
@@ -48,20 +29,19 @@
     box-shadow: var(--td-chat-input-box-shadow);
 
     &:focus-within {
-      border-color: @brand-color;
-      background: @bg-color-container;
+      border-color: var(--td-chat-input-hover-border);
       box-shadow: var(--td-chat-input-shadow);
     }
 
     &:hover {
-      border-color: @brand-color;
+      border-color: var(--td-chat-input-hover-border);
     }
   }
 
   // 附件区
   &__attachments {
     display: block;
-    padding: 12px;
+    margin: var(--td-chat-input-attachments-margin);
   }
 
   &__textarea__wrapper {

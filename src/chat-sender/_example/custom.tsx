@@ -94,6 +94,7 @@ export default class CustomExample extends Component {
           onSend={this.onSend}
         >
           {this.renderPanel()}
+          <div slot="header">我是header</div>
           <div slot="input-prefix" className="prefix" onClick={() => this.senderRef.current?.selectFile()}>
             <t-icon-focus className="icon" />
           </div>
