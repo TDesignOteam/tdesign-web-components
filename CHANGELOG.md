@@ -8,6 +8,11 @@ spline: explain
 ## 🌈 1.1.6 `2025-07-07` 
 ### 🚧 Others
 - Feat/chatmessage 支持传入avatar/name slot @carolin913 ([#247](https://github.com/TDesignOteam/tdesign-web-components/pull/247))
+- Feat/chatlist 修改scrollList type @carolin913 ([#247](https://github.com/TDesignOteam/tdesign-web-components/pull/247))
+
+## 🌈 1.1.6 `2025-07-07` 
+### 🚧 Others
+- Feat/chatmessage 支持传入avatar/name slot @carolin913 ([#247](https://github.com/TDesignOteam/tdesign-web-components/pull/247))
 - - Feat/chatlist 修改scrollList type @carolin913 ([#247](https://github.com/TDesignOteam/tdesign-web-components/pull/247))
 
 ## 🌈 1.1.3 `2025-06-20` 
