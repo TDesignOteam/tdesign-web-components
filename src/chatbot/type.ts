@@ -196,11 +196,7 @@ export interface TdChatListProps {
 
 export interface TdChatListApi {
   /** 滚动到 */
-  scrollTo: (
-    opts?: ScrollOptions & {
-      to?: 'bottom' | 'top';
-    },
-  ) => void;
+  scrollTo: (opt?: TdChatListScrollToOptions) => void;
 }
 
 type TdChatContentSearchProps = {
