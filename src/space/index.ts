@@ -1,4 +1,4 @@
-import './style/index.js';
+// import './style/index.js';
 
 import _Space from './space';
 

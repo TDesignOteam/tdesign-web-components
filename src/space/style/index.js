@@ -1,4 +1,4 @@
-import { css, globalCSS } from 'omi';
+import { css } from 'omi';
 
 // 为了做主题切换
 import styles from '../../_common/style/web/components/space/_index.less';

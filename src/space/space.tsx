@@ -1,17 +1,20 @@
 import { toArray } from 'lodash-es';
-import { classNames, Component, OmiProps, tag } from 'omi';
+import { classNames, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { LightDOMComponent } from '../_util/light-dom-component';
 import { type StyledProps } from '../common';
 import { TdSpaceProps } from './type';
+
+import styles from '../_common/style/web/components/space/_index.less';
 
 export interface SpaceProps extends TdSpaceProps, StyledProps {}
 
 const SizeMap = { small: '8px', medium: '16px', large: '24px' };
 
 @tag('t-space')
-export default class Space extends Component<SpaceProps> {
-  static css = [];
+export default class Space extends LightDOMComponent<SpaceProps> {
+  static css = [styles];
 
   static defaultProps = { breakLine: false, direction: 'horizontal', size: 'medium' };
 

@@ -113,12 +113,23 @@ export class tdWcContent extends Component<{ componentImport: () => Promise<any>
     }, 20);
   }
 
+  private styleObserver: MutationObserver | null = null;
+
   install(): void {
+    // 注入 TDesign 组件的全局样式到当前 Shadow DOM
+    this.injectTDesignStyles();
+
+    // 设置样式监听器
+    this.setupStyleObserver();
+
     this.props
       ?.componentImport?.()
       .then((c) => {
         this.component = c.default();
         this.update();
+
+        // 组件加载后立即尝试注入样式
+        this.injectTDesignStyles();
 
         window.dispatchEvent?.(new Event('component-loaded'));
 
@@ -132,8 +143,83 @@ export class tdWcContent extends Component<{ componentImport: () => Promise<any>
       });
   }
 
+  private injectedStylesCount = 0;
+
+  private setupStyleObserver(): void {
+    // 检查是否为 TDesign 组件样式
+    const isTDesignStyle = (element: Element): boolean => element.tagName === 'STYLE' && element.id.endsWith('-styles');
+
+    // 检查节点列表中是否有 TDesign 样式变化
+    const hasStyleChanges = (nodeList: NodeList): boolean => Array.from(nodeList).some((node) => node.nodeType === Node.ELEMENT_NODE && isTDesignStyle(node as Element));
+
+    // 监听 document.head 中样式标签的变化
+    this.styleObserver = new MutationObserver((mutations) => {
+      const shouldUpdate = mutations.some(
+        (mutation) => hasStyleChanges(mutation.addedNodes) || hasStyleChanges(mutation.removedNodes),
+      );
+
+      if (shouldUpdate) {
+        console.log('td-wc-content: 检测到样式变化，重新注入');
+        this.injectTDesignStyles();
+      }
+    });
+
+    // 开始监听 document.head 的变化
+    this.styleObserver.observe(document.head, {
+      childList: true,
+      subtree: false,
+    });
+  }
+
+  private injectTDesignStyles(): void {
+    if (!this.shadowRoot) return;
+
+    // 从 document.head 中查找所有组件样式（由 LightDOMComponent 注入的）
+    const componentStyles = document.querySelectorAll('style[id$="-styles"]');
+    // const globalStyles = document.querySelectorAll('style[id^="tdesign-global-style-"]');
+
+    const totalStyles = componentStyles.length;
+
+    if (totalStyles === 0) {
+      console.log('td-wc-content: 未找到任何TDesign样式，跳过注入');
+      return;
+    }
+
+    if (totalStyles === this.injectedStylesCount) {
+      console.log('td-wc-content: 样式已是最新，跳过注入');
+      return;
+    }
+
+    // 注入组件样式
+    componentStyles.forEach((sourceStyle: HTMLStyleElement) => {
+      const styleId = `shadow-${sourceStyle.id}`;
+      let existingStyle = this.shadowRoot.querySelector(`#${styleId}`) as HTMLStyleElement;
+      const newContent = sourceStyle.textContent || '';
+
+      if (!existingStyle) {
+        existingStyle = document.createElement('style');
+        existingStyle.id = styleId;
+        existingStyle.textContent = newContent;
+        this.shadowRoot.appendChild(existingStyle);
+        console.log(`td-wc-content: 新增组件样式 ${sourceStyle.id}，长度:`, newContent.length);
+      } else if (existingStyle.textContent !== newContent) {
+        existingStyle.textContent = newContent;
+        console.log(`td-wc-content: 更新组件样式 ${sourceStyle.id}，长度:`, newContent.length);
+      }
+    });
+
+    this.injectedStylesCount = totalStyles;
+    console.log(`td-wc-content: 样式注入完成，共注入 ${this.injectedStylesCount} 个样式`);
+  }
+
   uninstall(): void {
     document.removeEventListener('scroll', this.changeTocAndTitleHeight);
+
+    // 清理样式观察器
+    if (this.styleObserver) {
+      this.styleObserver.disconnect();
+      this.styleObserver = null;
+    }
   }
 
   render() {

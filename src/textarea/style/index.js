@@ -8,4 +8,3 @@ export const styleSheet = css`
 `;
 
 globalCSS(styleSheet);
-

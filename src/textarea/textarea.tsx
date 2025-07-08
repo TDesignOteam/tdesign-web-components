@@ -1,16 +1,18 @@
-import { classNames, Component, createRef, tag } from 'omi';
+import { classNames, createRef, tag } from 'omi';
 
 import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
 import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
+import { LightDOMComponent } from '../_util/light-dom-component';
 import { StyledProps } from '../common';
 import useLengthLimit from '../input/useLengthLimit';
 import { TdTextareaProps } from './type';
 
+import styles from '../_common/style/web/components/textarea/_index.less';
+
 export interface TextareaProps extends TdTextareaProps, StyledProps {}
 @tag('t-textarea')
-export default class Textarea extends Component<TdTextareaProps> {
-  static css = [];
+export default class Textarea extends LightDOMComponent<TdTextareaProps> {
+  static css = [styles];
 
   static propTypes = {
     allowInputOverMax: Boolean,
@@ -60,6 +62,7 @@ export default class Textarea extends Component<TdTextareaProps> {
   installed() {
     const { value, defaultValue, disabled, ...otherProps } = this.props;
     this.pValue = value || defaultValue;
+
     this.eventPropsNames = Object.keys(otherProps).filter((key) => /^on[A-Z]/.test(key));
     this.eventProps = this.eventPropsNames.reduce((eventProps, key) => {
       Object.assign(eventProps, {
@@ -73,21 +76,21 @@ export default class Textarea extends Component<TdTextareaProps> {
             this.isFocused = false;
             this.update();
           }
-          this.props[key](e);
+          this.props?.[key]?.(e);
           e.stopPropagation();
         },
       });
       return eventProps;
     }, {});
-
     // 处理autosize初始化高度不准确
-    setTimeout(() => {
-      this.adjustTextareaHeight();
-    }, 0);
+    // setTimeout(() => {
+    //   this.adjustTextareaHeight();
+    // }, 0);
   }
 
   ready(): void {
-    setExportparts(this);
+    // setExportparts(this);
+    this.adjustTextareaHeight();
   }
 
   updated(): void {
@@ -143,6 +146,7 @@ export default class Textarea extends Component<TdTextareaProps> {
   adjustTextareaHeight = () => {
     const node = this.textArea.current;
     const { autosize } = this.props;
+    if (!node) return;
     if (autosize === true) {
       const heightObj = calcTextareaHeight(node);
       this.setHeight(heightObj);
@@ -152,7 +156,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     }
   };
 
-  onChange = (e: Event) => {
+  onInputChange = (e: Event) => {
     const target = e.currentTarget as HTMLTextAreaElement;
     const val = target.value;
 
@@ -167,7 +171,7 @@ export default class Textarea extends Component<TdTextareaProps> {
 
     const limitedValue = getValueByLimitNumber(target.value);
     this.pValue = limitedValue;
-
+    // this.props?.onChange?.(limitedValue, { e });
     this.fire('change', limitedValue);
   };
 
@@ -203,11 +207,10 @@ export default class Textarea extends Component<TdTextareaProps> {
           autofocus={autofocus}
           maxlength={maxlength}
           maxcharacter={maxcharacter}
-          // 这个事件会在失焦前触发，必须加上否则会导致失焦时，textarea的value值为空
-          onChange={this.onChange}
-          onInput={this.onChange}
           ref={this.textArea}
           enterkeyhint={enterkeyhint}
+          onChange={this.onInputChange}
+          onInput={this.onInputChange}
         />
         {tips && (
           <div

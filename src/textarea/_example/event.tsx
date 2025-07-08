@@ -1,40 +1,41 @@
 import 'tdesign-web-components/textarea';
 
-import { Component, signal } from 'omi';
+import { LightDOMComponent } from '../../_util/light-dom-component';
 
-export default class Textarea extends Component {
-  inputValue = signal('');
+export default class Textarea extends LightDOMComponent {
+  private inputValue = '';
 
-  onBlur = (value, { e }) => {
-    console.log('onBlur: ', value, e);
+  onBlur = (value, context) => {
+    console.log('onBlur: ', value, context);
   };
 
-  onFocus = (value, { e }) => {
-    console.log('onFocus: ', value, e);
+  onFocus = (value, context) => {
+    console.log('onFocus: ', value, context);
   };
 
-  onKeyup = (value, { e }) => {
-    console.log('onKeyup', value, e);
+  onKeyup = (value, context) => {
+    console.log('onKeyup', value, context);
   };
 
-  onKeypress = (value, { e }) => {
-    console.log('onKeypress', value, e);
+  onKeypress = (value, context) => {
+    console.log('onKeypress', value, context);
   };
 
-  onKeydown = (value, { e }) => {
-    console.log('onKeydown', value, e);
+  onKeydown = (value, context) => {
+    console.log('onKeydown', value, context);
   };
 
   onChange = (e: CustomEvent) => {
-    console.log('onChange', e);
-    this.inputValue.value = e.detail;
+    console.log('onChange', e.detail);
+    if (!e.detail) return;
+    this.inputValue = e.detail;
   };
 
   render() {
     return (
       <t-textarea
         placeholder="请输入"
-        value={this.inputValue.value}
+        value={this.inputValue}
         onBlur={this.onBlur}
         onFocus={this.onFocus}
         onKeypress={this.onKeypress}
