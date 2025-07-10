@@ -157,15 +157,44 @@ export type AIContentChunkUpdate = AIMessageContent & {
   // 将新内容块和入策略，merge表示和入到同类型内容中，append表示作为新的内容块，默认是merge
   strategy?: 'merge' | 'append';
 };
-export interface ChatServiceConfig {
+
+// SSE连接层事件回调（技术层面）
+export interface SSEConnectionCallbacks {
+  /** 心跳检测 - 每10秒触发，用于监控连接健康状态 */
+  onHeartbeat?: (event: { connectionId: string; timestamp: number }) => void;
+  /** 连接状态变化 - 监控连接技术状态：connecting/connected/reconnecting/error等 */
+  onConnectionStateChange?: (event: { connectionId: string; from: string; to: string; timestamp: number }) => void;
+  /** 连接建立成功 - SSE连接技术层面建立完成 */
+  onConnectionEstablished?: (connectionId: string) => void;
+  /** 连接断开 - SSE连接技术层面断开（可能会自动重连） */
+  onConnectionLost?: (connectionId: string) => void;
+}
+
+// 网络请求配置（纯技术配置）
+export interface ChatNetworkConfig {
+  /** 请求端点 */
   endpoint?: string;
+  /** 是否启用流式传输 */
   stream?: boolean;
+  /** 重试间隔（毫秒） */
   retryInterval?: number;
+  /** 最大重试次数 */
   maxRetries?: number;
+  /** SSE连接技术层面的监控回调 */
+  connection?: SSEConnectionCallbacks;
+}
+
+// 主配置接口 - 三选一的配置模式
+export interface ChatServiceConfig extends ChatNetworkConfig {
+  /** 请求发送前配置 */
   onRequest?: (params: ChatRequestParams) => RequestInit | Promise<RequestInit>;
+  /** 接收到消息数据块 - 用于解析和处理聊天内容 */
   onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
+  /** 对话完成 - 聊天业务流程结束（正常完成/用户中断/出错） */
   onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
+  /** 用户主动中断对话 */
   onAbort?: () => Promise<void>;
+  /** 错误处理 */
   onError?: (err: Error | Response) => void;
 }
 

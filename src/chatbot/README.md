@@ -30,6 +30,10 @@ spline: base
 
 {{ customRenderItem }}
 
+<!-- ### AG-UI
+
+{{ agui }} -->
+
 ## API
 
 ## Chatbot Props

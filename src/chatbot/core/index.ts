@@ -1,5 +1,5 @@
-import { LLMService } from './server/llmService';
 import { MessageStore } from './store/message';
+import LLMService from './enhanced-server';
 import MessageProcessor from './processor';
 import type {
   AIContentChunkUpdate,

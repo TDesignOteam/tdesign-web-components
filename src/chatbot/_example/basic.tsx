@@ -309,17 +309,53 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
   }
 }
 
-const mockModels = {
+// 测试用的回调配置
+const mockModelsWithCallbacks = {
   endpoint: 'http://localhost:3000/sse/normal',
   stream: true,
+
+  // === 业务层回调测试 ===
   onComplete: (isAborted) => {
-    console.log('onComplete', isAborted);
+    console.log('🏁 [业务层] 对话完成:', {
+      isAborted,
+      timestamp: new Date().toISOString(),
+      action: isAborted ? '用户中断' : '正常结束',
+    });
   },
+
   onError: (err) => {
-    console.log('onError', err);
+    console.error('🚨 [业务层] 聊天错误:', {
+      error: err,
+      message: err.message || String(err),
+      timestamp: new Date().toISOString(),
+      type: 'business_error',
+    });
   },
-  onMessage: defaultChunkParser,
+
+  onAbort: async () => {
+    console.log('🛑 [业务层] 用户主动停止:', {
+      timestamp: new Date().toISOString(),
+      reason: 'user_initiated',
+    });
+  },
+
+  onMessage: (chunk, message) => {
+    console.log('💬 [业务层] 收到消息:', {
+      chunk,
+      message: message?.id ? `消息ID: ${message.id}` : '新消息',
+      timestamp: new Date().toISOString(),
+    });
+    return defaultChunkParser(chunk);
+  },
+
   onRequest: (params) => {
+    console.log('📤 [业务层] 发送请求:', {
+      prompt: `${params.prompt?.slice(0, 50)}...`,
+      messageID: params.messageID,
+      attachments: params.attachments?.length || 0,
+      timestamp: new Date().toISOString(),
+    });
+
     const { prompt, messageID, attachments = [] } = params;
     return {
       headers: {
@@ -341,6 +377,50 @@ const mockModels = {
         is_search_net: 1,
       }),
     };
+  },
+
+  // === 连接层回调测试 ===
+  connection: {
+    onHeartbeat: (event) => {
+      // 每10次心跳打印一次，避免日志过多
+      if (!(window as any).heartbeatCount) (window as any).heartbeatCount = 0;
+      (window as any).heartbeatCount += 1;
+
+      if ((window as any).heartbeatCount % 10 === 0) {
+        console.log('💓 [连接层] 心跳检测 (x10):', {
+          event,
+          totalCount: (window as any).heartbeatCount,
+          timestamp: new Date(event.timestamp).toLocaleTimeString(),
+        });
+      }
+    },
+
+    onConnectionStateChange: (event) => {
+      console.log('🔧 [连接层] 连接状态变化:', {
+        from: event.from,
+        to: event.to,
+        connectionId: `${event.connectionId?.slice(0, 8)}...`,
+        timestamp: new Date(event.timestamp).toLocaleTimeString(),
+        reason: event.reason || 'unknown',
+      });
+    },
+
+    onConnectionEstablished: (connectionId) => {
+      console.log('🔗 [连接层] SSE连接建立:', {
+        connectionId: `${connectionId?.slice(0, 8)}...`,
+        timestamp: new Date().toISOString(),
+        status: 'connected',
+      });
+    },
+
+    onConnectionLost: (connectionId) => {
+      console.warn('📡 [连接层] SSE连接断开:', {
+        connectionId: `${connectionId?.slice(0, 8)}...`,
+        timestamp: new Date().toISOString(),
+        status: 'disconnected',
+        note: '系统将自动重连',
+      });
+    },
   },
 };
 
@@ -485,6 +565,13 @@ export default class BasicChat extends Component {
       }
     };
     document.addEventListener('mousedown', this.clickHandler);
+
+    // 打印回调测试说明
+    console.log('🚀 聊天系统初始化完成 - 回调测试已启用');
+    console.log('📝 说明：');
+    console.log('   🏷️  [业务层] - 处理聊天对话逻辑的回调');
+    console.log('   🔧 [连接层] - 处理SSE技术监控的回调');
+    console.log('   💡 请发送消息观察各种回调的触发情况');
   }
 
   uninstall(): void {
@@ -511,11 +598,34 @@ export default class BasicChat extends Component {
             placeholder: '请输入问题',
             onFileSelect,
           }}
-          chatServiceConfig={mockModels}
+          chatServiceConfig={mockModelsWithCallbacks}
           onChatReady={(e) => console.log('chatReady', e)}
         ></t-chatbot>
-        <button onClick={() => this.chatRef.current?.setMessages(mockData, 'prepend')}>设置消息</button>
-        <button onClick={() => this.chatRef.current?.scrollList({ to: 'top' })}>滚动到上面</button>
+
+        <div style={{ padding: '16px', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <button onClick={() => this.chatRef.current?.setMessages(mockData, 'prepend')}>设置消息</button>
+          <button onClick={() => this.chatRef.current?.scrollList({ to: 'top' })}>滚动到上面</button>
+          <button onClick={() => this.chatRef.current?.abortChat()}>停止对话</button>
+          <button
+            onClick={() => {
+              console.clear();
+              console.log('🧹 控制台已清空');
+              console.log('📝 回调测试说明：');
+              console.log('   🏷️  [业务层] - 处理聊天对话逻辑的回调');
+              console.log('   🔧 [连接层] - 处理SSE技术监控的回调');
+            }}
+          >
+            清空控制台
+          </button>
+          <button
+            onClick={() => {
+              console.log('🔄 重新开始测试');
+              (window as any).heartbeatCount = 0;
+            }}
+          >
+            重置计数器
+          </button>
+        </div>
       </>
     );
   }
