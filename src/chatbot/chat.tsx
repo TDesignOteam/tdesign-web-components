@@ -124,7 +124,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     const { engineMode, aguiServiceConfig } = this.props;
 
     if (engineMode === 'agui' && aguiServiceConfig) {
-      this.chatEngine = new AGUIEngine(aguiServiceConfig);
+      // this.chatEngine = new AGUIEngine(aguiServiceConfig);
     } else {
       this.chatEngine = new ChatEngine();
     }
@@ -152,7 +152,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       defaultMessages: messages = [],
       messageProps,
       chatServiceConfig: config,
-      aguiServiceConfig,
+      // aguiServiceConfig,
       autoSendPrompt,
       engineMode,
     } = this.props;
@@ -163,7 +163,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
     // 根据引擎类型使用不同的配置
     if (engineMode === 'agui' && this.chatEngine instanceof AGUIEngine) {
-      this.chatEngine.init(aguiServiceConfig, messages);
+      // this.chatEngine.init(aguiServiceConfig, messages);
     } else if (this.chatEngine instanceof ChatEngine) {
       this.chatEngine.init(config, messages);
     }
