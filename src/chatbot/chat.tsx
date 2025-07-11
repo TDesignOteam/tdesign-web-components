@@ -4,6 +4,7 @@ import '../button';
 
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
+import { debounceTime } from 'rxjs/operators';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
@@ -12,6 +13,8 @@ import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
+import { AGUIEngine } from './core/agui-engine';
+import { IChatEngine } from './core/base-engine';
 import {
   type AttachmentItem,
   type ChatMessagesData,
@@ -44,6 +47,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     layout: String,
     autoSendPrompt: Object,
     reverse: Boolean,
+    engineMode: String,
     defaultMessages: Array,
     messageProps: [Object, Function],
     listProps: Object,
@@ -60,13 +64,14 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     clearHistory: false,
     layout: 'both',
     reverse: false,
+    engineMode: 'default',
   };
 
   listRef = createRef<Chatlist>();
 
   ChatSenderRef = createRef<ChatSender>();
 
-  public chatEngine: ChatEngine;
+  public chatEngine: IChatEngine;
 
   public chatStatus: ChatStatus = 'idle';
 
@@ -115,7 +120,14 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   install() {
-    this.chatEngine = new ChatEngine();
+    // 根据engineMode选择引擎，默认使用传统引擎
+    const { engineMode, aguiServiceConfig } = this.props;
+
+    if (engineMode === 'agui' && aguiServiceConfig) {
+      this.chatEngine = new AGUIEngine(aguiServiceConfig);
+    } else {
+      this.chatEngine = new ChatEngine();
+    }
   }
 
   ready(): void {
@@ -136,22 +148,40 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 合并消息配置、初始化引擎、同步状态、订阅聊天
    */
   private initChat() {
-    const { defaultMessages: messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
+    const {
+      defaultMessages: messages = [],
+      messageProps,
+      chatServiceConfig: config,
+      aguiServiceConfig,
+      autoSendPrompt,
+      engineMode,
+    } = this.props;
+
     if (typeof messageProps === 'object') {
       this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     }
-    this.chatEngine.init(config, messages);
+
+    // 根据引擎类型使用不同的配置
+    if (engineMode === 'agui' && this.chatEngine instanceof AGUIEngine) {
+      this.chatEngine.init(aguiServiceConfig, messages);
+    } else if (this.chatEngine instanceof ChatEngine) {
+      this.chatEngine.init(config, messages);
+    }
+
     const { messageStore } = this.chatEngine;
+
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
     this.syncState(messages);
     this.subscribeToChat();
+
     // 如果有传入autoSendPrompt，自动发起提问
     if (autoSendPrompt !== '' && autoSendPrompt !== 'undefined') {
       this.chatEngine.sendUserMessage({
         prompt: autoSendPrompt,
       });
     }
+
     this.fire(
       'chatReady',
       {},
@@ -203,7 +233,12 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 发送系统消息
    */
   sendSystemMessage(msg: string) {
-    this.chatEngine.sendSystemMessage(msg);
+    // 检查引擎是否支持sendSystemMessage方法
+    if ('sendSystemMessage' in this.chatEngine && typeof this.chatEngine.sendSystemMessage === 'function') {
+      this.chatEngine.sendSystemMessage(msg);
+    } else {
+      console.warn('当前引擎不支持sendSystemMessage方法');
+    }
   }
 
   /**
@@ -270,7 +305,16 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 最后一条AI消息
    */
   get messagesStore(): ChatMessageStore {
-    return this.chatEngine?.messageStore.getState();
+    // 兼容不同MessageStore的API
+    if ('getState' in this.chatEngine.messageStore && typeof this.chatEngine.messageStore.getState === 'function') {
+      return this.chatEngine.messageStore.getState();
+    }
+    // MessageStoreObservable使用直接属性访问
+    const messageStore = this.chatEngine.messageStore as any;
+    return {
+      messageIds: messageStore.messageIds || messageStore.messages?.map((m: any) => m.id) || [],
+      messages: messageStore.messages || [],
+    };
   }
 
   /**
@@ -282,12 +326,30 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   /**
    * 订阅聊天状态变化
+   * 优化版本：支持Observable引擎的高级功能
    */
   private subscribeToChat() {
-    this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
-      this.syncState(state.messages);
-      this.update();
-    });
+    // 检查是否为Observable版本的引擎
+    if ('getMessages$' in this.chatEngine && typeof this.chatEngine.getMessages$ === 'function') {
+      // 使用Observable订阅，具有防抖和去重优化
+      const subscription = this.chatEngine
+        .getMessages$()
+        .pipe(
+          debounceTime(50), // 防抖50ms，避免频繁更新
+        )
+        .subscribe((messages: ChatMessagesData[]) => {
+          this.syncState(messages);
+          this.update();
+        });
+
+      this.unsubscribeMsg = () => subscription.unsubscribe();
+    } else {
+      // 向后兼容：使用传统订阅方式
+      this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
+        this.syncState(state.messages);
+        this.update();
+      });
+    }
   }
 
   /**

@@ -339,14 +339,7 @@ const mockModelsWithCallbacks = {
     });
   },
 
-  onMessage: (chunk, message) => {
-    console.log('💬 [业务层] 收到消息:', {
-      chunk,
-      message: message?.id ? `消息ID: ${message.id}` : '新消息',
-      timestamp: new Date().toISOString(),
-    });
-    return defaultChunkParser(chunk);
-  },
+  onMessage: (chunk) => defaultChunkParser(chunk),
 
   onRequest: (params) => {
     console.log('📤 [业务层] 发送请求:', {

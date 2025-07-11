@@ -1,3 +1,5 @@
+import { BehaviorSubject, distinctUntilChanged, map, Observable, shareReplay } from 'rxjs';
+
 import type {
   AIMessage,
   AIMessageContent,
@@ -8,124 +10,309 @@ import type {
   UserMessage,
 } from '../type';
 import { isAIMessage, isUserMessage } from '../utils';
-import ReactiveState from './reactiveState';
 
-// 专注消息生命周期管理
-export class MessageStore extends ReactiveState<ChatMessageStore> {
-  initialize(initialState?: Partial<ChatMessageStore>) {
-    super.initialize({
+/**
+ * 基于RxJS Observable的消息存储类
+ * 提供响应式消息管理和强大的组合性
+ */
+export class MessageStore {
+  // 使用BehaviorSubject作为核心状态存储
+  private state$ = new BehaviorSubject<ChatMessageStore>({
+    messageIds: [],
+    messages: [],
+  });
+
+  // 缓存的Observable流，避免重复创建
+  private messages$: Observable<ChatMessagesData[]>;
+
+  private messageIds$: Observable<string[]>;
+
+  private lastMessage$: Observable<ChatMessagesData | undefined>;
+
+  private lastAIMessage$: Observable<AIMessage | undefined>;
+
+  private lastUserMessage$: Observable<UserMessage | undefined>;
+
+  constructor(initialState?: Partial<ChatMessageStore>) {
+    if (initialState) {
+      this.initialize(initialState);
+    }
+
+    // 预创建常用的Observable流，使用shareReplay避免重复计算
+    this.messages$ = this.state$.pipe(
+      map((state) => state.messages),
+      distinctUntilChanged((prev, curr) => prev.length === curr.length && prev.every((msg, i) => msg === curr[i])),
+      shareReplay(1),
+    );
+
+    this.messageIds$ = this.state$.pipe(
+      map((state) => state.messageIds),
+      distinctUntilChanged((prev, curr) => prev.length === curr.length && prev.every((id, i) => id === curr[i])),
+      shareReplay(1),
+    );
+
+    this.lastMessage$ = this.messages$.pipe(
+      map((messages) => messages[messages.length - 1]),
+      distinctUntilChanged(),
+      shareReplay(1),
+    );
+
+    this.lastAIMessage$ = this.messages$.pipe(
+      map((messages) => {
+        const aiMessages = messages.filter((msg) => isAIMessage(msg));
+        return aiMessages[aiMessages.length - 1];
+      }),
+      distinctUntilChanged(),
+      shareReplay(1),
+    );
+
+    this.lastUserMessage$ = this.messages$.pipe(
+      map((messages) => {
+        const userMessages = messages.filter((msg) => isUserMessage(msg));
+        return userMessages[userMessages.length - 1];
+      }),
+      distinctUntilChanged(),
+      shareReplay(1),
+    );
+  }
+
+  /**
+   * 初始化状态
+   */
+  initialize(initialState: Partial<ChatMessageStore>) {
+    const newState = {
       messageIds: [],
       messages: [],
       ...initialState,
-    });
+    };
+    this.state$.next(newState);
   }
 
+  /**
+   * 获取所有消息的Observable流
+   */
+  getMessages$(): Observable<ChatMessagesData[]> {
+    return this.messages$;
+  }
+
+  /**
+   * 获取消息ID列表的Observable流
+   */
+  getMessageIds$(): Observable<string[]> {
+    return this.messageIds$;
+  }
+
+  /**
+   * 获取最后一条消息的Observable流
+   */
+  getLastMessage$(): Observable<ChatMessagesData | undefined> {
+    return this.lastMessage$;
+  }
+
+  /**
+   * 获取最后一条AI消息的Observable流
+   */
+  getLastAIMessage$(): Observable<AIMessage | undefined> {
+    return this.lastAIMessage$;
+  }
+
+  /**
+   * 获取最后一条用户消息的Observable流
+   */
+  getLastUserMessage$(): Observable<UserMessage | undefined> {
+    return this.lastUserMessage$;
+  }
+
+  /**
+   * 通用的状态更新方法
+   */
+  private updateState(updater: (state: ChatMessageStore) => ChatMessageStore) {
+    const currentState = this.state$.value;
+    const newState = updater(currentState);
+    this.state$.next(newState);
+  }
+
+  /**
+   * 创建新消息
+   */
   createMessage(message: ChatMessagesData) {
-    const { id } = message;
-    this.setState((draft) => {
-      draft.messageIds.push(id);
-      draft.messages.push(message);
-    });
+    this.updateState((state) => ({
+      ...state,
+      messageIds: [...state.messageIds, message.id],
+      messages: [...state.messages, message],
+    }));
   }
 
+  /**
+   * 批量创建消息
+   */
   createMultiMessages(messages: ChatMessagesData[]) {
-    this.setState((draft) => {
-      messages.forEach((msg) => {
-        draft.messageIds.push(msg.id);
-      });
-      draft.messages.push(...messages);
-    });
+    this.updateState((state) => ({
+      ...state,
+      messageIds: [...state.messageIds, ...messages.map((msg) => msg.id)],
+      messages: [...state.messages, ...messages],
+    }));
   }
 
+  /**
+   * 设置消息列表
+   */
   setMessages(messages: ChatMessagesData[], mode: ChatMessageSetterMode = 'replace') {
-    this.setState((draft) => {
-      if (mode === 'replace') {
-        draft.messageIds = messages.map((msg) => msg.id);
-        draft.messages = [...messages];
-      } else if (mode === 'prepend') {
-        draft.messageIds = [...messages.map((msg) => msg.id), ...draft.messageIds];
-        draft.messages = [...messages, ...draft.messages];
-      } else {
-        draft.messageIds.push(...messages.map((msg) => msg.id));
-        draft.messages.push(...messages);
+    this.updateState((state) => {
+      switch (mode) {
+        case 'replace':
+          return {
+            messageIds: messages.map((msg) => msg.id),
+            messages: [...messages],
+          };
+        case 'prepend':
+          return {
+            messageIds: [...messages.map((msg) => msg.id), ...state.messageIds],
+            messages: [...messages, ...state.messages],
+          };
+        case 'append':
+        default:
+          return {
+            messageIds: [...state.messageIds, ...messages.map((msg) => msg.id)],
+            messages: [...state.messages, ...messages],
+          };
       }
     });
   }
 
-  // 追加内容到指定类型的content
+  /**
+   * 追加内容到指定消息
+   */
   appendContent(messageId: string, processedContent: AIMessageContent, targetIndex: number = -1) {
-    this.setState((draft) => {
-      const message = draft.messages.find((m) => m.id === messageId);
-      if (!message || !isAIMessage(message)) return;
+    this.updateState((state) => {
+      const messageIndex = state.messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return state;
 
+      const message = state.messages[messageIndex];
+      if (!isAIMessage(message)) return state;
+
+      const updatedMessage = { ...message };
       if (targetIndex >= 0 && targetIndex < message.content.length) {
-        // 合并到指定位置
-        message.content[targetIndex] = processedContent;
+        updatedMessage.content = [...message.content];
+        updatedMessage.content[targetIndex] = processedContent;
       } else {
-        // 添加新内容块
-        message.content.push(processedContent);
+        updatedMessage.content = [...message.content, processedContent];
       }
 
-      this.updateMessageStatusByContent(message);
+      this.updateMessageStatusByContent(updatedMessage);
+
+      const newMessages = [...state.messages];
+      newMessages[messageIndex] = updatedMessage;
+
+      return {
+        ...state,
+        messages: newMessages,
+      };
     });
   }
 
-  // 完整替换消息的content数组
+  /**
+   * 替换消息内容
+   */
   replaceContent(messageId: string, processedContent: AIMessageContent[]) {
-    this.setState((draft) => {
-      const message = draft.messages.find((m) => m.id === messageId);
-      if (!message || !isAIMessage(message)) return;
-      message.content = processedContent;
+    this.updateState((state) => {
+      const messageIndex = state.messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return state;
+
+      const message = state.messages[messageIndex];
+      if (!isAIMessage(message)) return state;
+
+      const updatedMessage = { ...message, content: processedContent };
+      const newMessages = [...state.messages];
+      newMessages[messageIndex] = updatedMessage;
+
+      return {
+        ...state,
+        messages: newMessages,
+      };
     });
   }
 
-  // 更新消息整体状态
+  /**
+   * 设置消息状态
+   */
   setMessageStatus(messageId: string, status: ChatMessagesData['status']) {
-    this.setState((draft) => {
-      const message = draft.messages.find((m) => m.id === messageId);
-      if (message) {
-        message.status = status;
-        if (isAIMessage(message) && message.content.length > 0) {
-          message.content.at(-1).status = status;
-        }
+    this.updateState((state) => {
+      const messageIndex = state.messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return state;
+
+      const message = state.messages[messageIndex];
+      const updatedMessage = { ...message, status };
+
+      if (isAIMessage(updatedMessage) && updatedMessage.content.length > 0) {
+        updatedMessage.content = [...updatedMessage.content];
+        const lastContentIndex = updatedMessage.content.length - 1;
+        updatedMessage.content[lastContentIndex] = {
+          ...updatedMessage.content[lastContentIndex],
+          status,
+        };
       }
+
+      const newMessages = [...state.messages];
+      newMessages[messageIndex] = updatedMessage;
+
+      return {
+        ...state,
+        messages: newMessages,
+      };
     });
   }
 
-  // 为消息设置扩展属性
+  /**
+   * 设置消息扩展属性
+   */
   setMessageExt(messageId: string, attr = {}) {
-    this.setState((draft) => {
-      const message = draft.messages.find((m) => m.id === messageId);
-      if (message) {
-        message.ext = { ...message.ext, ...attr };
-      }
+    this.updateState((state) => {
+      const messageIndex = state.messages.findIndex((m) => m.id === messageId);
+      if (messageIndex === -1) return state;
+
+      const message = state.messages[messageIndex];
+      const updatedMessage = {
+        ...message,
+        ext: { ...message.ext, ...attr },
+      };
+
+      const newMessages = [...state.messages];
+      newMessages[messageIndex] = updatedMessage;
+
+      return {
+        ...state,
+        messages: newMessages,
+      };
     });
   }
 
+  /**
+   * 清空历史消息
+   */
   clearHistory() {
-    this.setState((draft) => {
-      draft.messageIds = [];
-      draft.messages = [];
-    });
+    this.updateState(() => ({
+      messageIds: [],
+      messages: [],
+    }));
   }
 
-  // 删除指定消息
+  /**
+   * 删除指定消息
+   */
   removeMessage(messageId: string) {
-    this.setState((draft) => {
-      // 从ID列表删除
-      const idIndex = draft.messageIds.indexOf(messageId);
-      if (idIndex !== -1) {
-        draft.messageIds.splice(idIndex, 1);
-      }
-
-      // 从消息列表删除
-      draft.messages = draft.messages.filter((msg) => msg.id !== messageId);
-    });
+    this.updateState((state) => ({
+      messageIds: state.messageIds.filter((id) => id !== messageId),
+      messages: state.messages.filter((msg) => msg.id !== messageId),
+    }));
   }
 
-  // 创建消息分支（用于保留历史版本）
+  /**
+   * 创建消息分支
+   */
   createMessageBranch(messageId: string) {
-    const original = this.getState().messages.find((m) => m.id === messageId);
+    const currentState = this.state$.value;
+    const original = currentState.messages.find((m) => m.id === messageId);
     if (!original) return;
 
     // 克隆消息并生成新ID
@@ -137,36 +324,56 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
     this.createMessage(branchedMessage);
   }
 
-  get messages() {
-    return this.getState().messages;
+  // Getter方法，同步获取当前值
+  get messages(): ChatMessagesData[] {
+    return this.state$.value.messages;
   }
 
-  getMessageByID(id: string) {
-    return this.getState().messages.find((m) => m.id === id);
+  get messageIds(): string[] {
+    return this.state$.value.messageIds;
   }
 
-  get currentMessage(): ChatMessagesData {
-    const { messages } = this.getState();
-    return messages.at(-1);
+  getMessageByID(id: string): ChatMessagesData | undefined {
+    return this.state$.value.messages.find((m) => m.id === id);
+  }
+
+  get currentMessage(): ChatMessagesData | undefined {
+    const { messages } = this.state$.value;
+    return messages[messages.length - 1];
   }
 
   get lastAIMessage(): AIMessage | undefined {
-    const { messages } = this.getState();
+    const { messages } = this.state$.value;
     const aiMessages = messages.filter((msg) => isAIMessage(msg));
-    return aiMessages.at(-1);
+    return aiMessages[aiMessages.length - 1];
   }
 
   get lastUserMessage(): UserMessage | undefined {
-    const { messages } = this.getState();
+    const { messages } = this.state$.value;
     const userMessages = messages.filter((msg) => isUserMessage(msg));
-    return userMessages.at(-1);
+    return userMessages[userMessages.length - 1];
   }
 
+  /**
+   * 兼容性方法：订阅所有变化（类似原ReactiveState的subscribe）
+   */
+  subscribe(subscriber: (state: ChatMessageStore) => void): () => void {
+    const subscription = this.state$.subscribe(subscriber);
+    return () => subscription.unsubscribe();
+  }
+
+  /**
+   * 销毁方法
+   */
+  destroy() {
+    this.state$.complete();
+  }
+
+  // 私有辅助方法
   private resolvedStatus(content: AIMessageContent, status: ChatMessageStatus): ChatMessageStatus {
     return typeof content.status === 'function' ? content.status(status) : content.status;
   }
 
-  // 更新消息整体状态
   private updateMessageStatusByContent(message: AIMessage) {
     // 优先处理错误状态
     if (message.content.some((c) => c.status === 'error')) {
@@ -178,26 +385,15 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
     }
 
     // 非最后一个内容块如果不是error|stop, 则设为content.status｜complete
-    message.content
-      .slice(0, -1) // 获取除最后一个元素外的所有内容
-      .forEach((content) => {
-        if (content.status !== 'error' && content.status !== 'stop') {
-          content.status = this.resolvedStatus(content, 'complete');
-        }
-      });
+    message.content.slice(0, -1).forEach((content) => {
+      if (content.status !== 'error' && content.status !== 'stop') {
+        content.status = this.resolvedStatus(content, 'complete');
+      }
+    });
 
     // 检查是否全部完成
-    const allComplete = message.content.every(
-      (c) => c.status === 'complete' || c.status === 'stop', // 包含停止状态
-    );
+    const allComplete = message.content.every((c) => c.status === 'complete' || c.status === 'stop');
 
     message.status = allComplete ? 'complete' : 'streaming';
   }
 }
-
-// 订阅消息列表变化
-// useEffect(() => {
-//   return service.messageStore.subscribe(state => {
-//     setMessages(state.messages);
-//   });
-// }, []);

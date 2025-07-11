@@ -13,6 +13,29 @@ import type {
   ChatStatus,
 } from './core/type';
 
+/**
+ * AG-UI服务配置
+ */
+export interface TdAguiServiceConfig {
+  /** AG-UI Agent端点URL */
+  url: string;
+  /** Agent ID */
+  agentId?: string;
+  /** 请求头 */
+  headers?: Record<string, string>;
+  /** 初始状态 */
+  initialState?: any;
+  /** 工具定义 */
+  tools?: any[];
+  /** 上下文信息 */
+  context?: any[];
+}
+
+/**
+ * 引擎模式
+ */
+export type TdEngineMode = 'default' | 'agui';
+
 export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
 export interface TdChatMessageAction {
   name: TdChatMessageActionName;
@@ -80,8 +103,12 @@ export interface TdChatProps extends StyledProps {
   messageProps?: TdChatMessageConfig | ((msg: ChatMessagesData) => TdChatMessageConfigItem);
   /** 输入框配置（透传至t-chat-sender） */
   senderProps?: TdChatSenderProps;
-  /** 模型服务配置 */
+  /** 引擎模式 */
+  engineMode?: TdEngineMode;
+  /** 传统模式服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
+  /** AG-UI模式服务配置 */
+  aguiServiceConfig?: TdAguiServiceConfig;
   /** 消息内容更新回调 */
   onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
   /** 消息引擎初始化完成回调 */

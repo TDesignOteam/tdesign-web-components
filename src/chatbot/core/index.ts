@@ -1,5 +1,4 @@
-import { MessageStore } from './store/message';
-import LLMService from './enhanced-server';
+import { BaseEngine } from './base-engine';
 import MessageProcessor from './processor';
 import type {
   AIContentChunkUpdate,
@@ -14,17 +13,8 @@ import type {
 } from './type';
 import { isAIMessage } from './utils';
 
-export interface IChatEngine {
-  sendUserMessage(requestParams: ChatRequestParams): Promise<void>;
-  abortChat(): Promise<void>;
-}
-
-export default class ChatEngine implements IChatEngine {
-  public messageStore: MessageStore;
-
+export default class ChatEngine extends BaseEngine {
   private processor: MessageProcessor;
-
-  private llmService: LLMService;
 
   private config: ChatServiceConfig;
 
@@ -33,14 +23,21 @@ export default class ChatEngine implements IChatEngine {
   private stopReceive = false;
 
   constructor() {
-    this.llmService = new LLMService();
+    super(); // 调用BaseEngine构造函数，初始化MessageStore和LLMService
     this.processor = new MessageProcessor();
-    this.messageStore = new MessageStore();
   }
 
-  public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
+  // 原有的初始化方法（保持向后兼容）
+  public initWithConfig(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
+  }
+
+  // 实现BaseEngine要求的init方法
+  init(config?: any, messages?: ChatMessagesData[]): void {
+    if (config) {
+      this.initWithConfig(config as ChatServiceConfigSetter, messages);
+    }
   }
 
   public async sendUserMessage(requestParams: ChatRequestParams) {
@@ -73,7 +70,7 @@ export default class ChatEngine implements IChatEngine {
     if (this.config?.onAbort) {
       await this.config.onAbort();
     }
-    this.llmService.closeSSE();
+    this.closeSSE();
   }
 
   public registerMergeStrategy<T extends AIMessageContent>(
@@ -148,7 +145,7 @@ export default class ChatEngine implements IChatEngine {
   private async handleBatchRequest(params: ChatRequestParams) {
     const id = params.messageID;
     this.setMessageStatus(id, 'pending');
-    const result = await this.llmService.handleBatchRequest(params, this.config);
+    const result = await this.getLLMService().handleBatchRequest(params, this.config);
     this.messageStore.appendContent(id, result);
     this.setMessageStatus(id, 'complete');
   }
@@ -156,7 +153,7 @@ export default class ChatEngine implements IChatEngine {
   private async handleStreamRequest(params: ChatRequestParams) {
     const id = params.messageID;
     this.setMessageStatus(id, 'pending');
-    await this.llmService.handleStreamRequest(params, {
+    await this.getLLMService().handleStreamRequest(params, {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
         if (this.stopReceive) return null;
@@ -198,7 +195,7 @@ export default class ChatEngine implements IChatEngine {
 
   // 处理内容更新逻辑
   private processContentUpdate(messageId: string, rawChunk: AIContentChunkUpdate) {
-    const message = this.messageStore.getState().messages.find((m) => m.id === messageId);
+    const message = this.messageStore.messages.find((m) => m.id === messageId);
     if (!message || !isAIMessage(message)) return;
 
     //  // 只需要处理最后一个内容快
@@ -211,8 +208,15 @@ export default class ChatEngine implements IChatEngine {
     if (rawChunk?.strategy === 'append') {
       targetIndex = -1;
     } else {
-      // 合并/替换到现有同类型内容中
-      targetIndex = message.content.findLastIndex((content) => content.type === rawChunk.type);
+      // 合并/替换到现有同类型内容中（向后兼容的findLastIndex实现）
+      let lastFoundIndex = -1;
+      for (let i = message.content.length - 1; i >= 0; i--) {
+        if (message.content[i].type === rawChunk.type) {
+          lastFoundIndex = i;
+          break;
+        }
+      }
+      targetIndex = lastFoundIndex;
     }
 
     const processed = this.processor.processContentUpdate(
