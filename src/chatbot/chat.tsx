@@ -13,7 +13,6 @@ import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
-import { AGUIEngine } from './core/agui-engine';
 import { IChatEngine } from './core/base-engine';
 import {
   type AttachmentItem,
@@ -120,14 +119,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   install() {
-    // 根据engineMode选择引擎，默认使用传统引擎
-    const { engineMode, aguiServiceConfig } = this.props;
-
-    if (engineMode === 'agui' && aguiServiceConfig) {
-      // this.chatEngine = new AGUIEngine(aguiServiceConfig);
-    } else {
-      this.chatEngine = new ChatEngine();
-    }
+    this.chatEngine = new ChatEngine();
   }
 
   ready(): void {
@@ -148,25 +140,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 合并消息配置、初始化引擎、同步状态、订阅聊天
    */
   private initChat() {
-    const {
-      defaultMessages: messages = [],
-      messageProps,
-      chatServiceConfig: config,
-      // aguiServiceConfig,
-      autoSendPrompt,
-      engineMode,
-    } = this.props;
+    const { defaultMessages: messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
 
     if (typeof messageProps === 'object') {
       this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     }
 
-    // 根据引擎类型使用不同的配置
-    if (engineMode === 'agui' && this.chatEngine instanceof AGUIEngine) {
-      // this.chatEngine.init(aguiServiceConfig, messages);
-    } else if (this.chatEngine instanceof ChatEngine) {
-      this.chatEngine.init(config, messages);
-    }
+    this.chatEngine.init(config, messages);
 
     const { messageStore } = this.chatEngine;
 
