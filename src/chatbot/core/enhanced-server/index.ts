@@ -5,7 +5,7 @@
 
 // 导出所有类型
 // 默认导出（向后兼容）
-import { EnhancedLLMService } from './llm-service';
+import { LLMService } from './llm-service';
 
 export * from './types';
 
@@ -18,5 +18,5 @@ export { ConnectionManager } from './connection-manager';
 export { EnhancedSSEClient } from './sse-client';
 
 // 导出服务（保持向后兼容）
-export { EnhancedLLMService, type ILLMService } from './llm-service';
-export default EnhancedLLMService;
+export { LLMService, type ILLMService } from './llm-service';
+export default LLMService;

@@ -21,7 +21,7 @@ export interface ILLMService {
  * Enhanced LLM Service with retry logic, error handling, and connection management
  * 保持与原有 LLMService 接口完全兼容
  */
-export class EnhancedLLMService implements ILLMService {
+export class LLMService implements ILLMService {
   private currentConnection?: {
     client: EnhancedSSEClient;
     stateManager: ConnectionStateManager;
