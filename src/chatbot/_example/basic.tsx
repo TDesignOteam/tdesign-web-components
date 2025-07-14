@@ -310,8 +310,8 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 }
 
 const mockModels = {
-  endpoint: 'http://localhost:3000/sse/normal',
-  stream: true,
+  endpoint: 'http://localhost:3000/fetch/normal',
+  stream: false,
   onComplete: (isAborted) => {
     console.log('onComplete', isAborted);
   },

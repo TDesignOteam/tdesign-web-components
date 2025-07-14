@@ -164,7 +164,11 @@ export interface ChatServiceConfig {
   maxRetries?: number;
   onRequest?: (params: ChatRequestParams) => RequestInit | Promise<RequestInit>;
   onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
-  onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
+  onComplete?: (
+    isAborted: boolean,
+    params: RequestInit,
+    result?: any,
+  ) => AIContentChunkUpdate | AIMessageContent[] | null;
   onAbort?: () => Promise<void>;
   onError?: (err: Error | Response) => void;
 }

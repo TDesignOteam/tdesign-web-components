@@ -107,6 +107,16 @@ app.post('/sse/normal', (req, res) => {
   sendStream(res, messages, 300, req);
 });
 
+app.post('/fetch/normal', (req, res) => {
+  console.log('Received POST body:', req.body); // 打印请求体
+  setTimeout(() => {
+    res.json({
+      code: 200,
+      data: `hello, test fetch，${Date.now()}`,
+    });
+  }, 300);
+});
+
 // 带鉴权的POST请求
 app.post('/sse/auth', (req, res) => {
   // 检查授权头
