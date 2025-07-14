@@ -166,7 +166,7 @@ export interface ChatServiceConfig {
   onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
   onComplete?: (
     isAborted: boolean,
-    params: RequestInit,
+    params?: RequestInit,
     result?: any,
   ) => AIContentChunkUpdate | AIMessageContent[] | null;
   onAbort?: () => Promise<void>;
