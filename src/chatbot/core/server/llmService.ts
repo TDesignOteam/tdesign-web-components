@@ -54,9 +54,6 @@ export class LLMService implements ILLMService {
         throw error;
       }
     } finally {
-      // 请求完成后（无论成功、失败还是中止），重置AbortController
-      // 确保 this.fetchAbortController 指向的是当前请求的控制器
-      // 这一步很关键，避免了竞态条件
       this.fetchAbortController = null;
     }
   }
