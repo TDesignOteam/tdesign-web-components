@@ -193,6 +193,37 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
 
     message.status = allComplete ? 'complete' : 'streaming';
   }
+
+  /**
+   * 更新多个内容块
+   * @param messageId 消息ID
+   * @param contents 要更新的内容块数组
+   */
+  updateMultipleContents(messageId: string, contents: AIMessageContent[]) {
+    this.setState((draft) => {
+      const message = draft.messages.find((m) => m.id === messageId);
+      if (!message || !isAIMessage(message)) return;
+
+      // 更新或添加每个内容块
+      contents.forEach((content) => {
+        const existingIndex = message.content.findIndex((c) => c.id === content.id || c.type === content.type);
+
+        if (existingIndex >= 0) {
+          // 更新现有内容块
+          message.content[existingIndex] = {
+            ...message.content[existingIndex],
+            ...content,
+          };
+        } else {
+          // 添加新内容块
+          message.content.push(content);
+        }
+      });
+
+      // 更新消息状态
+      this.updateMessageStatusByContent(message);
+    });
+  }
 }
 
 // 订阅消息列表变化

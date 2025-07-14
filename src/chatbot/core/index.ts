@@ -39,6 +39,8 @@ export default class ChatEngine implements IChatEngine {
 
   private stopReceive = false;
 
+  // private aguiEventMapper: AGUIEventMapper | null = null;
+
   constructor() {
     this.llmService = new LLMService();
     this.processor = new MessageProcessor();
@@ -48,6 +50,10 @@ export default class ChatEngine implements IChatEngine {
   public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
+    // 初始化AG-UI事件映射器
+    // if (this.config.protocol === 'agui') {
+    //   this.aguiEventMapper = new AGUIEventMapper();
+    // }
   }
 
   public async sendUserMessage(requestParams: ChatRequestParams) {
@@ -167,14 +173,27 @@ export default class ChatEngine implements IChatEngine {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
         if (this.stopReceive) return null;
-        const parsed = this.config?.onMessage?.(chunk, this.messageStore.getMessageByID(id));
-        if (Array.isArray(parsed)) {
-          // 整体替换message中的content
-          this.messageStore.replaceContent(id, parsed);
-        } else if (parsed) {
-          this.processContentUpdate(id, parsed);
+        let result = null;
+        // 统一处理 AG-UI 协议
+        if (this.config.protocol === 'agui' && this.aguiEventMapper) {
+          // 优先使用用户自定义处理
+          if (this.config.onMessage) {
+            result = this.config.onMessage(chunk, this.messageStore.getMessageByID(id));
+          }
+
+          // 如果用户未处理，使用默认映射器
+          if (!result) {
+            result = this.aguiEventMapper.mapEvent(chunk);
+          }
         }
-        return parsed;
+        // 默认协议处理
+        else {
+          result = this.config?.onMessage?.(chunk, this.messageStore.getMessageByID(id));
+        }
+
+        // 统一处理结果
+        this.processMessageResult(id, result);
+        return result;
       },
       onError: (error) => {
         this.setMessageStatus(id, 'error');
@@ -188,6 +207,22 @@ export default class ChatEngine implements IChatEngine {
         this.config.onComplete?.(isAborted, params);
       },
     });
+  }
+
+  /**
+   * 统一处理消息结果
+   * 支持单个内容块、多个内容块和增量更新
+   */
+  private processMessageResult(messageId: string, result: AIMessageContent | AIMessageContent[] | null) {
+    if (!result) return;
+
+    if (Array.isArray(result)) {
+      // 处理多个内容块
+      this.messageStore.updateMultipleContents(messageId, result);
+    } else {
+      // 处理单个内容块
+      this.processContentUpdate(messageId, result);
+    }
   }
 
   private convertMessages(messages?: ChatMessagesData[]) {

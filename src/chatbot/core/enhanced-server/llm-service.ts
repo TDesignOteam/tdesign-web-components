@@ -1,6 +1,6 @@
 import type { AIMessageContent, ChatRequestParams, ChatServiceConfig, SSEChunkData } from '../type';
 import { ConnectionStateManager } from './connection-manager';
-import { ConnectionError, ValidationError } from './errors';
+import { ConnectionError } from './errors';
 import { EnhancedSSEClient } from './sse-client';
 import { ConsoleLogger, Logger } from './types';
 
@@ -41,9 +41,6 @@ export class LLMService implements ILLMService {
    * 处理批量请求（非流式）- 保持原有接口
    */
   async handleBatchRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<AIMessageContent> {
-    this.validateService();
-    this.validateBatchConfig(config);
-
     const requestConfig = await this.prepareRequest(params, config);
 
     try {
@@ -82,9 +79,6 @@ export class LLMService implements ILLMService {
    * 处理流式请求 - 保持原有接口
    */
   async handleStreamRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<void> {
-    this.validateService();
-    this.validateStreamConfig(config);
-
     // 如果有现有连接，先关闭它
     if (this.currentConnection) {
       await this.closeCurrentConnection();
@@ -351,36 +345,6 @@ export class LLMService implements ILLMService {
     // 其他错误不重试
     return false;
   };
-
-  /**
-   * 验证服务状态
-   */
-  private validateService(): void {
-    if (this.isDestroyed) {
-      throw new ValidationError('LLM Service has been destroyed');
-    }
-  }
-
-  /**
-   * 验证批量请求配置
-   */
-  private validateBatchConfig(config: ChatServiceConfig): void {
-    if (!config.endpoint) {
-      throw new ValidationError('Endpoint is required for batch requests');
-    }
-  }
-
-  /**
-   * 验证流式请求配置
-   */
-  private validateStreamConfig(config: ChatServiceConfig): void {
-    if (!config.endpoint) {
-      throw new ValidationError('Endpoint is required for stream requests');
-    }
-    if (!config.onMessage) {
-      throw new ValidationError('onMessage callback is required for stream requests');
-    }
-  }
 
   /**
    * 生成连接ID
