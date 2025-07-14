@@ -114,7 +114,7 @@ app.post('/fetch/normal', (req, res) => {
       code: 200,
       data: `hello, test fetch，${Date.now()}`,
     });
-  }, 300);
+  }, 3000);
 });
 
 // 带鉴权的POST请求

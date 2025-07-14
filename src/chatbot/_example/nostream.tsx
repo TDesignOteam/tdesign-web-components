@@ -38,6 +38,9 @@ const mockModels = {
   onError: (err) => {
     console.log('onError', err);
   },
+  onAbort: () => {
+    console.log('onAbort');
+  },
   onRequest: (params) => {
     const { prompt, messageID, attachments = [] } = params;
     return {
