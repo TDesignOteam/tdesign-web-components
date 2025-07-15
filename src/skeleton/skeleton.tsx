@@ -81,11 +81,6 @@ export default class Skeleton extends Component<SkeletonProps> {
   render() {
     const { animation, rowCol, theme, innerClass, innerStyle, children } = this.afterProps;
     const renderCols = (_cols: Number | SkeletonRowColObj | Array<SkeletonRowColObj>) => {
-      const getColItemClass = (obj: SkeletonRowColObj) =>
-        classNames(`${compname}__col`, `${compname}--type-${obj.type || 'text'}`, {
-          [`${compname}--animation-${animation}`]: animation,
-        });
-
       const getColItemStyle = (obj: SkeletonRowColObj): Styles => {
         const styleName = [
           'width',
@@ -121,7 +116,13 @@ export default class Skeleton extends Component<SkeletonProps> {
       }
 
       return cols.map((item, index) => (
-        <div key={index} class={getColItemClass(item)} style={getColItemStyle(item)}>
+        <div
+          key={index}
+          class={classNames(`${compname}__col`, `${compname}--type-${item.type || 'text'}`, {
+            [`${compname}--animation-${animation}`]: animation,
+          })}
+          style={getColItemStyle(item)}
+        >
           {parseTNode(item.content as TNode)}
         </div>
       ));
