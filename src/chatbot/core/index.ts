@@ -71,10 +71,6 @@ export default class ChatEngine implements IChatEngine {
   public async abortChat() {
     this.stopReceive = true;
 
-    if (this.config?.onAbort) {
-      await this.config.onAbort();
-    }
-
     try {
       if (this.config.stream) {
         this.llmService.closeSSE();
@@ -84,6 +80,9 @@ export default class ChatEngine implements IChatEngine {
         if (this.messageStore.lastAIMessage?.id) {
           this.messageStore.removeMessage(this.messageStore.lastAIMessage.id);
         }
+      }
+      if (this.config?.onAbort) {
+        await this.config.onAbort();
       }
     } catch (error) {
       console.warn('Error during service cleanup:', error);

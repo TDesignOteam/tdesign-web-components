@@ -49,10 +49,13 @@ export class LLMService implements ILLMService {
       return config.onComplete?.(false, req, data);
     } catch (error) {
       // 检查错误是否是由于中止操作引起的
-      if (error.name !== 'AbortError') {
+      if (error.name === 'AbortError') {
+        // 中止时调用onComplete并传递true
+        return config.onComplete?.(true, req);
+      } 
         config.onError?.(error);
         throw error;
-      }
+      
     } finally {
       this.fetchAbortController = null;
     }
