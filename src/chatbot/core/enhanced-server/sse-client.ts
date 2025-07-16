@@ -1,12 +1,12 @@
 /* eslint-disable no-await-in-loop, max-classes-per-file */
 import EventEmitter from '../utils/eventEmitter';
+import { LoggerManager } from '../utils/logger';
 import { ConnectionManager } from './connection-manager';
 import { ConnectionError, ValidationError } from './errors';
 import {
   ConnectionInfo,
-  ConsoleLogger,
+  DEFAULT_CONNECTION_STATS,
   DEFAULT_SSE_CONFIG,
-  Logger,
   SSEClientConfig,
   SSEClientOptions,
   SSEConnectionState,
@@ -14,7 +14,7 @@ import {
 } from './types';
 
 /**
- * Enhanced SSE Client with comprehensive error handling, retry logic, and resource management
+ * Enhanced SSE Client
  */
 export class EnhancedSSEClient extends EventEmitter {
   public readonly connectionId: string;
@@ -39,7 +39,7 @@ export class EnhancedSSEClient extends EventEmitter {
 
   private options: SSEClientOptions;
 
-  private logger: Logger;
+  private logger = LoggerManager.getLogger();
 
   private url: string;
 
@@ -50,8 +50,8 @@ export class EnhancedSSEClient extends EventEmitter {
     this.url = url;
     this.options = options;
     this.connectionId = this.generateConnectionId();
-    this.logger = options.logger || new ConsoleLogger();
-    this.connectionManager = new ConnectionManager(this.connectionId, options.retryConfig, this.logger);
+    this.logger = LoggerManager.getLogger();
+    this.connectionManager = new ConnectionManager(this.connectionId);
 
     this.connectionInfo = {
       id: this.connectionId,
@@ -59,6 +59,8 @@ export class EnhancedSSEClient extends EventEmitter {
       state: this.state,
       createdAt: Date.now(),
       retryCount: 0,
+      lastActivity: Date.now(),
+      stats: { ...DEFAULT_CONNECTION_STATS },
     };
 
     this.setupInternalEventHandlers();
@@ -68,10 +70,8 @@ export class EnhancedSSEClient extends EventEmitter {
    * 连接 SSE 服务
    */
   async connect(config: SSEClientConfig): Promise<void> {
-    this.validateConfig(config);
-
     if (this.state === SSEConnectionState.CONNECTED || this.state === SSEConnectionState.CONNECTING) {
-      throw new ValidationError(`无法连接，当前状态: ${this.state}`);
+      return;
     }
 
     this.config = {
@@ -81,10 +81,8 @@ export class EnhancedSSEClient extends EventEmitter {
         ...DEFAULT_SSE_CONFIG.headers,
         ...config.headers,
       },
-      // 确保必需的属性有默认值
-      timeout: config.timeout ?? DEFAULT_SSE_CONFIG.timeout ?? 30000,
-      heartbeatInterval: config.heartbeatInterval ?? DEFAULT_SSE_CONFIG.heartbeatInterval ?? 10000,
     };
+
     await this.setState(SSEConnectionState.CONNECTING);
     this.connectionManager.startConnection();
 
@@ -95,7 +93,6 @@ export class EnhancedSSEClient extends EventEmitter {
       this.startHeartbeat();
       await this.readStream();
     } catch (error) {
-      await this.setState(SSEConnectionState.ERROR);
       await this.handleConnectionError(error as Error);
     }
   }
@@ -210,9 +207,6 @@ export class EnhancedSSEClient extends EventEmitter {
           this.emit('end'); // 发出流结束事件
           this.emit('complete', false);
           await this.setState(SSEConnectionState.DISCONNECTED);
-
-          // 流正常结束，不需要重连
-          // 只有在真正的连接错误时才会重连
           return;
         }
 
@@ -233,59 +227,19 @@ export class EnhancedSSEClient extends EventEmitter {
   }
 
   /**
-   * 处理连接错误
+   * 简化的错误处理
    */
   private async handleConnectionError(error: Error): Promise<void> {
     this.connectionInfo.error = error;
-
-    // 先emit当前错误
     this.emit('error', error);
 
     try {
-      const finalError = await this.connectionManager.handleConnectionError(
-        error,
-        () => this.reconnect(),
-        (finalErr) => {
-          // 最终错误回调：确保在异步上下文中也能正确传递错误
-          this.logger.info(`Final error callback triggered for ${this.connectionId}:`, finalErr.message);
-          this.emit('error', finalErr);
-          this.setState(SSEConnectionState.ERROR).catch((setStateError) => {
-            this.logger.error('Failed to set error state:', setStateError);
-          });
-        },
-      );
-
-      if (finalError) {
-        // 同步返回的最终错误也要处理
-        this.emit('error', finalError);
-        await this.setState(SSEConnectionState.ERROR);
-      }
-      // 如果返回 null，表示正在重试，不需要额外处理
-    } catch (retryError) {
-      // 重试过程中发生新错误
-      this.emit('error', retryError);
+      await this.connectionManager.handleConnectionError(error);
+      await this.setState(SSEConnectionState.ERROR);
+    } catch (finalError) {
+      this.emit('error', finalError);
       await this.setState(SSEConnectionState.ERROR);
     }
-  }
-
-  /**
-   * 重新连接
-   */
-  private async reconnect(): Promise<void> {
-    this.logger.warn(`Reconnecting ${this.connectionId} due to connection error...`);
-
-    // 清理当前连接
-    await this.cleanup(false);
-
-    // 重置解析器
-    this.resetParser();
-
-    // 重新建立连接
-    await this.setState(SSEConnectionState.RECONNECTING);
-    await this.establishConnection();
-    await this.setState(SSEConnectionState.CONNECTED);
-    this.startHeartbeat();
-    await this.readStream();
   }
 
   /**
@@ -349,7 +303,7 @@ export class EnhancedSSEClient extends EventEmitter {
   }
 
   /**
-   * 清理资源
+   * 增强资源清理
    */
   private async cleanup(emitComplete = true): Promise<void> {
     this.stopHeartbeat();
@@ -483,23 +437,6 @@ export class EnhancedSSEClient extends EventEmitter {
     this.on('complete', (isAborted) => {
       this.logger.info(`SSE Client ${this.connectionId} completed, aborted: ${isAborted}`);
     });
-  }
-
-  /**
-   * 验证配置
-   */
-  private validateConfig(config: SSEClientConfig): void {
-    if (!config) {
-      throw new ValidationError('SSE 配置不能为空');
-    }
-
-    if (config.timeout && config.timeout < 0) {
-      throw new ValidationError('超时时间不能为负数');
-    }
-
-    if (config.heartbeatInterval && config.heartbeatInterval < 1000) {
-      throw new ValidationError('心跳间隔不能小于1000ms');
-    }
   }
 
   /**

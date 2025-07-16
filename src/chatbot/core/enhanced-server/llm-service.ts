@@ -1,8 +1,8 @@
 import type { AIMessageContent, ChatRequestParams, ChatServiceConfig, SSEChunkData } from '../type';
-import { ConnectionStateManager } from './connection-manager';
+import { LoggerManager } from '../utils/logger';
+import { ConnectionManager } from './connection-manager';
 import { ConnectionError } from './errors';
 import { EnhancedSSEClient } from './sse-client';
-import { ConsoleLogger, Logger } from './types';
 
 // 与原有接口保持兼容
 export interface ILLMService {
@@ -18,22 +18,21 @@ export interface ILLMService {
 }
 
 /**
- * Enhanced LLM Service with retry logic, error handling, and connection management
+ * Enhanced LLM Service with error handling and connection management
  * 保持与原有 LLMService 接口完全兼容
  */
 export class LLMService implements ILLMService {
   private currentConnection?: {
     client: EnhancedSSEClient;
-    stateManager: ConnectionStateManager;
+    connectionManager: ConnectionManager;
     connectionId: string;
   };
 
   private isDestroyed = false;
 
-  private logger: Logger;
+  private logger = LoggerManager.getLogger();
 
-  constructor(logger: Logger = new ConsoleLogger()) {
-    this.logger = logger;
+  constructor(private config: ChatServiceConfig) {
     this.logger.info('Enhanced LLM Service initialized');
   }
 
@@ -89,25 +88,18 @@ export class LLMService implements ILLMService {
 
     try {
       // 创建新的连接和状态管理器
-      const stateManager = new ConnectionStateManager(connectionId, this.logger);
+      const connectionManager = new ConnectionManager(connectionId);
 
       const client = new EnhancedSSEClient(config.endpoint!, {
-        retryConfig: {
-          maxRetries: config.maxRetries ?? 3,
-          baseDelay: config.retryInterval ?? 1000,
-          maxDelay: 30000,
-          backoffFactor: 2,
-          retryableErrors: this.isRetryableError,
-        },
         logger: this.logger,
         enableHeartbeat: true,
       });
 
       // 记录当前连接
-      this.currentConnection = { client, stateManager, connectionId };
+      this.currentConnection = { client, connectionManager, connectionId };
 
       // 设置事件监听器
-      this.setupClientEventHandlers(client, stateManager, config, requestConfig);
+      this.setupClientEventHandlers(client, connectionManager, config, requestConfig);
 
       // 开始连接
       await client.connect({
@@ -141,7 +133,7 @@ export class LLMService implements ILLMService {
    * 获取连接统计
    */
   getStats() {
-    return this.currentConnection?.stateManager.getStats() ?? null;
+    return this.currentConnection?.connectionManager.getStats() ?? null;
   }
 
   /**
@@ -176,7 +168,7 @@ export class LLMService implements ILLMService {
    */
   private setupClientEventHandlers(
     client: EnhancedSSEClient,
-    stateManager: ConnectionStateManager,
+    connectionManager: ConnectionManager,
     config: ChatServiceConfig,
     requestConfig: RequestInit,
   ): void {
@@ -187,25 +179,25 @@ export class LLMService implements ILLMService {
           config.onMessage?.(data);
         }
       } catch (error) {
-        this.logger.error(`Message handler error for ${stateManager}:`, error);
+        this.logger.error(`Message handler error for ${connectionManager}:`, error);
       }
     });
 
     // 错误处理
     client.on('error', (error: Error) => {
-      stateManager.updateState(client.getStatus(), error);
+      connectionManager.updateState(client.getStatus(), error);
 
       // 确保所有错误都通过 config.onError 传递
       if (!this.isDestroyed && config.onError) {
         try {
-          this.logger.debug(`Calling config.onError for ${stateManager}:`, error.message);
+          this.logger.debug(`Calling config.onError for ${connectionManager}:`, error.message);
           config.onError(error);
         } catch (handlerError) {
-          this.logger.error(`Error handler failed for ${stateManager}:`, handlerError);
+          this.logger.error(`Error handler failed for ${connectionManager}:`, handlerError);
         }
       } else {
         // 如果没有错误处理器，至少记录错误
-        this.logger.error(`Unhandled error for ${stateManager}:`, error);
+        this.logger.error(`Unhandled error for ${connectionManager}:`, error);
       }
     });
 
@@ -235,8 +227,7 @@ export class LLMService implements ILLMService {
 
     // 连接建立成功
     client.on('connected', () => {
-      stateManager.updateState(client.getStatus());
-      stateManager.resetRetryCount();
+      connectionManager.updateState(client.getStatus());
 
       try {
         if (!this.isDestroyed && config.connection?.onConnectionEstablished) {
@@ -249,7 +240,7 @@ export class LLMService implements ILLMService {
 
     // 连接断开
     client.on('disconnected', () => {
-      stateManager.updateState(client.getStatus());
+      connectionManager.updateState(client.getStatus());
 
       try {
         if (!this.isDestroyed && config.connection?.onConnectionLost) {
@@ -264,7 +255,7 @@ export class LLMService implements ILLMService {
 
     // 流数据接收完成 -> 触发业务层的对话完成
     client.on('end', () => {
-      this.logger.info(`Stream completed normally for connection ${stateManager}`);
+      this.logger.info(`Stream completed normally for connection ${connectionManager}`);
 
       // 这是业务层面的对话完成，不是连接层面的事件
       config.onComplete?.(false, requestConfig, null);
@@ -278,7 +269,7 @@ export class LLMService implements ILLMService {
     if (this.currentConnection) {
       try {
         await this.currentConnection.client.abort();
-        this.currentConnection.stateManager.cleanup();
+        this.currentConnection.connectionManager.cleanup();
       } catch (error) {
         this.logger.error('Error closing connection:', error);
       } finally {
@@ -319,37 +310,14 @@ export class LLMService implements ILLMService {
   }
 
   /**
-   * 判断错误是否可重试
-   */
-  private isRetryableError = (error: Error): boolean => {
-    // 检查错误是否有 isRetryable 属性
-    if ('isRetryable' in error && typeof error.isRetryable === 'boolean') {
-      return error.isRetryable;
-    }
-
-    // 网络错误通常可以重试
-    if (error.name === 'TypeError' || error.name === 'NetworkError') {
-      return true;
-    }
-
-    // 超时错误可以重试
-    if (error.name === 'TimeoutError' || error.message.includes('timeout')) {
-      return true;
-    }
-
-    // 连接被重置可以重试
-    if (error.message.includes('connection reset') || error.message.includes('ECONNRESET')) {
-      return true;
-    }
-
-    // 其他错误不重试
-    return false;
-  };
-
-  /**
    * 生成连接ID
    */
   private generateConnectionId(): string {
     return `sse_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
+  }
+
+  private handleConnectionError(error: Error): void {
+    this.logger.error('LLM服务连接错误:', error);
+    this.connectionManager.handleConnectionError(error);
   }
 }

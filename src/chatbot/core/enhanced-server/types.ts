@@ -13,15 +13,6 @@ export enum SSEConnectionState {
   ERROR = 'error',
 }
 
-// 重试配置
-export interface RetryConfig {
-  maxRetries: number;
-  baseDelay: number;
-  maxDelay: number;
-  backoffFactor: number;
-  retryableErrors: (error: Error) => boolean;
-}
-
 // SSE 客户端配置
 export interface SSEClientConfig extends Omit<RequestInit, 'signal'> {
   timeout?: number;
@@ -31,7 +22,6 @@ export interface SSEClientConfig extends Omit<RequestInit, 'signal'> {
 
 // SSE 客户端选项
 export interface SSEClientOptions {
-  retryConfig?: Partial<RetryConfig>;
   logger?: Logger;
   enableHeartbeat?: boolean;
 }
@@ -48,12 +38,13 @@ export interface SSEEvent {
 // 连接信息
 export interface ConnectionInfo {
   id: string;
-  url: string;
-  state: SSEConnectionState;
-  createdAt: number;
-  lastActivity?: number;
   retryCount: number;
-  error?: Error;
+  lastActivity: number;
+  state?: SSEConnectionState; // 可选状态
+  url?: string; // 可选URL
+  createdAt?: number; // 可选创建时间
+  error?: Error; // 可选错误信息
+  stats: ConnectionStats; // 添加必需的统计信息属性
 }
 
 // 简化的连接状态信息
@@ -63,41 +54,6 @@ export interface ConnectionStatus {
   retryCount: number;
   error?: Error;
   lastActivity?: number;
-}
-
-// 日志接口
-export interface Logger {
-  debug(message: string, ...args: any[]): void;
-  info(message: string, ...args: any[]): void;
-  warn(message: string, ...args: any[]): void;
-  error(message: string, ...args: any[]): void;
-}
-
-// 默认日志实现
-export class ConsoleLogger implements Logger {
-  private enableDebug: boolean;
-
-  constructor(enableDebug = false) {
-    this.enableDebug = enableDebug;
-  }
-
-  debug(message: string, ...args: any[]): void {
-    if (this.enableDebug) {
-      console.debug(`[SSE Debug] ${message}`, ...args);
-    }
-  }
-
-  info(message: string, ...args: any[]): void {
-    console.info(`[SSE Info] ${message}`, ...args);
-  }
-
-  warn(message: string, ...args: any[]): void {
-    console.warn(`[SSE Warn] ${message}`, ...args);
-  }
-
-  error(message: string, ...args: any[]): void {
-    console.error(`[SSE Error] ${message}`, ...args);
-  }
 }
 
 // 简化的连接统计
