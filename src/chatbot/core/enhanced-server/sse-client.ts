@@ -303,32 +303,21 @@ export class EnhancedSSEClient extends EventEmitter {
    */
   private parseSSEData(chunk: string): void {
     this.eventBuffer += chunk;
-    const lines = this.eventBuffer.split(/\r?\n/);
 
-    // 保留最后一行（可能不完整）
-    this.eventBuffer = lines.pop() || '';
+    // 循环处理，直到缓冲区中再也找不到完整的行
+    let newlineIndex;
+    // eslint-disable-next-line no-cond-assign
+    while ((newlineIndex = this.eventBuffer.indexOf('\n')) !== -1) {
+      // 提取一行（包含 \r 如果有的话）
+      const line = this.eventBuffer.slice(0, newlineIndex).replace(/\r$/, '');
 
-    for (const line of lines) {
+      // 从缓冲区移除已处理的行和换行符
+      this.eventBuffer = this.eventBuffer.slice(newlineIndex + 1);
+
+      // 处理这一行
       this.processSSELine(line);
     }
   }
-
-  // private parseSSEData(chunk: string): void {
-  //   this.eventBuffer += chunk;
-
-  //   // 循环处理，直到缓冲区中再也找不到完整的行
-  //   let newlineIndex;
-  //   while ((newlineIndex = this.eventBuffer.indexOf('\n')) !== -1) {
-  //     // 提取一行（包含 \r 如果有的话）
-  //     const line = this.eventBuffer.slice(0, newlineIndex).replace(/\r$/, '');
-
-  //     // 从缓冲区移除已处理的行和换行符
-  //     this.eventBuffer = this.eventBuffer.slice(newlineIndex + 1);
-
-  //     // 处理这一行
-  //     this.processSSELine(line);
-  //   }
-  // }
 
   /**
    * 处理SSE行数据
