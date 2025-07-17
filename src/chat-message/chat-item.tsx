@@ -82,7 +82,15 @@ export default class ChatItem extends Component<ChatMessageProps> {
       return false;
     }
     // 处理AI消息
-    if (isAIMessage(newMsg) && isAIMessage(oldMsg) && JSON.stringify(newMsg).length === JSON.stringify(oldMsg).length) {
+    // if (isAIMessage(newMsg) && isAIMessage(oldMsg) && JSON.stringify(newMsg).length === JSON.stringify(oldMsg).length) {
+    //   return false;
+    // }
+    if (
+      isAIMessage(newMsg) &&
+      isAIMessage(oldMsg) &&
+      newMsg.status === oldMsg.status &&
+      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
+    ) {
       return false;
     }
 
