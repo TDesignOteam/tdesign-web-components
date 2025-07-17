@@ -33,7 +33,7 @@ const mockModels = {
     if (!isAborted) {
       return {
         type: 'text',
-        data: result.data,
+        data: result?.data,
       };
     }
   },

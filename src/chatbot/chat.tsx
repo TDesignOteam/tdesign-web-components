@@ -4,7 +4,6 @@ import '../button';
 
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
-import { debounceTime } from 'rxjs/operators';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
@@ -13,7 +12,6 @@ import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
-import { IChatEngine } from './core/base-engine';
 import {
   type AttachmentItem,
   type ChatMessagesData,
@@ -46,7 +44,6 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     layout: String,
     autoSendPrompt: Object,
     reverse: Boolean,
-    engineMode: String,
     defaultMessages: Array,
     messageProps: [Object, Function],
     listProps: Object,
@@ -63,14 +60,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     clearHistory: false,
     layout: 'both',
     reverse: false,
-    engineMode: 'default',
   };
 
   listRef = createRef<Chatlist>();
 
   ChatSenderRef = createRef<ChatSender>();
 
-  public chatEngine: IChatEngine;
+  public chatEngine: ChatEngine;
 
   public chatStatus: ChatStatus = 'idle';
 
@@ -141,27 +137,21 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   private initChat() {
     const { defaultMessages: messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
-
     if (typeof messageProps === 'object') {
       this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     }
-
     this.chatEngine.init(config, messages);
-
     const { messageStore } = this.chatEngine;
-
     this.provide.messageStore = messageStore;
     this.provide.chatEngine = this.chatEngine;
     this.syncState(messages);
     this.subscribeToChat();
-
     // 如果有传入autoSendPrompt，自动发起提问
     if (autoSendPrompt !== '' && autoSendPrompt !== 'undefined') {
       this.chatEngine.sendUserMessage({
         prompt: autoSendPrompt,
       });
     }
-
     this.fire(
       'chatReady',
       {},
@@ -213,12 +203,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 发送系统消息
    */
   sendSystemMessage(msg: string) {
-    // 检查引擎是否支持sendSystemMessage方法
-    if ('sendSystemMessage' in this.chatEngine && typeof this.chatEngine.sendSystemMessage === 'function') {
-      this.chatEngine.sendSystemMessage(msg);
-    } else {
-      console.warn('当前引擎不支持sendSystemMessage方法');
-    }
+    this.chatEngine.sendSystemMessage(msg);
   }
 
   /**
@@ -285,16 +270,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 最后一条AI消息
    */
   get messagesStore(): ChatMessageStore {
-    // 兼容不同MessageStore的API
-    if ('getState' in this.chatEngine.messageStore && typeof this.chatEngine.messageStore.getState === 'function') {
-      return this.chatEngine.messageStore.getState();
-    }
-    // MessageStoreObservable使用直接属性访问
-    const messageStore = this.chatEngine.messageStore as any;
-    return {
-      messageIds: messageStore.messageIds || messageStore.messages?.map((m: any) => m.id) || [],
-      messages: messageStore.messages || [],
-    };
+    return this.chatEngine?.messageStore.getState();
   }
 
   /**
@@ -306,30 +282,12 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   /**
    * 订阅聊天状态变化
-   * 优化版本：支持Observable引擎的高级功能
    */
   private subscribeToChat() {
-    // 检查是否为Observable版本的引擎
-    if ('getMessages$' in this.chatEngine && typeof this.chatEngine.getMessages$ === 'function') {
-      // 使用Observable订阅，具有防抖和去重优化
-      const subscription = this.chatEngine
-        .getMessages$()
-        .pipe(
-          debounceTime(50), // 防抖50ms，避免频繁更新
-        )
-        .subscribe((messages: ChatMessagesData[]) => {
-          this.syncState(messages);
-          this.update();
-        });
-
-      this.unsubscribeMsg = () => subscription.unsubscribe();
-    } else {
-      // 向后兼容：使用传统订阅方式
-      this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
-        this.syncState(state.messages);
-        this.update();
-      });
-    }
+    this.unsubscribeMsg = this.chatEngine.messageStore.subscribe((state) => {
+      this.syncState(state.messages);
+      this.update();
+    });
   }
 
   /**

@@ -45,8 +45,11 @@ export class LLMService implements ILLMService {
   ): Promise<AIMessageContent | AIMessageContent[]> {
     // 确保只有一个客户端实例
     this.batchClient = this.batchClient || new BatchClient();
+    this.batchClient.on('error', (error) => {
+      config.onError?.(error);
+    });
 
-    const req = (await config.onRequest?.(params)) || {};
+    const req = (await config.onRequest?.(params)) || params;
 
     try {
       const data = await this.batchClient.request<AIMessageContent>(
@@ -61,9 +64,11 @@ export class LLMService implements ILLMService {
         },
         config.timeout, // 现在timeout属性已存在
       );
-
-      return config.onComplete?.(false, req, data) || data;
+      if (data) {
+        return config.onComplete?.(false, req, data);
+      }
     } catch (error) {
+      console.log(2);
       config.onError?.(error);
       throw error;
     }
@@ -103,7 +108,7 @@ export class LLMService implements ILLMService {
       this.sseClient = null;
     }
     if (this.batchClient) {
-      this.batchClient?.close();
+      this.batchClient?.abort();
       this.batchClient = null;
     }
   }

@@ -22,7 +22,6 @@ export interface SSEClientConfig extends Omit<RequestInit, 'signal'> {
 
 // SSE 客户端选项
 export interface SSEClientOptions {
-  logger?: Logger;
   enableHeartbeat?: boolean;
 }
 
@@ -95,7 +94,7 @@ export const DEFAULT_RETRY_CONFIG: RetryConfig = {
 };
 
 export const DEFAULT_SSE_CONFIG: SSEClientConfig = {
-  timeout: 30000,
+  timeout: 0,
   heartbeatInterval: 10000,
   method: 'POST',
   headers: {

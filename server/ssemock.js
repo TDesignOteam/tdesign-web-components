@@ -104,7 +104,7 @@ app.post('/sse/normal', (req, res) => {
     }
   });
 
-  sendStream(res, messages, 300, req);
+  sendStream(res, messages, 50, req);
 });
 
 app.post('/fetch/normal', (req, res) => {

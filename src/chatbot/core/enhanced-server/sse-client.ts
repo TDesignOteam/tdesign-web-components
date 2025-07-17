@@ -2,7 +2,7 @@
 import EventEmitter from '../utils/eventEmitter';
 import { LoggerManager } from '../utils/logger';
 import { ConnectionManager } from './connection-manager';
-import { ConnectionError, ValidationError } from './errors';
+import { ConnectionError, TimeoutError, ValidationError } from './errors';
 import {
   ConnectionInfo,
   DEFAULT_CONNECTION_STATS,
@@ -15,6 +15,7 @@ import {
 
 /**
  * Enhanced SSE Client
+ * 采用分层设计，分离了连接管理、状态管理、事件解析等职责
  */
 export class EnhancedSSEClient extends EventEmitter {
   public readonly connectionId: string;
@@ -157,6 +158,7 @@ export class EnhancedSSEClient extends EventEmitter {
         if (!this.controller?.signal.aborted) {
           this.controller?.abort();
         }
+        this.emit('error', new TimeoutError(`Request timed out after ${this.config.timeout}ms`));
       }, this.config.timeout);
     }
 
@@ -310,6 +312,23 @@ export class EnhancedSSEClient extends EventEmitter {
       this.processSSELine(line);
     }
   }
+
+  // private parseSSEData(chunk: string): void {
+  //   this.eventBuffer += chunk;
+
+  //   // 循环处理，直到缓冲区中再也找不到完整的行
+  //   let newlineIndex;
+  //   while ((newlineIndex = this.eventBuffer.indexOf('\n')) !== -1) {
+  //     // 提取一行（包含 \r 如果有的话）
+  //     const line = this.eventBuffer.slice(0, newlineIndex).replace(/\r$/, '');
+
+  //     // 从缓冲区移除已处理的行和换行符
+  //     this.eventBuffer = this.eventBuffer.slice(newlineIndex + 1);
+
+  //     // 处理这一行
+  //     this.processSSELine(line);
+  //   }
+  // }
 
   /**
    * 处理SSE行数据

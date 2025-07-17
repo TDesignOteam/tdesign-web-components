@@ -171,8 +171,12 @@ export default class ChatEngine implements IChatEngine {
     const id = params.messageID;
     this.setMessageStatus(id, 'pending');
     const result = await this.llmService.handleBatchRequest(params, this.config);
-    this.messageStore.appendContent(id, result);
-    this.setMessageStatus(id, 'complete');
+    if (result) {
+      this.processMessageResult(id, result);
+      this.setMessageStatus(id, 'complete');
+    } else {
+      this.setMessageStatus(id, 'error');
+    }
   }
 
   private async handleStreamRequest(params: ChatRequestParams) {

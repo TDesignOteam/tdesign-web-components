@@ -1,6 +1,6 @@
 import EventEmitter from '../utils/eventEmitter';
 import { LoggerManager } from '../utils/logger';
-import { ConnectionError } from './errors';
+import { ConnectionError, TimeoutError } from './errors';
 
 /**
  * 批量请求客户端（非流式）
@@ -17,14 +17,16 @@ export class BatchClient extends EventEmitter {
    * @param timeout 超时时间（毫秒）
    * @returns 响应数据
    */
-  async request<T>(endpoint: string, request: RequestInit, timeout: number = 10000): Promise<T> {
+  async request<T>(endpoint: string, request: RequestInit, timeout: number = 1000000): Promise<T> {
     // 中止上一个请求
     this.abort();
 
     this.controller = new AbortController();
     const timeoutId = setTimeout(() => {
-      this.controller?.abort();
-      this.emit('error', new ConnectionError(`Request timed out after ${timeout}ms`));
+      if (!this.controller?.signal.aborted) {
+        this.controller?.abort();
+      }
+      this.emit('error', new TimeoutError(`Request timed out after ${timeout}ms`));
     }, timeout);
 
     try {
@@ -34,13 +36,15 @@ export class BatchClient extends EventEmitter {
       });
 
       if (!response.ok) {
-        throw new ConnectionError(`HTTP error! status: ${response.status}`);
+        this.emit('error', new ConnectionError(`HTTP error! status: ${response.status}`));
+        return;
       }
-
       return (await response.json()) as T;
     } catch (error) {
-      this.logger.error('Batch request failed:', error);
-      this.emit('error', error);
+      if (error.name !== 'AbortError') {
+        this.logger.error('Batch request failed:', error);
+        this.emit('error', error);
+      }
     } finally {
       clearTimeout(timeoutId);
       this.controller = null;
@@ -55,12 +59,5 @@ export class BatchClient extends EventEmitter {
       this.controller.abort();
       this.controller = null;
     }
-  }
-
-  /**
-   * 关闭客户端
-   */
-  close(): void {
-    this.abort();
   }
 }

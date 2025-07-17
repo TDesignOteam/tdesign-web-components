@@ -1,0 +1,56 @@
+data: {"type":"RUN_STARTED","threadId":"1657dfe8-4767-455e-a450-40ec73d9a3a6","runId":"e76a08b1-e1a0-4c49-baf6-999dcc63df94"}
+
+data: {"type":"RUN_STARTED","threadId":"1657dfe8-4767-455e-a450-40ec73d9a3a6","runId":"e76a08b1-e1a0-4c49-baf6-999dcc63df94"}
+
+data: {"type":"STATE_SNAPSHOT","snapshot":{"steps":[{"description":"视频字幕擦除","status":"pending"},{"description":"音频分离","status":"pending"},{"description":"文字提取","status":"pending"},{"description":"角色识别","status":"pending"},{"description":"字幕翻译","status":"pending"},{"description":"配音台本制作","status":"pending"},{"description":"音频克隆","status":"pending"},{"description":"音频合流","status":"pending"},{"description":"视频合流","status":"pending"}]}}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/0/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/1/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/2/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/3/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/4/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/5/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/6/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/7/status","value":"completed"}]}
+
+data: {"type":"STATE_DELTA","delta":[{"op":"replace","path":"/steps/8/status","value":"completed"}]}
+
+data: {"type":"STATE_SNAPSHOT","snapshot":{"steps":[{"description":"视频字幕擦除","status":"completed"},{"description":"音频分离","status":"completed"},{"description":"文字提取","status":"completed"},{"description":"角色识别","status":"completed"},{"description":"字幕翻译","status":"completed"},{"description":"配音台本制作","status":"completed"},{"description":"音频克隆","status":"completed"},{"description":"音频合流","status":"completed"},{"description":"视频合流","status":"completed"}]}}
+
+data: {"type":"TOOL_CALL_START","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","toolCallName":"generate_task_steps"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"steps\":["}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 1\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 2\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 3\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 4\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 5\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 6\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 7\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 8\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 9\", \"status\": \"enabled\"},"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"{\"description\": \"Step 10\", \"status\": \"enabled\"}"}
+
+data: {"type":"TOOL_CALL_ARGS","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38","delta":"]}"}
+
+data: {"type":"TOOL_CALL_END","toolCallId":"b478a46c-8027-4fa4-b15a-91dd160adc38"}
+
+data: {"type":"RUN_FINISHED","threadId":"1657dfe8-4767-455e-a450-40ec73d9a3a6","runId":"e76a08b1-e1a0-4c49-baf6-999dcc63df94"}
+

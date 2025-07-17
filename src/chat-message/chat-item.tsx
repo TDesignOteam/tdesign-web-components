@@ -82,11 +82,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
       return false;
     }
     // 处理AI消息
-    if (
-      isAIMessage(newMsg) &&
-      isAIMessage(oldMsg) &&
-      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
-    ) {
+    if (isAIMessage(newMsg) && isAIMessage(oldMsg) && JSON.stringify(newMsg).length === JSON.stringify(oldMsg).length) {
       return false;
     }
 
@@ -160,7 +156,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
   };
 
   get renderMessageStatus() {
-    // console.log('=====renderMessageStatus', isAIMessage(this.props.message));
     // if (!isAIMessage(this.props.message)) return null;
     const { status, content = [] } = this.props.message;
     const { animation = 'skeleton' } = this.props;

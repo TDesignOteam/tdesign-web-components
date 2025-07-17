@@ -263,7 +263,413 @@ const chunks = [
     type: 'text',
     msg: ',**我是加粗文本,**我不应该加粗"**我应该加粗;**',
   },
+  { type: 'text', msg: '🌼' },
 
+  { type: 'text', msg: '宝' },
+
+  { type: 'text', msg: '子' },
+  { type: 'text', msg: '们' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '*' },
+  { type: 'text', msg: '*重' },
+  { type: 'text', msg: '要' },
+  { type: 'text', msg: '通' },
+  { type: 'text', msg: '知*' },
+  { type: 'text', msg: '*_' },
+  { type: 'text', msg: '强调' },
+  { type: 'text', msg: '内容_' },
+  { type: 'text', msg: '，' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '春天' },
+
+  { type: 'text', msg: '来' },
+
+  { type: 'text', msg: '啦' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '#' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '一级标题' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '##' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '二级标题' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '[' },
+  { type: 'text', msg: '腾讯' },
+  { type: 'text', msg: '官网' },
+  { type: 'text', msg: ']' },
+  { type: 'text', msg: '(' },
+  { type: 'text', msg: 'https://www.qq.com' },
+  { type: 'text', msg: ')' },
+  { type: 'text', msg: '这些' },
+  { type: 'text', msg: '`' },
+  { type: 'text', msg: 'const' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: 'x' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '=' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '10' },
+  { type: 'text', msg: ';' },
+  { type: 'text', msg: '`' },
+  { type: 'text', msg: '户外' },
+
+  { type: 'text', msg: '郊' },
+
+  { type: 'text', msg: '游' },
+
+  { type: 'text', msg: '打卡' },
+
+  { type: 'text', msg: '地' },
+
+  { type: 'text', msg: '你必须' },
+
+  { type: 'text', msg: '知道' },
+
+  { type: 'text', msg: '👏' },
+
+  { type: 'text', msg: '\n\n' },
+  { type: 'text', msg: '```' },
+  { type: 'text', msg: 'javascript' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: 'function' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: 'test' },
+  { type: 'text', msg: '(' },
+  { type: 'text', msg: ')' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '{' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '  ' },
+  { type: 'text', msg: 'console' },
+  { type: 'text', msg: '.' },
+  { type: 'text', msg: 'log' },
+  { type: 'text', msg: '(' },
+  { type: 'text', msg: "'" },
+  { type: 'text', msg: 'Hello' },
+  { type: 'text', msg: "'" },
+  { type: 'text', msg: ')' },
+  { type: 'text', msg: ';' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '}' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '```' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '🌟' },
+
+  { type: 'text', msg: '郊' },
+
+  { type: 'text', msg: '野' },
+
+  { type: 'text', msg: '公园' },
+
+  { type: 'text', msg: '\n' },
+
+  { type: 'text', msg: '这里' },
+
+  { type: 'text', msg: '有大' },
+
+  { type: 'text', msg: '片的' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '>' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '这是引用内容' },
+  { type: 'text', msg: '\n\n' },
+  { type: 'text', msg: '草地' },
+
+  { type: 'text', msg: '和' },
+
+  { type: 'text', msg: '各种' },
+
+  { type: 'text', msg: '花卉' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '随便' },
+
+  { type: 'text', msg: '一' },
+
+  { type: 'text', msg: '拍' },
+
+  { type: 'text', msg: '都是' },
+
+  { type: 'text', msg: '大片' },
+
+  { type: 'text', msg: '既' },
+
+  { type: 'text', msg: '视' },
+
+  { type: 'text', msg: '感' },
+
+  { type: 'text', msg: '📷' },
+
+  { type: 'text', msg: '。' },
+
+  { type: 'text', msg: '还能' },
+
+  { type: 'text', msg: '放' },
+
+  { type: 'text', msg: '风筝' },
+
+  { type: 'text', msg: '、' },
+
+  { type: 'text', msg: '野' },
+
+  { type: 'text', msg: '餐' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '享受' },
+
+  { type: 'text', msg: '惬' },
+
+  { type: 'text', msg: '意的' },
+
+  { type: 'text', msg: '春' },
+
+  { type: 'text', msg: '日' },
+
+  { type: 'text', msg: '时光' },
+
+  { type: 'text', msg: '。\n\n' },
+  { type: 'text', msg: '-' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '列表项1' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '*' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '列表项2' },
+  { type: 'text', msg: '\n' },
+  // 有序列表
+  { type: 'text', msg: '1' },
+  { type: 'text', msg: '.' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '第一项' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '2' },
+  { type: 'text', msg: '.' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '第二项' },
+  { type: 'text', msg: '\n' },
+
+  { type: 'text', msg: '---' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '🌳' },
+  { type: 'text', msg: '植物' },
+
+  { type: 'text', msg: '园' },
+
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '各种' },
+
+  { type: 'text', msg: '珍' },
+
+  { type: 'text', msg: '稀' },
+
+  { type: 'text', msg: '植物' },
+
+  { type: 'text', msg: '汇聚' },
+
+  { type: 'text', msg: '于此' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '仿佛' },
+
+  { type: 'text', msg: '置身' },
+
+  { type: 'text', msg: '于' },
+
+  { type: 'text', msg: '绿色的' },
+
+  { type: 'text', msg: '海洋' },
+
+  { type: 'text', msg: '。' },
+
+  { type: 'text', msg: '漫步' },
+
+  { type: 'text', msg: '其中' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '感受' },
+
+  { type: 'text', msg: '大' },
+
+  { type: 'text', msg: '自然的' },
+
+  { type: 'text', msg: '神奇' },
+
+  { type: 'text', msg: '与' },
+
+  { type: 'text', msg: '美丽' },
+
+  { type: 'text', msg: '。\n\n' },
+
+  { type: 'text', msg: '💧' },
+
+  { type: 'text', msg: '湖' },
+
+  { type: 'text', msg: '边' },
+
+  { type: 'text', msg: '湿地' },
+
+  { type: 'text', msg: '\n' },
+
+  { type: 'text', msg: '湖' },
+
+  { type: 'text', msg: '水' },
+
+  { type: 'text', msg: '清澈' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '周围' },
+
+  { type: 'text', msg: '生态环境' },
+
+  { type: 'text', msg: '优越' },
+
+  { type: 'text', msg: '。' },
+
+  { type: 'text', msg: '能看到' },
+
+  { type: 'text', msg: '很多' },
+
+  { type: 'text', msg: '候' },
+
+  { type: 'text', msg: '鸟' },
+
+  { type: 'text', msg: '和水' },
+
+  { type: 'text', msg: '生' },
+
+  { type: 'text', msg: '植物' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '是' },
+
+  { type: 'text', msg: '亲近' },
+
+  { type: 'text', msg: '自然' },
+
+  { type: 'text', msg: '的好' },
+
+  { type: 'text', msg: '去' },
+
+  { type: 'text', msg: '处' },
+
+  { type: 'text', msg: '。\n\n' },
+  // 表格
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '姓名' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '年龄' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '---' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '---' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '张三' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '25' },
+  { type: 'text', msg: '|' },
+  { type: 'text', msg: '\n\n' },
+  { type: 'text', msg: '宝' },
+
+  { type: 'text', msg: '子' },
+
+  { type: 'text', msg: '们' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '赶紧' },
+
+  { type: 'text', msg: '收拾' },
+
+  { type: 'text', msg: '行' },
+
+  { type: 'text', msg: '囊' },
+
+  { type: 'text', msg: '，' },
+
+  { type: 'text', msg: '去' },
+
+  { type: 'text', msg: '这些' },
+
+  { type: 'text', msg: '地方' },
+
+  { type: 'text', msg: '打卡' },
+
+  { type: 'text', msg: '吧' },
+
+  { type: 'text', msg: '😜' },
+
+  { type: 'text', msg: '。\n\n' },
+
+  { type: 'text', msg: '-' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '[' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: ']' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '未完成任务' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '-' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '[' },
+  { type: 'text', msg: 'x' },
+  { type: 'text', msg: ']' },
+  { type: 'text', msg: ' ' },
+  { type: 'text', msg: '已完成任务' },
+
+  { type: 'text', msg: '\n\n' },
+  { type: 'text', msg: '!' },
+  { type: 'text', msg: '[' },
+  { type: 'text', msg: 'logo' },
+  { type: 'text', msg: ']' },
+  { type: 'text', msg: '(' },
+  { type: 'text', msg: 'https://tdesign.gtimg.com/demo/demo-image-1.png' },
+  { type: 'text', msg: ')' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: '#' },
+
+  { type: 'text', msg: '春天' },
+
+  { type: 'text', msg: '郊' },
+
+  { type: 'text', msg: '游' },
+  { type: 'text', msg: '内容' },
+  { type: 'text', msg: '[' },
+  { type: 'text', msg: '^' },
+  { type: 'text', msg: '1' },
+  { type: 'text', msg: ']' },
+  { type: 'text', msg: '\n' },
+  { type: 'text', msg: ' #' },
+
+  { type: 'text', msg: '打卡' },
+
+  { type: 'text', msg: '目的地' },
+
+  { type: 'text', msg: ' #' },
+
+  { type: 'text', msg: '户外' },
+
+  { type: 'text', msg: '之旅' },
+
+  { type: 'text', msg: ' #' },
+
+  { type: 'text', msg: '春' },
+
+  { type: 'text', msg: '日' },
+
+  { type: 'text', msg: '美景' },
+  { type: 'text', msg: '\n' },
   {
     type: 'suggestion',
     content:
