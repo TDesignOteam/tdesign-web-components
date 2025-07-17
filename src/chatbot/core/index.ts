@@ -42,7 +42,6 @@ export default class ChatEngine implements IChatEngine {
   // private aguiEventMapper: AGUIEventMapper | null = null;
 
   constructor() {
-    this.llmService = new LLMService();
     this.processor = new MessageProcessor();
     this.messageStore = new MessageStore();
   }
@@ -50,6 +49,7 @@ export default class ChatEngine implements IChatEngine {
   public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
+    this.llmService = new LLMService(this.config);
     // 初始化AG-UI事件映射器
     // if (this.config.protocol === 'agui') {
     //   this.aguiEventMapper = new AGUIEventMapper();
@@ -83,10 +83,22 @@ export default class ChatEngine implements IChatEngine {
 
   public async abortChat() {
     this.stopReceive = true;
+
     if (this.config?.onAbort) {
       await this.config.onAbort();
     }
-    this.llmService.closeSSE();
+
+    try {
+      this.llmService.closeConnect();
+      if (!this.config.stream) {
+        // 只有在批量模式下才删除最后一条AI消息
+        if (this.messageStore.lastAIMessage?.id) {
+          this.messageStore.removeMessage(this.messageStore.lastAIMessage.id);
+        }
+      }
+    } catch (error) {
+      console.warn('Error during service cleanup:', error);
+    }
   }
 
   public registerMergeStrategy<T extends AIMessageContent>(
@@ -142,14 +154,11 @@ export default class ChatEngine implements IChatEngine {
     try {
       if (this.config.stream) {
         // 处理sse流式响应模式
-        this.setMessageStatus(id, 'streaming');
         this.stopReceive = false;
         await this.handleStreamRequest(params);
       } else {
         // 处理批量响应模式
-        this.setMessageStatus(id, 'pending');
         await this.handleBatchRequest(params);
-        this.setMessageStatus(id, 'complete');
       }
       this.lastRequestParams = params;
     } catch (error) {
@@ -168,7 +177,7 @@ export default class ChatEngine implements IChatEngine {
 
   private async handleStreamRequest(params: ChatRequestParams) {
     const id = params.messageID;
-    this.setMessageStatus(id, 'pending');
+    this.setMessageStatus(id, 'streaming'); // todo: 这里应该在建立连接后在streaming
     await this.llmService.handleStreamRequest(params, {
       ...this.config,
       onMessage: (chunk: SSEChunkData) => {
@@ -204,7 +213,9 @@ export default class ChatEngine implements IChatEngine {
         const allContentFailed = this.messageStore.messages.every((content) => content.status === 'error');
         // eslint-disable-next-line no-nested-ternary
         this.setMessageStatus(id, isAborted ? 'stop' : allContentFailed ? 'error' : 'complete');
-        this.config.onComplete?.(isAborted, params);
+
+        // 返回空数组以满足类型要求
+        return this.config.onComplete?.(isAborted, params);
       },
     });
   }

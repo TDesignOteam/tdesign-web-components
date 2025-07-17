@@ -110,7 +110,7 @@ export default class ThinkingContentComponent extends Component<TdChatThinkConte
 
   pCollapsed = signal(false);
 
-  get collapsed() {
+  get computedCollapsed() {
     if (!isNil(this.props.collapsed)) return this.props.collapsed;
     return this.pCollapsed.value;
   }
@@ -130,6 +130,6 @@ export default class ThinkingContentComponent extends Component<TdChatThinkConte
 
   render(props: TdChatThinkContentProps) {
     if (!props?.content) return;
-    return renderThinking({ ...props, collapsed: this.collapsed, onChange: this.onCollapsedChange });
+    return renderThinking({ ...props, collapsed: this.computedCollapsed, onChange: this.onCollapsedChange });
   }
 }

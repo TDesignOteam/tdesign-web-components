@@ -183,8 +183,17 @@ export interface ChatNetworkConfig {
   retryInterval?: number;
   /** 最大重试次数 */
   maxRetries?: number;
+  /** 请求超时时间（毫秒） */
+  timeout?: number; // 添加timeout属性
   /** SSE连接技术层面的监控回调 */
   connection?: SSEConnectionCallbacks;
+}
+
+// 添加EnhancedSSEClient接口定义
+export interface IEnhancedSSEClient {
+  close(): void;
+  getStats(): any;
+  // ... 其他方法 ...
 }
 
 // TDesign 默认引擎的回调配置
@@ -193,9 +202,11 @@ export interface DefaultEngineCallbacks {
   onRequest?: (params: ChatRequestParams) => RequestInit | Promise<RequestInit>;
   /** 接收到消息数据块 - 用于解析和处理聊天内容 */
   onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
-  /** 对话完成 - 聊天业务流程结束（正常完成/用户中断/出错） */
-  onComplete?: (isAborted: boolean, params: RequestInit, result?: any) => void;
-  /** 用户主动中断对话 */
+  onComplete?: (
+    isAborted: boolean,
+    params?: RequestInit,
+    result?: any,
+  ) => AIContentChunkUpdate | AIMessageContent[] | null;
   onAbort?: () => Promise<void>;
   /** 错误处理 */
   onError?: (err: Error | Response) => void;

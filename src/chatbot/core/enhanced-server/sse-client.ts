@@ -83,17 +83,17 @@ export class EnhancedSSEClient extends EventEmitter {
       },
     };
 
-    await this.setState(SSEConnectionState.CONNECTING);
+    this.setState(SSEConnectionState.CONNECTING);
     this.connectionManager.startConnection();
 
     try {
       await this.establishConnection();
-      await this.setState(SSEConnectionState.CONNECTED);
+      this.setState(SSEConnectionState.CONNECTED);
       this.connectionManager.onConnectionSuccess();
       this.startHeartbeat();
       await this.readStream();
     } catch (error) {
-      await this.handleConnectionError(error as Error);
+      this.handleConnectionError(error as Error);
     }
   }
 
@@ -105,7 +105,7 @@ export class EnhancedSSEClient extends EventEmitter {
       return;
     }
 
-    await this.setState(SSEConnectionState.CLOSING);
+    this.setState(SSEConnectionState.CLOSING);
 
     try {
       this.stopHeartbeat();
@@ -124,7 +124,7 @@ export class EnhancedSSEClient extends EventEmitter {
       this.resetParser();
       this.emit('complete', true);
     } finally {
-      await this.setState(SSEConnectionState.CLOSED);
+      this.setState(SSEConnectionState.CLOSED);
     }
   }
 
@@ -206,7 +206,7 @@ export class EnhancedSSEClient extends EventEmitter {
           this.logger.info(`Connection ${this.connectionId} stream ended normally`);
           this.emit('end'); // 发出流结束事件
           this.emit('complete', false);
-          await this.setState(SSEConnectionState.DISCONNECTED);
+          this.setState(SSEConnectionState.DISCONNECTED);
           return;
         }
 
@@ -219,7 +219,7 @@ export class EnhancedSSEClient extends EventEmitter {
     } catch (error) {
       if (!this.controller?.signal.aborted) {
         this.logger.error(`Stream reading error for ${this.connectionId}:`, error);
-        await this.handleConnectionError(error as Error);
+        this.handleConnectionError(error as Error);
       } else {
         this.logger.debug(`Stream reading stopped for ${this.connectionId} (aborted)`);
       }
@@ -229,17 +229,11 @@ export class EnhancedSSEClient extends EventEmitter {
   /**
    * 简化的错误处理
    */
-  private async handleConnectionError(error: Error): Promise<void> {
+  private handleConnectionError(error: Error) {
     this.connectionInfo.error = error;
+    this.connectionManager.handleConnectionError(error);
+    this.setState(SSEConnectionState.ERROR);
     this.emit('error', error);
-
-    try {
-      await this.connectionManager.handleConnectionError(error);
-      await this.setState(SSEConnectionState.ERROR);
-    } catch (finalError) {
-      this.emit('error', finalError);
-      await this.setState(SSEConnectionState.ERROR);
-    }
   }
 
   /**
@@ -286,7 +280,7 @@ export class EnhancedSSEClient extends EventEmitter {
   /**
    * 设置连接状态
    */
-  private async setState(newState: SSEConnectionState): Promise<void> {
+  private setState(newState: SSEConnectionState) {
     const oldState = this.state;
     this.state = newState;
     this.connectionInfo.state = newState;
@@ -300,32 +294,6 @@ export class EnhancedSSEClient extends EventEmitter {
 
     this.emit('stateChange', stateChangeEvent);
     this.logger.debug(`Connection ${this.connectionId} state: ${oldState} -> ${newState}`);
-  }
-
-  /**
-   * 增强资源清理
-   */
-  private async cleanup(emitComplete = true): Promise<void> {
-    this.stopHeartbeat();
-    this.clearTimeouts();
-
-    if (this.reader) {
-      try {
-        await this.reader.cancel();
-      } catch (e) {
-        this.logger.warn('Reader cleanup error:', e);
-      }
-      this.reader = undefined;
-    }
-
-    if (this.controller && !this.controller.signal.aborted) {
-      this.controller.abort();
-      this.controller = undefined;
-    }
-
-    if (emitComplete) {
-      this.emit('complete', true);
-    }
   }
 
   /**

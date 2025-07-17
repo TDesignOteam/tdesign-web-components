@@ -30,6 +30,10 @@ spline: base
 
 {{ customRenderItem }}
 
+### nostream
+
+{{ nostream }}
+
 ## API
 
 ## Chatbot Props

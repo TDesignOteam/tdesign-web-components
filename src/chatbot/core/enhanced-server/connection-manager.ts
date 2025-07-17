@@ -19,7 +19,7 @@ export class ConnectionManager {
   /**
    * 处理连接错误
    */
-  async handleConnectionError(error: Error): Promise<boolean> {
+  handleConnectionError(error: Error): boolean {
     this.logger.error(`Connection ${this.connectionId} error:`, error);
     this.stats.lastError = error;
 

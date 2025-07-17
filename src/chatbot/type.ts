@@ -113,8 +113,8 @@ export interface TdChatProps extends StyledProps {
   onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
   /** 消息引擎初始化完成回调 */
   onChatReady?: (e: CustomEvent) => void;
-  /** 消息发送回调 */
-  onChatSent?: (e: CustomEvent<ChatRequestParams>) => void;
+  /** 消息发送完回调 */
+  onChatAfterSend?: (e: CustomEvent<ChatRequestParams>) => void;
 }
 
 export interface TdChatListScrollToOptions {
