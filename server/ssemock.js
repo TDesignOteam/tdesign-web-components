@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { agentChunks } from './agent.js';
+import { aguiChunks, simpleAguiChunks } from './agui-data.js';
 import { chunks } from './data.js';
 
 const app = express();
@@ -107,6 +108,25 @@ app.post('/sse/normal', (req, res) => {
   sendStream(res, messages, 50, req);
 });
 
+// AG-UI 标准协议事件流端点
+app.post('/sse/agui', (req, res) => {
+  console.log('🚀 收到AG-UI请求:', req.body);
+  setSSEHeaders(res);
+
+  // 根据请求参数选择使用完整版还是简化版数据
+  const useSimple = req.body?.simple === true;
+  const selectedChunks = useSimple ? simpleAguiChunks : aguiChunks;
+
+  // 将AG-UI事件转换为SSE格式
+  const messages = selectedChunks.map(
+    (chunk) =>
+      // AG-UI事件直接作为data发送，不需要额外包装
+      `data: ${JSON.stringify(chunk)}\n\n`,
+  );
+
+  sendStream(res, messages, 200, req);
+});
+
 app.post('/fetch/normal', (req, res) => {
   console.log('Received POST body:', req.body); // 打印请求体
   setTimeout(() => {
@@ -140,13 +160,13 @@ function sendStream(res, messages, interval, req) {
     const firstTimer = setTimeout(() => {
       if (index < messages.length) {
         res.write(messages[index]);
-        index++;
+        index += 1;
 
         // 后续消息按正常间隔发送
         const timer = setInterval(() => {
           if (index < messages.length) {
             res.write(messages[index]);
-            index++;
+            index += 1;
           } else {
             clearInterval(timer);
             res.end();

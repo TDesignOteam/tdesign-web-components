@@ -39,7 +39,7 @@ export default class ChatEngine implements IChatEngine {
 
   private stopReceive = false;
 
-  // private aguiEventMapper: AGUIEventMapper | null = null;
+  private aguiEventMapper: AGUIEventMapper | null = null;
 
   constructor() {
     this.processor = new MessageProcessor();

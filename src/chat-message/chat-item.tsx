@@ -81,10 +81,8 @@ export default class ChatItem extends Component<ChatMessageProps> {
     if (isUserMessage(newMsg) && isUserMessage(oldMsg) && newMsg.content === oldMsg.content) {
       return false;
     }
+
     // 处理AI消息
-    // if (isAIMessage(newMsg) && isAIMessage(oldMsg) && JSON.stringify(newMsg).length === JSON.stringify(oldMsg).length) {
-    //   return false;
-    // }
     if (
       isAIMessage(newMsg) &&
       isAIMessage(oldMsg) &&
