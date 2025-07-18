@@ -77,22 +77,6 @@ export interface HeartbeatEvent {
   timestamp: number;
 }
 
-// 默认配置
-export const DEFAULT_RETRY_CONFIG: RetryConfig = {
-  maxRetries: 5,
-  baseDelay: 1000,
-  maxDelay: 30000,
-  backoffFactor: 2,
-  retryableErrors: (error: Error) => {
-    // 检查错误是否有 isRetryable 属性（来自 SSEError）
-    if ('isRetryable' in error && typeof error.isRetryable === 'boolean') {
-      return error.isRetryable;
-    }
-    // 网络错误通常可以重试
-    return error.name === 'TypeError' || error.name === 'NetworkError' || error.name === 'AbortError';
-  },
-};
-
 export const DEFAULT_SSE_CONFIG: SSEClientConfig = {
   timeout: 0,
   heartbeatInterval: 10000,

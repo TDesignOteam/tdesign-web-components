@@ -68,7 +68,6 @@ export class LLMService implements ILLMService {
         return config.onComplete?.(false, req, data);
       }
     } catch (error) {
-      console.log(2);
       config.onError?.(error);
       throw error;
     }
@@ -78,8 +77,7 @@ export class LLMService implements ILLMService {
    * 处理流式请求
    */
   async handleStreamRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<void> {
-    // 确保只有一个客户端实例
-    this.sseClient = this.sseClient || new EnhancedSSEClient(config.endpoint);
+    this.sseClient = new EnhancedSSEClient(config.endpoint);
 
     const req = (await config.onRequest?.(params)) || {};
 

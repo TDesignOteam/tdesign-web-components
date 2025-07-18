@@ -3,6 +3,7 @@ import EventEmitter from '../utils/eventEmitter';
 import { LoggerManager } from '../utils/logger';
 import { ConnectionManager } from './connection-manager';
 import { ConnectionError, TimeoutError, ValidationError } from './errors';
+import { SSEEvent, SSEParser } from './sse-parser';
 import {
   ConnectionInfo,
   DEFAULT_CONNECTION_STATS,
@@ -28,9 +29,7 @@ export class EnhancedSSEClient extends EventEmitter {
 
   private connectionManager: ConnectionManager;
 
-  private eventBuffer = '';
-
-  private currentEvent: { event?: string; data?: string; id?: string } = {};
+  private parser: SSEParser;
 
   private heartbeatTimer?: ReturnType<typeof setInterval>;
 
@@ -53,6 +52,12 @@ export class EnhancedSSEClient extends EventEmitter {
     this.connectionId = this.generateConnectionId();
     this.logger = LoggerManager.getLogger();
     this.connectionManager = new ConnectionManager(this.connectionId);
+
+    // 初始化 SSE 解析器
+    this.parser = new SSEParser();
+    this.parser.onMessage = (event: SSEEvent) => {
+      this.emit('message', event);
+    };
 
     this.connectionInfo = {
       id: this.connectionId,
@@ -202,6 +207,7 @@ export class EnhancedSSEClient extends EventEmitter {
   private async readStream(): Promise<void> {
     try {
       while (this.state === SSEConnectionState.CONNECTED && this.reader) {
+        // eslint-disable no-await-in-loop
         const { done, value } = await this.reader.read();
 
         if (done) {
@@ -226,6 +232,14 @@ export class EnhancedSSEClient extends EventEmitter {
         this.logger.debug(`Stream reading stopped for ${this.connectionId} (aborted)`);
       }
     }
+  }
+
+  /**
+   * 解析SSE数据
+   */
+  private parseSSEData(chunk: string): void {
+    // 使用独立的 SSE 解析器处理数据
+    this.parser.parse(chunk);
   }
 
   /**
@@ -299,107 +313,10 @@ export class EnhancedSSEClient extends EventEmitter {
   }
 
   /**
-   * 解析SSE数据
-   */
-  private parseSSEData(chunk: string): void {
-    this.eventBuffer += chunk;
-
-    // 循环处理，直到缓冲区中再也找不到完整的行
-    let newlineIndex;
-    // eslint-disable-next-line no-cond-assign
-    while ((newlineIndex = this.eventBuffer.indexOf('\n')) !== -1) {
-      // 提取一行（包含 \r 如果有的话）
-      const line = this.eventBuffer.slice(0, newlineIndex).replace(/\r$/, '');
-
-      // 从缓冲区移除已处理的行和换行符
-      this.eventBuffer = this.eventBuffer.slice(newlineIndex + 1);
-
-      // 处理这一行
-      this.processSSELine(line);
-    }
-  }
-
-  /**
-   * 处理SSE行数据
-   */
-  private processSSELine(line: string): void {
-    if (line === '') {
-      // 空行表示事件结束
-      this.emitCurrentEvent();
-      return;
-    }
-
-    const colonIndex = line.indexOf(':');
-    if (colonIndex === 0) {
-      // 注释行，忽略
-      return;
-    }
-
-    let field: string;
-    let value: string;
-
-    if (colonIndex === -1) {
-      field = line.trim();
-      value = '';
-    } else {
-      field = line.slice(0, colonIndex).trim();
-      value = line.slice(colonIndex + 1).replace(/^ /, ''); // 移除开头空格
-    }
-
-    // 处理SSE字段
-    switch (field) {
-      case 'event':
-        this.currentEvent.event = value;
-        break;
-      case 'data':
-        if (this.currentEvent.data === undefined) {
-          this.currentEvent.data = value;
-        } else {
-          this.currentEvent.data += `\n${value}`;
-        }
-        break;
-      case 'id':
-        this.currentEvent.id = value;
-        break;
-      default:
-        // 忽略其他字段
-        break;
-    }
-  }
-
-  /**
-   * 发送当前事件
-   */
-  private emitCurrentEvent(): void {
-    if (this.currentEvent.data !== undefined) {
-      try {
-        // 尝试解析JSON，失败则保持原始字符串
-        let data: any;
-        try {
-          data = JSON.parse(this.currentEvent.data);
-        } catch {
-          data = this.currentEvent.data;
-        }
-
-        this.emit('message', {
-          event: this.currentEvent.event || '',
-          data,
-        });
-      } catch (error) {
-        this.logger.error('Error emitting event:', error);
-      }
-    }
-
-    // 清理当前事件
-    this.currentEvent = {};
-  }
-
-  /**
    * 重置解析器状态
    */
   private resetParser(): void {
-    this.eventBuffer = '';
-    this.currentEvent = {};
+    this.parser.reset();
   }
 
   /**
