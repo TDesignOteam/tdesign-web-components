@@ -1,5 +1,6 @@
 import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 import type { CherryOptions } from 'cherry-markdown/types/cherry';
+import { merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
@@ -24,9 +25,11 @@ export type TdChatContentMDPluginConfig =
   TdChatContentMDPresetConfig;
 /** cherryMarkdown原生插件配置 */
 
+export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars'>;
+
 export interface TdChatMarkdownContentProps {
   content?: string;
-  options?: Omit<CherryOptions, 'id' | 'el' | 'toolbars'>;
+  options?: TdChatContentMDOptions;
   pluginConfig?: Array<TdChatContentMDPluginConfig>;
 }
 
@@ -41,19 +44,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   };
 
   static defaultProps: Partial<TdChatMarkdownContentProps> = {
-    // TODO: 现在是测效果，正式看下默认怎么配。
-    options: {
-      engine: {
-        syntax: {
-          table: {
-            selfClosing: true,
-          },
-          codeBlock: {
-            copyCode: true,
-          },
-        },
-      },
-    },
+    options: {},
   };
 
   mdRef = createRef<HTMLElement>();
@@ -62,52 +53,62 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   isMarkdownInit = signal(false);
 
+  /** 传入cherryMarkdown的配置 */
+  private markdownOptions: CherryOptions = {
+    engine: {
+      syntax: {
+        fontEmphasis: {
+          selfClosing: true,
+        },
+        table: {
+          selfClosing: true,
+        },
+        link: {
+          target: '_blank',
+        },
+        codeBlock: {
+          copyCode: true,
+        },
+        mathBlock: {
+          engine: 'MathJax',
+          src: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
+          plugins: true,
+        },
+        inlineMath: {
+          engine: 'MathJax',
+        },
+      },
+    },
+    toolbars: {
+      toolbar: false,
+      toc: false,
+      showToolbar: false,
+    },
+    editor: {
+      defaultModel: 'previewOnly',
+      keepDocumentScrollAfterInit: true,
+    },
+    previewer: {
+      enablePreviewerBubble: false,
+    },
+  };
+
   ready() {
+    const { options } = this.props;
+    console.log('查看传入options', options);
+    this.markdownOptions = merge(this.markdownOptions, options);
     this.initMarkdown();
   }
 
   initMarkdown = async () => {
-    const { options } = this.props;
-
     this.isMarkdownInit.value = false;
-    const md = new Cherry({
-      ...options,
-      engine: {
-        syntax: {
-          table: {
-            selfClosing: true,
-          },
-          link: {
-            target: '_blank',
-          },
-          codeBlock: {
-            copyCode: true,
-          },
-          mathBlock: {
-            engine: 'MathJax',
-            src: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
-            plugins: true,
-          },
-          inlineMath: {
-            engine: 'MathJax',
-          },
-        },
-      },
-      el: this.mdRef.current,
-      toolbars: {
-        toolbar: false,
-        toc: false,
-        showToolbar: false,
-      },
-      editor: {
-        defaultModel: 'previewOnly',
-        keepDocumentScrollAfterInit: true,
-      },
-      previewer: {
-        enablePreviewerBubble: false,
-      },
-    });
+    console.log('查看markdownOptions', this.markdownOptions);
 
+    const md = new Cherry({
+      ...this.markdownOptions,
+      el: this.mdRef.current,
+    });
+    md.clearFlowSessionCursor();
     // 筛选生效的预设插件
 
     // 筛选自定义插件

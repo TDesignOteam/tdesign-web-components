@@ -1,14 +1,11 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import MarkdownIt from 'markdown-it';
+import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 import { Component } from 'omi';
-import type {
-  TdChatMarkdownContentProps,
-  TdChatMessageConfig,
-  TdChatMessageProps,
-} from 'tdesign-web-components/chatbot';
+import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
+import { TdChatMarkdownContentProps } from '../../chat-message/content/cherry-markdown-content';
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
 const defaultChunkParser = (chunk): AIMessageContent => {
@@ -108,67 +105,45 @@ const mockData: ChatMessagesData[] = [
     content: [
       {
         type: 'markdown',
-        data: '我是内容!!我是自定义markdown结构，点击我!!我是后面的内容',
+        data: '我是内容!!我是自定义markdown结构，点击我!!我是后面的内容，测试***我是内容***。这是一个链接 [Markdown语法](https://markdown.com.cn)，[这是一个自定义特殊链接](#promptId=atm)',
       },
     ],
   },
 ];
 
-// markdown自定义插件，请参考markdown-it定义插件的方法，事件触发需考虑shadowDOM隔离情况
-const colorTextPlugin = (md: MarkdownIt) => {
-  // 定义自定义渲染规则
-  md.inline.ruler.before('emphasis', 'color', (state, silent) => {
+/**
+ * markdown自定义插件，请参考cherry-markdown定义插件的方法，事件触发需考虑shadowDOM隔离情况
+ * https://github.com/Tencent/cherry-markdown/wiki/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%AD%E6%B3%95
+ */
+const colorText = Cherry.createSyntaxHook('important', Cherry.constants.HOOKS_TYPE_LIST.SEN, {
+  makeHtml(str) {
+    return str.replace(
+      this.RULE.reg,
+      (_whole, _m1, m2) =>
+        `<span part="md-color-text" onclick="this.dispatchEvent(new CustomEvent('color-text-click', { bubbles: true, composed: true, detail: { content: '${m2}' }}))">${m2}</span>`,
+    );
+  },
+  rule() {
     // 匹配 !!...!! 语法
-    const marker = '!!';
-    const startPos = state.pos;
-
-    if (state.src.slice(startPos, startPos + 2) !== marker) return false;
-    const endPos = state.src.indexOf(marker, startPos + 2);
-    if (endPos === -1) return false;
-
-    // 提取内容
-    const content = state.src.slice(startPos + 2, endPos);
-
-    // 创建 Token
-    if (!silent) {
-      const token = state.push('color_open', 'span', 1);
-      token.attrs = [
-        ['part', 'md-color-text'],
-        ['data-content', encodeURIComponent(content)], // 编码内容用于安全传输
-      ];
-
-      state.push('text', '', 0).content = content;
-      state.push('color_close', 'span', -1);
-    }
-
-    // 更新解析位置
-    state.pos = endPos + 2;
-    return true;
-  });
-
-  // 自定义渲染规则（添加事件派发）
-  md.renderer.rules.color_open = (tokens, idx) => {
-    const { attrs } = tokens[idx];
-    const content = decodeURIComponent(attrs.find((a) => a[0] === 'data-content')[1]);
-
-    return `
-      <span part="${attrs.find((a) => a[0] === 'part')[1]}"
-        onclick="this.dispatchEvent(new CustomEvent('color-text-click', { 
-          bubbles: true, 
-          composed: true,
-          detail: { content: '${content.replace(/'/g, "\\'")}' }
-        }))">
-    `;
-  };
-};
+    // eslint-disable-next-line no-useless-escape
+    return { reg: /(\!\!)([^\!]+)\1/g };
+  },
+});
 
 const mdConfig: TdChatMarkdownContentProps = {
   options: {
-    html: true, // 允许HTML标签
-    breaks: true, // 自动换行
-    typographer: true, // 排版优化
+    engine: {
+      global: {
+        htmlAttrWhiteList: 'part|onclick',
+      },
+      customSyntax: {
+        colorTextHook: {
+          syntaxClass: colorText,
+          force: false,
+        },
+      },
+    },
   },
-  pluginConfig: [colorTextPlugin],
 };
 
 const commonRoleConfig: Partial<TdChatMessageProps> = {
