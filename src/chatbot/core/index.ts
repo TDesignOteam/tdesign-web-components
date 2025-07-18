@@ -70,10 +70,24 @@ export default class ChatEngine implements IChatEngine {
 
   public async abortChat() {
     this.stopReceive = true;
+
     if (this.config?.onAbort) {
       await this.config.onAbort();
     }
-    this.llmService.closeSSE();
+
+    try {
+      if (this.config.stream) {
+        this.llmService.closeSSE();
+      } else {
+        this.llmService.closeFetch();
+        // 只有在批量模式下才删除最后一条AI消息
+        if (this.messageStore.lastAIMessage?.id) {
+          this.messageStore.removeMessage(this.messageStore.lastAIMessage.id);
+        }
+      }
+    } catch (error) {
+      console.warn('Error during service cleanup:', error);
+    }
   }
 
   public registerMergeStrategy<T extends AIMessageContent>(
@@ -178,7 +192,9 @@ export default class ChatEngine implements IChatEngine {
         const allContentFailed = this.messageStore.messages.every((content) => content.status === 'error');
         // eslint-disable-next-line no-nested-ternary
         this.setMessageStatus(id, isAborted ? 'stop' : allContentFailed ? 'error' : 'complete');
-        this.config.onComplete?.(isAborted, params);
+
+        // 返回空数组以满足类型要求
+        return this.config.onComplete?.(isAborted, params);
       },
     });
   }

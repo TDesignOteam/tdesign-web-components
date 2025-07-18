@@ -46,10 +46,13 @@ type ChatMessageProps = TdChatMessageProps;
 export default class ChatItem extends Component<ChatMessageProps> {
   static css = [styles];
 
+  // 声明哪些prop是slot
+  static slotProps = ['avatar', 'name'];
+
   static propTypes = {
     actions: [Array, Function, Boolean],
-    name: String,
-    avatar: String,
+    name: [String, Object], // 支持传入String或ReactNode
+    avatar: [String, Object], // 支持传入String或ReactNode
     datetime: String,
     message: Object,
     placement: String,
@@ -102,28 +105,42 @@ export default class ChatItem extends Component<ChatMessageProps> {
     }
     return (
       <div class={`${className}__header`}>
-        {!!name && <span class={`${className}__name`}>{name}</span>}
+        {!!name && <span class={`${className}__name`}>{this.renderNameContent(name)}</span>}
         {!!datetime && <span class={`${className}__time`}>{datetime}</span>}
       </div>
     );
   }
 
+  private renderNameContent(name: any) {
+    if (isString(name)) {
+      return name;
+    }
+
+    // 对于非字符串类型（包括React元素），都使用slot
+    return <slot name="name"></slot>;
+  }
+
   private renderAvatar() {
     if (!this.props.avatar) {
-      // 不要返回null，有抖动问题
-      return <div hidden />;
+      return <div hidden data-test={`${typeof this.props.avatar}`} />;
     }
+
+    const { avatar } = this.props;
+
     return (
       <div class={`${className}__avatar`}>
-        <div class={`${className}__avatar__box`}>
-          {isString(this.props.avatar) ? (
-            <img src={this.props.avatar} alt="avatar" class={`${className}__avatar-image`} />
-          ) : (
-            this.props.avatar
-          )}
-        </div>
+        <div class={`${className}__avatar__box`}>{this.renderAvatarContent(avatar)}</div>
       </div>
     );
+  }
+
+  private renderAvatarContent(avatar: any) {
+    if (isString(avatar)) {
+      return <img src={avatar} alt="avatar" class={`${className}__avatar-image`} />;
+    }
+
+    // 对于非字符串类型（包括React元素），都使用slot
+    return <slot name="avatar"></slot>;
   }
 
   private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {

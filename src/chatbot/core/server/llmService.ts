@@ -17,7 +17,17 @@ export interface ILLMService {
 export class LLMService implements ILLMService {
   private sseClient: SSEClient;
 
+  private fetchAbortController: AbortController | null = null; // 用于批量请求的AbortController
+
   async handleBatchRequest(params: ChatRequestParams, config: ChatServiceConfig): Promise<any> {
+    // 如果上一个请求正在进行中，先中止它，防止同时发起多个请求
+    if (this.fetchAbortController) {
+      this.fetchAbortController.abort();
+    }
+
+    // 为当前请求创建新的AbortController实例
+    this.fetchAbortController = new AbortController();
+
     const req = (await config.onRequest?.(params)) || {};
 
     try {
@@ -28,6 +38,7 @@ export class LLMService implements ILLMService {
           ...req.headers,
         },
         body: req.body,
+        signal: this.fetchAbortController.signal, // 添加AbortSignal
       });
 
       if (!response.ok) {
@@ -37,12 +48,27 @@ export class LLMService implements ILLMService {
       const data = await response.json();
       return config.onComplete?.(false, req, data);
     } catch (error) {
-      config.onError?.(error);
-      throw error;
+      // 检查错误是否是由于中止操作引起的
+      if (error.name !== 'AbortError') {
+        config.onError?.(error);
+        throw error;
+      }
+    } finally {
+      this.fetchAbortController = null;
+    }
+  }
+
+  /**
+   * 中止当前正在进行的批量请求
+   */
+  closeFetch() {
+    if (this.fetchAbortController) {
+      this.fetchAbortController.abort();
     }
   }
 
   closeSSE() {
+    // 终止当前SSE请求
     this.sseClient?.close();
   }
 

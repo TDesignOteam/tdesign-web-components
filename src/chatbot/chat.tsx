@@ -52,7 +52,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     injectCSS: Object,
     onMessageChange: Function,
     onChatReady: Function,
-    onChatSent: Function,
+    onChatAfterSend: Function,
   };
 
   static defaultProps = {
@@ -187,7 +187,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollList({ to: 'bottom' });
-    this.fire('chatSent', requestParams, {
+    this.fire('chat-after-send', requestParams, {
       composed: true,
     });
   }
