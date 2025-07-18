@@ -1,0 +1,113 @@
+@startuml TravelAgentComplete系统架构图
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam componentStyle rectangle
+skinparam roundcorner 20
+
+title TravelAgentComplete 系统架构图
+
+package "前端层 (Frontend)" {
+    [用户界面] as UI
+    [状态管理] as State
+    [事件处理器] as EventHandler
+    [SSE客户端] as SSEClient
+    
+    UI --> State
+    UI --> EventHandler
+    EventHandler --> SSEClient
+    SSEClient --> State
+}
+
+package "传输层 (Transport)" {
+    [HTTP/SSE] as HTTP
+    [事件流] as EventStream
+    [状态同步] as StateSync
+}
+
+package "服务层 (Server)" {
+    [SSE服务器] as SSEServer
+    [事件收集器] as EventCollector
+    [状态存储] as StateStorage
+    [错误处理] as ErrorHandler
+    
+    SSEServer --> EventCollector
+    EventCollector --> StateStorage
+    SSEServer --> ErrorHandler
+}
+
+package "Agent层 (Agent)" {
+    [TravelAgentComplete] as Agent
+    [业务逻辑] as BusinessLogic
+    [工具管理器] as ToolManager
+    [状态管理器] as AgentState
+    
+    Agent --> BusinessLogic
+    Agent --> ToolManager
+    Agent --> AgentState
+}
+
+package "工具层 (Tools)" {
+    [景点查询API] as AttractionsAPI
+    [天气查询API] as WeatherAPI
+    [预算计算API] as BudgetAPI
+    [预订API] as BookingAPI
+    
+    ToolManager --> AttractionsAPI
+    ToolManager --> WeatherAPI
+    ToolManager --> BudgetAPI
+    ToolManager --> BookingAPI
+}
+
+package "数据层 (Data)" {
+    [用户偏好] as UserPrefs
+    [行程数据] as ItineraryData
+    [景点信息] as AttractionsData
+    [天气信息] as WeatherData
+    [预算信息] as BudgetData
+    
+    AgentState --> UserPrefs
+    AgentState --> ItineraryData
+    AgentState --> AttractionsData
+    AgentState --> WeatherData
+    AgentState --> BudgetData
+}
+
+' 连接关系
+SSEClient <--> HTTP
+HTTP <--> SSEServer
+EventCollector <--> EventStream
+StateStorage <--> StateSync
+Agent <--> EventCollector
+Agent <--> StateStorage
+
+' 事件流
+note right of EventStream
+  事件类型：
+  - RUN_STARTED/FINISHED
+  - TEXT_MESSAGE_*
+  - TOOL_CALL_*
+  - STEP_*
+  - STATE_*
+  - CUSTOM
+end note
+
+' 状态管理
+note right of StateSync
+  状态同步：
+  - STATE_SNAPSHOT
+  - STATE_DELTA
+  - 增量更新
+end note
+
+' 工具调用
+note right of ToolManager
+  工具调用流程：
+  1. TOOL_CALL_START
+  2. TOOL_CALL_ARGS
+  3. 执行API调用
+  4. TOOL_CALL_END
+  5. TOOL_CALL_RESULT
+end note
+
+@enduml 

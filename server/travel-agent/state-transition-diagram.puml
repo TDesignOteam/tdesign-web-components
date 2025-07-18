@@ -1,0 +1,158 @@
+@startuml TravelAgentComplete状态转换图
+
+!theme plain
+skinparam backgroundColor #FFFFFF
+skinparam state {
+    BackgroundColor #E8F4FD
+    BorderColor #2E86AB
+    FontColor #2E86AB
+}
+
+title TravelAgentComplete 状态转换图
+
+[*] --> 初始化
+
+state 初始化 {
+    [生成ID] --> [初始化状态]
+    [初始化状态] --> [发送RUN_STARTED]
+}
+
+state 需求分析 {
+    [发送STEP_STARTED] --> [分析需求]
+    [分析需求] --> [更新状态]
+    [更新状态] --> [发送STEP_FINISHED]
+}
+
+state 景点查询 {
+    [发送STEP_STARTED] --> [发送TEXT_MESSAGE]
+    [发送TEXT_MESSAGE] --> [发送TOOL_CALL_START]
+    [发送TOOL_CALL_START] --> [调用外部API]
+    [调用外部API] --> [发送TOOL_CALL_END]
+    [发送TOOL_CALL_END] --> [发送TOOL_CALL_RESULT]
+    [发送TOOL_CALL_RESULT] --> [更新状态]
+    [更新状态] --> [发送STEP_FINISHED]
+}
+
+state 天气查询 {
+    [发送STEP_STARTED] --> [发送TOOL_CALL_START]
+    [发送TOOL_CALL_START] --> [调用天气API]
+    [调用天气API] --> [发送TOOL_CALL_END]
+    [发送TOOL_CALL_END] --> [发送TOOL_CALL_RESULT]
+    [发送TOOL_CALL_RESULT] --> [更新状态]
+    [更新状态] --> [发送STEP_FINISHED]
+}
+
+state 路线规划 {
+    [发送STEP_STARTED] --> [生成行程]
+    [生成行程] --> [流式发送文本]
+    [流式发送文本] --> [更新状态]
+    [更新状态] --> [发送STEP_FINISHED]
+}
+
+state 预算计算 {
+    [发送STEP_STARTED] --> [发送TOOL_CALL_START]
+    [发送TOOL_CALL_START] --> [调用预算API]
+    [调用预算API] --> [发送TOOL_CALL_END]
+    [发送TOOL_CALL_END] --> [发送TOOL_CALL_RESULT]
+    [发送TOOL_CALL_RESULT] --> [更新状态]
+    [更新状态] --> [发送STEP_FINISHED]
+}
+
+state 用户交互 {
+    [检查是否需要确认] --> [发送CUSTOM事件]
+    [发送CUSTOM事件] --> [发送stream_pause]
+    [发送stream_pause] --> [等待用户输入]
+    [等待用户输入] --> [用户输入继续]
+}
+
+state 继续处理 {
+    [发送stream_resume] --> [处理用户选择]
+    [处理用户选择] --> [执行预订步骤]
+    [执行预订步骤] --> [发送STEP_FINISHED]
+}
+
+state 完成阶段 {
+    [发送STEP_STARTED] --> [发送预算总结]
+    [发送预算总结] --> [发送温馨提示]
+    [发送温馨提示] --> [发送MESSAGES_SNAPSHOT]
+    [发送MESSAGES_SNAPSHOT] --> [发送RUN_FINISHED]
+}
+
+state 错误处理 {
+    [检测到错误] --> [发送RUN_ERROR]
+    [发送RUN_ERROR] --> [错误恢复]
+    [错误恢复] --> [继续执行或终止]
+}
+
+' 状态转换
+初始化 --> 需求分析 : 初始化完成
+需求分析 --> 景点查询 : 需求分析完成
+景点查询 --> 天气查询 : 景点查询完成
+天气查询 --> 路线规划 : 天气查询完成
+路线规划 --> 预算计算 : 路线规划完成
+预算计算 --> 用户交互 : 预算计算完成
+用户交互 --> 继续处理 : 用户输入
+继续处理 --> 完成阶段 : 预订完成
+完成阶段 --> [*] : 流程完成
+
+' 错误转换
+需求分析 --> 错误处理 : 分析失败
+景点查询 --> 错误处理 : 查询失败
+天气查询 --> 错误处理 : 查询失败
+路线规划 --> 错误处理 : 规划失败
+预算计算 --> 错误处理 : 计算失败
+用户交互 --> 错误处理 : 交互失败
+继续处理 --> 错误处理 : 处理失败
+
+' 状态数据
+note right of 初始化
+  状态数据：
+  - runId: 唯一运行ID
+  - threadId: 线程ID
+  - messageId: 消息ID
+  - state: 初始状态对象
+end note
+
+note right of 需求分析
+  状态更新：
+  - requirements: 需求分析结果
+  - completedSteps: 添加"需求分析"
+end note
+
+note right of 景点查询
+  状态更新：
+  - attractions: 景点信息
+  - completedSteps: 添加"景点查询"
+end note
+
+note right of 天气查询
+  状态更新：
+  - weather: 天气信息
+  - completedSteps: 添加"天气查询"
+end note
+
+note right of 路线规划
+  状态更新：
+  - currentItinerary: 行程安排
+  - completedSteps: 添加"路线规划"
+end note
+
+note right of 预算计算
+  状态更新：
+  - budget: 预算信息
+  - completedSteps: 添加"预算计算"
+end note
+
+note right of 用户交互
+  状态更新：
+  - pendingUserInput: true
+  - 等待用户确认
+end note
+
+note right of 继续处理
+  状态更新：
+  - pendingUserInput: false
+  - 根据用户选择处理
+end note
+
+@enduml 
