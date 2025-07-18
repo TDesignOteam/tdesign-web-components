@@ -185,6 +185,8 @@ export interface ChatNetworkConfig {
   maxRetries?: number;
   /** 请求超时时间（毫秒） */
   timeout?: number; // 添加timeout属性
+  /** 协议类型 */
+  protocol?: 'default' | 'agui';
   /** SSE连接技术层面的监控回调 */
   connection?: SSEConnectionCallbacks;
 }

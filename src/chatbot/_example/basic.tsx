@@ -311,7 +311,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 
 // 测试用的回调配置
 const mockModelsWithCallbacks = {
-  endpoint: 'http://localhost:3000/sse/normal',
+  endpoint: 'http://localhost:3000/sse/travel-agent',
   stream: true,
 
   // === 业务层回调测试 ===

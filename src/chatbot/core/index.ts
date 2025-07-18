@@ -1,3 +1,4 @@
+import { AGUIEventMapper } from './adapters/agui/agui-event-mapper';
 import { MessageStore } from './store/message';
 import { LLMService } from './enhanced-server';
 import MessageProcessor from './processor';
@@ -51,9 +52,9 @@ export default class ChatEngine implements IChatEngine {
     this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
     this.llmService = new LLMService(this.config);
     // 初始化AG-UI事件映射器
-    // if (this.config.protocol === 'agui') {
-    //   this.aguiEventMapper = new AGUIEventMapper();
-    // }
+    if (this.config.protocol === 'agui') {
+      this.aguiEventMapper = new AGUIEventMapper();
+    }
   }
 
   public async sendUserMessage(requestParams: ChatRequestParams) {

@@ -8,8 +8,8 @@ spline: base
 
 ### 基础使用
 
-{{ basic }}
-
+{{ agui }}
+<!-- 
 ### 输入框
 
 {{ input }}
@@ -32,7 +32,7 @@ spline: base
 
 ### nostream
 
-{{ nostream }}
+{{ nostream }} -->
 
 ## API
 
