@@ -28,3 +28,4 @@ esm
 cjs
 plugins/*.js
 plugins/*.js.map
+.codebuddy/*

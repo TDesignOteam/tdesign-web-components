@@ -4,7 +4,7 @@ import _Chat from './chat';
 
 export const Chat = _Chat;
 
-export * from './core';
+export * from './core/index.js';
 export * from './type';
 
 // 为方便如影测试，暂时从这里导出react组件

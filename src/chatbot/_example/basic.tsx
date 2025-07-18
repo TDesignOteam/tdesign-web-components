@@ -311,7 +311,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 
 // 测试用的回调配置
 const mockModelsWithCallbacks = {
-  endpoint: 'http://localhost:3000/sse/normal',
+  endpoint: 'http://localhost:3000/sse/travel-agent',
   stream: true,
 
   // === 业务层回调测试 ===
@@ -498,7 +498,7 @@ export default class BasicChat extends Component {
       const thinking = content.find((item) => item.type === 'thinking');
       const search = content.find((item) => item.type === 'search');
       return {
-        variant: 'outline',
+        // variant: 'outline',
         avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
         actions: ['replay', 'copy', 'good', 'bad'],
         handleActions: {

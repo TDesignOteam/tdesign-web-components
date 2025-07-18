@@ -30,10 +30,12 @@ const mockModels = {
   stream: false,
   onComplete: (isAborted, req, result) => {
     console.log('onComplete', isAborted, req, result);
-    return {
-      type: 'text',
-      data: result.data,
-    };
+    if (!isAborted) {
+      return {
+        type: 'text',
+        data: result?.data,
+      };
+    }
   },
   onError: (err) => {
     console.log('onError', err);

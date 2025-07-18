@@ -79,7 +79,10 @@
     "omi-reactify": "0.0.10",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.2.4"
+    "tdesign-icons-web-components": "^0.2.4",
+    "@ag-ui/client": "0.0.33",
+    "@ag-ui/core": "0.0.33",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",

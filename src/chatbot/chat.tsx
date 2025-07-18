@@ -168,6 +168,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   private syncState(state: ChatMessagesData[]) {
     this.chatMessages.value = state;
+    console.log('===messageChange', state);
     this.chatStatus = state.at(-1)?.status || 'idle';
     this.fire('messageChange', state, {
       composed: true,
