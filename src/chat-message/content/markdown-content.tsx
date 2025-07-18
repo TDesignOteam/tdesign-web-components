@@ -4,6 +4,7 @@ import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import markdownItCjFriendlyPlugin from '../md/markdownItCjkFriendly';
+import { mdPartAttrPlugin } from '../md/utils';
 
 import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
@@ -82,9 +83,11 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
       ...options,
     })
       .use(markdownItCjFriendlyPlugin)
+      .use(mdPartAttrPlugin)
       // 表格
       .use((md) => {
-        md.renderer.rules.table_open = () => `<div class=${baseClass}__markdown__table__wrapper>\n<table>\n`;
+        md.renderer.rules.table_open = () =>
+          `<div class=${baseClass}__markdown__table__wrapper part=${baseClass}__markdown__table__wrapper>\n<table>\n`;
         md.renderer.rules.table_close = () => '</table>\n</div>';
       })
       .use(linkPlugin, {
