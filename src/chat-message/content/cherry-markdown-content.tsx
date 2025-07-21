@@ -4,6 +4,7 @@ import { merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
+import { setExportparts } from '../../_util/dom';
 
 import styles from '../style/cherry-chat-content.less';
 
@@ -56,6 +57,11 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   /** 传入cherryMarkdown的配置 */
   private markdownOptions: CherryOptions = {
     engine: {
+      global: {
+        flowSessionContext: true,
+        // FIXME: 样式加不上，并且恢复数据时也会直接加上，不确定要不要加
+        // flowSessionCursor: `<span class="${baseClass}__cursor" part="${baseClass}__cursor">cursor</span>`,
+      },
       syntax: {
         fontEmphasis: {
           selfClosing: true,
@@ -98,6 +104,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
     console.log('查看传入options', options);
     this.markdownOptions = merge(this.markdownOptions, options);
     this.initMarkdown();
+    setExportparts(this);
   }
 
   initMarkdown = async () => {
@@ -108,7 +115,8 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
       ...this.markdownOptions,
       el: this.mdRef.current,
     });
-    md.clearFlowSessionCursor();
+    // md.clearFlowSessionCursor();
+
     // 筛选生效的预设插件
 
     // 筛选自定义插件
@@ -135,7 +143,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   parseMarkdown(markdown: string) {
     if (!this.isMarkdownInit.value || !markdown) return '';
-    return this.md?.setValue(markdown);
+    return this.md?.setMarkdown(markdown);
   }
 
   render() {

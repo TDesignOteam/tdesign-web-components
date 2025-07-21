@@ -454,6 +454,28 @@ const onFileSelect = async (e: CustomEvent<File[]>): Promise<TdAttachmentItem[]>
 };
 
 export default class BasicChat extends Component {
+  static css = [
+    `
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+
+      .chat::part(cursor) {
+        padding: 0 2.5px;
+        background-color: rgba(0,82,217, .5);
+        animation: .8s blink infinite;
+      }
+  `,
+  ];
+
   chatRef = createRef<Chatbot>();
 
   clickHandlerController = new AbortController();
@@ -515,6 +537,10 @@ export default class BasicChat extends Component {
           markdown: {
             options: {
               engine: {
+                global: {
+                  // 自定义光标
+                  flowSessionCursor: '<span part="cursor"></span>',
+                },
                 // @ts-expect-error cherryMD的bug
                 syntax: {
                   // 补充链接渲染a标签属性
@@ -575,6 +601,7 @@ export default class BasicChat extends Component {
       <>
         <t-chatbot
           ref={this.chatRef}
+          className="chat"
           style={{ display: 'block', height: '80vh' }}
           defaultMessages={[]}
           // autoSendPrompt="自动发送问题"
