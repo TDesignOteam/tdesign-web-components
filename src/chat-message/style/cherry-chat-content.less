@@ -4,7 +4,6 @@
 .@{prefix}-chat {
   // 消息样式
   &__text {
-    font: var(--td-chat-font-size);
     word-break: break-all;
 
     & *, *::before, *::after {
@@ -16,7 +15,8 @@
       box-shadow: none;
       min-height: 0;
       background-color: transparent;
-
+      font: var(--td-chat-font-size);
+      
       .cherry-previewer {
         padding: 0;
         border-left: none;
@@ -50,6 +50,20 @@
       }
       s {
         color: var(--td-chat-md-s-color);
+      }
+
+      div[data-type=codeBlock] {
+        margin-bottom: 0;
+      }
+
+      // override cherry markdown code style
+      pre {
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+        font-size: inherit;
+        background-color: transparent;
+        border-radius: 0;
       }
       
       :not(pre) > code {

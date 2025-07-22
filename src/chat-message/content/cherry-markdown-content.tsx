@@ -1,12 +1,17 @@
+import '../md/chat-md-code';
+
 import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 import type { CherryOptions } from 'cherry-markdown/types/cherry';
 import { merge } from 'lodash-es';
+import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
 import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { setExportparts } from '../../_util/dom';
 
 import styles from '../style/cherry-chat-content.less';
+// 单独用该组件时，发现动态加载样式不生效，目前直接引入
+import codeStyles from '../style/md/chat-md-code.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
@@ -36,7 +41,7 @@ export interface TdChatMarkdownContentProps {
 
 @tag('t-chat-cherry-md-content')
 export default class ChatCherryMDContent extends Component<TdChatMarkdownContentProps> {
-  static css = [styles];
+  static css = [styles, codeStyles];
 
   static propTypes = {
     content: String,
@@ -54,12 +59,14 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   isMarkdownInit = signal(false);
 
+  private renderCode = (code, lang) => `<t-chat-md-code lang="${lang}" code="${escapeHtml(code)}"></t-chat-md-code>`;
+
   /** 传入cherryMarkdown的配置 */
   private markdownOptions: CherryOptions = {
     engine: {
       global: {
         flowSessionContext: true,
-        // FIXME: 样式加不上，并且恢复数据时也会直接加上，不确定要不要加
+        // 恢复数据时也会直接加上光标
         // flowSessionCursor: `<span class="${baseClass}__cursor" part="${baseClass}__cursor">cursor</span>`,
       },
       syntax: {
@@ -73,7 +80,19 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           target: '_blank',
         },
         codeBlock: {
-          copyCode: true,
+          customRenderer: {
+            // 自定义语法渲染器
+            python: {
+              render: (code) => this.renderCode(code, 'python'),
+            },
+            javascript: {
+              render: (code) => this.renderCode(code, 'javascript'),
+            },
+            vue: {
+              render: (code) => this.renderCode(code, 'vue'),
+            },
+            // etc.
+          },
         },
         mathBlock: {
           engine: 'MathJax',
@@ -92,7 +111,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
     },
     editor: {
       defaultModel: 'previewOnly',
-      keepDocumentScrollAfterInit: true,
     },
     previewer: {
       enablePreviewerBubble: false,
@@ -116,20 +134,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
       el: this.mdRef.current,
     });
     // md.clearFlowSessionCursor();
-
-    // 筛选生效的预设插件
-
-    // 筛选自定义插件
-
-    // 注入预设插件
-    // 代码块
-    // 其他预设
-
-    // 注入自定义插件
-    // customPlugins.forEach((plugin) => {
-    // md.use(plugin);
-    // md.engine
-    // });
 
     this.md = md;
     this.isMarkdownInit.value = true;

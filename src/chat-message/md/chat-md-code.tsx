@@ -41,7 +41,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
     const { lang } = props;
 
     return (
-      <pre class={`${className}`}>
+      <div class={`${className}`}>
         <div class={`${`${className}__header`}`}>
           <span class={`${`${className}__header__lang`}`}>{lang}</span>
           {/* !事件直接放icon上会触发两次 */}
@@ -49,8 +49,8 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
             <t-icon-file-copy class={`${`${className}__header__copy`}`}></t-icon-file-copy>
           </span>
         </div>
-        <div class={`${classname([`${className}__body`, 'hljs'])}`} innerHTML={`<code>${this.codeHTML}</code>`} />
-      </pre>
+        <pre class={`${classname([`${className}__body`, 'hljs'])}`} innerHTML={`<code>${this.codeHTML}</code>`} />
+      </div>
     );
   }
 
