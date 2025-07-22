@@ -26,6 +26,7 @@ export default ({ mode }) => {
     resolve: {
       alias: {
         '@': resolve('../'),
+        '@src': resolve('../src'),
         '@site': resolve('./'),
         '@docs': resolve('./docs'),
         '@common': resolve('../src/_common/'),

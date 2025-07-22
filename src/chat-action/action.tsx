@@ -5,14 +5,14 @@ import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
-import '../../src/tooltip';
+import '@src/tooltip';
 
+import { getClassPrefix } from '@src/_util/classname';
+import { setExportparts } from '@src/_util/dom';
+import { type ChatComment } from '@src/chatbot';
+import { MessagePlugin } from '@src/message';
 import { Component, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
-import { type ChatComment } from '../chatbot';
-import { MessagePlugin } from '../message';
 import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
 
 import styles from './style/action.less';

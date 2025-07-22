@@ -15,3 +15,4 @@ if (
 (window as any).h = h;
 
 export * from './index';
+export * as Utils from './_util/registerDeps';

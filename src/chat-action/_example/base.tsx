@@ -11,7 +11,11 @@ export default class ChatAction extends Component {
     return (
       <t-space>
         <t-chat-action comment="good" copyText="这是一段文字" handleAction={onActions}></t-chat-action>
-        <t-chat-action actionBar={['good', 'bad', 'replay']} handleAction={onActions} tooltipProps={{ theme: 'light' }}></t-chat-action>
+        <t-chat-action
+          actionBar={['good', 'bad', 'replay']}
+          handleAction={onActions}
+          tooltipProps={{ theme: 'light' }}
+        ></t-chat-action>
       </t-space>
     );
   }

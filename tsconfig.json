@@ -16,7 +16,8 @@
       "tdesign-web-components/*": ["src/*"],
       "@test/utils": ["test/utils"],
       "@common/*": ["src/_common/*"],
-      "@": ["src"]
+      "@src": ["src"],
+      "@src/*": ["src/*"]
     },
     "allowImportingTsExtensions": true,
     "noEmit": true,

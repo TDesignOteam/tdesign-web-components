@@ -43,6 +43,9 @@ const inputList = [
 
 const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
   const plugins = [
+    alias({
+      entries: [{ find: '@src', replacement: path.resolve(__dirname, '../src') }],
+    }),
     nodeResolve(),
     commonjs(),
     esbuild({
