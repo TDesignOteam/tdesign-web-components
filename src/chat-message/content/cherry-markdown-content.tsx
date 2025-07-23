@@ -1,7 +1,7 @@
 import '../md/chat-md-code';
 
-import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
-import type { CherryOptions } from 'cherry-markdown/types/cherry';
+import Cherry from '@cherry-markdown/cherry-markdown-dev/dist/cherry-markdown.core';
+import type { CherryOptions } from '@cherry-markdown/cherry-markdown-dev/types/cherry';
 import { merge } from 'lodash-es';
 import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
 import { Component, createRef, signal, tag } from 'omi';
@@ -82,16 +82,13 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
         codeBlock: {
           customRenderer: {
             // 自定义语法渲染器
-            python: {
-              render: (code) => this.renderCode(code, 'python'),
+            all: {
+              render: (code, sign, cherryEnding) => {
+                console.log('查看code', code, sign, cherryEnding);
+                // FIXME: 语言获取
+                return this.renderCode(code, 'python');
+              },
             },
-            javascript: {
-              render: (code) => this.renderCode(code, 'javascript'),
-            },
-            vue: {
-              render: (code) => this.renderCode(code, 'vue'),
-            },
-            // etc.
           },
         },
         mathBlock: {

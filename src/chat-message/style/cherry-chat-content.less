@@ -1,5 +1,5 @@
 @import "./import.less";
-@import "cherry-markdown/dist/cherry-markdown.css";
+@import "@cherry-markdown/cherry-markdown-dev/dist/cherry-markdown.css";
 
 .@{prefix}-chat {
   // 消息样式
@@ -11,7 +11,10 @@
     }
 
     .cherry {
-      color: @text-color-primary;
+      // 覆盖cherry样式
+      --md-heading-color: var(--td-chat-md-font);
+      
+      color: var(--td-chat-md-font);
       box-shadow: none;
       min-height: 0;
       background-color: transparent;
@@ -69,6 +72,7 @@
       :not(pre) > code {
         color: @error-color;
         background: @error-color-1;
+        border: none;
         border-radius: @border-radius-default;
         padding: @comp-paddingTB-xxs @pop-padding-m;
         font-size: @font-size-s;
@@ -131,6 +135,7 @@
         border-left: var(--td-chat-md-blockquote-border-left);
         padding: var(--td-chat-md-blockquote-padding);
         color: var(--td-chat-md-blockquote-color);
+        background: transparent;
       }
 
       hr {
