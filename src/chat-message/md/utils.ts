@@ -1,3 +1,4 @@
+import Cherry from '@cherry-markdown/cherry-markdown-dev/dist/cherry-markdown.core';
 import markdownIt from 'markdown-it';
 
 export function markdownToTextWithParser(markdown) {
@@ -31,3 +32,13 @@ export function markdownToTextWithParser(markdown) {
   // 清理多余换行和空格
   return text.replace(/\n{2,}/g, '\n').trim();
 }
+
+/** cherryMarkdown自动添加part属性插件 */
+export const AddPartHook = Cherry.createSyntaxHook('addPart', Cherry.constants.HOOKS_TYPE_LIST.PAR, {
+  makeHtml(str) {
+    return str;
+  },
+  afterMakeHtml(str) {
+    return str.replace(/<(?!br\b)([^\s/]+)(\s*>|\s+[^>]+>)/g, (_whole, tag, attr) => `<${tag} part="md-${tag}"${attr}`);
+  },
+});

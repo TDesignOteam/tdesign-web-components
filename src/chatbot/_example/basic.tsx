@@ -310,7 +310,8 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 
 // 测试用的回调配置
 const mockModelsWithCallbacks = {
-  endpoint: 'http://localhost:3000/sse/normal',
+  // endpoint: 'http://localhost:3000/sse/normal',
+  endpoint: 'https://1257786608-9i9j1kpa67.ap-guangzhou.tencentscf.com/sse/normal',
   stream: true,
 
   // === 业务层回调测试 ===

@@ -1,4 +1,5 @@
 import '../md/chat-md-code';
+import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
 import Cherry from '@cherry-markdown/cherry-markdown-dev/dist/cherry-markdown.core';
 import type { CherryOptions } from '@cherry-markdown/cherry-markdown-dev/types/cherry';
@@ -8,6 +9,7 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { setExportparts } from '../../_util/dom';
+import { AddPartHook } from '../md/utils';
 
 import styles from '../style/cherry-chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
@@ -70,9 +72,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
         // flowSessionCursor: `<span class="${baseClass}__cursor" part="${baseClass}__cursor">cursor</span>`,
       },
       syntax: {
-        fontEmphasis: {
-          selfClosing: true,
-        },
         table: {
           selfClosing: true,
         },
@@ -83,21 +82,23 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           customRenderer: {
             // 自定义语法渲染器
             all: {
-              render: (code, sign, cherryEnding) => {
-                console.log('查看code', code, sign, cherryEnding);
+              render: (code) =>
                 // FIXME: 语言获取
-                return this.renderCode(code, 'python');
-              },
+                this.renderCode(code, 'python'),
             },
           },
         },
         mathBlock: {
-          engine: 'MathJax',
-          src: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
-          plugins: true,
+          engine: 'katex',
         },
         inlineMath: {
-          engine: 'MathJax',
+          engine: 'katex',
+        },
+      },
+      customSyntax: {
+        AddPart: {
+          syntaxClass: AddPartHook,
+          before: 'frontMatter',
         },
       },
     },
@@ -116,7 +117,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   ready() {
     const { options } = this.props;
-    console.log('查看传入options', options);
     this.markdownOptions = merge(this.markdownOptions, options);
     this.initMarkdown();
     setExportparts(this);
@@ -124,7 +124,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   initMarkdown = async () => {
     this.isMarkdownInit.value = false;
-    console.log('查看markdownOptions', this.markdownOptions);
 
     const md = new Cherry({
       ...this.markdownOptions,
