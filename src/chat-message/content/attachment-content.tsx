@@ -11,13 +11,14 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 export type TdChatAttachmentContentProps = {
+  key?: string;
   content?: AttachmentItem[];
   onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
 };
 
 // 纯函数渲染器
-export const renderAttachments = ({ content }: TdChatAttachmentContentProps, self: any) => (
-  <div className={`${className}__attachments`}>
+export const renderAttachments = ({ key, content }: TdChatAttachmentContentProps, self: any) => (
+  <div key={key} className={`${className}__attachments`}>
     <t-attachments
       items={content}
       removable={false}

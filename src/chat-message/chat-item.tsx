@@ -181,15 +181,23 @@ export default class ChatItem extends Component<ChatMessageProps> {
       const elementKey = `${id}-${index}`;
       // 系统消息渲染
       if (role === 'system') {
-        return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
+        return (
+          <div key={elementKey} className={`${getClassPrefix()}-chat__text--${role}`}>
+            {content.data}
+          </div>
+        );
       }
       // 用户消息渲染
       if (role === 'user') {
         if (isAttachmentContent(content)) {
-          return renderAttachments({ content: content.data }, this);
+          return renderAttachments({ key: elementKey, content: content.data }, this);
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
-          return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
+          return (
+            <div key={elementKey} className={`${getClassPrefix()}-chat__text--${role}`}>
+              {content.data}
+            </div>
+          );
         }
         return <slot key={elementKey} name={`${content?.slotName || `${content.type}-${index}`}`}></slot>;
       }
@@ -198,6 +206,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
       if (role === 'assistant') {
         if (isSearchContent(content)) {
           return renderSearch({
+            key: elementKey,
             content: content.data,
             status: content.status,
             useCollapse: chatContentProps?.search?.useCollapse,
@@ -208,6 +217,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
         if (isSuggestionContent(content)) {
           return renderSuggestion({
+            key: elementKey,
             content: content.data,
             handlePromptClick: (data) => this.handleClickAction('suggestion', data),
           });
@@ -215,6 +225,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
         if (isThinkingContent(content)) {
           // 思考
           return renderThinking({
+            key: elementKey,
             content: content.data,
             status: content.status,
             animation,

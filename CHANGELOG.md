@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.10 `2025-07-24` 
+### 🚧 Others
+- fix(chatbot): fix item render content key @LzhengH ([#259](https://github.com/TDesignOteam/tdesign-web-components/pull/259))
+
 ## 🌈 1.1.9 `2025-07-24` 
 ### 🚧 Others
 - feat(chatbot): 优化组合模式下message重复渲染问题 @LzhengH ([#257](https://github.com/TDesignOteam/tdesign-web-components/pull/257))
