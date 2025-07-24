@@ -2,6 +2,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { agentChunks } from './agent.js';
+import { AguiChunks } from './agui.js';
 import { chunks } from './data.js';
 
 const app = express();
@@ -52,6 +53,17 @@ app.post('/sse/agent', (req, res) => {
 
   sendStream(res, messages, 300, req);
 });
+
+app.post('/sse/agui', (req, res) => {
+  console.log('Received POST body:', req.body); // 打印请求体
+  setSSEHeaders(res);
+
+  // 将chunks转换为SSE格式消息
+  const messages = AguiChunks.map((chunk) => `data: ${JSON.stringify(chunk)}\n\n`);
+
+  sendStream(res, messages, 100, req);
+});
+
 // 支持POST请求的SSE端点
 app.post('/sse/normal', (req, res) => {
   console.log('Received POST body:', req.body); // 打印请求体
