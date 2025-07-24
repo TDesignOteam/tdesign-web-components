@@ -11,13 +11,14 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 export type TdChatSuggestionContentProps = {
+  key?: string;
   content?: SuggestionItem[];
   handlePromptClick?: ({ event, content }: { event: MouseEvent; content: SuggestionItem }) => void;
 };
 
 // 纯函数渲染器
-export const renderSuggestion = ({ content, handlePromptClick }: TdChatSuggestionContentProps) => (
-  <div className={`${className}__suggestion`}>
+export const renderSuggestion = ({ key, content, handlePromptClick }: TdChatSuggestionContentProps) => (
+  <div key={key} className={`${className}__suggestion`}>
     {content.map(
       (s, i) =>
         s?.title && (
