@@ -8,7 +8,15 @@ import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
 import mdContent from '../mock/testMarkdown.md?raw';
 
 export default class MarkdownExample extends Component {
-  hasCode = signal(false);
+  static css = [
+    `
+      .space::part(md_h3) {
+        color: red;
+      }
+    `,
+  ];
+
+  hasCode = signal(true);
 
   hasLink = signal(false);
 
@@ -73,7 +81,7 @@ export default class MarkdownExample extends Component {
 
   render() {
     return (
-      <t-space>
+      <t-space class="space">
         {/* rerenderKey正常写不需要，这里是为了触发重新挂载渲染 */}
         <t-chat-item key={this.rerenderKey.value} {...this.itemProps} />
         <t-space direction="vertical">
