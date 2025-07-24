@@ -54,14 +54,16 @@ export default class Chatlist extends Component<TdChatListProps> {
     if (!autoScroll || !this.isAutoScrollEnabled) {
       return;
     }
-    this.scrollTo();
+    this.scrollList({
+      to: 'bottom',
+    });
   }, 50);
 
   /** 检测自动滚动是否触发 */
   private checkAutoScroll = throttle(() => {
     const { scrollTop, scrollHeight, clientHeight } = this.listRef.current;
-    // 上滚检测给一个小阈值，避免生成过程中样式变更造成误触
-    const upScroll = this.scrollTopTmp - scrollTop >= 10 ? true : false;
+    // 判断上滚：总高度未变更 && 滚动diff大于阈值
+    const upScroll = scrollHeight === this.scrollHeightTmp && this.scrollTopTmp - scrollTop >= 10 ? true : false;
 
     // 用户主动上滚，取消自动滚动，标记为手动阻止
     if (upScroll) {
@@ -82,7 +84,7 @@ export default class Chatlist extends Component<TdChatListProps> {
       }
     }
     this.scrollTopTmp = scrollTop;
-  }, 100);
+  }, 60);
 
   /** 检测并显示滚到底部按钮 */
   private checkAndShowScrollButton = debounce(() => {
