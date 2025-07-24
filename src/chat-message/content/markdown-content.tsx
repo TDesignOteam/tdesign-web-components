@@ -1,8 +1,9 @@
 import MarkdownIt from 'markdown-it';
 import linkPlugin from 'markdown-it-link-attributes';
-import { Component, signal, tag } from 'omi';
+import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
+import { setExportparts } from '../../_util/dom';
 import markdownItCjFriendlyPlugin from '../md/markdownItCjkFriendly';
 import { mdPartAttrPlugin } from '../md/utils';
 
@@ -71,8 +72,19 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
   isMarkdownInit = signal(false);
 
+  receiveProps(
+    props: TdChatMarkdownContentProps | OmiProps<TdChatMarkdownContentProps, any>,
+    oldProps: TdChatMarkdownContentProps | OmiProps<TdChatMarkdownContentProps, any>,
+  ) {
+    if (props.content.length === oldProps.content.length) {
+      return false;
+    }
+    return true;
+  }
+
   ready() {
     this.initMarkdown();
+    setExportparts(this);
   }
 
   initMarkdown = async () => {

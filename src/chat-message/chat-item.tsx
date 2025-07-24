@@ -20,7 +20,6 @@ import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
-  isAIMessage,
   isAttachmentContent,
   isImageContent,
   isMarkdownContent,
@@ -79,14 +78,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
     // 处理用户消息
     if (isUserMessage(newMsg) && isUserMessage(oldMsg) && newMsg.content === oldMsg.content) {
-      return false;
-    }
-    // 处理AI消息
-    if (
-      isAIMessage(newMsg) &&
-      isAIMessage(oldMsg) &&
-      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
-    ) {
       return false;
     }
 
@@ -241,13 +232,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
-          return convertToLightDomNode(
+          return (
             <t-chat-md-content
               key={elementKey}
               className={`${className}__detail`}
               {...chatContentProps?.markdown}
               content={content.data}
-            ></t-chat-md-content>,
+            ></t-chat-md-content>
           );
         }
         // 自定义渲染slot
