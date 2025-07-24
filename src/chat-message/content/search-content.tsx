@@ -17,6 +17,7 @@ type SearchContent = {
   references?: ReferenceItem[];
 };
 export type TdChatSearchContentProps = {
+  key?: string;
   content?: SearchContent;
   status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
   onChange?: (value: CollapseValue) => void;
@@ -26,6 +27,7 @@ export type TdChatSearchContentProps = {
 
 // 纯函数渲染器
 export const renderSearch = ({
+  key,
   content,
   status,
   useCollapse = true,
@@ -51,7 +53,7 @@ export const renderSearch = ({
   );
 
   return (
-    <div className={`${className}__search__wrapper`}>
+    <div key={key} className={`${className}__search__wrapper`}>
       {useCollapse ? (
         <t-collapse
           className={`${className}__search`}
