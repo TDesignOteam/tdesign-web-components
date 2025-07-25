@@ -3,31 +3,30 @@
 
 // AG-UI 标准事件类型
 const AGUI_EVENT_TYPES = {
-  // 生命周期事件
+  TEXT_MESSAGE_START: 'TEXT_MESSAGE_START',
+  TEXT_MESSAGE_CONTENT: 'TEXT_MESSAGE_CONTENT',
+  TEXT_MESSAGE_END: 'TEXT_MESSAGE_END',
+  TEXT_MESSAGE_CHUNK: 'TEXT_MESSAGE_CHUNK',
+  THINKING_TEXT_MESSAGE_START: 'THINKING_TEXT_MESSAGE_START',
+  THINKING_TEXT_MESSAGE_CONTENT: 'THINKING_TEXT_MESSAGE_CONTENT',
+  THINKING_TEXT_MESSAGE_END: 'THINKING_TEXT_MESSAGE_END',
+  TOOL_CALL_START: 'TOOL_CALL_START',
+  TOOL_CALL_ARGS: 'TOOL_CALL_ARGS',
+  TOOL_CALL_END: 'TOOL_CALL_END',
+  TOOL_CALL_CHUNK: 'TOOL_CALL_CHUNK',
+  TOOL_CALL_RESULT: 'TOOL_CALL_RESULT',
+  THINKING_START: 'THINKING_START',
+  THINKING_END: 'THINKING_END',
+  STATE_SNAPSHOT: 'STATE_SNAPSHOT',
+  STATE_DELTA: 'STATE_DELTA',
+  MESSAGES_SNAPSHOT: 'MESSAGES_SNAPSHOT',
+  RAW: 'RAW',
+  CUSTOM: 'CUSTOM',
   RUN_STARTED: 'RUN_STARTED',
   RUN_FINISHED: 'RUN_FINISHED',
   RUN_ERROR: 'RUN_ERROR',
   STEP_STARTED: 'STEP_STARTED',
   STEP_FINISHED: 'STEP_FINISHED',
-
-  // 文本消息事件
-  TEXT_MESSAGE_START: 'TEXT_MESSAGE_START',
-  TEXT_MESSAGE_CHUNK: 'TEXT_MESSAGE_CHUNK',
-  TEXT_MESSAGE_END: 'TEXT_MESSAGE_END',
-
-  // 工具调用事件
-  TOOL_CALL_START: 'TOOL_CALL_START',
-  TOOL_CALL_CHUNK: 'TOOL_CALL_CHUNK',
-  TOOL_CALL_END: 'TOOL_CALL_END',
-
-  // 状态管理事件
-  STATE_SNAPSHOT: 'STATE_SNAPSHOT',
-  STATE_DELTA: 'STATE_DELTA',
-  MESSAGES_SNAPSHOT: 'MESSAGES_SNAPSHOT',
-
-  // 扩展事件
-  RAW: 'RAW',
-  CUSTOM: 'CUSTOM',
 };
 
 // 生成唯一的 runId
@@ -39,651 +38,550 @@ const generateMessageId = () => `msg_${Date.now()}_${Math.random().toString(36).
 // 生成唯一的 toolCallId
 const generateToolCallId = () => `tool_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-// AG-UI 标准事件流数据
-const aguiChunks = [
-  // 1. 对话开始事件
+// 简化的AG-UI事件流（用于快速测试）
+const simpleAguiChunks = [];
+
+// 北京5日游旅游规划事件流
+const tourChunks = [
+  // 1. 运行开始
   {
     type: AGUI_EVENT_TYPES.RUN_STARTED,
-    data: {
-      prompt: '请帮我规划一次家庭聚会',
-      messageId: generateMessageId(),
-      attachments: [],
-      agentId: 'family-planner-agent',
-      capabilities: ['meal_planning', 'device_scheduling', 'safety_monitoring'],
-    },
-    timestamp: Date.now(),
+    prompt: '请为我规划一个北京5日游行程',
+    messageId: generateMessageId(),
+    threadId: 'thread_001',
     runId: generateRunId(),
-    agentId: 'family-planner-agent',
-    threadId: 'thread_family_001',
-  },
-
-  // 2. 步骤开始事件 - 业务层面：餐饮规划步骤
-  {
-    type: AGUI_EVENT_TYPES.STEP_STARTED,
-    data: {
-      stepId: 'step_meal_planning',
-      stepName: '餐饮方案规划',
-      description: '开始分析用户饮食偏好并生成餐饮方案',
-      estimatedDuration: 12000, // 预计12秒
-      progress: 0,
-    },
+    agentId: 'travel-planner',
     timestamp: Date.now(),
-    runId: null, // 继承上一个事件的 runId
-    agentId: 'family-planner-agent',
   },
-
-  // 3. 思考过程开始 - 在步骤内部
-  {
-    type: AGUI_EVENT_TYPES.CUSTOM,
-    data: {
-      type: 'thinking',
-      title: '分析用户需求',
-      content: '正在分析用户提供的家庭聚会信息...',
-      step: 'meal_planning',
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 4. 工具调用开始 - 技术层面：调用饮食分析工具
-  {
-    type: AGUI_EVENT_TYPES.TOOL_CALL_START,
-    data: {
-      toolCallId: generateToolCallId(),
-      toolName: 'dietary_preference_analyzer',
-      action: 'analyze',
-      input: {
-        partySize: 8,
-        dietaryRestrictions: ['gluten-free', 'vegetarian'],
-        preferences: ['healthy', 'easy-to-prepare'],
-      },
-      stepId: 'step_meal_planning', // 关联到当前步骤
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 5. 工具调用结果
-  {
-    type: AGUI_EVENT_TYPES.TOOL_CALL_END,
-    data: {
-      toolCallId: null, // 继承上一个事件的 toolCallId
-      result: {
-        success: true,
-        recommendations: ['香草烤鸡（无麸质）', '蔬菜沙拉', '智能调酒机方案B'],
-        preparationTime: '45分钟',
-        alcoholContent: '12%',
-      },
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 6. 文本消息开始
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_START,
-    data: {
-      messageId: generateMessageId(),
-      contentType: 'text',
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 7. 文本消息块（流式）
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '🍴 推荐餐饮方案：',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '主菜是香草烤鸡（无麸质），',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '准备耗时45分钟；',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '饮品是智能调酒机方案B，',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '酒精浓度12%。',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 8. 文本消息结束
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_END,
-    data: {
-      messageId: null, // 继承上一个事件的 messageId
-      finalContent: '🍴 推荐餐饮方案：主菜是香草烤鸡（无麸质），准备耗时45分钟；饮品是智能调酒机方案B，酒精浓度12%。',
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 9. 步骤完成
-  {
-    type: AGUI_EVENT_TYPES.STEP_FINISHED,
-    data: {
-      stepId: 'step_meal_planning',
-      result: '餐饮方案规划完成',
-      duration: 12000, // 12秒
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 9.5. 状态增量更新 - 步骤完成后的状态变化
-  {
-    type: AGUI_EVENT_TYPES.STATE_DELTA,
-    data: {
-      updates: [
-        {
-          path: 'agentState.progress',
-          value: 33,
-          timestamp: Date.now(),
-        },
-        {
-          path: 'agentState.completedSteps',
-          value: ['meal_planning'],
-          operation: 'append',
-        },
-        {
-          path: 'agentState.memory.contextHistory',
-          value: [
-            {
-              type: 'meal_planning_result',
-              data: {
-                mainDish: '香草烤鸡（无麸质）',
-                preparationTime: '45分钟',
-                beverage: '智能调酒机方案B',
-                alcoholContent: '12%',
-              },
-              timestamp: Date.now(),
-            },
-          ],
-          operation: 'append',
-        },
-      ],
-      reason: '餐饮规划步骤完成',
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 10. 下一个步骤开始
-  {
-    type: AGUI_EVENT_TYPES.STEP_STARTED,
-    data: {
-      stepId: 'step_device_scheduling',
-      stepName: '设备调度',
-      description: '开始调度智能设备',
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 11. 工具调用开始
-  {
-    type: AGUI_EVENT_TYPES.TOOL_CALL_START,
-    data: {
-      toolCallId: generateToolCallId(),
-      toolName: 'smart_device_scheduler',
-      action: 'schedule',
-      input: {
-        devices: ['smart_oven', 'climate_control'],
-        timing: 'party_start_minus_45min',
-      },
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 12. 工具调用结果
-  {
-    type: AGUI_EVENT_TYPES.TOOL_CALL_END,
-    data: {
-      toolCallId: null,
-      result: {
-        success: true,
-        schedule: {
-          smart_oven: {
-            action: 'preheat',
-            temperature: '180°C',
-            startTime: '09:15',
-            duration: '45分钟',
-          },
-          climate_control: {
-            temperature: '23°C',
-            humidity: '55%',
-          },
-        },
-      },
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 13. 文本消息块
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '📱 设备调度方案：',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '智能烤箱预热至180°C，',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '倒计时09:15启动；',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '环境调节至23°C，湿度55%。',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 14. 步骤完成
-  {
-    type: AGUI_EVENT_TYPES.STEP_FINISHED,
-    data: {
-      stepId: 'step_device_scheduling',
-      result: '设备调度完成',
-      duration: 8000, // 8秒
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 15. 安全监测步骤
-  {
-    type: AGUI_EVENT_TYPES.STEP_STARTED,
-    data: {
-      stepId: 'step_safety_monitoring',
-      stepName: '安全监测',
-      description: '开始安全巡检',
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 16. 工具调用
-  {
-    type: AGUI_EVENT_TYPES.TOOL_CALL_START,
-    data: {
-      toolCallId: generateToolCallId(),
-      toolName: 'safety_inspector',
-      action: 'inspect',
-      input: {
-        areas: ['kitchen', 'living_room', 'outdoor'],
-        checks: ['gas_leak', 'electrical_safety', 'fire_hazards'],
-      },
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 17. 工具调用结果
-  {
-    type: AGUI_EVENT_TYPES.TOOL_CALL_END,
-    data: {
-      toolCallId: null,
-      result: {
-        success: true,
-        status: 'all_clear',
-        findings: '未发现燃气泄漏风险，所有安全检查通过',
-      },
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 18. 最终文本消息
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '✅ 安全巡检完成：未发现燃气泄漏风险。',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '所有智能体已完成协作！',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 19. 步骤完成
-  {
-    type: AGUI_EVENT_TYPES.STEP_FINISHED,
-    data: {
-      stepId: 'step_safety_monitoring',
-      result: '安全监测完成',
-      duration: 5000, // 5秒
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'family-planner-agent',
-  },
-
-  // 20. 状态快照 - 完整状态同步
+  // 2. 初始状态快照
   {
     type: AGUI_EVENT_TYPES.STATE_SNAPSHOT,
-    data: {
-      agentState: {
-        currentStep: 'completed',
-        completedSteps: ['meal_planning', 'device_scheduling', 'safety_monitoring'],
-        totalSteps: 3,
-        progress: 100,
-        memory: {
-          userPreferences: {
-            partySize: 8,
-            dietaryRestrictions: ['gluten-free', 'vegetarian'],
-            preferences: ['healthy', 'easy-to-prepare'],
-          },
-          contextHistory: [
-            {
-              type: 'meal_planning_result',
-              data: {
-                mainDish: '香草烤鸡（无麸质）',
-                preparationTime: '45分钟',
-                beverage: '智能调酒机方案B',
-                alcoholContent: '12%',
-              },
-            },
-            {
-              type: 'device_scheduling_result',
-              data: {
-                smartOven: { temperature: '180°C', startTime: '09:15' },
-                climateControl: { temperature: '23°C', humidity: '55%' },
-              },
-            },
-            {
-              type: 'safety_check_result',
-              data: { status: 'all_clear', findings: '未发现燃气泄漏风险' },
-            },
-          ],
-        },
-        tools: {
-          available: ['dietary_preference_analyzer', 'smart_device_scheduler', 'safety_inspector'],
-          active: [],
-          usageHistory: [
-            { tool: 'dietary_preference_analyzer', calls: 1, success: true },
-            { tool: 'smart_device_scheduler', calls: 1, success: true },
-            { tool: 'safety_inspector', calls: 1, success: true },
-          ],
-        },
-      },
-      messages: [
-        {
-          id: 'msg_1',
-          role: 'user',
-          content: '请帮我规划一次家庭聚会',
-          timestamp: Date.now() - 30000,
-          status: 'completed',
-        },
-        {
-          id: 'msg_2',
-          role: 'assistant',
-          content:
-            '🍴 推荐餐饮方案：主菜是香草烤鸡（无麸质），准备耗时45分钟；饮品是智能调酒机方案B，酒精浓度12%。\n\n📱 设备调度方案：智能烤箱预热至180°C，倒计时09:15启动；环境调节至23°C，湿度55%。\n\n✅ 安全巡检完成：未发现燃气泄漏风险。所有智能体已完成协作！',
-          timestamp: Date.now(),
-          status: 'completed',
-          processingInfo: {
-            startedAt: Date.now() - 25000,
-            completedAt: Date.now(),
-            totalDuration: 25000,
-            steps: [
-              { name: '餐饮规划', duration: 12000 },
-              { name: '设备调度', duration: 8000 },
-              { name: '安全监测', duration: 5000 },
-            ],
-          },
-        },
-      ],
-      sessionId: 'session_family_001',
-      userId: 'user_123',
+    snapshot: {
+      itinerary: null,
+      userPreferences: null,
+      status: 'init',
     },
-    timestamp: Date.now(),
     runId: null,
-    agentId: 'family-planner-agent',
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
   },
 
-  // 21. 对话完成
+  // ========== 步骤1：查询天气 ==========
+  // 状态变更：进入查询天气
   {
-    type: AGUI_EVENT_TYPES.RUN_FINISHED,
-    data: {
-      success: true,
-      reason: 'completed',
-      result: {
-        totalSteps: 3,
-        totalDuration: 25000, // 25秒
-        finalMessage: '家庭聚会规划完成！',
-        summary: {
-          mealPlan: '香草烤鸡（无麸质）+ 智能调酒机方案B',
-          deviceSchedule: '智能烤箱预热 + 环境调节',
-          safetyStatus: '安全检查通过',
-        },
-      },
-    },
-    timestamp: Date.now(),
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [{ op: 'replace', path: '/status', value: 'weather_querying' }],
     runId: null,
-    agentId: 'family-planner-agent',
-  },
-];
-
-// 简化的AG-UI事件流（用于快速测试）
-const simpleAguiChunks = [
-  // 对话开始
-  {
-    type: AGUI_EVENT_TYPES.RUN_STARTED,
-    data: {
-      prompt: '你好，请介绍一下AG-UI协议',
-      messageId: generateMessageId(),
-      attachments: [],
-    },
+    agentId: 'travel-planner',
     timestamp: Date.now(),
-    runId: generateRunId(),
-    agentId: 'agui-demo-agent',
   },
-
-  // 思考过程
   {
-    type: AGUI_EVENT_TYPES.CUSTOM,
-    data: {
-      type: 'thinking',
-      title: '思考中',
-      content: '正在分析用户关于AG-UI协议的问题...',
-    },
-    timestamp: Date.now(),
+    type: AGUI_EVENT_TYPES.STEP_STARTED,
+    stepName: '查询天气',
     runId: null,
-    agentId: 'agui-demo-agent',
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
   },
-
-  // 文本消息开始
+  {
+    type: AGUI_EVENT_TYPES.THINKING_START,
+    title: '分析天气需求',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  { type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_START, runId: null, agentId: 'travel-planner', timestamp: Date.now() },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_CONTENT,
+    delta: '用户需要了解北京5日天气以便安排行程。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_CONTENT,
+    delta: '准备调用天气查询工具获取最新天气信息。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  { type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_END, runId: null, agentId: 'travel-planner', timestamp: Date.now() },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_END,
+    title: '思考结束',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_START,
+    toolCallId: generateToolCallId(),
+    toolCallName: 'get_weather_forecast',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_ARGS,
+    toolCallId: null,
+    delta: '{"city": "北京", "days": 5}',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_END,
+    toolCallId: null,
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_RESULT,
+    toolCallId: null,
+    toolCallName: 'get_weather_forecast',
+    content: JSON.stringify([
+      { day: 1, high: 28, low: 18, condition: '晴' },
+      { day: 2, high: 26, low: 17, condition: '多云' },
+      { day: 3, high: 24, low: 16, condition: '小雨' },
+      { day: 4, high: 27, low: 19, condition: '晴' },
+      { day: 5, high: 29, low: 20, condition: '晴' },
+    ]),
+    role: 'tool',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
   {
     type: AGUI_EVENT_TYPES.TEXT_MESSAGE_START,
-    data: {
-      messageId: generateMessageId(),
-      contentType: 'text',
-    },
-    timestamp: Date.now(),
+    messageId: generateMessageId(),
+    role: 'assistant',
     runId: null,
-    agentId: 'agui-demo-agent',
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
   },
-
-  // 流式文本块
   {
     type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: 'AG-UI（Agent User Interaction Protocol）是一个',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
+    messageId: null,
+    delta: '北京未来5天天气如下：',
     runId: null,
-    agentId: 'agui-demo-agent',
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
   },
-
   {
     type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '用于前端应用与AI代理通信的标准化协议。',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
+    messageId: null,
+    delta: '第1天：晴，28~18℃；第2天：多云，26~17℃；第3天：小雨，24~16℃；第4天：晴，27~19℃；第5天：晴，29~20℃。',
     runId: null,
-    agentId: 'agui-demo-agent',
-  },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '它提供了16种标准事件类型，',
-      contentType: 'text',
-      delta: true,
-    },
+    agentId: 'travel-planner',
     timestamp: Date.now(),
-    runId: null,
-    agentId: 'agui-demo-agent',
   },
-
-  {
-    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
-    data: {
-      content: '支持实时流式交互和双向通信。',
-      contentType: 'text',
-      delta: true,
-    },
-    timestamp: Date.now(),
-    runId: null,
-    agentId: 'agui-demo-agent',
-  },
-
-  // 文本消息结束
   {
     type: AGUI_EVENT_TYPES.TEXT_MESSAGE_END,
-    data: {
-      messageId: null,
-      finalContent:
-        'AG-UI（Agent User Interaction Protocol）是一个用于前端应用与AI代理通信的标准化协议。它提供了16种标准事件类型，支持实时流式交互和双向通信。',
-    },
-    timestamp: Date.now(),
+    messageId: null,
     runId: null,
-    agentId: 'agui-demo-agent',
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
   },
+  {
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [
+      {
+        op: 'add',
+        path: '/itinerary/weather',
+        value: [
+          { day: 1, high: 28, low: 18, condition: '晴' },
+          { day: 2, high: 26, low: 17, condition: '多云' },
+          { day: 3, high: 24, low: 16, condition: '小雨' },
+          { day: 4, high: 27, low: 19, condition: '晴' },
+          { day: 5, high: 29, low: 20, condition: '晴' },
+        ],
+      },
+    ],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STEP_FINISHED,
+    stepName: '查询天气',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  // 查询天气结束
 
-  // 对话完成
+  // ========== 步骤2：行程规划 ==========
+  // 状态变更：进入行程规划
+  {
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [{ op: 'replace', path: '/status', value: 'planning' }],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STEP_STARTED,
+    stepName: '行程规划',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_START,
+    title: '分析行程需求',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  { type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_START, runId: null, agentId: 'travel-planner', timestamp: Date.now() },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_CONTENT,
+    delta: '根据天气和用户兴趣，规划每日路线。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_CONTENT,
+    delta: '优先安排晴天户外活动，雨天安排室内景点。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  { type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_END, runId: null, agentId: 'travel-planner', timestamp: Date.now() },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_END,
+    title: '思考结束',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_START,
+    toolCallId: generateToolCallId(),
+    toolCallName: 'plan_itinerary',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_ARGS,
+    toolCallId: null,
+    delta: '{"city": "北京", "days": 5, "weather": "晴/多云/小雨"}',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_END,
+    toolCallId: null,
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_RESULT,
+    toolCallId: null,
+    toolCallName: 'plan_itinerary',
+    content: JSON.stringify([
+      { day: 1, activities: ['抵达北京', '入住酒店', '王府井步行街'] },
+      { day: 2, activities: ['故宫博物院', '天安门广场', '北京烤鸭'] },
+      { day: 3, activities: ['长城（八达岭）', '明十三陵', '京剧表演'] },
+      { day: 4, activities: ['颐和园', '圆明园', '三里屯'] },
+      { day: 5, activities: ['鸟巢', '水立方', '798艺术区', '返程'] },
+    ]),
+    role: 'tool',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_START,
+    messageId: generateMessageId(),
+    role: 'assistant',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '以下是为您定制的北京5日游行程：',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '第1天：抵达北京，入住酒店，王府井步行街。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '第2天：故宫博物院，天安门广场，北京烤鸭。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '第3天：长城（八达岭），明十三陵，京剧表演。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '第4天：颐和园，圆明园，三里屯。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '第5天：鸟巢，水立方，798艺术区，返程。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_END,
+    messageId: null,
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [
+      {
+        op: 'add',
+        path: '/itinerary/plan',
+        value: [
+          { day: 1, activities: ['抵达北京', '入住酒店', '王府井步行街'] },
+          { day: 2, activities: ['故宫博物院', '天安门广场', '北京烤鸭'] },
+          { day: 3, activities: ['长城（八达岭）', '明十三陵', '京剧表演'] },
+          { day: 4, activities: ['颐和园', '圆明园', '三里屯'] },
+          { day: 5, activities: ['鸟巢', '水立方', '798艺术区', '返程'] },
+        ],
+      },
+    ],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STEP_FINISHED,
+    stepName: '行程规划',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  // 行程规划结束
+
+  // ========== 步骤3：酒店推荐 ==========
+  // 状态变更：进入酒店推荐
+  {
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [{ op: 'replace', path: '/status', value: 'hotel_recommending' }],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STEP_STARTED,
+    stepName: '酒店推荐',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_START,
+    title: '分析酒店需求',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  { type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_START, runId: null, agentId: 'travel-planner', timestamp: Date.now() },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_CONTENT,
+    delta: '根据行程和预算，筛选合适酒店。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_CONTENT,
+    delta: '优先推荐交通便利、评分高的酒店。',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  { type: AGUI_EVENT_TYPES.THINKING_TEXT_MESSAGE_END, runId: null, agentId: 'travel-planner', timestamp: Date.now() },
+  {
+    type: AGUI_EVENT_TYPES.THINKING_END,
+    title: '思考结束',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_START,
+    toolCallId: generateToolCallId(),
+    toolCallName: 'get_hotel_details',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_ARGS,
+    toolCallId: null,
+    delta: '{"location": "王府井", "budget": "中等"}',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_END,
+    toolCallId: null,
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TOOL_CALL_RESULT,
+    toolCallId: null,
+    toolCallName: 'get_hotel_details',
+    content: JSON.stringify([
+      { name: '北京王府井希尔顿酒店', rating: 4.8, price: 1200 },
+      { name: '北京长城脚下的公社', rating: 4.5, price: 800 },
+      { name: '北京四合院宾馆', rating: 4.2, price: 600 },
+    ]),
+    role: 'tool',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_START,
+    messageId: generateMessageId(),
+    role: 'assistant',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '为您推荐以下酒店：',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '1. 北京王府井希尔顿酒店（4.8分，¥1200/晚）',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '2. 北京长城脚下的公社（4.5分，¥800/晚）',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_CHUNK,
+    messageId: null,
+    delta: '3. 北京四合院宾馆（4.2分，¥600/晚）',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.TEXT_MESSAGE_END,
+    messageId: null,
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [
+      {
+        op: 'add',
+        path: '/itinerary/hotels',
+        value: [
+          { name: '北京王府井希尔顿酒店', rating: 4.8, price: 1200 },
+          { name: '北京长城脚下的公社', rating: 4.5, price: 800 },
+          { name: '北京四合院宾馆', rating: 4.2, price: 600 },
+        ],
+      },
+    ],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.STEP_FINISHED,
+    stepName: '酒店推荐',
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  // 酒店推荐结束
+
+  // 终局快照和收尾
+  // 状态变更：流程已完成
+  {
+    type: AGUI_EVENT_TYPES.STATE_DELTA,
+    delta: [{ op: 'replace', path: '/status', value: 'finished' }],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.MESSAGES_SNAPSHOT,
+    messages: [
+      { id: generateMessageId(), role: 'user', content: '请为我规划一个北京5日游行程' },
+      { id: generateMessageId(), role: 'assistant', content: '为您推荐以下酒店：1. 北京王府井希尔顿酒店...' },
+    ],
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.CUSTOM,
+    event: { tip: '节假日景点可能拥堵，请提前规划。' },
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
+  {
+    type: AGUI_EVENT_TYPES.RAW,
+    event: { content: '行程规划完成', metadata: { source: 'travel-planner' } },
+    runId: null,
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
+  },
   {
     type: AGUI_EVENT_TYPES.RUN_FINISHED,
-    data: {
-      success: true,
-      reason: 'completed',
-      result: {
-        totalTokens: 45,
-        duration: 3000,
-      },
-    },
-    timestamp: Date.now(),
+    threadId: 'thread_001',
     runId: null,
-    agentId: 'agui-demo-agent',
+    result: { totalAttractions: 8, estimatedCost: 5000, duration: '5天4晚' },
+    agentId: 'travel-planner',
+    timestamp: Date.now(),
   },
 ];
-
-export { aguiChunks, simpleAguiChunks, AGUI_EVENT_TYPES };
+export { simpleAguiChunks, tourChunks, AGUI_EVENT_TYPES };

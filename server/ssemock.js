@@ -3,7 +3,7 @@ import express from 'express';
 
 import { TravelAgentComplete } from './travel-agent/travel-agent-complete-example.js';
 import { agentChunks } from './agent.js';
-import { aguiChunks, simpleAguiChunks } from './agui-data.js';
+import { simpleAguiChunks, tourChunks } from './agui-data.js';
 import { chunks } from './data.js';
 import {
   generateErrorScenarioEvents,
@@ -122,11 +122,11 @@ app.post('/sse/agui', (req, res) => {
   setSSEHeaders(res);
 
   // 根据请求参数选择使用完整版还是简化版数据
-  const useSimple = req.body?.simple === true;
-  const selectedChunks = useSimple ? simpleAguiChunks : aguiChunks;
+  // const useSimple = req.body?.simple === true;
+  // const selectedChunks = useSimple ? simpleAguiChunks : aguiChunks;
 
   // 将AG-UI事件转换为SSE格式
-  const messages = selectedChunks.map(
+  const messages = tourChunks.map(
     (chunk) =>
       // AG-UI事件直接作为data发送，不需要额外包装
       `data: ${JSON.stringify(chunk)}\n\n`,
