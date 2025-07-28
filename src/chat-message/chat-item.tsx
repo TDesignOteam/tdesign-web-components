@@ -212,6 +212,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
             useCollapse: chatContentProps?.search?.useCollapse,
             handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
             handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
+            ...content?.ext,
           });
         }
 
@@ -229,7 +230,8 @@ export default class ChatItem extends Component<ChatMessageProps> {
             content: content.data,
             status: content.status,
             animation,
-            ...this.props.chatContentProps?.thinking,
+            ...chatContentProps?.thinking,
+            ...content?.ext,
           });
         }
         if (isImageContent(content)) {
