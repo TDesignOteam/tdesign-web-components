@@ -76,7 +76,7 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
     props: TdChatMarkdownContentProps | OmiProps<TdChatMarkdownContentProps, any>,
     oldProps: TdChatMarkdownContentProps | OmiProps<TdChatMarkdownContentProps, any>,
   ) {
-    if (props.content.length === oldProps.content.length) {
+    if (props.content?.length === oldProps.content?.length) {
       return false;
     }
     return true;
