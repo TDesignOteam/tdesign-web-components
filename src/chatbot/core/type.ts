@@ -19,6 +19,7 @@ export interface ChatBaseContent<T extends string, TData> {
   data: TData;
   status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
   id?: string;
+  ext?: Record<string, any>; // todo: 关联TdChatContentProps
 }
 
 // 内容类型

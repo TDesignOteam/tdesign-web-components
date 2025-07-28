@@ -6,7 +6,6 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
-import { convertToLightDomNode } from '../_util/lightDom';
 import type { TdChatListProps, TdChatListScrollToOptions } from './type';
 
 import styles from './style/chat-list.less';
@@ -150,7 +149,7 @@ export default class Chatlist extends Component<TdChatListProps> {
             className={classname([`${className}__scroll__button`])}
             onClick={() => this.scrollList({ behavior: 'smooth', to: 'bottom' })}
           >
-            {convertToLightDomNode(<t-icon-arrow-down />)}
+            <t-icon-arrow-down className={`${className}__scroll__icon`} />
           </div>
         </div>
         <div ref={this.innerRef}>
