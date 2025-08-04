@@ -1,4 +1,4 @@
-import _MarkdownContent from './content/cherry-markdown-content';
+import _MarkdownContent from './content/markdown-content';
 import _SearchContent from './content/search-content';
 import _SuggestionContent from './content/suggestion-content';
 import _ThinkingContent from './content/thinking-content';
@@ -13,6 +13,6 @@ export const ChatMessage = _ChatItem;
 export type { TdChatThinkContentProps } from './content/thinking-content';
 export type { TdChatSearchContentProps } from './content/search-content';
 export type { TdChatSuggestionContentProps } from './content/suggestion-content';
-export type * from './content/cherry-markdown-content';
+export type * from './content/markdown-content';
 
 export default ChatMessage;

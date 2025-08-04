@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/file-copy';
 import '../../message';
 
 import hljs from 'highlight.js';
-import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
+import { escape } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
@@ -28,7 +28,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
   install(): void {
     const { lang, code } = this.props;
     // 解析代码HTML
-    this.codeHTML = escapeHtml(code);
+    this.codeHTML = escape(code);
     if (lang && hljs.getLanguage(lang)) {
       this.codeHTML = hljs.highlight(code, {
         language: lang,

@@ -5,7 +5,7 @@ import Cherry from '@cherry-markdown/cherry-markdown-dev/dist/cherry-markdown.co
 import { Component } from 'omi';
 import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
-import { TdChatMarkdownContentProps } from '../../chat-message/content/cherry-markdown-content';
+import { TdChatMarkdownContentProps } from '../../chat-message/content/markdown-content';
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
 const defaultChunkParser = (chunk): AIMessageContent => {

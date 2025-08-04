@@ -16,10 +16,6 @@ spline: base
 
 {{ markdown }}
 
-### cMarkdown内容
-
-{{ cherryMarkdown }}
-
 ### 思考内容
 
 {{ thinking }}
