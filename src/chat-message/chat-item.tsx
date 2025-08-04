@@ -20,7 +20,6 @@ import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import {
-  isAIMessage,
   isAttachmentContent,
   isImageContent,
   isMarkdownContent,
@@ -81,14 +80,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
     if (isUserMessage(newMsg) && isUserMessage(oldMsg) && newMsg.content === oldMsg.content) {
       return false;
     }
-    // 处理AI消息
-    if (
-      isAIMessage(newMsg) &&
-      isAIMessage(oldMsg) &&
-      JSON.stringify(newMsg.content).length === JSON.stringify(oldMsg.content).length
-    ) {
-      return false;
-    }
 
     return true;
   }
@@ -99,7 +90,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   private renderMessageHeader() {
     const { name, datetime } = this.props;
-    if (this.renderMessageStatus || (!name && !datetime)) {
+    if (!name && !datetime) {
       return null;
     }
     return (
@@ -160,27 +151,24 @@ export default class ChatItem extends Component<ChatMessageProps> {
   };
 
   get renderMessageStatus() {
-    // console.log('=====renderMessageStatus', isAIMessage(this.props.message));
-    // if (!isAIMessage(this.props.message)) return null;
-    const { status, content = [] } = this.props.message;
+    const { status } = this.props.message;
     const { animation = 'skeleton' } = this.props;
-    // 如果有任一内容，就不用展示message整体状态
-    if (content.length > 0 || status === 'complete') {
-      return null;
+    if (status === 'pending') {
+      return (
+        <div class={`${className}-chat-loading`}>
+          {convertToLightDomNode(
+            <t-chat-loading className={`${className}-chat-loading-light`} animation={animation}></t-chat-loading>,
+          )}
+        </div>
+      );
     }
     if (status === 'stop') {
-      return <div className={`${className}__detail`}>已终止</div>;
+      return <div className={`${className}__stop`}>已终止</div>;
     }
     if (status === 'error') {
       return <div className={`${className}__error`}>请求失败</div>;
     }
-    return (
-      <div class={`${className}-chat-loading`}>
-        {convertToLightDomNode(
-          <t-chat-loading className={`${className}-chat-loading-light`} animation={animation}></t-chat-loading>,
-        )}
-      </div>
-    );
+    return null;
   }
 
   renderMessage() {
@@ -190,15 +178,23 @@ export default class ChatItem extends Component<ChatMessageProps> {
       const elementKey = `${id}-${index}`;
       // 系统消息渲染
       if (role === 'system') {
-        return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
+        return (
+          <div key={elementKey} className={`${getClassPrefix()}-chat__text--${role}`}>
+            {content.data}
+          </div>
+        );
       }
       // 用户消息渲染
       if (role === 'user') {
         if (isAttachmentContent(content)) {
-          return renderAttachments({ content: content.data }, this);
+          return renderAttachments({ key: elementKey, content: content.data }, this);
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
-          return <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>;
+          return (
+            <div key={elementKey} className={`${getClassPrefix()}-chat__text--${role}`}>
+              {content.data}
+            </div>
+          );
         }
         return <slot key={elementKey} name={`${content?.slotName || `${content.type}-${index}`}`}></slot>;
       }
@@ -207,16 +203,19 @@ export default class ChatItem extends Component<ChatMessageProps> {
       if (role === 'assistant') {
         if (isSearchContent(content)) {
           return renderSearch({
+            key: elementKey,
             content: content.data,
             status: content.status,
             useCollapse: chatContentProps?.search?.useCollapse,
             handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
             handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
+            ...content?.ext,
           });
         }
 
         if (isSuggestionContent(content)) {
           return renderSuggestion({
+            key: elementKey,
             content: content.data,
             handlePromptClick: (data) => this.handleClickAction('suggestion', data),
           });
@@ -224,10 +223,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
         if (isThinkingContent(content)) {
           // 思考
           return renderThinking({
+            key: elementKey,
             content: content.data,
             status: content.status,
             animation,
-            ...this.props.chatContentProps?.thinking,
+            ...chatContentProps?.thinking,
+            ...content?.ext,
           });
         }
         if (isImageContent(content)) {
@@ -273,14 +274,19 @@ export default class ChatItem extends Component<ChatMessageProps> {
         data-has-header={!!this.renderMessageHeader()}
       >
         {this.renderAvatar()}
-        {this.renderMessageStatus}
-        {!this.renderMessageStatus ? (
-          <div class={`${className}__main`}>
-            {this.renderMessageHeader()}
-            <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
-            <slot name="actionbar"></slot>
-          </div>
-        ) : null}
+        <div class={`${className}__main`}>
+          {this.renderMessageHeader()}
+          <slot name="content">
+            {this.renderMessageStatus ? (
+              this.renderMessageStatus
+            ) : (
+              <div class={classname(`${className}__content`, `${className}__content--base`)}>
+                {this.renderMessage()}
+              </div>
+            )}
+          </slot>
+          <slot name="actionbar"></slot>
+        </div>
       </div>
     );
   }

@@ -17,6 +17,7 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 type TdChatThinkBaseProps = {
+  key?: string;
   content?: {
     text?: string;
     title?: string;
@@ -35,6 +36,7 @@ export interface IRenderThinking extends TdChatThinkBaseProps {
 
 // 纯函数渲染器（无shadow root）
 export const renderThinking = ({
+  key,
   content,
   status,
   maxHeight,
@@ -58,7 +60,7 @@ export const renderThinking = ({
   return (
     <t-collapse
       // collapsed做key可在非受控更新时触发展开收起
-      key={onChange ? undefined : collapsed}
+      key={onChange ? key : `${collapsed}-${key}`}
       className={`${className}__think ${layoutClass}`}
       expandIconPlacement={'right'}
       value={onChange ? defaultCollapsed : undefined}

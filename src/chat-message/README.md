@@ -10,6 +10,10 @@ spline: base
 
 {{ style }}
 
+## 特殊状态
+
+{{ loading }}
+
 ## 消息内容
 
 ### markdown内容

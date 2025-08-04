@@ -5,6 +5,21 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.12 `2025-08-04` 
+### 🚧 Others
+- feat(chat-item): add content slot, adjust status effect conditions @LzhengH ([#265](https://github.com/TDesignOteam/tdesign-web-components/pull/265))
+- fix(markdown): fix unexpected error @LzhengH ([#264](https://github.com/TDesignOteam/tdesign-web-components/pull/264))
+
+## 🌈 1.1.10 `2025-07-24` 
+### 🚧 Others
+- fix(chatbot): fix item render content key @LzhengH ([#259](https://github.com/TDesignOteam/tdesign-web-components/pull/259))
+
+## 🌈 1.1.9 `2025-07-24` 
+### 🚧 Others
+- feat(chatbot): 优化组合模式下message重复渲染问题 @LzhengH ([#257](https://github.com/TDesignOteam/tdesign-web-components/pull/257))
+- feat(chatbot): 支持onRequest透传用户自定义参数 @LzhengH ([#257](https://github.com/TDesignOteam/tdesign-web-components/pull/257))
+- fix(chatlist):  TdChatbotApi类型问题 @LzhengH ([#257](https://github.com/TDesignOteam/tdesign-web-components/pull/257))
+
 ## 🌈 1.1.6 `2025-07-07` 
 ### 🚧 Others
 - Feat/chatmessage 支持传入avatar/name slot @carolin913 ([#247](https://github.com/TDesignOteam/tdesign-web-components/pull/247))

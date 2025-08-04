@@ -342,13 +342,6 @@ const mockModelsWithCallbacks = {
   onMessage: (chunk) => defaultChunkParser(chunk),
 
   onRequest: (params) => {
-    console.log('📤 [业务层] 发送请求:', {
-      prompt: `${params.prompt?.slice(0, 50)}...`,
-      messageID: params.messageID,
-      attachments: params.attachments?.length || 0,
-      timestamp: new Date().toISOString(),
-    });
-
     const { prompt, messageID, attachments = [] } = params;
     return {
       headers: {
@@ -370,50 +363,6 @@ const mockModelsWithCallbacks = {
         is_search_net: 1,
       }),
     };
-  },
-
-  // === 连接层回调测试 ===
-  connection: {
-    onHeartbeat: (event) => {
-      // 每10次心跳打印一次，避免日志过多
-      if (!(window as any).heartbeatCount) (window as any).heartbeatCount = 0;
-      (window as any).heartbeatCount += 1;
-
-      if ((window as any).heartbeatCount % 10 === 0) {
-        console.log('💓 [连接层] 心跳检测 (x10):', {
-          event,
-          totalCount: (window as any).heartbeatCount,
-          timestamp: new Date(event.timestamp).toLocaleTimeString(),
-        });
-      }
-    },
-
-    onConnectionStateChange: (event) => {
-      console.log('🔧 [连接层] 连接状态变化:', {
-        from: event.from,
-        to: event.to,
-        connectionId: `${event.connectionId?.slice(0, 8)}...`,
-        timestamp: new Date(event.timestamp).toLocaleTimeString(),
-        reason: event.reason || 'unknown',
-      });
-    },
-
-    onConnectionEstablished: (connectionId) => {
-      console.log('🔗 [连接层] SSE连接建立:', {
-        connectionId: `${connectionId?.slice(0, 8)}...`,
-        timestamp: new Date().toISOString(),
-        status: 'connected',
-      });
-    },
-
-    onConnectionLost: (connectionId) => {
-      console.warn('📡 [连接层] SSE连接断开:', {
-        connectionId: `${connectionId?.slice(0, 8)}...`,
-        timestamp: new Date().toISOString(),
-        status: 'disconnected',
-        note: '系统将自动重连',
-      });
-    },
   },
 };
 

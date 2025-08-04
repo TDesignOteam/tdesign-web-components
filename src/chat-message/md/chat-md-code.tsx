@@ -49,7 +49,10 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
             <t-icon-file-copy class={`${`${className}__header__copy`}`}></t-icon-file-copy>
           </span>
         </div>
-        <pre class={`${classname([`${className}__body`, 'hljs'])}`} innerHTML={`<code>${this.codeHTML}</code>`} />
+        <pre
+          class={`${classname([`${className}__body`, 'hljs'])}`}
+          innerHTML={`<code part="${className}__code">${this.codeHTML}</code>`}
+        />
       </div>
     );
   }

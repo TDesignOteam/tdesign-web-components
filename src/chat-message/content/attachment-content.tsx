@@ -3,7 +3,6 @@ import '../../attachments';
 import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import { convertToLightDomNode } from '../../_util/lightDom';
 import { type AttachmentItem } from '../../chatbot/type';
 import { TdAttachmentItem } from '../../filecard';
 
@@ -12,23 +11,22 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 export type TdChatAttachmentContentProps = {
+  key?: string;
   content?: AttachmentItem[];
   onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
 };
 
 // 纯函数渲染器
-export const renderAttachments = ({ content }: TdChatAttachmentContentProps, self: any) => (
-  <div className={`${className}__attachments`}>
-    {convertToLightDomNode(
-      <t-attachments
-        items={content}
-        removable={false}
-        onFileClick={(e) => {
-          self.fire('file-click', e.detail, { composed: true });
-        }}
-        style={{ '--td-attachment-image-width': '150px', '--td-attachment-image-height': '150px' }}
-      />,
-    )}
+export const renderAttachments = ({ key, content }: TdChatAttachmentContentProps, self: any) => (
+  <div key={key} className={`${className}__attachments`}>
+    <t-attachments
+      items={content}
+      removable={false}
+      onFileClick={(e) => {
+        self.fire('file-click', e.detail, { composed: true });
+      }}
+      style={{ '--td-attachment-image-width': '150px', '--td-attachment-image-height': '150px' }}
+    />
   </div>
 );
 

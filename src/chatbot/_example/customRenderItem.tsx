@@ -56,21 +56,28 @@ export default class CustomRenderExample extends Component {
 
   render() {
     return (
-      <t-chat-item {...this.props}>
-        {/* 自定义渲染-植入插槽 */}
-        {this.props.message.content.map((item) => {
-          switch (item.type) {
-            case 'weather':
-              return (
-                <div slot={`${item.type}-${item.id}`} className="weather">
-                  今天{item.data.city}天气{item.data.conditions}
-                </div>
-              );
-          }
-          return null;
-        })}
-        <div slot="actions">自定义actions</div>
-      </t-chat-item>
+      <>
+        <t-chat-item {...this.props}>
+          {/* 自定义渲染-植入插槽 */}
+          {this.props.message.content.map((item) => {
+            switch (item.type) {
+              case 'weather':
+                return (
+                  <div slot={`${item.type}-${item.id}`} className="weather">
+                    今天{item.data.city}天气{item.data.conditions}
+                  </div>
+                );
+            }
+            return null;
+          })}
+          <div slot="actionbar">自定义actions</div>
+        </t-chat-item>
+        <t-chat-item {...this.props}>
+          {/* 完全自定义内容 */}
+          <div slot="content">自定义内容</div>
+          <div slot="actionbar">自定义actions</div>
+        </t-chat-item>
+      </>
     );
   }
 }
