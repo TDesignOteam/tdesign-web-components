@@ -18,7 +18,7 @@ const userMsg = {
 const AIMsg = {
   id: (Math.random() * 10000).toString(),
   role: 'assistant',
-  status: 'pending',
+  status: 'complete',
   content: [
     {
       type: 'text',

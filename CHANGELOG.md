@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.12 `2025-08-04` 
+### 🚧 Others
+- feat(chat-item): add content slot, adjust status effect conditions @LzhengH ([#265](https://github.com/TDesignOteam/tdesign-web-components/pull/265))
+- fix(markdown): fix unexpected error @LzhengH ([#264](https://github.com/TDesignOteam/tdesign-web-components/pull/264))
+
 ## 🌈 1.1.10 `2025-07-24` 
 ### 🚧 Others
 - fix(chatbot): fix item render content key @LzhengH ([#259](https://github.com/TDesignOteam/tdesign-web-components/pull/259))

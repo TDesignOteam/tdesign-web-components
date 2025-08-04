@@ -90,7 +90,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   private renderMessageHeader() {
     const { name, datetime } = this.props;
-    if (this.renderMessageStatus || (!name && !datetime)) {
+    if (!name && !datetime) {
       return null;
     }
     return (
@@ -151,27 +151,24 @@ export default class ChatItem extends Component<ChatMessageProps> {
   };
 
   get renderMessageStatus() {
-    // console.log('=====renderMessageStatus', isAIMessage(this.props.message));
-    // if (!isAIMessage(this.props.message)) return null;
-    const { status, content = [] } = this.props.message;
+    const { status } = this.props.message;
     const { animation = 'skeleton' } = this.props;
-    // 如果有任一内容，就不用展示message整体状态
-    if (content.length > 0 || status === 'complete') {
-      return null;
+    if (status === 'pending') {
+      return (
+        <div class={`${className}-chat-loading`}>
+          {convertToLightDomNode(
+            <t-chat-loading className={`${className}-chat-loading-light`} animation={animation}></t-chat-loading>,
+          )}
+        </div>
+      );
     }
     if (status === 'stop') {
-      return <div className={`${className}__detail`}>已终止</div>;
+      return <div className={`${className}__stop`}>已终止</div>;
     }
     if (status === 'error') {
       return <div className={`${className}__error`}>请求失败</div>;
     }
-    return (
-      <div class={`${className}-chat-loading`}>
-        {convertToLightDomNode(
-          <t-chat-loading className={`${className}-chat-loading-light`} animation={animation}></t-chat-loading>,
-        )}
-      </div>
-    );
+    return null;
   }
 
   renderMessage() {
@@ -277,14 +274,19 @@ export default class ChatItem extends Component<ChatMessageProps> {
         data-has-header={!!this.renderMessageHeader()}
       >
         {this.renderAvatar()}
-        {this.renderMessageStatus}
-        {!this.renderMessageStatus ? (
-          <div class={`${className}__main`}>
-            {this.renderMessageHeader()}
-            <div class={classname(`${className}__content`, `${className}__content--base`)}>{this.renderMessage()}</div>
-            <slot name="actionbar"></slot>
-          </div>
-        ) : null}
+        <div class={`${className}__main`}>
+          {this.renderMessageHeader()}
+          <slot name="content">
+            {this.renderMessageStatus ? (
+              this.renderMessageStatus
+            ) : (
+              <div class={classname(`${className}__content`, `${className}__content--base`)}>
+                {this.renderMessage()}
+              </div>
+            )}
+          </slot>
+          <slot name="actionbar"></slot>
+        </div>
       </div>
     );
   }
