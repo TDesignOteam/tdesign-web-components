@@ -276,7 +276,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
         {this.renderAvatar()}
         <div class={`${className}__main`}>
           {this.renderMessageHeader()}
-          <slot name="content">
+          <slot name="content" className={`${className}__content__slot`}>
             {this.renderMessageStatus ? (
               this.renderMessageStatus
             ) : (
