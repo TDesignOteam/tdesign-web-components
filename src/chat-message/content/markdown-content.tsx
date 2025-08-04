@@ -133,7 +133,8 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
       switch (preset) {
         // 公式
         case 'katex': {
-          await import('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js');
+          // TODO: 怎么载入？
+          // await import('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js');
           this.markdownOptions.engine.syntax.mathBlock = {
             engine: 'katex',
             ...this.markdownOptions.engine.syntax.mathBlock,
