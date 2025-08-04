@@ -8,11 +8,7 @@ import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
 import mdContent from '../mock/testMarkdown.md?raw';
 
 export default class MarkdownExample extends Component {
-  hasCode = signal(true);
-
-  hasLink = signal(false);
-
-  hasKatex = signal(true);
+  hasKatex = signal(false);
 
   rerenderKey = signal(1);
 
@@ -35,22 +31,8 @@ export default class MarkdownExample extends Component {
       },
       chatContentProps: {
         markdown: {
-          options: {
-            html: true,
-            breaks: true,
-            typographer: true,
-            highlight: (str, lang) => {
-              if (lang === 'javascript') {
-                return '<div>javascript自定义<div />';
-              }
-            },
-          },
           pluginConfig: [
             // 预设插件
-            {
-              preset: 'code',
-              enabled: this.hasCode.value,
-            },
             {
               preset: 'katex',
               enabled: this.hasKatex.value,
@@ -60,11 +42,6 @@ export default class MarkdownExample extends Component {
       },
     };
   }
-
-  changeCodeHandler = (e) => {
-    this.hasCode.value = e;
-    this.rerenderKey.value += 1;
-  };
 
   changeKatexHandler = (e) => {
     this.hasKatex.value = e;
@@ -78,10 +55,6 @@ export default class MarkdownExample extends Component {
         <t-chat-item key={this.rerenderKey.value} {...this.itemProps} />
         <t-space direction="vertical">
           <div style={{ width: '100px' }}>插件配置</div>
-          <t-space>
-            代码块
-            <t-switch size="large" value={this.hasCode.value} onChange={this.changeCodeHandler} />
-          </t-space>
           <t-space>
             公式
             <t-switch size="large" value={this.hasKatex.value} onChange={this.changeKatexHandler} />

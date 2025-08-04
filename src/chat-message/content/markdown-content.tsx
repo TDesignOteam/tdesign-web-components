@@ -9,14 +9,14 @@ import { getClassPrefix } from '../../_util/classname';
 import { setExportparts } from '../../_util/dom';
 import { AddPartHook } from '../md/utils';
 
-import styles from '../style/cherry-chat-content.less';
+import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
 import codeStyles from '../style/md/chat-md-code.less';
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
 /** markdown插件预设 */
-export type TdChatContentMDPresetPlugin = '';
+export type TdChatContentMDPresetPlugin = 'katex';
 
 export interface TdChatContentMDPresetConfig {
   preset: TdChatContentMDPresetPlugin;
@@ -29,13 +29,13 @@ export interface TdChatContentMDPresetConfig {
 export type TdChatContentMDPluginConfig =
   /** 预设插件配置 */
   TdChatContentMDPresetConfig;
-/** cherryMarkdown原生插件配置 */
 
 export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars'>;
 
 export interface TdChatMarkdownContentProps {
   content?: string;
   options?: TdChatContentMDOptions;
+  pluginConfig?: Array<TdChatContentMDPluginConfig>;
 }
 
 @tag('t-chat-md-content')
@@ -45,6 +45,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   static propTypes = {
     content: String,
     options: Object,
+    pluginConfig: Object,
   };
 
   static defaultProps: Partial<TdChatMarkdownContentProps> = {
@@ -82,12 +83,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
             },
           },
         },
-        // mathBlock: {
-        //   engine: 'katex',
-        // },
-        // inlineMath: {
-        //   engine: 'katex',
-        // },
       },
       customSyntax: {
         AddPart: {
@@ -117,7 +112,40 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   }
 
   initMarkdown = async () => {
+    const { pluginConfig } = this.props;
     this.isMarkdownInit.value = false;
+
+    // 筛选生效的预设插件
+    const enabledPresetPlugins =
+      (pluginConfig?.filter((item) => {
+        if (typeof item !== 'object') {
+          return false;
+        }
+        if (typeof item.enabled === 'boolean' && !item.enabled) {
+          return false;
+        }
+        return true;
+      }) as TdChatContentMDPresetConfig[] | undefined) || [];
+
+    // 注入预设插件 注意配置优先级用户自定义永远最高
+    for await (const config of enabledPresetPlugins) {
+      const { preset } = config;
+      switch (preset) {
+        // 公式
+        case 'katex': {
+          await import('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js');
+          this.markdownOptions.engine.syntax.mathBlock = {
+            engine: 'katex',
+            ...this.markdownOptions.engine.syntax.mathBlock,
+          };
+          this.markdownOptions.engine.syntax.inlineMath = {
+            engine: 'katex',
+            ...this.markdownOptions.engine.syntax.inlineMath,
+          };
+          break;
+        }
+      }
+    }
 
     const md = new Cherry({
       ...this.markdownOptions,
