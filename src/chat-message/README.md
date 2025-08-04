@@ -7,7 +7,12 @@ spline: base
 ---
 
 ## 消息体样式
+
 {{ style }}
+
+## 特殊状态
+
+{{ loading }}
 
 ## 消息内容
 
