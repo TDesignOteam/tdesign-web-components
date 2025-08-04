@@ -90,7 +90,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   private renderMessageHeader() {
     const { name, datetime } = this.props;
-    if (!name && !datetime) {
+    if (this.renderMessageStatus || (!name && !datetime)) {
       return null;
     }
     return (
@@ -151,9 +151,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
   };
 
   get renderMessageStatus() {
-    const { status } = this.props.message;
+    const { status, content } = this.props.message;
     const { animation = 'skeleton' } = this.props;
-    if (status === 'pending') {
+    if (status === 'pending' || (status === 'streaming' && content.length === 0)) {
       return (
         <div class={`${className}-chat-loading`}>
           {convertToLightDomNode(
@@ -162,12 +162,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
         </div>
       );
     }
-    if (status === 'stop') {
-      return <div className={`${className}__stop`}>已终止</div>;
-    }
-    if (status === 'error') {
-      return <div className={`${className}__error`}>请求失败</div>;
-    }
+    // 这里不添加stop和error状态是避免影响已渲染内容
     return null;
   }
 
@@ -274,19 +269,18 @@ export default class ChatItem extends Component<ChatMessageProps> {
         data-has-header={!!this.renderMessageHeader()}
       >
         {this.renderAvatar()}
-        <div class={`${className}__main`}>
-          {this.renderMessageHeader()}
-          <slot name="content" className={`${className}__content__slot`}>
-            {this.renderMessageStatus ? (
-              this.renderMessageStatus
-            ) : (
+        {this.renderMessageStatus}
+        {!this.renderMessageStatus && (
+          <div class={`${className}__main`}>
+            {this.renderMessageHeader()}
+            <slot name="content" className={`${className}__content__slot`}>
               <div class={classname(`${className}__content`, `${className}__content--base`)}>
                 {this.renderMessage()}
               </div>
-            )}
-          </slot>
-          <slot name="actionbar"></slot>
-        </div>
+            </slot>
+            <slot name="actionbar"></slot>
+          </div>
+        )}
       </div>
     );
   }

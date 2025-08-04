@@ -29,38 +29,6 @@ export default class BasicExample extends Component {
             ],
           }}
         ></t-chat-item>
-        <t-chat-item
-          variant="outline"
-          placement="left"
-          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-          name="DeepSeek"
-          message={{
-            role: 'assistant',
-            status: 'stop',
-            content: [
-              {
-                type: 'text',
-                data: '有内容',
-              },
-            ],
-          }}
-        ></t-chat-item>
-        <t-chat-item
-          variant="outline"
-          placement="left"
-          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
-          name="DeepSeek"
-          message={{
-            role: 'assistant',
-            status: 'error',
-            content: [
-              {
-                type: 'text',
-                data: '有内容',
-              },
-            ],
-          }}
-        ></t-chat-item>
       </>
     );
   }
