@@ -62,7 +62,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
-    "@cherry-markdown/cherry-markdown-dev": "^0.9.4-dev.202507230237.4848b82",
+    "@cherry-markdown/cherry-markdown-dev": "^0.9.4-dev.202508041500.acf8c8d",
     "@popperjs/core": "^2.11.8",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

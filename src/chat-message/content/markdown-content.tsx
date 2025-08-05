@@ -35,7 +35,6 @@ export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars
 export interface TdChatMarkdownContentProps {
   content?: string;
   options?: TdChatContentMDOptions;
-  pluginConfig?: Array<TdChatContentMDPluginConfig>;
 }
 
 @tag('t-chat-md-content')
@@ -45,7 +44,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   static propTypes = {
     content: String,
     options: Object,
-    pluginConfig: Object,
   };
 
   static defaultProps: Partial<TdChatMarkdownContentProps> = {
@@ -57,8 +55,6 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   md: Cherry | null = null;
 
   isMarkdownInit = signal(false);
-
-  private renderCode = (code, lang) => `<t-chat-md-code lang="${lang}" code="${escape(code)}"></t-chat-md-code>`;
 
   /** 传入cherryMarkdown的配置 */
   private markdownOptions: CherryOptions = {
@@ -77,9 +73,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           customRenderer: {
             // 自定义语法渲染器
             all: {
-              render: (code) =>
-                // FIXME: 语言获取
-                this.renderCode(code, 'python'),
+              render: (code, _sign, _cherry, lang) => `<t-chat-md-code lang="${lang}" code="${escape(code)}" />`,
             },
           },
         },
@@ -112,47 +106,12 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   }
 
   initMarkdown = async () => {
-    const { pluginConfig } = this.props;
     this.isMarkdownInit.value = false;
-
-    // 筛选生效的预设插件
-    const enabledPresetPlugins =
-      (pluginConfig?.filter((item) => {
-        if (typeof item !== 'object') {
-          return false;
-        }
-        if (typeof item.enabled === 'boolean' && !item.enabled) {
-          return false;
-        }
-        return true;
-      }) as TdChatContentMDPresetConfig[] | undefined) || [];
-
-    // 注入预设插件 注意配置优先级用户自定义永远最高
-    for await (const config of enabledPresetPlugins) {
-      const { preset } = config;
-      switch (preset) {
-        // 公式
-        case 'katex': {
-          // TODO: 怎么载入？
-          // await import('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js');
-          this.markdownOptions.engine.syntax.mathBlock = {
-            engine: 'katex',
-            ...this.markdownOptions.engine.syntax.mathBlock,
-          };
-          this.markdownOptions.engine.syntax.inlineMath = {
-            engine: 'katex',
-            ...this.markdownOptions.engine.syntax.inlineMath,
-          };
-          break;
-        }
-      }
-    }
 
     const md = new Cherry({
       ...this.markdownOptions,
       el: this.mdRef.current,
     });
-    // md.clearFlowSessionCursor();
 
     this.md = md;
     this.isMarkdownInit.value = true;

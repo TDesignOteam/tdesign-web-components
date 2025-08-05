@@ -1,6 +1,8 @@
 import 'tdesign-web-components/chatbot';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/switch';
+// 公式能力引入，参考cherryMarkdown示例
+import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
 import { Component, signal } from 'omi';
 import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
@@ -39,19 +41,26 @@ export default class MarkdownExample extends Component {
       },
       chatContentProps: {
         markdown: {
-          pluginConfig: [
-            // 预设插件
-            {
-              preset: 'katex',
-              enabled: this.hasKatex.value,
+          options: {
+            engine: {
+              syntax: this.hasKatex.value
+                ? {
+                    mathBlock: {
+                      engine: 'katex',
+                    },
+                    inlineMath: {
+                      engine: 'katex',
+                    },
+                  }
+                : undefined,
             },
-          ],
+          },
         },
       },
     };
   }
 
-  changeKatexHandler = (e) => {
+  changeKatexHandler = async (e) => {
     this.hasKatex.value = e;
     this.rerenderKey.value += 1;
   };
