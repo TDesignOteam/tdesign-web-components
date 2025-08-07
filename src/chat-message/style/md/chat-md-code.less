@@ -34,10 +34,13 @@
     }
   }
 
-  &__body {
+  &__body.hljs {
     padding: var(--td-chat-md-code-body-padding);
     background-color: var(--td-chat-md-code-body-bg);
     overflow: var(--td-chat-md-code-body-overflow);
+    // 覆盖 cherry markdown style
+    border-bottom-left-radius: var(--td-chat-md-code-radius);
+    border-bottom-right-radius: var(--td-chat-md-code-radius);
 
     code {
       font-size: var(--td-chat-md-code-body-code-font-size);

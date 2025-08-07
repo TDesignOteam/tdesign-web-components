@@ -20,7 +20,7 @@ export interface TdChatMessageAction {
 }
 
 export type TdChatContentProps = {
-  markdown?: Omit<TdChatMarkdownContentProps, 'content' | 'role'>;
+  markdown?: Omit<TdChatMarkdownContentProps, 'content'>;
   search?: TdChatContentSearchProps;
   thinking?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;

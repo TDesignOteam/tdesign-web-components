@@ -2,7 +2,7 @@ import 'tdesign-icons-web-components/esm/components/file-copy';
 import '../../message';
 
 import hljs from 'highlight.js';
-import { escapeHtml } from 'markdown-it/lib/common/utils.mjs';
+import { escape } from 'lodash-es';
 import { Component, OmiProps, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
@@ -28,7 +28,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
   install(): void {
     const { lang, code } = this.props;
     // 解析代码HTML
-    this.codeHTML = escapeHtml(code);
+    this.codeHTML = escape(code);
     if (lang && hljs.getLanguage(lang)) {
       this.codeHTML = hljs.highlight(code, {
         language: lang,
@@ -41,7 +41,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
     const { lang } = props;
 
     return (
-      <pre class={`${className}`}>
+      <div class={`${className}`}>
         <div class={`${`${className}__header`}`}>
           <span class={`${`${className}__header__lang`}`}>{lang}</span>
           {/* !事件直接放icon上会触发两次 */}
@@ -49,11 +49,11 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
             <t-icon-file-copy class={`${`${className}__header__copy`}`}></t-icon-file-copy>
           </span>
         </div>
-        <div
+        <pre
           class={`${classname([`${className}__body`, 'hljs'])}`}
-          innerHTML={`<code part=${`${className}__code`}>${this.codeHTML}</code>`}
+          innerHTML={`<code part="${className}__code">${this.codeHTML}</code>`}
         />
-      </pre>
+      </div>
     );
   }
 

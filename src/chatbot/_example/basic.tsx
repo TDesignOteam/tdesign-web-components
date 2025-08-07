@@ -1,7 +1,6 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
 import { findTargetElement, TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
 
@@ -311,7 +310,8 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 
 // 测试用的回调配置
 const mockModelsWithCallbacks = {
-  endpoint: 'http://localhost:3000/sse/normal',
+  // endpoint: 'http://localhost:3000/sse/normal',
+  endpoint: 'https://1257786608-9i9j1kpa67.ap-guangzhou.tencentscf.com/sse/normal',
   stream: true,
 
   // === 业务层回调测试 ===
@@ -403,36 +403,10 @@ const onFileSelect = async (e: CustomEvent<File[]>): Promise<TdAttachmentItem[]>
   return attachments;
 };
 
-const resourceLinkPlugin = (md: MarkdownIt) => {
-  // 保存原始链接渲染函数
-  const defaultRender = md.renderer.rules.link_open?.bind(md.renderer);
-
-  // 覆盖链接渲染规则
-  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
-    const token = tokens[idx];
-    const href = token.attrGet('href') || '';
-    const id = href.split('#promptId=')[1];
-    // 识别特殊资源链接
-    if (href.startsWith('#promptId')) {
-      // 返回自定义DOM结构
-      // return `<a part="resource-link"
-      //   onclick="this.dispatchEvent(new CustomEvent('resource-link-click', {
-      //     bubbles: true,
-      //     composed: true,
-      //     detail: { resourceId: '${id}'}
-      //   }))">`;
-      return `<a part="resource-link" data-resource="${id}">`;
-    }
-
-    // 普通链接保持默认渲染
-    return defaultRender(tokens, idx, options, env, self);
-  };
-};
-
 export default class BasicChat extends Component {
   chatRef = createRef<Chatbot>();
 
-  clickHandler?: (e: MouseEvent) => void;
+  clickHandlerController = new AbortController();
 
   messagePropsFunc = (msg: ChatMessagesData): TdChatMessageConfigItem => {
     const { role, content } = msg;
@@ -489,7 +463,22 @@ export default class BasicChat extends Component {
             layout: 'border',
           },
           markdown: {
-            pluginConfig: [resourceLinkPlugin],
+            options: {
+              engine: {
+                syntax: {
+                  // 补充链接渲染a标签属性
+                  link: {
+                    attrRender: (_text, href) => {
+                      const id = href.split('#promptId=')[1];
+                      // 识别特殊资源链接
+                      if (href.startsWith('#promptId')) {
+                        return `data-resource="${id}"`;
+                      }
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       };
@@ -500,13 +489,22 @@ export default class BasicChat extends Component {
     this.chatRef.current.addEventListener('message_action', (e: CustomEvent) => {
       console.log('message_action', e.detail);
     });
-    this.clickHandler = (e) => {
-      const target = findTargetElement(e, 'a[data-resource]');
-      if (target) {
-        console.log('捕获资源链接点击:', target.dataset);
-      }
-    };
-    document.addEventListener('mousedown', this.clickHandler);
+
+    document.addEventListener(
+      'click',
+      (e) => {
+        const target = findTargetElement(e, 'a[data-resource]');
+        if (target) {
+          e.preventDefault();
+          e.stopPropagation();
+          console.log('捕获资源链接点击:', target.dataset);
+        }
+      },
+      {
+        capture: true,
+        signal: this.clickHandlerController.signal,
+      },
+    );
 
     // 打印回调测试说明
     console.log('🚀 聊天系统初始化完成 - 回调测试已启用');
@@ -518,9 +516,7 @@ export default class BasicChat extends Component {
 
   uninstall(): void {
     // 移除全局点击监听
-    if (this.clickHandler) {
-      document.removeEventListener('mousedown', this.clickHandler);
-    }
+    this.clickHandlerController.abort();
   }
 
   render() {
@@ -528,6 +524,7 @@ export default class BasicChat extends Component {
       <>
         <t-chatbot
           ref={this.chatRef}
+          className="chat"
           style={{ display: 'block', height: '80vh' }}
           defaultMessages={[]}
           // autoSendPrompt="自动发送问题"
