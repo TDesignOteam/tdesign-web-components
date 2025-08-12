@@ -1,7 +1,7 @@
 import '../md/chat-md-code';
 
-import Cherry from '@cherry-markdown/cherry-markdown-dev/dist/cherry-markdown.core';
-import type { CherryOptions } from '@cherry-markdown/cherry-markdown-dev/types/cherry';
+import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+import type { CherryOptions } from 'cherry-markdown/types/cherry';
 import { escape, merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
