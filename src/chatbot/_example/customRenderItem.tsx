@@ -76,6 +76,9 @@ export default class CustomRenderExample extends Component {
           {/* 完全自定义内容 */}
           <div slot="content">自定义内容</div>
           <div slot="actionbar">自定义actions</div>
+          <div slot="name">自定义name</div>
+          <div slot="datetime">自定义datetime</div>
+          <div slot="avatar">自定义头像</div>
         </t-chat-item>
       </>
     );
