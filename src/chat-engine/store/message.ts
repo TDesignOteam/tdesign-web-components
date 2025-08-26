@@ -1,10 +1,12 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable class-methods-use-this */
 import type {
   AIMessage,
   AIMessageContent,
   ChatMessagesData,
   ChatMessageSetterMode,
-  ChatMessageStatus,
   ChatMessageStore,
+  ToolCall,
   UserMessage,
 } from '../type';
 import { isAIMessage, isUserMessage } from '../utils';
@@ -53,10 +55,10 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
   }
 
   // 追加内容到指定类型的content
-  appendContent(messageId: string, processedContent: AIMessageContent, targetIndex: number = -1) {
+  appendContent(messageId: string, processedContent: AIMessageContent, targetIndex = -1) {
     this.setState((draft) => {
       const message = draft.messages.find((m) => m.id === messageId);
-      if (!message || !isAIMessage(message)) return;
+      if (!message || !isAIMessage(message) || !message.content) return;
 
       if (targetIndex >= 0 && targetIndex < message.content.length) {
         // 合并到指定位置
@@ -66,7 +68,8 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
         message.content.push(processedContent);
       }
 
-      this.updateMessageStatusByContent(message);
+      // 移除消息整体状态的自动推断，让ChatEngine控制
+      // this.updateMessageStatusByContent(message);
     });
   }
 
@@ -85,8 +88,12 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
         message.status = status;
-        if (isAIMessage(message) && message.content.length > 0) {
-          message.content.at(-1).status = status;
+        if (isAIMessage(message) && message.content && message.content.length > 0) {
+          const lastContent = message.content[message.content.length - 1];
+          // 添加类型检查，确保content有status属性
+          if ('status' in lastContent) {
+            lastContent.status = status;
+          }
         }
       }
     });
@@ -98,6 +105,16 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
       const message = draft.messages.find((m) => m.id === messageId);
       if (message) {
         message.ext = { ...message.ext, ...attr };
+      }
+    });
+  }
+
+  // 为AI消息设置工具调用
+  setMessageToolCalls(messageId: string, toolCalls: ToolCall[]) {
+    this.setState((draft) => {
+      const message = draft.messages.find((m) => m.id === messageId);
+      if (message && isAIMessage(message)) {
+        message.toolCalls = toolCalls;
       }
     });
   }
@@ -126,13 +143,13 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
   // 创建消息分支（用于保留历史版本）
   createMessageBranch(messageId: string) {
     const original = this.getState().messages.find((m) => m.id === messageId);
-    if (!original) return;
+    if (!original || !original.content) return;
 
     // 克隆消息并生成新ID
     const branchedMessage = {
       ...original,
       content: original.content.map((c) => ({ ...c })),
-    };
+    } as ChatMessagesData;
 
     this.createMessage(branchedMessage);
   }
@@ -147,51 +164,74 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
 
   get currentMessage(): ChatMessagesData {
     const { messages } = this.getState();
-    return messages.at(-1);
+    return messages[messages.length - 1];
   }
 
   get lastAIMessage(): AIMessage | undefined {
     const { messages } = this.getState();
     const aiMessages = messages.filter((msg) => isAIMessage(msg));
-    return aiMessages.at(-1);
+    return aiMessages[aiMessages.length - 1];
   }
 
   get lastUserMessage(): UserMessage | undefined {
     const { messages } = this.getState();
     const userMessages = messages.filter((msg) => isUserMessage(msg));
-    return userMessages.at(-1);
+    return userMessages[userMessages.length - 1];
   }
 
-  private resolvedStatus(content: AIMessageContent, status: ChatMessageStatus): ChatMessageStatus {
-    return typeof content.status === 'function' ? content.status(status) : content.status;
-  }
-
-  // 更新消息整体状态
+  // 更新消息整体状态（自动推断）
   private updateMessageStatusByContent(message: AIMessage) {
+    if (!message.content) return;
+
     // 优先处理错误状态
     if (message.content.some((c) => c.status === 'error')) {
       message.status = 'error';
       message.content.forEach((content) => {
-        content.status = this.resolvedStatus(content, 'streaming') ? 'stop' : content.status;
+        if (content.status) {
+          const resolvedStatus = content.status || 'streaming';
+          content.status = resolvedStatus === 'streaming' ? 'stop' : content.status;
+        }
       });
       return;
     }
 
-    // 非最后一个内容块如果不是error|stop, 则设为content.status｜complete
-    message.content
-      .slice(0, -1) // 获取除最后一个元素外的所有内容
-      .forEach((content) => {
-        if (content.status !== 'error' && content.status !== 'stop') {
-          content.status = this.resolvedStatus(content, 'complete');
+    // 非最后一个内容块处理
+    message.content.slice(0, -1).forEach((content) => {
+      content.status = content.status !== 'error' && content.status !== 'stop' ? 'complete' : content.status;
+    });
+  }
+
+  /**
+   * 更新多个内容块
+   * @param messageId 消息ID
+   * @param contents 要更新的内容块数组
+   */
+  updateMultipleContents(messageId: string, contents: AIMessageContent[]) {
+    this.setState((draft) => {
+      const message = draft.messages.find((m) => m.id === messageId);
+      if (!message || !isAIMessage(message) || !message.content) return;
+
+      const messageContent = message.content; // 确保TypeScript知道content存在
+
+      // 更新或添加每个内容块
+      contents.forEach((content) => {
+        const existingIndex = messageContent.findIndex((c) => c.id === content.id || c.type === content.type);
+
+        if (existingIndex >= 0) {
+          // 更新现有内容块
+          messageContent[existingIndex] = {
+            ...messageContent[existingIndex],
+            ...content,
+          };
+        } else {
+          // 添加新内容块
+          messageContent.push(content);
         }
       });
 
-    // 检查是否全部完成
-    const allComplete = message.content.every(
-      (c) => c.status === 'complete' || c.status === 'stop', // 包含停止状态
-    );
-
-    message.status = allComplete ? 'complete' : 'streaming';
+      // 消息整体状态的自动推断
+      this.updateMessageStatusByContent(message);
+    });
   }
 }
 

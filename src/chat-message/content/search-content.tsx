@@ -4,8 +4,8 @@ import '../../collapse';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
+import { ChatMessageStatus, ReferenceItem } from '../../chat-engine';
 import { TdChatContentProps } from '../../chatbot';
-import { ChatMessageStatus, ReferenceItem } from '../../chatbot/core/type';
 import { CollapseValue } from '../../collapse';
 
 import styles from '../style/chat-item.less';

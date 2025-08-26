@@ -4,7 +4,7 @@ import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import { type SuggestionItem } from '../../chatbot/type';
+import { type SuggestionItem } from '../../chat-engine';
 
 import styles from '../style/chat-item.less';
 

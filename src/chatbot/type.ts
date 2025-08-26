@@ -1,8 +1,4 @@
 import { TdChatActionsName } from '../chat-action';
-import { type TdChatLoadingProps } from '../chat-loading';
-import { type TdChatMarkdownContentProps } from '../chat-message';
-import { type TdChatSenderProps } from '../chat-sender';
-import type { StyledProps, TNode } from '../common';
 import type {
   AIMessageContent,
   ChatContentType,
@@ -11,7 +7,11 @@ import type {
   ChatRequestParams,
   ChatServiceConfigSetter,
   ChatStatus,
-} from './core/type';
+} from '../chat-engine/type';
+import { ChatLoadingAnimationType, type TdChatLoadingProps } from '../chat-loading';
+import { type TdChatMarkdownContentProps } from '../chat-message';
+import { type TdChatSenderProps } from '../chat-sender';
+import type { StyledProps, TNode } from '../common';
 
 export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
 export interface TdChatMessageAction {
@@ -35,7 +35,7 @@ export interface TdChatMessageProps {
     | TdChatMessageActionName[]
     // | ((preset: TdChatMessageAction[], message: ChatMessagesData) => TdChatMessageAction[])
     | boolean;
-  animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
+  animation?: ChatLoadingAnimationType;
   handleActions?: Partial<Record<TdChatMessageActionName, (data?: any) => void>>;
   /**
    * 作者
@@ -254,5 +254,3 @@ export interface SSEEvent {
 export interface BackBottomParams {
   behavior?: 'auto' | 'smooth';
 }
-
-export type * from './core/type';

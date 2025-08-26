@@ -3,14 +3,15 @@ import 'tdesign-web-components/chatbot';
 
 import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
-import { findTargetElement, TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from 'tdesign-web-components/chat-engine';
+import { findTargetElement } from 'tdesign-web-components/chat-engine';
+import { TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
+import type { TdAttachmentItem } from 'tdesign-web-components/filecard';
 
-import type { TdAttachmentItem } from '../../filecard';
 import Chatbot from '../chat';
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
 
 // 天气扩展类型定义
-declare module '../core/type' {
+declare module '../../chat-engine/type' {
   interface AIContentTypeOverrides {
     weather: {
       type: 'weather';
@@ -243,7 +244,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
     case 'search':
       return {
         type: 'search',
-        status: (status) => (rest.content ? status : 'complete'),
+        status: rest.content ? 'streaming' : 'complete',
         data: {
           title: rest.title,
           references: rest.content,
@@ -262,7 +263,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       }
       return {
         type: 'thinking',
-        status: () => (/耗时/.test(rest.title) ? 'complete' : undefined),
+        status: /耗时/.test(rest.title) ? 'complete' : 'streaming',
         data: {
           title: rest.title || '思考中...',
           text: rest.content || '',

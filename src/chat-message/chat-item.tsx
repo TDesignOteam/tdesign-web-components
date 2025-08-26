@@ -28,7 +28,7 @@ import {
   isTextContent,
   isThinkingContent,
   isUserMessage,
-} from '../chatbot';
+} from '../chat-engine';
 import type { TdChatMessageActionName, TdChatMessageProps } from '../chatbot/type';
 import { renderAttachments } from './content/attachment-content';
 import { renderSearch } from './content/search-content';

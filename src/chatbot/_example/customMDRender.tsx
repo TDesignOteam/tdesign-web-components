@@ -9,7 +9,7 @@ import type {
   TdChatMessageProps,
 } from 'tdesign-web-components/chatbot';
 
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../core/type';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../../chat-engine/type';
 
 const defaultChunkParser = (chunk): AIMessageContent => {
   try {

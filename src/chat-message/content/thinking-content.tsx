@@ -9,7 +9,8 @@ import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { ChatMessageStatus, TdChatContentProps } from '../../chatbot';
+import type { ChatMessageStatus } from '../../chat-engine';
+import type { TdChatContentProps } from '../../chatbot';
 import { CollapseValue } from '../../collapse';
 
 import styles from '../style/chat-item.less';

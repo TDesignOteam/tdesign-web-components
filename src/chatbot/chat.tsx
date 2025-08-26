@@ -9,21 +9,21 @@ import classname, { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
-import { TdChatSenderParams } from '../chat-sender';
-import type ChatSender from '../chat-sender/chat-sender';
-import { TdAttachmentItem } from '../filecard';
+import ChatEngine, { getMessageContentForCopy, isAIMessage } from '../chat-engine';
 import {
+  AIMessageContent,
   type AttachmentItem,
   type ChatMessagesData,
+  ChatMessageSetterMode,
   type ChatMessageStore,
   type ChatRequestParams,
   type ChatStatus,
-} from './core/type';
+} from '../chat-engine/type';
+import { TdChatSenderParams } from '../chat-sender';
+import type ChatSender from '../chat-sender/chat-sender';
+import { TdAttachmentItem } from '../filecard';
 import type Chatlist from './chat-list';
-import ChatEngine, { getMessageContentForCopy, isAIMessage } from './core';
 import type {
-  AIMessageContent,
-  ChatMessageSetterMode,
   TdChatbotApi,
   TdChatListScrollToOptions,
   TdChatMessageActionName,

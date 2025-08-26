@@ -1,3 +1,5 @@
+import type { ToolCallEventType } from './adapters/agui/events';
+
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
 export type ChatMessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
 export type ChatStatus = 'idle' | ChatMessageStatus;
@@ -10,16 +12,19 @@ export type ChatContentType =
   | 'image'
   | 'audio'
   | 'video'
-  | 'suggestion';
+  | 'suggestion'
+  | 'toolcall';
+
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 
 // 基础类型
 export interface ChatBaseContent<T extends string, TData> {
   type: T;
   data: TData;
-  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
+  status?: ChatMessageStatus;
   id?: string;
-  ext?: Record<string, any>; // todo: 关联TdChatContentProps
+  strategy?: 'merge' | 'append';
+  ext?: Record<string, any>;
 }
 
 // 内容类型
@@ -85,6 +90,18 @@ export type ThinkingContent = ChatBaseContent<
   }
 >;
 
+export type ToolCall = {
+  toolCallId: string;
+  toolCallName: string;
+  eventType?: ToolCallEventType;
+  parentMessageId?: string;
+  args?: string; // 对应TOOL_CALL_ARGS事件返回的delta合并后的结果
+  chunk?: string; // 对应TOOL_CALL_CHUNK事件返回的delta合并后的结果
+  result?: string; // 对应TOOL_CALL_RESULT事件返回的content合并后的结果
+};
+
+export type ToolCallContent = ChatBaseContent<'toolcall', ToolCall>;
+
 // 消息主体
 // 基础消息结构
 
@@ -108,13 +125,8 @@ type AIContentTypeMap = {
   image: ImageContent;
   search: SearchContent;
   suggestion: SuggestionContent;
+  toolcall: ToolCallContent;
 } & AIContentTypeOverrides;
-
-// 自动生成联合类型
-// export type AIMessageContent = AIContentTypeMap[keyof AIContentTypeMap];
-// export type AIMessageContent = {
-//   [K in keyof AIContentTypeMap]: AIContentTypeMap[K];
-// }[keyof AIContentTypeMap];
 
 export type AIContentType = keyof AIContentTypeMap;
 export type AIMessageContent = AIContentTypeMap[AIContentType];
@@ -130,8 +142,11 @@ export type ChatComment = 'good' | 'bad' | '';
 export interface AIMessage extends ChatBaseMessage {
   role: 'assistant';
   content?: AIMessageContent[];
+  history?: AIMessageContent[][];
   /** 点赞点踩 */
   comment?: ChatComment;
+  /** 工具调用 - 兼容 AGUI/OpenAI 协议 */
+  toolCalls?: ToolCall[];
 }
 
 export interface SystemMessage extends ChatBaseMessage {
@@ -147,35 +162,93 @@ export type SSEChunkData = {
   data: any;
 };
 
-export interface ChatRequestParams extends RequestInit {
-  prompt: string;
+export interface ChatRequestParams {
+  prompt?: string;
   messageID?: string;
   attachments?: AttachmentContent['data'];
+  [key: string]: any;
 }
 
 // 基础配置类型
-export type AIContentChunkUpdate = AIMessageContent & {
-  // 将新内容块和入策略，merge表示和入到同类型内容中，append表示作为新的内容块，默认是merge
-  strategy?: 'merge' | 'append';
-};
-export interface ChatServiceConfig {
+export type AIContentChunkUpdate = AIMessageContent;
+
+// ============= TDesign 原生架构 =============
+// 网络请求配置（TDesign原生）
+export interface ChatNetworkConfig {
+  /** 请求端点 */
   endpoint?: string;
+  /** 是否启用流式传输 */
   stream?: boolean;
+  /** 重试间隔（毫秒） */
   retryInterval?: number;
+  /** 最大重试次数 */
   maxRetries?: number;
-  onRequest?: (params: ChatRequestParams) => RequestInit | Promise<RequestInit>;
-  onMessage?: (chunk: SSEChunkData, message?: ChatMessagesData) => AIContentChunkUpdate | AIMessageContent[] | null;
+  /** 请求超时时间（毫秒） */
+  timeout?: number; // 添加timeout属性
+  /** 协议类型 */
+  protocol?: 'default' | 'agui';
+}
+
+// TDesign 默认引擎的回调配置
+export interface DefaultEngineCallbacks {
+  /** 请求发送前配置 */
+  onRequest?: (
+    params: ChatRequestParams,
+  ) => (ChatRequestParams & RequestInit) | Promise<ChatRequestParams & RequestInit>;
+  onStart?: (chunk: string) => void;
+  /** 接收到消息数据块 - 用于解析和处理聊天内容 */
+  onMessage?: (
+    chunk: SSEChunkData,
+    message?: ChatMessagesData,
+    parsedResult?: AIMessageContent | AIMessageContent[] | null,
+  ) => AIMessageContent | AIMessageContent[] | null;
   onComplete?: (
     isAborted: boolean,
-    params?: RequestInit,
+    params?: ChatRequestParams,
     result?: any,
-  ) => AIContentChunkUpdate | AIMessageContent[] | null;
+  ) => AIMessageContent | AIMessageContent[] | void;
   onAbort?: () => Promise<void>;
+  /** 错误处理 */
   onError?: (err: Error | Response) => void;
 }
 
+// 默认引擎完整的服务配置
+export interface ChatServiceConfig extends ChatNetworkConfig, DefaultEngineCallbacks {}
+
 // 联合类型支持静态配置和动态生成
 export type ChatServiceConfigSetter = ChatServiceConfig | ((params?: any) => ChatServiceConfig);
+
+// 统一的引擎接口
+export interface IChatEngine {
+  /** 初始化引擎 - 不同引擎使用不同的配置类型 */
+  init(config?: any, messages?: ChatMessagesData[]): void;
+
+  /** 发送用户消息 */
+  sendUserMessage(params: ChatRequestParams): Promise<void>;
+
+  /** 重新生成AI回复 */
+  regenerateAIMessage(keepVersion?: boolean): Promise<void>;
+
+  /** 中止聊天 */
+  abortChat(): Promise<void>;
+
+  /** 设置消息 */
+  setMessages(messages: ChatMessagesData[], mode?: ChatMessageSetterMode): void;
+
+  /** 清空消息 */
+  clearMessages(): void;
+
+  /** 注册合并策略 */
+  registerMergeStrategy<T extends AIMessageContent>(type: T['type'], handler: (chunk: T, existing?: T) => T): void;
+
+  // 属性访问
+  get messages(): ChatMessagesData[];
+  get status(): ChatStatus;
+  get messageStore(): any; // 抽象化，不同引擎可能有不同的store
+
+  // 销毁
+  destroy(): void;
+}
 
 // 消息相关状态
 export interface ChatMessageStore {
