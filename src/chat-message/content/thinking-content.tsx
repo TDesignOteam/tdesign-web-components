@@ -69,18 +69,16 @@ export const renderThinking = ({
       onChange={onChange}
     >
       <t-collapse-panel className={`${className}__think__content`}>
-        {text && (
-          <t-auto-scroll maxHeight={maxHeight}>
+        <t-auto-scroll maxHeight={maxHeight}>
+          <slot name="content">
             <div className={`${className}__think__inner`}>
               {text
-                .split('\n')
+                ?.split('\n')
                 .filter(Boolean)
-                .map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))}
+                .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
             </div>
-          </t-auto-scroll>
-        )}
+          </slot>
+        </t-auto-scroll>
         <div slot="header" className={`${className}__think__header__content`}>
           {status !== 'stop' && renderThinkingStatus(status as ChatMessageStatus)}
           {status === 'stop' ? '思考已终止' : title}
@@ -132,7 +130,6 @@ export default class ThinkingContentComponent extends Component<TdChatThinkConte
   };
 
   render(props: TdChatThinkContentProps) {
-    if (!props?.content) return;
     return renderThinking({ ...props, collapsed: this.computedCollapsed, onChange: this.onCollapsedChange });
   }
 }

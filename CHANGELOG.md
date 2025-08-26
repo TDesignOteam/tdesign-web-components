@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.15 `2025-08-18` 
+### 🚧 Others
+- feat(chat-item): 默认添加header/name/avatar/datetime插槽 @LzhengH ([#273](https://github.com/TDesignOteam/tdesign-web-components/pull/273))
+
 ## 🌈 1.1.13 `2025-08-05` 
 ### 🚧 Others
 - fix(chat-item): fix style @LzhengH ([#267](https://github.com/TDesignOteam/tdesign-web-components/pull/267))

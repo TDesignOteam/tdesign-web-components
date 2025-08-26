@@ -90,47 +90,42 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   private renderMessageHeader() {
     const { name, datetime } = this.props;
-    if (this.renderMessageStatus || (!name && !datetime)) {
-      return null;
-    }
     return (
-      <div class={`${className}__header`}>
-        {!!name && <span class={`${className}__name`}>{this.renderNameContent(name)}</span>}
-        {!!datetime && <span class={`${className}__time`}>{datetime}</span>}
-      </div>
+      <slot name="header">
+        {!this.renderMessageStatus ? (
+          <div class={`${className}__header`}>
+            <slot name="name">
+              {!!name && <span class={`${className}__name`}>{this.renderNameContent(name)}</span>}
+            </slot>
+            <slot name="datetime">{!!datetime && <span class={`${className}__time`}>{datetime}</span>}</slot>
+          </div>
+        ) : null}
+      </slot>
     );
   }
 
   private renderNameContent(name: any) {
-    if (isString(name)) {
-      return name;
-    }
-
     // 对于非字符串类型（包括React元素），都使用slot
-    return <slot name="name"></slot>;
+    return isString(name) ? name : null;
   }
 
   private renderAvatar() {
-    if (!this.props.avatar) {
-      return <div hidden data-test={`${typeof this.props.avatar}`} />;
-    }
-
     const { avatar } = this.props;
 
     return (
-      <div class={`${className}__avatar`}>
-        <div class={`${className}__avatar__box`}>{this.renderAvatarContent(avatar)}</div>
-      </div>
+      <slot name="avatar">
+        {avatar ? (
+          <div class={`${className}__avatar`}>
+            <div class={`${className}__avatar__box`}>{this.renderAvatarContent(avatar)}</div>
+          </div>
+        ) : null}
+      </slot>
     );
   }
 
   private renderAvatarContent(avatar: any) {
-    if (isString(avatar)) {
-      return <img src={avatar} alt="avatar" class={`${className}__avatar-image`} />;
-    }
-
     // 对于非字符串类型（包括React元素），都使用slot
-    return <slot name="avatar"></slot>;
+    return isString(avatar) ? <img src={avatar} alt="avatar" class={`${className}__avatar-image`} /> : null;
   }
 
   private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {
@@ -266,7 +261,8 @@ export default class ChatItem extends Component<ChatMessageProps> {
     return (
       <div
         className={classname(baseClass, roleClass, variantClass, placementClass)}
-        data-has-header={!!this.renderMessageHeader()}
+        // 渲染出原生的header时要设置额外间隔，当用户slot自定义header时不管
+        data-has-header={!this.renderMessageStatus && (!!props.name || !!props.datetime)}
       >
         {this.renderAvatar()}
         {this.renderMessageStatus}
