@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.16 `2025-08-27` 
+### 🚧 Others
+- feat(chatItem): thinking添加slot @LzhengH 
+- fix(markdown): 修复markdown data为空时渲染object的问题 @LzhengH ([#275](https://github.com/TDesignOteam/tdesign-web-components/pull/275))
+
 ## 🌈 1.1.15 `2025-08-18` 
 ### 🚧 Others
 - feat(chat-item): 默认添加header/name/avatar/datetime插槽 @LzhengH ([#273](https://github.com/TDesignOteam/tdesign-web-components/pull/273))
