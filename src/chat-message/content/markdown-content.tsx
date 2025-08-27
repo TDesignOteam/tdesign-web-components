@@ -184,9 +184,10 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
   }
 
   render() {
+    const html = this.getTextInfo();
     return (
       <div className={`${baseClass}`}>
-        <div className={`${baseClass}__markdown`} unsafeHTML={{ html: this.getTextInfo() || '' }}></div>
+        {!!html && <div className={`${baseClass}__markdown`} unsafeHTML={{ html }}></div>}
       </div>
     );
   }
