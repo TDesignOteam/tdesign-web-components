@@ -23,7 +23,7 @@ type TdChatThinkBaseProps = {
     text?: string;
     title?: string;
   };
-  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
+  status?: ChatMessageStatus;
 } & TdChatContentProps['thinking'];
 
 export type TdChatThinkContentProps = {

@@ -192,34 +192,46 @@ export default class ChatItem extends Component<ChatMessageProps> {
       // AI消息渲染
       if (role === 'assistant') {
         if (isSearchContent(content)) {
-          return renderSearch({
-            key: elementKey,
-            content: content.data,
-            status: content.status,
-            useCollapse: chatContentProps?.search?.useCollapse,
-            handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
-            handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
-            ...content?.ext,
-          });
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderSearch({
+                key: elementKey,
+                content: content.data,
+                status: content.status,
+                useCollapse: chatContentProps?.search?.useCollapse,
+                handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
+                handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
+                ...content?.ext,
+              })}
+            </slot>
+          );
         }
 
         if (isSuggestionContent(content)) {
-          return renderSuggestion({
-            key: elementKey,
-            content: content.data,
-            handlePromptClick: (data) => this.handleClickAction('suggestion', data),
-          });
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderSuggestion({
+                key: elementKey,
+                content: content.data,
+                handlePromptClick: (data) => this.handleClickAction('suggestion', data),
+              })}
+            </slot>
+          );
         }
         if (isThinkingContent(content)) {
           // 思考
-          return renderThinking({
-            key: elementKey,
-            content: content.data,
-            status: content.status,
-            animation,
-            ...chatContentProps?.thinking,
-            ...content?.ext,
-          });
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderThinking({
+                key: elementKey,
+                content: content.data,
+                status: content.status,
+                animation,
+                ...chatContentProps?.thinking,
+                ...content?.ext,
+              })}
+            </slot>
+          );
         }
         if (isImageContent(content)) {
           // 图片
