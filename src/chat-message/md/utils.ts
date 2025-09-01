@@ -6,6 +6,12 @@ export const AddPartHook = Cherry.createSyntaxHook('addPart', Cherry.constants.H
     return str;
   },
   afterMakeHtml(str) {
-    return str.replace(/<(?!br\b)([^\s/]+)(\s*>|\s+[^>]+>)/g, (_whole, tag, attr) => `<${tag} part="md_${tag}"${attr}`);
+    return str.replace(/<(?!br\b)([^\s/>]+)([^>]*)>/g, (_whole, tag, attr = '') => {
+      // 已有 part 属性，不添加
+      if (/(\s|^)part\s*=/.test(attr)) {
+        return `<${tag}${attr}>`;
+      }
+      return `<${tag}${attr} part="md_${tag}">`;
+    });
   },
 });
