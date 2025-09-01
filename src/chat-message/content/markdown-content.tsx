@@ -73,7 +73,8 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           customRenderer: {
             // 自定义语法渲染器
             all: {
-              render: (code, _sign, _cherry, lang) => `<t-chat-md-code lang="${lang}" code="${escape(code)}" />`,
+              render: (code, _sign, _cherry, lang) =>
+                `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" />`,
             },
           },
         },

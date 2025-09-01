@@ -3,7 +3,7 @@ import '../../message';
 
 import hljs from 'highlight.js';
 import { escape } from 'lodash-es';
-import { Component, OmiProps, tag } from 'omi';
+import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../../_util/classname';
 import type { TdChatCodeProps } from '../../chatbot/type';
@@ -17,8 +17,9 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
   static isLightDOM = true;
 
   static propTypes = {
-    lang: String,
-    code: String,
+    // cherryMarkdown会将dom自定义属性自动添加data-
+    'data-lang': String,
+    'data-code': String,
   };
 
   msgInstance = null;
@@ -26,7 +27,8 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
   codeHTML = null;
 
   install(): void {
-    const { lang, code } = this.props;
+    const lang = this.props['data-lang'];
+    const code = this.props['data-code'];
     // 解析代码HTML
     this.codeHTML = escape(code);
     if (lang && hljs.getLanguage(lang)) {
@@ -37,8 +39,8 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
     }
   }
 
-  render(props: OmiProps<TdChatCodeProps>) {
-    const { lang } = props;
+  render() {
+    const lang = this.props['data-lang'];
 
     return (
       <div class={`${className}`}>
