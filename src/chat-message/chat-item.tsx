@@ -166,7 +166,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   renderMessage() {
     const { message, chatContentProps, animation } = this.props;
     const { role, id } = message;
-    return message.content.map((content, index) => {
+    return message?.content?.map((content, index) => {
       const elementKey = `${id}-${index}`;
       // 系统消息渲染
       if (role === 'system') {
