@@ -36,6 +36,7 @@ export default class CustomRenderExample extends Component {
   props: TdChatMessageProps = {
     variant: 'text',
     placement: 'left',
+    name: '测试',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
     message: {
       id: '123',

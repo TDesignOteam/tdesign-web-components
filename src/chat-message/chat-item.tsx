@@ -94,10 +94,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
       <slot name="header">
         {!this.renderMessageStatus ? (
           <div class={`${className}__header`}>
-            <slot name="name">
-              {!!name && <span class={`${className}__name`}>{this.renderNameContent(name)}</span>}
-            </slot>
-            <slot name="datetime">{!!datetime && <span class={`${className}__time`}>{datetime}</span>}</slot>
+            <span class={`${className}__name`}>
+              <slot name="name">{this.renderNameContent(name)}</slot>
+            </span>
+            <span class={`${className}__time`}>
+              <slot name="datetime">{datetime}</slot>
+            </span>
           </div>
         ) : null}
       </slot>
@@ -113,19 +115,19 @@ export default class ChatItem extends Component<ChatMessageProps> {
     const { avatar } = this.props;
 
     return (
-      <slot name="avatar">
-        {avatar ? (
-          <div class={`${className}__avatar`}>
-            <div class={`${className}__avatar__box`}>{this.renderAvatarContent(avatar)}</div>
-          </div>
-        ) : null}
-      </slot>
+      <div class={`${className}__avatar`}>
+        <slot name="avatar">{this.renderAvatarContent(avatar)}</slot>
+      </div>
     );
   }
 
   private renderAvatarContent(avatar: any) {
     // 对于非字符串类型（包括React元素），都使用slot
-    return isString(avatar) ? <img src={avatar} alt="avatar" class={`${className}__avatar-image`} /> : null;
+    return isString(avatar) ? (
+      <div className={`${className}__avatar-box`}>
+        <img src={avatar} alt="avatar" class={`${className}__avatar-image`} />
+      </div>
+    ) : null;
   }
 
   private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {

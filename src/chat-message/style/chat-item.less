@@ -55,7 +55,9 @@
     // 存在name、datetime等header区域时
     &[data-has-header="true"] {
       .@{prefix}-chat__item__avatar {
-        padding: var(--td-chat-item-avatar-has-header-padding);
+        &-box, ::slotted(*) {
+          padding: var(--td-chat-item-avatar-has-header-padding);
+        }
       }
     }
 
@@ -71,7 +73,10 @@
     &.right {
       .@{prefix}-chat__item__avatar {
         order: 2;
-        margin: var(--td-chat-item-right-avatar-margin);
+
+        &-box, ::slotted(*) {
+          margin: var(--td-chat-item-right-avatar-margin);
+        }
       }
 
       .@{prefix}-chat__item-chat-loading-light {
@@ -162,15 +167,12 @@
   }
 
   &__avatar {
-    flex-shrink: 0;
-    cursor: pointer;
-    display: flex;
-    margin: var(--td-chat-item-left-avatar-margin);
-    padding: var(--td-chat-item-avatar-padding);
-  
-    &__box {
+    &-box, ::slotted(*) {
+      margin: var(--td-chat-item-left-avatar-margin);
+      padding: var(--td-chat-item-avatar-padding);
+      cursor: pointer;
     }
-  
+
     &-image {
       width: @comp-size-m;
       height: @comp-size-m;
