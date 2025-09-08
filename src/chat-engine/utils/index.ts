@@ -4,6 +4,7 @@ import type {
   ChatMessagesData,
   ImageContent,
   MarkdownContent,
+  ReasoningContent,
   SearchContent,
   SuggestionContent,
   TextContent,
@@ -240,6 +241,10 @@ export function isAIMessage(message: ChatMessagesData) {
 
 export function isThinkingContent(content: AIMessageContent): content is ThinkingContent {
   return content.type === 'thinking';
+}
+
+export function isReasoningContent(content: AIMessageContent): content is ReasoningContent {
+  return content.type === 'reasoning';
 }
 
 export function isTextContent(content: AIMessageContent): content is TextContent {

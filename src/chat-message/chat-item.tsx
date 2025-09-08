@@ -1,4 +1,5 @@
 import './content/markdown-content';
+import './content/reasoning-content';
 import '../collapse';
 import '../chat-loading';
 import '../attachments';
@@ -23,6 +24,7 @@ import {
   isAttachmentContent,
   isImageContent,
   isMarkdownContent,
+  isReasoningContent,
   isSearchContent,
   isSuggestionContent,
   isTextContent,
@@ -31,6 +33,7 @@ import {
 } from '../chat-engine';
 import type { TdChatMessageActionName, TdChatMessageProps } from '../chatbot/type';
 import { renderAttachments } from './content/attachment-content';
+import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
@@ -228,6 +231,21 @@ export default class ChatItem extends Component<ChatMessageProps> {
                 status: content.status,
                 animation,
                 ...chatContentProps?.thinking,
+                ...content?.ext,
+              })}
+            </slot>
+          );
+        }
+        if (isReasoningContent(content)) {
+          // 推理过程
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderReasoning({
+                key: elementKey,
+                content: content.data,
+                status: content.status,
+                animation,
+                ...chatContentProps?.reasoning,
                 ...content?.ext,
               })}
             </slot>

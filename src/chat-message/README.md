@@ -42,6 +42,9 @@ spline: base
 ### 自定义内容
 {{ custom }}
 
+### 混合内容
+
+{{ reasoning }}
 
 ## API
 

@@ -23,6 +23,7 @@ export type TdChatContentProps = {
   markdown?: Omit<TdChatMarkdownContentProps, 'content' | 'role'>;
   search?: TdChatContentSearchProps;
   thinking?: TdChatContentThinkProps;
+  reasoning?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;
   [key: string]: any; // 处理其他ContentType情况
 } & Partial<Record<Exclude<ChatContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;

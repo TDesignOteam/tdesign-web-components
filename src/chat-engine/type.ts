@@ -90,6 +90,9 @@ export type ThinkingContent = ChatBaseContent<
   }
 >;
 
+// 推理过程 - 支持混合内容类型
+export type ReasoningContent = ChatBaseContent<'reasoning', AIMessageContent[]>;
+
 export type ToolCall = {
   toolCallId: string;
   toolCallName: string;
@@ -122,6 +125,7 @@ type AIContentTypeMap = {
   text: TextContent;
   markdown: MarkdownContent;
   thinking: ThinkingContent;
+  reasoning: ReasoningContent;
   image: ImageContent;
   search: SearchContent;
   suggestion: SuggestionContent;
