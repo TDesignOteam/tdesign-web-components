@@ -215,7 +215,7 @@ export default class FileCard extends Component<TdFileCardProps> {
         })}
         onClick={(e: Event) => {
           e.stopPropagation();
-          this.fire('file-click', item, {
+          this.fire('fileClick', item, {
             composed: true,
           });
           this.togglePreview();

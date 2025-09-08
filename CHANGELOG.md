@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.1.17 `2025-09-08` 
+### 🚧 Others
+- fix(attachments): fix onFileClick in vue @LzhengH ([#277](https://github.com/TDesignOteam/tdesign-web-components/pull/277))
+
 ## 🌈 1.1.16 `2025-08-27` 
 ### 🚧 Others
 - feat(chatItem): thinking添加slot @LzhengH 

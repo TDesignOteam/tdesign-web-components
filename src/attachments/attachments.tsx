@@ -184,7 +184,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
               className={`t-filecard-item ${props?.className || ''}`}
               removable={removable}
               onFileClick={() => {
-                this.fire('file-click', item, {
+                this.fire('fileClick', item, {
                   composed: true,
                 });
               }}
