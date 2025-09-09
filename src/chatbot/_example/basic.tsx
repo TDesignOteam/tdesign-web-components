@@ -447,6 +447,7 @@ export default class BasicChat extends Component {
       const thinking = content.find((item) => item.type === 'thinking');
       const search = content.find((item) => item.type === 'search');
       return {
+        // variant: 'text',
         variant: 'outline',
         avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
         actions: ['replay', 'copy', 'good', 'bad'],
