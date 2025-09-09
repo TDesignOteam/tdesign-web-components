@@ -22,10 +22,6 @@
       flex: 0 0 auto;
     }
     
-    .@{prefix}-chat__item__detail {
-      box-sizing: border-box;
-    }
-  
     &.model-change {
       justify-content: center;
       margin-top: @comp-margin-xxl;
@@ -115,33 +111,49 @@
   }
 
   // variant
+  // 仅user类在text上区分variant
   &--variant--base {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__text--user, .@{prefix}-chat__item__detail {
+      .@{prefix}-chat__text--user {
         background-color: var(--td-chat-item-primary-bg);
         border-color: transparent;
+      }
+    }
+    &.@{prefix}-chat__item__role--assistant {
+      .@{prefix}-chat__item__content {
+        margin: var(--td-chat-item-content-base-margin);
+        padding: var(--td-chat-item-content-base-padding);
+        background-color: var(--td-chat-item-primary-bg);
+        border-color: var(--td-chat-item-content-base-border-color);
+        border-radius: var(--td-chat-item-content-radius);
       }
     }
   }
   
   &--variant--outline {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__text--user, .@{prefix}-chat__item__detail {
+      .@{prefix}-chat__text--user {
         background-color: var(--td-chat-item-default-bg);
         border-color: var(--td-chat-item-outline-border-color);
+      }
+    }
+    &.@{prefix}-chat__item__role--assistant {
+      .@{prefix}-chat__item__content {
+        margin: var(--td-chat-item-content-base-margin);
+        padding: var(--td-chat-item-content-base-padding);
+        background-color: var(--td-chat-item-default-bg);
+        border-color: var(--td-chat-item-outline-border-color);
+        border-radius: var(--td-chat-item-content-radius);
       }
     }
   }
 
   &--variant--text {
     .@{prefix}-chat__item__main {
-      .@{prefix}-chat__text--user, .@{prefix}-chat__item__detail {
+      .@{prefix}-chat__text--user {
         margin: var(--td-chat-item-text-detail-text-margin);
         padding: var(--td-chat-item-text-content-padding);
         background-color: transparent;
-      }
-      .@{prefix}-chat__item__detail {
-        padding: var(--td-chat-item-text-detail-padding);
       }
     }
   }
@@ -185,11 +197,12 @@
   }
 
   &__content {
-    display: inline-block;
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--td-chat-item-content-gap);
     // less中同时使用min和var有bug，目前只能这么写 https://github.com/less/less.js/issues/3777
     max-width: e('min(100%, var(--td-chat-item-content-max-width))');
     padding: var(--td-chat-item-content-padding);
-    padding-top: 0;
     border: var(--td-chat-item-content-border);
     border-radius: var(--td-chat-item-content-radius);
     text-align: var(--td-chat-item-content-text-align);
@@ -202,7 +215,6 @@
   &__think {
     display: block;
     width: 100%;
-    margin-bottom: var(--td-chat-item-think-margin-bottom);
 
     & *, *::before, *::after {
       box-sizing: border-box;
@@ -343,7 +355,7 @@
   &__detail {
     display: inline-block;
     max-width: var(--td-chat-item-text-max-width);
-    padding: var(--td-chat-item-text-padding);
+    padding: var(--td-chat-item-text-detail-padding);
     border: var(--td-chat-item-text-border);
     border-radius: var(--td-chat-item-text-radius);
   }
@@ -397,7 +409,6 @@
     }
 
     &__wrapper {
-      margin: var(--td-chat-item-search-wrapper-margin);
     }
     &__header {
       cursor: pointer;
@@ -507,7 +518,6 @@
     display: flex;
     flex-direction: column;
     gap: var(--td-chat-item-suggestion-gap);
-    margin: var(--td-chat-item-suggestion-margin);
 
     & *, *::before, *::after {
       box-sizing: border-box;
