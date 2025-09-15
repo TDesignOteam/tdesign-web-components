@@ -4,7 +4,6 @@ import type {
   ChatMessagesData,
   ImageContent,
   MarkdownContent,
-  ReasoningContent,
   SearchContent,
   SuggestionContent,
   TextContent,
@@ -70,7 +69,7 @@ function navigateArrayPath(target: any[], pathSegment: string, nextKey: string, 
  * 处理对象路径导航
  */
 function navigateObjectPath(target: any, pathSegment: string, nextKey: string, operation: string): any {
-  if (target[pathSegment] === undefined) {
+  if (target[pathSegment] === undefined || target[pathSegment] === null) {
     if (operation === 'remove') {
       throw new Error('要删除的路径不存在');
     }
@@ -243,10 +242,6 @@ export function isThinkingContent(content: AIMessageContent): content is Thinkin
   return content.type === 'thinking';
 }
 
-export function isReasoningContent(content: AIMessageContent): content is ReasoningContent {
-  return content.type === 'reasoning';
-}
-
 export function isTextContent(content: AIMessageContent): content is TextContent {
   return content.type === 'text';
 }
@@ -273,6 +268,10 @@ export function isAttachmentContent(content: UserMessageContent): content is Att
 
 export function isToolCallContent(content: AIMessageContent): content is ToolCallContent {
   return content.type === 'toolcall';
+}
+
+export function isReasoningContent(content) {
+  return content.type === 'reasoning';
 }
 
 /** 提取消息复制内容 */

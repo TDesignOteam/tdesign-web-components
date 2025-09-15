@@ -38,6 +38,50 @@ export enum EventType {
   STEP_FINISHED = 'STEP_FINISHED',
 }
 
+/**
+ * 检查事件类型是否为文本消息相关
+ * @param eventType 事件类型
+ * @returns 是否为文本消息事件
+ */
+export function isTextMessageEvent(eventType: string): boolean {
+  return ['TEXT_MESSAGE_START', 'TEXT_MESSAGE_CHUNK', 'TEXT_MESSAGE_CONTENT', 'TEXT_MESSAGE_END'].includes(eventType);
+}
+
+/**
+ * 检查事件类型是否为思考相关
+ * @param eventType 事件类型
+ * @returns 是否为思考事件
+ */
+export function isThinkingEvent(eventType: string): boolean {
+  return [
+    'THINKING_START',
+    'THINKING_TEXT_MESSAGE_START',
+    'THINKING_TEXT_MESSAGE_CONTENT',
+    'THINKING_TEXT_MESSAGE_END',
+    'THINKING_END',
+  ].includes(eventType);
+}
+
+/**
+ * 检查事件类型是否为工具调用相关
+ * @param eventType 事件类型
+ * @returns 是否为工具调用事件
+ */
+export function isToolCallEvent(eventType: string): boolean {
+  return ['TOOL_CALL_START', 'TOOL_CALL_ARGS', 'TOOL_CALL_CHUNK', 'TOOL_CALL_RESULT', 'TOOL_CALL_END'].includes(
+    eventType,
+  );
+}
+
+/**
+ * 检查事件类型是否为状态相关
+ * @param eventType 事件类型
+ * @returns 是否为状态事件
+ */
+export function isStateEvent(eventType: string): boolean {
+  return ['STATE_SNAPSHOT', 'STATE_DELTA'].includes(eventType);
+}
+
 const BaseEventSchema = z.object({
   type: z.nativeEnum(EventType),
   timestamp: z.number().optional(),
