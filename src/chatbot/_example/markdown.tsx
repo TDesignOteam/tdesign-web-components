@@ -5,8 +5,8 @@ import 'tdesign-web-components/switch';
 import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
 import { Component, signal } from 'omi';
-import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
+import { TdChatMessageProps } from '../../chat-message/type';
 import mdContent from '../mock/testMarkdown.md?raw';
 
 export default class MarkdownExample extends Component {
@@ -28,17 +28,15 @@ export default class MarkdownExample extends Component {
       placement: 'left',
       avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       actions: true,
-      message: {
-        id: '123',
-        content: [
-          {
-            type: 'markdown',
-            data: mdContent,
-          },
-        ],
-        status: 'complete',
-        role: 'assistant',
-      },
+      id: '123',
+      role: 'assistant',
+      content: [
+        {
+          type: 'markdown',
+          data: mdContent,
+        },
+      ],
+      status: 'complete',
       chatContentProps: {
         markdown: {
           options: {

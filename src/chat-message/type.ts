@@ -1,5 +1,12 @@
 import type { TdChatActionsName } from '../chat-action';
-import type { ChatContentType, ChatMessagesData } from '../chat-engine/type';
+import type {
+  AIMessageContent,
+  ChatContentType,
+  ChatMessageRole,
+  ChatMessagesData,
+  ChatMessageStatus,
+  UserMessageContent,
+} from '../chat-engine/type';
 import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
 import type { TNode } from '../common';
 import type { TdChatMarkdownContentProps } from './content/markdown-content';
@@ -62,15 +69,27 @@ export interface TdChatMessageProps {
   /**
    * 消息类型
    */
-  // role?: ModelRoleEnum; // 统一用message里的role
+  role?: ChatMessageRole;
+  /**
+   * 消息内容
+   */
+  content?: AIMessageContent[] | UserMessageContent[];
+  /**
+   * 消息状态
+   */
+  status?: ChatMessageStatus;
+  /**
+   * 消息ID
+   */
+  id?: string;
   /**
    * 消息样式，是否有边框，背景色等
    */
   variant?: TdChatMessageVariant;
   /** 气泡方向 */
   placement?: 'left' | 'right';
-  /** 消息体 */
-  message: ChatMessagesData;
+  /** 消息体 (兼容旧版本，优先级低于直接传入的 role/content/status) */
+  message?: ChatMessagesData;
   /** 透传chat-content参数 */
   chatContentProps?: TdChatContentProps;
 }
