@@ -31,12 +31,12 @@ import {
   isThinkingContent,
   isUserMessage,
 } from '../chat-engine';
-import type { TdChatMessageActionName, TdChatMessageProps } from '../chatbot/type';
 import { renderAttachments } from './content/attachment-content';
 import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
+import type { TdChatMessageActionName, TdChatMessageProps } from './type';
 
 import styles from './style/chat-item.less';
 

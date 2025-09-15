@@ -21,5 +21,6 @@ export type { TdChatSearchContentProps } from './content/search-content';
 export type { TdChatSuggestionContentProps } from './content/suggestion-content';
 export type { TdChatReasoningProps } from './content/reasoning-content';
 export type * from './content/markdown-content';
+export type * from './type';
 
 export default ChatMessage;

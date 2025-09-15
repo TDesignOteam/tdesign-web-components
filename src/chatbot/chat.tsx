@@ -19,18 +19,12 @@ import {
   type ChatRequestParams,
   type ChatStatus,
 } from '../chat-engine/type';
+import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-message/type';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
 import type Chatlist from './chat-list';
-import type {
-  TdChatbotApi,
-  TdChatListScrollToOptions,
-  TdChatMessageActionName,
-  TdChatMessageConfig,
-  TdChatMessageProps,
-  TdChatProps,
-} from './type';
+import type { TdChatbotApi, TdChatListScrollToOptions, TdChatMessageConfig, TdChatProps } from './type';
 
 import styles from './style/chat.less';
 

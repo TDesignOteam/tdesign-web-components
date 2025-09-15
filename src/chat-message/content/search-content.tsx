@@ -5,8 +5,8 @@ import { Component, OmiProps, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { ChatMessageStatus, ReferenceItem } from '../../chat-engine';
-import { TdChatContentProps } from '../../chatbot';
 import { CollapseValue } from '../../collapse';
+import type { TdChatContentProps } from '../type';
 
 import styles from '../style/chat-item.less';
 
