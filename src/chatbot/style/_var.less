@@ -191,6 +191,8 @@
   --td-chat-md-code-header-padding: 0 16px 0 12px;
   --td-chat-md-code-header-font: 500 14px / 1.6 @font-family;
   --td-chat-md-code-header-bg: #f3f3f3;
+  --td-chat-md-code-header-bg-dark: #282c34;
+  --td-chat-md-code-header-color-dark: #abb2bf;
   --td-chat-md-code-header-copy-color: @gray-color-7;
   --td-chat-md-code-header-copy-hover-color: @gray-color-9;
   --td-chat-md-code-body-padding: 10px 16px !important;
@@ -204,23 +206,25 @@
   --td-chat-md-blockquote-margin: 16px 0;
   --td-chat-md-blockquote-padding: 10px 15px;
   --td-chat-md-blockquote-border-left: 4px solid #d9d9d9;
-  --td-chat-md-blockquote-color: rgba(0, 0, 0, 0.4);
+  --td-chat-md-blockquote-color: @gray-color-7;
+
+  --td-chat-md-footnote-bg: var(--td-bg-color-page);
   
   --td-chat-md-hr-margin: 16px 0;
   --td-chat-md-hr-border: 1px solid rgba(0, 0, 0, 0.08);
   
-  --td-chat-md-table-border: 1px solid rgba(0, 0, 0, 0.08);
+  --td-chat-md-table-border: 1px solid @bg-color-secondarycontainer;
   --td-chat-md-table-radius: 8px;
   --td-chat-md-table-margin: 8px 0;
   --td-chat-md-table-font-size: 14px;
   --td-chat-md-table-th-padding: 0.66em 1em;
   --td-chat-md-table-th-max-width: 448px;
-  --td-chat-md-table-th-bg: #f5f5f5;
-  --td-chat-md-table-th-color: rgba(0, 0, 0, 0.9);
+  --td-chat-md-table-th-bg: @bg-color-secondarycontainer;
+  --td-chat-md-table-th-color: @text-color-primary;
   --td-chat-md-table-th-font: 700 14px / 1.6 @font-family;
 
-  --td-chat-md-table-td-bg-odd: #fff;
-  --td-chat-md-table-td-bg-even: #f5f5f5;
-  --td-chat-md-table-td-color: rgba(0, 0, 0, 0.6);
+  --td-chat-md-table-td-bg-odd: @bg-color-container;
+  --td-chat-md-table-td-bg-even: @bg-color-secondarycontainer;
+  --td-chat-md-table-td-color: @text-color-primary;
   --td-chat-md-table-td-font: 400 14px / 1.6 @font-family;
 }

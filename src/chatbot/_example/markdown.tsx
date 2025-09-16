@@ -42,6 +42,9 @@ export default class MarkdownExample extends Component {
       chatContentProps: {
         markdown: {
           options: {
+            themeSettings: {
+              codeBlockTheme: 'dark',
+            },
             engine: {
               syntax: this.hasKatex.value
                 ? {

@@ -20,6 +20,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
     // cherryMarkdown会将dom自定义属性自动添加data-
     'data-lang': String,
     'data-code': String,
+    'data-theme': String,
   };
 
   msgInstance = null;
@@ -41,9 +42,10 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
 
   render() {
     const lang = this.props['data-lang'];
+    const theme = this.props['data-theme'];
 
     return (
-      <div class={`${className}`}>
+      <div class={classname(`${className}`, theme)}>
         <div class={`${`${className}__header`}`}>
           <span class={`${`${className}__header__lang`}`}>{lang}</span>
           {/* !事件直接放icon上会触发两次 */}
