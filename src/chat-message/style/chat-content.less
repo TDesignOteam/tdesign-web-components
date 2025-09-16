@@ -12,7 +12,9 @@
 
     .cherry {
       // 覆盖cherry样式
+      --md-paragraph-color: var(--td-chat-md-font);
       --md-heading-color: var(--td-chat-md-font);
+      --md-inline-code-bg: var(--td-chat-md-footnote-bg);
       
       color: var(--td-chat-md-font);
       box-shadow: none;
@@ -108,6 +110,11 @@
 
         &:hover {
           color: var(--td-chat-md-link-hover-color);
+        }
+
+        // 覆盖图标
+        &::after {
+          content: '' !important;
         }
       }
 

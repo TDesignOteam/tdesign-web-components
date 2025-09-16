@@ -30,7 +30,11 @@ export type TdChatContentMDPluginConfig =
   /** 预设插件配置 */
   TdChatContentMDPresetConfig;
 
-export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars'>;
+export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars' | 'themeSettings'> & {
+  themeSettings?: {
+    codeBlockTheme?: 'light' | 'dark';
+  };
+};
 
 export interface TdChatMarkdownContentProps {
   content?: string;
@@ -111,6 +115,23 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
     const md = new Cherry({
       ...this.markdownOptions,
+      engine: {
+        ...this.markdownOptions.engine,
+        syntax: {
+          ...this.markdownOptions.engine?.syntax,
+          codeBlock: {
+            customRenderer: {
+              // 自定义语法渲染器
+              all: {
+                render: (code, _sign, _cherry, lang) =>
+                  `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
+                    this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
+                  }" />`,
+              },
+            },
+          },
+        },
+      },
       el: this.mdRef.current,
     });
 
