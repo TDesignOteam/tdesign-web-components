@@ -1,11 +1,13 @@
-import MarkdownIt from 'markdown-it';
-import linkPlugin from 'markdown-it-link-attributes';
-import { Component, OmiProps, signal, tag } from 'omi';
+import '../md/chat-md-code';
+
+import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+import type { CherryOptions } from 'cherry-markdown/types/cherry';
+import { escape, merge } from 'lodash-es';
+import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { setExportparts } from '../../_util/dom';
-import markdownItCjFriendlyPlugin from '../md/markdownItCjkFriendly';
-import { mdPartAttrPlugin } from '../md/utils';
+import { AddPartHook } from '../md/utils';
 
 import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
@@ -14,7 +16,7 @@ import codeStyles from '../style/md/chat-md-code.less';
 const baseClass = `${getClassPrefix()}-chat__text`;
 
 /** markdown插件预设 */
-export type TdChatContentMDPresetPlugin = 'code' | 'link' | 'katex';
+export type TdChatContentMDPresetPlugin = 'katex';
 
 export interface TdChatContentMDPresetConfig {
   preset: TdChatContentMDPresetPlugin;
@@ -26,146 +28,111 @@ export interface TdChatContentMDPresetConfig {
 
 export type TdChatContentMDPluginConfig =
   /** 预设插件配置 */
-  | TdChatContentMDPresetConfig
-  /** markdownIt原生插件配置 */
-  | MarkdownIt.PluginSimple
-  | MarkdownIt.PluginWithParams
-  | MarkdownIt.PluginWithOptions;
+  TdChatContentMDPresetConfig;
+
+export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars' | 'themeSettings'> & {
+  themeSettings?: {
+    codeBlockTheme?: 'light' | 'dark';
+  };
+};
 
 export interface TdChatMarkdownContentProps {
   content?: string;
-  options?: MarkdownIt.Options;
-  pluginConfig?: Array<TdChatContentMDPluginConfig>;
+  options?: TdChatContentMDOptions;
 }
 
 @tag('t-chat-md-content')
-export default class ChatMDContent extends Component<TdChatMarkdownContentProps> {
+export default class ChatCherryMDContent extends Component<TdChatMarkdownContentProps> {
   static css = [styles, codeStyles];
 
   static propTypes = {
     content: String,
     options: Object,
-    pluginConfig: Object,
   };
 
-  static defaultProps = {
-    // TODO: 现在是测效果，正式看下默认怎么配。
-    options: {
-      html: true, // 允许HTML标签
-      breaks: true, // 自动换行
-      typographer: true, // 排版优化
-    },
-    pluginConfig: [
-      {
-        preset: 'code',
-        enabled: false,
-      },
-      {
-        preset: 'katex',
-        enabled: false,
-      },
-    ],
+  static defaultProps: Partial<TdChatMarkdownContentProps> = {
+    options: {},
   };
 
-  // TODO: md对象看看是不是直接provider传进来，否则每个content都要构造一个
-  md: MarkdownIt | null = null;
+  mdRef = createRef<HTMLElement>();
+
+  md: Cherry | null = null;
 
   isMarkdownInit = signal(false);
 
-  receiveProps(
-    props: TdChatMarkdownContentProps | OmiProps<TdChatMarkdownContentProps, any>,
-    oldProps: TdChatMarkdownContentProps | OmiProps<TdChatMarkdownContentProps, any>,
-  ) {
-    if (props.content?.length === oldProps.content?.length) {
-      return false;
-    }
-    return true;
-  }
+  /** 传入cherryMarkdown的配置 */
+  private markdownOptions: CherryOptions = {
+    engine: {
+      global: {
+        flowSessionContext: true,
+      },
+      syntax: {
+        table: {
+          selfClosing: true,
+        },
+        link: {
+          target: '_blank',
+        },
+        codeBlock: {
+          customRenderer: {
+            // 自定义语法渲染器
+            all: {
+              render: (code, _sign, _cherry, lang) =>
+                `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" />`,
+            },
+          },
+        },
+      },
+      customSyntax: {
+        AddPart: {
+          syntaxClass: AddPartHook,
+          before: 'frontMatter',
+        },
+      },
+    },
+    toolbars: {
+      toolbar: false,
+      toc: false,
+      showToolbar: false,
+    },
+    editor: {
+      defaultModel: 'previewOnly',
+    },
+    previewer: {
+      enablePreviewerBubble: false,
+    },
+  };
 
   ready() {
+    const { options } = this.props;
+    this.markdownOptions = merge(this.markdownOptions, options);
     this.initMarkdown();
     setExportparts(this);
   }
 
   initMarkdown = async () => {
-    const { options, pluginConfig } = this.props;
-
     this.isMarkdownInit.value = false;
-    const md = MarkdownIt({
-      ...options,
-    })
-      .use(markdownItCjFriendlyPlugin)
-      .use(mdPartAttrPlugin)
-      // 表格
-      .use((md) => {
-        md.renderer.rules.table_open = () =>
-          `<div class=${baseClass}__markdown__table__wrapper part=${baseClass}__markdown__table__wrapper>\n<table>\n`;
-        md.renderer.rules.table_close = () => '</table>\n</div>';
-      })
-      .use(linkPlugin, {
-        attrs: {
-          target: '_blank',
-          rel: 'noopener',
+
+    const md = new Cherry({
+      ...this.markdownOptions,
+      engine: {
+        ...this.markdownOptions.engine,
+        syntax: {
+          ...this.markdownOptions.engine?.syntax,
+          codeBlock: {
+            customRenderer: {
+              // 自定义语法渲染器
+              all: {
+                render: (code, _sign, _cherry, lang) =>
+                  `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
+                    this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
+                  }" />`,
+              },
+            },
+          },
         },
-      });
-
-    // 筛选生效的预设插件
-    const enabledPresetPlugins =
-      (pluginConfig?.filter((item) => {
-        if (typeof item !== 'object') {
-          return false;
-        }
-        if (typeof item.enabled === 'boolean' && !item.enabled) {
-          return false;
-        }
-        return true;
-      }) as TdChatContentMDPresetConfig[] | undefined) || [];
-    // 筛选自定义插件
-    const customPlugins =
-      (pluginConfig?.filter((item) => typeof item !== 'object') as Array<
-        Exclude<TdChatContentMDPluginConfig, TdChatContentMDPresetConfig>
-      >) || [];
-
-    // 注入预设插件
-    // 代码块
-    const codeHighlightConfig = enabledPresetPlugins.find((item) => item.preset === 'code');
-    if (codeHighlightConfig) {
-      await import('../md/chat-md-code');
-
-      const codeHighlight = (code: string, lang: string, attrs: string) => {
-        // 优先取用户自定义代码块渲染
-        const customHighlight = options?.highlight?.(code, lang, attrs);
-        if (customHighlight) {
-          return customHighlight;
-        }
-        // 传参注意转义
-        return `<t-chat-md-code lang="${lang}" code="${md.utils.escapeHtml(code)}"></t-chat-md-code>`;
-      };
-      md.options.highlight = codeHighlight;
-    }
-
-    // 其他预设
-    for await (const config of enabledPresetPlugins) {
-      const { preset, options } = config;
-      switch (preset) {
-        // 链接
-        case 'link': {
-          const plugin = await import('markdown-it-link-attributes');
-          md.use(plugin.default, options);
-          break;
-        }
-        // 公式
-        case 'katex': {
-          const plugin = await import('@vscode/markdown-it-katex');
-          md.use(plugin.default, options);
-          break;
-        }
-      }
-    }
-
-    // 注入自定义插件
-    customPlugins.forEach((plugin) => {
-      md.use(plugin);
+      },
+      el: this.mdRef.current,
     });
 
     this.md = md;
@@ -180,14 +147,15 @@ export default class ChatMDContent extends Component<TdChatMarkdownContentProps>
 
   parseMarkdown(markdown: string) {
     if (!this.isMarkdownInit.value || !markdown) return '';
-    return this.md?.render(markdown);
+    return this.md?.setMarkdown(markdown);
   }
 
   render() {
-    const html = this.getTextInfo();
+    this.getTextInfo();
+
     return (
       <div className={`${baseClass}`}>
-        {!!html && <div className={`${baseClass}__markdown`} unsafeHTML={{ html }}></div>}
+        <div ref={this.mdRef} className={`${baseClass}__markdown`}></div>
       </div>
     );
   }

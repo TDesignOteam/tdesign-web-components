@@ -2,10 +2,11 @@ import 'tdesign-web-components/chatbot';
 import 'tdesign-web-components/space';
 
 import { Component } from 'omi';
-import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
+
+import { TdChatMessageProps } from '../../chat-message/type';
 
 // customThinking扩展类型定义
-declare module '../core/type' {
+declare module '../../chat-engine/type' {
   interface AIContentTypeOverrides {
     customThinking: {
       type: 'customThinking';
@@ -38,43 +39,41 @@ export default class CustomRenderExample extends Component {
     placement: 'left',
     name: '测试',
     avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
-    message: {
-      id: '123',
-      content: [
-        {
-          type: 'weather',
-          id: 'w1',
-          slotName: 'weather-w1',
-          data: {
-            temp: 1,
-            city: '北京',
-            conditions: '多云',
-          },
+    id: '123',
+    role: 'assistant',
+    content: [
+      {
+        type: 'weather',
+        id: 'w1',
+        slotName: 'weather-w1',
+        data: {
+          temp: 1,
+          city: '北京',
+          conditions: '多云',
         },
-        {
-          type: 'text',
-          data: '我是文本',
+      },
+      {
+        type: 'text',
+        data: '我是文本',
+      },
+      {
+        type: 'weather',
+        slotName: 'weather-w2',
+        id: 'w2',
+        data: {
+          temp: 1,
+          city: '上海',
+          conditions: '小雨',
         },
-        {
-          type: 'weather',
-          slotName: 'weather-w2',
-          id: 'w2',
-          data: {
-            temp: 1,
-            city: '上海',
-            conditions: '小雨',
-          },
+      },
+      {
+        type: 'customThinking',
+        data: {
+          title: '自定义thinking内容',
         },
-        {
-          type: 'customThinking',
-          data: {
-            title: '自定义thinking内容',
-          },
-        },
-      ],
-      status: 'complete',
-      role: 'assistant',
-    },
+      },
+    ],
+    status: 'complete',
   };
 
   render() {
@@ -82,7 +81,7 @@ export default class CustomRenderExample extends Component {
       <>
         <t-chat-item {...this.props}>
           {/* 自定义渲染-植入插槽 */}
-          {this.props.message.content.map((item, idx) => {
+          {this.props.content.map((item, idx) => {
             switch (item.type) {
               case 'weather':
                 return (

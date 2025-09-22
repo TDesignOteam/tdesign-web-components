@@ -53,12 +53,11 @@ export default class UploadExample extends Component {
   // 有文件数量超出时会触发，文件大小超出限制、文件同名时会触发等场景。注意如果设置允许上传同名文件，则此事件不会触发
   onValidate: UploadProps['onValidate'] = (params) => {
     const { files, type } = params;
-    console.log('onValidate', params);
     if (type === 'FILE_OVER_SIZE_LIMIT') {
       files.map((t) => t.name).join('、');
-      console.warn(`${files.map((t) => t.name).join('、')} 等图片大小超出限制，已自动过滤`, 5000);
+      // console.warn(`${files.map((t) => t.name).join('、')} 等图片大小超出限制，已自动过滤`, 5000);
     } else if (type === 'FILES_OVER_LENGTH_LIMIT') {
-      console.warn('文件数量超出限制，仅上传未超出数量的文件');
+      // console.warn('文件数量超出限制，仅上传未超出数量的文件');
     } else if (type === 'FILTER_FILE_SAME_NAME') {
       // 如果希望支持上传同名图片，请设置 allowUploadDuplicateFile={true}
       console.warn('不允许上传同名图片');
@@ -110,9 +109,6 @@ export default class UploadExample extends Component {
           <Checkbox checked={this.disabled.value} onChange={this.setDisabled}>
             禁用状态
           </Checkbox>
-          {/* <Checkbox checked={this.uploadInOneRequest.value} onChange={this.setUploadInOneRequest}>
-            多个文件一个请求上传
-          </Checkbox> */}
           <Checkbox checked={this.autoUpload.value} onChange={this.setAutoUpload}>
             自动上传
           </Checkbox>
@@ -167,26 +163,6 @@ export default class UploadExample extends Component {
             // custom UI example
             // fileListDisplay={UploadUI}
           />
-
-          {/* <Upload
-            ref={uploadRef3}
-            files={files3}
-            onChange={setFiles3}
-            action="//service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
-            theme="image"
-            tips="允许选择多张图片文件上传，最多只能上传 3 张图片"
-            accept="image/*"
-            multiple
-            max={3}
-            disabled={disabled}
-            sizeLimit={{ size: 2, unit: 'MB' }}
-            autoUpload={autoUpload}
-            abridgeName={[6, 6]}
-            uploadAllFilesInOneRequest={uploadInOneRequest}
-            onSuccess={onSuccess}
-            onValidate={onValidate}
-            onPreview={onPreview}
-          /> */}
         </Space>
       </Space>
     );

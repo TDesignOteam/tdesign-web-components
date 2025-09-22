@@ -1,69 +1,14 @@
-import { TdChatActionsName } from '../chat-action';
-import { type TdChatLoadingProps } from '../chat-loading';
-import { type TdChatMarkdownContentProps } from '../chat-message';
-import { type TdChatSenderProps } from '../chat-sender';
-import type { StyledProps, TNode } from '../common';
 import type {
   AIMessageContent,
-  ChatContentType,
   ChatMessagesData,
   ChatMessageSetterMode,
   ChatRequestParams,
   ChatServiceConfigSetter,
   ChatStatus,
-} from './core/type';
-
-export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
-export interface TdChatMessageAction {
-  name: TdChatMessageActionName;
-  render: TNode;
-}
-
-export type TdChatContentProps = {
-  markdown?: Omit<TdChatMarkdownContentProps, 'content' | 'role'>;
-  search?: TdChatContentSearchProps;
-  thinking?: TdChatContentThinkProps;
-  suggestion?: TdChatContentSuggestionProps;
-  [key: string]: any; // 处理其他ContentType情况
-} & Partial<Record<Exclude<ChatContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
-
-export interface TdChatMessageProps {
-  /**
-   * 操作
-   */
-  actions?:
-    | TdChatMessageActionName[]
-    // | ((preset: TdChatMessageAction[], message: ChatMessagesData) => TdChatMessageAction[])
-    | boolean;
-  animation?: 'skeleton' | 'moving' | 'gradient' | 'circle';
-  handleActions?: Partial<Record<TdChatMessageActionName, (data?: any) => void>>;
-  /**
-   * 作者
-   */
-  name?: string | TNode;
-  /**
-   * 头像
-   */
-  avatar?: string | TNode;
-  /**
-   * 时间
-   */
-  datetime?: string | TNode;
-  /**
-   * 消息类型
-   */
-  // role?: ModelRoleEnum; // 统一用message里的role
-  /**
-   * 消息样式，是否有边框，背景色等
-   */
-  variant?: Variant;
-  /** 气泡方向 */
-  placement?: 'left' | 'right';
-  /** 消息体 */
-  message: ChatMessagesData;
-  /** 透传chat-content参数 */
-  chatContentProps?: TdChatContentProps;
-}
+} from '../chat-engine/type';
+import type { TdChatMessageProps } from '../chat-message';
+import type { TdChatSenderProps } from '../chat-sender';
+import type { StyledProps, TNode } from '../common';
 
 export interface TdChatProps extends StyledProps {
   children?: TNode;
@@ -199,22 +144,6 @@ export interface TdChatListApi {
   scrollList: (opt?: TdChatListScrollToOptions) => void;
 }
 
-type TdChatContentSearchProps = {
-  useCollapse?: boolean;
-  collapsed?: boolean;
-};
-
-type TdChatContentThinkProps = {
-  maxHeight?: number;
-  animation?: TdChatLoadingProps['animation'];
-  collapsed?: boolean;
-  layout?: 'block' | 'border';
-};
-
-type TdChatContentSuggestionProps = {
-  directSend?: boolean;
-};
-
 export interface TdChatCodeProps {
   lang: string;
   code: string;
@@ -240,7 +169,6 @@ export interface MetaData {
 
 export type ModelRoleEnum = 'assistant' | 'user' | 'system';
 
-export type Variant = 'base' | 'text' | 'outline';
 export type Layout = 'single' | 'both';
 export interface FetchSSEOptions {
   success?: (res: SSEEvent) => void; // 流式数据解析成功回调
@@ -254,5 +182,3 @@ export interface SSEEvent {
 export interface BackBottomParams {
   behavior?: 'auto' | 'smooth';
 }
-
-export type * from './core/type';

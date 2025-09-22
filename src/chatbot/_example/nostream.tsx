@@ -1,16 +1,15 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import MarkdownIt from 'markdown-it';
 import { Component, createRef } from 'omi';
-import { findTargetElement, TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
+import { type ChatMessagesData, findTargetElement } from 'tdesign-web-components/chat-engine';
+import { TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
 
 import type { TdAttachmentItem } from '../../filecard';
 import Chatbot from '../chat';
-import type { ChatMessagesData } from '../core/type';
 
 // 天气扩展类型定义
-declare module '../core/type' {
+declare module 'tdesign-web-components/chat-engine' {
   interface AIContentTypeOverrides {
     weather: {
       type: 'weather';
@@ -103,32 +102,6 @@ const onFileSelect = async (e: CustomEvent<File[]>): Promise<TdAttachmentItem[]>
   return attachments;
 };
 
-const resourceLinkPlugin = (md: MarkdownIt) => {
-  // 保存原始链接渲染函数
-  const defaultRender = md.renderer.rules.link_open?.bind(md.renderer);
-
-  // 覆盖链接渲染规则
-  md.renderer.rules.link_open = (tokens, idx, options, env, self) => {
-    const token = tokens[idx];
-    const href = token.attrGet('href') || '';
-    const id = href.split('#promptId=')[1];
-    // 识别特殊资源链接
-    if (href.startsWith('#promptId')) {
-      // 返回自定义DOM结构
-      // return `<a part="resource-link"
-      //   onclick="this.dispatchEvent(new CustomEvent('resource-link-click', {
-      //     bubbles: true,
-      //     composed: true,
-      //     detail: { resourceId: '${id}'}
-      //   }))">`;
-      return `<a part="resource-link" data-resource="${id}">`;
-    }
-
-    // 普通链接保持默认渲染
-    return defaultRender(tokens, idx, options, env, self);
-  };
-};
-
 export default class BasicChat extends Component {
   chatRef = createRef<Chatbot>();
 
@@ -187,9 +160,6 @@ export default class BasicChat extends Component {
             maxHeight: 100,
             collapsed: thinking?.status === 'complete' ? true : false,
             layout: 'border',
-          },
-          markdown: {
-            pluginConfig: [resourceLinkPlugin],
           },
         },
       };

@@ -34,12 +34,12 @@ spline: base
 ### 组合头像偏移方向
 
 组合头像可控制层叠方向
-{{ group-cascading }}
+{{ groupCascading }}
 
 ### 组合头像个数
 
 组合头像可设置最大展示个数，超过则隐藏显示
-{{ group-max }}
+{{ groupMax }}
 
 ## API
 

@@ -9,8 +9,9 @@ import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
-import type { ChatMessageStatus, TdChatContentProps } from '../../chatbot';
+import type { ChatMessageStatus } from '../../chat-engine';
 import { CollapseValue } from '../../collapse';
+import type { TdChatContentProps } from '../type';
 
 import styles from '../style/chat-item.less';
 
@@ -22,7 +23,7 @@ type TdChatThinkBaseProps = {
     text?: string;
     title?: string;
   };
-  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
+  status?: ChatMessageStatus;
 } & TdChatContentProps['thinking'];
 
 export type TdChatThinkContentProps = {

@@ -3,7 +3,7 @@ import '../../attachments';
 import { Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import { type AttachmentItem } from '../../chatbot/type';
+import { type AttachmentItem } from '../../chat-engine';
 import { TdAttachmentItem } from '../../filecard';
 
 import styles from '../style/chat-item.less';

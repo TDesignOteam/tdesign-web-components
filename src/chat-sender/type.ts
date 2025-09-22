@@ -1,5 +1,5 @@
 import { TdAttachmentsProps } from '../attachments';
-import { ChatRequestParams } from '../chatbot';
+import { ChatRequestParams } from '../chat-engine';
 import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
 import { TdTextareaProps } from '../textarea';

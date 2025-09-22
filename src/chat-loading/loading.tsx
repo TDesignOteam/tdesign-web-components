@@ -44,6 +44,15 @@ export default class Loading extends Component<TdChatLoadingProps> {
         </div>
       );
     }
+    if (animation === 'dot') {
+      return (
+        <div class={`${className}__dot`}>
+          <span class={`${className}__dot-item`} style={{ animationDelay: '0s' }}></span>
+          <span class={`${className}__dot-item`} style={{ animationDelay: '0.2s' }}></span>
+          <span class={`${className}__dot-item`} style={{ animationDelay: '0.4s' }}></span>
+        </div>
+      );
+    }
     return (
       <t-skeleton class={`${className}__skeleton`} loading={true} theme="paragraph" animation="gradient"></t-skeleton>
     );

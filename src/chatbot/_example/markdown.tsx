@@ -1,10 +1,12 @@
 import 'tdesign-web-components/chatbot';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/switch';
+// 公式能力引入，参考cherryMarkdown示例
+import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
 import { Component, signal } from 'omi';
-import { TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
+import { TdChatMessageProps } from '../../chat-message/type';
 import mdContent from '../mock/testMarkdown.md?raw';
 
 export default class MarkdownExample extends Component {
@@ -16,10 +18,6 @@ export default class MarkdownExample extends Component {
     `,
   ];
 
-  hasCode = signal(true);
-
-  hasLink = signal(false);
-
   hasKatex = signal(false);
 
   rerenderKey = signal(1);
@@ -30,51 +28,40 @@ export default class MarkdownExample extends Component {
       placement: 'left',
       avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
       actions: true,
-      message: {
-        id: '123',
-        content: [
-          {
-            type: 'markdown',
-            data: mdContent,
-          },
-        ],
-        status: 'complete',
-        role: 'assistant',
-      },
+      id: '123',
+      role: 'assistant',
+      content: [
+        {
+          type: 'markdown',
+          data: mdContent,
+        },
+      ],
+      status: 'complete',
       chatContentProps: {
         markdown: {
           options: {
-            html: true,
-            breaks: true,
-            typographer: true,
-            highlight: (str, lang) => {
-              if (lang === 'javascript') {
-                return '<div>javascript自定义<div />';
-              }
+            themeSettings: {
+              codeBlockTheme: 'dark',
+            },
+            engine: {
+              syntax: this.hasKatex.value
+                ? {
+                    mathBlock: {
+                      engine: 'katex',
+                    },
+                    inlineMath: {
+                      engine: 'katex',
+                    },
+                  }
+                : undefined,
             },
           },
-          pluginConfig: [
-            // 预设插件
-            {
-              preset: 'code',
-              enabled: this.hasCode.value,
-            },
-            {
-              preset: 'katex',
-              enabled: this.hasKatex.value,
-            },
-          ],
         },
       },
     };
   }
 
-  changeCodeHandler = (e) => {
-    this.hasCode.value = e;
-    this.rerenderKey.value += 1;
-  };
-
-  changeKatexHandler = (e) => {
+  changeKatexHandler = async (e) => {
     this.hasKatex.value = e;
     this.rerenderKey.value += 1;
   };
@@ -86,10 +73,6 @@ export default class MarkdownExample extends Component {
         <t-chat-item key={this.rerenderKey.value} {...this.itemProps} />
         <t-space direction="vertical">
           <div style={{ width: '100px' }}>插件配置</div>
-          <t-space>
-            代码块
-            <t-switch size="large" value={this.hasCode.value} onChange={this.changeCodeHandler} />
-          </t-space>
           <t-space>
             公式
             <t-switch size="large" value={this.hasKatex.value} onChange={this.changeKatexHandler} />

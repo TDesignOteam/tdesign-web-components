@@ -1,11 +1,15 @@
-import type { AIMessage, AttachmentItem, ChatMessagesData, UserMessage } from '../type';
-import {
-  type AIMessageContent,
-  type ImageContent,
-  type MarkdownContent,
-  type SearchContent,
-  type TextContent,
-  type ThinkingContent,
+/* eslint-disable class-methods-use-this */
+import type {
+  AIMessage,
+  AIMessageContent,
+  AttachmentItem,
+  ChatMessagesData,
+  ImageContent,
+  MarkdownContent,
+  SearchContent,
+  TextContent,
+  ThinkingContent,
+  UserMessage,
 } from '../type';
 
 export default class MessageProcessor {
@@ -15,7 +19,7 @@ export default class MessageProcessor {
     this.registerDefaultHandlers();
   }
 
-  public createUserMessage(content: string, attachments?: AttachmentItem[]): ChatMessagesData {
+  public createUserMessage(content, attachments?: AttachmentItem[]): ChatMessagesData {
     const messageContent: UserMessage['content'] = [
       {
         type: 'text',
@@ -39,14 +43,15 @@ export default class MessageProcessor {
     };
   }
 
-  public createAssistantMessage(): AIMessage {
-    // 创建初始助手消息
+  public createAssistantMessage(msg?: { content?: AIMessageContent[]; status?: AIMessage['status'] }): AIMessage {
+    const { content = [], status = 'pending' } = msg || {};
+
     return {
       id: this.generateID(),
       role: 'assistant',
-      status: 'pending',
-      datetime: `${Date.now()}`,
-      content: [],
+      content,
+      status,
+      datetime: new Date().toISOString(),
     };
   }
 
@@ -101,6 +106,11 @@ export default class MessageProcessor {
           ...existing,
           data: mergeData(existing.data, chunk.data),
           status: chunk.status || 'streaming',
+          // 合并ext字段，确保动态属性能够正确传递
+          ext: {
+            ...existing.ext,
+            ...chunk.ext,
+          },
         };
       }
       return {

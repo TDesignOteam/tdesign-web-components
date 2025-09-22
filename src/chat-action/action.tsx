@@ -11,7 +11,7 @@ import { Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
-import { type ChatComment } from '../chatbot';
+import { type ChatComment } from '../chat-engine';
 import { MessagePlugin } from '../message';
 import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
 
