@@ -5,6 +5,15 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.0 `2025-09-22` 
+### 🚧 Features
+- feat(chatMarkdown):  渲染引擎改为cherry-markdown @LzhengH ([#268](https://github.com/TDesignOteam/tdesign-web-components/pull/268))
+- feat(chatMarkdown):  code代码块支持theme切换 @LzhengH ([#281](https://github.com/TDesignOteam/tdesign-web-components/pull/281))
+- fix(chatMarkdown): link去掉默认图标 @LzhengH ([#282](https://github.com/TDesignOteam/tdesign-web-components/pull/282))
+- feat(chatEngine):  独立输出chatEngine @carolin913 ([#284](https://github.com/TDesignOteam/tdesign-web-components/pull/284))
+- feat(chatEngine):  支持适配ag-ui协议 @carolin913 ([#284](https://github.com/TDesignOteam/tdesign-web-components/pull/284))
+- fix(upload):  修复upload组件disabled状态问题、filevalue受控问题 @carolin913 ([#284](https://github.com/TDesignOteam/tdesign-web-components/pull/284))
+
 ## 🌈 1.1.17 `2025-09-08` 
 ### 🚧 Others
 - fix(attachments): fix onFileClick in vue @LzhengH ([#277](https://github.com/TDesignOteam/tdesign-web-components/pull/277))
