@@ -53,12 +53,11 @@ export default class UploadExample extends Component {
   // 有文件数量超出时会触发，文件大小超出限制、文件同名时会触发等场景。注意如果设置允许上传同名文件，则此事件不会触发
   onValidate: UploadProps['onValidate'] = (params) => {
     const { files, type } = params;
-    console.log('onValidate', params);
     if (type === 'FILE_OVER_SIZE_LIMIT') {
       files.map((t) => t.name).join('、');
-      console.warn(`${files.map((t) => t.name).join('、')} 等图片大小超出限制，已自动过滤`, 5000);
+      // console.warn(`${files.map((t) => t.name).join('、')} 等图片大小超出限制，已自动过滤`, 5000);
     } else if (type === 'FILES_OVER_LENGTH_LIMIT') {
-      console.warn('文件数量超出限制，仅上传未超出数量的文件');
+      // console.warn('文件数量超出限制，仅上传未超出数量的文件');
     } else if (type === 'FILTER_FILE_SAME_NAME') {
       // 如果希望支持上传同名图片，请设置 allowUploadDuplicateFile={true}
       console.warn('不允许上传同名图片');
