@@ -32,7 +32,6 @@ spline: data
 图片上传成功后，显示预览图片；图片上传失败后，不显示预览图片。
 
 - 设置属性 `theme="image"` 即可，这种风格不支持拖拽上传，如果需要拖拽上传请移步文档下方有拖拽上传的示例。
-- 上传组件中的全部文本，均可通过 `locale` 进行修改，也支持全局配置，<a href='../global-configuration?tab=api#uploadconfig'>查看文档</a>。
 - 图片预览地址，默认会读取上传接口返回的 `url` 字段。如果接口没有返回 `url` 字段，可以使用 `formatResponse` 格式化返回值，在返回值中增加 `url` 字段。
 
 {{ image }}

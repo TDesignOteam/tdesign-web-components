@@ -65,7 +65,7 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
   );
 
   const cardItemClasses = `${classPrefix}-upload__card-item ${classPrefix}-is-background`;
-  console.log('===displayFiles', displayFiles);
+
   return (
     <div>
       <ul className={`${classPrefix}-upload__card`}>
