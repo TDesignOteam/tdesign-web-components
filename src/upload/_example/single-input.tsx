@@ -15,7 +15,7 @@ export default class UploadSingleInput extends Component {
   disabled = signal(false);
 
   handleFail: UploadProps['onFail'] = ({ file }) => {
-    console.error(`${file.name} 上传失败`);
+    console.error('上传失败', file);
   };
 
   onSuccess: UploadProps['onSuccess'] = () => {
@@ -36,7 +36,6 @@ export default class UploadSingleInput extends Component {
   };
 
   render() {
-    console.log('===render');
     const Checkbox = ({ checked, onChange, children }) => {
       const handleChange = (event) => {
         if (onChange) {

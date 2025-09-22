@@ -68,7 +68,7 @@ export default class Base extends Component {
   disabled = signal(false);
 
   handleFail: UploadProps['onFail'] = ({ file }) => {
-    console.error(`文件 ${file.name} 上传失败`);
+    console.error('上传失败', file);
   };
 
   handleSelectChange: UploadProps['onSelectChange'] = (files) => {
@@ -175,7 +175,6 @@ export default class Base extends Component {
         </Space>
 
         <br></br>
-        {/* <!-- 1. formatRequest 用于修改或新增上传请求数据，示例：:formatRequest="(obj) => ({ ...obj, other: 123 })" --> */}
         <Space>
           <Upload
             ref={this.uploadRef1}
@@ -219,8 +218,6 @@ export default class Base extends Component {
             style={{ marginLeft: '40px', display: 'block' }}
             onFail={this.handleFail}
           ></Upload>
-
-          {/* formatResponse 可控制上传成功或者失败 */}
           <Upload
             ref={this.uploadRef3}
             files={this.files3.value}
