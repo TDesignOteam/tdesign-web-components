@@ -19,10 +19,11 @@ export type ValidateParams = Parameters<TdUploadProps['onValidate']>[0];
 
 export default function useUpload(props: SignalValue<UploadProps>) {
   const inputRef = createRef<HTMLInputElement>();
+  const files = signal<UploadFile[]>(props.value.files || []);
+
   const {
     disabled,
     autoUpload,
-    files,
     onChange,
     onSelectChange,
     sizeLimit,
@@ -33,13 +34,11 @@ export default function useUpload(props: SignalValue<UploadProps>) {
     onSuccess,
     onFail,
   } = toRef(props);
-  if (!files.value) {
-    files.value = [];
-  }
+
   const [uploadValue, setUploadValue] = [
     files,
     (value: typeof files.value, context: UploadChangeContext) => {
-      files.value = value;
+      files.value = [...value];
       onChange.value?.(value, context);
     },
   ];
@@ -144,6 +143,7 @@ export default function useUpload(props: SignalValue<UploadProps>) {
 
   const onFileChange = (files: File[]) => {
     if (disabled.value) return;
+    console.log('====onFileChange', files);
     const params = { currentSelectedFiles: formatToUploadFile([...files], undefined) };
     onSelectChange.value?.([...files], params);
     validateFile({
