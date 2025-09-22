@@ -1,7 +1,9 @@
+import 'tdesign-web-components/space';
+import 'tdesign-web-components/upload';
+import 'tdesign-web-components/button';
+
 import { Component, createRef, signal } from 'omi';
-import Button from 'tdesign-web-components/button';
 import { MessagePlugin } from 'tdesign-web-components/message/message';
-import Space from 'tdesign-web-components/space';
 import type { UploadProps } from 'tdesign-web-components/upload';
 import Upload from 'tdesign-web-components/upload';
 
@@ -53,8 +55,8 @@ export default class UploadSingleInput extends Component {
     };
 
     return (
-      <Space direction="vertical">
-        <Space>
+      <t-space direction="vertical">
+        <t-space>
           <Checkbox checked={this.autoUpload.value} onChange={this.setAutoUpload}>
             自动上传
           </Checkbox>
@@ -62,27 +64,27 @@ export default class UploadSingleInput extends Component {
             禁用状态
           </Checkbox>
           {!this.autoUpload.value && (
-            <Button variant="base" theme="default" size="small" style={{ height: '22px' }} onClick={this.uploadFiles}>
+            <t-button variant="base" theme="default" size="small" style={{ height: '22px' }} onClick={this.uploadFiles}>
               点击上传
-            </Button>
+            </t-button>
           )}
-        </Space>
+        </t-space>
         <br />
-        <Upload
+        <t-upload
           ref={this.uploadRef}
           style={{ width: '350px', display: 'block' }}
           files={this.files.value}
           onChange={(files) => (this.files.value = files)}
           abridgeName={[8, 6]}
-          action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
+          // action="https://service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
           theme="file-input"
           placeholder="请选择文件"
           autoUpload={this.autoUpload.value}
           disabled={this.disabled.value}
           onFail={this.handleFail}
           onSuccess={this.onSuccess}
-        ></Upload>
-      </Space>
+        ></t-upload>
+      </t-space>
     );
   }
 }
