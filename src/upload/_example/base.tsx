@@ -98,8 +98,9 @@ export default class Base extends Component {
       BEFORE_ALL_FILES_UPLOAD: 'beforeAllFilesUpload 方法拦截了文件',
       CUSTOM_BEFORE_UPLOAD: 'beforeUpload 方法拦截了文件',
     };
+    console.log('messageMap', messageMap[type]);
     // you can also set Upload.tips and Upload.status to show warning message.
-    messageMap[type] && console.warn(messageMap[type]);
+    // messageMap[type] && console.warn(messageMap[type]);
   };
 
   // 仅自定义文件列表所需
