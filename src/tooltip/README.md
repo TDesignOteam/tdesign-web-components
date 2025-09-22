@@ -34,9 +34,9 @@ spline: data
 
 {{ trigger }}
 
-### 定时消失
+<!-- ### 定时消失
 
-{{ duration }}
+{{ duration }} -->
 
 
 ## API

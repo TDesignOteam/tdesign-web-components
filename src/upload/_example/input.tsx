@@ -4,7 +4,7 @@ import Space from 'tdesign-web-components/space';
 import Upload from 'tdesign-web-components/upload';
 
 export default class UploadSingleInput extends Component {
-  uploadRef = createRef<InstanceType<typeof Upload>>();
+  uploadRef = createRef();
 
   files = signal([]);
 
