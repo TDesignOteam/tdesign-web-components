@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReasoningContent 测试</title>
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>ReasoningContent 组件测试</h1>
+      <div id="app"></div>
+    </div>
+
+    <script type="module">
+      import { render, h } from 'https://unpkg.com/omi@latest/esm/index.js';
+
+      // 模拟导入组件
+      console.log('ReasoningContent 组件测试页面已加载');
+
+      // 这里可以添加实际的组件测试代码
+      const testData = {
+        type: 'reasoning',
+        data: [
+          { type: 'text', data: '开始推理过程...' },
+          {
+            type: 'toolcall',
+            data: {
+              toolCallName: 'search',
+              args: '{"query": "test"}',
+              result: 'search result',
+            },
+          },
+        ],
+        status: 'complete',
+      };
+
+      document.getElementById('app').innerHTML = `
+            <div>
+                <h2>测试数据结构：</h2>
+                <pre>${JSON.stringify(testData, null, 2)}</pre>
+                <p>组件将在这里渲染...</p>
+            </div>
+        `;
+    </script>
+  </body>
+</html>

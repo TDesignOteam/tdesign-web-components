@@ -82,6 +82,23 @@
     }
   }
 
+  &__dot {
+    display: flex;
+    align-items: center;
+    gap: var(--td-chat-loading-dot-gap, 4px);
+  }
+
+  &__dot-item {
+    animation: DotsAnimation 1.4s ease-in-out infinite;
+    display: inline-block;
+    height: var(--td-chat-loading-dot-size, 6px);
+    width: var(--td-chat-loading-dot-size, 6px);
+    background: var(--td-chat-loading-dot-color, var(--td-brand-color));
+    border-radius: var(--td-radius-circle);
+    margin-right: 0px;
+    opacity: 0.3;
+  }
+
   &__text {
     margin-left: 8px;
   }
@@ -150,5 +167,17 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@keyframes DotsAnimation {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.3;
   }
 }

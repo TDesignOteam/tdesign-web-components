@@ -1,9 +1,10 @@
 import 'tdesign-icons-web-components/esm/components/upload';
+import '../input';
 
-import { classNames, Component, computed, css, OmiProps, signal, SignalValue, tag } from 'omi';
+import { classNames, Component, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
 import { classPrefix } from '../_util/classname';
-import { Button, ButtonProps } from '../button';
+import { ButtonProps } from '../button';
 import useUpload from './hooks/useUpload';
 import CustomFile from './CustomFile';
 import ImageCard from './ImageCard';
@@ -76,31 +77,6 @@ export default class Upload extends Component<UploadProps> {
     this.theme = theme;
     this.onPreview = onPreview;
     this.triggerButtonProps = triggerButtonProps;
-
-    this.commonDisplayFileProps = computed(() => ({
-      accept: props.value.accept,
-      files: this.uploadState.uploadValue.value,
-      toUploadFiles: this.uploadState.toUploadFiles.value,
-      displayFiles: this.uploadState.displayFiles.value,
-      theme: props.value.theme,
-      abridgeName: props.value.abridgeName,
-      placeholder: props.value.placeholder,
-      disabled: props.value.disabled,
-      tips: props.value.tips,
-      sizeOverLimitMessage: this.uploadState.sizeOverLimitMessage.value,
-      uploading: this.uploadState.uploading.value,
-      showUploadProgress: props.value.showUploadProgress,
-      classPrefix,
-      tipsClasses: this.uploadState.tipsClasses,
-      errorClasses: this.uploadState.errorClasses,
-      placeholderClass: this.uploadState.placeholderClass,
-      // locale,
-      autoUpload: props.value.autoUpload,
-      // showUploadProgress: props.showUploadProgress,
-      // fileListDisplay: props.fileListDisplay,
-      // imageViewerProps: props.imageViewerProps,
-      onRemove: this.uploadState.onRemove,
-    }));
   }
 
   install(): void {
@@ -113,31 +89,31 @@ export default class Upload extends Component<UploadProps> {
   }
 
   renderTrigger = (): JSX.Element => {
-    const { disabled, triggerUploadText, triggerUpload } = this.uploadState;
+    const { triggerUploadText, triggerUpload } = this.uploadState;
 
     const getDefaultTrigger = () => {
       if (this.theme.value === 'file-input') {
         return (
-          <Button
+          <t-button
             variant="outline"
             onClick={triggerUpload}
             {...this.triggerButtonProps.value}
-            disabled={disabled.value}
+            disabled={this.props.disabled}
           >
             {triggerUploadText.value}
-          </Button>
+          </t-button>
         );
       }
       return (
-        <Button
+        <t-button
           variant="outline"
           icon={<t-icon-upload />}
           onClick={triggerUpload}
           {...this.triggerButtonProps.value}
-          disabled={disabled.value}
+          disabled={this.props.disabled}
         >
           {triggerUploadText.value}
-        </Button>
+        </t-button>
       );
     };
     return (
@@ -146,8 +122,27 @@ export default class Upload extends Component<UploadProps> {
     );
   };
 
-  getNormalFileNode = () => (
-    <NormalFile {...this.commonDisplayFileProps.value}>
+  getNormalFileNode = (props: UploadProps) => (
+    <NormalFile
+      accept={props.accept}
+      files={this.uploadState.uploadValue.value}
+      toUploadFiles={this.uploadState.toUploadFiles.value}
+      displayFiles={this.uploadState.displayFiles.value}
+      theme={props.theme}
+      abridgeName={props.abridgeName}
+      placeholder={props.placeholder}
+      disabled={props.disabled}
+      tips={props.tips}
+      sizeOverLimitMessage={this.uploadState.sizeOverLimitMessage.value}
+      uploading={this.uploadState.uploading.value}
+      showUploadProgress={props.showUploadProgress}
+      classPrefix={classPrefix}
+      tipsClasses={this.uploadState.tipsClasses}
+      errorClasses={this.uploadState.errorClasses}
+      placeholderClass={this.uploadState.placeholderClass}
+      autoUpload={props.autoUpload}
+      onRemove={this.uploadState.onRemove}
+    >
       <div className={`${classPrefix}-upload__trigger`}>{this.renderTrigger()}</div>
     </NormalFile>
   );
@@ -156,8 +151,24 @@ export default class Upload extends Component<UploadProps> {
     const { uploadFiles, triggerUpload, cancelUpload } = this.uploadState;
     return (
       <ImageCard
-        {...this.commonDisplayFileProps.value}
+        accept={props.accept}
+        files={this.uploadState.uploadValue.value}
+        toUploadFiles={this.uploadState.toUploadFiles.value}
+        displayFiles={this.uploadState.displayFiles.value}
+        theme={props.theme}
+        abridgeName={props.abridgeName}
+        placeholder={props.placeholder}
+        disabled={props.disabled}
+        tips={props.tips}
+        sizeOverLimitMessage={this.uploadState.sizeOverLimitMessage.value}
+        uploading={this.uploadState.uploading.value}
         showUploadProgress={props.showUploadProgress}
+        classPrefix={classPrefix}
+        tipsClasses={this.uploadState.tipsClasses}
+        errorClasses={this.uploadState.errorClasses}
+        placeholderClass={this.uploadState.placeholderClass}
+        autoUpload={props.autoUpload}
+        onRemove={this.uploadState.onRemove}
         triggerUpload={triggerUpload}
         uploadFiles={uploadFiles}
         cancelUpload={cancelUpload}
@@ -167,10 +178,30 @@ export default class Upload extends Component<UploadProps> {
     );
   };
 
-  getCustomFile = () => {
+  getCustomFile = (props: UploadProps) => {
     const { triggerUpload } = this.uploadState;
     return (
-      <CustomFile {...this.commonDisplayFileProps.value} triggerUpload={triggerUpload}>
+      <CustomFile
+        accept={props.accept}
+        files={this.uploadState.uploadValue.value}
+        toUploadFiles={this.uploadState.toUploadFiles.value}
+        displayFiles={this.uploadState.displayFiles.value}
+        theme={props.theme}
+        abridgeName={props.abridgeName}
+        placeholder={props.placeholder}
+        disabled={props.disabled}
+        tips={props.tips}
+        sizeOverLimitMessage={this.uploadState.sizeOverLimitMessage.value}
+        uploading={this.uploadState.uploading.value}
+        showUploadProgress={props.showUploadProgress}
+        classPrefix={classPrefix}
+        tipsClasses={this.uploadState.tipsClasses}
+        errorClasses={this.uploadState.errorClasses}
+        placeholderClass={this.uploadState.placeholderClass}
+        autoUpload={props.autoUpload}
+        onRemove={this.uploadState.onRemove}
+        triggerUpload={triggerUpload}
+      >
         {this.renderTrigger()}
       </CustomFile>
     );
@@ -192,17 +223,17 @@ export default class Upload extends Component<UploadProps> {
         <input
           ref={inputRef}
           type="file"
-          disabled={false}
+          disabled={props.disabled}
           onChange={onNormalFileChange}
           multiple={false}
           accept={props.accept}
           hidden
         />
-        {['file', 'file-input'].includes(props.theme) && this.getNormalFileNode()}
+        {['file', 'file-input'].includes(props.theme) && this.getNormalFileNode(props)}
         {/* {['file', 'image'].includes(props.theme) && props.draggable && getSingleFileDraggerUploadNode()} */}
         {props.theme === 'image' && this.getImageCardUploadNode(props)}
         {/* {['image-flow', 'file-flow'].includes(props.theme) && getFlowListNode()} */}
-        {props.theme === 'custom' && this.getCustomFile()}
+        {props.theme === 'custom' && this.getCustomFile(props)}
 
         {Boolean(props.tips) && (
           <small class={classNames([tipsClasses, `${classPrefix.value}-upload__tips`])}>{props.tips}</small>

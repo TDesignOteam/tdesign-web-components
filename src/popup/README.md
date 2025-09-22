@@ -16,7 +16,7 @@ spline: message
 
 可以使用 `triggerElement` 自定义触发元素。
 
-{{ trigger-element }}
+{{ triggerElement }}
 
 ### 不同触发方式的弹出层
 

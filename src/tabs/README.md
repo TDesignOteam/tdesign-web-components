@@ -53,7 +53,7 @@ spline: base
 ### 可拖拽的选项卡
 
 提供了可拖拽的选项卡。
-{{ drag-sort }}
+{{ dragsort }}
 
 <!-- ### 懒加载
 

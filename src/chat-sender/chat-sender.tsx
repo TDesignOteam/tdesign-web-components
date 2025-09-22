@@ -314,19 +314,21 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleSend = () => {
-    if (!this.props.disabled && this.inputValue) {
-      this.fire(
-        'send',
-        {
-          value: this.inputValue,
-          attachments: this.attachmentsValue,
-        },
-        {
-          composed: true,
-        },
-      );
-      this.pValue.value = '';
+    if (this.props.disabled || !this.inputValue || this.inputValue.trim() === '') {
+      return;
     }
+    this.fire(
+      'send',
+      {
+        value: this.inputValue,
+        attachments: this.attachmentsValue,
+      },
+      {
+        composed: true,
+      },
+    );
+    this.pValue.value = '';
+    this.pAttachments.value = [];
   };
 
   private handleStop = () => {

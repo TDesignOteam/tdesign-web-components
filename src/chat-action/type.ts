@@ -1,4 +1,4 @@
-import { type ChatComment } from '../chatbot';
+import { type ChatComment } from '../chat-engine';
 import { StyledProps, TNode } from '../common';
 import { type TooltipProps } from '../tooltip';
 

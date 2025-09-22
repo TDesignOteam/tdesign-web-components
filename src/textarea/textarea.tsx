@@ -79,15 +79,14 @@ export default class Textarea extends Component<TdTextareaProps> {
       });
       return eventProps;
     }, {});
-
-    // 处理autosize初始化高度不准确
-    setTimeout(() => {
-      this.adjustTextareaHeight();
-    }, 0);
   }
 
   ready(): void {
     setExportparts(this);
+    // 处理autosize初始化高度不准确
+    setTimeout(() => {
+      this.adjustTextareaHeight();
+    }, 0);
   }
 
   updated(): void {

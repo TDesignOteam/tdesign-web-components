@@ -2,14 +2,14 @@
 import 'tdesign-web-components/chatbot';
 
 import { Component, createRef } from 'omi';
-import { findTargetElement, TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
+import { type ChatMessagesData, findTargetElement } from 'tdesign-web-components/chat-engine';
+import { TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
 
 import type { TdAttachmentItem } from '../../filecard';
 import Chatbot from '../chat';
-import type { ChatMessagesData } from '../core/type';
 
 // 天气扩展类型定义
-declare module '../core/type' {
+declare module 'tdesign-web-components/chat-engine' {
   interface AIContentTypeOverrides {
     weather: {
       type: 'weather';

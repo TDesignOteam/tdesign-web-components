@@ -1,4 +1,5 @@
 import './content/markdown-content';
+import './content/reasoning-content';
 import '../collapse';
 import '../chat-loading';
 import '../attachments';
@@ -23,17 +24,20 @@ import {
   isAttachmentContent,
   isImageContent,
   isMarkdownContent,
+  isReasoningContent,
   isSearchContent,
   isSuggestionContent,
   isTextContent,
   isThinkingContent,
   isUserMessage,
-} from '../chatbot';
-import type { TdChatMessageActionName, TdChatMessageProps } from '../chatbot/type';
+} from '../chat-engine';
+import type { ChatMessagesData } from '../chat-engine/type';
 import { renderAttachments } from './content/attachment-content';
+import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
+import type { TdChatMessageActionName, TdChatMessageProps } from './type';
 
 import styles from './style/chat-item.less';
 
@@ -53,8 +57,11 @@ export default class ChatItem extends Component<ChatMessageProps> {
     avatar: [String, Object], // 支持传入String或ReactNode
     datetime: String,
     message: Object,
-    placement: String,
     role: String,
+    content: Array,
+    status: String,
+    id: String,
+    placement: String,
     variant: String,
     chatContentProps: Object,
     handleActions: Object,
@@ -69,19 +76,59 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   searchExpand = signal(false);
 
+  // 将外部传入的 props 转换为内部的 message 变量
+  private getInternalMessage(): ChatMessagesData | null {
+    const { message, role, content, status, id } = this.props;
+
+    // 优先使用直接传入的属性
+    if (role && content) {
+      const internalMessage: ChatMessagesData = {
+        id,
+        role,
+        content,
+        status,
+      } as ChatMessagesData;
+      return internalMessage;
+    }
+
+    // 兼容旧版本，使用 message 属性
+    return message || null;
+  }
+
   receiveProps(
     props: ChatMessageProps | OmiProps<ChatMessageProps, any>,
     oldProps: ChatMessageProps | OmiProps<ChatMessageProps, any>,
   ) {
-    const newMsg = props?.message;
-    const oldMsg = oldProps?.message;
+    const newMsg = this.getInternalMessageFromProps(props);
+    const oldMsg = this.getInternalMessageFromProps(oldProps);
 
     // 处理用户消息
-    if (isUserMessage(newMsg) && isUserMessage(oldMsg) && newMsg.content === oldMsg.content) {
+    if (isUserMessage(newMsg) && isUserMessage(oldMsg) && newMsg?.content === oldMsg?.content) {
       return false;
     }
 
     return true;
+  }
+
+  // 从指定的 props 获取内部 message
+  private getInternalMessageFromProps(
+    props: ChatMessageProps | OmiProps<ChatMessageProps, any>,
+  ): ChatMessagesData | null {
+    const { message, role, content, status, id = '' } = props;
+
+    // 优先使用直接传入的属性
+    if (role && content) {
+      const internalMessage: ChatMessagesData = {
+        id,
+        role,
+        content,
+        status,
+      } as ChatMessagesData;
+      return internalMessage;
+    }
+
+    // 兼容旧版本，使用 message 属性
+    return message || null;
   }
 
   ready(): void {
@@ -131,9 +178,10 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {
+    const internalMessage = this.getInternalMessage();
     const toData = {
       ...data,
-      message: this.props.message,
+      message: internalMessage,
     };
     if (this.props?.handleActions?.[action]) {
       this.props.handleActions[action](toData);
@@ -148,9 +196,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
   };
 
   get renderMessageStatus() {
-    const { status, content } = this.props.message;
+    const internalMessage = this.getInternalMessage();
+    if (!internalMessage) return null;
+
+    const { status, content } = internalMessage;
     const { animation = 'skeleton' } = this.props;
-    if (status === 'pending' || (status === 'streaming' && content.length === 0)) {
+    if (status === 'pending' || (status === 'streaming' && content && content.length === 0)) {
       return (
         <div class={`${className}-chat-loading`}>
           {convertToLightDomNode(
@@ -164,9 +215,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   renderMessage() {
-    const { message, chatContentProps, animation } = this.props;
-    const { role, id } = message;
-    return message?.content?.map((content, index) => {
+    const { chatContentProps, animation } = this.props;
+    const internalMessage = this.getInternalMessage();
+    if (!internalMessage) return null;
+
+    const { role, id } = internalMessage;
+    return internalMessage?.content?.map((content, index) => {
       const elementKey = `${id}-${index}`;
       // 系统消息渲染
       if (role === 'system') {
@@ -194,34 +248,61 @@ export default class ChatItem extends Component<ChatMessageProps> {
       // AI消息渲染
       if (role === 'assistant') {
         if (isSearchContent(content)) {
-          return renderSearch({
-            key: elementKey,
-            content: content.data,
-            status: content.status,
-            useCollapse: chatContentProps?.search?.useCollapse,
-            handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
-            handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
-            ...content?.ext,
-          });
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderSearch({
+                key: elementKey,
+                content: content.data,
+                status: content.status,
+                useCollapse: chatContentProps?.search?.useCollapse,
+                handleSearchItemClick: (data) => this.handleClickAction('searchItem', data),
+                handleSearchResultClick: (data) => this.handleClickAction('searchResult', data),
+                ...content?.ext,
+              })}
+            </slot>
+          );
         }
 
         if (isSuggestionContent(content)) {
-          return renderSuggestion({
-            key: elementKey,
-            content: content.data,
-            handlePromptClick: (data) => this.handleClickAction('suggestion', data),
-          });
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderSuggestion({
+                key: elementKey,
+                content: content.data,
+                handlePromptClick: (data) => this.handleClickAction('suggestion', data),
+              })}
+            </slot>
+          );
         }
         if (isThinkingContent(content)) {
           // 思考
-          return renderThinking({
-            key: elementKey,
-            content: content.data,
-            status: content.status,
-            animation,
-            ...chatContentProps?.thinking,
-            ...content?.ext,
-          });
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderThinking({
+                key: elementKey,
+                content: content.data,
+                status: content.status,
+                animation,
+                ...chatContentProps?.thinking,
+                ...content?.ext,
+              })}
+            </slot>
+          );
+        }
+        if (isReasoningContent(content)) {
+          // 推理过程
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderReasoning({
+                key: elementKey,
+                content: content.data,
+                status: content.status,
+                animation,
+                ...chatContentProps?.reasoning,
+                ...content?.ext,
+              })}
+            </slot>
+          );
         }
         if (isImageContent(content)) {
           // 图片
@@ -252,11 +333,12 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   render(props: ChatMessageProps) {
-    const { message, variant, placement } = props;
-    if (!message) return;
+    const { variant, placement } = props;
+    const internalMessage = this.getInternalMessage();
+    if (!internalMessage) return;
 
     const baseClass = `${className}__inner`;
-    const roleClass = `${className}__role--${message?.role}`;
+    const roleClass = `${className}__role--${internalMessage?.role}`;
     const variantClass = variant ? `${className}--variant--${variant}` : '';
     const placementClass = placement;
 

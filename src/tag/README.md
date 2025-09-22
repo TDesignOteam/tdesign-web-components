@@ -29,7 +29,7 @@ spline: data
 
 通过 `maxWidth` 设置最大宽度，超出部分自动省略。
 
-{{ long-text }}
+{{ longText }}
 
 ### 不同尺寸的标签
 

@@ -41,7 +41,7 @@ spline: data
 - `tag` 用于定义单个标签的内容
 - `valueDisplay` 用于完全自定义全量标签内容
 
-{{ custom-tag }}
+{{ customTag }}
 
 
 ### 不同状态的标签输入框
@@ -58,7 +58,7 @@ spline: data
 
 ### 宽度自适应的标签输入框
 
-{{ auto-width }}
+{{ autowidth }}
 
 ### 可拖拽调整顺序的标签输入框
 {{ draggable }}

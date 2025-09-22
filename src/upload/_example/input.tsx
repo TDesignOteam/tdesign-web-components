@@ -1,12 +1,10 @@
 import { Component, createRef, signal } from 'omi';
 import Button from 'tdesign-web-components/button';
-import { MessagePlugin } from 'tdesign-web-components/message/message';
 import Space from 'tdesign-web-components/space';
-import type { UploadProps } from 'tdesign-web-components/upload';
 import Upload from 'tdesign-web-components/upload';
 
 export default class UploadSingleInput extends Component {
-  uploadRef = createRef<InstanceType<typeof Upload>>();
+  uploadRef = createRef();
 
   files = signal([]);
 
@@ -14,12 +12,12 @@ export default class UploadSingleInput extends Component {
 
   disabled = signal(false);
 
-  handleFail: UploadProps['onFail'] = ({ file }) => {
-    console.error(`${file.name} 上传失败`);
+  handleFail = ({ file }) => {
+    console.error('上传失败', file);
   };
 
-  onSuccess: UploadProps['onSuccess'] = () => {
-    MessagePlugin.info('上传成功');
+  onSuccess = () => {
+    console.info('上传成功');
   };
 
   // 非自动上传文件，需要在父组件单独执行上传
@@ -36,7 +34,6 @@ export default class UploadSingleInput extends Component {
   };
 
   render() {
-    console.log('===render');
     const Checkbox = ({ checked, onChange, children }) => {
       const handleChange = (event) => {
         if (onChange) {
@@ -67,7 +64,6 @@ export default class UploadSingleInput extends Component {
             </Button>
           )}
         </Space>
-        <br />
         <Upload
           ref={this.uploadRef}
           style={{ width: '350px', display: 'block' }}
