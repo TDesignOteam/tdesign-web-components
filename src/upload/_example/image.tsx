@@ -109,9 +109,6 @@ export default class UploadExample extends Component {
           <Checkbox checked={this.disabled.value} onChange={this.setDisabled}>
             禁用状态
           </Checkbox>
-          {/* <Checkbox checked={this.uploadInOneRequest.value} onChange={this.setUploadInOneRequest}>
-            多个文件一个请求上传
-          </Checkbox> */}
           <Checkbox checked={this.autoUpload.value} onChange={this.setAutoUpload}>
             自动上传
           </Checkbox>
@@ -166,26 +163,6 @@ export default class UploadExample extends Component {
             // custom UI example
             // fileListDisplay={UploadUI}
           />
-
-          {/* <Upload
-            ref={uploadRef3}
-            files={files3}
-            onChange={setFiles3}
-            action="//service-bv448zsw-1257786608.gz.apigw.tencentcs.com/api/upload-demo"
-            theme="image"
-            tips="允许选择多张图片文件上传，最多只能上传 3 张图片"
-            accept="image/*"
-            multiple
-            max={3}
-            disabled={disabled}
-            sizeLimit={{ size: 2, unit: 'MB' }}
-            autoUpload={autoUpload}
-            abridgeName={[6, 6]}
-            uploadAllFilesInOneRequest={uploadInOneRequest}
-            onSuccess={onSuccess}
-            onValidate={onValidate}
-            onPreview={onPreview}
-          /> */}
         </Space>
       </Space>
     );

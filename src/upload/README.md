@@ -25,7 +25,7 @@ spline: data
 
 设置 `theme="single-input"` 即可，这种风格不支持拖拽上传，文档下方有拖拽上传和批量上传示例。
 
-{{ single-input }}
+{{ input }}
 
 ### 基础图片上传
 
