@@ -1,9 +1,10 @@
 import 'tdesign-icons-web-components/esm/components/upload';
+import '../input';
 
 import { classNames, Component, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
 import { classPrefix } from '../_util/classname';
-import { Button, ButtonProps } from '../button';
+import { ButtonProps } from '../button';
 import useUpload from './hooks/useUpload';
 import CustomFile from './CustomFile';
 import ImageCard from './ImageCard';
@@ -93,18 +94,18 @@ export default class Upload extends Component<UploadProps> {
     const getDefaultTrigger = () => {
       if (this.theme.value === 'file-input') {
         return (
-          <Button
+          <t-button
             variant="outline"
             onClick={triggerUpload}
             {...this.triggerButtonProps.value}
             disabled={this.props.disabled}
           >
             {triggerUploadText.value}
-          </Button>
+          </t-button>
         );
       }
       return (
-        <Button
+        <t-button
           variant="outline"
           icon={<t-icon-upload />}
           onClick={triggerUpload}
@@ -112,7 +113,7 @@ export default class Upload extends Component<UploadProps> {
           disabled={this.props.disabled}
         >
           {triggerUploadText.value}
-        </Button>
+        </t-button>
       );
     };
     return (
