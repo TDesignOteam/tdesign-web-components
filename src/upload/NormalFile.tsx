@@ -3,23 +3,23 @@ import 'tdesign-icons-web-components/esm/components/check-circle-filled';
 import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import 'tdesign-icons-web-components/esm/components/close';
+import '../loading';
 
 import { abridgeName } from '../_common/js/upload/utils';
 import classNames from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
-import Loading from '../loading';
 import { CommonDisplayFileProps } from './interface';
 import { UploadFile } from './type';
 
 export type NormalFileProps = CommonDisplayFileProps;
-export function renderNormalFile(props: NormalFileProps): JSX.Element {
+export function renderNormalFile(props: NormalFileProps) {
   const { theme, disabled, classPrefix } = props;
 
   const uploadPrefix = `${classPrefix}-upload`;
 
   const renderProgress = (percent: number) => (
     <div className={`${uploadPrefix}__single-progress`}>
-      {convertToLightDomNode(<Loading loading={true} size="medium" />)}
+      {convertToLightDomNode(<t-loading loading={true} size="medium"></t-loading>)}
       <span className={`${uploadPrefix}__single-percent`}>{percent || 0}%</span>
     </div>
   );

@@ -1,13 +1,13 @@
 import 'tdesign-icons-web-components/esm/components/delete';
 import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/add';
+import '../image';
+import '../loading';
 
 import zhCn from '../_common/js/global-config/locale/zh_CN';
 import { abridgeName } from '../_common/js/upload/utils';
 import classNames from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
-import Image from '../image';
-import Loading from '../loading';
 // import ImageViewer from '../../image-viewer';
 import { CommonDisplayFileProps } from './interface';
 import { TdUploadProps, UploadFile } from './type';
@@ -32,7 +32,7 @@ export function renderImageCard(props: ImageCardUploadProps) {
 
   const renderMainContent = (file: UploadFile, index: number) => (
     <div className={`${classPrefix}-upload__card-content ${classPrefix}-upload__card-box`}>
-      <Image src={file.url} error="" loading="" />
+      <t-image src={file.url} error="" loading=""></t-image>
       {!disabled && (
         <div className={`${classPrefix}-upload__card-mask`}>
           <span className={`${classPrefix}-upload__card-mask-item`} onClick={(e) => e.stopPropagation()}>
@@ -44,7 +44,7 @@ export function renderImageCard(props: ImageCardUploadProps) {
   );
   const renderProgressFile = (file: UploadFile, loadCard: string) => (
     <div className={classNames([loadCard, `${classPrefix}-upload__${props.theme}-${file.status}`])}>
-      <Loading loading={true} size="medium" />
+      <t-loading loading={true} size="medium"></t-loading>
       <p>
         {locale?.progress?.uploadingText}
         {props.showUploadProgress ? ` ${file.percent}%` : ''}
