@@ -127,5 +127,3 @@ export function renderNormalFile(props: NormalFileProps) {
     </div>
   );
 }
-
-export default renderNormalFile;

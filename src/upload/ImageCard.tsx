@@ -115,5 +115,3 @@ export function renderImageCard(props: ImageCardUploadProps) {
     </div>
   );
 }
-
-export default renderImageCard;
