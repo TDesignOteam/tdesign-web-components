@@ -12,7 +12,7 @@ import { CommonDisplayFileProps } from './interface';
 import { UploadFile } from './type';
 
 export type NormalFileProps = CommonDisplayFileProps;
-export default function NormalFile(props: NormalFileProps): JSX.Element {
+export function renderNormalFile(props: NormalFileProps): JSX.Element {
   const { theme, disabled, classPrefix } = props;
 
   const uploadPrefix = `${classPrefix}-upload`;
@@ -127,3 +127,5 @@ export default function NormalFile(props: NormalFileProps): JSX.Element {
     </div>
   );
 }
+
+export default renderNormalFile;

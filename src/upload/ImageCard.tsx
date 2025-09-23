@@ -24,7 +24,7 @@ export interface ImageCardUploadProps extends CommonDisplayFileProps {
   showImageFileName?: boolean;
 }
 
-const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
+export function renderImageCard(props: ImageCardUploadProps) {
   const locale = zhCn.upload;
   const { displayFiles, classPrefix, onRemove, disabled } = props;
 
@@ -114,8 +114,6 @@ const ImageCard = (props: ImageCardUploadProps): JSX.Element => {
       </ul>
     </div>
   );
-};
+}
 
-ImageCard.displayName = 'ImageCard';
-
-export default ImageCard;
+export default renderImageCard;
