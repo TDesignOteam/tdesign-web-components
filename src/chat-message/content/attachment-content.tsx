@@ -20,6 +20,7 @@ export type TdChatAttachmentContentProps = {
 export const renderAttachments = ({ key, content }: TdChatAttachmentContentProps, self: any) => (
   <div key={key} className={`${className}__attachments`}>
     <t-attachments
+      className={`${className}__attachments__host`}
       items={content}
       removable={false}
       onFileClick={(e) => {
