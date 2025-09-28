@@ -80,19 +80,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
   private getInternalMessage(): ChatMessagesData | null {
     const { message, role, content, status, id } = this.props;
 
-    // 优先使用直接传入的属性
-    if (role && content) {
-      const internalMessage: ChatMessagesData = {
-        id,
-        role,
-        content,
-        status,
-      } as ChatMessagesData;
-      return internalMessage;
-    }
-
-    // 兼容旧版本，使用 message 属性
-    return message || null;
+    // 优先使用直接传入的属性，这里不要先解构message再覆盖属性，发现会覆盖undefined
+    return {
+      id: id || message?.id,
+      role: role || message?.role,
+      content: content || message?.content,
+      status: status || message?.status,
+    } as ChatMessagesData;
   }
 
   receiveProps(
@@ -116,19 +110,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
   ): ChatMessagesData | null {
     const { message, role, content, status, id = '' } = props;
 
-    // 优先使用直接传入的属性
-    if (role && content) {
-      const internalMessage: ChatMessagesData = {
-        id,
-        role,
-        content,
-        status,
-      } as ChatMessagesData;
-      return internalMessage;
-    }
-
-    // 兼容旧版本，使用 message 属性
-    return message || null;
+    // 优先使用直接传入的属性，这里不要先解构message再覆盖属性，发现会覆盖undefined
+    return {
+      id: id || message?.id,
+      role: role || message?.role,
+      content: content || message?.content,
+      status: status || message?.status,
+    } as ChatMessagesData;
   }
 
   ready(): void {
