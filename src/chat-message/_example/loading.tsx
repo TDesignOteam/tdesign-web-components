@@ -17,16 +17,30 @@ export default class BasicExample extends Component {
           avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
           name="DeepSeek"
           animation="skeleton"
-          message={{
-            role: 'assistant',
-            status: 'pending',
-            content: [
-              {
-                type: 'text',
-                data: '有内容',
-              },
-            ],
-          }}
+          role="assistant"
+          status="pending"
+          content={[
+            {
+              type: 'text',
+              data: '有内容',
+            },
+          ]}
+        ></t-chat-item>
+        <t-chat-item
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          role="assistant"
+          status="error"
+        ></t-chat-item>
+        <t-chat-item
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          role="assistant"
+          status="error"
+          content={[
+            {
+              type: 'text',
+              data: 'status error文案自定义',
+            },
+          ]}
         ></t-chat-item>
       </>
     );
