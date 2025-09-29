@@ -189,7 +189,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
     const { status, content } = internalMessage;
     const { animation = 'skeleton' } = this.props;
-    if (status === 'pending' || (status === 'streaming' && content && content.length === 0)) {
+    const emptyContent = !content || content.length === 0;
+
+    if (status === 'pending' || (status === 'streaming' && emptyContent)) {
       return (
         <div class={`${className}-chat-loading`}>
           {convertToLightDomNode(
@@ -197,6 +199,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
           )}
         </div>
       );
+    }
+    if (status === 'error' && emptyContent) {
+      return <div className={`${className}-chat-error`}>请求出错</div>;
     }
     // 这里不添加stop和error状态是避免影响已渲染内容
     return null;
