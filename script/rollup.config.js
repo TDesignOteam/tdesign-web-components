@@ -15,6 +15,7 @@ import postcss from 'rollup-plugin-postcss';
 import staticImport from 'rollup-plugin-static-import';
 import styles from 'rollup-plugin-styles';
 import { terser } from 'rollup-plugin-terser';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 import pkg from '../package.json';
 
@@ -23,12 +24,74 @@ const externalDeps = Object.keys(pkg.dependencies || {});
 const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
 const buildPlugins = ['vite-plugin-less-compiler'];
 
+// 分析模式配置
+const isAnalyze = process.env.ANALYZE === 'true';
+const analyzeMode = process.env.ANALYZE_MODE || 'all'; // 'all', 'umd', 'lib', 'esm'
+
 const banner = `/**
  * ${name} v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author}
  * @license ${pkg.license}
  */
 `;
+
+// 获取分析插件
+const getAnalyzePlugins = (buildType = 'umd') => {
+  if (!isAnalyze && buildType !== 'umd') return [];
+  
+  const plugins = [];
+  
+  // 基础分析器 - 控制台输出
+  plugins.push(
+    analyzer({
+      limit: 10,
+      summaryOnly: false,
+      hideDeps: false,
+      showExports: true,
+    })
+  );
+  
+  // 可视化分析器 - 生成 HTML 报告
+  if (isAnalyze || buildType === 'umd') {
+    plugins.push(
+      visualizer({
+        filename: `dist/stats-${buildType}.html`,
+        title: `${name} Bundle Analysis - ${buildType.toUpperCase()}`,
+        template: 'treemap', // treemap, sunburst, network
+        open: buildType === 'umd' && isAnalyze,
+        gzipSize: true,
+        brotliSize: true,
+        projectRoot: resolve(__dirname, '..'),
+      })
+    );
+    
+    // 生成多种格式的报告
+    if (buildType === 'umd') {
+      plugins.push(
+        visualizer({
+          filename: `dist/stats-${buildType}-sunburst.html`,
+          title: `${name} Bundle Analysis - ${buildType.toUpperCase()} (Sunburst)`,
+          template: 'sunburst',
+          open: false,
+          gzipSize: true,
+          brotliSize: true,
+          projectRoot: resolve(__dirname, '..'),
+        }),
+        visualizer({
+          filename: `dist/stats-${buildType}-network.html`,
+          title: `${name} Bundle Analysis - ${buildType.toUpperCase()} (Network)`,
+          template: 'network',
+          open: false,
+          gzipSize: true,
+          brotliSize: true,
+          projectRoot: resolve(__dirname, '..'),
+        })
+      );
+    }
+  }
+  
+  return plugins;
+};
 
 const input = 'src/index-lib.ts';
 const inputList = [
@@ -158,7 +221,9 @@ const umdCssConfig = {
 const libConfig = {
   input: inputList.concat('!src/index-lib.ts'),
   external: externalDeps.concat(externalPeerDeps),
-  plugins: [multiInput()].concat(getPlugins()),
+  plugins: [multiInput()]
+    .concat(getPlugins())
+    .concat(isAnalyze && (analyzeMode === 'all' || analyzeMode === 'lib') ? getAnalyzePlugins('lib') : []),
   output: {
     banner,
     dir: 'lib/',
@@ -174,7 +239,9 @@ const esmConfig = {
   // treeshake: false,
   // preserveModules: true,
   external: externalDeps.concat(externalPeerDeps),
-  plugins: [multiInput()].concat(getPlugins({ ignoreLess: true })),
+  plugins: [multiInput()]
+    .concat(getPlugins({ ignoreLess: true }))
+    .concat(isAnalyze && (analyzeMode === 'all' || analyzeMode === 'esm') ? getAnalyzePlugins('esm') : []),
   output: {
     banner,
     dir: 'esm/',
@@ -204,7 +271,7 @@ const umdConfig = {
   external: externalPeerDeps,
   plugins: getPlugins({
     env: 'development',
-  }).concat(analyzer({ limit: 5, summaryOnly: true })),
+  }).concat(getAnalyzePlugins('umd')),
   output: {
     name: 'TDesign',
     banner,
@@ -224,7 +291,7 @@ const umdMinConfig = {
   plugins: getPlugins({
     isProd: true,
     env: 'production',
-  }),
+  }).concat(isAnalyze && (analyzeMode === 'all' || analyzeMode === 'umd') ? getAnalyzePlugins('umd-min') : []),
   output: {
     name: 'TDesign',
     banner,

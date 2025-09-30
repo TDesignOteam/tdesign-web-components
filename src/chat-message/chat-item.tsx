@@ -200,7 +200,8 @@ export default class ChatItem extends Component<ChatMessageProps> {
         </div>
       );
     }
-    if (status === 'error') {
+    if (status === 'error' && (emptyContent || (content.length === 1 && content[0]?.type === 'text'))) {
+      console.log(11111, internalMessage);
       return <div className={`${className}-chat-error`}>{content?.[0]?.data || '请求出错'}</div>;
     }
     // 这里不添加stop和error状态是避免影响已渲染内容
