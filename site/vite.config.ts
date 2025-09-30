@@ -7,8 +7,7 @@ import addPartAttributePlugin from './vite-plugin-add-part';
 
 const publicPathMap = {
   preview: '/',
-  intranet: '/webcomponents/',
-  production: 'https://static.tdesign.tencent.com/webcomponents/',
+  production: '/webcomponents/',
 };
 
 // https://vitejs.dev/config/
