@@ -8,6 +8,7 @@ import '../button';
 import '../tooltip';
 import '../dropdown';
 
+import { isNil } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
@@ -74,7 +75,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   }
 
   get inputValue() {
-    if (this.props.value !== undefined) return this.props.value;
+    if (!isNil(this.props.value)) return this.props.value;
     return this.pValue.value;
   }
 

@@ -17,7 +17,7 @@ export default class Divider extends Component<DividerProps> {
   };
 
   static propTypes = {
-    algin: String,
+    align: String,
     content: Object,
     dashed: Boolean,
     layout: String,

@@ -5,6 +5,24 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.1 `2025-10-09` 
+### 🚧 Others
+- Fix/upload @carolin913 ([#287](https://github.com/TDesignOteam/tdesign-web-components/pull/287))
+-  fix(sender): fix sender default value @LzhengH ([#289](https://github.com/TDesignOteam/tdesign-web-components/pull/289))
+- fix(chat-item): fix code copy & fix chat-item message @LzhengH ([#291](https://github.com/TDesignOteam/tdesign-web-components/pull/291))
+- fix(chatItem): fix user right attachments @LzhengH ([#290](https://github.com/TDesignOteam/tdesign-web-components/pull/290))
+- fix(chatItem): fix render empty @LzhengH ([#294](https://github.com/TDesignOteam/tdesign-web-components/pull/294))
+- feat(chatItem): default error status @LzhengH ([#292](https://github.com/TDesignOteam/tdesign-web-components/pull/292))
+
+## 🌈 1.2.1 `2025-10-09` 
+### 🚧 Others
+- fix(upload): 修复受控状态问题 @carolin913 ([#287](https://github.com/TDesignOteam/tdesign-web-components/pull/287))
+- fix(chatSender): fix sender default value @LzhengH ([#289](https://github.com/TDesignOteam/tdesign-web-components/pull/289))
+- fix(chatItem): fix code copy & fix chat-item message @LzhengH ([#291](https://github.com/TDesignOteam/tdesign-web-components/pull/291))
+- fix(chatItem): fix user right attachments @LzhengH ([#290](https://github.com/TDesignOteam/tdesign-web-components/pull/290))
+- fix(chatItem): fix render empty @LzhengH ([#294](https://github.com/TDesignOteam/tdesign-web-components/pull/294))
+- feat(chatItem): default error status  @carolin913 @LzhengH ([#292](https://github.com/TDesignOteam/tdesign-web-components/pull/292))
+
 ## 🌈 1.2.0 `2025-09-22` 
 ### 🚧 Features
 - feat(chatMarkdown):  渲染引擎改为cherry-markdown @LzhengH ([#268](https://github.com/TDesignOteam/tdesign-web-components/pull/268))

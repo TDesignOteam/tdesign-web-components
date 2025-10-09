@@ -104,7 +104,7 @@
         order: 2;
         padding: var(--td-chat-item-name-padding-right);
       }
-      .@{prefix}-attachment-list {
+      .@{prefix}-chat__item__attachments__host::part(@{prefix}-attachment-list) {
         justify-content: flex-end;
       }
     }
@@ -378,6 +378,12 @@
     width: 100%;
     display: flex;
     align-items: center;
+  }
+
+  &-chat-error {
+    margin: var(--td-chat-item-text-detail-text-margin);
+    padding: var(--td-chat-item-text-content-padding);
+    color: var(--td-chat-item-text-error-color);
   }
 
   &-chat-loading-light {

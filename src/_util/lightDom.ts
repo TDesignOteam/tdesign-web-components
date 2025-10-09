@@ -102,23 +102,29 @@ export const convertToLightDomNode = (node: TNode) => {
     return tNode;
   }
 
-  // 找到之前注册的组件
-  const nodeCtor = customElements.get(tNode.nodeName) as ComponentConstructor;
-  if (!(nodeCtor && nodeCtor.is === 'Component' && !nodeCtor.isLightDOM)) {
+  try {
+    // 找到之前注册的组件
+    const nodeCtor = customElements.get(tNode.nodeName) as ComponentConstructor;
+    if (!(nodeCtor && nodeCtor.is === 'Component' && !nodeCtor.isLightDOM)) {
+      return tNode;
+    }
+
+    // 构建 lightDom 组件
+    const lightDomCtor = buildLightDomCtor(nodeCtor);
+
+    // 注册新的组件
+    const lightDomNodeName = `${tNode.nodeName}-light-dom`;
+    if (!customElements.get(lightDomNodeName)) {
+      define(lightDomNodeName, lightDomCtor);
+    }
+
+    return {
+      ...tNode,
+      nodeName: lightDomNodeName,
+    };
+  } catch (error) {
+    // 如果出现 Component 相关错误，直接返回原始节点
+    console.warn('convertToLightDomNode error:', error);
     return tNode;
   }
-
-  // 构建 lightDom 组件
-  const lightDomCtor = buildLightDomCtor(nodeCtor);
-
-  // 注册新的组件
-  const lightDomNodeName = `${tNode.nodeName}-light-dom`;
-  if (!customElements.get(lightDomNodeName)) {
-    define(lightDomNodeName, lightDomCtor);
-  }
-
-  return {
-    ...tNode,
-    nodeName: lightDomNodeName,
-  };
 };
