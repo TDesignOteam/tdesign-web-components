@@ -16,7 +16,7 @@ export default class Space extends Component<SpaceProps> {
   static defaultProps = { breakLine: false, direction: 'horizontal', size: 'medium' };
 
   static propTypes = {
-    algin: String,
+    align: String,
     breakLine: Boolean,
     direction: String,
     separator: Object,
