@@ -17,17 +17,53 @@ export default class BasicExample extends Component {
           avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
           name="DeepSeek"
           animation="skeleton"
-          message={{
-            role: 'assistant',
-            status: 'pending',
-            content: [
-              {
-                type: 'text',
-                data: '有内容',
-              },
-            ],
-          }}
+          role="assistant"
+          status="pending"
         ></t-chat-item>
+        <t-chat-item
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          role="assistant"
+          status="error"
+        ></t-chat-item>
+        <t-chat-item
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          role="assistant"
+          status="error"
+          content={[
+            {
+              type: 'text',
+              data: '自定义错误内容',
+            },
+          ]}
+        ></t-chat-item>
+        <t-chat-item
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          role="assistant"
+          status="error"
+          content={[
+            {
+              type: 'myerror',
+              data: 'status error文案自定义',
+            },
+          ]}
+        >
+          {[
+            {
+              type: 'myerror',
+              data: 'status error文案自定义',
+            },
+          ].map((item, idx) => {
+            switch (item.type) {
+              case 'myerror':
+                return (
+                  <div slot={`${item.type}-${idx}`} className="error-content">
+                    {`自定义渲染错误：${item.data}`}
+                  </div>
+                );
+            }
+            return null;
+          })}
+        </t-chat-item>
       </>
     );
   }

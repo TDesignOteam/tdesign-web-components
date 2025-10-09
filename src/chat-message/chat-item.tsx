@@ -127,7 +127,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     const { name, datetime } = this.props;
     return (
       <slot name="header">
-        {!this.renderMessageStatus ? (
+        {!this.renderMessageWithStatus ? (
           <div class={`${className}__header`}>
             <span class={`${className}__name`}>
               <slot name="name">{this.renderNameContent(name)}</slot>
@@ -186,13 +186,15 @@ export default class ChatItem extends Component<ChatMessageProps> {
     );
   };
 
-  get renderMessageStatus() {
+  get renderMessageWithStatus() {
     const internalMessage = this.getInternalMessage();
     if (!internalMessage) return null;
 
     const { status, content } = internalMessage;
     const { animation = 'skeleton' } = this.props;
-    if (status === 'pending' || (status === 'streaming' && content && content.length === 0)) {
+    const emptyContent = !content || content.length === 0;
+
+    if (status === 'pending' || (status === 'streaming' && emptyContent)) {
       return (
         <div class={`${className}-chat-loading`}>
           {convertToLightDomNode(
@@ -201,7 +203,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
         </div>
       );
     }
-    // 这里不添加stop和error状态是避免影响已渲染内容
+    if (status === 'error' && (emptyContent || (content.length === 1 && content[0]?.type === 'text'))) {
+      return <div className={`${className}-chat-error`}>{content?.[0]?.data || '请求出错'}</div>;
+    }
     return null;
   }
 
@@ -337,11 +341,11 @@ export default class ChatItem extends Component<ChatMessageProps> {
       <div
         className={classname(baseClass, roleClass, variantClass, placementClass)}
         // 渲染出原生的header时要设置额外间隔，当用户slot自定义header时不管
-        data-has-header={!this.renderMessageStatus && (!!props.name || !!props.datetime)}
+        data-has-header={!this.renderMessageWithStatus && (!!props.name || !!props.datetime)}
       >
         {this.renderAvatar()}
-        {this.renderMessageStatus}
-        {!this.renderMessageStatus && (
+        {this.renderMessageWithStatus}
+        {!this.renderMessageWithStatus && (
           <div class={`${className}__main`}>
             {this.renderMessageHeader()}
             <slot name="content" className={`${className}__content__slot`}>
