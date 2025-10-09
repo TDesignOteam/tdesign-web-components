@@ -157,6 +157,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   private renderAvatarContent(avatar: any) {
+    if (!avatar) {
+      return null;
+    }
     // 对于非字符串类型（包括React元素），都使用slot
     return isString(avatar) ? (
       <div className={`${className}__avatar-box`}>
