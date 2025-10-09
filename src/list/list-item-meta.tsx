@@ -3,7 +3,7 @@ import { classNames, Component, OmiProps, tag } from 'omi';
 import { getClassPrefix } from '../_util/classname';
 import { ListItemMetaProps } from './types';
 
-const ListItemMetaClassNamePefix = (className: string) => `${getClassPrefix()}-list-item__meta${className}`;
+const ListItemMetaClassNamePrefix = (className: string) => `${getClassPrefix()}-list-item__meta${className}`;
 
 @tag('t-list-item-meta')
 export default class ListItemMeta extends Component<ListItemMetaProps> {
@@ -18,7 +18,7 @@ export default class ListItemMeta extends Component<ListItemMetaProps> {
   };
 
   renderImage = (image: any) => (
-    <div class={classNames(ListItemMetaClassNamePefix('-avatar'))}>
+    <div class={classNames(ListItemMetaClassNamePrefix('-avatar'))}>
       <img src={image} alt="" />
     </div>
   );
@@ -27,12 +27,12 @@ export default class ListItemMeta extends Component<ListItemMetaProps> {
     const { description, image, title } = props;
     return (
       <>
-        <div class={classNames(ListItemMetaClassNamePefix(''))}>
+        <div class={classNames(ListItemMetaClassNamePrefix(''))}>
           {image && this.renderImage(image)}
           <div>
-            <h3 class={classNames(ListItemMetaClassNamePefix('-title'))}>{title}</h3>
+            <h3 class={classNames(ListItemMetaClassNamePrefix('-title'))}>{title}</h3>
             {typeof description === 'string' ? (
-              <p class={classNames(ListItemMetaClassNamePefix('-description'))}>{description}</p>
+              <p class={classNames(ListItemMetaClassNamePrefix('-description'))}>{description}</p>
             ) : (
               description
             )}
