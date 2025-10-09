@@ -210,7 +210,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   }
 
   renderMessage() {
-    const { chatContentProps, animation } = this.props;
+    const { chatContentProps } = this.props;
     const internalMessage = this.getInternalMessage();
     if (!internalMessage) return null;
 
@@ -277,7 +277,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
                 key: elementKey,
                 content: content.data,
                 status: content.status,
-                animation,
                 ...chatContentProps?.thinking,
                 ...content?.ext,
               })}
@@ -292,7 +291,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
                 key: elementKey,
                 content: content.data,
                 status: content.status,
-                animation,
                 ...chatContentProps?.reasoning,
                 ...content?.ext,
               })}

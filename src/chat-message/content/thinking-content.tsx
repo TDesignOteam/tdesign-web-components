@@ -54,7 +54,7 @@ export const renderThinking = ({
       return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
     return <t-chat-loading animation={animation || 'circle'}></t-chat-loading>;
   };
-  const { text, title } = content;
+  const { text, title } = content || {};
   const layoutClass = layout === 'border' ? `${className}__think-layout-border` : ``;
 
   // 通过是否传入onChange判断受控还是非受控
