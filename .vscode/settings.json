@@ -34,7 +34,8 @@
     "clsx",
     "Popconfirm",
     "Swiper",
-    "tdesign"
+    "tdesign",
+    "filecard"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "search.exclude": {

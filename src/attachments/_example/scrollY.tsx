@@ -65,7 +65,7 @@ export default class Button extends Component {
     return (
       <>
         <t-space>
-          <div style={{ width: '785px', height: '50px' }}>
+          <div style={{ width: '668px', height: '50px' }}>
             <t-attachments
               items={this.filesList}
               overflow="scrollY"
