@@ -10,7 +10,7 @@ export function getCollapseAnimation() {
   };
   const enter = (el: HTMLElement) => {
     el.dataset.oldOverflow = el.style.overflow;
-    el.style.height = `${el.scrollHeight}px`;
+    el.style.height = el.scrollHeight ? `${el.scrollHeight}px` : 'auto';
     el.style.paddingTop = el.dataset.oldPaddingTop;
     el.style.paddingBottom = el.dataset.oldPaddingBottom;
     el.style.overflow = 'hidden';
