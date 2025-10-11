@@ -6,7 +6,7 @@ import { Component, OmiProps, tag } from 'omi';
 import classnames, { getClassPrefix } from '../_util/classname';
 import { ListItemProps } from './types';
 
-const ListItemClassNamePefix = (className: string) => `${getClassPrefix()}-list-item${className}`;
+const ListItemClassNamePrefix = (className: string) => `${getClassPrefix()}-list-item${className}`;
 
 @tag('t-list-item')
 export default class ListItem extends Component<ListItemProps> {
@@ -25,11 +25,11 @@ export default class ListItem extends Component<ListItemProps> {
   render(props: OmiProps<ListItemProps>) {
     const { action, content, children, innerClass, innerStyle } = props;
 
-    const actionElement = action && <ul class={classnames(ListItemClassNamePefix(`__action`))}>{action}</ul>;
+    const actionElement = action && <ul class={classnames(ListItemClassNamePrefix(`__action`))}>{action}</ul>;
 
     return (
-      <li class={classnames(ListItemClassNamePefix(''), innerClass)} style={innerStyle}>
-        <div class={classnames(ListItemClassNamePefix('-main'))}>
+      <li class={classnames(ListItemClassNamePrefix(''), innerClass)} style={innerStyle}>
+        <div class={classnames(ListItemClassNamePrefix('-main'))}>
           {content || children}
           {action && actionElement}
         </div>

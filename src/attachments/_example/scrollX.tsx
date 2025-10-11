@@ -63,13 +63,13 @@ export default class Button extends Component {
 
   render() {
     return (
-      <>
+      <div>
         <t-space>
-          <div style={{ width: '785px' }}>
+          <div style={{ maxWidth: '668px' }}>
             <t-attachments items={this.filesList} overflow="scrollX"></t-attachments>
           </div>
         </t-space>
-      </>
+      </div>
     );
   }
 }

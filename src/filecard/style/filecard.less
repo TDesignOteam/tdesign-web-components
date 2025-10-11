@@ -12,7 +12,6 @@
     background: @file-card-item-bg;
     display: flex;
     align-items: center;
-    font-size: @file-card-item-size;
     color: @file-card-item-color;
 
     &:hover {
@@ -27,6 +26,10 @@
     }
     
     
+  }
+  
+  &-name {
+    font: @file-card-item-font;
   }
   
   &-remove {
@@ -69,8 +72,8 @@
   }
 
   &-desc {
-    color: #9e9d9e;
-    font-size: @file-card-item-desc-size;
+    color: var(--td-text-color-placeholder);
+    font: @file-card-item-desc-font;
 
     white-space: nowrap;
     overflow: hidden;

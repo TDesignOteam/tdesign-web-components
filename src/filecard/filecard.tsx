@@ -181,7 +181,7 @@ export default class FileCard extends Component<TdFileCardProps> {
     const { nameSuffix } = this.state;
     const { status = 'done', extension } = item;
     if (status === 'progress') {
-      this.state.icon = <t-icon-loading size="24px" />;
+      this.state.icon = <t-loading size="24px" />;
       this.update();
       return;
     }
