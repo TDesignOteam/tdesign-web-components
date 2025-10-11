@@ -29,22 +29,22 @@
   
     &.error {
       .@{prefix}-chat__item__text__content {
-        color: @error-color;
+        color: var(--td-error-color)
       }
     }
     .@{prefix}-chat__item__notice {
       // 水平居中
-      background: @bg-color-secondarycontainer;
+      background: var(--td-bg-color-secondarycontainer);
       padding: @comp-paddingTB-xxs @comp-paddingLR-s;
       font-size: @font-size-s;
-      color: @text-color-disabled;
-      border-radius: @border-radius-default;
+      color: var(--td-text-color-disabled);
+      border-radius: var(--td-radius-default);
       box-sizing: border-box;
       line-height: 20px;
       text-align: center;
   
       span {
-        color: @text-color-placeholder;
+        color: var(--td-text-color-placeholder);
       }
     }
 
@@ -399,7 +399,7 @@
     justify-content: flex-start;
     align-items: baseline;
     font: var(--td-chat-item-name-font);
-    color: @text-color-placeholder;
+    color: var(--td-text-color-placeholder);
     padding: var(--td-chat-item-header-padding);
 
     &:empty {
@@ -416,8 +416,6 @@
       box-sizing: border-box;
     }
 
-    &__wrapper {
-    }
     &__header {
       cursor: pointer;
       font-size: var(--td-chat-search-font-size);
@@ -538,7 +536,6 @@
       align-items: center;
       padding: var(--td-chat-item-suggestion-padding);
       border-radius: var(--td-chat-item-suggestion-radius);
-      border: var(--td-chat-item-suggestion-border);
       background-color: var(--td-chat-item-suggestion-background);
       color: var(--td-chat-item-suggestion-color);
       cursor: pointer;

@@ -1,4 +1,4 @@
-import 'tdesign-icons-web-components/esm/components/send';
+import 'tdesign-icons-web-components/esm/components/send-filled';
 import 'tdesign-icons-web-components/esm/components/stop';
 import 'tdesign-icons-web-components/esm/components/image';
 import 'tdesign-icons-web-components/esm/components/file-attachment';
@@ -169,7 +169,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           this.props.loading ? (
             <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
           ) : (
-            <t-icon-send className={`${className}__button__icon`} />
+            <t-icon-send-filled className={`${className}__button__icon`} />
           ),
         )}
       </t-button>
