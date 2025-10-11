@@ -1,4 +1,5 @@
 @import "./import.less";
+
 .@{prefix}-attachment {
 
   &-list-wrap {
@@ -61,11 +62,11 @@
       font-size: 14px;
       z-index: 10;
       background: var(--td-attachment-scroll-btn-bgc);
-      border-radius: 50%;
+      border-radius: var(--td-radius-circle);
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       cursor: pointer;
       transition: opacity 0.2s;
-      visibility: hidden;  
+      visibility: hidden;
     }
 
     &-prev-btn {

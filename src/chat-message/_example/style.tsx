@@ -36,8 +36,9 @@ export default class BasicExample extends Component {
     return (
       <>
         {/* 用户消息 */}
+
         <t-chat-item
-          variant="base"
+          variant="outline"
           name="张三"
           placement="right"
           role={userMsgData.role}

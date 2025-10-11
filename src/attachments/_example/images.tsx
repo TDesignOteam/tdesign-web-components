@@ -94,14 +94,14 @@ export default class Button extends Component {
       name: 'image-file.png',
       size: 333333,
       url: 'https://tdesign.gtimg.com/site/avatar.jpg',
-    }
+    },
   ];
 
   render() {
     return (
       <>
         <t-space>
-          <div style={{ width: '785px', height: '50px' }}>
+          <div style={{ width: '668px', height: '50px' }}>
             <t-attachments
               items={this.filesList}
               overflow="scrollX"
