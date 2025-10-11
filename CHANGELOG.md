@@ -5,6 +5,12 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.2 `2025-10-11` 
+### 🐞 Bug Fixes
+- `ChatMarkdown`: fix ChatMarkdown reusing @LzhengH ([#298](https://github.com/TDesignOteam/tdesign-web-components/pull/298))
+- `ChatThinking`: fix thinking animation @LzhengH ([#296](https://github.com/TDesignOteam/tdesign-web-components/pull/296))
+- `Chat`: 修复 Chat 相关组件的样式变量问题 @uyarn ([#299](https://github.com/TDesignOteam/tdesign-web-components/pull/299))
+
 ## 🌈 1.2.1 `2025-10-10` 
 ### 🚧 Others
 - fix(upload): 修复受控状态问题 @carolin913 ([#287](https://github.com/TDesignOteam/tdesign-web-components/pull/287))
