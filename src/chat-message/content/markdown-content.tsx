@@ -141,13 +141,14 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   getTextInfo() {
     const { content } = this.props;
-    if (typeof content !== 'string') return '';
-    return this.parseMarkdown(content);
+    if (typeof content !== 'string') return;
+    // 这里给一个空格针对空内容占位，避免cherryMD复用旧数据
+    this.parseMarkdown(content || ' ');
   }
 
   parseMarkdown(markdown: string) {
     if (!this.isMarkdownInit.value || !markdown) return '';
-    return this.md?.setMarkdown(markdown);
+    this.md?.setMarkdown(markdown);
   }
 
   render() {
