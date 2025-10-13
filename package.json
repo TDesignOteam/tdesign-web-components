@@ -1,7 +1,7 @@
 {
   "name": "tdesign-web-components",
   "purename": "tdesign",
-  "version": "1.2.2",
+  "version": "1.2.1",
   "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -73,21 +73,22 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@popperjs/core": "^2.11.8",
-    "cherry-markdown": "^0.10.0",
+    "cherry-markdown": "https://pkg.pr.new/Tencent/cherry-markdown@1463",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
+    "fast-json-patch": "3.1.1",
     "htm": "^3.1.1",
     "immer": "^10.1.1",
     "lodash-es": "^4.17.21",
     "markdown-it-fence": "^0.1.3",
+    "mermaid": "11.6.0",
     "nanostores": "^0.11.4",
     "omi": "^7.7.13",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
     "tdesign-icons-web-components": "^0.2.4",
-    "zod": "^3.23.8",
-    "fast-json-patch": "3.1.1"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
@@ -151,5 +152,6 @@
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-tdoc": "^2.0.4",
     "workbox-precaching": "^7.1.0"
-  }
+  },
+  "packageManager": "pnpm@10.18.0+sha512.e804f889f1cecc40d572db084eec3e4881739f8dec69c0ff10d2d1beff9a4e309383ba27b5b750059d7f4c149535b6cd0d2cb1ed3aeb739239a4284a68f40cfa"
 }
