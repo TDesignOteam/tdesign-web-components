@@ -17,7 +17,7 @@ import codeStyles from '../style/md/chat-md-code.less';
 
 Cherry?.usePlugin?.(CherryCodeBlockMermaidPlugin, {
   mermaid,
-  mermaidCanvasAppendDom: document.querySelector('#app'),
+  mermaidCanvasAppendDom: document.body,
 });
 
 const baseClass = `${getClassPrefix()}-chat__text`;
