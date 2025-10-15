@@ -5,6 +5,13 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.3 `2025-10-15` 
+### 🚀 Features
+- `icon`: 更新文件相关的图标资源 @uyarn ([#302](https://github.com/TDesignOteam/tdesign-web-components/pull/302))
+### 🐞 Bug Fixes
+- `chatmarkdown`: 内置支持 mermaid 的渲染效果 @LzhengH ([#301](https://github.com/TDesignOteam/tdesign-web-components/pull/301))
+- `chatmessage`: 修复 `1.2.2` 中错误更新的消息间距 @uyarn ([#302](https://github.com/TDesignOteam/tdesign-web-components/pull/302))
+
 ## 🌈 1.2.2 `2025-10-11` 
 ### 🐞 Bug Fixes
 - `ChatMarkdown`: fix ChatMarkdown reusing @LzhengH ([#298](https://github.com/TDesignOteam/tdesign-web-components/pull/298))
