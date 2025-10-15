@@ -85,7 +85,7 @@
     "omi": "^7.7.13",
     "omi-transition": "^0.1.11",
     "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.2.4",
+    "tdesign-icons-web-components": "^0.3.2",
     "zod": "^3.23.8",
     "fast-json-patch": "3.1.1"
   },
