@@ -32,6 +32,6 @@ export default class BasicExample extends Component {
   }
 
   render() {
-    return <t-chat-md-content content={this.displayText.value} />;
+    return <t-chat-md-content content={mdContent} />;
   }
 }
