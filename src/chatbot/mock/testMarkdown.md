@@ -20,17 +20,17 @@ _斜体文字_
 
 ```javascript
 // JavaScript 代码块
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+const port = 3000;
 
 app.get('/', (req, res) => {
-  res.send('Hello World')
-})
+  res.send('Hello World');
+});
 
 app.listen(port, () => {
-  console.log(`http://localhost:${port}`)
-})
+  console.log(`http://localhost:${port}`);
+});
 
 function greet(name) {
   console.log(`Hello, ${name}!`);
@@ -44,23 +44,24 @@ def hello():
     print("Markdown 示例")
 ```
 
-```vue
-<template #prefix>
-  <div class="model-select">
-    <t-tooltip v-model:visible="allowToolTip" content="切换模型" trigger="hover">
-      <t-select
-        v-model="selectValue"
-        :options="selectOptions"
-        value-type="object"
-        @focus="allowToolTip = false"
-      ></t-select>
-    </t-tooltip>
-    <t-button class="check-box" :class="{ 'is-active': isChecked }" variant="text" @click="checkClick">
-      <SystemSumIcon />
-      <span>深度思考</span>
-    </t-button>
-  </div>
-</template>
+```mermaid
+mindmap
+  root((mindmap))
+    Origins
+      Long history
+      ::icon(fa fa-book)
+      Popularisation
+        British popular psychology author Tony Buzan
+    Research
+      On effectiveness<br/>and features
+      On Automatic creation
+        Uses
+            Creative techniques
+            Strategic planning
+            Argument mapping
+    Tools
+      Pen and paper
+      Mermaid
 ```
 
 ### 列表测试
@@ -80,7 +81,7 @@ def hello():
 | 单元格     |  单元格  | 单元格 |
 | 长文本示例 | 中等长度 |   $100 |
 
-![示例](https://tdesign.gtimg.com/demo/demo-image-1.png "示例")
+![示例](https://tdesign.gtimg.com/demo/demo-image-1.png '示例')
 
 ### 其他元素
 
@@ -92,6 +93,7 @@ def hello():
 分割线测试（上方）
 
 块级公式
+
 $$
 E=mc^2
 $$
