@@ -1,4 +1,4 @@
-import 'tdesign-icons-web-components/esm/components/arrow-right';
+import 'tdesign-icons-web-components/esm/components/swap-right';
 
 import { Component, tag } from 'omi';
 
@@ -28,7 +28,7 @@ export const renderSuggestion = ({ key, content, handlePromptClick }: TdChatSugg
             onClick={(event) => handlePromptClick?.({ event, content: s })}
           >
             {s.title}
-            {convertToLightDomNode(<t-icon-arrow-right class={`${className}__suggestion-arrow`} />)}
+            {convertToLightDomNode(<t-icon-swap-right class={`${className}__suggestion-arrow`} size="16px" />)}
           </div>
         ),
     )}

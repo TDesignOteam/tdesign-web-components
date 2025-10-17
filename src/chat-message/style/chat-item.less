@@ -128,6 +128,11 @@
         border-radius: var(--td-chat-item-content-radius);
       }
     }
+    &.@{prefix}-chat__item__role--user {
+      .@{prefix}-chat__item__content {
+        padding: 0;
+      }
+    }
   }
   
   &--variant--outline {
@@ -144,6 +149,11 @@
         background-color: var(--td-chat-item-default-bg);
         border-color: var(--td-chat-item-outline-border-color);
         border-radius: var(--td-chat-item-content-radius);
+      }
+    }
+    &.@{prefix}-chat__item__role--user {
+      .@{prefix}-chat__item__content {
+        padding: 0;
       }
     }
   }
