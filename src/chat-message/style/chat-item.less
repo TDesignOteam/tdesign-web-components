@@ -551,9 +551,9 @@
       cursor: pointer;
     }
 
-    &-arrow {
-      color: var(--td-chat-item-suggestion-arrow-color);
+    &-arrow:not(svg) {
       margin-left: var(--td-chat-item-suggestion-arrow-margin);
+      color: var(--td-chat-item-suggestion-arrow-color);
       display: flex;
     }
 

@@ -35,6 +35,7 @@
 
     &:hover {
       border-color: var(--td-chat-input-hover-border);
+      box-shadow: var(--td-shadow-1);
     }
   }
 
@@ -42,6 +43,10 @@
   &__attachments {
     display: block;
     margin: var(--td-chat-input-attachments-margin);
+
+    &::part(@{prefix}-attachment-list-wrap) {
+      top: -4px;
+    }
   }
 
   &__textarea__wrapper {
@@ -59,7 +64,7 @@
     max-height: var(--td-chat-input-textarea-max-height);
     display: flex;
     flex-direction: column;
-
+         
     &::part(@{prefix}-textarea) {
       flex: 1;
       min-height: 0;
@@ -85,6 +90,7 @@
       font-size: var(--td-chat-input-font-size);
       background: none;
       box-shadow: none;
+      min-height: 60px;
     }
 
     &::part(@{prefix}-textarea__inner):placeholder {
@@ -96,6 +102,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-top: var(--td-comp-margin-s);
+    min-height: 32px;
 
     &__right {
       display: flex;
@@ -150,6 +158,7 @@
     height: var(--td-comp-size-s);
     text-align: center;
     cursor: pointer;
+   
 
     &::part(@{prefix}-button) {
       transform: rotate(-90deg);
@@ -158,11 +167,20 @@
       border-radius: var(--td-radius-circle);
       background: var(--td-chat-input-button-default-bg);
       color: var(--td-chat-input-button-default-color);
+      border-width: 0;
     }
     
     &--focus::part(@{prefix}-button) {
       background: var(--td-brand-color);
       color: var(--td-text-color-anti);
+    }
+
+    &:hover::part(@{prefix}-button) {
+      background: var(--td-brand-color-hover);
+    }
+
+    &:focus::part(@{prefix}-button) {
+      background: var(--td-brand-color-active);
     }
 
     &__icon {
