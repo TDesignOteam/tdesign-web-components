@@ -18,9 +18,23 @@
       padding: var(--td-chat-item-actions-item-padding);
       border-radius: var(--td-chat-item-actions-item-radius);
       cursor: pointer;
+      color: var(--td-text-color-primary);
 
       &:hover, &:active {
         background-color: var(--td-chat-item-actions-item-hover-bg);
       }
     }
+
+    &__refresh {
+      display: flex;
+      align-items: center;
+    }
+
+    &__refresh-line {
+      width: 1px;
+      height: var(--td-comp-size-xxxs);
+      background-color: var(--td-component-stroke);
+      margin-left: var(--td-comp-margin-xs);
+    }
+
   }
