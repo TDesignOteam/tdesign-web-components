@@ -243,6 +243,12 @@
         padding: var(--td-chat-item-think-padding-tb) var(--td-chat-item-think-padding-lr);
         border: var(--td-chat-item-think-header-border);
       }
+
+      &::part(@{prefix}-collapse-panel__icon) {
+        font-size: 18px;
+        color: var(--td-text-color-secondary);
+        padding: 3px;
+      }
   
       &::part(@{prefix}-collapse-panel__body) {
         border: var(--td-chat-item-think-body-border);
