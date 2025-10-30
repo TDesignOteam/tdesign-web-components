@@ -75,7 +75,7 @@ export default class Dropdown extends Component<DropdownProps> {
   };
 
   render(props: DropdownProps) {
-    const { popupProps = {}, disabled, placement, trigger, innerClass, children, innerStyle } = props;
+    const { popupProps, disabled, placement, trigger, innerClass, children, innerStyle } = props;
 
     const renderContent = <t-dropdown-menu {...props} options={this.options} onClick={this.handleMenuClick} />;
 

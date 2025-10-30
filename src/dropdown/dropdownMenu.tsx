@@ -34,6 +34,8 @@ export default class DropdownMenu extends Component<DropdownProps> {
   static defaultProps = {
     minColumnWidth: 10,
     maxColumnWidth: 160,
+    options: [],
+    maxHeight: 300,
   };
 
   classPrefix = getClassPrefix();
@@ -184,7 +186,7 @@ export default class DropdownMenu extends Component<DropdownProps> {
   }
 
   render(props: DropdownProps) {
-    const { options = [], maxHeight = 300, direction, panelTopContent, panelBottomContent } = props;
+    const { options, maxHeight, direction, panelTopContent, panelBottomContent } = props;
     return (
       <div
         className={classNames(this.dropdownMenuClass, `${this.dropdownMenuClass}--${direction}`, {

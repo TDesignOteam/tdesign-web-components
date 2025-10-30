@@ -33,6 +33,8 @@ export default class Popconfirm extends Component<PopconfirmProps> {
     placement: 'top',
     showArrow: true,
     theme: 'default',
+    cancelBtn: '取消',
+    confirmBtn: '确定',
   };
 
   private pVisible = false;
@@ -57,7 +59,7 @@ export default class Popconfirm extends Component<PopconfirmProps> {
   }
 
   render(props: OmiProps<PopconfirmProps>) {
-    const { cancelBtn = '取消', confirmBtn = '确定', ...rest } = props;
+    const { cancelBtn, confirmBtn, ...rest } = props;
 
     delete rest.className;
     delete rest.style;
