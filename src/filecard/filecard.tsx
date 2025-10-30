@@ -41,6 +41,7 @@ export default class FileCard extends Component<TdFileCardProps> {
     imageViewer: true,
     disabled: false,
     cardType: 'file',
+    style: {},
   };
 
   // 预览状态
@@ -254,7 +255,7 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
-    const { cardType = 'file', item, style = {} } = this.props;
+    const { cardType, item, style } = this.props;
     if (cardType === 'image') {
       const newstyle = {
         ...{
