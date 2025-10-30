@@ -41,6 +41,7 @@ export default class FileCard extends Component<TdFileCardProps> {
     imageViewer: true,
     disabled: false,
     cardType: 'file',
+    style: {},
   };
 
   // 预览状态
@@ -48,7 +49,7 @@ export default class FileCard extends Component<TdFileCardProps> {
 
   private togglePreview = () => {
     // 切换预览状态
-    const { item, imageViewer = true } = this.props;
+    const { item, imageViewer } = this.props;
     if (!imageViewer) return;
     const ext = item.extension || this.state.nameSuffix;
     if (this.IMG_EXTS.some((e) => ext.toLowerCase().includes(e))) {
@@ -202,7 +203,7 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   render() {
-    const { item, disabled, removable, cardType = 'file' } = this.props;
+    const { item, disabled, removable, cardType } = this.props;
     if (!item) return;
     const { status = 'done' } = item;
     const { desc, icon, iconColor, namePrefix, nameSuffix } = this.state;
@@ -254,7 +255,7 @@ export default class FileCard extends Component<TdFileCardProps> {
   }
 
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
-    const { cardType = 'file', item, style = {} } = this.props;
+    const { cardType, item, style } = this.props;
     if (cardType === 'image') {
       const newstyle = {
         ...{

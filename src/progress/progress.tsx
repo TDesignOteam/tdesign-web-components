@@ -54,7 +54,13 @@ export interface ProgressProps extends TdProgressProps, StyledProps {}
 export default class Progress extends Component<ProgressProps> {
   static css = [];
 
-  static defaultProps = { label: true, percentage: 0, size: 'medium', theme: 'line' };
+  static defaultProps = {
+    label: true,
+    percentage: 0,
+    size: 'medium',
+    theme: 'line',
+    color: '',
+  };
 
   static propTypes = {
     color: [String, Array, Object],
@@ -121,7 +127,7 @@ export default class Progress extends Component<ProgressProps> {
 
   render(props: OmiProps<ProgressProps>) {
     const { componentName } = this;
-    const { theme, percentage, label, color = '', trackColor, strokeWidth, size } = props;
+    const { theme, percentage, label, color, trackColor, strokeWidth, size } = props;
     let iconMap = this.iconLineMap;
     let { status } = props;
     if (!status && percentage >= 100) {

@@ -72,6 +72,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     actions: DefaultChatMessageActionsName,
     variant: 'text',
     placement: 'left',
+    animation: 'skeleton',
   };
 
   searchExpand = signal(false);
@@ -191,7 +192,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     if (!internalMessage) return null;
 
     const { status, content } = internalMessage;
-    const { animation = 'skeleton' } = this.props;
+    const { animation } = this.props;
     const emptyContent = !content || content.length === 0;
 
     if (status === 'pending' || (status === 'streaming' && emptyContent)) {
