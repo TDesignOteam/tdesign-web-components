@@ -31,6 +31,11 @@ export const propTypes = {
 export default class DropdownMenu extends Component<DropdownProps> {
   static propTypes = propTypes;
 
+  static defaultProps = {
+    minColumnWidth: 10,
+    maxColumnWidth: 160,
+  };
+
   classPrefix = getClassPrefix();
 
   dropdownClass = `${this.classPrefix}-dropdown`;
@@ -75,7 +80,7 @@ export default class DropdownMenu extends Component<DropdownProps> {
   throttleUpdate: (e: MouseEvent, deep?: number) => void = throttle(this.handleScroll, 10);
 
   renderOptions = (data: Array<DropdownOption | TNode>, deep: number) => {
-    const { minColumnWidth = 10, maxColumnWidth = 160 } = this.props;
+    const { minColumnWidth, maxColumnWidth } = this.props;
     const arr = [];
     let renderContent: TNode;
     data.forEach?.((menu, idx) => {
