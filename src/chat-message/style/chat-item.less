@@ -128,6 +128,11 @@
         border-radius: var(--td-chat-item-content-radius);
       }
     }
+    &.@{prefix}-chat__item__role--user {
+      .@{prefix}-chat__item__content {
+        padding: 0;
+      }
+    }
   }
   
   &--variant--outline {
@@ -144,6 +149,11 @@
         background-color: var(--td-chat-item-default-bg);
         border-color: var(--td-chat-item-outline-border-color);
         border-radius: var(--td-chat-item-content-radius);
+      }
+    }
+    &.@{prefix}-chat__item__role--user {
+      .@{prefix}-chat__item__content {
+        padding: 0;
       }
     }
   }
@@ -232,6 +242,12 @@
       &::part(@{prefix}-collapse-panel__header) {
         padding: var(--td-chat-item-think-padding-tb) var(--td-chat-item-think-padding-lr);
         border: var(--td-chat-item-think-header-border);
+      }
+
+      &::part(@{prefix}-collapse-panel__icon) {
+        font-size: 18px;
+        color: var(--td-text-color-secondary);
+        padding: 3px;
       }
   
       &::part(@{prefix}-collapse-panel__body) {
@@ -541,9 +557,9 @@
       cursor: pointer;
     }
 
-    &-arrow {
-      color: var(--td-chat-item-suggestion-arrow-color);
+    &-arrow:not(svg) {
       margin-left: var(--td-chat-item-suggestion-arrow-margin);
+      color: var(--td-chat-item-suggestion-arrow-color);
       display: flex;
     }
 

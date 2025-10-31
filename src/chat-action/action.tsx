@@ -50,7 +50,7 @@ export const renderActions = (
   const renderComment = (type: 'good' | 'bad', isActive: boolean) => {
     const config = {
       label: '点赞',
-      icon: <t-icon-thumb-up />,
+      icon: <t-icon-thumb-up size="16px" />,
       clickCallback: (e) => {
         pComment.value = 'good';
         handleAction?.('good', {
@@ -61,7 +61,7 @@ export const renderActions = (
     };
     if (type === 'good') {
       if (isActive) {
-        config.icon = <t-icon-thumb-up-filled color={`var(--td-brand-color)`} />;
+        config.icon = <t-icon-thumb-up-filled color={`var(--td-brand-color)`} size="16px" />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
           handleAction?.('good', {
@@ -73,7 +73,7 @@ export const renderActions = (
     } else {
       config.label = '点踩';
       if (isActive) {
-        config.icon = <t-icon-thumb-down-filled color={`var(--td-brand-color)`} />;
+        config.icon = <t-icon-thumb-down-filled color={`var(--td-brand-color)`} size="16px" />;
         config.clickCallback = (e) => {
           pComment.value = undefined;
           handleAction?.('bad', {
@@ -82,7 +82,7 @@ export const renderActions = (
           });
         };
       } else {
-        config.icon = <t-icon-thumb-down />;
+        config.icon = <t-icon-thumb-down size="16px" />;
         config.clickCallback = (e) => {
           pComment.value = 'bad';
           handleAction?.('bad', {
@@ -130,8 +130,8 @@ export const renderActions = (
 
   const presetActions = () =>
     [
-      { name: 'replay', render: defaultPresetActions('replay', <t-icon-refresh />, '重新生成') },
-      { name: 'copy', render: defaultPresetActions('copy', <t-icon-copy />, '复制') },
+      { name: 'replay', render: defaultPresetActions('replay', <t-icon-refresh size="16px" />, '重新生成') },
+      { name: 'copy', render: defaultPresetActions('copy', <t-icon-copy size="16px" />, '复制') },
       {
         name: 'good',
         render: renderComment('good', pComment.value === 'good'),
@@ -140,7 +140,7 @@ export const renderActions = (
         name: 'bad',
         render: renderComment('bad', pComment.value === 'bad'),
       },
-      { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 />, '分享') },
+      { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 size="16px" />, '分享') },
     ] as TdChatActionItem[];
 
   const arrayActions: TdChatActionItem[] =
@@ -148,7 +148,20 @@ export const renderActions = (
       ? actionBar.map((action) => presetActions().find((item) => item.name === action))
       : presetActions();
 
-  return <div className={className}>{arrayActions.map((item) => item.render)}</div>;
+  return (
+    <div className={className}>
+      {arrayActions.map((item, index) =>
+        item.name === 'replay' && index + 1 !== arrayActions.length ? (
+          <div class={`${className}__refresh`}>
+            {item.render}
+            <span class={`${className}__refresh-line`} />
+          </div>
+        ) : (
+          item.render
+        ),
+      )}
+    </div>
+  );
 };
 
 // Web Component版本

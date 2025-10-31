@@ -26,7 +26,7 @@ export const renderAttachments = ({ key, content }: TdChatAttachmentContentProps
       onFileClick={(e) => {
         self.fire('fileClick', e.detail, { composed: true });
       }}
-      style={{ '--td-attachment-image-width': '150px', '--td-attachment-image-height': '150px' }}
+      style={{ '--td-attachment-image-width': '160px', '--td-attachment-image-height': '160px' }}
     />
   </div>
 );
