@@ -5,12 +5,15 @@ import { classNames, Component, createRef, tag } from 'omi';
 import { classPrefix } from '../_util/classname';
 import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
+import parseTNode from '../_util/parseTNode';
 import { TagProps } from './type';
 
 const TagClassNamePrefix = (className: string) => `${classPrefix}-tag${className}`;
 
 @tag('t-tag')
 export default class Tag extends Component<TagProps> {
+  static isLightDOM = true;
+
   static css = [];
 
   static defaultProps = {
@@ -31,7 +34,7 @@ export default class Tag extends Component<TagProps> {
 
     children: String,
     content: String,
-    icon: String,
+    icon: Object,
     maxWidth: String,
     shape: String,
     size: String,
@@ -83,24 +86,20 @@ export default class Tag extends Component<TagProps> {
   render(props: TagProps) {
     const { disabled, maxWidth, icon, children, content, closable, innerStyle, innerClass } = props;
 
-    if (typeof icon === 'object' && 'attributes' in icon) {
-      icon.attributes.style = {};
-      icon.attributes.style.marginRight = 4;
-    }
+    const iconNode = icon ? convertToLightDomNode(flexIcon(parseTNode(icon))) : null;
 
     return (
       <span
-        class={this.cls()}
+        class={classNames(this.cls(), innerClass)}
         part="my-part"
         ref={this.span}
         onClick={this.handleClick}
-        className={innerClass}
         style={
           maxWidth ? { maxWidth: typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth, ...innerStyle } : innerStyle
         }
       >
         <>
-          {icon}
+          {iconNode}
           <span class={maxWidth ? TagClassNamePrefix(`--text`) : undefined} {...this.getTitle(children)}>
             {children ?? content}
           </span>

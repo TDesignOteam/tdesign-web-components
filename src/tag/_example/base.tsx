@@ -8,7 +8,7 @@ export default class Base extends Component {
     return (
       <t-space direction="vertical">
         <t-space>
-          <t-tag icon="11">标签一</t-tag>
+          <t-tag>标签一</t-tag>
           <a href="https://www.tencent.com/zh-cn" target="_blank" rel="noreferrer">
             <t-tag>超链接</t-tag>
           </a>
