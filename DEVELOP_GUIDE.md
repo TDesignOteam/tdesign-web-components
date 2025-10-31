@@ -11,7 +11,7 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 src/\_common 文件夹，由于Tdesign React/Vue等组件库已相对成熟，我们涉及到开发common部分的比较少，主要是复用其中已经定义过的样式class和方法，包括：
 
 - 一些公共的工具函数
-- 组件库 UI 开发内容，既 html 结构和 css 样式（React/Vue 等多技术栈共用）
+- 组件库 UI 开发内容，即 html 结构和 css 样式（React/Vue 等多技术栈共用）
 
 ### 初始化子仓库
 
@@ -91,11 +91,13 @@ npm run start
 ### 目录结构
 
 ```shell
-├── site # 站点代码
-├── src # 组件代码
-├── src/[组件]/__tests__ # 测试文件
-├── src/[组件]/_example # 演示文件
-├── test # 测试配置
+.
+├── site/                   # 站点代码
+├── src/                    # 组件代码
+│   ├── _common/           # 公共资源和样式（tdesign-common子仓库）
+│   └── [组件]/            
+│       ├── _example/      # 演示文件
+│       ├── index.ts       # 组件导出入口
 ```
 
 ### 新增开发组件
