@@ -46,7 +46,7 @@
   --td-chat-item-text-max-width: 100%;
   --td-chat-item-text-padding: var(--td-comp-paddingTB-m) var(--td-comp-paddingLR-l);
   --td-chat-item-status-margin: var(--td-comp-margin-s) 0 0;
-  --td-chat-item-text-content-padding: var(--td-comp-paddingTB-m) 0;
+  --td-chat-item-text-content-padding: 0;
   --td-chat-item-text-detail-padding: 0;
   --td-chat-item-text-detail-margin: 0;
   --td-chat-item-text-detail-text-margin: 0;
@@ -62,7 +62,7 @@
   --td-chat-item-left-avatar-margin: 0 var(--td-comp-margin-xl) 0 var(--td-comp-margin-xs);
   --td-chat-item-right-avatar-margin: 0 var(--td-comp-margin-xs) 0 var(--td-comp-margin-xl);
   --td-chat-item-avatar-padding: 6px 0 0 0;
-  --td-chat-item-avatar-has-header-padding: 34px 0 0 0;
+  --td-chat-item-avatar-has-header-padding: 30px 0 0 0;
   --td-chat-item-image-margin: var(--td-comp-margin-m) 0;
   --td-chat-item-think-gap-p: 0 0 var(--td-comp-margin-s) 0;
   --td-chat-item-think-padding-tb: var(--td-comp-paddingTB-s);
@@ -70,7 +70,7 @@
   --td-chat-item-think-border: none;
   --td-chat-item-think-radius: var(--td-radius-medium);
   --td-chat-item-think-title-gap: var(--td-comp-margin-s);
-  --td-chat-item-think-status-wh: 16px;
+  --td-chat-item-think-status-wh: 20px;
   --td-chat-item-think-pending-border-width: 2px;
   --td-chat-item-think-header-border: none;
   --td-chat-item-think-body-bg: none;
@@ -87,11 +87,11 @@
   --td-chat-item-think-inner-border-margin-left: 0px;
   --td-chat-item-actions-list-margin: var(--td-comp-margin-xs) 0;
   --td-chat-item-text-actions-list-margin: var(--td-comp-margin-xs) 0 0 var(--td-comp-margin-l);
-  --td-chat-item-actions-list-gap: var(--td-comp-margin-s);
-  --td-chat-item-actions-list-padding: 4px;
+  --td-chat-item-actions-list-gap: var(--td-comp-margin-xs);
+  --td-chat-item-actions-list-padding: var(--td-comp-paddingTB-xs) var(--td-comp-paddingLR-xs);
   --td-chat-item-actions-list-radius: var(--td-radius-medium);
   --td-chat-item-actions-list-border: 1px solid var(--td-component-border);
-  --td-chat-item-actions-item-padding: 4px;
+  --td-chat-item-actions-item-padding: var(--td-comp-paddingTB-xs) var(--td-comp-paddingLR-xs);
   --td-chat-item-actions-item-radius: 4px;
   --td-chat-item-attachments-margin-top: 12px;
   --td-chat-item-image-max-width: 150px; 
@@ -109,19 +109,19 @@
   --td-chat-item-search-icon-before-radius: 1px;
   --td-chat-item-search-link-color: var(--td-brand-color);
   --td-chat-item-search-link-hov-color: var(--td-brand-color-hover);
-  --td-chat-item-suggestion-gap: var(--td-comp-margin-xs);
+  --td-chat-item-suggestion-gap: var(--td-comp-margin-s);
   --td-chat-item-suggestion-height: 38px;
-  --td-chat-item-suggestion-padding: 6px 12px;
-  --td-chat-item-suggestion-radius: 8px;
+  --td-chat-item-suggestion-padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-m);
+  --td-chat-item-suggestion-radius: var(--td-radius-medium);
   --td-chat-item-suggestion-border: solid 1px var(--td-component-border);
-  --td-chat-item-suggestion-arrow-margin: 6px;
+  --td-chat-item-suggestion-arrow-margin: var(--td-comp-margin-s);
 
   // 字体尺寸、行高
   --td-chat-font-size: 16px;
   --td-chat-item-system-font-size: 12px;
   --td-chat-item-suggestion-font-size: 14px;
   --td-chat-item-search-link-line-height: 24px;
-  --td-chat-list-scroll-button-font-size: 20px;
+  --td-chat-list-scroll-button-font-size: 24px;
   --td-chat-search-font-size: 12px;
   --td-chat-item-content-text-align: left;
   --td-chat-item-right-content-text-align: right;
@@ -143,7 +143,7 @@
   --td-chat-item-think-status-pending-color: var(--td-brand-color);
   --td-chat-item-think-status-sent-color: var(--td-success-color);
   --td-chat-item-think-status-error-color: var(--td-error-color);
-  --td-chat-item-think-content-color: #929292;
+  --td-chat-item-think-content-color: var(--td-text-color-placeholder);
   --td-chat-item-actions-list-bg: var(--td-bg-color-secondarycontainer);
   --td-chat-item-actions-item-hover-bg: var(--td-bg-color-component-hover);
   --td-chat-item-suggestion-color: var(--td-text-color-primary);

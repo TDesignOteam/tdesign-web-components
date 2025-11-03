@@ -12,6 +12,7 @@ export const dropdownDefaultProps: TdDropdownProps = {
   minColumnWidth: 10,
   placement: 'bottom-left',
   trigger: 'hover',
+  popupProps: {},
 };
 
 export const dropdownItemDefaultProps: TdDropdownItemProps = {

@@ -28,6 +28,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   static defaultProps: Partial<TdAttachmentsProps> = {
     removable: true,
     imageViewer: true,
+    style: {},
   };
 
   IMG_EXTS = ['png', 'jpg', 'jpeg', 'gif', 'bmp', 'webp', 'svg'];
@@ -163,7 +164,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   }
 
   render(props: TdAttachmentsProps) {
-    const { items, overflow, removable, innerClass, imageViewer = true, style = {} } = props;
+    const { items, overflow, removable, innerClass, imageViewer, style } = props;
     const listCls = `${className}-list`;
     const allImages = this.isAllImages(items);
     return (

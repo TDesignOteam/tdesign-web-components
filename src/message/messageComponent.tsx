@@ -66,7 +66,7 @@ export default class MessageComponent extends Component<MessageComponentProps> {
   }
 
   render(props: Omi.OmiProps<MessageComponentProps> | MessageComponentProps) {
-    const { theme, innerClass, children, innerStyle, icon = true, content, closeBtn, onCloseBtnClick, onClose } = props;
+    const { theme, innerClass, children, innerStyle, icon, content, closeBtn, onCloseBtnClick, onClose } = props;
     const onCloseFn = onClose;
     const onCloseBtnClickFn = onCloseBtnClick;
     const handleCloseBtnClick = (e) => {

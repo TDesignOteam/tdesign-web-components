@@ -54,6 +54,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     clearHistory: false,
     layout: 'both',
     reverse: false,
+    defaultMessages: [],
   };
 
   listRef = createRef<Chatlist>();
@@ -130,7 +131,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 合并消息配置、初始化引擎、同步状态、订阅聊天
    */
   private initChat() {
-    const { defaultMessages: messages = [], messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
+    const { defaultMessages: messages, messageProps, chatServiceConfig: config, autoSendPrompt } = this.props;
     if (typeof messageProps === 'object') {
       this.messageRoleProps = merge({}, this.messageRoleProps, messageProps);
     }

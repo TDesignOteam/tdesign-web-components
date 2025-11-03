@@ -16,8 +16,16 @@ export default class BasicExample extends Component {
           placement="left"
           avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
           name="DeepSeek"
-          animation="skeleton"
           role="assistant"
+          status="pending"
+        ></t-chat-item>
+        <t-chat-item
+          variant="text"
+          placement="left"
+          avatar="https://tdesign.gtimg.com/site/chat-avatar.png"
+          name="DeepSeek"
+          role="assistant"
+          animation="circle"
           status="pending"
         ></t-chat-item>
         <t-chat-item
