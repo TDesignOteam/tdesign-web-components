@@ -5,6 +5,11 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.4 `2025-11-03` 
+### 🐞 Bug Fixes
+- `chat-message`:  use `defaultProps` to set the default value of `animation` to `skeleton` @zhangpaopao0609 ([#307](https://github.com/TDesignOteam/tdesign-web-components/pull/307))
+- `tag`:  修复tag样式和icon问题 @LeonardoSya ([#307](https://github.com/TDesignOteam/tdesign-web-components/pull/309))
+
 ## 🌈 1.2.3 `2025-10-15` 
 ### 🚀 Features
 - `icon`: 更新文件相关的图标资源 @uyarn ([#302](https://github.com/TDesignOteam/tdesign-web-components/pull/302))
