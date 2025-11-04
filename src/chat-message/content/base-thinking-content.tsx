@@ -34,7 +34,7 @@ export const renderThinkingStatus = (status: ChatMessageStatus, animation = 'cir
     return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
   if (status === 'error')
     return convertToLightDomNode(<t-icon-close-circle class={`${className}__think__status--error`} />);
-  return <t-chat-loading animation={animation || 'circle'}></t-chat-loading>;
+  return <t-chat-loading animation={animation || 'moving'}></t-chat-loading>;
 };
 
 // 基础思考容器渲染函数
