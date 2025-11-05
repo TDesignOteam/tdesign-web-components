@@ -45,7 +45,7 @@ export default class FakeArrow extends Component<FakeArrowProps> {
         xmlns="http://www.w3.org/2000/svg"
         style={{
           transition: 'all 0.2s cubic-bezier(0.38, 0, 0.24, 1)',
-          transform: props.isActive ? 'rotate(0deg)' : 'rotate(-90deg)',
+          transform: props.isActive ? 'rotate(0deg)' : 'rotate(-180deg)',
         }}
       >
         <path d="M3.75 5.7998L7.99274 10.0425L12.2361 5.79921" stroke="currentColor" stroke-width="1.3" />
