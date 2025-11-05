@@ -29,7 +29,7 @@ export type BaseThinkingProps = {
 } & TdChatContentProps['thinking'];
 
 // 渲染状态图标的公共函数
-export const renderThinkingStatus = (status: ChatMessageStatus, animation = 'circle') => {
+export const renderThinkingStatus = (status: ChatMessageStatus, animation = 'moving') => {
   if (status === 'complete' || status === 'stop')
     return convertToLightDomNode(<t-icon-check-circle class={`${className}__think__status--complete`} />);
   if (status === 'error')
@@ -42,7 +42,7 @@ export const renderBaseThinkingContainer = ({
   key,
   status,
   maxHeight,
-  animation = 'circle',
+  animation = 'moving',
   collapsed = false,
   layout = 'block',
   onChange,
