@@ -5,6 +5,13 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.5 `2025-11-05` 
+### 🐞 Bug Fixes
+- `fix`: 优化 Chatbot 相关组件样式 @uyarn ([#313](https://github.com/TDesignOteam/tdesign-web-components/pull/313))
+### 🚧 Others
+- fix: fix chatbot style @uyarn ([#312](https://github.com/TDesignOteam/tdesign-web-components/pull/312))
+- chatbot/chatEngine: 补充实例方法和类型说明 @carolin913 ([#314](https://github.com/TDesignOteam/tdesign-web-components/pull/314))
+
 ## 🌈 1.2.4 `2025-11-03` 
 ### 🐞 Bug Fixes
 - `chat-message`:  use `defaultProps` to set the default value of `animation` to `skeleton` @zhangpaopao0609 ([#307](https://github.com/TDesignOteam/tdesign-web-components/pull/307))
