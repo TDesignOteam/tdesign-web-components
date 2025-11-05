@@ -247,7 +247,20 @@ export default class FileCard extends Component<TdFileCardProps> {
               });
             }}
           >
-            <t-icon-close-circle-filled size="15px" />
+            <svg
+              width="1em"
+              height="1em"
+              viewBox="0 0 16 16"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              style="font-size: 15px"
+            >
+              <rect width="16" height="16" rx="8" fill="var(--td-text-color-primary)" />
+              <path
+                d="M5.87836 4.93579L7.99968 7.05711L10.121 4.93579L11.0638 5.8786L8.94248 7.99992L11.0638 10.1212L10.121 11.064L7.99968 8.94273L5.87836 11.064L4.93555 10.1212L7.05687 7.99992L4.93555 5.8786L5.87836 4.93579Z"
+                fill="var(--td-bg-color-container)"
+              />
+            </svg>
           </div>
         )}
       </div>

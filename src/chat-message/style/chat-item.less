@@ -402,6 +402,8 @@
     margin: var(--td-chat-item-text-detail-text-margin);
     padding: var(--td-chat-item-text-content-padding);
     color: var(--td-chat-item-text-error-color);
+    display: flex;
+    align-items: center;
   }
 
   &-chat-loading-light {
@@ -446,6 +448,7 @@
     &-links {
       display: flex;
       flex-direction: column;
+      color: var(--td-chat-item-search-link-color);
     }
 
     &-link-wrapper {
@@ -480,6 +483,12 @@
       &::part(@{prefix}-collapse-panel__header) {
         padding: 0;
         border: none;
+      }
+
+      &::part(@{prefix}-collapse-panel__icon) {
+        font-size: 18px;
+        color: var(--td-text-color-secondary);
+        padding: 3px;
       }
   
       &::part(@{prefix}-collapse-panel__body) {

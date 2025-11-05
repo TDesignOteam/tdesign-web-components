@@ -188,6 +188,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
+   * 发送AI消息
+   */
+  async sendAIMessage(options?: { params?: ChatRequestParams; content?: AIMessageContent[]; sendRequest?: boolean }) {
+    await this.chatEngine.sendAIMessage(options);
+  }
+
+  /**
    * 重新回答
    */
   async regenerate(keepVersion: boolean = false) {
