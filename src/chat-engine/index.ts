@@ -92,9 +92,10 @@ export default class ChatEngine implements IChatEngine {
   /**
    * 发送用户消息并获取AI回复
    * @param requestParams 请求参数，包含用户输入的文本和附件
+   * @param sendRequest 是否立即发送
    * @description 创建用户消息和AI消息，并发送请求获取AI回复
    */
-  public async sendUserMessage(requestParams: ChatRequestParams) {
+  public async sendUserMessage(requestParams: ChatRequestParams, sendRequest = true) {
     const { prompt, attachments, ...customParams } = requestParams;
 
     // 检查条件：prompt和attachments至少传入一个，且如果设置了就不能为空
@@ -110,12 +111,14 @@ export default class ChatEngine implements IChatEngine {
     const userMessage = this.messageProcessor.createUserMessage(prompt, attachments);
     const aiMessage = this.messageProcessor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
-    const params = {
-      ...requestParams,
-      messageID: aiMessage.id,
-      ...customParams, // 透传用户自定义参数
-    };
-    this.sendRequest(params);
+    if (sendRequest) {
+      const params = {
+        ...requestParams,
+        messageID: aiMessage.id,
+        ...customParams, // 透传用户自定义参数
+      };
+      this.sendRequest(params);
+    }
   }
 
   /**

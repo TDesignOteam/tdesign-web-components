@@ -239,6 +239,17 @@ export interface IChatEngine {
   sendUserMessage(params: ChatRequestParams): Promise<void>;
 
   /**
+   * 手动发送AI消息
+   * @param options 包含请求参数params、发送消息内容content和是否发送请求的标志sendRequest
+   * @description 创建并存储一条AI消息，可选择是否同时发送请求
+   */
+  sendAIMessage(options: {
+    params?: ChatRequestParams;
+    content?: AIMessageContent[];
+    sendRequest?: boolean;
+  }): Promise<void>;
+
+  /**
    * 重新生成AI回复
    * @param keepVersion 是否保留历史版本，默认为false
    * @description
