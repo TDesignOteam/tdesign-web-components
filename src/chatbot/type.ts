@@ -20,7 +20,7 @@ export interface TdChatProps extends StyledProps {
   listProps?: TdChatListProps;
   /** 消息数据源 */
   autoSendPrompt?: string;
-  defaultMessages: Array<ChatMessagesData>;
+  defaultMessages?: Array<ChatMessagesData>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig | ((msg: ChatMessagesData) => TdChatMessageConfigItem);
   /** 输入框配置（透传至t-chat-sender） */
@@ -51,6 +51,16 @@ export interface TdChatbotApi {
    * @param msg - 系统消息内容
    */
   sendSystemMessage: (msg: string) => void;
+
+  /**
+   * 发送AI回答
+   * @param msg - 系统消息内容
+   */
+  sendAIMessage: (options?: {
+    params?: ChatRequestParams;
+    content?: AIMessageContent[];
+    sendRequest?: boolean;
+  }) => Promise<void>;
 
   /**
    * 批量设置消息
