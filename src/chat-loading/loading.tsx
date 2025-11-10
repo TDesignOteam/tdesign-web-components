@@ -44,7 +44,7 @@ export default class Loading extends Component<TdChatLoadingProps> {
         </div>
       );
     }
-    if (animation === 'dot') {
+    if (animation === 'dots') {
       return (
         <div class={`${className}__dot`}>
           <span class={`${className}__dot-item`} style={{ animationDelay: '0s' }}></span>
