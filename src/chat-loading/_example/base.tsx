@@ -16,7 +16,7 @@ export default class ChatLoading extends Component {
           <t-chat-loading animation="moving"></t-chat-loading>
           <t-chat-loading animation="gradient"></t-chat-loading>
           <t-chat-loading animation="circle"></t-chat-loading>
-          <t-chat-loading animation="dot"></t-chat-loading>
+          <t-chat-loading animation="dots"></t-chat-loading>
           <t-chat-loading animation="moving" text={'加载中...'}></t-chat-loading>
         </t-space>
       </>
