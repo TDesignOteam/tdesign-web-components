@@ -5,6 +5,7 @@ import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TElement, TNode } from '../common';
@@ -31,9 +32,11 @@ export interface InputRef {
 const renderIcon = (classPrefix: string, type: 'prefix' | 'suffix', icon: TNode | TElement) => {
   const result = parseTNode(icon);
   const iconClassName = icon ? `${classPrefix}-input__${type}-icon` : '';
+  const shouldWrapWithFlex = typeof result === 'object' && result !== null && 'attributes' in (result as any);
+  const iconNode = shouldWrapWithFlex ? flexIcon(result as TNode) : result;
 
-  return result ? (
-    <span class={classname(`${classPrefix}-input__${type} ${iconClassName}`)}>{result}</span>
+  return iconNode ? (
+    <span class={classname(`${classPrefix}-input__${type} ${iconClassName}`)}>{iconNode}</span>
   ) : (
     <span></span>
   );
@@ -327,8 +330,11 @@ export default class Input extends Component<InputProps> {
     this.inputRef.current.addEventListener('input', this.inputHandlerBind);
   }
 
-  uninstall(): void {
-    this.inputRef.current.removeEventListener('input', this.inputHandlerBind);
+  uninstall() {
+    if (this.inputRef?.current) {
+      this.inputRef.current.removeEventListener('input', this.inputHandlerBind);
+    }
+    this.resizeObserver?.disconnect?.();
   }
 
   receiveProps(props: InputProps | OmiProps<InputProps, any>, oldProps: InputProps | OmiProps<InputProps, any>) {
