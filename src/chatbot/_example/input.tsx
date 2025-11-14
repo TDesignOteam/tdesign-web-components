@@ -1,4 +1,6 @@
 import 'tdesign-web-components/chatbot';
+import 'tdesign-icons-web-components/esm/components/chevron-down';
+import 'tdesign-icons-web-components/esm/components/system-2';
 
 import { Component, signal } from 'omi';
 
@@ -80,7 +82,7 @@ export default class ChatSender extends Component {
           className={`${className}__model-dropdown-btn`}
           variant="text"
           shape="round"
-          suffix={<t-icon name="chevron-down" size="16" />}
+          suffix={<t-icon-chevron-down size="16" />}
         >
           {this.modelValue.value || '默认模型'}
         </t-button>
@@ -97,7 +99,7 @@ export default class ChatSender extends Component {
           console.log('深度思考:', this.deepThinkActive.value);
         }}
       >
-        <t-icon name="system-2" size="16" />
+        <t-icon-system-2 size="16" />
         深度思考
       </a>
     </div>
