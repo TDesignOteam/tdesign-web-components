@@ -1,4 +1,4 @@
-import { isFunction, isObject } from 'lodash-es';
+import { isFunction } from 'lodash-es';
 import { Component } from 'omi';
 
 import useControlled from '../_util/useControlled';
@@ -82,7 +82,7 @@ export default function useOverlayInnerStyle(
   const tOverlayInnerStyle = () => {
     let result: TdPopupProps['overlayInnerStyle'] = {};
     const overlayInnerStyle = popupProps?.overlayInnerStyle || {};
-    if (isFunction(overlayInnerStyle) || (isObject(overlayInnerStyle) && overlayInnerStyle.width)) {
+    if (isFunction(overlayInnerStyle)) {
       result = overlayInnerStyle;
     } else if (!autoWidth) {
       result = matchWidthFunc;
