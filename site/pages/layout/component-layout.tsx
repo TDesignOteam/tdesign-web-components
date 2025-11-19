@@ -3,10 +3,11 @@ import './td-wc-content/index.tsx';
 import { Component, tag, VNode } from 'omi';
 import styles from 'tdesign-site-components/lib/styles/style.css?raw';
 
+import packageJson from '../../../package.json';
 import sidebarConfig from '../../sidebar.config.ts';
 
 const routerList = JSON.parse(JSON.stringify(sidebarConfig).replace(/component:.+/g, ''));
-
+const currentVersion = packageJson.version;
 @tag('component-layout')
 export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
   asideRef: Element | null = null;
@@ -36,7 +37,11 @@ export class ComponentLayout extends Component<{ children?: VNode | VNode[] }> {
             <td-doc-search slot="search" docsearchInfo="搜索" />
           </td-header>
           <td-doc-aside ref={(e: any) => (this.asideRef = e)} title="Web Components" routerList={routerList}>
-            <td-select value="0.0.1" options={[{ label: '0.0.1', value: '0.0.1' }]} slot="extra"></td-select>
+            <td-select
+              value={currentVersion}
+              options={[{ label: currentVersion, value: currentVersion }]}
+              slot="extra"
+            ></td-select>
           </td-doc-aside>
           <slot></slot>
         </td-doc-layout>
