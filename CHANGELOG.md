@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.6 `2025-11-10` 
+### 🐞 Bug Fixes
+- `fix`: 修复 `chat-loading` dots 风格命名错误的问题
+
 ## 🌈 1.2.5 `2025-11-05` 
 ### 🐞 Bug Fixes
 - `fix`: 优化 Chatbot 相关组件样式 @uyarn ([#313](https://github.com/TDesignOteam/tdesign-web-components/pull/313))
