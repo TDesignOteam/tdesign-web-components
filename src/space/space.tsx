@@ -3,7 +3,6 @@ import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { type StyledProps } from '../common';
-import { styleSheet } from './style';
 import { TdSpaceProps } from './type';
 
 export interface SpaceProps extends TdSpaceProps, StyledProps {}
@@ -13,7 +12,6 @@ const SizeMap = { small: '8px', medium: '16px', large: '24px' };
 @tag('t-space')
 export default class Space extends Component<SpaceProps> {
   static css = [
-    styleSheet,
     `:host {
       display: inline-flex;
       vertical-align: middle;
