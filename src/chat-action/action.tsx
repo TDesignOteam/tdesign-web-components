@@ -145,21 +145,42 @@ export const renderActions = (
 
   const arrayActions: TdChatActionItem[] =
     Array.isArray(actionBar) && actionBar.length > 0
-      ? actionBar.map((action) => presetActions().find((item) => item.name === action))
+      ? actionBar.map((action) => {
+          // 兼容preset的旧逻辑
+          if (typeof action === 'string') {
+            return presetActions().find((item) => item.name === action);
+          }
+          return action;
+        })
       : presetActions();
 
   return (
     <div className={className}>
-      {arrayActions.map((item, index) =>
-        item.name === 'replay' && index + 1 !== arrayActions.length ? (
-          <div class={`${className}__refresh`}>
-            {item.render}
-            <span class={`${className}__refresh-line`} />
-          </div>
-        ) : (
-          item.render
-        ),
-      )}
+      {arrayActions.map((item, index) => {
+        if (!item) return null;
+        if (item.name === 'replay' && index + 1 !== arrayActions.length) {
+          return (
+            <div class={`${className}__refresh`}>
+              {item.render}
+              <span class={`${className}__refresh-line`} />
+            </div>
+          );
+        }
+        // preset action
+        if (item.render) return item.render;
+        // custom action
+        if (item.name) {
+          if (item.ignoreWrapper) {
+            return <slot name={item.name} />;
+          }
+          return (
+            <span class={`${className}__item__wrapper`}>
+              <slot name={item.name} />
+            </span>
+          );
+        }
+        return null;
+      })}
     </div>
   );
 };
