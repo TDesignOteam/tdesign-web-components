@@ -3,6 +3,7 @@ import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { type StyledProps } from '../common';
+import { styleSheet } from './style';
 import { TdSpaceProps } from './type';
 
 export interface SpaceProps extends TdSpaceProps, StyledProps {}
@@ -11,7 +12,17 @@ const SizeMap = { small: '8px', medium: '16px', large: '24px' };
 
 @tag('t-space')
 export default class Space extends Component<SpaceProps> {
-  static css = [];
+  static css = [
+    styleSheet,
+    `:host {
+      display: inline-flex;
+      vertical-align: middle;
+    }
+    .${getClassPrefix()}-space {
+      width: 100%;
+    }
+    `,
+  ];
 
   static defaultProps = { breakLine: false, direction: 'horizontal', size: 'medium' };
 
@@ -27,13 +38,17 @@ export default class Space extends Component<SpaceProps> {
 
   renderGap = '';
 
-  renderStyle = {
-    gap: this.renderGap,
-    ...(this.props.breakLine ? { flexWrap: 'wrap' } : {}),
-    ...this.props.innerStyle,
-  };
+  renderStyle = {};
 
   install() {
+    this.updateHostStyle();
+  }
+
+  updated() {
+    this.updateHostStyle();
+  }
+
+  updateHostStyle() {
     if (Array.isArray(this.props.size)) {
       this.renderGap = this.props.size
         .map((s: string | number) => {
@@ -78,15 +93,16 @@ export default class Space extends Component<SpaceProps> {
   render(props: OmiProps<SpaceProps>) {
     return (
       <div
-        style={this.renderStyle}
         class={classNames(
           `${this.componentName}`,
           {
             [`${this.componentName}-align-${props.align}`]: props.align,
             [`${this.componentName}-${props.direction}`]: props.direction,
+            [`${this.componentName}--break-line`]: props.breakLine,
           },
           props.innerClass,
         )}
+        style={{ ...this.renderStyle, width: '100%' }}
       >
         {this.contentNode.flat()}
       </div>
