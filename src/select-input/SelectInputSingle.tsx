@@ -73,6 +73,30 @@ export default class SingleSelectInput extends Component<
     const singleValueDisplay = !props.multiple ? props.valueDisplay : null;
 
     const displayedValue = popupVisible && props.allowInput ? this.inputValue : getInputValue(value, keys);
+    const showInput = (props.allowInput ?? false) || !singleValueDisplay;
+    const valueLabel = singleValueDisplay ? (
+      <span
+        className={`${this.classPrefix}-select-input__single-value`}
+        style={{
+          display: 'inline-flex',
+          flex: '1 1 auto',
+          minWidth: 0,
+          overflow: 'hidden',
+          whiteSpace: 'nowrap',
+          textOverflow: 'ellipsis',
+        }}
+        title={typeof displayedValue === 'string' ? displayedValue : undefined}
+      >
+        {singleValueDisplay}
+      </span>
+    ) : null;
+    const labelContent =
+      props.label || valueLabel ? (
+        <>
+          {props.label}
+          {valueLabel}
+        </>
+      ) : undefined;
 
     return (
       <t-input
@@ -80,13 +104,10 @@ export default class SingleSelectInput extends Component<
         {...commonInputProps}
         autoWidth={props.autoWidth}
         placeholder={singleValueDisplay ? '' : props.placeholder}
-        value={singleValueDisplay ? ' ' : displayedValue}
-        label={
-          <>
-            {props.label}
-            {singleValueDisplay}
-          </>
-        }
+        value={showInput ? displayedValue : ''}
+        label={labelContent}
+        showInput={showInput}
+        keepWrapperWidth={!showInput}
         onChange={this.onInnerInputChange}
         readonly={!props.allowInput}
         onClear={this.onInnerClear}

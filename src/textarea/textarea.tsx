@@ -168,6 +168,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     this.pValue = limitedValue;
 
     this.fire('change', limitedValue);
+    this.adjustTextareaHeight();
   };
 
   render(props: TextareaProps) {

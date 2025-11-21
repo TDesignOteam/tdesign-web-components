@@ -13,17 +13,6 @@ export default function SpaceBreakLine() {
       <t-button>Button</t-button>
       <t-button>Button</t-button>
       <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
-      <t-button>Button</t-button>
     </t-space>
   );
 }
