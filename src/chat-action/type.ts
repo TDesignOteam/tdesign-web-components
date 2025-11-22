@@ -7,6 +7,7 @@ export type TdChatActionsName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
 export type TdChatActionItem = {
   name: TdChatActionsName;
   render: TNode;
+  ignoreWrapper?: boolean;
 };
 
 interface ChatActionProps {
