@@ -1,167 +1,95 @@
-// import classNames from 'classnames';
-// import get from 'lodash/get';
-// import isNumber from 'lodash/isNumber';
-// import isString from 'lodash/isString';
+import { classNames, Component, OmiProps, tag } from 'omi';
 
-// import classname, { getClassPrefix } from '../_util/classname';
-// import { StyledProps, TNode } from '../common';
-// import { SelectKeysType, SelectOption, SelectValue, TdOptionProps, TdSelectProps } from './type';
+import { getClassPrefix } from '../_util/classname';
+import { optionDefaultProps } from './defaultProps';
+import { TdOptionProps, TdSelectProps } from './type';
 
-// /**
-//  * Option 组件属性
-//  */
-// export interface SelectOptionProps
-//   extends StyledProps,
-//     TdOptionProps,
-//     Pick<TdSelectProps, 'size' | 'multiple' | 'max'> {
-//   selectedValue?: SelectValue;
-//   children?: TNode;
-//   onSelect?: (
-//     value: string | number,
-//     context: {
-//       label?: string;
-//       selected?: boolean;
-//       event: MouseEvent;
-//       restData?: Record<string, any>;
-//     },
-//   ) => void;
-//   onCheckAllChange?: (checkAll: boolean, e: MouseEvent) => void;
-//   restData?: Record<string, any>;
-//   keys?: SelectKeysType;
-//   optionLength?: number;
-//   isVirtual?: boolean;
-//   onRowMounted?: (rowData: { ref: HTMLElement; data: SelectOption }) => void;
-// }
+export interface OptionProps extends TdOptionProps {
+  onClick?: (options: { value: string | number; label?: string; e: MouseEvent }) => void;
+  selected?: boolean;
+  index?: number;
+  multiple?: boolean;
+  size?: TdSelectProps['size'];
+}
 
-// const componentType = 'select';
+@tag('t-option')
+export default class Option extends Component<OptionProps> {
+  static css = [];
 
-// const Option = (props: SelectOptionProps) => {
-//   const {
-//     disabled: propDisabled,
-//     label: propLabel,
-//     title: propTitle,
-//     selectedValue,
-//     checkAll,
-//     multiple,
-//     size,
-//     max,
-//     keys,
-//     value,
-//     onSelect,
-//     children,
-//     content,
-//     restData,
-//     style,
-//     className,
-//     isVirtual,
-//   } = props;
+  static defaultProps = optionDefaultProps;
 
-//   let selected: boolean;
-//   let indeterminate: boolean;
-//   const label = propLabel || value;
-//   const disabled = propDisabled || (multiple && Array.isArray(selectedValue) && max && selectedValue.length >= max);
+  static propTypes = {
+    checkAll: Boolean,
+    children: [String, Object, Function],
+    content: [String, Object, Function],
+    disabled: Boolean,
+    label: String,
+    title: String,
+    value: [String, Number],
+    selected: Boolean,
+    index: Number,
+    onClick: Function,
+    multiple: Boolean,
+    size: String,
+  };
 
-//   const titleContent = useMemo(() => {
-//     // 外部设置 props，说明希望受控
-//     const controlledTitle = Reflect.has(props, 'title');
-//     if (controlledTitle) return propTitle;
-//     if (typeof label === 'string') return label;
-//     return null;
-//   }, [propTitle, label]);
+  handleClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    if (this.props.disabled) return;
 
-//   const { classPrefix } = useConfig();
+    const { value, label } = this.props;
+    this.props.onClick?.({ value: value as string | number, label, e });
+  };
 
-//   // 使用斜八角动画
-//   const [optionRef, setRefCurrent] = useDomRefCallback();
+  render(props: OmiProps<OptionProps>) {
+    const { disabled, label, content, children, selected, multiple, size } = props;
+    const classPrefix = getClassPrefix();
+    const commonClass = `${classPrefix}-select-option`;
+    const optionClass = classNames(commonClass, {
+      [`${classPrefix}-is-disabled`]: disabled,
+      [`${classPrefix}-is-selected`]: selected,
+      [`${classPrefix}-size-s`]: size === 'small',
+      [`${classPrefix}-size-l`]: size === 'large',
+    });
 
-//   useEffect(() => {
-//     if (isVirtual && optionRef) {
-//       props.onRowMounted?.({
-//         ref: optionRef,
-//         data: props,
-//       });
-//     }
-//     // eslint-disable-next-line
-//   }, [isVirtual, optionRef]);
+    const renderItem = () => {
+      const optionalChildren = Array.isArray(children) && children.length === 0 ? null : children;
+      const displayContent = content || optionalChildren || label;
+      if (multiple) {
+        return (
+          <label
+            className={classNames(`${classPrefix}-checkbox`, {
+              [`${classPrefix}-is-disabled`]: disabled,
+              [`${classPrefix}-is-checked`]: selected,
+            })}
+          >
+            <input
+              type="checkbox"
+              className={`${classPrefix}-checkbox__former`}
+              checked={selected}
+              disabled={disabled}
+              onClick={(e) => {
+                e.stopPropagation();
+                // e.nativeEvent.stopImmediatePropagation();
+              }}
+              readOnly
+            />
+            <span className={`${classPrefix}-checkbox__input`}></span>
+            <span className={`${classPrefix}-checkbox__label`}>{displayContent}</span>
+          </label>
+        );
+      }
+      return <span>{displayContent}</span>;
+    };
 
-//   useRipple(optionRef);
-
-//   // 处理单选场景
-//   if (!multiple) {
-//     selected =
-//       isNumber(selectedValue) || isString(selectedValue)
-//         ? value === selectedValue
-//         : value === get(selectedValue, keys?.value || 'value');
-//   }
-//   // 处理多选场景
-//   if (multiple && Array.isArray(selectedValue)) {
-//     selected = selectedValue.some((item) => {
-//       if (isNumber(item) || isString(item)) {
-//         // 如果非 object 类型
-//         return item === value;
-//       }
-//       return get(item, keys?.value || 'value') === value;
-//     });
-//     if (props.checkAll) {
-//       selected = selectedValue.length === props.optionLength;
-//       indeterminate = selectedValue.length > 0 && !selected;
-//     }
-//   }
-
-//   const handleSelect = (event: MouseEvent) => {
-//     if (!disabled && !checkAll) {
-//       onSelect(value, { label: String(label), selected, event, restData });
-//     }
-//     if (checkAll) {
-//       props.onCheckAllChange?.(selected, event);
-//     }
-//   };
-
-//   const renderItem = (children: TNode) => {
-//     if (multiple) {
-//       return (
-//         <label
-//           className={classNames(`${classPrefix}-checkbox`, {
-//             [`${classPrefix}-is-indeterminate`]: indeterminate,
-//             [`${classPrefix}-is-disabled`]: disabled,
-//             [`${classPrefix}-is-checked`]: selected,
-//           })}
-//           title={titleContent}
-//         >
-//           <input
-//             type="checkbox"
-//             className={classNames(`${classPrefix}-checkbox__former`)}
-//             value=""
-//             disabled={disabled && !selected}
-//             onClick={(e) => {
-//               e.stopPropagation();
-//               e.stopImmediatePropagation();
-//             }}
-//           />
-//           <span className={classNames(`${classPrefix}-checkbox__input`)}></span>
-//           <span className={classNames(`${classPrefix}-checkbox__label`)}>{children || content || label}</span>
-//         </label>
-//       );
-//     }
-//     return <span title={titleContent}>{children || content || label}</span>;
-//   };
-
-//   return (
-//     <li
-//       className={classNames(className, `${classPrefix}-${componentType}-option`, {
-//         [`${classPrefix}-is-disabled`]: disabled,
-//         [`${classPrefix}-is-selected`]: selected,
-//         [`${classPrefix}-size-s`]: size === 'small',
-//         [`${classPrefix}-size-l`]: size === 'large',
-//       })}
-//       key={value}
-//       onClick={handleSelect}
-//       ref={setRefCurrent}
-//       style={style}
-//     >
-//       {renderItem(children)}
-//     </li>
-//   );
-// };
-
-// export default Option;
+    return (
+      <li
+        className={optionClass}
+        onClick={this.handleClick}
+        title={props.title || (typeof label === 'string' ? label : '')}
+      >
+        {renderItem()}
+      </li>
+    );
+  }
+}

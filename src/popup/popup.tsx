@@ -276,11 +276,24 @@ export default class Popup extends Component<PopupProps> {
     return { ...overlayStyle };
   }
 
+  resizeObserver = null as ResizeObserver;
+
   updatePopper = () => {
-    this.popperInstance = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
-      placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-      ...(this.props?.popperOptions || {}),
-    });
+    if (this.popperInstance) {
+      this.popperInstance.destroy();
+      this.popperInstance = null;
+    }
+
+    if (this.triggerRef.current && this.popperRef.current) {
+      this.popperInstance = createPopper(
+        this.triggerRef.current as HTMLElement,
+        this.popperRef.current as HTMLElement,
+        {
+          placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
+          ...(this.props?.popperOptions || {}),
+        },
+      );
+    }
   };
 
   setVisible = (visible: boolean) => {
@@ -296,6 +309,12 @@ export default class Popup extends Component<PopupProps> {
 
   install(): void {
     window.addEventListener('resize', this.updatePopper);
+    if (this.triggerRef.current) {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updatePopper();
+      });
+      this.resizeObserver.observe(this.triggerRef.current as HTMLElement);
+    }
   }
 
   installed() {
@@ -321,6 +340,14 @@ export default class Popup extends Component<PopupProps> {
 
   uninstall(): void {
     window.removeEventListener('resize', this.updatePopper);
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    if (this.popperInstance) {
+      this.popperInstance.destroy();
+      this.popperInstance = null;
+    }
   }
 
   render(props: OmiProps<PopupProps>) {

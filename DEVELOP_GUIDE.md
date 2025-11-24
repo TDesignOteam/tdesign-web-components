@@ -125,6 +125,12 @@ npm run start
 },
 ```
 
+`src/index.ts` 中也需要导出你新添加的组件，如：
+
+```typescript
+export * from './button';
+```
+
 ### Demo 格式
 
 目前支持 omi class 组件和 function 组件demo，前者适用于有状态的demo，后者适用于静态的demo展示，具体可参考`switch`组件
