@@ -70,7 +70,6 @@ export default class Option extends Component<OptionProps> {
               disabled={disabled}
               onClick={(e) => {
                 e.stopPropagation();
-                // e.nativeEvent.stopImmediatePropagation();
               }}
               readOnly
             />
