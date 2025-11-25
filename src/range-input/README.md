@@ -22,6 +22,10 @@ spline: base
 
 {{ status }}
 
+### 与 Popup 组件搭配使用
+
+{{ popup }}
+
 ## API
 ### RangeInput Props
 
@@ -45,3 +49,20 @@ onChange | Function |  | TS 类型：`(ev: CustomEvent<{value: RangeInputValue, 
 onFocus | Function |  | TS 类型：`(ev: CustomEvent<{value: RangeInputValue, context?: { e?: FocusEvent; position?: RangeInputPosition }}>) => void`<br/>范围输入框获得焦点时触发 | N
 onMouseenter | Function |  | TS 类型：`(ev: CustomEvent<{context: { e: MouseEvent }}>) => void`<br/>进入输入框时触发 | N
 onMouseleave | Function |  | TS 类型：`(ev: CustomEvent<context: { e: MouseEvent }>) => void`<br/>离开输入框时触发 | N
+
+### RangeInputPopup Props
+
+名称 | 类型 | 默认值 | 说明 | 必传
+-- | -- | -- | -- | --
+disabled | Boolean | false | 是否禁用范围输入框 | N
+inputValue | Array | [] | 受控值，TS 类型：`RangeInputValue`。传入后组件进入受控模式 | N
+defaultInputValue | Array | [] | 输入框的默认值（非受控初始值），TS 类型：`RangeInputValue`。仅在未传 `inputValue` 时生效，示例：`defaultInputValue={[ '2025-01-01', '2025-01-07' ]}` | N
+panel | TNode | - | 下拉面板内容，可完全自定义该组件，示例：`panel={<div>这是一个浮窗</div>}` | N
+popupProps | PopupProps | - | 透传 Popup 浮层全部属性 | N
+popupVisible | Boolean | - | 弹层显隐（受控）。不传则该状态由组件内部管理 | N
+rangeInputProps | RangeInputProps | - | 透传 RangeInput 组件全部属性 | N
+readonly | Boolean | false | 输入框的只读状态。和`disabled`相比，`readonly`仍然可以打开 popup，但是无法输入内容 | N
+status | String | default | 输入框状态，枚举值：`default/success/warning/error`，可控制边框颜色 | N
+tips | TNode | - | 输入框下方提示文本，会根据 `status` 呈现不同样式 | N
+onInputChange | Function | - | 输入框值变化回调。签名：`(value: RangeInputValue, context?: any) => void`。受控时仅透传；非受控时组件内部会同时更新本地值 | N
+onPopupVisibleChange | Function | - | 弹层显隐变化回调。签名：`(visible: boolean, context: any) => void` | N
