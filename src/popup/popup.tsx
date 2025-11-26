@@ -9,7 +9,7 @@ import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 import { getIEVersion } from '../_common/js/utils/helper';
 import classname from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
-import { domContains } from '../_util/dom';
+import { domContains, setExportparts } from '../_util/dom';
 import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext, TdPopupProps } from './type';
 import { attachListeners, getPopperPlacement, triggers } from './utils';
@@ -330,6 +330,7 @@ export default class Popup extends Component<PopupProps> {
 
   ready(): void {
     this.updatePopper();
+    setExportparts(this);
   }
 
   receiveProps(props, oldProps) {

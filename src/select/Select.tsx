@@ -6,6 +6,7 @@ import '../loading';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { selectDefaultProps } from './defaultProps';
 import { SelectValue, TdOptionProps, TdSelectProps } from './type';
 
@@ -82,6 +83,10 @@ export default class Select extends Component<TdSelectProps> {
     this.state.innerValue = this.props.value !== undefined ? this.props.value : this.props.defaultValue;
     this.state.innerPopupVisible =
       this.props.popupVisible !== undefined ? this.props.popupVisible : this.props.defaultPopupVisible;
+  }
+
+  ready() {
+    setExportparts(this);
   }
 
   receiveProps(props: TdSelectProps, oldProps: TdSelectProps) {
