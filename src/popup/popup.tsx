@@ -153,8 +153,7 @@ export default class Popup extends Component<PopupProps> {
   };
 
   handleDocumentClick = (ev?: MouseEvent) => {
-    const path = ev && ev.composedPath ? ev.composedPath() : [];
-    const target = path[0] || (ev && ev.target);
+    const target = ev.composedPath()[0];
     setTimeout(() => {
       if (this.contentClicked) {
         setTimeout(() => {
@@ -164,14 +163,9 @@ export default class Popup extends Component<PopupProps> {
       }
 
       const triggerEl = this.triggerRef.current as HTMLElement;
-      const popperEl = this.popperRef.current as HTMLElement;
-
-      // 兼容 Shadow DOM，若事件路径包含触发元素或浮层，则视为内部点击
-      if (path && path.includes && (path.includes(triggerEl) || path.includes(popperEl))) return;
-
       if (domContains(triggerEl, target as HTMLElement)) return;
+      const popperEl = this.popperRef.current as HTMLElement;
       if (domContains(popperEl, target as HTMLElement)) return;
-
       this.handlePopVisible(false, { trigger: 'document', e: ev });
     });
   };
@@ -190,13 +184,10 @@ export default class Popup extends Component<PopupProps> {
   };
 
   clickHandle = (e: MouseEvent) => {
-    const path = e.composedPath ? e.composedPath() : [];
-    const triggerEl = this.triggerRef.current as HTMLElement;
-
-    // 使用受控可见性判断（兼容受控场景）
-    if (this.getVisible() === true) {
-      const target = path[0] || (e && e.target);
-      if (domContains(triggerEl, target as HTMLElement) || (path && path.includes && path.includes(triggerEl))) {
+    if (this.visible === true) {
+      const triggerEl = this.triggerRef.current as HTMLElement;
+      const target = e.composedPath()[0];
+      if (domContains(triggerEl, target as HTMLElement)) {
         this.handlePopVisible(false, { trigger: 'trigger-element-click', e });
         return;
       }
@@ -279,16 +270,10 @@ export default class Popup extends Component<PopupProps> {
   }
 
   getOverlayStyle(overlayStyle: PopupProps['overlayStyle']) {
-    if (typeof overlayStyle === 'function') {
-      const triggerElement = this.triggerRef.current as HTMLElement;
-      const popupElement = this.popperRef.current as HTMLElement;
-      const style = overlayStyle(triggerElement, popupElement);
-      return style ? { ...style } : {};
+    if (this.triggerRef.current && this.popperRef.current && typeof overlayStyle === 'function') {
+      return { ...overlayStyle(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement) };
     }
-    if (overlayStyle && typeof overlayStyle === 'object') {
-      return { ...overlayStyle };
-    }
-    return {};
+    return { ...overlayStyle };
   }
 
   updatePopper = () => {
@@ -380,8 +365,6 @@ export default class Popup extends Component<PopupProps> {
             attach={props.attach}
             onDOMReady={(h) => {
               this.popperRef.current = h;
-              // 首次挂载popup panel时，保证overlayInnerStyle样式计算生效
-              this.update();
               setTimeout(() => {
                 this.updatePopper();
               });
