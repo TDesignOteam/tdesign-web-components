@@ -27,6 +27,7 @@ export default class Select extends Component<TdSelectProps> {
     placeholder: String,
     popupVisible: Boolean,
     defaultPopupVisible: Boolean,
+    popupProps: Object,
     showArrow: Boolean,
     size: String,
     suffixIcon: Object,
@@ -128,6 +129,7 @@ export default class Select extends Component<TdSelectProps> {
       loading,
       showArrow,
       popupVisible: popupVisibleProp,
+      popupProps,
     } = props;
     const { innerValue, innerPopupVisible } = this.state;
     const classPrefix = getClassPrefix();
@@ -211,7 +213,8 @@ export default class Select extends Component<TdSelectProps> {
           panel={panelContent}
           multiple={multiple}
           popupProps={{
-            overlayClassName: [`${classPrefix}-select__dropdown`],
+            ...popupProps,
+            overlayClassName: classNames(`${classPrefix}-select__dropdown`, popupProps?.overlayClassName),
           }}
         />
       </div>

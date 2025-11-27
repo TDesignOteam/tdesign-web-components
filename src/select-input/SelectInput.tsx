@@ -68,6 +68,7 @@ class SelectInput extends Component<SelectInputProps> {
     multiple: Boolean,
     panel: [Function, Object, String, Number],
     placeholder: String,
+    popupMatchWidth: Boolean,
     popupProps: Object,
     popupVisible: Boolean,
     defaultPopupVisible: Boolean,

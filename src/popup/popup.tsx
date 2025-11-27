@@ -3,7 +3,7 @@ import './popupTrigger';
 import '../common/portal';
 
 import { createPopper, Instance } from '@popperjs/core';
-import { debounce } from 'lodash-es';
+import { debounce, throttle } from 'lodash-es';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import { getIEVersion } from '../_common/js/utils/helper';
@@ -17,6 +17,10 @@ import { attachListeners, getPopperPlacement, triggers } from './utils';
 export interface PopupProps extends TdPopupProps, StyledProps {
   expandAnimation?: boolean;
   updateScrollTop?: (content: HTMLElement) => void;
+  /** 触发元素宽度变化时的回调 */
+  onTriggerResize?: (width: number, height: number) => void;
+  /** popup内容宽度变化时的回调 */
+  onPopperResize?: (width: number, height: number) => void;
 }
 
 export const defaultProps = {
@@ -53,11 +57,16 @@ export const PopupTypes = {
   onVisibleChange: Function,
   expandAnimation: Boolean,
   updateScrollTop: Function,
+  onTriggerResize: Function,
+  onPopperResize: Function,
 };
 
 @tag('t-popup')
 export default class Popup extends Component<PopupProps> {
   static css = `
+    .t-popup__wrapper {
+      display: contents;
+    }
     t-trigger::part(pop-tag) {
       vertical-align: middle;
       -webkit-animation: t-fade-in .2s ease-in-out;
@@ -129,6 +138,11 @@ export default class Popup extends Component<PopupProps> {
     this.update();
     if (this.visible) {
       this.addPopContentEvent();
+      // 提供兜底处理，确保频繁触发window resize时panel的位置正确
+      requestAnimationFrame(() => {
+        this.updatePopper();
+        this.update();
+      });
     }
   };
 
@@ -276,9 +290,12 @@ export default class Popup extends Component<PopupProps> {
     return { ...overlayStyle };
   }
 
-  resizeObserver = null as ResizeObserver;
+  triggerResizeObserver: ResizeObserver = null;
 
-  updatePopper = () => {
+  popperResizeObserver: ResizeObserver = null;
+
+  // 创建popper实例
+  createPopperInstance = () => {
     if (this.popperInstance) {
       this.popperInstance.destroy();
       this.popperInstance = null;
@@ -296,6 +313,15 @@ export default class Popup extends Component<PopupProps> {
     }
   };
 
+  // 更新popper位置（以前updatePopper会每次都销毁重建，有可能导致panel位置变化更新不及时）
+  updatePopper = () => {
+    if (this.popperInstance) {
+      this.popperInstance.update();
+    } else {
+      this.createPopperInstance();
+    }
+  };
+
   setVisible = (visible: boolean) => {
     const { handlePopVisible } = this;
     handlePopVisible(visible, { trigger: 'document' });
@@ -305,20 +331,69 @@ export default class Popup extends Component<PopupProps> {
     this.isPopoverInDomTree = true;
     this.update();
     this.addPopContentEvent();
+    // 提供兜底处理，确保频繁触发window resize时panel的位置正确
+    requestAnimationFrame(() => {
+      this.updatePopper();
+    });
   };
 
-  install(): void {
-    window.addEventListener('resize', this.updatePopper);
-    if (this.triggerRef.current) {
-      this.resizeObserver = new ResizeObserver(() => {
+  // window resize时更新popper位置并重新计算样式
+  handleWindowResize = throttle(() => {
+    if (this.visible) {
+      // 重新渲染，目的是更新overlayInnerStyle
+      this.update();
+      // 等浏览器完成渲染后，再用新的dom位置计算popper位置确保定位正确
+      requestAnimationFrame(() => {
         this.updatePopper();
       });
-      this.resizeObserver.observe(this.triggerRef.current as HTMLElement);
     }
+  }, 100); // 加个频繁window resize时的节流
+
+  install(): void {
+    window.addEventListener('resize', this.handleWindowResize);
   }
+
+  setupTriggerResizeObserver = () => {
+    if (this.triggerResizeObserver) {
+      this.triggerResizeObserver.disconnect();
+    }
+    if (this.triggerRef.current) {
+      this.triggerResizeObserver = new ResizeObserver((entries) => {
+        if (this.visible) {
+          // 重新渲染，目的是更新overlayInnerStyle
+          this.update();
+          // 等浏览器完成渲染后，再用新的dom位置计算popper位置确保定位正确
+          requestAnimationFrame(() => {
+            this.updatePopper();
+          });
+        }
+        if (this.props.onTriggerResize && entries[0]) {
+          const { width, height } = entries[0].contentRect;
+          this.props.onTriggerResize(width, height);
+        }
+      });
+      this.triggerResizeObserver.observe(this.triggerRef.current as HTMLElement);
+    }
+  };
+
+  setupPopperResizeObserver = () => {
+    if (this.popperResizeObserver) {
+      this.popperResizeObserver.disconnect();
+    }
+    if (this.popperRef.current) {
+      this.popperResizeObserver = new ResizeObserver((entries) => {
+        if (this.props.onPopperResize && entries[0]) {
+          const { width, height } = entries[0].contentRect;
+          this.props.onPopperResize(width, height);
+        }
+      });
+      this.popperResizeObserver.observe(this.popperRef.current as HTMLElement);
+    }
+  };
 
   installed() {
     this.addTriggerEvent();
+    this.setupTriggerResizeObserver();
 
     this.visible = this.props.visible;
 
@@ -329,7 +404,7 @@ export default class Popup extends Component<PopupProps> {
   }
 
   ready(): void {
-    this.updatePopper();
+    this.createPopperInstance();
     setExportparts(this);
   }
 
@@ -337,13 +412,20 @@ export default class Popup extends Component<PopupProps> {
     if (props.visible && oldProps.visible !== props.visible) {
       this.showPopupByControlled();
     }
+    if (props.placement !== oldProps.placement) {
+      this.createPopperInstance();
+    }
   }
 
   uninstall(): void {
-    window.removeEventListener('resize', this.updatePopper);
-    if (this.resizeObserver) {
-      this.resizeObserver.disconnect();
-      this.resizeObserver = null;
+    window.removeEventListener('resize', this.handleWindowResize);
+    if (this.triggerResizeObserver) {
+      this.triggerResizeObserver.disconnect();
+      this.triggerResizeObserver = null;
+    }
+    if (this.popperResizeObserver) {
+      this.popperResizeObserver.disconnect();
+      this.popperResizeObserver = null;
     }
     if (this.popperInstance) {
       this.popperInstance.destroy();
@@ -380,7 +462,8 @@ export default class Popup extends Component<PopupProps> {
     });
 
     return (
-      <>
+      // Fragment作为根元素时，setExportparts调用getAttribute会报错
+      <div class={`${componentName}__wrapper`}>
         {children.length > 1 ? (
           <span className="t-trigger" ref={this.triggerRef}>
             <slot>{children}</slot>
@@ -394,7 +477,9 @@ export default class Popup extends Component<PopupProps> {
             onDOMReady={(h) => {
               this.popperRef.current = h;
               setTimeout(() => {
-                this.updatePopper();
+                this.createPopperInstance();
+                // 在 popper DOM 准备好后设置 ResizeObserver
+                this.setupPopperResizeObserver();
               });
             }}
           >
@@ -420,7 +505,7 @@ export default class Popup extends Component<PopupProps> {
             </div>
           </t-portal>
         ) : null}
-      </>
+      </div>
     );
   }
 }
