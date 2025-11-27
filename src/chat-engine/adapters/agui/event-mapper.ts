@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import type { AIMessageContent, SSEChunkData, ToolCall } from '../../type';
-import { EventType, isStateEvent,isTextMessageEvent, isThinkingEvent, isToolCallEvent } from './events';
+import { EventType, isStateEvent, isTextMessageEvent, isThinkingEvent, isToolCallEvent } from './events';
 import { stateManager } from './state-manager';
 import {
   addToReasoningData,
@@ -293,6 +293,12 @@ export class AGUIEventMapper {
    * 处理工具调用开始事件
    */
   private handleToolCallStart(event: any): AIMessageContent | null {
+    // 检查是否已存在相同的 toolCallName（排除当前 toolCallId）
+    // 用于判断是覆盖同名工具调用（merge）还是新增（append）
+    const hasSameToolCallName = Object.entries(this.toolCallMap).some(
+      ([id, tc]) => tc.toolCallName === event.toolCallName && id !== event.toolCallId,
+    );
+
     // 初始化工具调用
     this.toolCallMap[event.toolCallId] = {
       eventType: 'TOOL_CALL_START',
@@ -301,7 +307,11 @@ export class AGUIEventMapper {
       parentMessageId: event.parentMessageId || '',
     };
 
-    const toolCallContent = createToolCallContent(this.toolCallMap[event.toolCallId], 'pending');
+    // 根据是否存在相同 toolCallName 决定策略：
+    // - 存在相同 toolCallName：merge（覆盖之前的同名工具调用，因为使用相同的渲染组件）
+    // - 不存在：append（添加新的工具调用，使用不同的渲染组件）
+    const strategy = hasSameToolCallName ? 'merge' : 'append';
+    const toolCallContent = createToolCallContent(this.toolCallMap[event.toolCallId], 'pending', strategy);
 
     if (this.reasoningContext.active) {
       // Reasoning 模式：添加 toolcall 到 reasoning.data
@@ -312,7 +322,8 @@ export class AGUIEventMapper {
       return createReasoningContent(data, 'streaming', 'merge', false);
     }
     // 独立模式：返回独立的工具调用内容块
-    return { ...toolCallContent, strategy: 'append' };
+    // 通过 type (toolcall-${toolCallName}) + strategy 来控制是否合并
+    return toolCallContent;
   }
 
   /**
@@ -408,7 +419,10 @@ export class AGUIEventMapper {
       const currentIndex = this.reasoningContext.currentDataIndex;
       if (currentIndex >= 0 && this.reasoningContext.currentData[currentIndex]) {
         const currentContent = this.reasoningContext.currentData[currentIndex];
-        if (currentContent.type === 'toolcall') {
+        const currentType = currentContent.type;
+
+        // 检查 type 是否匹配（toolcall-${toolCallName}）
+        if (currentType.startsWith('toolcall')) {
           const updatedContent = {
             ...currentContent,
             data: this.toolCallMap[toolCallId],
@@ -427,6 +441,7 @@ export class AGUIEventMapper {
       return null;
     }
     // 独立模式：返回独立的 toolcall 更新
+    // 通过相同的 type (toolcall-${toolCallName}) 来实现 merge
     return createToolCallContent(this.toolCallMap[toolCallId], status, 'merge');
   }
 

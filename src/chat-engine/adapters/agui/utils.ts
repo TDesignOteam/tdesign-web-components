@@ -206,7 +206,7 @@ export function createThinkingContent(
  * 创建 toolcall 类型的 AIMessageContent
  * @param toolCall 工具调用数据
  * @param status 状态
- * @param strategy 策略
+ * @param strategy 策略（可选，会根据 toolCallName 自动判断）
  * @returns toolcall 类型的 AIMessageContent
  */
 export function createToolCallContent(
@@ -214,7 +214,9 @@ export function createToolCallContent(
   status: 'pending' | 'streaming' | 'complete' = 'pending',
   strategy: 'append' | 'merge' = 'append',
 ): any {
-  return createAIMessageContent('toolcall', toolCall, status, strategy);
+  // 根据 toolCallName 生成唯一的 type
+  const type = `toolcall-${toolCall.toolCallName}`;
+  return createAIMessageContent(type, toolCall, status, strategy);
 }
 
 /**
@@ -393,14 +395,15 @@ export function convertReasoningMessages(reasoningMessages: any[]): any[] {
       if (msg.toolCalls && msg.toolCalls.length > 0) {
         msg.toolCalls.forEach((toolCall: any) => {
           const toolResult = toolCallMap.get(toolCall.id)?.result || '';
+          const toolCallData = {
+            toolCallId: toolCall.id,
+            toolCallName: toolCall.function.name,
+            args: toolCall.function.arguments,
+            result: toolResult,
+          };
           reasoningData.push({
-            type: 'toolcall',
-            data: {
-              toolCallId: toolCall.id,
-              toolCallName: toolCall.function.name,
-              args: toolCall.function.arguments,
-              result: toolResult,
-            },
+            type: `toolcall-${toolCall.function.name}`,
+            data: toolCallData,
             status: 'complete',
           });
         });
@@ -456,14 +459,16 @@ export function processToolCalls(toolCalls: any[], toolCallMap: Map<string, any>
       };
     }
 
+    const toolCallData = {
+      toolCallId: toolCall.id,
+      toolCallName: toolCall.function.name,
+      args: toolCall.function.arguments,
+      result: toolResult,
+    };
+
     return {
-      type: 'toolcall' as const,
-      data: {
-        toolCallId: toolCall.id,
-        toolCallName: toolCall.function.name,
-        args: toolCall.function.arguments,
-        result: toolResult,
-      },
+      type: `toolcall-${toolCall.function.name}` as const,
+      data: toolCallData,
     };
   });
 }

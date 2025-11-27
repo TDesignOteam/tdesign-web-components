@@ -8,6 +8,7 @@ import { TdChatMessageConfigItem } from 'tdesign-web-components/chatbot';
 import type { TdAttachmentItem } from 'tdesign-web-components/filecard';
 
 import Chatbot from '../chat';
+import mdContent from '../mock/testMarkdown.md?raw';
 
 // 天气扩展类型定义
 declare module '../../chat-engine/type' {
@@ -164,8 +165,8 @@ const mockData: ChatMessagesData[] = [
     role: 'assistant',
     content: [
       {
-        type: 'text',
-        data: '出错了',
+        type: 'markdown',
+        data: mdContent,
       },
     ],
   },
@@ -453,6 +454,9 @@ export default class BasicChat extends Component {
             event.preventDefault();
             event.stopPropagation();
             console.log('searchItem', content);
+          },
+          codeCopy: (data) => {
+            console.log('codeCopy', data);
           },
         },
         chatContentProps: {
