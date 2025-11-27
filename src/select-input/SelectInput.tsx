@@ -115,11 +115,7 @@ class SelectInput extends Component<SelectInputProps> {
   singleInputValue;
 
   install(): void {
-    const { loading, suffixIcon, multiple } = this.props;
-    this.commonInputProps = {
-      ...pick(this.props, COMMON_PROPERTIES),
-      suffixIcon: loading ? <t-loading loading size="small" /> : suffixIcon,
-    };
+    this.updateCommonInputProps();
 
     const { innerPopupVisible, tOverlayInnerStyle, onInnerPopupVisibleChange } = useOverlayInnerStyle(
       this.props,
@@ -132,11 +128,24 @@ class SelectInput extends Component<SelectInputProps> {
     this.innerPopupVisible = innerPopupVisible;
     this.onInnerPopupVisibleChange = onInnerPopupVisibleChange;
 
-    if (multiple) {
+    if (this.props.multiple) {
       this.multipleInputValue = this.props.inputValue || this.props.defaultInputValue;
     } else {
       this.singleInputValue = this.props.inputValue || this.props.defaultInputValue;
     }
+  }
+
+  updateCommonInputProps() {
+    const { loading, suffixIcon } = this.props;
+
+    this.commonInputProps = {
+      ...pick(this.props, COMMON_PROPERTIES),
+      suffixIcon: loading ? <t-loading loading size="small" /> : suffixIcon,
+    };
+  }
+
+  receiveProps() {
+    this.updateCommonInputProps();
   }
 
   updateValue = (val, key: 'multipleInputValue' | 'singleInputValue') => {

@@ -9,7 +9,7 @@ import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 import { getIEVersion } from '../_common/js/utils/helper';
 import classname from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
-import { domContains } from '../_util/dom';
+import { domContains, setExportparts } from '../_util/dom';
 import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext, TdPopupProps } from './type';
 import { attachListeners, getPopperPlacement, triggers } from './utils';
@@ -291,11 +291,24 @@ export default class Popup extends Component<PopupProps> {
     return {};
   }
 
+  resizeObserver = null as ResizeObserver;
+
   updatePopper = () => {
-    this.popperInstance = createPopper(this.triggerRef.current as HTMLElement, this.popperRef.current as HTMLElement, {
-      placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-      ...(this.props?.popperOptions || {}),
-    });
+    if (this.popperInstance) {
+      this.popperInstance.destroy();
+      this.popperInstance = null;
+    }
+
+    if (this.triggerRef.current && this.popperRef.current) {
+      this.popperInstance = createPopper(
+        this.triggerRef.current as HTMLElement,
+        this.popperRef.current as HTMLElement,
+        {
+          placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
+          ...(this.props?.popperOptions || {}),
+        },
+      );
+    }
   };
 
   setVisible = (visible: boolean) => {
@@ -311,6 +324,12 @@ export default class Popup extends Component<PopupProps> {
 
   install(): void {
     window.addEventListener('resize', this.updatePopper);
+    if (this.triggerRef.current) {
+      this.resizeObserver = new ResizeObserver(() => {
+        this.updatePopper();
+      });
+      this.resizeObserver.observe(this.triggerRef.current as HTMLElement);
+    }
   }
 
   installed() {
@@ -326,6 +345,7 @@ export default class Popup extends Component<PopupProps> {
 
   ready(): void {
     this.updatePopper();
+    setExportparts(this);
   }
 
   receiveProps(props, oldProps) {
@@ -336,6 +356,14 @@ export default class Popup extends Component<PopupProps> {
 
   uninstall(): void {
     window.removeEventListener('resize', this.updatePopper);
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+    if (this.popperInstance) {
+      this.popperInstance.destroy();
+      this.popperInstance = null;
+    }
   }
 
   render(props: OmiProps<PopupProps>) {

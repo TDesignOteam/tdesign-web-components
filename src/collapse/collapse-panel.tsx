@@ -114,7 +114,11 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         {typeof this.props.expandIcon !== 'boolean' ? (
           this.props.expandIcon
         ) : (
-          <t-fake-arrow isActive={isActive} disabled={this.isDisabled.value} style={{ height: '18px' }} />
+          <t-fake-arrow
+            isActive={isActive}
+            disabled={this.isDisabled.value}
+            style={{ height: '18px', transform: isActive ? 'rotate(-180deg)' : 'rotate(-90deg)' }}
+          />
         )}
       </div>
     );

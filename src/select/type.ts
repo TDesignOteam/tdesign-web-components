@@ -323,6 +323,13 @@ export type SelectValue<T extends SelectOption = SelectOption> = string | number
 
 export type SelectValueChangeTrigger = 'clear' | 'tag-remove' | 'backspace' | 'check' | 'uncheck' | 'default';
 
+export interface SelectContext<T extends SelectOption = SelectOption> {
+  option?: T;
+  selectedOptions: T[];
+  trigger: SelectValueChangeTrigger;
+  e?: MouseEvent | KeyboardEvent;
+}
+
 export interface SelectRemoveContext<T> {
   value: string | number;
   data: T;
