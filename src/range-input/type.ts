@@ -31,6 +31,10 @@ export interface TdRangeInputProps {
    */
   readonly?: boolean;
   /**
+   * 后缀图标
+   */
+  suffixIcon?: TNode;
+  /**
    * 范围分隔符
    * @default '-'
    */
@@ -121,6 +125,11 @@ export interface TdRangeInputPopupProps {
    */
   autoWidth?: boolean;
   /**
+   * 是否可清空
+   * @default false
+   */
+  clearable?: boolean;
+  /**
    * 是否禁用范围输入框，值为数组表示可分别控制某一个输入框是否禁用
    */
   disabled?: boolean;
@@ -162,6 +171,10 @@ export interface TdRangeInputPopupProps {
    * @default default
    */
   status?: 'default' | 'success' | 'warning' | 'error';
+  /**
+   * 后缀图标
+   */
+  suffixIcon?: TNode;
   /**
    * 输入框下方提示文本，会根据不同的 `status` 呈现不同的样式
    */

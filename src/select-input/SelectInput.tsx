@@ -8,6 +8,7 @@ import { pick } from 'lodash-es';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { StyledProps } from '../common';
 import { PopupVisibleChangeContext } from '../popup';
 import { selectInputDefaultProps } from './defaultProps';
@@ -137,6 +138,10 @@ class SelectInput extends Component<SelectInputProps> {
     } else {
       this.singleInputValue = this.props.inputValue || this.props.defaultInputValue;
     }
+  }
+
+  ready() {
+    setExportparts(this);
   }
 
   updateValue = (val, key: 'multipleInputValue' | 'singleInputValue') => {

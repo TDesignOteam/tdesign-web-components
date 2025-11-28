@@ -5,6 +5,8 @@ import './RangeInputInner';
 import { bind, classNames, Component, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
+import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
 import { RangeInputPosition, RangeInputValue, TdRangeInputProps } from './type';
 
@@ -26,6 +28,11 @@ export default class RangeInput extends Component<RangeInputProps> {
 
     .${getClassPrefix()}-range-input__suffix-clear.${getClassPrefix()}-icon {
       display: flex;
+    }
+
+    .${getClassPrefix()}-range-input.${getClassPrefix()}-is-focused .${getClassPrefix()}-range-input__suffix .t-icon-time,
+    .${getClassPrefix()}-range-input.${getClassPrefix()}-is-focused .${getClassPrefix()}-range-input__suffix .t-icon-calendar {
+      color: var(--td-brand-color);
     }
   `;
 
@@ -68,6 +75,10 @@ export default class RangeInput extends Component<RangeInputProps> {
 
     this.addEventListener('mouseenter', this.handleMouseEnter);
     this.addEventListener('mouseleave', this.handleMouseLeave);
+  }
+
+  ready() {
+    setExportparts(this);
   }
 
   uninstalled() {
@@ -150,6 +161,7 @@ export default class RangeInput extends Component<RangeInputProps> {
       readonly,
       format,
       clearable,
+      suffixIcon,
       innerClass,
       innerStyle,
       value = this.innerValue,
@@ -161,16 +173,22 @@ export default class RangeInput extends Component<RangeInputProps> {
     const [firstFormat, secondFormat] = calcArrayValue(format);
 
     const showClearIcon = clearable && value?.length && !disabled && this.isHover.value;
-    const suffixIconContent = showClearIcon ? (
-      <span
-        className={`${classPrefix}-range-input__suffix ${classPrefix}-range-input__suffix-icon`}
-        onClick={() => {
-          this.handleChange(undefined, 'clear', '');
-        }}
-      >
-        <t-icon-close-circle-filled className={`${name}__suffix-clear ${classPrefix}-icon`} />
-      </span>
-    ) : null;
+    let suffixIconContent = null;
+    if (showClearIcon) {
+      suffixIconContent = (
+        <span
+          className={`${name}__suffix ${name}__suffix-icon`}
+          onClick={() => {
+            this.handleChange(undefined, 'clear', '');
+          }}
+        >
+          <t-icon-close-circle-filled className={`t-icon ${name}__suffix-clear ${classPrefix}-icon`} />
+        </span>
+      );
+    } else if (suffixIcon) {
+      const iconNode = parseTNode(suffixIcon);
+      suffixIconContent = iconNode ? <span className={`${name}__suffix ${name}__suffix-icon`}>{iconNode}</span> : null;
+    }
 
     return (
       <div
