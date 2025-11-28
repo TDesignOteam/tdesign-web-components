@@ -29,7 +29,7 @@ type TdChatContentSuggestionProps = {
 
 export type TdChatMessageVariant = 'base' | 'text' | 'outline';
 
-export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion';
+export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion' | 'codeCopy';
 export interface TdChatMessageAction {
   name: TdChatMessageActionName;
   render: TNode;
