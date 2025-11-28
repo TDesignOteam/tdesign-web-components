@@ -443,6 +443,7 @@ export default class DatePicker extends Component<DatePickerProps> {
           onInputChange={this.handleInputChange}
           prefixIcon={prefixIconNode}
           suffixIcon={suffixIconNode}
+          popupMatchWidth={false}
         />
       </div>
     );

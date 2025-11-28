@@ -837,6 +837,7 @@ export default class DatePickerPanel extends Component<SinglePanelProps> {
                       overlayClassName: `${headerClassName}-controller-month-popup`,
                       overlayInnerStyle: { width: monthSelectWidth },
                     }}
+                    popupMatchWidth={false}
                     onPopupVisibleChange={(visible: boolean) => this.handleMonthPopupVisibleChange(visible)}
                   />
                 )}
@@ -856,6 +857,7 @@ export default class DatePickerPanel extends Component<SinglePanelProps> {
                     updateScrollTop: this.handleUpdateScrollTop,
                     overlayInnerStyle: { width: yearSelectWidth },
                   }}
+                  popupMatchWidth={false}
                   onPopupVisibleChange={(visible: boolean) => this.handleYearPopupVisibleChange(visible)}
                 />
               </div>

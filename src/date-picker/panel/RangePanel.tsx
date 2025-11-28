@@ -868,6 +868,7 @@ export default class RangePanel extends Component<RangePanelProps> {
                     overlayClassName: `${headerClassName}-controller-month-popup`,
                     overlayInnerStyle: { width: monthSelectWidth },
                   }}
+                  popupMatchWidth={false}
                   onPopupVisibleChange={(visible: boolean) => this.handleMonthPopupVisibleChange(visible, partial)}
                 />
               )}
@@ -887,6 +888,7 @@ export default class RangePanel extends Component<RangePanelProps> {
                   updateScrollTop: this.handleUpdateScrollTop,
                   overlayInnerStyle: { width: yearSelectWidth },
                 }}
+                popupMatchWidth={false}
                 onPopupVisibleChange={(visible: boolean) => this.handleYearPopupVisibleChange(visible, partial)}
               />
             </div>
