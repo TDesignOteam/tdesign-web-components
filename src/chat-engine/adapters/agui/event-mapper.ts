@@ -293,12 +293,6 @@ export class AGUIEventMapper {
    * 处理工具调用开始事件
    */
   private handleToolCallStart(event: any): AIMessageContent | null {
-    // 检查是否已存在相同的 toolCallName（排除当前 toolCallId）
-    // 用于判断是覆盖同名工具调用（merge）还是新增（append）
-    const hasSameToolCallName = Object.entries(this.toolCallMap).some(
-      ([id, tc]) => tc.toolCallName === event.toolCallName && id !== event.toolCallId,
-    );
-
     // 初始化工具调用
     this.toolCallMap[event.toolCallId] = {
       eventType: 'TOOL_CALL_START',
@@ -307,11 +301,8 @@ export class AGUIEventMapper {
       parentMessageId: event.parentMessageId || '',
     };
 
-    // 根据是否存在相同 toolCallName 决定策略：
-    // - 存在相同 toolCallName：merge（覆盖之前的同名工具调用，因为使用相同的渲染组件）
-    // - 不存在：append（添加新的工具调用，使用不同的渲染组件）
-    const strategy = hasSameToolCallName ? 'merge' : 'append';
-    const toolCallContent = createToolCallContent(this.toolCallMap[event.toolCallId], 'pending', strategy);
+    // 每个toocallstart都会开始一个新的内容块，使用append（添加新的工具调用，使用不同的渲染组件）
+    const toolCallContent = createToolCallContent(this.toolCallMap[event.toolCallId], 'pending', 'append');
 
     if (this.reasoningContext.active) {
       // Reasoning 模式：添加 toolcall 到 reasoning.data
