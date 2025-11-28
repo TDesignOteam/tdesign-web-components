@@ -5,6 +5,12 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.8 `2025-11-28` 
+### 🚧 Feature
+- feat: 新增RangeInputPopup组件 @LeonardoSya ([#320](https://github.com/TDesignOteam/tdesign-web-components/pull/320))
+- feat(chatmessage): add codeblock click callback @carolin913 ([#332](https://github.com/TDesignOteam/tdesign-web-components/pull/332))
+- feat(chatengine): 支持并发多个agui toolcall事件 @carolin913 ([#332](https://github.com/TDesignOteam/tdesign-web-components/pull/332))
+
 ## 🌈 1.2.6 `2025-11-10` 
 ### 🐞 Bug Fixes
 - `fix`: 修复 `chat-loading` dots 风格命名错误的问题
