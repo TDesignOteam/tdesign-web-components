@@ -62,8 +62,21 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
   }
 
   clickCopyHandler = () => {
+    const code = this.props['data-code'] || '';
+    const lang = this.props['data-lang'];
+
+    // 派发事件到外层
+    this.fire(
+      'code_copy',
+      { code, lang },
+      {
+        bubbles: true,
+        composed: true,
+      },
+    );
+
     navigator.clipboard
-      .writeText(this.props['data-code'] || '')
+      .writeText(code)
       .then(() => {
         this.msgInstance = MessagePlugin.success('复制成功');
       })

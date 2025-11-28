@@ -122,7 +122,21 @@ export default class ChatItem extends Component<ChatMessageProps> {
 
   ready(): void {
     setExportparts(this);
+
+    // 监听代码复制事件
+    this.addEventListener('code_copy', this.handleCodeCopy as EventListener);
   }
+
+  uninstall(): void {
+    // 清理事件监听
+    this.removeEventListener('code_copy', this.handleCodeCopy as EventListener);
+  }
+
+  private handleCodeCopy = (event: CustomEvent) => {
+    event.stopPropagation();
+    const { code, lang } = event.detail;
+    this.handleClickAction('codeCopy' as TdChatMessageActionName, { code, lang });
+  };
 
   private renderMessageHeader() {
     const { name, datetime } = this.props;

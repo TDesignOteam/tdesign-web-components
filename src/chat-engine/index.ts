@@ -457,15 +457,16 @@ export default class ChatEngine implements IChatEngine {
     //  const processed = this.messageProcessor.processContentUpdate(lastContent, rawChunk);
     //  this.messageStore.appendContent(messageId, processed);
 
-    let targetIndex;
+    let targetIndex: number;
     // 作为新的内容块追加
     if (rawChunk?.strategy === 'append') {
       targetIndex = -1;
     } else {
-      // 合并/替换到现有同类型内容中
+      // merge 策略：按 type 查找最后一个匹配的类型
+      // 通过 type (如 toolcall-${toolCallName}) 来定位要更新的内容块
       targetIndex = message.content.findIndex((content: AIMessageContent) => content.type === rawChunk.type);
       if (targetIndex !== -1) {
-        // 找到最后一个匹配的类型
+        // 找到最后一个匹配的类型（从后往前查找）
         for (let i = message.content.length - 1; i >= 0; i--) {
           if (message.content[i].type === rawChunk.type) {
             targetIndex = i;

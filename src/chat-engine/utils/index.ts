@@ -115,7 +115,7 @@ export function isAttachmentContent(content: UserMessageContent): content is Att
 }
 
 export function isToolCallContent(content: AIMessageContent): content is ToolCallContent {
-  return content.type === 'toolcall';
+  return content.type.startsWith('toolcall');
 }
 
 export function isReasoningContent(content) {
