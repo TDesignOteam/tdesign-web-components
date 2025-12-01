@@ -1,6 +1,6 @@
 /* eslint-disable class-methods-use-this */
 import type { AIMessageContent, SSEChunkData, ToolCall } from '../../type';
-import { EventType, isStateEvent,isTextMessageEvent, isThinkingEvent, isToolCallEvent } from './events';
+import { EventType, isStateEvent, isTextMessageEvent, isThinkingEvent, isToolCallEvent } from './events';
 import { stateManager } from './state-manager';
 import {
   addToReasoningData,
@@ -301,7 +301,8 @@ export class AGUIEventMapper {
       parentMessageId: event.parentMessageId || '',
     };
 
-    const toolCallContent = createToolCallContent(this.toolCallMap[event.toolCallId], 'pending');
+    // 每个toocallstart都会开始一个新的内容块，使用append（添加新的工具调用，使用不同的渲染组件）
+    const toolCallContent = createToolCallContent(this.toolCallMap[event.toolCallId], 'pending', 'append');
 
     if (this.reasoningContext.active) {
       // Reasoning 模式：添加 toolcall 到 reasoning.data
@@ -312,7 +313,8 @@ export class AGUIEventMapper {
       return createReasoningContent(data, 'streaming', 'merge', false);
     }
     // 独立模式：返回独立的工具调用内容块
-    return { ...toolCallContent, strategy: 'append' };
+    // 通过 type (toolcall-${toolCallName}) + strategy 来控制是否合并
+    return toolCallContent;
   }
 
   /**
@@ -408,7 +410,10 @@ export class AGUIEventMapper {
       const currentIndex = this.reasoningContext.currentDataIndex;
       if (currentIndex >= 0 && this.reasoningContext.currentData[currentIndex]) {
         const currentContent = this.reasoningContext.currentData[currentIndex];
-        if (currentContent.type === 'toolcall') {
+        const currentType = currentContent.type;
+
+        // 检查 type 是否匹配（toolcall-${toolCallName}）
+        if (currentType.startsWith('toolcall')) {
           const updatedContent = {
             ...currentContent,
             data: this.toolCallMap[toolCallId],
@@ -427,6 +432,7 @@ export class AGUIEventMapper {
       return null;
     }
     // 独立模式：返回独立的 toolcall 更新
+    // 通过相同的 type (toolcall-${toolCallName}) 来实现 merge
     return createToolCallContent(this.toolCallMap[toolCallId], status, 'merge');
   }
 

@@ -1,4 +1,4 @@
-import { isFunction, isObject } from 'lodash-es';
+import { isFunction } from 'lodash-es';
 import { Component } from 'omi';
 
 import useControlled from '../_util/useControlled';
