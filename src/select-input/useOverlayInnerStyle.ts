@@ -84,7 +84,7 @@ export default function useOverlayInnerStyle(
   const tOverlayInnerStyle = () => {
     let result: TdPopupProps['overlayInnerStyle'] = {};
     const overlayInnerStyle = popupProps?.overlayInnerStyle || {};
-    if (isFunction(overlayInnerStyle) || (isObject(overlayInnerStyle) && overlayInnerStyle.width)) {
+    if (isFunction(overlayInnerStyle) || (!isFunction(overlayInnerStyle) && overlayInnerStyle.width)) {
       // 下游组件自定义了overlayInnerStyle则使用自定义的配置
       result = overlayInnerStyle;
     } else if (popupMatchWidth) {
