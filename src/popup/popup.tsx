@@ -100,6 +100,39 @@ export default class Popup extends Component<PopupProps> {
 
   popperInstance: Instance = null;
 
+  pendingPopperUpdate: number = null;
+
+  getPopperElements = () => {
+    const triggerEl = this.triggerRef.current as HTMLElement;
+    const popperEl = this.popperRef.current as HTMLElement;
+
+    if (!triggerEl || !popperEl) {
+      return null;
+    }
+
+    const computedStyle = window.getComputedStyle(popperEl);
+    if (computedStyle.display === 'none') {
+      return null;
+    }
+
+    const triggerRect = triggerEl.getBoundingClientRect();
+    if (triggerRect.width === 0 && triggerRect.height === 0) {
+      return null;
+    }
+
+    return { triggerEl, popperEl };
+  };
+
+  deferUpdate = (callback: () => void) => {
+    if (this.pendingPopperUpdate) {
+      cancelAnimationFrame(this.pendingPopperUpdate);
+    }
+    this.pendingPopperUpdate = requestAnimationFrame(() => {
+      this.pendingPopperUpdate = null;
+      callback();
+    });
+  };
+
   triggerType = () =>
     triggers.reduce(
       (map, trigger) => ({
@@ -125,11 +158,16 @@ export default class Popup extends Component<PopupProps> {
 
   handlePopVisible = (visible: boolean, context: PopupVisibleChangeContext) => {
     if (this.props.disabled || visible === !!this.visible) return;
-    this.visible = visible;
-    this.handleDocumentEvent(visible);
+
     if (typeof this.props.onVisibleChange === 'function') {
       this.props.onVisibleChange(visible, context);
     }
+
+    // 受控模式下仅触发事件，状态更新由receiveProps处理
+    if (this.props.visible !== undefined) return;
+
+    this.visible = visible;
+    this.handleDocumentEvent(visible);
     if (this.visible) {
       this.isPopoverInDomTree = true;
     } else if (this.props.destroyOnClose) {
@@ -141,7 +179,6 @@ export default class Popup extends Component<PopupProps> {
       // 提供兜底处理，确保频繁触发window resize时panel的位置正确
       requestAnimationFrame(() => {
         this.updatePopper();
-        this.update();
       });
     }
   };
@@ -311,25 +348,52 @@ export default class Popup extends Component<PopupProps> {
 
   // 创建popper实例
   createPopperInstance = () => {
+    if (!this.visible && !this.props.visible) {
+      return;
+    }
+
+    const elements = this.getPopperElements();
+    if (!elements) {
+      this.deferUpdate(() => this.createPopperInstance());
+      return;
+    }
+
+    const { triggerEl, popperEl } = elements;
+
     if (this.popperInstance) {
       this.popperInstance.destroy();
       this.popperInstance = null;
     }
 
-    if (this.triggerRef.current && this.popperRef.current) {
-      this.popperInstance = createPopper(
-        this.triggerRef.current as HTMLElement,
-        this.popperRef.current as HTMLElement,
+    this.popperInstance = createPopper(triggerEl, popperEl, {
+      placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
+      modifiers: [
         {
-          placement: getPopperPlacement(this.props.placement as PopupProps['placement']),
-          ...(this.props?.popperOptions || {}),
+          name: 'eventListeners',
+          options: {
+            scroll: true,
+            resize: true,
+          },
         },
-      );
-    }
+      ],
+      ...(this.props?.popperOptions || {}),
+    });
+
+    this.popperInstance.forceUpdate();
   };
 
   // 更新popper位置（以前updatePopper会每次都销毁重建，有可能导致panel位置变化更新不及时）
   updatePopper = () => {
+    if (!this.visible && !this.props.visible) {
+      return;
+    }
+
+    const elements = this.getPopperElements();
+    if (!elements) {
+      this.deferUpdate(() => this.updatePopper());
+      return;
+    }
+
     if (this.popperInstance) {
       this.popperInstance.update();
     } else {
@@ -419,14 +483,26 @@ export default class Popup extends Component<PopupProps> {
   }
 
   ready(): void {
-    this.createPopperInstance();
+    // 注意：此时 popperRef 可能还未设置（popup 内容还未渲染）
+    // createPopperInstance 会在 onDOMReady 中调用
     setExportparts(this);
   }
 
   receiveProps(props, oldProps) {
-    if (props.visible && oldProps.visible !== props.visible) {
-      this.showPopupByControlled();
+    if (props.visible !== undefined && props.visible !== oldProps.visible) {
+      this.visible = props.visible;
+      this.handleDocumentEvent(this.visible);
+
+      if (this.visible) {
+        this.showPopupByControlled();
+      } else {
+        if (props.destroyOnClose) {
+          this.isPopoverInDomTree = false;
+        }
+        this.update();
+      }
     }
+
     if (props.placement !== oldProps.placement) {
       this.createPopperInstance();
     }
@@ -434,6 +510,10 @@ export default class Popup extends Component<PopupProps> {
 
   uninstall(): void {
     window.removeEventListener('resize', this.handleWindowResize);
+    if (this.pendingPopperUpdate) {
+      cancelAnimationFrame(this.pendingPopperUpdate);
+      this.pendingPopperUpdate = null;
+    }
     if (this.triggerResizeObserver) {
       this.triggerResizeObserver.disconnect();
       this.triggerResizeObserver = null;
@@ -493,9 +573,9 @@ export default class Popup extends Component<PopupProps> {
               this.popperRef.current = h;
               // 首次挂载popup panel时，保证overlayInnerStyle样式计算生效
               this.update();
-              setTimeout(() => {
+              // 确保浏览器完成布局后再创建popper
+              requestAnimationFrame(() => {
                 this.createPopperInstance();
-                // 在 popper DOM 准备好后设置 ResizeObserver
                 this.setupPopperResizeObserver();
               });
             }}
