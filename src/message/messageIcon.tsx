@@ -7,10 +7,9 @@ import '../loading';
 import { Component, tag } from 'omi';
 
 import { convertToLightDomNode } from '../_util/lightDom';
+import style from './style/messageIcon.less?inline';
 import { classPrefix } from './const';
 import { TdMessageProps } from './type';
-
-import style from './style/messageIcon.less';
 
 const iconClassName = `${classPrefix}-icon`;
 

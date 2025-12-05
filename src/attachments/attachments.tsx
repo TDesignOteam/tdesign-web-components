@@ -7,9 +7,8 @@ import { Component, createRef, tag } from 'omi';
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
 import { setExportparts } from '../_util/dom';
+import styles from './style/attachments.less?inline';
 import { TdAttachmentsProps } from './type';
-
-import styles from './style/attachments.less';
 
 const className = `${getClassPrefix()}-attachment`;
 @tag('t-attachments')

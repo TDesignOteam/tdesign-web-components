@@ -11,9 +11,8 @@ import { getClassPrefix } from '../../_util/classname';
 import { convertToLightDomNode } from '../../_util/lightDom';
 import type { ChatMessageStatus } from '../../chat-engine';
 import type { CollapseValue } from '../../collapse';
+import styles from '../style/chat-item.less?inline';
 import type { TdChatContentProps } from '../type';
-
-import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
