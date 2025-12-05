@@ -24,4 +24,12 @@ export interface TdDividerProps {
    * @default horizontal
    */
   layout?: 'horizontal' | 'vertical';
+  /**
+   * 分割线颜色
+   */
+  color?: string;
+  /**
+   * 分割线粗细
+   */
+  width?: string | number;
 }
