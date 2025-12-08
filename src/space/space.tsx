@@ -61,9 +61,14 @@ export default class Space extends Component<SpaceProps> {
       this.renderGap = `${this.props.size}px`;
     }
 
+    // 由于space-item继承space的width:100%，space竖向布局时无法使space-item里面的内容水平居中。因此这种情况下需要textAlign:center
+    const centerVerticalStyle =
+      this.props.direction === 'vertical' && this.props.align === 'center' ? { textAlign: 'center' } : {};
+
     this.renderStyle = {
       gap: this.renderGap,
       ...(this.props.breakLine ? { flexWrap: 'wrap' } : {}),
+      ...centerVerticalStyle,
       ...this.props.innerStyle,
     };
   }

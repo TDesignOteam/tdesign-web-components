@@ -20,6 +20,10 @@ export default class Image extends Component<ImageProps> {
     :host {
       display: inline-flex;
     }
+    .t-image__wrapper {
+      width: 100%;
+      height: 100%;
+    }
   `,
   ];
 
