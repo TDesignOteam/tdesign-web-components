@@ -45,7 +45,6 @@ export default class Divider extends Component<DividerProps> {
     content: Object,
     dashed: Boolean,
     layout: String,
-    width: [String, Number],
   };
 
   componentName = `${getClassPrefix()}-divider`;
@@ -65,17 +64,8 @@ export default class Divider extends Component<DividerProps> {
       props.innerClass,
     );
 
-    const customStyle: Record<string, string> = {};
-    if (props.width !== undefined) {
-      const widthValue = typeof props.width === 'number' ? `${props.width}px` : props.width;
-      customStyle['--td-divider-width'] = widthValue;
-    }
-    if (props.color) {
-      customStyle['--td-divider-color'] = props.color;
-    }
-
     return (
-      <div class={dividerClassNames} style={{ ...customStyle, ...props.innerStyle }}>
+      <div class={dividerClassNames} style={props.innerStyle}>
         {showText ? <span class={`${this.componentName}__inner-text`}>{childNode}</span> : null}
       </div>
     );

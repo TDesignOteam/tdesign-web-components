@@ -6,7 +6,7 @@ export default function DividerCustom() {
       <p>
         通过高效广告平台，协助品牌和市场营销者触达数以亿计的中国消费者通过金融科技及企业服务，促进合作伙伴业务发展，助力实现数字化升级，我们大力投资于人才队伍和推动科技创新，积极参与互联网行业协同发展。
       </p>
-      <t-divider width="4px" color="red"></t-divider>
+      <t-divider innerStyle={{ '--td-divider-width': '4px', '--td-divider-color': 'red' }}></t-divider>
       <p>
         通过高效广告平台，协助品牌和市场营销者触达数以亿计的中国消费者通过金融科技及企业服务，促进合作伙伴业务发展，助力实现数字化升级，我们大力投资于人才队伍和推动科技创新，积极参与互联网行业协同发展。
       </p>
@@ -14,7 +14,10 @@ export default function DividerCustom() {
       <t-divider></t-divider>
 
       <span>正直</span>
-      <t-divider width={2} color="#66ccff" layout={'vertical'}></t-divider>
+      <t-divider
+        innerStyle={{ '--td-divider-width': '2px', '--td-divider-color': '#66ccff' }}
+        layout="vertical"
+      ></t-divider>
       <span>进取</span>
     </div>
   );
