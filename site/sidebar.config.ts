@@ -218,6 +218,12 @@ export default [
         component: () => import('tdesign-web-components/checkbox/README.md'),
       },
       {
+        title: 'DatePicker 日期选择器',
+        name: 'date-picker',
+        path: '/webcomponents/components/date-picker',
+        component: () => import('tdesign-web-components/date-picker/README.md'),
+      },
+      {
         title: 'Input 输入框',
         name: 'input',
         path: '/webcomponents/components/input',
