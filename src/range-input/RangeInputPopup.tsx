@@ -1,5 +1,5 @@
-import 'tdesign-web-components/range-input';
-import 'tdesign-web-components/popup';
+import '../range-input';
+import '../popup';
 
 import { classNames, Component, createRef, tag } from 'omi';
 
