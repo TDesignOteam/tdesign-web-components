@@ -1,6 +1,7 @@
 import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { optionDefaultProps } from './defaultProps';
 import { TdOptionProps, TdSelectProps } from './type';
 
@@ -32,6 +33,10 @@ export default class Option extends Component<OptionProps> {
     multiple: Boolean,
     size: String,
   };
+
+  ready() {
+    setExportparts(this);
+  }
 
   handleClick = (e: MouseEvent) => {
     e.stopPropagation();
