@@ -58,6 +58,8 @@ export const renderSearch = ({
         <t-collapse
           className={`${className}__search`}
           expandIconPlacement="right"
+          expandIconDirection="up"
+          expandIconActiveDirection="down"
           value={onChange ? defaultCollapsed : undefined}
           defaultValue={onChange ? undefined : defaultCollapsed}
           onChange={onChange}

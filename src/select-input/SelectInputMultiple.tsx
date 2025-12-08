@@ -50,6 +50,13 @@ export default class SelectInputMultiple extends Component<
     this.tInputValue = this.props.inputValue || this.props.defaultInputValue;
   }
 
+  ready(): void {
+    // autoWidth时，:host宽度需要自适应
+    if (this.props.autoWidth) {
+      (this as any).style.width = 'fit-content';
+    }
+  }
+
   onTagInputChange = (val: TagInputValue, context: SelectInputChangeContext) => {
     // 避免触发浮层的显示或隐藏
     if (context.trigger === 'tag-remove') {
@@ -66,9 +73,13 @@ export default class SelectInputMultiple extends Component<
     this.props.onUpdateValue('', 'multipleInputValue');
   };
 
-  receiveProps(newProps) {
+  receiveProps(newProps: TdSelectInputProps, oldProps: TdSelectInputProps) {
     if (newProps.inputValue !== this.tInputValue) {
       this.tInputValue = newProps.inputValue;
+    }
+    // autoWidth变化时更新:host宽度
+    if (newProps.autoWidth !== oldProps.autoWidth) {
+      (this as any).style.width = newProps.autoWidth ? 'fit-content' : '100%';
     }
   }
 

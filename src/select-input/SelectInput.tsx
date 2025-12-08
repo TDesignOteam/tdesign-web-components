@@ -8,6 +8,7 @@ import { pick } from 'lodash-es';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { StyledProps } from '../common';
 import { PopupVisibleChangeContext } from '../popup';
 import { selectInputDefaultProps } from './defaultProps';
@@ -68,6 +69,7 @@ class SelectInput extends Component<SelectInputProps> {
     multiple: Boolean,
     panel: [Function, Object, String, Number],
     placeholder: String,
+    popupMatchWidth: Boolean,
     popupProps: Object,
     popupVisible: Boolean,
     defaultPopupVisible: Boolean,
@@ -102,8 +104,6 @@ class SelectInput extends Component<SelectInputProps> {
 
   classPrefix = classPrefix;
 
-  commonInputProps: SelectInputCommonProperties;
-
   tOverlayInnerStyle;
 
   innerPopupVisible;
@@ -114,13 +114,16 @@ class SelectInput extends Component<SelectInputProps> {
 
   singleInputValue;
 
-  install(): void {
-    const { loading, suffixIcon, multiple } = this.props;
-    this.commonInputProps = {
+  get commonInputProps(): SelectInputCommonProperties {
+    const { loading, suffixIcon } = this.props;
+
+    return {
       ...pick(this.props, COMMON_PROPERTIES),
       suffixIcon: loading ? <t-loading loading size="small" /> : suffixIcon,
     };
+  }
 
+  install(): void {
     const { innerPopupVisible, tOverlayInnerStyle, onInnerPopupVisibleChange } = useOverlayInnerStyle(
       this.props,
       {
@@ -132,11 +135,15 @@ class SelectInput extends Component<SelectInputProps> {
     this.innerPopupVisible = innerPopupVisible;
     this.onInnerPopupVisibleChange = onInnerPopupVisibleChange;
 
-    if (multiple) {
+    if (this.props.multiple) {
       this.multipleInputValue = this.props.inputValue || this.props.defaultInputValue;
     } else {
       this.singleInputValue = this.props.inputValue || this.props.defaultInputValue;
     }
+  }
+
+  ready() {
+    setExportparts(this);
   }
 
   updateValue = (val, key: 'multipleInputValue' | 'singleInputValue') => {

@@ -8,7 +8,31 @@ export interface DividerProps extends TdDividerProps, StyledProps {}
 
 @tag('t-divider')
 export default class Divider extends Component<DividerProps> {
-  static css = [];
+  // 由于::before, ::after伪元素，inline style不能覆盖，所以必须注入css变量
+  static css = [
+    `
+      .t-divider {
+        border-top-width: var(--td-divider-width, 1px);
+        border-top-color: var(--td-divider-color, inherit);
+      }
+      .t-divider--vertical {
+        border-left-width: var(--td-divider-width, 1px);
+        border-left-color: var(--td-divider-color, inherit);
+      }
+      .t-divider--with-text::before,
+      .t-divider--with-text::after {
+        border-top-width: var(--td-divider-width, 1px);
+        border-top-color: var(--td-divider-color, inherit);
+      }
+      .t-divider--dashed.t-divider--with-text::before,
+      .t-divider--dashed.t-divider--with-text::after {
+        border-top-width: var(--td-divider-width, 1px);
+      }
+      .t-divider--vertical.t-divider--dashed {
+        border-left-width: var(--td-divider-width, 1px);
+      }
+  `,
+  ];
 
   static defaultProps = {
     align: 'center',
@@ -39,6 +63,7 @@ export default class Divider extends Component<DividerProps> {
       },
       props.innerClass,
     );
+
     return (
       <div class={dividerClassNames} style={props.innerStyle}>
         {showText ? <span class={`${this.componentName}__inner-text`}>{childNode}</span> : null}

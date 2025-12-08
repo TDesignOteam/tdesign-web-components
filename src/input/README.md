@@ -80,3 +80,82 @@ spline: form
 可以使用 `borderless` 来开启无边框模式。
 
 {{ borderless }}
+
+## API
+
+### Input Props
+
+#### 基础属性
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| **value** | `string` | `''` | 输入框的值（受控模式） |
+| **defaultValue** | `string` | `''` | 输入框的默认值（非受控模式） |
+| **placeholder** | `string` | `'请输入'` | 占位符 |
+| **type** | `'text' \| 'number' \| 'url' \| 'tel' \| 'password' \| 'search' \| 'submit' \| 'hidden'` | `'text'` | 输入框类型 |
+| **disabled** | `boolean` | - | 是否禁用输入框 |
+| **readonly** | `boolean` | `false` | 只读状态 |
+| **autofocus** | `boolean` | `false` | 自动聚焦 |
+| **autocomplete** | `string` | - | 是否开启自动填充功能，HTML5 原生属性 |
+
+#### 样式属性
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| **size** | `'small' \| 'medium' \| 'large'` | `'medium'` | 输入框尺寸 |
+| **align** | `'left' \| 'center' \| 'right'` | `'left'` | 文本内容位置，居左/居中/居右 |
+| **status** | `'default' \| 'success' \| 'warning' \| 'error'` | - | 输入框状态 |
+| **borderless** | `boolean` | `false` | 无边框模式 |
+| **autoWidth** | `boolean` | `false` | 宽度随内容自适应 |
+| **inputClass** | `string \| string[] \| object` | - | t-input 同级类名 |
+
+#### 内容属性
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| **label** | `TNode` | - | 左侧文本 |
+| **suffix** | `TNode` | - | 后置图标前的后置内容 |
+| **prefixIcon** | `TElement` | - | 组件前置图标 |
+| **suffixIcon** | `TElement` | - | 组件后置图标 |
+| **tips** | `TNode` | - | 输入框下方提示文本，会根据不同的 `status` 呈现不同的样式 |
+
+#### 清空与长度限制
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| **clearable** | `boolean` | `false` | 是否可清空 |
+| **showClearIconOnEmpty** | `boolean` | `false` | 输入框内容为空时，悬浮状态是否显示清空按钮 |
+| **maxlength** | `number` | - | 用户最多可以输入的文本长度，一个中文等于一个计数长度 |
+| **maxcharacter** | `number` | - | 用户最多可以输入的字符个数，一个中文汉字表示两个字符长度 |
+| **allowInputOverMax** | `boolean` | `false` | 超出 `maxlength` 或 `maxcharacter` 之后是否允许继续输入 |
+| **showLimitNumber** | `boolean` | `false` | 是否在输入框右侧显示字数统计 |
+
+#### 格式化
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| **format** | `(value: string) => string` | - | 指定输入框展示值的格式，失焦时生效 |
+
+### 事件回调
+
+| 事件名 | 参数类型 | 说明 |
+|--------|----------|------|
+| **onChange** | `(value: string, context?: { e?: MouseEvent }) => void` | 输入框值发生变化时触发 |
+| **onFocus** | `(value: string, context: { e: FocusEvent }) => void` | 获得焦点时触发 |
+| **onBlur** | `(value: string, context: { e: FocusEvent }) => void` | 失去焦点时触发 |
+| **onClear** | `(context: { e: MouseEvent }) => void` | 清空按钮点击时触发 |
+| **onEnter** | `(value: string, context: { e: KeyboardEvent }) => void` | 回车键按下时触发 |
+| **onKeydown** | `(value: string, context: { e: KeyboardEvent }) => void` | 键盘按下时触发 |
+| **onKeyup** | `(value: string, context: { e: KeyboardEvent }) => void` | 释放键盘时触发 |
+| **onKeypress** | `(value: string, context: { e: KeyboardEvent }) => void` | 按下字符键时触发 |
+| **onCompositionstart** | `(value: string, context: { e: CompositionEvent }) => void` | 中文输入开始时触发 |
+| **onCompositionend** | `(value: string, context: { e: CompositionEvent }) => void` | 中文输入结束时触发 |
+| **onMouseenter** | `(context: { e: MouseEvent }) => void` | 进入输入框时触发 |
+| **onMouseleave** | `(context: { e: MouseEvent }) => void` | 离开输入框时触发 |
+| **onValidate** | `(context: { error?: 'exceed-maximum' \| 'below-minimum' }) => void` | 字数超出限制时触发 |
+
+### InputGroup Props
+
+| 属性名 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| **separate** | `boolean` | `false` | 多个输入框之间是否需要间隔 |

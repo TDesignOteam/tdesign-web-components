@@ -67,6 +67,8 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     'disabled',
     'collapseProps',
     'expandIconPlacement',
+    'expandIconDirection',
+    'expandIconActiveDirection',
     'expandOnRowClick',
   ];
 
@@ -99,22 +101,26 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   }
 
   renderIcon() {
-    const { expandIconPlacement, getCollapseValue } = this.injection;
+    const { expandIconPlacement, expandIconDirection, expandIconActiveDirection, getCollapseValue } = this.injection;
     const isActive = getCollapseValue().includes(this.innerValue.value);
     if (this.props.expandIcon === false) {
       return null;
     }
     return (
       <div
-        className={classname(`${className}__icon`, [`${className}__icon--${expandIconPlacement.value}`], {
-          [`${className}__icon--active`]: isActive,
-        })}
+        className={classname(`${className}__icon`, [`${className}__icon--${expandIconPlacement.value}`])}
         onClick={this.handleClick}
       >
         {typeof this.props.expandIcon !== 'boolean' ? (
           this.props.expandIcon
         ) : (
-          <t-fake-arrow isActive={isActive} disabled={this.isDisabled.value} style={{ height: '18px' }} />
+          <t-fake-arrow
+            direction={expandIconDirection?.value || 'right'}
+            activeDirection={expandIconActiveDirection?.value || 'down'}
+            isActive={isActive}
+            disabled={this.isDisabled.value}
+            style={{ height: '18px' }}
+          />
         )}
       </div>
     );
