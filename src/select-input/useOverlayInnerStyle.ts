@@ -8,14 +8,16 @@ import { TdSelectInputProps } from './type';
 export type overlayStyleProps = Pick<
   TdSelectInputProps,
   | 'popupProps'
-  | 'autoWidth'
   | 'readonly'
   | 'onPopupVisibleChange'
   | 'disabled'
   | 'allowInput'
   | 'popupVisible'
   | 'defaultPopupVisible'
->;
+> & {
+  /** 下拉框宽度是否与触发元素宽度保持一致，默认true */
+  popupMatchWidth?: boolean;
+};
 
 // 单位：px
 const MAX_POPUP_WIDTH = 1000;
@@ -27,7 +29,7 @@ export default function useOverlayInnerStyle(
   },
   activeComponent?: Component,
 ) {
-  const { popupProps, autoWidth, readonly, disabled, onPopupVisibleChange, allowInput } = props;
+  const { popupProps, readonly, disabled, onPopupVisibleChange, allowInput, popupMatchWidth = true } = props;
   const [innerPopupVisible, setInnerPopupVisible] = useControlled(props, 'popupVisible', onPopupVisibleChange, {
     activeComponent,
   });
@@ -82,11 +84,14 @@ export default function useOverlayInnerStyle(
   const tOverlayInnerStyle = () => {
     let result: TdPopupProps['overlayInnerStyle'] = {};
     const overlayInnerStyle = popupProps?.overlayInnerStyle || {};
-    if (isFunction(overlayInnerStyle)) {
+    if (isFunction(overlayInnerStyle) || (!isFunction(overlayInnerStyle) && overlayInnerStyle.width)) {
+      // 下游组件自定义了overlayInnerStyle则使用自定义的配置
       result = overlayInnerStyle;
-    } else if (!autoWidth) {
+    } else if (popupMatchWidth) {
+      // popupMatchWidth为true时，panel宽度跟随trigger宽度
       result = matchWidthFunc;
     }
+    // popupMatchWidth为false时，result为空对象，panel宽度由内容决定
     return result;
   };
 

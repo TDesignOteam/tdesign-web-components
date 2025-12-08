@@ -13,6 +13,8 @@ export default class Collapse extends Component<TdCollapseProps> {
     defaultExpandAll: Boolean,
     disabled: Boolean,
     expandIconPlacement: String,
+    expandIconDirection: String,
+    expandIconActiveDirection: String,
     expandMutex: Boolean,
     expandOnRowClick: Boolean,
     value: Array,
@@ -24,6 +26,8 @@ export default class Collapse extends Component<TdCollapseProps> {
     borderless: false,
     defaultExpandAll: false,
     expandIconPlacement: 'left',
+    expandIconDirection: 'right',
+    expandIconActiveDirection: 'down',
     expandMutex: false,
     expandOnRowClick: true,
     defaultValue: [],
@@ -38,6 +42,10 @@ export default class Collapse extends Component<TdCollapseProps> {
   innerDisabled = signal(false);
 
   innerExpandIconPlacement: Omi.SignalValue<TdCollapseProps['expandIconPlacement']> = signal('left');
+
+  innerExpandIconDirection: Omi.SignalValue<TdCollapseProps['expandIconDirection']> = signal('right');
+
+  innerExpandIconActiveDirection: Omi.SignalValue<TdCollapseProps['expandIconActiveDirection']> = signal('down');
 
   innerExpandOnRowClick = signal(true);
 
@@ -73,18 +81,31 @@ export default class Collapse extends Component<TdCollapseProps> {
     collapseProps: this.props,
     disabled: this.innerDisabled,
     expandIconPlacement: this.innerExpandIconPlacement,
+    expandIconDirection: this.innerExpandIconDirection,
+    expandIconActiveDirection: this.innerExpandIconActiveDirection,
     expandOnRowClick: this.innerExpandOnRowClick,
   };
 
   innerChecked: any = signal(null);
 
   install(): void {
-    const { defaultValue, borderless, defaultExpandAll, disabled, expandIconPlacement, expandOnRowClick } = this.props;
+    const {
+      defaultValue,
+      borderless,
+      defaultExpandAll,
+      disabled,
+      expandIconPlacement,
+      expandIconDirection,
+      expandIconActiveDirection,
+      expandOnRowClick,
+    } = this.props;
     this.pCollapseValue.value = defaultValue;
     this.innerBorderless.value = borderless;
     this.innerDefaultExpandAll.value = defaultExpandAll;
     this.innerDisabled.value = disabled;
     this.innerExpandIconPlacement.value = expandIconPlacement || 'left';
+    this.innerExpandIconDirection.value = expandIconDirection || 'right';
+    this.innerExpandIconActiveDirection.value = expandIconActiveDirection || 'down';
     if (typeof expandOnRowClick !== 'undefined') {
       this.innerExpandOnRowClick.value = expandOnRowClick;
     }

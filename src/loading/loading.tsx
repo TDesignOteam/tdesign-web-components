@@ -142,7 +142,7 @@ export default class Loading extends Component<LoadingProps> {
     });
 
     const commonContent = () => {
-      let renderIndicator = <t-loading-gradient />;
+      let renderIndicator = <t-loading-gradient style={{ verticalAlign: 'top' }} />;
 
       if (indicator && typeof indicator !== 'boolean') {
         renderIndicator = indicator as JSX.Element;
@@ -166,7 +166,10 @@ export default class Loading extends Component<LoadingProps> {
       ) : null;
     }
 
-    if (content || children) {
+    const hasContent =
+      content || (children && (Array.isArray(children) ? children.some((child) => child != null) : true));
+
+    if (hasContent) {
       return (
         <div className={classnames(relativeClass, innerClass)} style={innerStyle}>
           {content || children}
