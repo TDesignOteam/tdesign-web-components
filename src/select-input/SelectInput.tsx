@@ -104,7 +104,8 @@ class SelectInput extends Component<SelectInputProps> {
 
   classPrefix = classPrefix;
 
-  tOverlayInnerStyle;
+  // 在某些场景下，组件的render()可能在install()完成之前被调用，因此提供默认值避免ts error
+  tOverlayInnerStyle = () => ({});
 
   innerPopupVisible;
 
