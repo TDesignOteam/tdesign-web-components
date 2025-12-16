@@ -4,6 +4,7 @@ import '../loading/style';
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { getChildrenArray } from '../_util/component';
 import { setExportparts } from '../_util/dom';
 import eventDispose from '../_util/eventDispose';
 import { flexIcon } from '../_util/icon';
@@ -93,6 +94,8 @@ export default class Button extends Component<ButtonProps> {
       suffix,
       innerClass,
       innerStyle,
+      children,
+      content,
       ...rest
     } = props;
 
@@ -117,6 +120,33 @@ export default class Button extends Component<ButtonProps> {
         flexIcon(<t-loading-gradient className={`${classPrefix}-loading ${classPrefix}-loading--inherit-color`} />),
       );
     }
+
+    // 判断是否有文字内容
+    const childrenArray = getChildrenArray(children);
+    const hasTextContent = childrenArray.some((child) => {
+      if (typeof child === 'string' || typeof child === 'number') {
+        return true;
+      }
+      if (typeof child === 'object' && child !== null && 'attributes' in child) {
+        return (child as any).attributes?.slot !== 'icon';
+      }
+      return !!child;
+    });
+    const hasContent = !!(hasTextContent || content);
+
+    const renderIconSlot = () => {
+      if (loading) {
+        return loadingNode;
+      }
+      if (hasContent && icon) {
+        return (
+          <span className={`${classPrefix}-icon`}>
+            <slot name="icon">{iconNode}</slot>
+          </span>
+        );
+      }
+      return <slot name="icon">{iconNode}</slot>;
+    };
 
     const Tag = this.tag as string;
     return (
@@ -144,8 +174,7 @@ export default class Button extends Component<ButtonProps> {
         disabled={isDisabled || undefined}
         {...rest}
       >
-        {/* icon放到slot外面，就不用手写margin-left了，直接继承 */}
-        {loading ? loadingNode : <slot name="icon">{iconNode ? iconNode : null}</slot>}
+        {renderIconSlot()}
         <span className={`${classPrefix}-button__text`} part={`${classPrefix}-button__text`}>
           <slot></slot>
         </span>
