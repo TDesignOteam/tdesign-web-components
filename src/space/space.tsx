@@ -2,6 +2,7 @@ import { toArray } from 'lodash-es';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { convertNodeListToVNodes } from '../_util/component';
 import { type StyledProps } from '../common';
 import { TdSpaceProps } from './type';
 
@@ -39,10 +40,6 @@ export default class Space extends Component<SpaceProps> {
   renderStyle = {};
 
   install() {
-    this.updateHostStyle();
-  }
-
-  updated() {
     this.updateHostStyle();
   }
 
@@ -90,7 +87,13 @@ export default class Space extends Component<SpaceProps> {
   }
 
   beforeRender(): void {
-    this.innerHTML = '';
+    // 兼容react环境：如果props.children为空，从light dom获取子节点
+    const childrenArr = toArray(this.props.children);
+    if (childrenArr.length === 0 && this.childNodes.length > 0) {
+      this.props.children = convertNodeListToVNodes(this.childNodes);
+    }
+
+    this.updateHostStyle();
   }
 
   render(props: OmiProps<SpaceProps>) {
