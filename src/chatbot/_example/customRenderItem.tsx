@@ -53,6 +53,10 @@ export default class CustomRenderExample extends Component {
         },
       },
       {
+        type: 'markdown',
+        data: '我是原始markdown组件',
+      },
+      {
         type: 'text',
         data: '我是文本',
       },
@@ -105,6 +109,8 @@ export default class CustomRenderExample extends Component {
                     </div>
                   </t-chat-thinking-content>
                 );
+              case 'markdown':
+                return <div slot={`markdown-${idx}`}>我是自定义markdown组件</div>;
             }
             return null;
           })}
