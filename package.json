@@ -12,7 +12,7 @@
     "dev": "cd site && vite --force",
     "site": "cd site && vite build",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
-    "prebuild": "rimraf es/* lib/* dist/* esm/*",
+    "prebuild": "rimraf es/* lib/* dist/* esm/* cjs/*",
     "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc",
     "build:analyze": "cross-env NODE_ENV=production ANALYZE=true rollup -c script/rollup.config.js && npm run build:tsc",
     "build:analyze:all": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=all rollup -c script/rollup.config.js && npm run build:tsc",
