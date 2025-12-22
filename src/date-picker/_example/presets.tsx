@@ -27,18 +27,18 @@ export default class DatePickerPresetsDemo extends Component {
     value3: ['', ''],
   };
 
-  handleChange1 = (value: string) => {
-    this.state.value1 = value;
+  handleChange1 = (e: CustomEvent) => {
+    this.state.value1 = e.detail.value;
     this.update();
   };
 
-  handleChange2 = (value: string[]) => {
-    this.state.value2 = value;
+  handleChange2 = (e: CustomEvent) => {
+    this.state.value2 = e.detail.value;
     this.update();
   };
 
-  handleChange3 = (value: string[]) => {
-    this.state.value3 = value;
+  handleChange3 = (e: CustomEvent) => {
+    this.state.value3 = e.detail.value;
     this.update();
   };
 
