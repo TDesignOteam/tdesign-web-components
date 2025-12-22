@@ -95,6 +95,11 @@ export interface TdSelectInputProps {
    */
   placeholder?: string;
   /**
+   * 下拉框宽度是否与触发元素宽度保持一致
+   * @default true
+   */
+  popupMatchWidth?: boolean;
+  /**
    * 透传 Popup 浮层组件全部属性
    */
   popupProps?: PopupProps;

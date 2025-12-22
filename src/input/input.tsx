@@ -316,6 +316,8 @@ export default class Input extends Component<InputProps> {
     this.renderType = this.props.type;
 
     if (this.props.autoWidth) {
+      // autoWidth 模式下，:host 宽度需要自适应
+      (this as any).style.width = 'fit-content';
       requestAnimationFrame(() => {
         this.updateInputWidth();
       });
@@ -343,6 +345,10 @@ export default class Input extends Component<InputProps> {
       (Reflect.has(oldProps, 'value') && !this.isControlled)
     ) {
       this.innerValue = props.value;
+    }
+    // autoWidth 变化时更新 :host 宽度
+    if (props.autoWidth !== oldProps.autoWidth) {
+      (this as any).style.width = props.autoWidth ? 'fit-content' : '100%';
     }
   }
 

@@ -5,6 +5,7 @@
  * */
 
 import { TNode } from '../common';
+import type { ArrowDirection } from '../common/fake-arrow';
 
 export interface TdCollapseProps {
   /**
@@ -30,6 +31,16 @@ export interface TdCollapseProps {
    * @default left
    */
   expandIconPlacement?: 'left' | 'right';
+  /**
+   * 展开图标收起时的方向
+   * @default right
+   */
+  expandIconDirection?: ArrowDirection;
+  /**
+   * 展开图标展开时的方向
+   * @default down
+   */
+  expandIconActiveDirection?: ArrowDirection;
   /**
    * 每个面板互斥展开，每次只展开一个面板
    * @default false

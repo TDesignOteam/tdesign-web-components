@@ -1,9 +1,10 @@
-import 'tdesign-web-components/range-input';
-import 'tdesign-web-components/popup';
+import '../range-input';
+import '../popup';
 
 import { classNames, Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
 import { StyledProps } from '../common';
 import useOverlayInnerStyle from '../select-input/useOverlayInnerStyle';
 import { TdRangeInputPopupProps } from './type';
@@ -27,6 +28,10 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
   install() {
     const { inputValue, defaultInputValue } = this.props;
     this.innerInputValue = inputValue !== undefined ? inputValue : defaultInputValue;
+  }
+
+  ready() {
+    setExportparts(this);
   }
 
   receiveProps(nextProps: { inputValue: any; visible?: boolean }) {
@@ -63,6 +68,9 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
       className,
       style,
       innerStyle,
+      autoWidth,
+      clearable,
+      suffixIcon,
     } = props;
 
     const { tOverlayInnerStyle, innerPopupVisible, onInnerPopupVisibleChange } = useOverlayInnerStyle(
@@ -84,16 +92,19 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
 
     // 计算 panel 宽度，支持自定义或和输入框宽度保持一致
     const overlayInnerStyle = (triggerEl: HTMLElement, popupEl: HTMLElement) => {
-      if (!this.cachedOverlayWidth && triggerEl) {
-        const { width } = triggerEl.getBoundingClientRect();
-        if (Number.isFinite(width) && width > 0) {
-          this.cachedOverlayWidth = `${Math.round(width)}px`;
+      // 如果设置了autoWidth，则不强制宽度与输入框一致
+      if (!autoWidth) {
+        if (!this.cachedOverlayWidth && triggerEl) {
+          const { width } = triggerEl.getBoundingClientRect();
+          if (Number.isFinite(width) && width > 0) {
+            this.cachedOverlayWidth = `${Math.round(width)}px`;
+          }
         }
-      }
 
-      if (triggerEl && !this.lockedTriggerElement) {
-        this.lockedTriggerElement = triggerEl;
-        this.lockedTriggerOriginalWidth = triggerEl.style.width;
+        if (triggerEl && !this.lockedTriggerElement) {
+          this.lockedTriggerElement = triggerEl;
+          this.lockedTriggerOriginalWidth = triggerEl.style.width;
+        }
       }
 
       const baseStyle = tOverlayInnerStyle?.() || {};
@@ -109,11 +120,11 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
         marginTop: '16px',
       } as Record<string, any>;
 
-      if (this.cachedOverlayWidth) {
+      if (!autoWidth && this.cachedOverlayWidth) {
         merged.width = this.cachedOverlayWidth;
       }
 
-      if (this.lockedTriggerElement && this.cachedOverlayWidth) {
+      if (!autoWidth && this.lockedTriggerElement && this.cachedOverlayWidth) {
         this.lockedTriggerElement.style.width = this.cachedOverlayWidth;
       }
 
@@ -150,6 +161,8 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
             value={value}
             onChange={this.handleRangeInputChange}
             readonly={readonly}
+            clearable={clearable}
+            suffixIcon={suffixIcon}
             {...rangeInputConfig}
           />
         </t-popup>

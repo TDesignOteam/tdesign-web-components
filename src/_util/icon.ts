@@ -8,6 +8,11 @@ import { TNode } from '../common';
 const hostStyleString = 'display:inline-flex;align-items:center;justify-content:center;fill:none;';
 
 export const flexIcon = (icon: TNode) => {
+  // 防止生成<undefined></undefined>
+  if (!icon || typeof icon !== 'object' || !('nodeName' in icon || 'attributes' in icon)) {
+    return null;
+  }
+
   if (!icon) return icon;
 
   const vnode = icon as VNode;

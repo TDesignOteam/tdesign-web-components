@@ -46,6 +46,22 @@ export default class SingleSelectInput extends Component<
     this.inputValue = this.props.inputValue || this.props.defaultInputValue;
   }
 
+  ready(): void {
+    // autoWidth时，:host宽度需要自适应
+    if (this.props.autoWidth) {
+      this.style.width = 'fit-content';
+    }
+  }
+
+  receiveProps(props: TdSelectInputProps) {
+    // autoWidth变化时更新:host宽度
+    if (props.autoWidth) {
+      this.style.width = 'fit-content';
+    } else {
+      this.style.width = '100%';
+    }
+  }
+
   onInnerClear = (context: { e: MouseEvent }) => {
     context?.e?.stopPropagation();
     this.props.onClear?.(context);
