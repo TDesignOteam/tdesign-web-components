@@ -38,9 +38,9 @@ const banner = `/**
 // 获取分析插件
 const getAnalyzePlugins = (buildType = 'umd') => {
   if (!isAnalyze && buildType !== 'umd') return [];
-  
+
   const plugins = [];
-  
+
   // 基础分析器 - 控制台输出
   plugins.push(
     analyzer({
@@ -48,9 +48,9 @@ const getAnalyzePlugins = (buildType = 'umd') => {
       summaryOnly: false,
       hideDeps: false,
       showExports: true,
-    })
+    }),
   );
-  
+
   // 可视化分析器 - 生成 HTML 报告
   if (isAnalyze || buildType === 'umd') {
     plugins.push(
@@ -62,9 +62,9 @@ const getAnalyzePlugins = (buildType = 'umd') => {
         gzipSize: true,
         brotliSize: true,
         projectRoot: resolve(__dirname, '..'),
-      })
+      }),
     );
-    
+
     // 生成多种格式的报告
     if (buildType === 'umd') {
       plugins.push(
@@ -85,12 +85,23 @@ const getAnalyzePlugins = (buildType = 'umd') => {
           gzipSize: true,
           brotliSize: true,
           projectRoot: resolve(__dirname, '..'),
-        })
+        }),
       );
     }
   }
-  
+
   return plugins;
+};
+
+// 处理?inline后缀
+const inlineResolver = {
+  name: 'inline-resolver',
+  resolveId(source, importer) {
+    if (source.endsWith('?inline')) {
+      return this.resolve(source.replace('?inline', ''), importer, { skipSelf: true });
+    }
+    return null;
+  },
 };
 
 const input = 'src/index-lib.ts';
@@ -106,6 +117,7 @@ const inputList = [
 
 const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
   const plugins = [
+    inlineResolver,
     nodeResolve(),
     commonjs(),
     esbuild({
@@ -197,7 +209,7 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
 
 const cssConfig = {
   input: ['src/style/index.js'],
-  plugins: [multiInput(), styles({ mode: 'extract' })],
+  plugins: [inlineResolver, multiInput(), styles({ mode: 'extract' })],
   output: {
     banner,
     dir: 'lib/',
@@ -208,7 +220,7 @@ const cssConfig = {
 
 const umdCssConfig = {
   input: ['src/style/index.js'],
-  plugins: [multiInput(), styles({ mode: 'extract' })],
+  plugins: [inlineResolver, multiInput(), styles({ mode: 'extract' })],
   output: {
     banner,
     dir: 'dist/',

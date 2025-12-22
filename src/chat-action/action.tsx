@@ -13,9 +13,8 @@ import { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
 import { type ChatComment } from '../chat-engine';
 import { MessagePlugin } from '../message';
+import styles from './style/action.less?inline';
 import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
-
-import styles from './style/action.less';
 
 const className = `${getClassPrefix()}-chat-actions`;
 

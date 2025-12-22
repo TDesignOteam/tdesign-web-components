@@ -17,9 +17,8 @@ import { Component, tag } from 'omi';
 
 import classname from '../_util/classname';
 import { getClassPrefix } from '../_util/classname';
+import styles from './style/filecard.less?inline';
 import { TdFileCardProps } from './type';
-
-import styles from './style/filecard.less';
 
 const className = `${getClassPrefix()}-filecard`;
 @tag('t-filecard')

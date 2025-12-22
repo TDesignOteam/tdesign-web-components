@@ -27,13 +27,10 @@
     "allowJs": true,
     "checkJs": true,
     "downlevelIteration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "types": ["node", "vitest/globals"]
   },
-  "include": ["src", "site", "typings.d.ts"],
-  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"],
-  "types": [
-    "node",
-    "vitest/globals",
-  ],
+  "include": ["src", "site", "typings.d.ts", "test/**/*"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"],
   "compileOnSave": false
 }

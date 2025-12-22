@@ -12,6 +12,7 @@
     "dev": "cd site && vite --force",
     "site": "cd site && vite build",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
+    "test": "vitest",
     "prebuild": "rimraf es/* lib/* dist/* esm/*",
     "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc",
     "build:analyze": "cross-env NODE_ENV=production ANALYZE=true rollup -c script/rollup.config.js && npm run build:tsc",
@@ -30,8 +31,7 @@
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
     "generate:entry": "node ./script/generate-entry.js",
-    "prepare": "husky",
-    "test": "echo 'test to do'"
+    "prepare": "husky"
   },
   "files": [
     "esm",
@@ -100,6 +100,7 @@
     "@commitlint/cli": "^19.3.0",
     "@commitlint/config-conventional": "^19.2.2",
     "@commitlint/cz-commitlint": "^19.2.0",
+    "@open-wc/testing": "^4.0.0",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",
@@ -120,6 +121,7 @@
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "express": "^4.17.3",
     "gray-matter": "^4.0.3",
+    "happy-dom": "^20.0.11",
     "highlight.js": "^11.11.1",
     "husky": "^9.0.11",
     "less": "^4.2.2",
@@ -149,9 +151,10 @@
     "tdesign-theme-generator": "^1.0.16",
     "ts-node": "^10.9.1",
     "typescript": "^5.8.2",
-    "vite": "^4.4.5",
-    "vite-plugin-pwa": "^0.20.0",
+    "vite": "^6.2.0",
+    "vite-plugin-pwa": "^1.2.0",
     "vite-plugin-tdoc": "^2.0.4",
+    "vitest": "^2.1.1",
     "workbox-precaching": "^7.1.0"
   }
 }
