@@ -98,10 +98,15 @@ export default class DatePicker extends Component<DatePickerProps> {
    * 管理value的受控/非受控状态
    */
   private setupValueControl(props: DatePickerProps) {
-    const [value, setValue] = useControlled(props, 'value', (val, context) => props.onChange?.(val, context), {
-      defaultValue: props.defaultValue,
-      activeComponent: this,
-    });
+    const [value, setValue] = useControlled(
+      props,
+      'value',
+      (val, context) => this.fire('change', { value: val, ...context }),
+      {
+        defaultValue: props.defaultValue,
+        activeComponent: this,
+      },
+    );
     this.valueState = value as DateValue;
     this.setValueState = (nextValue, context) => {
       setValue(nextValue, context);
@@ -117,7 +122,7 @@ export default class DatePicker extends Component<DatePickerProps> {
     const [visible, setVisible] = useControlled(
       props,
       'popupVisible',
-      (val, context) => props.onVisibleChange?.(val, context),
+      (val, context) => this.fire('visible-change', { visible: val, ...context }),
       {
         defaultPopupVisible: props.defaultPopupVisible,
         activeComponent: this,
@@ -219,7 +224,7 @@ export default class DatePicker extends Component<DatePickerProps> {
     this.inputValueSignal.value = '';
     this.setValueState?.(undefined, { trigger: 'clear', dayjsValue: dayjs() });
     this.setPopupVisibleState?.(false, { trigger: 'clear', ...detail });
-    this.props.onClear?.(detail);
+    this.fire('clear', detail);
   };
 
   /**
@@ -253,7 +258,7 @@ export default class DatePicker extends Component<DatePickerProps> {
       dayjsValue,
       trigger: 'pick',
     });
-    this.props.onPick?.(date, { dayjsValue, trigger: 'pick' });
+    this.fire('pick', { value: date, dayjsValue, trigger: 'pick' });
     this.setPopupVisibleState?.(false, { trigger: 'pick' });
   };
 
@@ -363,7 +368,7 @@ export default class DatePicker extends Component<DatePickerProps> {
       dayjsValue,
       trigger: 'preset',
     });
-    this.props.onPresetClick?.(context);
+    this.fire('preset-click', context);
   };
 
   private renderPanel(props: DatePickerProps) {

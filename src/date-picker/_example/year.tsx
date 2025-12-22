@@ -9,13 +9,13 @@ export default class DatePickerYearDemo extends Component {
     rangeValue: ['', ''],
   };
 
-  handleChange = (value: string) => {
-    this.state.value = value;
+  handleChange = (e: CustomEvent) => {
+    this.state.value = e.detail.value;
     this.update();
   };
 
-  handleRangeChange = (value: string[]) => {
-    this.state.rangeValue = value;
+  handleRangeChange = (e: CustomEvent) => {
+    this.state.rangeValue = e.detail.value;
     this.update();
   };
 
