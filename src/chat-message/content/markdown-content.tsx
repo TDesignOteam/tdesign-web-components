@@ -112,14 +112,27 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   ready() {
     const { options } = this.props;
+
     this.markdownOptions = merge(this.markdownOptions, options);
+
     this.initMarkdown();
     setExportparts(this);
   }
 
   initMarkdown = async () => {
     this.isMarkdownInit.value = false;
+    const customCodeBlock = this.props.options.engine?.syntax?.codeBlock;
+    const customCodeBlockRenderer = typeof customCodeBlock === 'object' ? customCodeBlock?.customRenderer : undefined;
 
+    const defaultCodeBlockRenderer = {
+      // 自定义语法渲染器
+      all: {
+        render: (code, _sign, _cherry, lang) =>
+          `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
+            this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
+          }" />`,
+      },
+    };
     const md = new Cherry({
       ...this.markdownOptions,
       engine: {
@@ -127,15 +140,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
         syntax: {
           ...this.markdownOptions.engine?.syntax,
           codeBlock: {
-            customRenderer: {
-              // 自定义语法渲染器
-              all: {
-                render: (code, _sign, _cherry, lang) =>
-                  `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
-                    this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
-                  }" />`,
-              },
-            },
+            customRenderer: { ...defaultCodeBlockRenderer, ...customCodeBlockRenderer },
           },
         },
       },
