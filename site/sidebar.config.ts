@@ -18,6 +18,13 @@ export default [
         path: '/webcomponents/custom-theme',
         component: () => import('@docs/theme.md'),
       },
+      {
+        title: '自定义样式',
+        titleEn: 'Style Customization',
+        name: 'style',
+        path: '/webcomponents/style',
+        component: () => import('@docs/style.md'),
+      },
       // {
       //   title: '最佳实践',
       //   titleEn: 'Starter Kit',
