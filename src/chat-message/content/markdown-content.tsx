@@ -112,15 +112,19 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   ready() {
     const { options } = this.props;
+
     this.markdownOptions = merge(this.markdownOptions, options);
+
     this.initMarkdown();
     setExportparts(this);
   }
 
   initMarkdown = async () => {
     this.isMarkdownInit.value = false;
+    const customCodeBlock = this.props.options.engine?.syntax?.codeBlock;
+    const customCodeBlockRenderer = typeof customCodeBlock === 'object' ? customCodeBlock?.customRenderer : undefined;
 
-    const defaultCustomRenderer = {
+    const defaultCodeBlockRenderer = {
       // 自定义语法渲染器
       all: {
         render: (code, _sign, _cherry, lang) =>
@@ -132,13 +136,13 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
     const md = new Cherry({
       ...this.markdownOptions,
       engine: {
-        syntax: {
-          codeBlock: {
-            customRenderer: defaultCustomRenderer,
-          },
-          ...this.markdownOptions.engine?.syntax,
-        },
         ...this.markdownOptions.engine,
+        syntax: {
+          ...this.markdownOptions.engine?.syntax,
+          codeBlock: {
+            customRenderer: { ...defaultCodeBlockRenderer, ...customCodeBlockRenderer },
+          },
+        },
       },
       el: this.mdRef.current,
     });
