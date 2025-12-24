@@ -18,6 +18,14 @@ module.exports = {
       jsx: true,
     },
   },
+  overrides: [
+    {
+      files: ['src/**/_example/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
+      rules: {
+        'no-restricted-imports': 'off',
+      },
+    },
+  ],
   rules: {
     'no-use-before-define': 'off',
     'no-useless-constructor': 'off',
@@ -93,6 +101,7 @@ module.exports = {
             message: 'Please use lodash-es instead.',
           },
         ],
+        patterns: ['tdesign-web-components/*'],
       },
     ],
   },

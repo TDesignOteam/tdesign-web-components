@@ -1,8 +1,10 @@
-import 'tdesign-icons-web-components/esm/components/loading';
+import '../loading/gradient';
+import '../loading/style';
 
 import { Component, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { getChildrenArray } from '../_util/component';
 import { setExportparts } from '../_util/dom';
 import eventDispose from '../_util/eventDispose';
 import { flexIcon } from '../_util/icon';
@@ -50,9 +52,10 @@ export default class Button extends Component<ButtonProps> {
   };
 
   get tag() {
-    const { tag, href, disabled } = this.props;
-    if (!tag && href && !disabled) return 'a';
-    if (!tag && disabled) return 'div';
+    const { tag, href, disabled, loading } = this.props;
+    const isDisabled = disabled || loading;
+    if (!tag && href && !isDisabled) return 'a';
+    if (!tag && isDisabled) return 'div';
     return tag || 'button';
   }
 
@@ -91,6 +94,8 @@ export default class Button extends Component<ButtonProps> {
       suffix,
       innerClass,
       innerStyle,
+      children,
+      content,
       ...rest
     } = props;
 
@@ -99,6 +104,7 @@ export default class Button extends Component<ButtonProps> {
     delete rest.style;
 
     const classPrefix = getClassPrefix();
+    const isDisabled = disabled || loading;
 
     if (ignoreAttributes?.length > 0) {
       ignoreAttributes.forEach((attr) => {
@@ -106,8 +112,41 @@ export default class Button extends Component<ButtonProps> {
       });
     }
 
-    let iconNode = convertToLightDomNode(flexIcon(icon));
-    if (loading) iconNode = convertToLightDomNode(flexIcon(<t-icon-loading className="mr-[2px]" />));
+    const iconNode = convertToLightDomNode(flexIcon(icon));
+
+    let loadingNode = null;
+    if (loading) {
+      loadingNode = convertToLightDomNode(
+        flexIcon(<t-loading-gradient className={`${classPrefix}-loading ${classPrefix}-loading--inherit-color`} />),
+      );
+    }
+
+    // 判断是否有文字内容
+    const childrenArray = getChildrenArray(children);
+    const hasTextContent = childrenArray.some((child) => {
+      if (typeof child === 'string' || typeof child === 'number') {
+        return true;
+      }
+      if (typeof child === 'object' && child !== null && 'attributes' in child) {
+        return (child as any).attributes?.slot !== 'icon';
+      }
+      return !!child;
+    });
+    const hasContent = !!(hasTextContent || content);
+
+    const renderIconSlot = () => {
+      if (loading) {
+        return loadingNode;
+      }
+      if (hasContent && icon) {
+        return (
+          <span className={`${classPrefix}-icon`}>
+            <slot name="icon">{iconNode}</slot>
+          </span>
+        );
+      }
+      return <slot name="icon">{iconNode}</slot>;
+    };
 
     const Tag = this.tag as string;
     return (
@@ -122,7 +161,7 @@ export default class Button extends Component<ButtonProps> {
             [`${classPrefix}-button--shape-${shape}`]: shape !== 'rectangle',
             [`${classPrefix}-button--ghost`]: ghost,
             [`${classPrefix}-is-loading`]: loading,
-            [`${classPrefix}-is-disabled`]: disabled,
+            [`${classPrefix}-is-disabled`]: isDisabled,
             [`${classPrefix}-size-s`]: size === 'small',
             [`${classPrefix}-size-l`]: size === 'large',
             [`${classPrefix}-size-full-width`]: block,
@@ -132,9 +171,10 @@ export default class Button extends Component<ButtonProps> {
         part={`${classPrefix}-button`}
         onClick={this.clickHandle}
         style={innerStyle}
+        disabled={isDisabled || undefined}
         {...rest}
       >
-        <slot name="icon">{iconNode ? iconNode : null}</slot>
+        {renderIconSlot()}
         <span className={`${classPrefix}-button__text`} part={`${classPrefix}-button__text`}>
           <slot></slot>
         </span>

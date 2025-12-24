@@ -1,7 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 import 'tdesign-icons-web-components/esm/components/chevron-left';
 import 'tdesign-icons-web-components/esm/components/chevron-right';
-import 'tdesign-web-components/select-input';
+import '../../select-input';
 import 'dayjs/locale/zh-cn';
 
 import classNames from 'classnames';
