@@ -9,19 +9,19 @@ spline: explain
 ### 🚀 Features 
 - `DatePicker`: 新增`DatePicker` 和 `DateRangePicker` 组件 @LeonardoSya ([#330](https://github.com/TDesignOteam/tdesign-web-components/pull/330))
 - `Select`: 新增 `Select` 选择器组件 @LeonardoSya ([#328](https://github.com/TDesignOteam/tdesign-web-components/pull/328))
-- `Divider`: 新增`color` 和 `width` API @LeonardoSya ([#334](https://github.com/TDesignOteam/tdesign-web-components/pull/334))
-- `Image`: 修复加载错误时图片占位样式问题 @LeonardoSya ([#329](https://github.com/TDesignOteam/tdesign-web-components/pull/329))
+- `Divider`: 新增 `color` 和 `width` API @LeonardoSya ([#334](https://github.com/TDesignOteam/tdesign-web-components/pull/334))
 ### 🐞 Bug Fixes
 - `ChatMarkdown`: 修复自定义 Markdown 渲染引擎的部分配置不生效的问题 @uyarn ([#349](https://github.com/TDesignOteam/tdesign-web-components/pull/349))
-### 🚧 Others
-- `Input`: 完善文档内容 @LeonardoSya ([#336](https://github.com/TDesignOteam/tdesign-web-components/pull/336))
 - `Image`: 修复加载错误时图片占位样式问题 @LeonardoSya ([#329](https://github.com/TDesignOteam/tdesign-web-components/pull/329))
 - `Button`: 修复使用`icon`的场景的间距问题 @LeonardoSya ([#341](https://github.com/TDesignOteam/tdesign-web-components/pull/341))
+### 🚧 Others
+- `Input`: 完善文档内容 @LeonardoSya ([#336](https://github.com/TDesignOteam/tdesign-web-components/pull/336))
 
 ## 🌈 1.2.8 `2025-11-28` 
 ### 🚧 Feature
 - feat: 新增RangeInputPopup组件 @LeonardoSya ([#320](https://github.com/TDesignOteam/tdesign-web-components/pull/320))
 - feat(chatmessage): add codeblock click callback @carolin913 ([#332](https://github.com/TDesignOteam/tdesign-web-components/pull/332))
+
 - feat(chatengine): 支持并发多个agui toolcall事件 @carolin913 ([#332](https://github.com/TDesignOteam/tdesign-web-components/pull/332))
 
 ## 🌈 1.2.6 `2025-11-10` 
