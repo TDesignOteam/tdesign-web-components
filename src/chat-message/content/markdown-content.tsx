@@ -120,24 +120,25 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
   initMarkdown = async () => {
     this.isMarkdownInit.value = false;
 
+    const defaultCustomRenderer = {
+      // 自定义语法渲染器
+      all: {
+        render: (code, _sign, _cherry, lang) =>
+          `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
+            this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
+          }" />`,
+      },
+    };
     const md = new Cherry({
       ...this.markdownOptions,
       engine: {
-        ...this.markdownOptions.engine,
         syntax: {
-          ...this.markdownOptions.engine?.syntax,
           codeBlock: {
-            customRenderer: {
-              // 自定义语法渲染器
-              all: {
-                render: (code, _sign, _cherry, lang) =>
-                  `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
-                    this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
-                  }" />`,
-              },
-            },
+            customRenderer: defaultCustomRenderer,
           },
+          ...this.markdownOptions.engine?.syntax,
         },
+        ...this.markdownOptions.engine,
       },
       el: this.mdRef.current,
     });
