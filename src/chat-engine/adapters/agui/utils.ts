@@ -206,17 +206,26 @@ export function createThinkingContent(
  * 创建 toolcall 类型的 AIMessageContent
  * @param toolCall 工具调用数据
  * @param status 状态
- * @param strategy 策略（可选，会根据 toolCallName 自动判断）
+ * @param strategy 策略（可选）
  * @returns toolcall 类型的 AIMessageContent
+ *
+ * type 格式: toolcall-${toolCallName}-${toolCallId}
+ * - toolCallName: 用于查找对应的渲染组件
+ * - toolCallId: 用于区分同名工具的不同调用实例，支持并行工具调用
  */
 export function createToolCallContent(
   toolCall: any,
   status: 'pending' | 'streaming' | 'complete' = 'pending',
-  strategy: 'append' | 'merge' = 'append',
+  strategy?: 'append' | 'merge',
 ): any {
-  // 根据 toolCallName 生成唯一的 type
-  const type = `toolcall-${toolCall.toolCallName}`;
-  return createAIMessageContent(type, toolCall, status, strategy);
+  // 根据 toolCallName 和 toolCallId 生成唯一的 type
+  // 这样同名工具的不同调用实例会有不同的 type，支持并行工具调用场景
+  const type = `toolcall-${toolCall.toolCallName}-${toolCall.toolCallId}`;
+
+  // 如果没有指定 strategy，默认使用 'append'
+  const finalStrategy = strategy || 'append';
+
+  return createAIMessageContent(type, toolCall, status, finalStrategy);
 }
 
 /**
@@ -402,7 +411,8 @@ export function convertReasoningMessages(reasoningMessages: any[]): any[] {
             result: toolResult,
           };
           reasoningData.push({
-            type: `toolcall-${toolCall.function.name}`,
+            // 使用 toolCallName-toolCallId 格式，与 createToolCallContent 保持一致
+            type: `toolcall-${toolCall.function.name}-${toolCall.id}`,
             data: toolCallData,
             status: 'complete',
           });
@@ -467,7 +477,8 @@ export function processToolCalls(toolCalls: any[], toolCallMap: Map<string, any>
     };
 
     return {
-      type: `toolcall-${toolCall.function.name}` as const,
+      // 使用 toolCallName-toolCallId 格式，支持并行工具调用
+      type: `toolcall-${toolCall.function.name}-${toolCall.id}` as const,
       data: toolCallData,
     };
   });
