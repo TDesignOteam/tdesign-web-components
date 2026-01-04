@@ -11,37 +11,17 @@ export default class TagInputBase extends Component {
   tags3 = ['Vue', 'React'];
 
   render() {
-    const onTagInputEnter = (val, context) => {
-      console.log('TagEnter', val, context);
-    };
-
-    const onChange = (val, context) => {
-      this.tags1 = val;
+    const onChange = (e: CustomEvent) => {
+      this.tags1 = e.detail.value;
       this.update();
-      console.log('onChange', val, context);
-    };
-
-    const onClick = (val) => {
-      console.log('Click', val);
-    };
-
-    const onRemove = (val) => {
-      console.log('Remove', val);
+      console.log('change', e.detail.value);
     };
 
     return (
-      <t-space direction="vertical" style={{ width: '80%' }}>
-        <t-tag-input
-          value={this.tags1}
-          onChange={onChange}
-          clearable
-          onEnter={onTagInputEnter}
-          onClick={onClick}
-          onRemove={onRemove}
-          placeholder="请输入"
-        ></t-tag-input>
-        <t-tag-input value={this.tags2} label="Controlled: " placeholder="请输入" clearable />
-        <t-tag-input defaultValue={this.tags3} label="UnControlled: " placeholder="请输入" clearable />
+      <t-space direction="vertical">
+        <t-tag-input value={this.tags1} onChange={onChange} clearable placeholder="请输入" />
+        <t-tag-input value={this.tags2} label="Controlled:" />
+        <t-tag-input defaultValue={this.tags2} label="UnControlled:" />
       </t-space>
     );
   }

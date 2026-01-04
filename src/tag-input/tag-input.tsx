@@ -1,596 +1,363 @@
-import 'tdesign-icons-web-components/esm/components/close-circle-filled';
+import 'tdesign-icons-web-components';
 import '../input';
 import '../tag';
 
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import classNames, { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
-import { InputValue } from '../input';
-import { TagInputValue, TdTagInputProps } from './type';
+import classname, { getClassPrefix } from '../_util/classname';
+import { tagInputDefaultProps } from './defaultProps';
+import { TagInputChangeContext, TagInputValue, TdTagInputProps } from './type';
 
-const classPrefix = getClassPrefix();
+const className = `${getClassPrefix()}-tag-input`;
 
-const TagInputClassNamePrefix = (className: string) => `${classPrefix}-tag-input${className}`;
-
-export interface TagInputProps extends TdTagInputProps, StyledProps {}
-
-interface DragSortProps<T> {
-  sortOnDraggable: boolean;
-  onDragSort?: (context: DragSortContext<T>) => void;
-  onDragOverCheck?: {
-    x?: boolean;
-    targetClassNameRegExp?: RegExp;
-  };
-}
-
-type DragFnType = (e?: DragEvent, index?: number, record?: any) => void;
-interface DragSortInnerData {
-  dragging?: boolean;
-  draggable?: boolean;
-  onDragStart?: DragFnType;
-  onDragOver?: DragFnType;
-  onDrop?: DragFnType;
-  onDragEnd?: DragFnType;
-}
-
-interface DragSortInnerProps extends DragSortInnerData {
-  getDragProps?: (index?: number, record?: any) => DragSortInnerData;
-}
-
-interface DragSortContext<T> {
-  currentIndex: number;
-  current: T;
-  targetIndex: number;
-  target: T;
-}
-
-const isFunction = (arg: unknown) => typeof arg === 'function';
+export type TagInputProps = TdTagInputProps;
 
 @tag('t-tag-input')
 export default class TagInput extends Component<TagInputProps> {
-  static css = `
-    t-input::part(input-tag) {
-      padding: 0;
-      vertical-align: middle;
-      -webkit-animation: t-fade-in .2s ease-in-out;
-      animation: t-fade-in .2s ease-in-out;
-      margin: 3px var(--td-comp-margin-xs) 3px 0;
-    }
+  static css = [];
 
-    t-input::part(input-tag-l) {
-      height: var(--td-comp-size-m);
-      font: var(--td-font-body-medium);
-    }
-
-    t-input::part(input-tag-s) {
-      height: var(--td-comp-size-xxs);
-      font: var(--td-font-body-small);
-      margin: 1px var(--td-comp-margin-xs) 1px 0;
-    }
-  `;
-
-  static defaultProps = {
-    autoWidth: false,
-    clearable: false,
-    dragSort: false,
-    excessTagsDisplayType: 'break-line',
-    defaultInputValue: '',
-    minCollapsedNum: 0,
-    placeholder: undefined,
-    readonly: false,
-    size: 'medium',
-    defaultValue: [],
-  };
+  static defaultProps = tagInputDefaultProps;
 
   static propTypes = {
-    autoWidth: Boolean,
+    value: Array,
+    defaultValue: Array,
+    inputValue: [String, Number],
+    defaultInputValue: [String, Number],
+    label: String,
     clearable: Boolean,
     disabled: Boolean,
-    dragSort: Boolean,
     readonly: Boolean,
-
-    excessTagsDisplayType: String,
     placeholder: String,
-    size: String,
-    status: String,
     max: Number,
     minCollapsedNum: Number,
-
-    onBlur: Function,
+    excessTagsDisplayType: String,
+    size: String,
+    status: String,
+    tips: String,
+    autoWidth: Boolean,
+    valueDisplay: [String, Function],
     onChange: Function,
-    onClear: Function,
-    onClick: Function,
-    onDragSort: Function,
-    onEnter: Function,
-    onFocus: Function,
     onInputChange: Function,
-    onMouseenter: Function,
-    onMouseleave: Function,
-    onPaste: Function,
+    onEnter: Function,
+    onExceed: Function,
     onRemove: Function,
+    onClear: Function,
+    onFocus: Function,
+    onBlur: Function,
   };
 
-  tagInputRef = createRef();
+  // 内部状态
+  private innerTags: TagInputValue = [];
 
-  tInputValue = '';
+  private innerInputValue: string = '';
 
-  oldInputValue = '';
+  private isHover = false;
 
-  isHover = false;
+  private inputRef = createRef<HTMLElement>();
 
-  tagValue = [];
+  private scrollElement: HTMLElement | null = null;
 
-  mouseEnterTimer = null;
+  private scrollDistance = 0;
 
-  scrollDistance = 0;
+  private mouseEnterTimer: ReturnType<typeof setTimeout> | null = null;
 
-  scrollElement;
+  private get isTagsControlled() {
+    return Reflect.has(this.props, 'value') && this.props.value !== null && this.props.value !== undefined;
+  }
 
-  draggingIndex = -1;
+  private get isInputControlled() {
+    return (
+      Reflect.has(this.props, 'inputValue') && this.props.inputValue !== null && this.props.inputValue !== undefined
+    );
+  }
 
-  dragStartData = null;
+  private get tags(): TagInputValue {
+    return this.isTagsControlled ? this.props.value ?? [] : this.innerTags;
+  }
 
-  isDropped = null;
-
-  startInfo = { nodeX: 0, nodeWidth: 0, mouseX: 0 };
-
-  isCompositionRef = createRef();
+  private get inputVal(): string {
+    return this.isInputControlled ? String(this.props.inputValue ?? '') : this.innerInputValue;
+  }
 
   install() {
-    this.tagValue = this.props?.defaultValue || [];
+    this.innerInputValue = String(this.props.defaultInputValue ?? '');
   }
 
-  installed() {
-    this.initScroll(this.tagInputRef);
+  ready() {
+    // defaultValue不在install()而在ready()中读取，是因为install()时omi-reactify的update()还没执行，复杂类型的props未被设置
+    this.innerTags = this.props.defaultValue ?? [];
+    this.initScroll();
   }
 
-  updateScrollElement = (element) => {
-    [this.scrollElement] = element.current.children;
-  };
+  uninstall() {
+    if (this.mouseEnterTimer) {
+      clearTimeout(this.mouseEnterTimer);
+      this.mouseEnterTimer = null;
+    }
+  }
 
-  updateScrollDistance = () => {
+  private initScroll() {
+    if (this.inputRef.current) {
+      this.scrollElement = this.inputRef.current.children?.[0] as HTMLElement;
+    }
+  }
+
+  // 计算最大可滚动距离
+  private updateScrollDistance() {
     if (!this.scrollElement) return;
     this.scrollDistance = this.scrollElement.scrollWidth - this.scrollElement.clientWidth;
-  };
+  }
 
-  scrollTo = (options) => {
-    if (isFunction(this.scrollElement?.scroll)) {
-      this.scrollElement.scroll({ left: options.x, behavior: 'smooth' });
+  private doScrollTo(distance: number) {
+    if (this.scrollElement?.scroll) {
+      this.scrollElement.scroll({ left: distance, behavior: 'smooth' });
     }
-  };
+  }
 
-  scrollToRight = () => {
+  private scrollToRight() {
     this.updateScrollDistance();
-    this.scrollTo({ x: this.scrollDistance, y: 0 });
-  };
+    this.doScrollTo(this.scrollDistance);
+  }
 
-  scrollToLeft = () => {
-    this.scrollTo({ x: 0, y: 0 });
-  };
+  private scrollToLeft() {
+    this.doScrollTo(0);
+  }
 
-  // TODO：MAC 电脑横向滚动，Windows 纵向滚动。当前只处理了横向滚动
-  onWheel = ({ e }: { e: WheelEvent }) => {
-    if (this.props.readonly || this.props.disabled) return;
+  // 处理鼠标滚轮事件
+  private onWheel = (eventOrContext: WheelEvent | { e: WheelEvent }) => {
+    const { readonly, disabled, excessTagsDisplayType } = this.props;
+    if (readonly || disabled) return;
     if (!this.scrollElement) return;
-    if (e?.deltaX && e.deltaX > 0) {
+    if (excessTagsDisplayType !== 'scroll') return;
+
+    const e = eventOrContext instanceof WheelEvent ? eventOrContext : eventOrContext.e;
+    this.updateScrollDistance();
+    if (e.deltaX > 0 || e.deltaY > 0) {
       const distance = Math.min(this.scrollElement.scrollLeft + 120, this.scrollDistance);
-      this.scrollTo({ x: distance, y: 0 });
+      this.doScrollTo(distance);
     } else {
       const distance = Math.max(this.scrollElement.scrollLeft - 120, 0);
-      this.scrollTo({ x: distance, y: 0 });
+      this.doScrollTo(distance);
     }
   };
 
-  // 鼠标 hover，自动滑动到最右侧，以便输入新标签
-  scrollToRightOnEnter = () => {
+  private scrollToRightOnEnter() {
     if (this.props.excessTagsDisplayType !== 'scroll') return;
-    // 一闪而过的 mousenter 不需要执行
     this.mouseEnterTimer = setTimeout(() => {
       this.scrollToRight();
-      clearTimeout(this.mouseEnterTimer);
     }, 100);
-  };
+  }
 
-  scrollToLeftOnLeave = () => {
+  private scrollToLeftOnLeave() {
     if (this.props.excessTagsDisplayType !== 'scroll') return;
-    this.scrollTo({ x: 0 });
-    clearTimeout(this.mouseEnterTimer);
-  };
-
-  clearScroll = () => {
-    clearTimeout(this.mouseEnterTimer);
-  };
-
-  initScroll = (element) => {
-    if (!element) return;
-    this.updateScrollElement(element);
-  };
-
-  private useDragSorter = <T,>(props: DragSortProps<T>): DragSortInnerProps => {
-    const { sortOnDraggable, onDragSort, onDragOverCheck } = props;
-
-    const onDragOver = (e, index, record) => {
-      e.preventDefault();
-      if (this.draggingIndex === index || this.draggingIndex === -1) return;
-      if (onDragOverCheck?.targetClassNameRegExp && !onDragOverCheck?.targetClassNameRegExp.test(e.target?.className)) {
-        return;
-      }
-      if (onDragOverCheck?.x) {
-        if (!this.startInfo.nodeWidth) return;
-
-        const { x, width } = e.target.getBoundingClientRect();
-        const targetNodeMiddleX = x + width / 2;
-        const clientX = e.clientX || 0;
-        const draggingNodeLeft = clientX - (this.startInfo.mouseX - this.startInfo.nodeX);
-        const draggingNodeRight = draggingNodeLeft + this.startInfo.nodeWidth;
-
-        let overlap = false;
-        if (draggingNodeLeft > x && draggingNodeLeft < x + width) {
-          overlap = draggingNodeLeft < targetNodeMiddleX;
-        } else {
-          overlap = draggingNodeRight > targetNodeMiddleX;
-        }
-        if (!overlap) return;
-      }
-      onDragSort?.({
-        currentIndex: this.draggingIndex,
-        current: this.dragStartData,
-        target: record,
-        targetIndex: index,
-      });
-      this.draggingIndex = index;
-    };
-
-    if (!sortOnDraggable) {
-      return {};
+    this.scrollToLeft();
+    if (this.mouseEnterTimer) {
+      clearTimeout(this.mouseEnterTimer);
+      this.mouseEnterTimer = null;
     }
+  }
 
-    const onDragStart = (e, index, record: T) => {
-      this.draggingIndex = index;
-      this.dragStartData = record;
-      if (onDragOverCheck) {
-        const { x, width } = e.target.getBoundingClientRect();
-        this.startInfo = {
-          nodeX: x,
-          nodeWidth: width,
-          mouseX: e.clientX || 0,
-        };
-      }
-    };
-
-    const onDrop = () => {
-      this.isDropped = true;
-    };
-
-    const onDragEnd = () => {
-      if (!this.isDropped) {
-        // 取消排序，待扩展 api，输出 dragStartData
-      }
-      this.isDropped = false;
-      this.draggingIndex = -1;
-      this.dragStartData = null;
-    };
-
-    const getDragProps = (index, record: T) => {
-      if (sortOnDraggable) {
-        return {
-          draggable: true,
-          onDragStart: (e) => {
-            onDragStart(e, index, record);
-          },
-          onDragOver: (e) => {
-            onDragOver(e, index, record);
-          },
-          onDrop: () => {
-            onDrop();
-          },
-          onDragEnd: () => {
-            onDragEnd();
-          },
-        };
-      }
-      return {};
-    };
-
-    return { onDragStart, onDragOver, onDrop, onDragEnd, getDragProps, dragging: this.draggingIndex !== -1 };
-  };
-
-  private onClose = (p: { e?: MouseEvent; index: number; item: string | number }) => {
-    const { props, tagValue } = this;
-    const arr = [...tagValue];
-    arr.splice(p.index, 1);
-    this.tagValue = arr;
-    props?.onChange &&
-      props?.onChange?.(arr, {
-        ...p,
-        trigger: 'tag-remove',
-      });
-    props?.onRemove && props?.onRemove?.({ e: p?.e, index: p.index, item: p.item, trigger: 'tag-remove', value: arr });
+  // 事件派发
+  private fireChange(value: TagInputValue, context: TagInputChangeContext) {
+    if (!this.isTagsControlled) {
+      this.innerTags = value;
+    }
+    this.fire('change', { value, context }, { bubbles: true, composed: true });
     this.update();
-  };
+  }
 
-  // 按下回退键，删除标签
-  private onInputBackspaceKeyDown = (value: InputValue, context: { e: KeyboardEvent }) => {
-    const { tagValue, props, tInputValue, isCompositionRef } = this;
-    if (!context) return;
-    const { e } = context;
-    if (!tagValue || !tagValue.length) return;
-    // 回车键删除，输入框值为空时，才允许 Backspace 删除标签
-    // 当输入中文拼音时，如果输入的拼音内容未转换为中文时，tInputValue 的内容为空，此时按Backspace键会触发删除标签的情况，而不是只删除输入框内的中文拼音
-    if (!tInputValue && !isCompositionRef.current && ['Backspace', 'NumpadDelete'].includes(e.key)) {
-      const index = tagValue.length - 1;
-      const item = tagValue[index];
-      const trigger = 'backspace';
-      const newValue = tagValue.slice(0, -1);
-      this.tagValue = newValue;
-      props?.onChange && props?.onChange(newValue, { e, index, item, trigger });
-      props?.onRemove && props?.onRemove?.({ e, index, item, trigger, value: newValue });
-      this.update();
+  private fireInputChange(value: string, context: { e?: Event; trigger?: 'input' | 'clear' | 'enter' | 'blur' }) {
+    if (!this.isInputControlled) {
+      this.innerInputValue = value;
     }
-  };
-
-  private clearAll = (e) => {
-    const { props } = this;
-    this.tagValue = [];
-    this.tInputValue = '';
-    props?.onChange && props.onChange([], { e, trigger: 'clear' });
+    this.fire('inputChange', { value, context }, { bubbles: true, composed: true });
     this.update();
-  };
+  }
 
-  private onClearClick = (e: MouseEvent) => {
-    this.clearAll(e);
-    this.props.onClear?.({ e });
-  };
-
-  private onInnerClick = (context: { e: MouseEvent }) => {
-    const { props, tagInputRef } = this;
-    if (!props.disabled && !props.readonly) {
-      (tagInputRef.current as any).inputElement?.focus?.();
+  // 交互
+  private handleEnter = (value: string, context: { e: KeyboardEvent }) => {
+    const v = value.replace(/[^\u4e00-\u9fa5a-zA-Z0-9]/g, '').trim();
+    if (!v) return;
+    const { max } = this.props;
+    if (max != null && this.tags.length >= max) {
+      this.fire('exceed', { value: this.tags, inputValue: v, e: context.e }, { bubbles: true, composed: true });
+      return;
     }
-    props.onClick?.(context);
-  };
 
-  private onInnerEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
-    const { tagValue, props } = this;
-    const valueStr = value ? String(value).trim() : '';
-    let newValue: TagInputValue = tagValue;
-    const isLimitExceeded = props.max && tagValue?.length >= props.max;
-    if (valueStr && !isLimitExceeded) {
-      newValue = tagValue instanceof Array ? tagValue.concat(String(valueStr)) : [valueStr];
-    }
-    this.tInputValue = '';
-    props.onChange?.(newValue, {
-      ...context,
-      trigger: 'enter',
-    });
-    this.tagValue = newValue;
-    props?.onEnter?.(newValue, { ...context, inputValue: value });
-    this.update();
-  };
-
-  private onInputEnter = (value: InputValue, context: { e: KeyboardEvent }) => {
-    !this.isCompositionRef.current && this.onInnerEnter(value, context);
+    const tags = [...this.tags, v];
+    this.fireChange(tags, { trigger: 'enter', item: v, e: context.e });
+    this.fireInputChange('', { e: context.e, trigger: 'enter' });
+    this.fire('enter', { value: tags, inputValue: v, e: context.e }, { bubbles: true, composed: true });
     this.scrollToRight();
   };
 
-  private addHover = (context) => {
-    const { props } = this;
-    if (props.readonly || props.disabled) return;
+  private handleBackspace = (_value: string, context: { e: KeyboardEvent }) => {
+    if (context.e.key !== 'Backspace') return;
+    // 输入框有值时不删tag
+    if (this.inputVal) return;
+    if (!this.tags.length) return;
+
+    const index = this.tags.length - 1;
+    const item = this.tags[index];
+    const tags = this.tags.slice(0, -1);
+    this.fireChange(tags, { trigger: 'backspace', index, item, e: context.e });
+    this.fire(
+      'remove',
+      { value: tags, index, item, trigger: 'backspace', e: context.e },
+      { bubbles: true, composed: true },
+    );
+  };
+
+  private handleTagClose = (index: number, e?: MouseEvent) => {
+    const item = this.tags[index];
+    const tags = [...this.tags];
+    tags.splice(index, 1);
+    this.fireChange(tags, { trigger: 'tag-remove', index, item, e });
+    this.fire('remove', { value: tags, index, item, trigger: 'tag-remove' }, { bubbles: true, composed: true });
+  };
+
+  private handleClear = (e: MouseEvent) => {
+    e.stopPropagation();
+    this.fireChange([], { trigger: 'clear', e });
+    this.fireInputChange('', { e, trigger: 'clear' });
+    this.fire('clear', { e }, { bubbles: true, composed: true });
+  };
+
+  private handleInputChange = (value: string, context?: { e?: Event }) => {
+    this.fireInputChange(value, { e: context?.e, trigger: 'input' });
+  };
+
+  private handleMouseEnter = () => {
     this.isHover = true;
     this.update();
-    props.onMouseenter?.(context);
+    this.scrollToRightOnEnter();
   };
 
-  private cancelHover = (context) => {
-    const { props } = this;
-    if (props.readonly || props.disabled) return;
+  private handleMouseLeave = () => {
     this.isHover = false;
     this.update();
-    props.onMouseleave?.(context);
+    this.scrollToLeftOnLeave();
   };
 
-  private onInputCompositionstart = (value: string, context: { e: CompositionEvent }) => {
-    this.isCompositionRef.current = true;
-    this.props.inputProps?.onCompositionstart?.(value, context);
-  };
+  // render
+  private renderLabel() {
+    const { valueDisplay, label } = this.props;
 
-  private onInputCompositionend = (value: string, context: { e: CompositionEvent }) => {
-    this.isCompositionRef.current = false;
-    this.props.inputProps?.onCompositionend?.(value, context);
-  };
+    if (valueDisplay) {
+      const onClose = (index: number) => this.handleTagClose(index);
+      if (typeof valueDisplay === 'function') {
+        return valueDisplay(this.tags, onClose);
+      }
+      return valueDisplay;
+    }
 
-  // 将对 tag-input 组件的 value 值进行受控处理提取到 render 之前
-  beforeRender(): void {
-    this.tagValue = this.props?.value ? this.props.value : this.tagValue;
-  }
+    const { minCollapsedNum, tagProps, disabled, readonly, size } = this.props;
+    let { tags } = this;
+    let collapsedCount = 0;
+    if (minCollapsedNum != null && tags.length > minCollapsedNum) {
+      tags = tags.slice(0, minCollapsedNum);
+      collapsedCount = this.tags.length - minCollapsedNum;
+    }
 
-  render(props: OmiProps<TagInputProps>) {
-    const {
-      excessTagsDisplayType,
-      autoWidth,
-      readonly,
-      disabled,
-      clearable,
-      placeholder,
-      valueDisplay,
-      label,
-      inputProps,
-      size,
-      tips,
-      status,
-      suffixIcon,
-      suffix,
-      innerStyle,
-      borderless,
-      onPaste,
-      onFocus,
-      onBlur,
-    } = props;
+    const list: any[] = [];
 
-    const { tagValue } = this;
+    if (label) {
+      list.push(
+        <div key="label" class={`${className}__prefix`}>
+          {label}
+        </div>,
+      );
+    }
 
-    const { getDragProps } = this.useDragSorter({
-      ...props,
-      sortOnDraggable: props.dragSort,
-      onDragOverCheck: {
-        x: true,
-        targetClassNameRegExp: /^t-tag/,
-      },
+    const isLastTag = (idx: number) => idx === tags.length - 1 && collapsedCount === 0;
+    // 禁用动画，防止update时tag闪烁
+    const noAnimationStyle = { animationName: 'none' };
+
+    tags.forEach((item, index) => {
+      list.push(
+        <t-tag
+          key={index}
+          size={size}
+          closable={!disabled && !readonly}
+          disabled={disabled}
+          innerStyle={isLastTag(index) ? noAnimationStyle : { ...noAnimationStyle, marginRight: '4px' }}
+          onClose={(e: any) => {
+            const event = e?.e ?? e;
+            this.handleTagClose(index, event);
+          }}
+          {...(tagProps || {})}
+        >
+          {item}
+        </t-tag>,
+      );
     });
 
-    // 自定义 Tag 节点
-    const displayNode = isFunction(valueDisplay)
-      ? (valueDisplay as any)({
-          value: tagValue,
-          onClose: (index, item) => this.onClose({ index, item }),
-        })
-      : valueDisplay;
+    if (collapsedCount > 0) {
+      list.push(
+        <t-tag key="collapsed" size={size} disabled={disabled} innerStyle={noAnimationStyle}>
+          +{collapsedCount}
+        </t-tag>,
+      );
+    }
 
-    const onInputBackspaceKeyUp = (value: InputValue) => {
-      if (!tagValue || !tagValue.length) return;
-      this.oldInputValue = value;
-    };
+    return list;
+  }
 
-    const renderLabel = ({ displayNode, label }) => {
-      const newList = props.minCollapsedNum ? tagValue.slice(0, props.minCollapsedNum) : tagValue;
-      const list = displayNode
-        ? displayNode
-        : newList?.map((item, index) => {
-            const tagContent = isFunction(props.tag) ? (props.tag as any)({ value: item }) : props.tag;
-            return (
-              <t-tag
-                part={`input-tag ${size === 'large' && 'input-tag-l'} ${size === 'small' && 'input-tag-s'}`}
-                key={index}
-                size={size}
-                disabled={disabled}
-                onClose={(context) => this.onClose({ e: context.e, item, index })}
-                closable={!readonly && !disabled}
-                {...getDragProps?.(index, item)}
-                {...props.tagProps}
-                style={{ margin: `` }}
-                class={classNames(`${classPrefix}-tag`)}
-              >
-                {tagContent ?? item}
-              </t-tag>
-            );
-          });
-      if (label) {
-        list?.unshift(
-          <div class={`${classPrefix}-tag-input ${classPrefix}-tag-input__prefix`} key="label">
-            {label}
-          </div>,
-        );
-      }
-      if (newList.length !== tagValue.length) {
-        const len = tagValue.length - newList.length;
-        const params = {
-          value: tagValue,
-          count: tagValue.length - props.minCollapsedNum,
-          collapsedTags: tagValue.slice(props.minCollapsedNum, tagValue.length),
-          collapsedSelectedItems: tagValue.slice(props.minCollapsedNum, tagValue.length),
-          onClose: this.onClose,
-        };
-        const more = isFunction(props.collapsedItems) ? (props.collapsedItems as any)(params) : props.collapsedItems;
-        if (more) {
-          list.push(more);
-        } else {
-          list.push(
-            <t-tag
-              part={`input-tag ${size === 'large' && 'input-tag-l'} ${size === 'small' && 'input-tag-s'}`}
-              size={size}
-            >
-              +{len}
-            </t-tag>,
-          );
-        }
-      }
-      return list;
-    };
-
-    const tagInputPlaceholder = !tagValue?.length ? placeholder : '';
-
-    const showClearIcon = Boolean(!readonly && !disabled && clearable && this.isHover && tagValue?.length);
-
-    const suffixIconNode = showClearIcon ? (
+  render(props: TdTagInputProps | OmiProps<TdTagInputProps, any>) {
+    const { clearable, disabled, readonly, placeholder, size, status, tips, suffixIcon, excessTagsDisplayType } = props;
+    const showClear = clearable && this.isHover && !disabled && !readonly && (this.tags.length > 0 || this.inputVal);
+    const placeholderText = this.tags.length ? '' : placeholder;
+    const suffixNode = showClear ? (
       <t-icon-close-circle-filled
-        style={{ display: 'flex' }}
-        innerClass={classNames([
-          `${classPrefix}-icon`,
-          `${classPrefix}-icon-close-circle-filled `,
-          TagInputClassNamePrefix(`__suffix-clear`),
-        ])}
-        onMouseDown={(e) => e.preventDefault()}
-        onClick={this.onClearClick}
+        class={`${className}__suffix-clear`}
+        onClick={this.handleClear}
+        onMouseDown={(e: MouseEvent) => e.preventDefault()}
       />
     ) : (
       suffixIcon
     );
-
-    const isEmpty = !(Array.isArray(tagValue) && tagValue.length);
-
-    const classes = [
-      `${classPrefix}-tag-input`,
-      {
-        [TagInputClassNamePrefix(`--break-line`)]: excessTagsDisplayType === 'break-line',
-        [TagInputClassNamePrefix(`__with-suffix-icon`)]: !!suffixIconNode,
-        [`${classPrefix}-is-empty`]: isEmpty,
-        [TagInputClassNamePrefix(`--with-tag`)]: !isEmpty,
-        [`${classPrefix}-input--auto-width`]: !!autoWidth,
-        [`${classPrefix}-input__warp`]: !autoWidth,
-      },
-      props.innerClass,
-    ];
+    const isEmpty = this.tags.length === 0;
+    // 处理自动换行时的input宽度自适应
+    const needAutoExpand = excessTagsDisplayType === 'break-line' && !isEmpty;
+    const innerClass = classname(className, {
+      [`${getClassPrefix()}-is-empty`]: isEmpty,
+      [`${className}--break-line`]: excessTagsDisplayType === 'break-line',
+      [`${className}--scroll`]: excessTagsDisplayType === 'scroll',
+      [`${className}--with-tag`]: !isEmpty,
+    });
 
     return (
       <t-input
-        ref={this.tagInputRef}
-        value={this.tInputValue}
-        onChange={(val) => {
-          this.tInputValue = val;
-          this.update();
-        }}
-        autoWidth={true} // 控制input_inner的宽度 设置为true让内部input不会提前换行
-        onWheel={this.onWheel}
-        size={size}
-        readonly={readonly}
+        ignoreFire
+        fitHeight
+        ref={this.inputRef}
+        innerClass={innerClass}
+        value={this.inputVal}
+        label={this.renderLabel()}
+        placeholder={placeholderText}
         disabled={disabled}
-        label={renderLabel({ displayNode, label })}
-        innerClass={classNames(classes)}
-        style={innerStyle}
-        tips={tips}
+        readonly={readonly}
+        size={size}
         status={status}
-        placeholder={tagInputPlaceholder}
-        suffix={suffix}
-        suffixIcon={suffixIconNode}
-        showInput={!inputProps?.readonly || !tagValue || !tagValue?.length}
-        keepWrapperWidth={!autoWidth}
-        borderless={borderless}
-        onPaste={onPaste}
-        onEnter={this.onInputEnter}
-        onMyKeydown={this.onInputBackspaceKeyDown}
-        onMyKeyup={onInputBackspaceKeyUp}
-        onMouseenter={(context) => {
-          this.addHover(context);
-          this.scrollToRightOnEnter();
+        tips={tips}
+        suffixIcon={suffixNode}
+        autoWidth={props.autoWidth}
+        autoExpandWidth={needAutoExpand}
+        onChange={this.handleInputChange}
+        onEnter={this.handleEnter}
+        onMyKeydown={this.handleBackspace}
+        onWheel={this.onWheel}
+        onMouseenter={this.handleMouseEnter}
+        onMouseleave={this.handleMouseLeave}
+        onFocus={(value: string, context: { e: FocusEvent }) => {
+          this.fire('focus', { value: this.tags, inputValue: value, e: context.e }, { bubbles: true, composed: true });
         }}
-        onMouseleave={(context) => {
-          this.cancelHover(context);
-          this.scrollToLeftOnLeave();
-        }}
-        onFocus={(inputValue, context) => {
-          onFocus?.(tagValue, { e: context.e, inputValue });
-        }}
-        onBlur={(tInputValue, context) => {
-          if (tInputValue) {
-            this.tInputValue = '';
-            this.update();
+        onBlur={(value: string, context: { e: FocusEvent }) => {
+          if (this.inputVal) {
+            this.fireInputChange('', { e: context.e, trigger: 'blur' });
           }
-          onBlur?.(tagValue, { e: context.e, inputValue: '' });
+          this.fire('blur', { value: this.tags, inputValue: value, e: context.e }, { bubbles: true, composed: true });
         }}
-        onCompositionstart={this.onInputCompositionstart}
-        onCompositionend={this.onInputCompositionend}
-        {...inputProps}
       />
     );
   }
