@@ -1,3 +1,4 @@
+import type { TNode } from '../common';
 import type { InputValue } from '../input';
 import type { TagProps } from '../tag';
 
@@ -18,6 +19,13 @@ export interface TagInputRemoveContext {
   item: string;
   trigger: 'tag-remove' | 'backspace';
   e?: MouseEvent | KeyboardEvent;
+}
+
+export interface CollapsedItemsParams {
+  value: TagInputValue;
+  collapsedSelectedItems: TagInputValue | Array<{ label?: string; value?: any; disabled?: boolean }>;
+  count: number;
+  onClose: (context: { index: number; e?: MouseEvent }) => void;
 }
 
 export interface TdTagInputProps {
@@ -57,10 +65,12 @@ export interface TdTagInputProps {
   suffixIcon?: any;
   /** 宽度随内容自适应 */
   autoWidth?: boolean;
-  /** 自定义标签的内部内容 */
-  tag?: string | ((value: string) => any);
   /** 自定义值呈现的全部内容 */
   valueDisplay?: string | ((value: TagInputValue, onClose: (index: number) => void) => any);
+  /** 自定义折叠标签呈现方式 */
+  collapsedItems?: TNode<CollapsedItemsParams>;
+  /** 数据化配置选项内容 */
+  options?: Array<{ label?: string; value?: any; disabled?: boolean }>;
   /** 标签值变化回调 */
   onChange?: (value: TagInputValue, context: TagInputChangeContext) => void;
   /** 输入框值变化回调 */

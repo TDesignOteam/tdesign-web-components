@@ -36,6 +36,8 @@ export default class TagInput extends Component<TagInputProps> {
     tips: String,
     autoWidth: Boolean,
     valueDisplay: [String, Function],
+    collapsedItems: [String, Function],
+    options: Array,
     onChange: Function,
     onInputChange: Function,
     onEnter: Function,
@@ -251,11 +253,11 @@ export default class TagInput extends Component<TagInputProps> {
       return valueDisplay;
     }
 
-    const { minCollapsedNum, tagProps, disabled, readonly, size } = this.props;
-    let { tags } = this;
+    const { minCollapsedNum, tagProps, disabled, readonly, size, collapsedItems, options } = this.props;
+    let displayTags = this.tags;
     let collapsedCount = 0;
-    if (minCollapsedNum != null && tags.length > minCollapsedNum) {
-      tags = tags.slice(0, minCollapsedNum);
+    if (minCollapsedNum != null && minCollapsedNum > 0 && this.tags.length > minCollapsedNum) {
+      displayTags = this.tags.slice(0, minCollapsedNum);
       collapsedCount = this.tags.length - minCollapsedNum;
     }
 
@@ -269,11 +271,11 @@ export default class TagInput extends Component<TagInputProps> {
       );
     }
 
-    const isLastTag = (idx: number) => idx === tags.length - 1 && collapsedCount === 0;
+    const isLastTag = (idx: number) => idx === displayTags.length - 1 && collapsedCount === 0;
     // 禁用动画，防止update时tag闪烁
     const noAnimationStyle = { animationName: 'none' };
 
-    tags.forEach((item, index) => {
+    displayTags.forEach((item, index) => {
       list.push(
         <t-tag
           key={index}
@@ -292,11 +294,25 @@ export default class TagInput extends Component<TagInputProps> {
       );
     });
 
+    // 当tags数超过minCollapsedNum时，优先尝试调用collapsedItems（用户自定义的折叠样式），否则调用默认的“+N”样式
     if (collapsedCount > 0) {
+      // 透传options，让collapsedItems能拿到完整的options内容
+      const collapsedOptions = Array.isArray(options) ? options : this.tags;
+      const collapsedParams = {
+        value: this.tags,
+        collapsedSelectedItems: collapsedOptions.slice(minCollapsedNum),
+        count: collapsedCount,
+        onClose: (context: { index: number; e?: MouseEvent }) => this.handleTagClose(context.index, context.e),
+      };
+
+      const collapsedNode = typeof collapsedItems === 'function' ? collapsedItems(collapsedParams) : collapsedItems;
+
       list.push(
-        <t-tag key="collapsed" size={size} disabled={disabled} innerStyle={noAnimationStyle}>
-          +{collapsedCount}
-        </t-tag>,
+        collapsedNode ?? (
+          <t-tag key="collapsed" size={size} disabled={disabled} innerStyle={noAnimationStyle}>
+            +{collapsedCount}
+          </t-tag>
+        ),
       );
     }
 
