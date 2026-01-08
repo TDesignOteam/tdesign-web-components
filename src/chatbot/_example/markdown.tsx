@@ -15,6 +15,9 @@ export default class MarkdownExample extends Component {
       .space::part(md_h3) {
         color: red;
       }
+      .space::part(t-chat__text__markdown__code__body) {
+        background: black;
+      }
     `,
   ];
 
