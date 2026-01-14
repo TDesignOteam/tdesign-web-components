@@ -38,9 +38,9 @@ const banner = `/**
 // 获取分析插件
 const getAnalyzePlugins = (buildType = 'umd') => {
   if (!isAnalyze && buildType !== 'umd') return [];
-  
+
   const plugins = [];
-  
+
   // 基础分析器 - 控制台输出
   plugins.push(
     analyzer({
@@ -48,9 +48,9 @@ const getAnalyzePlugins = (buildType = 'umd') => {
       summaryOnly: false,
       hideDeps: false,
       showExports: true,
-    })
+    }),
   );
-  
+
   // 可视化分析器 - 生成 HTML 报告
   if (isAnalyze || buildType === 'umd') {
     plugins.push(
@@ -62,9 +62,9 @@ const getAnalyzePlugins = (buildType = 'umd') => {
         gzipSize: true,
         brotliSize: true,
         projectRoot: resolve(__dirname, '..'),
-      })
+      }),
     );
-    
+
     // 生成多种格式的报告
     if (buildType === 'umd') {
       plugins.push(
@@ -85,11 +85,11 @@ const getAnalyzePlugins = (buildType = 'umd') => {
           gzipSize: true,
           brotliSize: true,
           projectRoot: resolve(__dirname, '..'),
-        })
+        }),
       );
     }
   }
-  
+
   return plugins;
 };
 
