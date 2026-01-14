@@ -5,6 +5,10 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.2.10 `2025-12-30` 
+### 🚀 Features
+- `chatEngine`: toolcall渲染兼容并发同一名称的工具调用 @carolin913 ([#352](https://github.com/TDesignOteam/tdesign-web-components/pull/352))
+
 ## 🌈 1.2.9 `2025-12-24` 
 ### 🚀 Features 
 - `DatePicker`: 新增`DatePicker` 和 `DateRangePicker` 组件 @LeonardoSya ([#330](https://github.com/TDesignOteam/tdesign-web-components/pull/330))

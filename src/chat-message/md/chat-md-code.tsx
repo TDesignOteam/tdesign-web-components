@@ -55,6 +55,7 @@ export default class ChatMDCode extends Component<TdChatCodeProps> {
         </div>
         <pre
           class={`${classname([`${className}__body`, 'hljs'])}`}
+          part={`${className}__body`}
           innerHTML={`<code part="${className}__code">${this.codeHTML}</code>`}
         />
       </div>
