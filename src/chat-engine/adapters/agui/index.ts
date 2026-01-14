@@ -1,10 +1,10 @@
 /* eslint-disable class-methods-use-this */
-import type { AIMessageContent, ChatMessagesData,ChatRequestParams, SSEChunkData, ToolCall } from '../../type';
+import type { AIMessageContent, ChatMessagesData, ChatRequestParams, SSEChunkData, ToolCall } from '../../type';
 import { AGUIEventMapper } from './event-mapper';
-import type { BaseEvent,RunErrorEvent, RunFinishedEvent, RunStartedEvent } from './events';
+import type { BaseEvent, RunErrorEvent, RunFinishedEvent, RunStartedEvent } from './events';
 import { EventType } from './events';
-import type { AGUIAssistantHistoryMessage,AGUIHistoryMessage, AGUIUserHistoryMessage } from './types';
-import { buildToolCallMap,processReasoningContent, processToolCalls } from './utils';
+import type { ActivityMessage,AGUIAssistantHistoryMessage, AGUIHistoryMessage, AGUIUserHistoryMessage } from './types';
+import { buildToolCallMap, processReasoningContent, processToolCalls } from './utils';
 
 // 重新导出类型，以便其他文件可以使用
 export type {
@@ -61,9 +61,8 @@ export class AGUIAdapter {
     const processMessageGroup = (messages: AGUIHistoryMessage[]): AIMessageContent[] => {
       const allContent: AIMessageContent[] = [];
 
-      messages
-        .filter((msg) => msg.role === 'assistant')
-        .forEach((msg) => {
+      messages.forEach((msg) => {
+        if (msg.role === 'assistant') {
           const assistantMsg = msg as AGUIAssistantHistoryMessage;
 
           // 处理 reasoningContent（支持 reasoning 和 thinking 两种类型）
@@ -87,7 +86,18 @@ export class AGUIAdapter {
             const toolCallContents = processToolCalls(assistantMsg.toolCalls, toolCallMap);
             allContent.push(...(toolCallContents as AIMessageContent[]));
           }
-        });
+        } else if (msg.role === 'activity') {
+          const activityMsg = msg as ActivityMessage;
+          allContent.push({
+            type: 'activity',
+            data: {
+              activityType: activityMsg.activityType,
+              content: activityMsg.content,
+            },
+            status: 'complete',
+          });
+        }
+      });
 
       return allContent;
     };
@@ -144,8 +154,8 @@ export class AGUIAdapter {
 
         // 开始新的组
         currentUserMessage = msg as AGUIUserHistoryMessage;
-      } else if (msg.role === 'assistant' || msg.role === 'tool') {
-        // 收集助手消息和工具调用结果到当前组
+      } else if (msg.role === 'assistant' || msg.role === 'tool' || msg.role === 'activity') {
+        // 收集助手消息、工具调用结果和活动消息到当前组
         currentGroupMessages.push(msg);
       }
     });

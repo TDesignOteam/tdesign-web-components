@@ -14,7 +14,8 @@ export type ChatContentType =
   | 'video'
   | 'suggestion'
   | 'reasoning'
-  | 'toolcall';
+  | 'toolcall'
+  | 'activity';
 
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 
@@ -106,6 +107,15 @@ export type ToolCall = {
 
 export type ToolCallContent = ChatBaseContent<'toolcall', ToolCall>;
 
+// Activity 内容
+export type ActivityData<TContent = Record<string, any>> = {
+  activityType: string;
+  messageId?: string;
+  content: TContent;
+};
+
+export type ActivityContent<TContent = Record<string, any>> = ChatBaseContent<'activity', ActivityData<TContent>>;
+
 // 消息主体
 // 基础消息结构
 
@@ -131,6 +141,7 @@ type AIContentTypeMap = {
   suggestion: SuggestionContent;
   reasoning: ReasoningContent;
   toolcall: ToolCallContent;
+  activity: ActivityContent;
 } & AIContentTypeOverrides;
 
 export type AIContentType = keyof AIContentTypeMap;

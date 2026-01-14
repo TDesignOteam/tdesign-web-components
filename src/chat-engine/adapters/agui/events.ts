@@ -26,6 +26,9 @@ export enum EventType {
   TOOL_CALL_CHUNK = 'TOOL_CALL_CHUNK',
   TOOL_CALL_RESULT = 'TOOL_CALL_RESULT',
 
+  ACTIVITY_SNAPSHOT = 'ACTIVITY_SNAPSHOT',
+  ACTIVITY_DELTA = 'ACTIVITY_DELTA',
+
   STATE_SNAPSHOT = 'STATE_SNAPSHOT',
   STATE_DELTA = 'STATE_DELTA',
   MESSAGES_SNAPSHOT = 'MESSAGES_SNAPSHOT',
@@ -71,6 +74,15 @@ export function isToolCallEvent(eventType: string): boolean {
   return ['TOOL_CALL_START', 'TOOL_CALL_ARGS', 'TOOL_CALL_CHUNK', 'TOOL_CALL_RESULT', 'TOOL_CALL_END'].includes(
     eventType,
   );
+}
+
+/**
+ * 检查事件类型是否为活动相关
+ * @param eventType 事件类型
+ * @returns 是否为活动事件
+ */
+export function isActivityEvent(eventType: string): boolean {
+  return ['ACTIVITY_SNAPSHOT', 'ACTIVITY_DELTA'].includes(eventType);
 }
 
 /**
@@ -162,6 +174,21 @@ export const ToolCallChunkEventSchema = BaseEventSchema.extend({
   delta: z.string().optional(),
 });
 
+export const ActivitySnapshotEventSchema = BaseEventSchema.extend({
+  type: z.literal(EventType.ACTIVITY_SNAPSHOT),
+  messageId: z.string().optional(),
+  activityType: z.string(),
+  content: z.record(z.any()),
+  replace: z.boolean().optional(),
+});
+
+export const ActivityDeltaEventSchema = BaseEventSchema.extend({
+  type: z.literal(EventType.ACTIVITY_DELTA),
+  messageId: z.string().optional(),
+  activityType: z.string().optional(),
+  patch: z.array(z.any()).optional(), // JSON Patch (RFC 6902)
+});
+
 export const ThinkingStartEventSchema = BaseEventSchema.extend({
   type: z.literal(EventType.THINKING_START),
   title: z.string().optional(),
@@ -241,6 +268,8 @@ export const EventSchemas = z.discriminatedUnion('type', [
   ToolCallEndEventSchema,
   ToolCallChunkEventSchema,
   ToolCallResultEventSchema,
+  ActivitySnapshotEventSchema,
+  ActivityDeltaEventSchema,
   StateSnapshotEventSchema,
   StateDeltaEventSchema,
   MessagesSnapshotEventSchema,
@@ -266,6 +295,8 @@ export type ToolCallArgsEvent = z.infer<typeof ToolCallArgsEventSchema>;
 export type ToolCallEndEvent = z.infer<typeof ToolCallEndEventSchema>;
 export type ToolCallChunkEvent = z.infer<typeof ToolCallChunkEventSchema>;
 export type ToolCallResultEvent = z.infer<typeof ToolCallResultEventSchema>;
+export type ActivitySnapshotEvent = z.infer<typeof ActivitySnapshotEventSchema>;
+export type ActivityDeltaEvent = z.infer<typeof ActivityDeltaEventSchema>;
 export type ThinkingStartEvent = z.infer<typeof ThinkingStartEventSchema>;
 export type ThinkingEndEvent = z.infer<typeof ThinkingEndEventSchema>;
 export type StateSnapshotEvent = z.infer<typeof StateSnapshotEventSchema>;

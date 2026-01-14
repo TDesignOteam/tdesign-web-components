@@ -229,6 +229,38 @@ export function createToolCallContent(
 }
 
 /**
+ * 创建 activity 类型的 AIMessageContent
+ * @param activityType 活动类型
+ * @param content 活动内容
+ * @param status 状态
+ * @param strategy 策略
+ * @returns activity 类型的 AIMessageContent
+ *
+ * type 格式: activity-${activityType}
+ * - activityType: 用于查找对应的渲染组件和区分不同类型的 Activity
+ * - 支持并行多个不同类型的 Activity
+ */
+export function createActivityContent(
+  activityType: string,
+  content: Record<string, any>,
+  status: 'streaming' | 'complete' = 'complete',
+  strategy: 'append' | 'merge' = 'append',
+): any {
+  // 使用 activity-${activityType} 格式，支持并行不同类型的 Activity
+  const type = `activity-${activityType}`;
+
+  return createAIMessageContent(
+    type,
+    {
+      activityType,
+      content,
+    },
+    status,
+    strategy,
+  );
+}
+
+/**
  * 创建 markdown 类型的 AIMessageContent
  * @param data markdown 数据
  * @param status 状态

@@ -1,9 +1,18 @@
 /* eslint-disable class-methods-use-this */
 import type { AIMessageContent, SSEChunkData, ToolCall } from '../../type';
-import { EventType, isStateEvent, isTextMessageEvent, isThinkingEvent, isToolCallEvent } from './events';
+import { applyJsonPatch } from '../../utils';
+import {
+  EventType,
+  isActivityEvent,
+  isStateEvent,
+  isTextMessageEvent,
+  isThinkingEvent,
+  isToolCallEvent,
+} from './events';
 import { stateManager } from './state-manager';
 import {
   addToReasoningData,
+  createActivityContent,
   createMarkdownContent,
   createReasoningContent,
   createTextContent,
@@ -28,6 +37,11 @@ export class AGUIEventMapper {
   private toolCallMap: Record<string, ToolCall> = {};
 
   private toolCallEnded: Set<string> = new Set(); // 记录已经TOOL_CALL_END的工具调用
+
+  private currentActivity: {
+    activityType: string;
+    content: Record<string, any>;
+  } | null = null;
 
   // Reasoning 上下文状态管理
   private reasoningContext: {
@@ -62,6 +76,10 @@ export class AGUIEventMapper {
 
     if (isToolCallEvent(event.type)) {
       return this.handleToolCallEvent(event);
+    }
+
+    if (isActivityEvent(event.type)) {
+      return this.handleActivityEvent(event);
     }
 
     if (isStateEvent(event.type)) {
@@ -104,6 +122,7 @@ export class AGUIEventMapper {
   reset() {
     this.toolCallMap = {};
     this.toolCallEnded.clear();
+    this.currentActivity = null;
     this.resetReasoningContext();
   }
 
@@ -162,6 +181,48 @@ export class AGUIEventMapper {
         return this.handleToolCallResult(event);
       case EventType.TOOL_CALL_END:
         return this.handleToolCallEnd(event);
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * 处理活动事件
+   */
+  private handleActivityEvent(event: any): AIMessageContent | null {
+    switch (event.type) {
+      case EventType.ACTIVITY_SNAPSHOT:
+        this.currentActivity = {
+          activityType: event.activityType,
+          content: event.content,
+        };
+        return createActivityContent(
+          this.currentActivity.activityType,
+          this.currentActivity.content,
+          'streaming',
+          'append',
+        );
+
+      case EventType.ACTIVITY_DELTA:
+        if (this.currentActivity) {
+          let newContent = this.currentActivity.content;
+
+          // 优先使用 patch 字段进行 JSON Patch 更新
+          if (event.patch && Array.isArray(event.patch)) {
+            newContent = applyJsonPatch(this.currentActivity.content, event.patch);
+          }
+
+          this.currentActivity.content = newContent;
+
+          return createActivityContent(
+            this.currentActivity.activityType,
+            this.currentActivity.content,
+            'streaming',
+            'merge',
+          );
+        }
+        return null;
+
       default:
         return null;
     }
@@ -398,6 +459,15 @@ export class AGUIEventMapper {
   private handleToolCallEnd(event: any) {
     // 标记工具调用结束
     this.toolCallEnded.add(event.toolCallId);
+
+    // 更新 toolCallMap 中的 eventType
+    if (this.toolCallMap[event.toolCallId]) {
+      this.toolCallMap[event.toolCallId] = {
+        ...this.toolCallMap[event.toolCallId],
+        eventType: EventType.TOOL_CALL_END,
+      };
+    }
+
     return this.updateToolCallInContext(event.toolCallId, 'complete');
   }
 

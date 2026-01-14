@@ -1,6 +1,7 @@
 import { applyPatch } from 'fast-json-patch';
 
 import type {
+  ActivityContent,
   AIMessageContent,
   AttachmentContent,
   ChatMessagesData,
@@ -115,7 +116,11 @@ export function isAttachmentContent(content: UserMessageContent): content is Att
 }
 
 export function isToolCallContent(content: AIMessageContent): content is ToolCallContent {
-  return content.type.startsWith('toolcall');
+  return content.type === 'toolcall' || content.type.startsWith('toolcall-');
+}
+
+export function isActivityContent(content: AIMessageContent): content is ActivityContent {
+  return content.type === 'activity' || content.type.startsWith('activity-');
 }
 
 export function isReasoningContent(content) {
