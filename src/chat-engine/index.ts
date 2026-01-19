@@ -27,7 +27,7 @@ export default class ChatEngine implements IChatEngine {
 
   private llmService!: LLMService;
 
-  private config!: ChatServiceConfig;
+  private configSetter!: ChatServiceConfigSetter;
 
   private lastRequestParams: ChatRequestParams | undefined;
 
@@ -59,6 +59,14 @@ export default class ChatEngine implements IChatEngine {
   }
 
   /**
+   * 获取当前配置
+   * 如果 configSetter 是函数，每次调用都会执行函数获取最新配置
+   */
+  private get config(): ChatServiceConfig {
+    return typeof this.configSetter === 'function' ? this.configSetter() : this.configSetter || {};
+  }
+
+  /**
    * 销毁聊天引擎实例
    * @description 中止请求，清理消息存储和适配器，释放资源
    */
@@ -81,9 +89,9 @@ export default class ChatEngine implements IChatEngine {
    */
   public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
-    this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
+    this.configSetter = configSetter;
     this.llmService = new LLMService();
-    // 初始化AGUI适配器
+    // 初始化AGUI适配器（使用初始配置判断协议类型）
     if (this.config.protocol === 'agui') {
       this.aguiAdapter = new AGUIAdapter();
     }
