@@ -1,4 +1,4 @@
-import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+import Cherry from 'cherry-markdown';
 
 import _MarkdownContent from './content/markdown-content';
 import _ReasoningContent from './content/reasoning-content';

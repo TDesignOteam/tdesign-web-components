@@ -1,7 +1,7 @@
 import '../md/chat-md-code';
 
+import Cherry from 'cherry-markdown';
 import CherryCodeBlockMermaidPlugin from 'cherry-markdown/dist/addons/cherry-code-block-mermaid-plugin';
-import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 import type { CherryOptions } from 'cherry-markdown/types/cherry';
 import { escape, merge } from 'lodash-es';
 import mermaid from 'mermaid';

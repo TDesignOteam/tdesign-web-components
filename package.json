@@ -1,7 +1,7 @@
 {
   "name": "tdesign-web-components",
   "purename": "tdesign",
-  "version": "1.2.10",
+  "version": "1.2.11-dev.3",
   "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -73,7 +73,7 @@
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@popperjs/core": "^2.11.8",
-    "cherry-markdown": "^0.10.1-alpha.0",
+    "cherry-markdown": "https://pkg.pr.new/cherry-markdown@1597",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "copy-to-clipboard": "^3.3.3",
