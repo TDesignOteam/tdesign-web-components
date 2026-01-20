@@ -36,6 +36,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
+    readyToSend: Function,
     onFileSelect: Function,
     onFileRemove: Function,
     onSend: Function,
@@ -159,7 +160,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         className={classname([
           `${className}__button`,
           {
-            [`${className}__button--focus`]: this.inputValue || this.props.loading,
+            [`${className}__button--focus`]: this.isReadyToSend || this.props.loading,
           },
         ])}
         onClick={this.clickSend}
@@ -187,6 +188,12 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         render: this.renderButton(),
       },
     ];
+  }
+
+  get isReadyToSend() {
+    return this.props.readyToSend && typeof this.props.readyToSend === 'function'
+      ? this.props.readyToSend(this.inputValue)
+      : this.inputValue && this.inputValue.trim() !== '';
   }
 
   private renderActions = () => {
@@ -315,7 +322,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleSend = () => {
-    if (this.props.disabled || !this.inputValue || this.inputValue.trim() === '') {
+    if (this.props.disabled || !this.isReadyToSend) {
       return;
     }
     this.fire(
