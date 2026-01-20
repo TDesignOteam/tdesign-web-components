@@ -75,8 +75,9 @@ export function handleMessagesSnapshot(messages: any[]): any[] {
 
 /**
  * 处理自定义事件
+ * 直接将 CUSTOM 事件转换为通用格式，由业务层自行处理
  * @param event 自定义事件对象
- * @returns 处理结果或undefined
+ * @returns 处理结果
  */
 export function handleCustomEvent(event: any): any {
   if (event.name === 'suggestion') {
@@ -86,7 +87,14 @@ export function handleCustomEvent(event: any): any {
       status: 'complete',
     };
   }
-  return undefined;
+  return {
+    type: 'custom',
+    data: {
+      name: event.name,
+      value: event.value,
+    },
+    status: 'complete',
+  };
 }
 
 /**

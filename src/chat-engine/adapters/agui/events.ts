@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { MessageSchema, StateSchema } from './types';
+import { AGUIMessageSchema, StateSchema } from './types';
 
 export type ToolCallEventType =
   | 'TOOL_CALL_START'
@@ -9,7 +9,7 @@ export type ToolCallEventType =
   | 'TOOL_CALL_CHUNK'
   | 'TOOL_CALL_RESULT';
 
-export enum EventType {
+export enum AGUIEventType {
   TEXT_MESSAGE_START = 'TEXT_MESSAGE_START',
   TEXT_MESSAGE_CONTENT = 'TEXT_MESSAGE_CONTENT',
   TEXT_MESSAGE_END = 'TEXT_MESSAGE_END',
@@ -95,71 +95,71 @@ export function isStateEvent(eventType: string): boolean {
 }
 
 const BaseEventSchema = z.object({
-  type: z.nativeEnum(EventType),
+  type: z.nativeEnum(AGUIEventType),
   timestamp: z.number().optional(),
   rawEvent: z.any().optional(),
 });
 
 export const TextMessageStartEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TEXT_MESSAGE_START),
+  type: z.literal(AGUIEventType.TEXT_MESSAGE_START),
   messageId: z.string(),
   role: z.literal('assistant'),
 });
 
 export const TextMessageContentEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TEXT_MESSAGE_CONTENT),
+  type: z.literal(AGUIEventType.TEXT_MESSAGE_CONTENT),
   messageId: z.string(),
   delta: z.string().refine((s) => s.length > 0, 'Delta must not be an empty string'),
 });
 
 export const TextMessageEndEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TEXT_MESSAGE_END),
+  type: z.literal(AGUIEventType.TEXT_MESSAGE_END),
   messageId: z.string(),
 });
 
 export const TextMessageChunkEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TEXT_MESSAGE_CHUNK),
+  type: z.literal(AGUIEventType.TEXT_MESSAGE_CHUNK),
   messageId: z.string().optional(),
   role: z.literal('assistant').optional(),
   delta: z.string().optional(),
 });
 
 export const ThinkingTextMessageStartEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.THINKING_TEXT_MESSAGE_START),
+  type: z.literal(AGUIEventType.THINKING_TEXT_MESSAGE_START),
 });
 
 export const ThinkingTextMessageContentEventSchema = TextMessageContentEventSchema.omit({
   messageId: true,
   type: true,
 }).extend({
-  type: z.literal(EventType.THINKING_TEXT_MESSAGE_CONTENT),
+  type: z.literal(AGUIEventType.THINKING_TEXT_MESSAGE_CONTENT),
 });
 
 export const ThinkingTextMessageEndEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.THINKING_TEXT_MESSAGE_END),
+  type: z.literal(AGUIEventType.THINKING_TEXT_MESSAGE_END),
 });
 
 export const ToolCallStartEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TOOL_CALL_START),
+  type: z.literal(AGUIEventType.TOOL_CALL_START),
   toolCallId: z.string(),
   toolCallName: z.string(),
   parentMessageId: z.string().optional(),
 });
 
 export const ToolCallArgsEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TOOL_CALL_ARGS),
+  type: z.literal(AGUIEventType.TOOL_CALL_ARGS),
   toolCallId: z.string(),
   delta: z.string(),
 });
 
 export const ToolCallEndEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TOOL_CALL_END),
+  type: z.literal(AGUIEventType.TOOL_CALL_END),
   toolCallId: z.string(),
 });
 
 export const ToolCallResultEventSchema = BaseEventSchema.extend({
   messageId: z.string(),
-  type: z.literal(EventType.TOOL_CALL_RESULT),
+  type: z.literal(AGUIEventType.TOOL_CALL_RESULT),
   toolCallId: z.string(),
   toolCallName: z.string(),
   content: z.string(),
@@ -167,7 +167,7 @@ export const ToolCallResultEventSchema = BaseEventSchema.extend({
 });
 
 export const ToolCallChunkEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.TOOL_CALL_CHUNK),
+  type: z.literal(AGUIEventType.TOOL_CALL_CHUNK),
   toolCallId: z.string().optional(),
   toolCallName: z.string().optional(),
   parentMessageId: z.string().optional(),
@@ -175,7 +175,7 @@ export const ToolCallChunkEventSchema = BaseEventSchema.extend({
 });
 
 export const ActivitySnapshotEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.ACTIVITY_SNAPSHOT),
+  type: z.literal(AGUIEventType.ACTIVITY_SNAPSHOT),
   messageId: z.string().optional(),
   activityType: z.string(),
   content: z.record(z.any()),
@@ -183,75 +183,75 @@ export const ActivitySnapshotEventSchema = BaseEventSchema.extend({
 });
 
 export const ActivityDeltaEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.ACTIVITY_DELTA),
+  type: z.literal(AGUIEventType.ACTIVITY_DELTA),
   messageId: z.string().optional(),
   activityType: z.string().optional(),
   patch: z.array(z.any()).optional(), // JSON Patch (RFC 6902)
 });
 
 export const ThinkingStartEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.THINKING_START),
+  type: z.literal(AGUIEventType.THINKING_START),
   title: z.string().optional(),
 });
 
 export const ThinkingEndEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.THINKING_END),
+  type: z.literal(AGUIEventType.THINKING_END),
   title: z.string().optional(),
 });
 
 export const StateSnapshotEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.STATE_SNAPSHOT),
+  type: z.literal(AGUIEventType.STATE_SNAPSHOT),
   snapshot: StateSchema,
 });
 
 export const StateDeltaEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.STATE_DELTA),
+  type: z.literal(AGUIEventType.STATE_DELTA),
   delta: z.array(z.any()), // JSON Patch (RFC 6902)
 });
 
 export const MessagesSnapshotEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.MESSAGES_SNAPSHOT),
-  messages: z.array(MessageSchema),
+  type: z.literal(AGUIEventType.MESSAGES_SNAPSHOT),
+  messages: z.array(AGUIMessageSchema),
 });
 
 export const RawEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.RAW),
+  type: z.literal(AGUIEventType.RAW),
   event: z.any(),
   source: z.string().optional(),
 });
 
 export const CustomEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.CUSTOM),
+  type: z.literal(AGUIEventType.CUSTOM),
   name: z.string(),
   value: z.any(),
 });
 
 export const RunStartedEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.RUN_STARTED),
+  type: z.literal(AGUIEventType.RUN_STARTED),
   threadId: z.string(),
   runId: z.string(),
 });
 
 export const RunFinishedEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.RUN_FINISHED),
+  type: z.literal(AGUIEventType.RUN_FINISHED),
   threadId: z.string(),
   runId: z.string(),
   result: z.any().optional(),
 });
 
 export const RunErrorEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.RUN_ERROR),
+  type: z.literal(AGUIEventType.RUN_ERROR),
   message: z.string(),
   code: z.string().optional(),
 });
 
 export const StepStartedEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.STEP_STARTED),
+  type: z.literal(AGUIEventType.STEP_STARTED),
   stepName: z.string(),
 });
 
 export const StepFinishedEventSchema = BaseEventSchema.extend({
-  type: z.literal(EventType.STEP_FINISHED),
+  type: z.literal(AGUIEventType.STEP_FINISHED),
   stepName: z.string(),
 });
 

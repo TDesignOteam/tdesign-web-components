@@ -2,7 +2,7 @@
 import type { AIMessageContent, SSEChunkData, ToolCall } from '../../type';
 import { applyJsonPatch } from '../../utils';
 import {
-  EventType,
+  AGUIEventType,
   isActivityEvent,
   isStateEvent,
   isTextMessageEvent,
@@ -131,14 +131,14 @@ export class AGUIEventMapper {
    */
   private handleTextMessageEvent(event: any): AIMessageContent | null {
     switch (event.type) {
-      case EventType.TEXT_MESSAGE_START:
+      case AGUIEventType.TEXT_MESSAGE_START:
         return createMarkdownContent('', 'streaming', 'append');
-      case EventType.TEXT_MESSAGE_CHUNK:
-      case EventType.TEXT_MESSAGE_CONTENT:
-      case EventType.TEXT_MESSAGE_END:
+      case AGUIEventType.TEXT_MESSAGE_CHUNK:
+      case AGUIEventType.TEXT_MESSAGE_CONTENT:
+      case AGUIEventType.TEXT_MESSAGE_END:
         return createMarkdownContent(
           event.delta || '',
-          event.type === EventType.TEXT_MESSAGE_END ? 'complete' : 'streaming',
+          event.type === AGUIEventType.TEXT_MESSAGE_END ? 'complete' : 'streaming',
           'merge',
         );
       default:
@@ -151,15 +151,15 @@ export class AGUIEventMapper {
    */
   private handleThinkingEvent(event: any): AIMessageContent | null {
     switch (event.type) {
-      case EventType.THINKING_START:
+      case AGUIEventType.THINKING_START:
         return this.handleThinkingStart();
-      case EventType.THINKING_TEXT_MESSAGE_START:
+      case AGUIEventType.THINKING_TEXT_MESSAGE_START:
         return this.handleThinkingTextStart(event);
-      case EventType.THINKING_TEXT_MESSAGE_CONTENT:
+      case AGUIEventType.THINKING_TEXT_MESSAGE_CONTENT:
         return this.handleThinkingTextContent(event);
-      case EventType.THINKING_TEXT_MESSAGE_END:
+      case AGUIEventType.THINKING_TEXT_MESSAGE_END:
         return this.handleThinkingTextEnd(event);
-      case EventType.THINKING_END:
+      case AGUIEventType.THINKING_END:
         return this.handleThinkingEnd();
       default:
         return null;
@@ -171,15 +171,15 @@ export class AGUIEventMapper {
    */
   private handleToolCallEvent(event: any): AIMessageContent | null {
     switch (event.type) {
-      case EventType.TOOL_CALL_START:
+      case AGUIEventType.TOOL_CALL_START:
         return this.handleToolCallStart(event);
-      case EventType.TOOL_CALL_ARGS:
+      case AGUIEventType.TOOL_CALL_ARGS:
         return this.handleToolCallArgs(event);
-      case EventType.TOOL_CALL_CHUNK:
+      case AGUIEventType.TOOL_CALL_CHUNK:
         return this.handleToolCallChunk(event);
-      case EventType.TOOL_CALL_RESULT:
+      case AGUIEventType.TOOL_CALL_RESULT:
         return this.handleToolCallResult(event);
-      case EventType.TOOL_CALL_END:
+      case AGUIEventType.TOOL_CALL_END:
         return this.handleToolCallEnd(event);
       default:
         return null;
@@ -191,7 +191,7 @@ export class AGUIEventMapper {
    */
   private handleActivityEvent(event: any): AIMessageContent | null {
     switch (event.type) {
-      case EventType.ACTIVITY_SNAPSHOT:
+      case AGUIEventType.ACTIVITY_SNAPSHOT:
         this.currentActivity = {
           activityType: event.activityType,
           content: event.content,
@@ -203,7 +203,7 @@ export class AGUIEventMapper {
           'append',
         );
 
-      case EventType.ACTIVITY_DELTA:
+      case AGUIEventType.ACTIVITY_DELTA:
         if (this.currentActivity) {
           let newContent = this.currentActivity.content;
 
@@ -241,11 +241,11 @@ export class AGUIEventMapper {
    */
   private handleOtherEvent(event: any): AIMessageContent | AIMessageContent[] | null {
     switch (event.type) {
-      case EventType.MESSAGES_SNAPSHOT:
+      case AGUIEventType.MESSAGES_SNAPSHOT:
         return handleMessagesSnapshot(event.messages);
-      case EventType.CUSTOM:
+      case AGUIEventType.CUSTOM:
         return handleCustomEvent(event);
-      case EventType.RUN_ERROR:
+      case AGUIEventType.RUN_ERROR:
         return [createTextContent(event.message || event.error || '系统未知错误', 'error')];
       default:
         return null;
@@ -425,7 +425,7 @@ export class AGUIEventMapper {
 
     // 更新内部ToolCall对象
     this.toolCallMap[event.toolCallId] = updateToolCall(this.toolCallMap[event.toolCallId], {
-      eventType: EventType.TOOL_CALL_RESULT,
+      eventType: AGUIEventType.TOOL_CALL_RESULT,
       result: newResult,
     });
 
@@ -464,7 +464,7 @@ export class AGUIEventMapper {
     if (this.toolCallMap[event.toolCallId]) {
       this.toolCallMap[event.toolCallId] = {
         ...this.toolCallMap[event.toolCallId],
-        eventType: EventType.TOOL_CALL_END,
+        eventType: AGUIEventType.TOOL_CALL_END,
       };
     }
 

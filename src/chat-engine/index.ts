@@ -452,11 +452,6 @@ export default class ChatEngine implements IChatEngine {
     const message = this.messageStore.messages.find((m) => m.id === messageId);
     if (!message || !isAIMessage(message) || !message.content) return;
 
-    //  // 只需要处理最后一个内容快
-    //  const lastContent = message.content.at(-1);
-    //  const processed = this.messageProcessor.processContentUpdate(lastContent, rawChunk);
-    //  this.messageStore.appendContent(messageId, processed);
-
     let targetIndex: number;
     // 作为新的内容块追加
     if (rawChunk?.strategy === 'append') {
