@@ -4,7 +4,7 @@ import CherryCodeBlockMermaidPlugin from 'cherry-markdown/dist/addons/cherry-cod
 import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
 import type { CherryOptions } from 'cherry-markdown/types/cherry';
 import { escape, merge } from 'lodash-es';
-import mermaid from 'mermaid';
+// import mermaid from 'mermaid';
 import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
@@ -15,10 +15,13 @@ import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
 import codeStyles from '../style/md/chat-md-code.less';
 
-Cherry?.usePlugin?.(CherryCodeBlockMermaidPlugin, {
-  mermaid,
-  mermaidCanvasAppendDom: document.body,
-});
+if ((window as any).mermaid) {
+  Cherry?.usePlugin?.(CherryCodeBlockMermaidPlugin, {
+    mermaidCanvasAppendDom: document.body,
+    mermaid: (window as any).mermaid,
+    mermaidAPI: (window as any).mermaid,
+  });
+}
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
