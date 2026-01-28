@@ -3,7 +3,8 @@
   "compilerOptions": {
     "allowImportingTsExtensions": false,
     "noEmit": false,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "module": "NodeNext"
   },
   "include": ["./src", "typings.d.ts"],
   "exclude": [
