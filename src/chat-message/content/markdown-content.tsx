@@ -1,8 +1,8 @@
 import '../md/chat-md-code';
 
-import Cherry from 'cherry-markdown';
-import CherryCodeBlockMermaidPlugin from 'cherry-markdown/dist/addons/cherry-code-block-mermaid-plugin';
-import type { CherryOptions } from 'cherry-markdown/types/cherry';
+import type { CherryOptions } from 'cherry-markdown';
+import CherryCodeBlockMermaidPlugin from 'cherry-markdown/addons/cherry-code-block-mermaid-plugin';
+import Cherry from 'cherry-markdown/cherry-markdown.core';
 import { escape, merge } from 'lodash-es';
 import mermaid from 'mermaid';
 import { Component, createRef, signal, tag } from 'omi';
