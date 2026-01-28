@@ -1,7 +1,7 @@
-import Cherry from 'cherry-markdown/cherry-markdown.core';
+import { core as CherryCore } from 'cherry-markdown';
 
 /** cherryMarkdown自动添加part属性插件 */
-export const AddPartHook = Cherry.createSyntaxHook('addPart', Cherry.constants.HOOKS_TYPE_LIST.PAR, {
+export const AddPartHook = CherryCore.createSyntaxHook('addPart', CherryCore.constants.HOOKS_TYPE_LIST.PAR, {
   makeHtml(str) {
     return str;
   },

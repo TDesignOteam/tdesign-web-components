@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "moduleResolution": "nodenext",
+    "moduleResolution": "bundler",
     "module": "esnext",
     "target": "esnext",
     "outDir": "lib",
