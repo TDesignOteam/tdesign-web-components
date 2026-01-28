@@ -1,12 +1,12 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import Cherry from 'cherry-markdown';
+import Cherry from 'cherry-markdown/cherry-markdown.core';
 import { Component } from 'omi';
 import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../../chat-engine/type';
-import { TdChatMarkdownContentProps } from '../../chat-message/content/markdown-content';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../../chat-engine/type.js';
+import { TdChatMarkdownContentProps } from '../../chat-message/content/markdown-content.js';
 
 const defaultChunkParser = (chunk): AIMessageContent => {
   try {

@@ -1,24 +1,29 @@
-import '../md/chat-md-code';
+import '../md/chat-md-code.js';
 
-import type { CherryOptions } from 'cherry-markdown';
 import CherryCodeBlockMermaidPlugin from 'cherry-markdown/addons/cherry-code-block-mermaid-plugin';
 import Cherry from 'cherry-markdown/cherry-markdown.core';
 import { escape, merge } from 'lodash-es';
-import mermaid from 'mermaid';
 import { Component, createRef, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
-import { setExportparts } from '../../_util/dom';
-import { AddPartHook } from '../md/utils';
+import { getClassPrefix } from '../../_util/classname.js';
+import { setExportparts } from '../../_util/dom.js';
+import { AddPartHook } from '../md/utils.js';
 
 import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
 import codeStyles from '../style/md/chat-md-code.less';
 
-Cherry?.usePlugin?.(CherryCodeBlockMermaidPlugin, {
-  mermaid,
-  mermaidCanvasAppendDom: document.body,
-});
+// 从 Cherry 类的构造函数参数推断类型
+type CherryOptions = ConstructorParameters<typeof Cherry>[0];
+
+if ((window as any).mermaid) {
+  // 使用类型断言以绕过本地包类型配置问题
+  Cherry?.usePlugin?.(CherryCodeBlockMermaidPlugin as any, {
+    mermaidCanvasAppendDom: document.body,
+    mermaid: (window as any).mermaid,
+    mermaidAPI: (window as any).mermaid,
+  });
+}
 
 const baseClass = `${getClassPrefix()}-chat__text`;
 
