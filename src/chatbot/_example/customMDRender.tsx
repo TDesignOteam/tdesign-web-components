@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import { core as CherryCore } from 'cherry-markdown';
+import { stream as CherryStream } from 'cherry-markdown';
 import { Component } from 'omi';
 import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
@@ -115,7 +115,7 @@ const mockData: ChatMessagesData[] = [
  * markdown自定义插件，请参考cherry-markdown定义插件的方法，事件触发需考虑shadowDOM隔离情况
  * https://github.com/Tencent/cherry-markdown/wiki/%E8%87%AA%E5%AE%9A%E4%B9%89%E8%AF%AD%E6%B3%95
  */
-const colorText = CherryCore.createSyntaxHook('important', CherryCore.constants.HOOKS_TYPE_LIST.SEN, {
+const colorText = CherryStream.createSyntaxHook('important', CherryStream.constants.HOOKS_TYPE_LIST.SEN, {
   makeHtml(str) {
     return str.replace(
       this.RULE.reg,

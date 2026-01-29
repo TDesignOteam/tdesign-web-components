@@ -1,6 +1,6 @@
 import '../md/chat-md-code';
 
-import { core as CherryCore, MermaidPlugin } from 'cherry-markdown';
+import { MermaidPlugin,stream as CherryStream } from 'cherry-markdown';
 import { escape, merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
@@ -12,12 +12,12 @@ import styles from '../style/chat-content.less';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
 import codeStyles from '../style/md/chat-md-code.less';
 
-// 从 CherryCore 类的构造函数参数推断类型
-type CherryOptions = ConstructorParameters<typeof CherryCore>[0];
+// 从 CherryStream 类的构造函数参数推断类型
+type CherryOptions = ConstructorParameters<typeof CherryStream>[0];
 
 if ((window as any).mermaid) {
   // 使用类型断言以绕过本地包类型配置问题
-  CherryCore?.usePlugin?.(MermaidPlugin, {
+  CherryStream?.usePlugin?.(MermaidPlugin, {
     mermaidCanvasAppendDom: document.body,
     mermaid: (window as any).mermaid,
     mermaidAPI: (window as any).mermaid,
@@ -67,7 +67,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   mdRef = createRef<HTMLElement>();
 
-  md: CherryCore | null = null;
+  md: CherryStream | null = null;
 
   isMarkdownInit = signal(false);
 
@@ -137,7 +137,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           }" />`,
       },
     };
-    const md = new CherryCore({
+    const md = new CherryStream({
       ...this.markdownOptions,
       engine: {
         ...this.markdownOptions.engine,
