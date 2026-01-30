@@ -1,6 +1,7 @@
 import '../md/chat-md-code';
 
-import { MermaidPlugin,stream as CherryStream } from 'cherry-markdown';
+import MermaidPlugin from 'cherry-markdown/dist/addons/cherry-code-block-mermaid-plugin.esm.js';
+import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { escape, merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 

@@ -1,4 +1,4 @@
-import { stream as CherryStream } from 'cherry-markdown';
+import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 
 /** cherryMarkdown自动添加part属性插件 */
 export const AddPartHook = CherryStream.createSyntaxHook('addPart', CherryStream.constants.HOOKS_TYPE_LIST.PAR, {

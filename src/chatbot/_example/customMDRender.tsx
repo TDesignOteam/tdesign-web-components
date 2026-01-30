@@ -1,7 +1,7 @@
 /* eslint-disable no-await-in-loop */
 import 'tdesign-web-components/chatbot';
 
-import { stream as CherryStream } from 'cherry-markdown';
+import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { Component } from 'omi';
 import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
 

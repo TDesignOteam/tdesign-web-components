@@ -1,4 +1,4 @@
-import { stream as CherryStream } from 'cherry-markdown';
+import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 
 import _MarkdownContent from './content/markdown-content';
 import _ReasoningContent from './content/reasoning-content';
