@@ -36,7 +36,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
-    readyToSend: Function,
+    readyToSend: [Object, Function],
     onFileSelect: Function,
     onFileRemove: Function,
     onSend: Function,
