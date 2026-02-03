@@ -90,7 +90,7 @@ export class MessageStore extends ReactiveState<ChatMessageStore> {
         if (isAIMessage(message) && message.content && message.content.length > 0) {
           const lastContent = message.content[message.content.length - 1];
           // 添加类型检查，确保content有status属性
-          if ('status' in lastContent) {
+          if ('status' in lastContent && lastContent.status !== 'error') {
             lastContent.status = status;
           }
         }

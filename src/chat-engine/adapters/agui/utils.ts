@@ -242,6 +242,7 @@ export function createToolCallContent(
  * @param content 活动内容
  * @param status 状态
  * @param strategy 策略
+ * @param deltaInfo 增量信息（可选，用于 A2UI 等场景的增量处理）
  * @returns activity 类型的 AIMessageContent
  *
  * type 格式: activity-${activityType}
@@ -253,9 +254,12 @@ export function createActivityContent(
   content: Record<string, any>,
   status: 'streaming' | 'complete' = 'complete',
   strategy: 'append' | 'merge' = 'append',
+  deltaInfo?: { fromIndex: number; toIndex: number },
 ): any {
   // 使用 activity-${activityType} 格式，支持并行不同类型的 Activity
   const type = `activity-${activityType}`;
+
+  const ext = deltaInfo ? { deltaInfo } : undefined;
 
   return createAIMessageContent(
     type,
@@ -265,6 +269,7 @@ export function createActivityContent(
     },
     status,
     strategy,
+    ext,
   );
 }
 
@@ -273,14 +278,22 @@ export function createActivityContent(
  * @param data markdown 数据
  * @param status 状态
  * @param strategy 策略
+ * @param role 消息角色（可选，默认 assistant），通过 ext.role 传递给业务层
  * @returns markdown 类型的 AIMessageContent
  */
 export function createMarkdownContent(
   data: string,
   status: 'streaming' | 'complete' = 'complete',
   strategy: 'append' | 'merge' = 'append',
+  role?: 'assistant' | 'system',
 ): any {
-  return createAIMessageContent('markdown', data, status, strategy);
+  const notAssistant = role && role !== 'assistant';
+  // TODO: 这里对于textchunk中设置了role的情况delta没做合并（暂时type=`${role}-text`业务自行处理)
+  const content = createAIMessageContent(notAssistant ? `${role}-text` : 'markdown', data, status, strategy);
+  if (notAssistant) {
+    content.ext = { ...content.ext, role };
+  }
+  return content;
 }
 
 /**

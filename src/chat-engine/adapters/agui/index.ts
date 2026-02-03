@@ -1,8 +1,8 @@
 /* eslint-disable class-methods-use-this */
 import type { AIMessageContent, ChatMessagesData, ChatRequestParams, SSEChunkData, ToolCall } from '../../type';
+import type { BaseEvent, RunErrorEvent, RunFinishedEvent, RunStartedEvent } from './types/events';
+import { AGUIEventType } from './types/events';
 import { AGUIEventMapper } from './event-mapper';
-import type { BaseEvent, RunErrorEvent, RunFinishedEvent, RunStartedEvent } from './events';
-import { AGUIEventType } from './events';
 import type {
   AGUIActivityMessage,
   AGUIAssistantHistoryMessage,
@@ -17,6 +17,7 @@ export type {
   AGUIUserHistoryMessage,
   AGUIAssistantHistoryMessage,
   AGUIToolHistoryMessage,
+  AGUIActivityMessage,
 } from './types';
 
 /**
@@ -280,7 +281,7 @@ export class AGUIAdapter {
    *
    * @param event 解析后的事件对象
    * @param callbacks 回调函数
-   * @returns 是否处理了生命周期事件
+   * @returns 是否处理了生命周期事件（仅RUN_STARTED和RUN_FINISHED返回true，RUN_ERROR需要继续处理生成消息内容）
    */
   private handleAGUISpecificEvents(event: BaseEvent, callbacks: AGUIAdapterCallbacks): boolean {
     switch (event.type) {
@@ -291,8 +292,10 @@ export class AGUIAdapter {
         callbacks.onRunComplete?.(false, {} as ChatRequestParams, event as RunFinishedEvent);
         return true;
       case AGUIEventType.RUN_ERROR:
+        // RUN_ERROR 需要触发回调，但不能返回 true
+        // 因为还需要通过 event-mapper 生成错误消息内容用于 UI 展示
         callbacks.onRunError?.(event as RunErrorEvent);
-        return true;
+        return false; // 继续处理，让 event-mapper 生成错误消息
       default:
         return false; // 不是生命周期事件
     }
@@ -302,6 +305,6 @@ export class AGUIAdapter {
 /**
  * 状态订阅机制导出
  */
-export * from './state-manager';
-
-export * from './events';
+export * from './StateManager';
+export * from './ActivityManager';
+export * from './types';

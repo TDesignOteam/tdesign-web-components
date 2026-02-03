@@ -1,4 +1,4 @@
-import type { ToolCallEventType } from './adapters/agui/events';
+import type { ToolCallEventType } from './adapters/agui/types/events';
 
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
 export type ChatMessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
@@ -112,6 +112,11 @@ export type ActivityData<TContent = Record<string, any>> = {
   activityType: string;
   messageId?: string;
   content: TContent;
+  /** 增量更新信息 */
+  deltaInfo?: {
+    fromIndex: number;
+    toIndex: number;
+  };
 };
 
 export type ActivityContent<TContent = Record<string, any>> = ChatBaseContent<'activity', ActivityData<TContent>>;
