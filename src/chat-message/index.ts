@@ -1,4 +1,4 @@
-import Cherry from 'cherry-markdown/dist/cherry-markdown.core';
+import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 
 import _MarkdownContent from './content/markdown-content';
 import _ReasoningContent from './content/reasoning-content';
@@ -14,7 +14,7 @@ export const ChatSearchContent = _SearchContent;
 export const ChatMessage = _ChatItem;
 export const ChatReasoningContent = _ReasoningContent;
 // 外部使用自定义逻辑时使用的CherryMarkdown类必须跟渲染时保持一致
-export const TdMarkdownEngine = Cherry;
+export const TdMarkdownEngine = CherryStream;
 
 export type { TdChatThinkContentProps } from './content/thinking-content';
 export type { TdChatSearchContentProps } from './content/search-content';
