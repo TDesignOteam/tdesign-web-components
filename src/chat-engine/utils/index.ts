@@ -1,6 +1,5 @@
-import { applyPatch } from 'fast-json-patch';
-
 import type {
+  ActivityContent,
   AIMessageContent,
   AttachmentContent,
   ChatMessagesData,
@@ -13,24 +12,26 @@ import type {
   ToolCallContent,
   UserMessageContent,
 } from '../type';
+import { applyPatchImmutable, type Operation } from './immutable-patch';
 
 /**
  * 应用JSON Patch操作到状态对象
- * 使用fast-json-patch库实现RFC6902规范的JSON Patch操作
+ *
+ * 使用 Immutable Patch + Structural Sharing：
+ * - 只重建被修改路径上的节点
+ * - 未修改的节点保持原引用
+ * - 配合 React.memo 使用时，未变化的组件不会重渲染
+ *
  * @param state 原始状态对象
  * @param delta 包含patch操作的数组
- * @returns 更新后的新状态对象
+ * @returns 更新后的新状态对象（结构共享）
  */
 export function applyJsonPatch(state: any, delta: any[]): any {
   try {
-    // 使用fast-json-patch库应用补丁
-    // applyPatch会自动深拷贝原始对象，避免直接修改
-    const result = applyPatch(state, delta, false, false);
-    return result.newDocument;
+    return applyPatchImmutable(state, delta as Operation[]);
   } catch (error) {
     console.warn('JSON Patch操作失败，返回原始状态:', error);
-    // 如果应用补丁失败，返回原始状态的深拷贝
-    return JSON.parse(JSON.stringify(state));
+    return state;
   }
 }
 
@@ -115,7 +116,11 @@ export function isAttachmentContent(content: UserMessageContent): content is Att
 }
 
 export function isToolCallContent(content: AIMessageContent): content is ToolCallContent {
-  return content.type.startsWith('toolcall');
+  return content.type === 'toolcall' || content.type.startsWith('toolcall-');
+}
+
+export function isActivityContent(content: AIMessageContent): content is ActivityContent {
+  return content.type === 'activity' || content.type.startsWith('activity-');
 }
 
 export function isReasoningContent(content) {

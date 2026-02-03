@@ -2,6 +2,8 @@
 /* eslint-disable class-methods-use-this */
 import { AGUIAdapter } from './adapters/agui';
 import { MessageStore } from './store/message';
+import type { ChatEventBusOptions, IChatEventBus } from './event-bus';
+import { ChatEngineEventType,ChatEventBus } from './event-bus';
 import MessageProcessor from './processor';
 import { LLMService } from './server';
 import type {
@@ -23,11 +25,17 @@ import { isAIMessage } from './utils';
 export default class ChatEngine implements IChatEngine {
   public messageStore: MessageStore;
 
+  /**
+   * 事件总线实例
+   * @description 用于发布/订阅引擎事件，支持无 UI 场景下的事件分发
+   */
+  public readonly eventBus: IChatEventBus;
+
   private messageProcessor: MessageProcessor;
 
   private llmService!: LLMService;
 
-  private configSetter!: ChatServiceConfigSetter;
+  private config!: ChatServiceConfig;
 
   private lastRequestParams: ChatRequestParams | undefined;
 
@@ -35,9 +43,10 @@ export default class ChatEngine implements IChatEngine {
 
   private aguiAdapter: AGUIAdapter | null = null;
 
-  constructor() {
+  constructor(eventBusOptions?: ChatEventBusOptions) {
     this.messageProcessor = new MessageProcessor();
     this.messageStore = new MessageStore();
+    this.eventBus = new ChatEventBus(eventBusOptions);
   }
 
   /**
@@ -59,26 +68,27 @@ export default class ChatEngine implements IChatEngine {
   }
 
   /**
-   * 获取当前配置
-   * 如果 configSetter 是函数，每次调用都会执行函数获取最新配置
-   */
-  private get config(): ChatServiceConfig {
-    return typeof this.configSetter === 'function' ? this.configSetter() : this.configSetter || {};
-  }
-
-  /**
    * 销毁聊天引擎实例
    * @description 中止请求，清理消息存储和适配器，释放资源
    */
   destroy(): void {
+    // 发布销毁事件
+    this.eventBus.emit(ChatEngineEventType.ENGINE_DESTROY, {
+      timestamp: Date.now(),
+    });
+
     // 中止当前请求
     this.abortChat();
 
     // 清理消息存储
     this.messageStore.clearHistory();
+    this.messageStore.destroy();
 
     // 清理适配器
     this.aguiAdapter = null;
+
+    // 销毁事件总线
+    this.eventBus.destroy();
   }
 
   /**
@@ -89,12 +99,18 @@ export default class ChatEngine implements IChatEngine {
    */
   public init(configSetter: ChatServiceConfigSetter, initialMessages?: ChatMessagesData[]) {
     this.messageStore.initialize(this.convertMessages(initialMessages));
-    this.configSetter = configSetter;
+    this.config = typeof configSetter === 'function' ? configSetter() : configSetter || {};
     this.llmService = new LLMService();
-    // 初始化AGUI适配器（使用初始配置判断协议类型）
+
+    // 初始化AGUI适配器
     if (this.config.protocol === 'agui') {
       this.aguiAdapter = new AGUIAdapter();
     }
+
+    // 发布初始化事件
+    this.eventBus.emit(ChatEngineEventType.ENGINE_INIT, {
+      timestamp: Date.now(),
+    });
   }
 
   /**
@@ -119,6 +135,13 @@ export default class ChatEngine implements IChatEngine {
     const userMessage = this.messageProcessor.createUserMessage(prompt, attachments);
     const aiMessage = this.messageProcessor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
+
+    // 发布消息创建事件
+    this.eventBus.emit(ChatEngineEventType.MESSAGE_CREATE, {
+      message: userMessage,
+      messages: this.messages,
+    });
+
     if (sendRequest) {
       const params = {
         ...requestParams,
@@ -135,7 +158,7 @@ export default class ChatEngine implements IChatEngine {
    * @description 创建并存储一条系统消息，通常用于设置上下文或控制对话流程
    */
   public async sendSystemMessage(msg: string) {
-    this.messageStore.createMessage({
+    const systemMessage = {
       role: 'system',
       content: [
         {
@@ -143,7 +166,14 @@ export default class ChatEngine implements IChatEngine {
           data: msg,
         },
       ],
-    } as SystemMessage);
+    } as SystemMessage;
+    this.messageStore.createMessage(systemMessage);
+
+    // 发布消息创建事件
+    this.eventBus.emit(ChatEngineEventType.MESSAGE_CREATE, {
+      message: systemMessage,
+      messages: this.messages,
+    });
   }
 
   /**
@@ -160,6 +190,13 @@ export default class ChatEngine implements IChatEngine {
       status: sendRequest ? 'pending' : 'complete',
     });
     this.messageStore.createMessage(newAIMessage);
+
+    // 发布消息创建事件
+    this.eventBus.emit(ChatEngineEventType.MESSAGE_CREATE, {
+      message: newAIMessage,
+      messages: this.messages,
+    });
+
     if (sendRequest) {
       params.messageID = newAIMessage.id;
       await this.sendRequest(params);
@@ -182,7 +219,14 @@ export default class ChatEngine implements IChatEngine {
       if (!this.config.stream) {
         // 只有在批量模式下才删除最后一条AI消息
         if (this.messageStore.lastAIMessage?.id) {
-          this.messageStore.removeMessage(this.messageStore.lastAIMessage.id);
+          const messageId = this.messageStore.lastAIMessage.id;
+          this.messageStore.removeMessage(messageId);
+
+          // 发布消息删除事件
+          this.eventBus.emit(ChatEngineEventType.MESSAGE_DELETE, {
+            messageId,
+            messages: this.messages,
+          });
         }
       }
     } catch (error) {
@@ -219,6 +263,11 @@ export default class ChatEngine implements IChatEngine {
    */
   public clearMessages(): void {
     this.messageStore.clearHistory();
+
+    // 发布消息清空事件
+    this.eventBus.emit(ChatEngineEventType.MESSAGE_CLEAR, {
+      timestamp: Date.now(),
+    });
   }
 
   /**
@@ -261,6 +310,13 @@ export default class ChatEngine implements IChatEngine {
    */
   public async sendRequest(params: ChatRequestParams) {
     const { messageID: id } = params;
+
+    // 发布请求开始事件
+    this.eventBus.emit(ChatEngineEventType.REQUEST_START, {
+      params,
+      messageId: id,
+    });
+
     try {
       if (this.config.stream) {
         // 处理sse流式响应模式
@@ -273,6 +329,14 @@ export default class ChatEngine implements IChatEngine {
       this.lastRequestParams = params;
     } catch (error) {
       this.setMessageStatus(id!, 'error');
+
+      // 发布请求错误事件
+      this.eventBus.emit(ChatEngineEventType.REQUEST_ERROR, {
+        messageId: id!,
+        error,
+        params,
+      });
+
       throw error;
     }
   }
@@ -295,27 +359,67 @@ export default class ChatEngine implements IChatEngine {
     if (result) {
       this.processMessageResult(id, result);
       this.setMessageStatus(id, 'complete');
+
+      // 发布请求完成事件
+      const message = this.messageStore.getMessageByID(id);
+      if (message) {
+        this.eventBus.emit(ChatEngineEventType.REQUEST_COMPLETE, {
+          messageId: id,
+          params,
+          message,
+        });
+      }
     } else {
       this.setMessageStatus(id, 'error');
+
+      // 发布请求错误事件
+      this.eventBus.emit(ChatEngineEventType.REQUEST_ERROR, {
+        messageId: id,
+        error: new Error('Batch request returned empty result'),
+        params,
+      });
     }
   }
 
-  private handleError(id: string, error: any) {
+  private handleError(id: string, error: unknown) {
     this.setMessageStatus(id, 'error');
-    this.config.onError?.(error);
+    this.config.onError?.(error as Error);
+
+    // 发布请求错误事件
+    this.eventBus.emit(ChatEngineEventType.REQUEST_ERROR, {
+      messageId: id,
+      error,
+    });
   }
 
-  private handleComplete(id: string, isAborted: boolean, params: ChatRequestParams, chunk?: any) {
+  private handleComplete(id: string, isAborted: boolean, params: ChatRequestParams, chunk?: unknown) {
     // 先调用用户自定义的 onComplete 回调，让业务层决定如何处理
     const customResult = this.config.onComplete?.(isAborted, params, chunk);
     // 如果用户返回了自定义内容，处理这些内容
     if (Array.isArray(customResult) || (customResult && 'status' in customResult)) {
       this.processMessageResult(id, customResult);
     } else {
-      // 所有消息内容块都失败才算消息体失败
-      const allContentFailed = this.messageStore.messages.every((content) => content.status === 'error');
+      // 所有消息内容块检查，只要有一个失败，消息的status就是失败
+      const allContentFailed = this.messageStore.messages.find((content) => content.status === 'error');
       // eslint-disable-next-line no-nested-ternary
       this.setMessageStatus(id, isAborted ? 'stop' : allContentFailed ? 'error' : 'complete');
+    }
+
+    // 发布请求完成/中止事件
+    const message = this.messageStore.getMessageByID(id);
+    if (message) {
+      if (isAborted) {
+        this.eventBus.emit(ChatEngineEventType.REQUEST_ABORT, {
+          messageId: id,
+          params,
+        });
+      } else {
+        this.eventBus.emit(ChatEngineEventType.REQUEST_COMPLETE, {
+          messageId: id,
+          params,
+          message,
+        });
+      }
     }
   }
 
@@ -348,15 +452,41 @@ export default class ChatEngine implements IChatEngine {
       onMessage: (chunk: SSEChunkData) => {
         if (this.stopReceive || !messageId) return null;
 
-        let result;
+        let result: AIMessageContent | AIMessageContent[] | null = null;
 
         // SSE数据 → AGUIEventMapper.mapEvent → 用户自定义onMessage(解析后数据 + 原始chunk)
         // 首先使用AGUI适配器进行通用协议解析
         if (this.aguiAdapter) {
           result = this.aguiAdapter.handleAGUIEvent(chunk, {
-            onRunStart: (event) => this.config.onStart?.(JSON.stringify(event)),
-            onRunComplete: (isAborted, params, event) => this.handleComplete(messageId, isAborted, params, event),
-            onRunError: (error) => this.handleError(messageId, error),
+            onRunStart: (event) => {
+              // 重置适配器状态，确保新一轮对话从干净状态开始
+              this.aguiAdapter?.reset();
+              this.config.onStart?.(JSON.stringify(event));
+              // 发布 AGUI 运行开始事件
+              this.eventBus.emit(ChatEngineEventType.AGUI_RUN_START, {
+                runId: event.runId || '',
+                threadId: event.threadId,
+                timestamp: Date.now(),
+              });
+            },
+            onRunComplete: (isAborted, requestParams, event) => {
+              this.handleComplete(messageId, isAborted, requestParams, event);
+              // 发布 AGUI 运行完成事件
+              if (!isAborted) {
+                this.eventBus.emit(ChatEngineEventType.AGUI_RUN_COMPLETE, {
+                  runId: event?.runId || '',
+                  threadId: event?.threadId,
+                  timestamp: Date.now(),
+                });
+              }
+            },
+            onRunError: (error) => {
+              this.handleError(messageId, error);
+              // 发布 AGUI 运行错误事件
+              this.eventBus.emit(ChatEngineEventType.AGUI_RUN_ERROR, {
+                error,
+              });
+            },
           });
         }
 
@@ -368,6 +498,14 @@ export default class ChatEngine implements IChatEngine {
             result = userResult;
           }
         }
+
+        // 发布流数据事件
+        this.eventBus.emit(ChatEngineEventType.REQUEST_STREAM, {
+          messageId,
+          chunk,
+          content: result,
+        });
+
         // 处理消息结果
         this.processMessageResult(messageId, result);
         return result;
@@ -402,6 +540,13 @@ export default class ChatEngine implements IChatEngine {
         if (this.config.onMessage) {
           result = this.config.onMessage(chunk, this.messageStore.getMessageByID(messageId));
         }
+
+        // 发布流数据事件
+        this.eventBus.emit(ChatEngineEventType.REQUEST_STREAM, {
+          messageId,
+          chunk,
+          content: result,
+        });
 
         // 处理消息结果
         this.processMessageResult(messageId, result);
@@ -440,6 +585,48 @@ export default class ChatEngine implements IChatEngine {
       // 处理单个内容块
       this.processContentUpdate(messageId, result);
     }
+
+    // 发布消息更新事件
+    const message = this.messageStore.getMessageByID(messageId);
+    if (message) {
+      this.eventBus.emit(ChatEngineEventType.MESSAGE_UPDATE, {
+        messageId,
+        content: result,
+        message,
+      });
+
+      // AG-UI 协议：发布细粒度事件
+      if (this.aguiAdapter) {
+        this.emitAGUIDetailEvents(messageId, result);
+      }
+    }
+  }
+
+  /**
+   * 发布 AG-UI 细粒度事件
+   * 根据内容类型分发到对应的事件通道
+   * todo: 这里的类型 any问题
+   */
+  private emitAGUIDetailEvents(messageId: string, result: AIMessageContent | AIMessageContent[]) {
+    const contents = Array.isArray(result) ? result : [result];
+    for (const content of contents) {
+      // Activity 事件
+      if ((content as any).data.activityType) {
+        this.eventBus.emit(ChatEngineEventType.AGUI_ACTIVITY, {
+          activityType: (content as any).data.activityType,
+          messageId,
+          content: (content as any)?.data?.content,
+        });
+      }
+
+      // ToolCall 事件
+      if ((content as any)?.data?.eventType?.startsWith('TOOL_CALL')) {
+        this.eventBus.emit(ChatEngineEventType.AGUI_TOOLCALL, {
+          toolCall: (content as any).data,
+          eventType: (content as any).data.eventType,
+        });
+      }
+    }
   }
 
   private convertMessages(messages?: ChatMessagesData[]) {
@@ -452,7 +639,17 @@ export default class ChatEngine implements IChatEngine {
   }
 
   private setMessageStatus(messageId: string, status: ChatMessagesData['status']) {
+    const previousStatus = this.messageStore.getMessageByID(messageId)?.status;
     this.messageStore.setMessageStatus(messageId, status);
+
+    // 发布消息状态变化事件
+    if (status) {
+      this.eventBus.emit(ChatEngineEventType.MESSAGE_STATUS_CHANGE, {
+        messageId,
+        status,
+        previousStatus,
+      });
+    }
   }
 
   // 处理内容更新逻辑
@@ -460,14 +657,9 @@ export default class ChatEngine implements IChatEngine {
     const message = this.messageStore.messages.find((m) => m.id === messageId);
     if (!message || !isAIMessage(message) || !message.content) return;
 
-    //  // 只需要处理最后一个内容快
-    //  const lastContent = message.content.at(-1);
-    //  const processed = this.messageProcessor.processContentUpdate(lastContent, rawChunk);
-    //  this.messageStore.appendContent(messageId, processed);
-
     let targetIndex: number;
     // 作为新的内容块追加
-    if (rawChunk?.strategy === 'append') {
+    if ((rawChunk as any)?.strategy === 'append') {
       targetIndex = -1;
     } else {
       // merge 策略：按 type 查找最后一个匹配的类型
@@ -493,5 +685,7 @@ export default class ChatEngine implements IChatEngine {
 }
 
 export * from './utils';
-export * from './adapters/agui';
+export * from './adapters';
+export * from './event-bus';
+export * from './adapters';
 export type * from './type';

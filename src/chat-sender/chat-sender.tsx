@@ -6,7 +6,6 @@ import '../attachments';
 import '../textarea';
 import '../button';
 import '../tooltip';
-import '../dropdown';
 
 import { isNil } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
@@ -36,7 +35,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
-    readyToSend: Function,
+    readyToSend: [Object, Function],
     onFileSelect: Function,
     onFileRemove: Function,
     onSend: Function,
