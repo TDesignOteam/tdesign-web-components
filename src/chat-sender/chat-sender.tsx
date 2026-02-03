@@ -6,7 +6,6 @@ import '../attachments';
 import '../textarea';
 import '../button';
 import '../tooltip';
-import '../dropdown';
 
 import { isNil } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';

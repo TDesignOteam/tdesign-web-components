@@ -94,15 +94,41 @@ const getAnalyzePlugins = (buildType = 'umd') => {
 };
 
 const input = 'src/index-lib.ts';
+
+// todo: 这里先按白名单：只打包 chat 相关组件
 const inputList = [
-  'src/**/*.ts',
-  'src/**/*.jsx',
-  'src/**/*.tsx',
+  // chat 开头的组件
+  'src/chat-*/**/*.ts',
+  'src/chat-*/**/*.tsx',
+  // 额外需要的组件
+  'src/chatbot/**/*.ts',
+  'src/chatbot/**/*.tsx',
+  'src/attachments/**/*.ts',
+  'src/attachments/**/*.tsx',
+  'src/filecard/**/*.ts',
+  'src/filecard/**/*.tsx',
+  // 公共模块
+  'src/_util/**/*.ts',
+  'src/_util/**/*.tsx',
+  'src/*.ts',
+  // 排除项
   '!src/**/_example',
   '!src/**/*.d.ts',
   '!src/**/__tests__',
   '!src/**/_usage',
 ];
+
+// 全部都打包
+// const inputList = [
+//   'src/**/*.ts',
+//   'src/**/*.jsx',
+//   'src/**/*.tsx',
+//   '!src/**/_example',
+//   '!src/**/*.d.ts',
+//   '!src/**/__tests__',
+//   '!src/**/_usage',
+// ];
+
 
 const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
   const plugins = [
