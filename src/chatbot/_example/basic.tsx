@@ -207,7 +207,7 @@ const mockData: ChatMessagesData[] = [
     content: [
       {
         type: 'markdown',
-        data: '**tdesign**',
+        data: '**tdesign** 团队的 *核心开发者* `uyarnchen` 是也。',
       },
     ],
   },
