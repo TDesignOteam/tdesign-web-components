@@ -130,6 +130,8 @@
     }
     &.@{prefix}-chat__item__role--user {
       .@{prefix}-chat__item__content {
+        // 如用户的content设为flex/inline-flex，会导致内部文本强制为block类型，宽度会与附件齐平，导致短文本时背景比文本短一截
+        display: block;
         padding: 0;
       }
     }
@@ -577,7 +579,7 @@
 
 .@{prefix}-chat__text {
   &--user {
-    display: inline-block;
+    display: inline-block !important;
     max-width: var(--td-chat-item-text-max-width);
     margin: var(--td-chat-item-text-detail-margin);
     padding: var(--td-chat-item-text-padding);
