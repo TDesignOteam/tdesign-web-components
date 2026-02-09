@@ -177,7 +177,7 @@ const mockData: ChatMessagesData[] = [
     content: [
       {
         type: 'text',
-        data: '这张图里的帅哥是谁，这张图里的帅哥是谁，这张图里的帅哥是谁，这张图里的帅哥是谁，这张图里的帅哥是谁',
+        data: '这张图里的帅哥是谁',
       },
       {
         type: 'attachment',
@@ -207,7 +207,7 @@ const mockData: ChatMessagesData[] = [
     content: [
       {
         type: 'markdown',
-        data: '**tdesign** 团队的 *核心开发者*  `uyarnchen` 是也。',
+        data: '**tdesign** 团队的 *核心开发者* `uyarnchen` 是也。',
       },
     ],
   },
