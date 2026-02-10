@@ -99,6 +99,7 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           wrap: false,
           lineNumber: false,
           copyCode: true,
+          editCode: false,
         },
       },
       customSyntax: {
