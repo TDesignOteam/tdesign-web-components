@@ -11,21 +11,18 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 export type TdChatAttachmentContentProps = {
-  key?: string;
   content?: AttachmentItem[];
   onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
 };
 
 // 纯函数渲染器
-export const renderAttachments = ({ key, content }: TdChatAttachmentContentProps, self: any) => (
-  <div key={key} className={`${className}__attachments`}>
+export const renderAttachments = ({ content, onFileClick }: TdChatAttachmentContentProps) => (
+  <div className={`${className}__attachments`}>
     <t-attachments
       className={`${className}__attachments__host`}
       items={content}
       removable={false}
-      onFileClick={(e) => {
-        self.fire('fileClick', e.detail, { composed: true });
-      }}
+      onFileClick={onFileClick}
       style={{ '--td-attachment-image-width': '160px', '--td-attachment-image-height': '160px' }}
     />
   </div>
@@ -41,8 +38,12 @@ export default class AttachmentContentComponent extends Component<TdChatAttachme
     onFileClick: Function,
   };
 
+  onFileClick = (event) => {
+    this.fire('fileClick', event.detail, { composed: true });
+  };
+
   render(props) {
     if (!props?.content) return;
-    return renderAttachments(props, this);
+    return renderAttachments({ ...props, onFileClick: this.onFileClick });
   }
 }
