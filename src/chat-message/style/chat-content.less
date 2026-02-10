@@ -58,7 +58,13 @@
       }
 
       div[data-type=codeBlock] {
-        margin-bottom: 0;
+        margin: var(--td-chat-md-code-margin);
+        overflow: hidden;
+
+        pre[class*=language-] {
+          margin: 0;
+          border-radius: var(--td-chat-md-code-radius);
+        }
       }
 
       // override cherry markdown code style

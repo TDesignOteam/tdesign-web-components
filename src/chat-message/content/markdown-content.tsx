@@ -1,8 +1,6 @@
-import '../md/chat-md-code';
-
 import MermaidPlugin from 'cherry-markdown/dist/addons/cherry-code-block-mermaid-plugin.esm.js';
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
-import { escape, merge } from 'lodash-es';
+import { merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
@@ -10,8 +8,6 @@ import { setExportparts } from '../../_util/dom';
 import { AddPartHook } from '../md/utils';
 
 import styles from '../style/chat-content.less';
-// 单独用该组件时，发现动态加载样式不生效，目前直接引入
-import codeStyles from '../style/md/chat-md-code.less';
 
 // 从 CherryStream 类的构造函数参数推断类型
 type CherryOptions = ConstructorParameters<typeof CherryStream>[0];
@@ -38,13 +34,27 @@ export interface TdChatContentMDPresetConfig {
   options?: any;
 }
 
+/** cherry-md中支持的代码块风格 */
+type CherryCodeBlockTheme =
+  | 'coy'
+  | 'dark'
+  | 'default'
+  | 'funky'
+  | 'okaidia'
+  | 'one-dark'
+  | 'one-light'
+  | 'solarized-light'
+  | 'twilight'
+  | 'vs-dark'
+  | 'vs-light';
+
 export type TdChatContentMDPluginConfig =
   /** 预设插件配置 */
   TdChatContentMDPresetConfig;
 
 export type TdChatContentMDOptions = Omit<CherryOptions, 'id' | 'el' | 'toolbars' | 'themeSettings'> & {
   themeSettings?: {
-    codeBlockTheme?: 'light' | 'dark';
+    codeBlockTheme?: 'light' | 'dark' | CherryCodeBlockTheme;
   };
 };
 
@@ -55,7 +65,7 @@ export interface TdChatMarkdownContentProps {
 
 @tag('t-chat-md-content')
 export default class ChatCherryMDContent extends Component<TdChatMarkdownContentProps> {
-  static css = [styles, codeStyles];
+  static css = [styles];
 
   static propTypes = {
     content: String,
@@ -86,13 +96,9 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
           target: '_blank',
         },
         codeBlock: {
-          customRenderer: {
-            // 自定义语法渲染器
-            all: {
-              render: (code, _sign, _cherry, lang) =>
-                `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" />`,
-            },
-          },
+          wrap: false,
+          lineNumber: false,
+          copyCode: true,
         },
       },
       customSyntax: {
@@ -126,27 +132,26 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
 
   initMarkdown = async () => {
     this.isMarkdownInit.value = false;
-    const customCodeBlock = this.props.options.engine?.syntax?.codeBlock;
-    const customCodeBlockRenderer = typeof customCodeBlock === 'object' ? customCodeBlock?.customRenderer : undefined;
 
-    const defaultCodeBlockRenderer = {
-      // 自定义语法渲染器
-      all: {
-        render: (code, _sign, _cherry, lang) =>
-          `<t-chat-md-code key="${_sign}" data-lang="${lang}" data-code="${escape(code)}" data-theme="${
-            this.markdownOptions.themeSettings?.codeBlockTheme === 'dark' ? 'dark' : 'light'
-          }" />`,
-      },
-    };
     const md = new CherryStream({
       ...this.markdownOptions,
+      themeSettings: {
+        ...this.markdownOptions.themeSettings,
+        // 兼容老版本light/dark风格
+        codeBlockTheme: (() => {
+          if (this.markdownOptions.themeSettings?.codeBlockTheme === 'dark') {
+            return 'one-dark';
+          }
+          if (this.markdownOptions.themeSettings?.codeBlockTheme === 'light') {
+            return 'one-light';
+          }
+          return this.markdownOptions.themeSettings?.codeBlockTheme || 'one-light';
+        })(),
+      },
       engine: {
         ...this.markdownOptions.engine,
         syntax: {
           ...this.markdownOptions.engine?.syntax,
-          codeBlock: {
-            customRenderer: { ...defaultCodeBlockRenderer, ...customCodeBlockRenderer },
-          },
         },
       },
       el: this.mdRef.current,
