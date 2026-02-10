@@ -159,6 +159,7 @@ export class AGUIAdapter {
             role: 'assistant',
             content: allContent,
             status: 'complete',
+            datetime: new Date(messages.at(-1)?.timestamp || Date.now()).toISOString(),
           });
         }
       }
@@ -179,7 +180,7 @@ export class AGUIAdapter {
               data: currentUserMessage.content,
             },
           ],
-          datetime: new Date(currentUserMessage.timestamp || Date.now()).toISOString(),
+          datetime: new Date(currentUserMessage?.timestamp || Date.now()).toISOString(),
         });
       }
       // 处理AI消息
