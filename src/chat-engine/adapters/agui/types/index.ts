@@ -3,6 +3,8 @@
 
 import { z } from 'zod';
 
+import type { UserMessageContent } from '../../../type';
+
 export const FunctionCallSchema = z.object({
   name: z.string(),
   arguments: z.string(),
@@ -39,10 +41,19 @@ const AssistantMessageSchema = BaseMessageSchema.extend({
   toolCalls: z.array(ToolCallSchema).optional(),
 });
 
+/**
+ * 用户消息 Schema
+ * content 支持两种格式：
+ * 1. 字符串（标准 AG-UI 格式）
+ * 2. 数组（已转换为 ChatEngine 的 UserMessageContent[] 格式）
+ */
 const UserMessageSchema = BaseMessageSchema.extend({
   role: z.literal('user'),
-  content: z.string(),
+  content: z.union([z.string(), z.array(z.any())]),
 });
+
+// 扩展类型定义，支持两种 content 格式
+export type AGUIUserMessageContent = string | UserMessageContent[];
 
 const ToolMessageSchema = z.object({
   id: z.string(),
