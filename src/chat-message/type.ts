@@ -9,6 +9,7 @@ import type {
 } from '../chat-engine/type';
 import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
 import type { TNode } from '../common';
+import { TdChatAttachmentContentProps } from './content/attachment-content';
 import type { TdChatMarkdownContentProps } from './content/markdown-content';
 
 type TdChatContentSearchProps = {
@@ -41,6 +42,7 @@ export type TdChatContentProps = {
   thinking?: TdChatContentThinkProps;
   reasoning?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;
+  attachments?: TdChatAttachmentContentProps;
   [key: string]: any; // 处理其他ContentType情况
 } & Partial<Record<Exclude<ChatContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
 

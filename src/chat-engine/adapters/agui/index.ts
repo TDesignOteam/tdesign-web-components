@@ -166,6 +166,7 @@ export class AGUIAdapter {
             role: 'assistant',
             content: allContent,
             status: 'complete',
+            datetime: new Date(messages.at(-1)?.timestamp || Date.now()).toISOString(),
           });
         }
       }
