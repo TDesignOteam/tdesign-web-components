@@ -112,6 +112,14 @@
     }
   }
 
+  // common variant样式
+  &__role--user {
+    .@{prefix}-chat__item__content {
+      // 如用户的content设为flex/inline-flex，会导致内部文本强制为block类型，宽度会与附件齐平，导致短文本时背景比文本短一截
+      display: block;
+    }
+  }
+
   // variant
   // 仅user类在text上区分variant
   &--variant--base {
@@ -132,8 +140,6 @@
     }
     &.@{prefix}-chat__item__role--user {
       .@{prefix}-chat__item__content {
-        // 如用户的content设为flex/inline-flex，会导致内部文本强制为block类型，宽度会与附件齐平，导致短文本时背景比文本短一截
-        display: block;
         padding: 0;
       }
     }
