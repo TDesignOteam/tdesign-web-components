@@ -118,7 +118,8 @@ export default class ChatCherryMDContent extends Component<TdChatMarkdownContent
       defaultModel: 'previewOnly',
     },
     previewer: {
-      enablePreviewerBubble: false,
+      // 关闭会导致代码块按钮隐藏
+      // enablePreviewerBubble: false,
     },
   };
 

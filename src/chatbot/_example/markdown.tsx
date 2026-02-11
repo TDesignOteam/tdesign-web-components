@@ -118,7 +118,7 @@ export default class MarkdownExample extends Component {
         markdown: {
           options: {
             themeSettings: {
-              codeBlockTheme: 'dark',
+              codeBlockTheme: 'light',
             },
             engine: {
               syntax: {
@@ -142,7 +142,18 @@ export default class MarkdownExample extends Component {
                         },
                       },
                     }
-                  : {}),
+                  : {
+                      codeBlock: {
+                        customBtns: [
+                          {
+                            html: '<div>自定义按钮</div>',
+                            onClick: (event, code, lang) => {
+                              console.log(`【${lang}】: ${code}`);
+                            },
+                          },
+                        ],
+                      },
+                    }),
               },
             },
           },
