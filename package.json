@@ -70,6 +70,10 @@
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TDesignOteam/tdesign-web-components.git"
+  },
   "dependencies": {
     "@babel/runtime": "^7.24.7",
     "@popperjs/core": "^2.11.8",
