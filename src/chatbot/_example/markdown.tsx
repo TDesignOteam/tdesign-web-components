@@ -118,7 +118,7 @@ export default class MarkdownExample extends Component {
         markdown: {
           options: {
             themeSettings: {
-              codeBlockTheme: 'light',
+              codeBlockTheme: 'dark',
             },
             engine: {
               syntax: {
