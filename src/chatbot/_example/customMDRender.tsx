@@ -3,6 +3,7 @@ import 'tdesign-web-components/chatbot';
 
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { Component } from 'omi';
+import { findTargetElement } from 'tdesign-web-components/chat-engine';
 import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
 
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../../chat-engine/type';
@@ -175,6 +176,21 @@ export default class BasicChat extends Component {
   };
 
   ready(): void {
+    // 处理链接点击
+    const handleResourceClick = (event: MouseEvent) => {
+      event.preventDefault();
+      // 查找符合条件的目标元素
+      const targetResource = findTargetElement(event, ['a[part=md_a]']);
+      if (targetResource) {
+        // 获取链接地址并触发回调
+        const href = targetResource.getAttribute('href');
+        if (href) {
+          console.log('跳转链接href', href);
+        }
+      }
+    };
+    // 注册全局点击事件监听
+    document.addEventListener('click', handleResourceClick);
     // 处理markdown自定义元素点击事件
     // 注意：只有 composed: true 时才能在此捕获
     document.addEventListener('color-text-click', this.clickTextHandler);
