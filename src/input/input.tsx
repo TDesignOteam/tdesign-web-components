@@ -5,6 +5,8 @@ import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
+import { setExportparts } from '../_util/dom';
+import { createEmit } from '../_util/emit';
 import { flexIcon } from '../_util/icon';
 import { convertToLightDomNode } from '../_util/lightDom';
 import parseTNode from '../_util/parseTNode';
@@ -17,6 +19,8 @@ const classPrefix = getClassPrefix();
 export interface InputProps extends TdInputProps, StyledProps {
   showInput?: boolean; // 控制透传readonly同时是否展示input 默认保留 因为正常Input需要撑开宽度
   keepWrapperWidth?: boolean; // 控制透传autoWidth之后是否容器宽度也自适应 多选等组件需要用到自适应但也需要保留宽度
+  autoExpandWidth?: boolean; // input宽度随内容自动扩展
+  fitHeight?: boolean; // 高度自适应内容
   onMyKeydown?: (value: InputValue, context: { e: KeyboardEvent }) => void;
   onMyKeyup?: (value: InputValue, context: { e: KeyboardEvent }) => void;
 }
@@ -49,7 +53,22 @@ export default class Input extends Component<InputProps> {
   static css = [
     `:host {
       width: 100%;
-    };
+    }
+    /* input宽度随内容自动扩展 */
+    .t-input--auto-expand .t-input__inner {
+      display: inline-block;
+      width: auto;
+      min-width: 0;
+      max-width: 100%;
+      vertical-align: middle;
+      field-sizing: content;
+    }
+    /* 无内容时input宽度不要占位 */
+    .t-input--auto-expand .t-input__inner:placeholder-shown {
+      width: 0;
+      min-width: 0;
+      padding: 0;
+    }
     `,
   ];
 
@@ -87,6 +106,21 @@ export default class Input extends Component<InputProps> {
     type: String,
     defaultValue: String,
     borderless: Boolean,
+    onChange: Function,
+    onEnter: Function,
+    onFocus: Function,
+    onBlur: Function,
+    onKeydown: Function,
+    onKeyup: Function,
+    onKeypress: Function,
+    onClear: Function,
+    onMouseenter: Function,
+    onMouseleave: Function,
+    onCompositionstart: Function,
+    onCompositionend: Function,
+    onValidate: Function,
+    onMyKeydown: Function,
+    onMyKeyup: Function,
   };
 
   inputRef = createRef<HTMLElement>();
@@ -119,6 +153,8 @@ export default class Input extends Component<InputProps> {
     super();
     this.inputHandlerBind = this.inputHandler.bind(this);
   }
+
+  private emit = createEmit(this);
 
   private get isControlled() {
     return Reflect.has(this.props, 'value');
@@ -166,7 +202,8 @@ export default class Input extends Component<InputProps> {
         onValidate,
       });
       onValidateChange();
-      onChange?.(newStr);
+      onChange?.(newStr, { e });
+      this.emit('change', { value: newStr, e });
     }
 
     this.update();
@@ -178,6 +215,7 @@ export default class Input extends Component<InputProps> {
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
     onFocus?.(currentTarget.value, { e });
+    this.emit('focus', { value: currentTarget.value, e });
     this.isFocused = true;
     this.update();
   };
@@ -188,6 +226,7 @@ export default class Input extends Component<InputProps> {
     if (readonly) return;
     const { currentTarget }: { currentTarget: any } = e;
     onBlur?.(currentTarget.value, { e });
+    this.emit('blur', { value: currentTarget.value, e });
     this.isFocused = false;
     this.update();
   };
@@ -197,6 +236,7 @@ export default class Input extends Component<InputProps> {
     const { onMouseenter } = this.props;
     this.isHover = true;
     onMouseenter?.({ e });
+    this.emit('mouseEnter', { e });
     this.update();
   };
 
@@ -204,24 +244,33 @@ export default class Input extends Component<InputProps> {
     e.stopImmediatePropagation();
     const { onMouseleave } = this.props;
     this.isHover = false;
-    this.update();
     onMouseleave?.({ e });
+    this.emit('mouseLeave', { e });
+    this.update();
   };
 
   private handleClear = (e: MouseEvent) => {
     const { onChange, onClear } = this.props;
     this.composingValue = '';
+    if (!this.isControlled) {
+      this.innerValue = '';
+    }
     this.update();
     onChange?.('', { e });
     onClear?.({ e });
+    this.emit('clear', { e });
   };
 
   private handleKeyDown = (e: KeyboardEvent) => {
     const { onEnter } = this.props;
     const { key, currentTarget }: { key: string; currentTarget: any } = e;
-    key === 'Enter' && onEnter?.(currentTarget.value, { e });
+    if (key === 'Enter') {
+      onEnter?.(currentTarget.value, { e });
+      this.emit('enter', { value: currentTarget.value, e });
+    }
     this.props.onMyKeydown?.(currentTarget.value, { e });
     this.props.onKeydown?.(currentTarget.value, { e });
+    this.emit('keyDown', { value: currentTarget.value, e });
     // 防止 最外层 onKeydown
     e.stopPropagation();
   };
@@ -230,6 +279,7 @@ export default class Input extends Component<InputProps> {
     const { currentTarget }: { currentTarget: any } = e;
     this.props.onMyKeyup?.(currentTarget.value, { e });
     this.props.onKeyup?.(currentTarget.value, { e });
+    this.emit('keyUp', { value: currentTarget.value, e });
     // 防止 最外层 onKeyup
     e.stopPropagation();
   };
@@ -238,6 +288,7 @@ export default class Input extends Component<InputProps> {
     const { onKeypress } = this.props;
     const { currentTarget }: { currentTarget: any } = e;
     onKeypress?.(currentTarget.value, { e });
+    this.emit('keyPress', { value: currentTarget.value, e });
     // 防止 最外层 onKeypress
     e.stopPropagation();
   };
@@ -247,6 +298,7 @@ export default class Input extends Component<InputProps> {
     this.composingRef.current = true;
     const { currentTarget }: { currentTarget: any } = e;
     onCompositionstart?.(currentTarget.value, { e });
+    this.emit('compositionStart', { value: currentTarget.value, e });
   };
 
   private handleCompositionEnd = (e: CompositionEvent) => {
@@ -257,6 +309,7 @@ export default class Input extends Component<InputProps> {
       this.handleChange(e);
     }
     onCompositionend?.(currentTarget.value, { e });
+    this.emit('compositionEnd', { value: currentTarget.value, e });
   };
 
   private updateInputWidth() {
@@ -296,15 +349,13 @@ export default class Input extends Component<InputProps> {
       this.innerValue = limitedValue;
     }
     this.composingValue = limitedValue;
-    this.props.onChange?.(limitedValue);
+    this.props.onChange?.(limitedValue, { e });
     if (!this.props.allowInputOverMax) {
       this.update();
     }
     onValidateChange();
 
-    if (!(this.props as any).ignoreAttrs) {
-      this.fire('change', { value: limitedValue, context: { e } });
-    }
+    this.emit('change', { value: limitedValue, e });
   };
 
   install() {
@@ -314,6 +365,8 @@ export default class Input extends Component<InputProps> {
 
   ready() {
     this.renderType = this.props.type;
+
+    setExportparts(this);
 
     if (this.props.autoWidth) {
       // autoWidth 模式下，:host 宽度需要自适应
@@ -381,6 +434,8 @@ export default class Input extends Component<InputProps> {
       allowInputOverMax,
       inputClass,
       format,
+      autoExpandWidth,
+      fitHeight,
       onValidate,
       ...restProps
     } = props;
@@ -509,7 +564,9 @@ export default class Input extends Component<InputProps> {
           [`${classPrefix}-input--suffix`]: suffixIconContent || suffixContent,
           [`${classPrefix}-input--borderless`]: borderless,
           [`${classPrefix}-input--focused`]: this.isFocused,
+          [`${classPrefix}-input--auto-expand`]: autoExpandWidth,
         })}
+        style={fitHeight ? { height: 'fit-content' } : undefined}
         onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
       >

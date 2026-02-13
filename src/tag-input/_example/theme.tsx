@@ -7,8 +7,8 @@ export default class TagInputTheme extends Component {
   tags = ['Vue', 'React', 'Omi', 'Miniprogram'];
 
   render() {
-    const setTags = (value) => {
-      this.tags = value;
+    const setTags = (e: CustomEvent) => {
+      this.tags = e.detail.value;
       this.update();
     };
 
