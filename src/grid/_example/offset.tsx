@@ -1,6 +1,6 @@
 import 'tdesign-web-components/grid';
 
-import css from 'tdesign-web-components/grid/_example/common.css';
+import css from 'tdesign-web-components/grid/_example/common.css?inline';
 
 export default function OffsetGrid() {
   return (

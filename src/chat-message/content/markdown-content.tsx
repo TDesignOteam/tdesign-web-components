@@ -8,10 +8,9 @@ import { Component, createRef, signal, tag } from 'omi';
 import { getClassPrefix } from '../../_util/classname';
 import { setExportparts } from '../../_util/dom';
 import { AddPartHook } from '../md/utils';
-
-import styles from '../style/chat-content.less';
+import styles from '../style/chat-content.less?inline';
 // 单独用该组件时，发现动态加载样式不生效，目前直接引入
-import codeStyles from '../style/md/chat-md-code.less';
+import codeStyles from '../style/md/chat-md-code.less?inline';
 
 // 从 CherryStream 类的构造函数参数推断类型
 type CherryOptions = ConstructorParameters<typeof CherryStream>[0];

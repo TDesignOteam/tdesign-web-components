@@ -23,10 +23,9 @@ import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-messag
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
+import styles from './style/chat.less?inline';
 import type Chatlist from './chat-list';
 import type { TdChatbotApi, TdChatListScrollToOptions, TdChatMessageConfig, TdChatProps } from './type';
-
-import styles from './style/chat.less';
 
 const className = `${getClassPrefix()}-chat`;
 @tag('t-chatbot')

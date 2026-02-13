@@ -93,6 +93,17 @@ const getAnalyzePlugins = (buildType = 'umd') => {
   return plugins;
 };
 
+// 处理?inline后缀
+const inlineResolver = {
+  name: 'inline-resolver',
+  resolveId(source, importer) {
+    if (source.endsWith('?inline')) {
+      return this.resolve(source.replace('?inline', ''), importer, { skipSelf: true });
+    }
+    return null;
+  },
+};
+
 const input = 'src/index-lib.ts';
 const inputList = [
   'src/**/*.ts',
@@ -106,6 +117,7 @@ const inputList = [
 
 const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
   const plugins = [
+    inlineResolver,
     nodeResolve(),
     commonjs(),
     esbuild({
@@ -197,7 +209,7 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
 
 const cssConfig = {
   input: ['src/style/index.js'],
-  plugins: [multiInput(), styles({ mode: 'extract' })],
+  plugins: [inlineResolver, multiInput(), styles({ mode: 'extract' })],
   output: {
     banner,
     dir: 'lib/',
@@ -208,7 +220,7 @@ const cssConfig = {
 
 const umdCssConfig = {
   input: ['src/style/index.js'],
-  plugins: [multiInput(), styles({ mode: 'extract' })],
+  plugins: [inlineResolver, multiInput(), styles({ mode: 'extract' })],
   output: {
     banner,
     dir: 'dist/',

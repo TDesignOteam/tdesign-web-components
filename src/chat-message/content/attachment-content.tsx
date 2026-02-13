@@ -5,8 +5,7 @@ import { Component, tag } from 'omi';
 import { getClassPrefix } from '../../_util/classname';
 import { type AttachmentItem } from '../../chat-engine';
 import { TdAttachmentItem } from '../../filecard';
-
-import styles from '../style/chat-item.less';
+import styles from '../style/chat-item.less?inline';
 
 const className = `${getClassPrefix()}-chat__item`;
 

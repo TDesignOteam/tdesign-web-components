@@ -37,9 +37,8 @@ import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
+import styles from './style/chat-item.less?inline';
 import type { TdChatMessageActionName, TdChatMessageProps } from './type';
-
-import styles from './style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
