@@ -7,7 +7,7 @@ import replace from '@rollup/plugin-replace';
 import url from '@rollup/plugin-url';
 import { resolve } from 'path';
 import atImport from 'postcss-import';
-import analyzer from 'rollup-plugin-analyzer';
+import outputSize from 'rollup-plugin-output-size';
 import esbuild from 'rollup-plugin-esbuild';
 import ignoreImport from 'rollup-plugin-ignore-import';
 import multiInput from 'rollup-plugin-multi-input';
@@ -43,11 +43,10 @@ const getAnalyzePlugins = (buildType = 'umd') => {
 
   // 基础分析器 - 控制台输出
   plugins.push(
-    analyzer({
-      limit: 10,
-      summaryOnly: false,
-      hideDeps: false,
-      showExports: true,
+    outputSize({
+      gzip: true,
+      brotli: true,
+      summary: 'always',
     }),
   );
 
