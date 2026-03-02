@@ -248,7 +248,7 @@ export default class TagInput extends Component<TagInputProps> {
     if (valueDisplay) {
       const onClose = (index: number) => this.handleTagClose(index);
       if (typeof valueDisplay === 'function') {
-        return valueDisplay(this.tags, onClose);
+        return valueDisplay({ value: this.tags, onClose });
       }
       return valueDisplay;
     }

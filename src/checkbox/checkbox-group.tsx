@@ -184,7 +184,7 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
     let children = null;
     if (this.props.options?.length) {
       children = this.optionList?.map((option, index) => {
-        const { isLightDom, ...rest } = option;
+        const { isLightDom = true, ...rest } = option;
         const checkbox = (
           <t-checkbox
             key={`${option.value || ''}${index}`}
@@ -192,7 +192,9 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
             index={index}
             checked={this.tChecked?.includes(option.value)}
             data={option}
-          ></t-checkbox>
+          >
+            {option.label}
+          </t-checkbox>
         );
         if (isLightDom) {
           return convertToLightDomNode(checkbox);

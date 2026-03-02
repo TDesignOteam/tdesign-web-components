@@ -66,7 +66,7 @@ export interface TdTagInputProps {
   /** 宽度随内容自适应 */
   autoWidth?: boolean;
   /** 自定义值呈现的全部内容 */
-  valueDisplay?: string | ((value: TagInputValue, onClose: (index: number) => void) => any);
+  valueDisplay?: string | ((params: { value: TagInputValue; onClose: (index: number, item?: any) => void }) => any);
   /** 自定义折叠标签呈现方式 */
   collapsedItems?: TNode<CollapsedItemsParams>;
   /** 数据化配置选项内容 */
