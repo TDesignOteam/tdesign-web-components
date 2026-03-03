@@ -283,7 +283,8 @@ export default class FileCard extends Component<TdFileCardProps> {
         <t-image
           src={item.url}
           shape="round"
-          fit="contain"
+          fit="cover"
+          position="center"
           className={`${className}-image`}
           style={newstyle}
           loading={<t-icon-loading size={iconSize} />}
