@@ -31,10 +31,10 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   /** 透传input-file参数 */
   uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
   /**
-   * 覆盖发送条件，返回为true时标识为可发送
-   * @default value不为空时可发送
+   * 禁用发送按钮，支持布尔值或函数形式
+   * @default false
    */
-  readyToSend?: (inputValue: string) => boolean;
+  sendBtnDisabled?: boolean | ((inputValue: string) => boolean);
   onSend?: (e: CustomEvent<TdChatSenderParams>) => ChatRequestParams | void;
   onStop?: (e: CustomEvent<string>) => void;
   onChange?: (e: CustomEvent<string>) => void;
