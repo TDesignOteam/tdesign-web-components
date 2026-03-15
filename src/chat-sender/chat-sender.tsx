@@ -35,7 +35,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
-    readyToSend: [Object, Function],
+    sendBtnDisabled: [Boolean, Function],
     onFileSelect: Function,
     onFileRemove: Function,
     onSend: Function,
@@ -105,6 +105,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     }
     if (props.attachmentsProps.items !== oldProps.attachmentsProps.items) return true;
     if (props.loading !== oldProps.loading) return true;
+    if (typeof props.sendBtnDisabled === 'boolean' && props.sendBtnDisabled !== oldProps.sendBtnDisabled) return true;
     return false;
   }
 
@@ -159,7 +160,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         className={classname([
           `${className}__button`,
           {
-            [`${className}__button--focus`]: this.isReadyToSend || this.props.loading,
+            [`${className}__button--focus`]: !this.isSendBtnDisabled || this.props.loading,
           },
         ])}
         onClick={this.clickSend}
@@ -189,10 +190,12 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     ];
   }
 
-  get isReadyToSend() {
-    return this.props.readyToSend && typeof this.props.readyToSend === 'function'
-      ? this.props.readyToSend(this.inputValue)
-      : this.inputValue && this.inputValue.trim() !== '';
+  get isSendBtnDisabled() {
+    const { sendBtnDisabled } = this.props;
+    if (typeof sendBtnDisabled === 'boolean') return sendBtnDisabled;
+    if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(this.inputValue);
+    // 默认：输入为空时禁用
+    return !this.inputValue || this.inputValue.trim() === '';
   }
 
   private renderActions = () => {
@@ -321,7 +324,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleSend = () => {
-    if (this.props.disabled || !this.isReadyToSend) {
+    if (this.props.disabled || this.isSendBtnDisabled) {
       return;
     }
     this.fire(

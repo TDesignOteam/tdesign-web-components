@@ -10,6 +10,10 @@ spline: base
 
 {{ basic }}
 
+### 禁用发送按钮
+
+{{ sendBtnDisabled }}
+
 ### 附件发送
 
 {{ attachment }}
@@ -32,6 +36,7 @@ spline: base
 | `defaultValue` | `string` | - | 输入框默认值（非受控模式） |
 | `loading` | `boolean` | `false` | 是否加载中 |
 | `autosize` | `boolean \| { minRows?: number; maxRows?: number }` | `{ minRows: 2 }` | 高度自动撑开 |
+| `sendBtnDisabled` | `boolean \| ((inputValue: string) => boolean)` | - | 禁用发送按钮，支持布尔值或函数形式。默认输入为空时禁用 |
 
 ## 操作按钮配置
 
