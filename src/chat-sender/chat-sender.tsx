@@ -105,7 +105,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     }
     if (props.attachmentsProps.items !== oldProps.attachmentsProps.items) return true;
     if (props.loading !== oldProps.loading) return true;
-    if (typeof props.sendBtnDisabled === 'boolean' && props.sendBtnDisabled !== oldProps.sendBtnDisabled) return true;
+    if (props.sendBtnDisabled !== oldProps.sendBtnDisabled) return true;
     return false;
   }
 
