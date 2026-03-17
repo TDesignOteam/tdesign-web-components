@@ -126,10 +126,6 @@ export interface TdChatbotApi {
     type: T['type'], // 使用类型中定义的type字段作为参数类型
     handler: (chunk: T, existing?: T) => T,
   ) => void;
-  /**
-   * 触发选择文件
-   */
-  selectFile: () => void;
 }
 
 export type TdChatMessageConfigItem = Omit<TdChatMessageProps, 'message'>;
