@@ -10,10 +10,6 @@ spline: base
 
 {{ basic }}
 
-### 禁用发送按钮
-
-{{ sendBtnDisabled }}
-
 ### 附件发送
 
 {{ attachment }}
