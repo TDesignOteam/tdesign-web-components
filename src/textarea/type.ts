@@ -67,27 +67,27 @@ export interface TdTextareaProps {
   /**
    * 失去焦点时触发
    */
-  onBlur?: (value: TextareaValue, context: { e: FocusEvent }) => void;
+  onBlur?: (e: CustomEvent<{ value: TextareaValue; e: FocusEvent }>) => void;
   /**
    * 输入内容变化时触发:
    */
-  onChange?: (value: TextareaValue, context?: { e?: Event }) => void;
+  onChange?: (e: CustomEvent<{ value: TextareaValue; e: Event }>) => void;
   /**
    * 获得焦点时触发
    */
-  onFocus?: (value: TextareaValue, context: { e: FocusEvent }) => void;
+  onFocus?: (e: CustomEvent<{ value: TextareaValue; e: FocusEvent }>) => void;
   /**
    * 键盘按下时触发
    */
-  onKeydown?: (value: TextareaValue, context: { e: KeyboardEvent }) => void;
+  onKeydown?: (e: CustomEvent<{ value: TextareaValue; e: KeyboardEvent }>) => void;
   /**
    * 按下字符键时触发（keydown -> keypress -> keyup）
    */
-  onKeypress?: (value: TextareaValue, context: { e: KeyboardEvent }) => void;
+  onKeypress?: (e: CustomEvent<{ value: TextareaValue; e: KeyboardEvent }>) => void;
   /**
    * 释放键盘时触发
    */
-  onKeyup?: (value: TextareaValue, context: { e: KeyboardEvent }) => void;
+  onKeyup?: (e: CustomEvent<{ value: TextareaValue; e: KeyboardEvent }>) => void;
 }
 
 export type TextareaValue = string;

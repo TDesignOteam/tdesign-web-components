@@ -25,9 +25,9 @@ export default class Textarea extends Component {
     console.log('onKeydown', value, e);
   };
 
-  onChange = (e: CustomEvent) => {
+  onChange = (e: CustomEvent<{ value: string; e: Event }>) => {
     console.log('onChange', e);
-    this.inputValue.value = e.detail;
+    this.inputValue.value = e.detail.value;
   };
 
   render() {

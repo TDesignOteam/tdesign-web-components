@@ -62,6 +62,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     this.pValue = value || defaultValue;
     this.eventPropsNames = Object.keys(otherProps).filter((key) => /^on[A-Z]/.test(key));
     this.eventProps = this.eventPropsNames.reduce((eventProps, key) => {
+      const eventName = key.slice(2).toLowerCase(); // onXxx-> xxx
       Object.assign(eventProps, {
         [key]: (e) => {
           if (disabled) return;
@@ -73,7 +74,7 @@ export default class Textarea extends Component<TdTextareaProps> {
             this.isFocused = false;
             this.update();
           }
-          this.props[key](e);
+          this.fire(eventName, { value: this.inputValue, e });
           e.stopPropagation();
         },
       });
@@ -167,7 +168,8 @@ export default class Textarea extends Component<TdTextareaProps> {
     const limitedValue = getValueByLimitNumber(target.value);
     this.pValue = limitedValue;
 
-    this.fire('change', limitedValue);
+    // DOM 事件
+    this.fire('change', { value: limitedValue, e });
     this.adjustTextareaHeight();
   };
 

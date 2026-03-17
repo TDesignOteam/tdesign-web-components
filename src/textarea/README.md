@@ -51,9 +51,9 @@ status | String | - | 文本框状态。可选项：`default/success/warning/err
 tips | TNode | - | 输入框下方提示文本 | N
 value | String | - | 文本框值 | N
 defaultValue | String | - | 文本框值，非受控属性 | N
-onBlur | Function |  | TS 类型：`(value: string, context: FocusEvent) => void`<br/>失去焦点时触发 | N
-onFocus | Function |  | TS 类型：`(value: string, context: FocusEvent) => void`<br/>获得焦点时触发 | N
-onKeydown | Function |  | TS 类型：`(value: string, context: KeyboardEvent) => void`<br/>键盘按下时触发 | N
-onKeypress | Function |  | TS 类型：`(value: string, context: KeyboardEvent) => void`<br/>按下字符键时触发 | N
-onKeyup | Function |  | TS 类型：`(value: string, context: KeyboardEvent) => void`<br/>释放键盘时触发 | N
-onChange | Function |  | TS 类型：`(value: string, context: Event) => void`<br/>输入内容变化时触发 | N
+onBlur | Function |  | TS 类型：`(e: CustomEvent<{ value: string; e: FocusEvent }>) => void`<br/>失去焦点时触发 | N
+onFocus | Function |  | TS 类型：`(e: CustomEvent<{ value: string; e: FocusEvent }>) => void`<br/>获得焦点时触发 | N
+onKeydown | Function |  | TS 类型：`(e: CustomEvent<{ value: string; e: KeyboardEvent }>) => void`<br/>键盘按下时触发 | N
+onKeypress | Function |  | TS 类型：`(e: CustomEvent<{ value: string; e: KeyboardEvent }>) => void`<br/>按下字符键时触发 | N
+onKeyup | Function |  | TS 类型：`(e: CustomEvent<{ value: string; e: KeyboardEvent }>) => void`<br/>释放键盘时触发 | N
+onChange | Function |  | TS 类型：`(e: CustomEvent<{ value: string; e: Event }>) => void`<br/>输入内容变化时触发 | N
