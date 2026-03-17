@@ -7,9 +7,9 @@ export default class BasicExample extends Component {
 
   loading = signal<boolean>(false);
 
-  onChange = (e: CustomEvent) => {
-    console.log('onChange', e);
-    this.inputValue.value = e.detail;
+  onChange = (e: CustomEvent<{ value: string; e: Event }>) => {
+    console.log('onChange', e.detail);
+    this.inputValue.value = e.detail.value;
   };
 
   onSend = (e) => {

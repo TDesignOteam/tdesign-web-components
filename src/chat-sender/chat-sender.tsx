@@ -115,7 +115,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     const removed = e.detail;
     // 受控模式：只通知外部，不内部处理
     if (this.isControlled) {
-      this.fire('fileRemove', removed, { composed: true });
+      this.fire('fileRemove', [removed], { composed: true });
       return;
     }
     // 非受控模式：内部处理删除
@@ -123,7 +123,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     if (index === -1) return;
     const rest = this.attachmentsValue.filter((_, i) => i !== index);
     this.pAttachments.value = rest;
-    this.fire('fileRemove', removed, { composed: true });
+    this.fire('fileRemove', [removed], { composed: true });
   };
 
   receiveProps(

@@ -26,9 +26,9 @@ export default class AttachmentExample extends Component {
     },
   ]);
 
-  onChange = (e: CustomEvent) => {
-    console.log('onChange', e);
-    this.inputValue.value = e.detail;
+  onChange = (e: CustomEvent<{ value: string; e: Event }>) => {
+    console.log('onChange', e.detail);
+    this.inputValue.value = e.detail.value;
   };
 
   onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem[]>) => {

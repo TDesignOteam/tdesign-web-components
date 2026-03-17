@@ -59,12 +59,11 @@ export default class ChatSenderEventCustom extends Component {
     this.addLog('onFileSelect', { name, fileCount: files.length });
   };
 
-  onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
+  onFileRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onFileRemove:', e.detail);
-    // 受控模式下需要父组件手动更新 attachments
-    const removed = e.detail;
+    const removedItems = e.detail;
     this.attachments.value = this.attachments.value.filter(
-      (item) => !(item.name === removed.name && item.url === removed.url),
+      (item) => !removedItems.some((removed) => removed.name === item.name && removed.url === item.url),
     );
     this.addLog('onFileRemove', e.detail);
   };
