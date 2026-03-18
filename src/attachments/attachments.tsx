@@ -35,25 +35,44 @@ export default class Attachments extends Component<TdAttachmentsProps> {
 
   containerRef = createRef<HTMLElement>();
 
+  /** ResizeObserver 实例 */
+  private resizeObserver: ResizeObserver | null = null;
+
+  /** 滚动事件处理器（保存引用以便清理） */
+  private handleScroll = () => {
+    this.updateButtonVisibility();
+  };
+
   installed() {
     // 添加延迟确保DOM完全渲染
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         this.updateButtonVisibility();
         // 添加尺寸变化监听
-        const resizeObserver = new ResizeObserver(() => {
+        this.resizeObserver = new ResizeObserver(() => {
           this.updateButtonVisibility();
         });
         if (this.containerRef.current) {
-          resizeObserver.observe(this.containerRef.current);
+          this.resizeObserver.observe(this.containerRef.current);
         }
       });
     });
 
     // 监听手动滚动事件
-    this.containerRef.current?.addEventListener('scroll', () => {
-      this.updateButtonVisibility();
-    });
+    this.containerRef.current?.addEventListener('scroll', this.handleScroll);
+  }
+
+  uninstalled() {
+    // 清理 ResizeObserver
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+      this.resizeObserver = null;
+    }
+
+    // 清理滚动事件监听器
+    if (this.containerRef.current) {
+      this.containerRef.current.removeEventListener('scroll', this.handleScroll);
+    }
   }
 
   ready(): void {
