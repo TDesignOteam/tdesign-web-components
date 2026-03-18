@@ -203,6 +203,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       raw: file,
     }));
 
+    this.pAttachments.value = [...this.pAttachments.value, ...attachmentItems];
+
     this.fire('fileSelect', attachmentItems, { composed: true });
     ref.current.value = '';
   };

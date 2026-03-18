@@ -65,14 +65,11 @@ export default class ChatSenderControlledMode extends Component {
   };
 
   onFileSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
-    // 组件内部会自动更新附件列表
-    // 这里同步到外部状态，用于其他业务逻辑（如显示附件数量）
-    this.attachments.value = [...this.attachments.value, ...e.detail];
+    console.log('onFileSelect', e.detail);
   };
 
   onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
-    // ✅ 组件内部已自动删除，这里同步到外部状态
-    this.attachments.value = this.attachments.value.filter((item) => item.name !== e.detail.name);
+    console.log('onFileRemove', e.detail);
   };
 
   onStop = () => {

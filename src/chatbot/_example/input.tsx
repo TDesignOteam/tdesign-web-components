@@ -42,13 +42,12 @@ export default class ChatSender extends Component {
     this.inputValue.value = e.detail;
   };
 
-  onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem>) => {
-    console.log('onAttachmentsRemove', e.detail);
+  onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
+    console.log('onFileRemove', e.detail);
   };
 
-  onAttachmentsSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
-    console.log('onAttachmentsSelect', e);
-    this.files.value = e.detail.concat(this.files.value);
+  onFileSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
+    console.log('onFileSelect', e.detail);
   };
 
   onSend = (e: CustomEvent<TdChatSenderParams>) => {
@@ -110,7 +109,7 @@ export default class ChatSender extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         loading={this.loading.value}
-        actions
+        actions={['uploadImage', 'uploadAttachment', 'send']}
         attachmentsProps={{
           items: this.files.value,
           overflow: 'scrollX',
@@ -120,8 +119,8 @@ export default class ChatSender extends Component {
           multiple: true,
           accept: 'image/*',
         }}
-        onFileSelect={this.onAttachmentsSelect}
-        onFileRemove={this.onAttachmentsRemove}
+        onFileSelect={this.onFileSelect}
+        onFileRemove={this.onFileRemove}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}
