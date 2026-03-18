@@ -16,7 +16,15 @@ export interface TdChatSenderAction {
 
 export interface TdChatSenderParams {
   value: string;
+  context: {
+    e?: MouseEvent | KeyboardEvent;
+  };
+  /** 附件列表（WC 特有增强） */
   attachments?: TdAttachmentItem[];
+}
+
+export interface TdChatSenderEventContext {
+  e: Event;
 }
 
 export interface TdChatSenderContext {
@@ -31,10 +39,16 @@ export interface TdChatSenderUploadProps {
 }
 
 export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
-  value?: string;
+  /** 输入框的值，支持双向绑定（通过 onChange 事件实现） */
+  value?: string | number;
+  /** 输入框默认值，非受控模式 */
+  defaultValue?: string | number;
+  /** 输入框默认文案 */
   placeholder?: string;
+  /** 是否禁用输入框 */
   disabled?: boolean;
-  defaultValue?: string;
+  /** 是否加载中 */
+  loading?: boolean;
   /**
    * 操作按钮配置
    * - TdChatSenderActionName[]: 预设按钮名称数组，如 ['uploadImage', 'send']
@@ -50,11 +64,13 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
     | ((preset: TdChatSenderAction[]) => TdChatSenderAction[])
     | TNode
     | boolean;
-  /** 是否加载中 */
-  loading?: boolean;
-  /** 透传attachment参数 */
+  /** 输入框右下角区域扩展 */
+  suffix?: TNode;
+  /** 输入框左下角区域扩展 */
+  footerPrefix?: TNode;
+  /** 透传附件组件参数 */
   attachmentsProps?: TdAttachmentsProps;
-  /** 透传textarea参数 */
+  /** 透传 Textarea 组件属性 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
   /**
    * 透传上传输入框的HTML属性
@@ -73,17 +89,17 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   /** 发送消息事件 */
   onSend?: (e: CustomEvent<TdChatSenderParams>) => void;
   /** 停止发送事件 */
-  onStop?: (e: CustomEvent<string>) => void;
+  onStop?: (e: CustomEvent<{ value: string; context: { e: MouseEvent } }>) => void;
   /** 输入内容变化事件 */
-  onChange?: (e: CustomEvent<string>) => void;
+  onChange?: (e: CustomEvent<{ value: string; context: { e: InputEvent } }>) => void;
   /** 输入框聚焦事件 */
-  onFocus?: (e: CustomEvent<string>) => void;
+  onFocus?: (e: CustomEvent<{ value: string; context: { e: FocusEvent } }>) => void;
   /** 输入框失焦事件 */
-  onBlur?: (e: CustomEvent<string>) => void;
+  onBlur?: (e: CustomEvent<{ value: string; context: { e: FocusEvent } }>) => void;
   /** 文件选择事件 */
   onFileSelect?: (e: CustomEvent<TdAttachmentItem[]>) => void;
-  /** 文件移除事件，参数为被删除的文件项 */
-  onFileRemove?: (e: CustomEvent<TdAttachmentItem>) => void;
+  /** 文件移除事件，参数为被删除的文件项和索引 */
+  onFileRemove?: (e: CustomEvent<{ item: TdAttachmentItem; index: number }>) => void;
 }
 
 export interface TdChatSenderApi {

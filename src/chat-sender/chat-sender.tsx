@@ -34,11 +34,13 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   static propTypes = {
     placeholder: String,
     disabled: Boolean,
-    value: String,
-    actions: [Array, Function, Object, Boolean, String],
-    defaultValue: String,
+    value: [String, Number],
+    defaultValue: [String, Number],
     loading: Boolean,
     autosize: Object,
+    actions: [Array, Function, Object, Boolean, String],
+    suffix: [String, Function, Object],
+    footerPrefix: [String, Function, Object],
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
@@ -60,14 +62,12 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       items: [],
       overflow: 'scrollX',
     },
-    autosize: { minRows: 2 },
+    autosize: { minRows: 2, maxRows: 5 },
     textareaProps: {},
     actions: ['send'],
   };
 
   pValue: Omi.SignalValue<string> = signal('');
-
-  pAttachments: Omi.SignalValue<TdAttachmentItem[]> = signal([]);
 
   uploadImageRef = createRef<HTMLInputElement>();
 
@@ -77,7 +77,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   private shiftDown = false;
 
-  /** 预设操作按钮配置（惰性渲染） */
+  private isComposing = false;
+
   private getPresetActions = (): TdChatSenderAction[] => [
     {
       name: 'uploadImage',
@@ -94,35 +95,30 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   ];
 
   ready() {
-    const { value, defaultValue, attachmentsProps } = this.props;
+    const { value, defaultValue } = this.props;
 
-    this.pValue.value = value || defaultValue;
-    attachmentsProps?.items && (this.pAttachments.value = attachmentsProps.items);
+    this.pValue.value = String(value ?? defaultValue ?? '');
     this.update();
 
     setExportparts(this);
   }
 
+  get isControlled() {
+    return !isNil(this.props.value);
+  }
+
   get inputValue() {
-    if (!isNil(this.props.value)) return this.props.value;
+    if (this.isControlled) return String(this.props.value ?? '');
     return this.pValue.value;
   }
 
   get attachmentsValue() {
-    // 始终返回内部状态（删除操作直接生效）
-    return this.pAttachments.value;
+    return this.props.attachmentsProps?.items || [];
   }
 
   private handleAttachmentsRemove = (e: CustomEvent<{ item: TdAttachmentItem; index: number }>) => {
     const { item, index } = e.detail;
-    if (index < 0 || index >= this.attachmentsValue.length) return;
-
-    // 删除操作直接生效：更新内部状态
-    const rest = this.attachmentsValue.filter((_, i) => i !== index);
-    this.pAttachments.value = rest;
-
-    // 触发事件通知外部（外部可选择同步自己的状态）
-    this.fire('fileRemove', item, { composed: true });
+    this.fire('fileRemove', { item, index }, { composed: true });
   };
 
   receiveProps(
@@ -140,18 +136,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     }
 
     if (props.defaultValue !== oldProps.defaultValue) {
-      this.pValue.value = props.defaultValue;
-      shouldUpdate = true;
-    }
-
-    // 双向绑定：外部 items 变化时同步到内部状态
-    const newItems = props.attachmentsProps?.items;
-    const oldItems = oldProps.attachmentsProps?.items;
-    // 引用比较或长度比较（处理内联对象场景）
-    if (newItems !== oldItems || newItems?.length !== oldItems?.length) {
-      if (newItems !== undefined) {
-        this.pAttachments.value = newItems;
-      }
+      this.pValue.value = String(props.defaultValue ?? '');
       shouldUpdate = true;
     }
 
@@ -163,25 +148,29 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       shouldUpdate = true;
     }
 
+    if (props.suffix !== oldProps.suffix) {
+      shouldUpdate = true;
+    }
+
+    if (props.footerPrefix !== oldProps.footerPrefix) {
+      shouldUpdate = true;
+    }
+
     return shouldUpdate;
   }
 
-  /** 获取焦点 */
   focus = (options?: FocusOptions) => {
     this.inputRef.current?.focus(options);
   };
 
-  /** 取消焦点 */
   blur = () => {
     this.inputRef.current?.blur();
   };
 
-  /** 触发图片选择 */
   selectImage = () => {
     this.uploadImageRef.current?.click();
   };
 
-  /** 触发文件选择 */
   selectFile = () => {
     this.uploadAttachmentRef.current?.click();
   };
@@ -193,7 +182,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       return;
     }
 
-    // 将 File[] 转换为 TdAttachmentItem[]
     const attachmentItems: TdAttachmentItem[] = Array.from(files).map((file) => ({
       name: file.name,
       size: file.size,
@@ -201,13 +189,10 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       raw: file,
     }));
 
-    this.pAttachments.value = [...this.pAttachments.value, ...attachmentItems];
-
     this.fire('fileSelect', attachmentItems, { composed: true });
     ref.current.value = '';
   };
 
-  /** 获取图片上传属性（优先级：imageUploadProps > uploadProps） */
   private getImageUploadProps = (): TdChatSenderUploadProps => {
     const { imageUploadProps, uploadProps } = this.props;
     return {
@@ -217,7 +202,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     };
   };
 
-  /** 获取文件上传属性（优先级：fileUploadProps > uploadProps） */
   private getFileUploadProps = (): TdChatSenderUploadProps => {
     const { fileUploadProps, uploadProps } = this.props;
     return {
@@ -226,7 +210,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     };
   };
 
-  /** 上传图片按钮 */
   private renderUploadImage = () => (
     <t-tooltip content="上传图片" className={`${className}__actions__tooltip`}>
       <span
@@ -240,7 +223,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     </t-tooltip>
   );
 
-  /** 上传附件按钮 */
   private renderUploadAttachment = () => (
     <t-tooltip content="上传附件" className={`${className}__actions__tooltip`}>
       <span
@@ -254,7 +236,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     </t-tooltip>
   );
 
-  /** 根据 name 获取对应的渲染函数 */
   private getActionRender = (name: TdChatSenderActionName) => {
     if (name === 'uploadImage') return this.renderUploadImage();
     if (name === 'uploadAttachment') return this.renderUploadAttachment();
@@ -262,9 +243,24 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     return null;
   };
 
-  /** 渲染发送按钮 */
   private renderSendButton = () => {
-    const { disabled, loading } = this.props;
+    const { disabled } = this.props;
+
+    if (this.showStopBtn) {
+      return (
+        <t-button
+          theme="default"
+          size="small"
+          variant="text"
+          className={classname(`${className}__button`)}
+          onClick={this.handleStop}
+        >
+          {convertToLightDomNode(
+            <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />,
+          )}
+        </t-button>
+      );
+    }
 
     return (
       <t-button
@@ -274,24 +270,17 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         className={classname([
           `${className}__button`,
           {
-            [`${className}__button--focus`]: !this.isSendBtnDisabled || loading,
+            [`${className}__button--focus`]: !this.isSendBtnDisabled,
           },
         ])}
         onClick={this.clickSend}
         disabled={disabled || this.isSendBtnDisabled}
       >
-        {convertToLightDomNode(
-          loading ? (
-            <t-icon-stop className={classname(`${className}__button__icon`, `${className}__button__stop`)} />
-          ) : (
-            <t-icon-send-filled className={`${className}__button__icon`} />
-          ),
-        )}
+        {convertToLightDomNode(<t-icon-send-filled className={`${className}__button__icon`} />)}
       </t-button>
     );
   };
 
-  /** 渲染预设按钮 */
   private renderPresetActions = (names: TdChatSenderActionName[]) =>
     names.map((name) => (
       <div key={name} class={`${className}__actions__item__wrapper`}>
@@ -304,33 +293,39 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     if (typeof sendBtnDisabled === 'boolean') return sendBtnDisabled;
     if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(this.inputValue);
 
-    // 有文字或有附件都可以发送
     const hasContent = !!this.inputValue;
     const hasAttachments = this.attachmentsValue?.length > 0;
     return !loading && !hasContent && !hasAttachments;
   }
 
-  /** 渲染右侧区域 */
-  private renderActionsArea = () => {
-    const { actions } = this.props;
+  get showStopBtn() {
+    return this.props.loading;
+  }
 
-    // 优先级：slot > actions
+  private renderActionsArea = () => {
+    const { actions, suffix } = this.props;
+
     const hasSlotContent = this.querySelector('[slot="actions"]');
     if (hasSlotContent) {
       return <slot name="actions"></slot>;
     }
 
-    // false 表示不显示
+    if (suffix) {
+      return parseTNode(suffix, { renderPresets: () => this.renderActionsByConfig(actions) });
+    }
+
+    return this.renderActionsByConfig(actions);
+  };
+
+  private renderActionsByConfig = (actions: TdChatSenderProps['actions']) => {
     if (actions === false) {
       return null;
     }
 
-    // true 表示使用默认按钮
     if (actions === true) {
       return this.renderPresetActions(['send']);
     }
 
-    // 函数形式：基于预设修改
     if (typeof actions === 'function') {
       const result = actions(this.getPresetActions());
       return result.map((item) => (
@@ -340,15 +335,11 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       ));
     }
 
-    // 数组形式
     if (Array.isArray(actions)) {
-      // 判断是字符串数组还是对象数组
       const isStringArray = actions.every((item) => typeof item === 'string');
       if (isStringArray) {
-        // TdChatSenderActionName[]: 预设按钮名称数组
         return this.renderPresetActions(actions as TdChatSenderActionName[]);
       }
-      // TdChatSenderAction[]: 完整对象数组
       return (actions as TdChatSenderAction[]).map((item) => (
         <div key={item.name} class={`${className}__actions__item__wrapper`}>
           {item.render}
@@ -356,7 +347,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       ));
     }
 
-    // TNode 形式：自定义渲染
     if (actions) {
       return parseTNode(actions);
     }
@@ -421,7 +411,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           </div>
           <div className={`${className}__footer`}>
             <div className={`${className}__footer__left`}>
-              <slot name="footer-prefix"></slot>
+              <slot name="footer-prefix">{parseTNode(this.props.footerPrefix)}</slot>
             </div>
             <div className={`${className}__footer__right`}>{this.renderActionsArea()}</div>
           </div>
@@ -431,20 +421,25 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   }
 
   private handleChange = (e: CustomEvent<{ value: string; e: Event }>) => {
-    const { value } = e.detail;
-    this.pValue.value = value;
-    this.fire('change', value, { composed: true });
+    const { value, e: inputEvent } = e.detail;
+    if (!this.isControlled) {
+      this.pValue.value = value;
+    }
+    this.fire('change', { value, context: { e: inputEvent } }, { composed: true });
   };
 
   private handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Shift') this.shiftDown = true;
     if (e.key === 'Enter' && !this.shiftDown) {
+      if (this.isComposing || e.isComposing) {
+        return;
+      }
       e.preventDefault();
       const { loading } = this.props;
       if (loading) {
         this.handleStop();
       } else {
-        this.handleSend();
+        this.handleSend(e);
       }
     }
   };
@@ -454,36 +449,37 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   private handleCompositionStart = () => {
-    this.shiftDown = true;
+    this.isComposing = true;
   };
 
   private handleCompositionEnd = () => {
-    this.shiftDown = false;
+    this.isComposing = false;
   };
 
-  private handleFocus = () => {
-    this.fire('focus', this.inputValue, { composed: true });
+  private handleFocus = (e: FocusEvent) => {
+    this.fire('focus', { value: this.inputValue, context: { e } }, { composed: true });
   };
 
-  private handleBlur = () => {
-    this.fire('blur', this.inputValue, { composed: true });
+  private handleBlur = (e: FocusEvent) => {
+    this.fire('blur', { value: this.inputValue, context: { e } }, { composed: true });
   };
 
-  private handleSend = () => {
+  private handleSend = (e?: MouseEvent | KeyboardEvent) => {
     if (this.props.disabled || this.isSendBtnDisabled) {
       return;
     }
-    this.fire('send', { value: this.inputValue, attachments: this.attachmentsValue }, { composed: true });
-
-    // 发送后不自动清空文本和附件，由外部决定是否清空
+    this.fire(
+      'send',
+      { value: this.inputValue, context: { e }, attachments: this.attachmentsValue },
+      { composed: true },
+    );
   };
 
-  private handleStop = () => {
-    this.fire('stop', this.inputValue, { composed: true });
+  private handleStop = (e?: MouseEvent) => {
+    this.fire('stop', { value: this.inputValue, context: { e } }, { composed: true });
   };
 
-  private clickSend = () => {
-    const { loading } = this.props;
-    return loading ? this.handleStop() : this.handleSend();
+  private clickSend = (e?: MouseEvent) => {
+    this.handleSend(e);
   };
 }

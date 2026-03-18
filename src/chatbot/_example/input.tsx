@@ -37,13 +37,16 @@ export default class ChatSender extends Component {
 
   modelValue = signal(''); // 新增模型值信号
 
-  onChange = (e: CustomEvent) => {
+  onChange = (e: CustomEvent<{ value: string; e: InputEvent }>) => {
     console.log('onChange', e);
-    this.inputValue.value = e.detail;
+    this.inputValue.value = e.detail.value;
   };
 
-  onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
-    console.log('onFileRemove', e.detail);
+  onAttachmentsRemove = (e: CustomEvent<{ item: TdAttachmentItem; index: number }>) => {
+    console.log('onAttachmentsRemove', e.detail);
+    // 受控模式：需要手动删除文件
+    const { index } = e.detail;
+    this.files.value = this.files.value.filter((_, i) => i !== index);
   };
 
   onFileSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
@@ -57,8 +60,8 @@ export default class ChatSender extends Component {
     this.loading.value = true;
   };
 
-  onStop = () => {
-    console.log('停止');
+  onStop = (e: CustomEvent<{ value: string; context: { e?: MouseEvent } }>) => {
+    console.log('停止', e.detail);
     this.loading.value = false;
   };
 
@@ -120,7 +123,7 @@ export default class ChatSender extends Component {
           accept: 'image/*',
         }}
         onFileSelect={this.onFileSelect}
-        onFileRemove={this.onFileRemove}
+        onFileRemove={this.onAttachmentsRemove}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}

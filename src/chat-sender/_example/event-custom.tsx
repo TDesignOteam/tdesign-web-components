@@ -18,15 +18,17 @@ export default class ChatSenderEventCustom extends Component {
     this.logs.value = [log, ...this.logs.value.slice(0, 9)];
   };
 
-  onChange = (e: CustomEvent<string>) => {
+  onChange = (e: CustomEvent<{ value: string; context: { e: InputEvent } }>) => {
     console.log('onChange:', e.detail);
-    this.inputValue.value = e.detail;
+    this.inputValue.value = e.detail.value;
     this.addLog('onChange', e.detail);
   };
 
-  onSend = (e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[] }>) => {
+  onSend = (
+    e: CustomEvent<{ value: string; context: { e?: MouseEvent | KeyboardEvent }; attachments?: TdAttachmentItem[] }>,
+  ) => {
     console.log('onSend:', e.detail);
-
+    // 发送后手动清空输入框和附件
     this.inputValue.value = '';
     this.attachments.value = [];
     this.loading.value = true;
@@ -34,18 +36,18 @@ export default class ChatSenderEventCustom extends Component {
     this.addLog('onSend', e.detail);
   };
 
-  onStop = (e: CustomEvent<string>) => {
+  onStop = (e: CustomEvent<{ value: string; context: { e?: MouseEvent } }>) => {
     console.log('onStop:', e.detail);
     this.loading.value = false;
     this.addLog('onStop', e.detail);
   };
 
-  onFocus = (e: CustomEvent<string>) => {
+  onFocus = (e: CustomEvent<{ value: string; context: { e: FocusEvent } }>) => {
     console.log('onFocus:', e.detail);
     this.addLog('onFocus', e.detail);
   };
 
-  onBlur = (e: CustomEvent<string>) => {
+  onBlur = (e: CustomEvent<{ value: string; context: { e: FocusEvent } }>) => {
     console.log('onBlur:', e.detail);
     this.addLog('onBlur', e.detail);
   };
@@ -59,11 +61,11 @@ export default class ChatSenderEventCustom extends Component {
     this.addLog('onFileSelect', { fileCount: e.detail.length });
   };
 
-  onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
+  onFileRemove = (e: CustomEvent<{ item: TdAttachmentItem; index: number }>) => {
     console.log('onFileRemove:', e.detail);
-    // ✅ 组件已自动删除附件，这里只是通知
-    // 如果需要同步外部状态，可以在这里更新
-    this.attachments.value = this.attachments.value.filter((item) => item.name !== e.detail.name);
+    // 受控模式：需要手动删除文件
+    const { index } = e.detail;
+    this.attachments.value = this.attachments.value.filter((_, i) => i !== index);
     this.addLog('onFileRemove', e.detail);
   };
 

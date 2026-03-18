@@ -26,17 +26,16 @@ export default class AttachmentExample extends Component {
     },
   ]);
 
-  onChange = (e: CustomEvent<{ value: string; e: Event }>) => {
+  onChange = (e: CustomEvent<{ value: string; context: { e: Event } }>) => {
     console.log('onChange', e.detail);
     this.inputValue.value = e.detail.value;
   };
 
-  onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
-    console.log('onAttachmentsRemove', e);
-    const removedFiles = e.detail;
-    this.files.value = this.files.value.filter(
-      (file) => !removedFiles.some((removed) => removed.name === file.name && removed.url === file.url),
-    );
+  onAttachmentsRemove = (e: CustomEvent<{ item: TdAttachmentItem; index: number }>) => {
+    console.log('onAttachmentsRemove', e.detail);
+    // 受控模式：需要手动删除文件
+    const { index } = e.detail;
+    this.files.value = this.files.value.filter((_, i) => i !== index);
   };
 
   onAttachmentsSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
@@ -52,8 +51,8 @@ export default class AttachmentExample extends Component {
     this.loading.value = true;
   };
 
-  onStop = () => {
-    console.log('停止');
+  onStop = (e: CustomEvent<{ value: string; e?: MouseEvent }>) => {
+    console.log('停止', e.detail);
     this.loading.value = false;
   };
 
