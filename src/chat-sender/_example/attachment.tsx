@@ -33,7 +33,10 @@ export default class AttachmentExample extends Component {
 
   onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onAttachmentsRemove', e);
-    this.files.value = e.detail;
+    const removedFiles = e.detail;
+    this.files.value = this.files.value.filter(
+      (file) => !removedFiles.some((removed) => removed.name === file.name && removed.url === file.url),
+    );
   };
 
   onAttachmentsSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
@@ -60,10 +63,13 @@ export default class AttachmentExample extends Component {
         value={this.inputValue.value}
         placeholder="请输入内容"
         loading={this.loading.value}
-        actions={['attachment', 'send']}
-        uploadProps={{
-          multiple: false,
+        actions={['uploadAttachment', 'send']}
+        imageUploadProps={{
+          multiple: true,
           accept: 'image/*',
+        }}
+        fileUploadProps={{
+          multiple: false,
         }}
         attachmentsProps={{
           items: this.files.value,

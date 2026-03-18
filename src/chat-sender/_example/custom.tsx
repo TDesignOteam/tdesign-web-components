@@ -37,8 +37,8 @@ export default class CustomExample extends Component {
 
   senderRef = createRef<ChatSender>();
 
-  onChange = (e: CustomEvent) => {
-    this.inputValue.value = e.detail;
+  onChange = (e: CustomEvent<{ value: string; e: Event }>) => {
+    this.inputValue.value = e.detail.value;
   };
 
   onSend = () => {
@@ -63,18 +63,34 @@ export default class CustomExample extends Component {
     );
   };
 
-  renderActions = (presets) => [
-    ...presets,
+  renderActions = (preset) => [
+    ...preset.filter((item) => item.name !== 'send'), // 保留上传按钮，移除发送按钮
     {
       name: 'clear',
       render: (
         <t-tooltip content="清空">
           <span
+            className="input__action"
             onClick={() => {
               this.inputValue.value = '';
             }}
           >
             {convertToLightDomNode(<t-icon-clear part="icon" />)}
+          </span>
+        </t-tooltip>
+      ),
+    },
+    {
+      name: 'send',
+      render: (
+        <t-tooltip content="发送">
+          <span
+            className="input__action"
+            onClick={() => {
+              this.onSend();
+            }}
+          >
+            {convertToLightDomNode(<t-icon-send-filled part="icon" />)}
           </span>
         </t-tooltip>
       ),
@@ -95,7 +111,7 @@ export default class CustomExample extends Component {
         >
           {this.renderPanel()}
           <div slot="header">我是header</div>
-          <div slot="input-prefix" className="prefix" onClick={() => this.senderRef.current?.focus()}>
+          <div slot="input-prefix" className="prefix" onClick={() => this.senderRef.current?.selectFile()}>
             <t-icon-focus className="icon" />
           </div>
           <div slot="inner-header">我是innerHeader</div>

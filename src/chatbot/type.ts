@@ -95,6 +95,16 @@ export interface TdChatbotApi {
   scrollList: (opt?: TdChatListScrollToOptions) => void;
 
   /**
+   * 触发图片选择
+   */
+  selectImage: () => void;
+
+  /**
+   * 触发文件选择
+   */
+  selectFile: () => void;
+
+  /**
    * 获取当前消息列表
    */
   readonly chatMessageValue: ChatMessagesData[];

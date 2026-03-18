@@ -26,53 +26,104 @@ spline: base
 
 ### ChatSender Props
 
-## 基础属性
+| 属性名 | 类型 | 默认值 | 说明 | 必传 |
+| :--------------- | :-------------------- | :------------------- | :---------------------------------------------------- | :--- |
+| actions | [TdChatSenderActionName](#tdchatsenderactionname)[] / [TdChatSenderAction](#tdchatsenderaction)[] / Function / TNode / Boolean | `['send']` | 操作按钮配置 | N |
+| attachmentsProps | [TdAttachmentsProps](#tdattachmentsprops) | `{ items: []`<br/>`overflow: 'scrollX' }` | 附件列表配置属性，透传 Attachments 组件 | N |
+| autosize | Boolean / { minRows?: number; maxRows?: number } | `{ minRows: 2 }` | 高度自动撑开，配置项 `{ minRows, maxRows }` | N |
+| defaultValue | String | - | 输入框的默认值，非受控模式 | N |
+| disabled | Boolean | `false` | 是否禁用输入框 | N |
+| fileUploadProps | [TdChatSenderUploadProps](#tdchatsenderuploadprops) | - | 文件上传配置，优先级高于 uploadProps | N |
+| imageUploadProps | [TdChatSenderUploadProps](#tdchatsenderuploadprops) | `{ accept: 'image/*' }` | 图片上传配置，优先级高于 uploadProps | N |
+| loading | Boolean | `false` | 发送按钮是否处于加载状态 | N |
+| placeholder | String | - | 输入框默认文案 | N |
+| sendBtnDisabled | Boolean / (inputValue: string) => boolean | - | 禁用发送按钮，默认输入为空时禁用 | N |
+| textareaProps | [TdTextareaProps](#tdtextareaprops) | - | 透传 Textarea 组件属性 | N |
+| uploadProps | [TdChatSenderUploadProps](#tdchatsenderuploadprops) | - | **已废弃**，请使用 imageUploadProps 和 fileUploadProps 替代 | N |
+| value | String | - | 输入框的值，支持双向绑定 | N |
 
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `placeholder` | `string` | - | 输入框占位文本 |
-| `disabled` | `boolean` | `false` | 是否禁用整个输入组件 |
-| `value` | `string` | - | 输入框当前值（受控模式） |
-| `defaultValue` | `string` | - | 输入框默认值（非受控模式） |
-| `loading` | `boolean` | `false` | 是否加载中 |
-| `autosize` | `boolean \| { minRows?: number; maxRows?: number }` | `{ minRows: 2 }` | 高度自动撑开 |
-| `sendBtnDisabled` | `boolean \| ((inputValue: string) => boolean)` | - | 禁用发送按钮，支持布尔值或函数形式。默认输入为空时禁用 |
-| `actions` | `TdChatSenderActionName[]` \| `TdChatSenderAction[]` \| `Function` \| `boolean` | - | 操作按钮配置：简单数组 `['uploadImage', 'uploadAttachment']`、完整对象数组、函数处理预设按钮、布尔值控制显示 |
-| `suffix` | `string` \| `TNode` \| `Function` | - | 右侧区域内容。支持字符串、渲染函数 |
 
-## 插槽
+### ChatSender Events
 
-| 插槽名 | 说明 |
-|--------|------|
-| `header` | 输入框外标题区域扩展 |
-| `inner-header` | 输入框内标题区域扩展 |
-| `input-prefix` | 输入框前方区域 |
-| `footer-prefix` | 输入框左下角区域扩展 |
-| `suffix` | 输入框右下角区域扩展 |
+| 名称       | 参数                                                                                                    | 描述                   |
+| :--------- | :------------------------------------------------------------------------------------------------------ | :--------------------- |
+| blur       | (e: CustomEvent<{ value: string; e: FocusEvent }>)                                                      | 输入框失焦时触发       |
+| change     | (e: CustomEvent<{ value: string; e: Event }>)                                                           | 输入框值发生变化时触发 |
+| fileRemove | (e: CustomEvent<[TdAttachmentItem](#tdattachmentitem)[]>)                                               | 移除文件时触发         |
+| fileSelect | (e: CustomEvent<{ files: FileList; name: [UploadActionType](#uploadactiontype) }>)                      | 选择文件时触发         |
+| focus      | (e: CustomEvent<{ value: string; e: FocusEvent }>)                                                      | 输入框聚焦时触发       |
+| send       | (e: CustomEvent<{ value: string; attachments?: [TdAttachmentItem](#tdattachmentitem)[]; e: MouseEvent \| KeyboardEvent }>) | 点击消息发送时触发 |
+| stop       | (e: CustomEvent<{ value: string; e: MouseEvent }>)                                                      | 点击消息终止时触发     |
 
-## 透传属性
+### ChatSender Slots
 
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `attachmentsProps` | `TdAttachmentsProps` | `{ items: [], overflow: 'scrollX' }` | 附件列表配置属性 |
-| `textareaProps` | `Partial<TdTextareaProps>` | `{}` | 文本输入框配置属性 |
-| `uploadProps` | `Omit<JSX.HTMLAttributes, 'onChange' \| 'ref' \| 'type' \| 'hidden'>` | - | 文件上传输入框的HTML属性 |
+| 名称          | 说明                 |
+| :------------ | :------------------- |
+| actions       | 输入框右下角区域扩展 |
+| footer-prefix | 输入框左下角区域扩展 |
+| header        | 输入框外标题区域扩展 |
+| inner-header  | 输入框内标题区域扩展 |
+| input-prefix  | 输入框前方区域       |
 
-## 事件回调
+### ChatSender Ref
 
-| 事件名 | 参数类型 | 说明 |
-|--------|----------|------|
-| `onSend` | `(e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[]; e: MouseEvent \| KeyboardEvent }>) => void` | 点击发送按钮时触发 |
-| `onStop` | `(e: CustomEvent<{ value: string; e: MouseEvent }>) => void` | 点击停止按钮时触发 |
-| `onChange` | `(e: CustomEvent<{ value: string; e: Event }>) => void` | 输入内容变化时触发 |
-| `onFocus` | `(e: CustomEvent<{ value: string; e: FocusEvent }>) => void` | 输入框聚焦时触发 |
-| `onBlur` | `(e: CustomEvent<{ value: string; e: FocusEvent }>) => void` | 输入框失焦时触发 |
-| `onFileSelect` | `(e: CustomEvent<{ files: FileList; name: UploadActionType }>) => void` | 选择文件时触发 |
-| `onFileRemove` | `(e: CustomEvent<TdAttachmentItem[]>) => void` | 移除文件时触发 |
+| 名称        | 参数                       | 说明             |
+| :---------- | :------------------------- | :--------------- |
+| blur        | -                          | 取消焦点         |
+| focus       | (options?: FocusOptions)   | 获取焦点         |
+| selectFile  | -                          | 触发文件选择     |
+| selectImage | -                          | 触发图片选择     |
 
-## Ref
+### 类型定义
 
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `focus` | `(option?: { preventScroll?: boolean; }) => void` | - | 获取焦点 |
-| `blur` | `() => void` | - | 取消焦点 |
+#### TdChatSenderActionName
+
+预设按钮名称，类型：`'uploadImage' | 'uploadAttachment' | 'send'`
+
+| 名称               | 说明         |
+| :----------------- | :----------- |
+| 'send'             | 发送按钮     |
+| 'uploadAttachment' | 上传附件按钮 |
+| 'uploadImage'      | 上传图片按钮 |
+
+#### TdChatSenderAction
+
+自定义操作按钮配置。
+
+| 名称   | 类型   | 说明           |
+| :----- | :----- | :------------- |
+| name   | String | 按钮唯一标识   |
+| render | TNode  | 渲染内容       |
+
+#### UploadActionType
+
+上传操作类型，类型：`'uploadImage' | 'uploadAttachment'`
+
+#### TdChatSenderUploadProps
+
+上传配置属性。
+
+| 名称     | 类型    | 说明                                   |
+| :------- | :------ | :------------------------------------- |
+| accept   | String  | 接受的文件类型，如 'image/*' 或 '.jpg,.png' |
+| multiple | Boolean | 是否允许多选                           |
+
+#### TdAttachmentItem
+
+附件项数据结构。
+
+| 名称   | 类型                                    | 说明         |
+| :----- | :-------------------------------------- | :----------- |
+| name   | String                                  | 文件名称     |
+| url    | String                                  | 文件地址     |
+| size   | Number                                  | 文件大小     |
+| type   | String                                  | 文件类型     |
+| status | 'success' \| 'error' \| 'uploading'     | 上传状态     |
+
+#### TdAttachmentsProps
+
+附件列表组件属性，透传至 [Attachments 组件](/components/attachments)。
+
+#### TdTextareaProps
+
+文本域组件属性，透传至 [Textarea 组件](/components/textarea)。

@@ -8,7 +8,9 @@ export type TdChatSenderActionName = 'uploadImage' | 'uploadAttachment' | 'send'
 export type UploadActionType = 'uploadImage' | 'uploadAttachment';
 
 export interface TdChatSenderAction {
+  /** 按钮唯一标识 */
   name: string;
+  /** 渲染内容 */
   render: TNode;
 }
 
@@ -21,6 +23,13 @@ export interface TdChatSenderContext {
   e?: Event | MouseEvent | KeyboardEvent | FocusEvent;
 }
 
+export interface TdChatSenderUploadProps {
+  /** 接受的文件类型，如 'image/*' 或 '.jpg,.png' */
+  accept?: string;
+  /** 是否允许多选 */
+  multiple?: boolean;
+}
+
 export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   value?: string;
   placeholder?: string;
@@ -28,32 +37,34 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
   defaultValue?: string;
   /**
    * 操作按钮配置
-   * - TdChatSenderActionName[]: 简单数组形式，如 ['uploadImage', 'uploadAttachment']
-   * - TdChatSenderAction[]: 自定义操作按钮列表（完整对象）
-   * - Function: (preset: TdChatSenderAction[]) => TdChatSenderAction[]
-   * - boolean: `true` 显示默认操作按钮，`false` 不显示操作按钮
-   * @default false
+   * - TdChatSenderActionName[]: 预设按钮名称数组，如 ['uploadImage', 'send']
+   * - TdChatSenderAction[]: 完整对象数组，自定义渲染
+   * - Function: (preset: TdChatSenderAction[]) => TdChatSenderAction[]，基于预设修改
+   * - TNode: 自定义渲染内容
+   * - boolean: true 显示默认按钮，false 不显示
+   * @default ['send']
    */
   actions?:
     | TdChatSenderActionName[]
     | TdChatSenderAction[]
     | ((preset: TdChatSenderAction[]) => TdChatSenderAction[])
+    | TNode
     | boolean;
-  /**
-   * 右侧区域内容，优先级高于 actions
-   * - string: 文本内容
-   * - TNode: 自定义渲染节点
-   * - Slot: 使用 `slot="suffix"` 完全自定义 HTML 结构
-   */
-  suffix?: TNode;
   /** 是否加载中 */
   loading?: boolean;
   /** 透传attachment参数 */
   attachmentsProps?: TdAttachmentsProps;
   /** 透传textarea参数 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
-  /** 透传上传输入框的HTML属性 */
-  uploadProps?: Omit<JSX.HTMLAttributes, 'onChange' | 'ref' | 'type' | 'hidden'>;
+  /**
+   * 透传上传输入框的HTML属性
+   * @deprecated 请使用 imageUploadProps 和 fileUploadProps 替代，优先级低于 imageUploadProps 和 fileUploadProps
+   */
+  uploadProps?: TdChatSenderUploadProps;
+  /** 图片上传配置，优先级高于 uploadProps */
+  imageUploadProps?: TdChatSenderUploadProps;
+  /** 文件上传配置，优先级高于 uploadProps */
+  fileUploadProps?: TdChatSenderUploadProps;
   /**
    * 禁用发送按钮，支持布尔值或函数形式
    * @default false
@@ -73,4 +84,8 @@ export interface TdChatSenderApi {
   focus: (opts?: FocusOptions) => void;
   /** 取消焦点 */
   blur: () => void;
+  /** 触发图片选择 */
+  selectImage: () => void;
+  /** 触发文件选择 */
+  selectFile: () => void;
 }

@@ -276,6 +276,20 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
+   * 选择图片
+   */
+  selectImage() {
+    this.ChatSenderRef.current?.selectImage();
+  }
+
+  /**
+   * 选择文件
+   */
+  selectFile() {
+    this.ChatSenderRef.current?.selectFile();
+  }
+
+  /**
    * 订阅聊天状态变化
    */
   private subscribeToChat() {
