@@ -77,23 +77,21 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   private shiftDown = false;
 
-  /** 预设操作按钮列表，供函数形式使用 */
-  get presetActions(): TdChatSenderAction[] {
-    return [
-      {
-        name: 'uploadImage',
-        render: this.renderUploadImage(),
-      },
-      {
-        name: 'uploadAttachment',
-        render: this.renderUploadAttachment(),
-      },
-      {
-        name: 'send',
-        render: this.renderSendButton(),
-      },
-    ];
-  }
+  /** 预设操作按钮配置（惰性渲染） */
+  private getPresetActions = (): TdChatSenderAction[] => [
+    {
+      name: 'uploadImage',
+      render: this.renderUploadImage(),
+    },
+    {
+      name: 'uploadAttachment',
+      render: this.renderUploadAttachment(),
+    },
+    {
+      name: 'send',
+      render: this.renderSendButton(),
+    },
+  ];
 
   ready() {
     const { value, defaultValue, attachmentsProps } = this.props;
@@ -334,7 +332,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
     // 函数形式：基于预设修改
     if (typeof actions === 'function') {
-      const result = actions(this.presetActions);
+      const result = actions(this.getPresetActions());
       return result.map((item) => (
         <div key={item.name} class={`${className}__actions__item__wrapper`}>
           {item.render}
