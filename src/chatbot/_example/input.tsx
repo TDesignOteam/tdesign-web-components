@@ -53,8 +53,8 @@ export default class ChatSender extends Component {
 
   onSend = (e: CustomEvent<TdChatSenderParams>) => {
     console.log('提交', e);
-    this.inputValue.value = '';
-    this.files.value = [];
+    // this.files.value = [];
+    // this.inputValue.value = '';
     this.loading.value = true;
   };
 

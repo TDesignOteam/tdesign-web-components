@@ -26,8 +26,11 @@ export default class ChatSenderEventCustom extends Component {
 
   onSend = (e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[] }>) => {
     console.log('onSend:', e.detail);
+
     this.inputValue.value = '';
+    this.attachments.value = [];
     this.loading.value = true;
+
     this.addLog('onSend', e.detail);
   };
 
@@ -49,13 +52,18 @@ export default class ChatSenderEventCustom extends Component {
 
   onFileSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onFileSelect:', e.detail);
+    // ✅ 组件会自动处理文件添加，这里可以选择：
+    // 1. 什么都不做（组件自己管理）
+    // 2. 同步到外部状态（用于其他业务逻辑）
     this.attachments.value = [...e.detail, ...this.attachments.value];
     this.addLog('onFileSelect', { fileCount: e.detail.length });
   };
 
   onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
     console.log('onFileRemove:', e.detail);
-    // 非受控模式：组件内部已处理删除，这里仅获取通知
+    // ✅ 组件已自动删除附件，这里只是通知
+    // 如果需要同步外部状态，可以在这里更新
+    this.attachments.value = this.attachments.value.filter((item) => item.name !== e.detail.name);
     this.addLog('onFileRemove', e.detail);
   };
 

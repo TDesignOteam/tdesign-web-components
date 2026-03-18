@@ -111,6 +111,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   }
 
   get attachmentsValue() {
+    // 始终返回内部状态（删除操作直接生效）
     return this.pAttachments.value;
   }
 
@@ -118,8 +119,11 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     const { item, index } = e.detail;
     if (index < 0 || index >= this.attachmentsValue.length) return;
 
+    // 删除操作直接生效：更新内部状态
     const rest = this.attachmentsValue.filter((_, i) => i !== index);
     this.pAttachments.value = rest;
+
+    // 触发事件通知外部（外部可选择同步自己的状态）
     this.fire('fileRemove', item, { composed: true });
   };
 
@@ -127,16 +131,41 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     props: TdChatSenderProps | OmiProps<TdChatSenderProps, any>,
     oldProps: TdChatSenderProps | OmiProps<TdChatSenderProps, any>,
   ) {
-    if (props.disabled !== oldProps.disabled) return true;
-    if (props.value !== oldProps.value) return true;
+    let shouldUpdate = false;
+
+    if (props.disabled !== oldProps.disabled) {
+      shouldUpdate = true;
+    }
+
+    if (props.value !== oldProps.value) {
+      shouldUpdate = true;
+    }
+
     if (props.defaultValue !== oldProps.defaultValue) {
       this.pValue.value = props.defaultValue;
-      return true;
+      shouldUpdate = true;
     }
-    if (props.attachmentsProps.items !== oldProps.attachmentsProps.items) return true;
-    if (props.loading !== oldProps.loading) return true;
-    if (props.sendBtnDisabled !== oldProps.sendBtnDisabled) return true;
-    return false;
+
+    // 双向绑定：外部 items 变化时同步到内部状态
+    const newItems = props.attachmentsProps?.items;
+    const oldItems = oldProps.attachmentsProps?.items;
+    // 引用比较或长度比较（处理内联对象场景）
+    if (newItems !== oldItems || newItems?.length !== oldItems?.length) {
+      if (newItems !== undefined) {
+        this.pAttachments.value = newItems;
+      }
+      shouldUpdate = true;
+    }
+
+    if (props.loading !== oldProps.loading) {
+      shouldUpdate = true;
+    }
+
+    if (props.sendBtnDisabled !== oldProps.sendBtnDisabled) {
+      shouldUpdate = true;
+    }
+
+    return shouldUpdate;
   }
 
   /** 获取焦点 */
@@ -275,7 +304,10 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     if (typeof sendBtnDisabled === 'boolean') return sendBtnDisabled;
     if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(this.inputValue);
 
-    return !loading && !this.inputValue;
+    // 有文字或有附件都可以发送
+    const hasContent = !!this.inputValue;
+    const hasAttachments = this.attachmentsValue?.length > 0;
+    return !loading && !hasContent && !hasAttachments;
   }
 
   /** 渲染右侧区域 */
@@ -442,8 +474,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       return;
     }
     this.fire('send', { value: this.inputValue, attachments: this.attachmentsValue }, { composed: true });
-    this.pValue.value = '';
-    this.pAttachments.value = [];
+
+    // 发送后不自动清空文本和附件，由外部决定是否清空
   };
 
   private handleStop = () => {
