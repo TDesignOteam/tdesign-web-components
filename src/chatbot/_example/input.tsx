@@ -42,9 +42,8 @@ export default class ChatSender extends Component {
     this.inputValue.value = e.detail;
   };
 
-  onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
-    console.log('onAttachmentsRemove', e);
-    this.files.value = e.detail;
+  onAttachmentsRemove = (e: CustomEvent<TdAttachmentItem>) => {
+    console.log('onAttachmentsRemove', e.detail);
   };
 
   onAttachmentsSelect = (e: CustomEvent<TdAttachmentItem[]>) => {

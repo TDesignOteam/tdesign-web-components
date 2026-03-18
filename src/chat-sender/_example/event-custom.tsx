@@ -18,53 +18,44 @@ export default class ChatSenderEventCustom extends Component {
     this.logs.value = [log, ...this.logs.value.slice(0, 9)];
   };
 
-  onChange = (e: CustomEvent<{ value: string; e: Event }>) => {
+  onChange = (e: CustomEvent<string>) => {
     console.log('onChange:', e.detail);
-    this.inputValue.value = e.detail.value;
+    this.inputValue.value = e.detail;
     this.addLog('onChange', e.detail);
   };
 
-  onSend = (e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[]; e: MouseEvent | KeyboardEvent }>) => {
+  onSend = (e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[] }>) => {
     console.log('onSend:', e.detail);
     this.inputValue.value = '';
     this.loading.value = true;
     this.addLog('onSend', e.detail);
   };
 
-  onStop = (e: CustomEvent<{ value: string; e: MouseEvent }>) => {
+  onStop = (e: CustomEvent<string>) => {
     console.log('onStop:', e.detail);
     this.loading.value = false;
     this.addLog('onStop', e.detail);
   };
 
-  onFocus = (e: CustomEvent<{ value: string; e: FocusEvent }>) => {
+  onFocus = (e: CustomEvent<string>) => {
     console.log('onFocus:', e.detail);
     this.addLog('onFocus', e.detail);
   };
 
-  onBlur = (e: CustomEvent<{ value: string; e: FocusEvent }>) => {
+  onBlur = (e: CustomEvent<string>) => {
     console.log('onBlur:', e.detail);
     this.addLog('onBlur', e.detail);
   };
 
-  onFileSelect = (e: CustomEvent<{ files: FileList; name: 'uploadImage' | 'uploadAttachment' }>) => {
+  onFileSelect = (e: CustomEvent<TdAttachmentItem[]>) => {
     console.log('onFileSelect:', e.detail);
-    const { files, name } = e.detail;
-    const mockItem: TdAttachmentItem = {
-      name: files[0]?.name || 'file',
-      url: URL.createObjectURL(files[0]),
-      status: 'success',
-    };
-    this.attachments.value = [...(this.attachments.value || []), mockItem];
-    this.addLog('onFileSelect', { name, fileCount: files.length });
+    this.attachments.value = [...e.detail, ...this.attachments.value];
+    this.addLog('onFileSelect', { fileCount: e.detail.length });
   };
 
-  onFileRemove = (e: CustomEvent<TdAttachmentItem[]>) => {
+  onFileRemove = (e: CustomEvent<TdAttachmentItem>) => {
     console.log('onFileRemove:', e.detail);
-    const removedItems = e.detail;
-    this.attachments.value = this.attachments.value.filter(
-      (item) => !removedItems.some((removed) => removed.name === item.name && removed.url === item.url),
-    );
+    // 非受控模式：组件内部已处理删除，这里仅获取通知
     this.addLog('onFileRemove', e.detail);
   };
 

@@ -110,30 +110,17 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     return this.pValue.value;
   }
 
-  get isAttachmentsControlled() {
-    return this.props?.attachmentsProps?.items !== undefined;
-  }
-
   get attachmentsValue() {
-    if (this.isAttachmentsControlled) {
-      return this.props.attachmentsProps.items;
-    }
     return this.pAttachments.value;
   }
 
-  private handleAttachmentsRemove = (e: CustomEvent<TdAttachmentItem>) => {
-    const removed = e.detail;
-    // 受控模式：只通知外部，不内部处理
-    if (this.isAttachmentsControlled) {
-      this.fire('fileRemove', [removed], { composed: true });
-      return;
-    }
-    // 非受控模式：内部处理删除
-    const index = this.attachmentsValue.findIndex((item) => item.name === removed.name && item.url === removed.url);
-    if (index === -1) return;
+  private handleAttachmentsRemove = (e: CustomEvent<{ item: TdAttachmentItem; index: number }>) => {
+    const { item, index } = e.detail;
+    if (index < 0 || index >= this.attachmentsValue.length) return;
+
     const rest = this.attachmentsValue.filter((_, i) => i !== index);
     this.pAttachments.value = rest;
-    this.fire('fileRemove', [removed], { composed: true });
+    this.fire('fileRemove', item, { composed: true });
   };
 
   receiveProps(
@@ -172,14 +159,22 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     this.uploadAttachmentRef.current?.click();
   };
 
-  private handleFileSelected = (name: UploadActionType) => (e: Event) => {
+  private handleFileSelected = (name: UploadActionType) => () => {
     const ref = name === 'uploadImage' ? this.uploadImageRef : this.uploadAttachmentRef;
     const files = ref.current?.files;
     if (!files?.length) {
       return;
     }
 
-    this.fire('fileSelect', { files, name, e }, { composed: true });
+    // 将 File[] 转换为 TdAttachmentItem[]
+    const attachmentItems: TdAttachmentItem[] = Array.from(files).map((file) => ({
+      name: file.name,
+      size: file.size,
+      type: file.type,
+      raw: file,
+    }));
+
+    this.fire('fileSelect', attachmentItems, { composed: true });
     ref.current.value = '';
   };
 
@@ -276,10 +271,11 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     ));
 
   get isSendBtnDisabled() {
-    const { sendBtnDisabled } = this.props;
+    const { sendBtnDisabled, loading } = this.props;
     if (typeof sendBtnDisabled === 'boolean') return sendBtnDisabled;
     if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(this.inputValue);
-    return !this.inputValue;
+
+    return !loading && !this.inputValue;
   }
 
   /** 渲染右侧区域 */
@@ -403,9 +399,9 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   }
 
   private handleChange = (e: CustomEvent<{ value: string; e: Event }>) => {
-    const { value, e: originalEvent } = e.detail;
+    const { value } = e.detail;
     this.pValue.value = value;
-    this.fire('change', { value, e: originalEvent }, { composed: true });
+    this.fire('change', value, { composed: true });
   };
 
   private handleKeyDown = (e: KeyboardEvent) => {
@@ -414,9 +410,9 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       e.preventDefault();
       const { loading } = this.props;
       if (loading) {
-        this.handleStop(e as unknown as MouseEvent);
+        this.handleStop();
       } else {
-        this.handleSend(e);
+        this.handleSend();
       }
     }
   };
@@ -433,29 +429,29 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     this.shiftDown = false;
   };
 
-  private handleFocus = (e: FocusEvent) => {
-    this.fire('focus', { value: this.inputValue, e }, { composed: true });
+  private handleFocus = () => {
+    this.fire('focus', this.inputValue, { composed: true });
   };
 
-  private handleBlur = (e: FocusEvent) => {
-    this.fire('blur', { value: this.inputValue, e }, { composed: true });
+  private handleBlur = () => {
+    this.fire('blur', this.inputValue, { composed: true });
   };
 
-  private handleSend = (e: MouseEvent | KeyboardEvent) => {
+  private handleSend = () => {
     if (this.props.disabled || this.isSendBtnDisabled) {
       return;
     }
-    this.fire('send', { value: this.inputValue, attachments: this.attachmentsValue, e }, { composed: true });
+    this.fire('send', { value: this.inputValue, attachments: this.attachmentsValue }, { composed: true });
     this.pValue.value = '';
     this.pAttachments.value = [];
   };
 
-  private handleStop = (e: MouseEvent) => {
-    this.fire('stop', { value: this.inputValue, e }, { composed: true });
+  private handleStop = () => {
+    this.fire('stop', this.inputValue, { composed: true });
   };
 
-  private clickSend = (e: MouseEvent) => {
+  private clickSend = () => {
     const { loading } = this.props;
-    return loading ? this.handleStop(e) : this.handleSend(e);
+    return loading ? this.handleStop() : this.handleSend();
   };
 }

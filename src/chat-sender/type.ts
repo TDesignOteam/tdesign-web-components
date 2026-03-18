@@ -70,13 +70,20 @@ export interface TdChatSenderProps extends Pick<TdTextareaProps, 'autosize'> {
    * @default false
    */
   sendBtnDisabled?: boolean | ((inputValue: string) => boolean);
-  onSend?: (e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[]; e: MouseEvent | KeyboardEvent }>) => void;
-  onStop?: (e: CustomEvent<{ value: string; e: MouseEvent }>) => void;
-  onChange?: (e: CustomEvent<{ value: string; e: Event }>) => void;
-  onFocus?: (e: CustomEvent<{ value: string; e: FocusEvent }>) => void;
-  onBlur?: (e: CustomEvent<{ value: string; e: FocusEvent }>) => void;
-  onFileSelect?: (e: CustomEvent<{ files: FileList; name: UploadActionType }>) => void;
-  onFileRemove?: (e: CustomEvent<TdAttachmentItem[]>) => void;
+  /** 发送消息事件 */
+  onSend?: (e: CustomEvent<TdChatSenderParams>) => void;
+  /** 停止发送事件 */
+  onStop?: (e: CustomEvent<string>) => void;
+  /** 输入内容变化事件 */
+  onChange?: (e: CustomEvent<string>) => void;
+  /** 输入框聚焦事件 */
+  onFocus?: (e: CustomEvent<string>) => void;
+  /** 输入框失焦事件 */
+  onBlur?: (e: CustomEvent<string>) => void;
+  /** 文件选择事件 */
+  onFileSelect?: (e: CustomEvent<TdAttachmentItem[]>) => void;
+  /** 文件移除事件，参数为被删除的文件项 */
+  onFileRemove?: (e: CustomEvent<TdAttachmentItem>) => void;
 }
 
 export interface TdChatSenderApi {

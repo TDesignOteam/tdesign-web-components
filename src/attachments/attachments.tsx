@@ -190,9 +190,13 @@ export default class Attachments extends Component<TdAttachmentsProps> {
                 });
               }}
               onRemove={() => {
-                this.fire('remove', item, {
-                  composed: true,
-                });
+                this.fire(
+                  'remove',
+                  { item, index },
+                  {
+                    composed: true,
+                  },
+                );
               }}
             ></t-filecard>
           ))}

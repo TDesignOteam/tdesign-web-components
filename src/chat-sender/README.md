@@ -45,15 +45,15 @@ spline: base
 
 ### ChatSender Events
 
-| 名称       | 参数                                                                                                    | 描述                   |
-| :--------- | :------------------------------------------------------------------------------------------------------ | :--------------------- |
-| blur       | `(e: CustomEvent<{ value: string; e: FocusEvent }>)`                                                      | 输入框失焦时触发       |
-| change     | `(e: CustomEvent<{ value: string; e: Event }>)`                                                           | 输入框值发生变化时触发 |
-| fileRemove | `(e: CustomEvent<[TdAttachmentItem](#tdattachmentitem)[]>)`                                               | 移除文件时触发         |
-| fileSelect | `(e: CustomEvent<{ files: FileList; name: [UploadActionType](#uploadactiontype) }>)`                      | 选择文件时触发 |
-| focus      | `(e: CustomEvent<{ value: string; e: FocusEvent }>)`                                                      | 输入框聚焦时触发       |
-| send       | `(e: CustomEvent<{ value: string; attachments?: [TdAttachmentItem](#tdattachmentitem)[]; e: MouseEvent \| KeyboardEvent }>)` | 点击消息发送时触发 |
-| stop       | `(e: CustomEvent<{ value: string; e: MouseEvent }>)`                                                      | 点击消息终止时触发     |
+| 名称       | 参数                                                         | 描述                   |
+| :--------- | :----------------------------------------------------------- | :--------------------- |
+| blur       | `(e: CustomEvent<string>)`                                   | 输入框失焦时触发       |
+| change     | `(e: CustomEvent<string>)`                                   | 输入框值发生变化时触发 |
+| fileRemove | `(e: CustomEvent<[TdAttachmentItem](#tdattachmentitem)>)`  | 移除文件时触发，参数为被删除的文件项 |
+| fileSelect | `(e: CustomEvent<[TdAttachmentItem](#tdattachmentitem)[]>)` | 选择文件时触发，返回新选择的文件列表 |
+| focus      | `(e: CustomEvent<string>)`                                   | 输入框聚焦时触发       |
+| send       | `(e: CustomEvent<[TdChatSenderParams](#tdchatsenderparams)>)`  | 点击消息发送时触发     |
+| stop       | `(e: CustomEvent<string>)`                                   | 点击消息终止时触发     |
 
 ### ChatSender Slots
 
@@ -75,6 +75,15 @@ spline: base
 | selectImage | -                          | 触发图片选择     |
 
 ### 类型定义
+
+#### TdChatSenderParams
+
+发送消息时的参数结构。
+
+| 名称        | 类型                                          | 说明       |
+| :---------- | :-------------------------------------------- | :--------- |
+| value       | String                                        | 输入框值   |
+| attachments | [TdAttachmentItem](#tdattachmentitem)[]       | 附件列表   |
 
 #### TdChatSenderActionName
 
@@ -119,11 +128,3 @@ spline: base
 | size   | Number                                  | 文件大小     |
 | type   | String                                  | 文件类型     |
 | status | 'success' \| 'error' \| 'uploading'     | 上传状态     |
-
-#### TdAttachmentsProps
-
-附件列表组件属性，透传至 [Attachments 组件](/components/attachments)。
-
-#### TdTextareaProps
-
-文本域组件属性，透传至 [Textarea 组件](/components/textarea)。
