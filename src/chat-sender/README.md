@@ -30,14 +30,14 @@ spline: base
 | :--------------- | :-------------------- | :------------------- | :---------------------------------------------------- | :--- |
 | actions | [TdChatSenderActionName](#tdchatsenderactionname)[] / [TdChatSenderAction](#tdchatsenderaction)[] / Function / TNode / Boolean | `['send']` | 操作按钮配置 | N |
 | attachmentsProps | [TdAttachmentsProps](#tdattachmentsprops) | `{ items: []`<br/>`overflow: 'scrollX' }` | 附件列表配置属性，透传 Attachments 组件 | N |
-| autosize | Boolean / { minRows?: number; maxRows?: number } | `{ minRows: 2 }` | 高度自动撑开，配置项 `{ minRows, maxRows }` | N |
+| autosize | Boolean / `{ minRows?: number; maxRows?: number }` | `{ minRows: 2 }` | 高度自动撑开，配置项 `{ minRows, maxRows }` | N |
 | defaultValue | String | - | 输入框的默认值，非受控模式 | N |
 | disabled | Boolean | `false` | 是否禁用输入框 | N |
 | fileUploadProps | [TdChatSenderUploadProps](#tdchatsenderuploadprops) | - | 文件上传配置，优先级高于 uploadProps | N |
 | imageUploadProps | [TdChatSenderUploadProps](#tdchatsenderuploadprops) | `{ accept: 'image/*' }` | 图片上传配置，优先级高于 uploadProps | N |
 | loading | Boolean | `false` | 发送按钮是否处于加载状态 | N |
 | placeholder | String | - | 输入框默认文案 | N |
-| sendBtnDisabled | Boolean / (inputValue: string) => boolean | - | 禁用发送按钮，默认输入为空时禁用 | N |
+| sendBtnDisabled | Boolean / `(inputValue: string) => boolean` | - | 禁用发送按钮，默认输入为空时禁用 | N |
 | textareaProps | [TdTextareaProps](#tdtextareaprops) | - | 透传 Textarea 组件属性 | N |
 | uploadProps | [TdChatSenderUploadProps](#tdchatsenderuploadprops) | - | **已废弃**，请使用 imageUploadProps 和 fileUploadProps 替代 | N |
 | value | String | - | 输入框的值，支持双向绑定 | N |
@@ -47,13 +47,13 @@ spline: base
 
 | 名称       | 参数                                                                                                    | 描述                   |
 | :--------- | :------------------------------------------------------------------------------------------------------ | :--------------------- |
-| blur       | (e: CustomEvent<{ value: string; e: FocusEvent }>)                                                      | 输入框失焦时触发       |
-| change     | (e: CustomEvent<{ value: string; e: Event }>)                                                           | 输入框值发生变化时触发 |
-| fileRemove | (e: CustomEvent<[TdAttachmentItem](#tdattachmentitem)[]>)                                               | 移除文件时触发         |
-| fileSelect | (e: CustomEvent<{ files: FileList; name: [UploadActionType](#uploadactiontype) }>)                      | 选择文件时触发         |
-| focus      | (e: CustomEvent<{ value: string; e: FocusEvent }>)                                                      | 输入框聚焦时触发       |
-| send       | (e: CustomEvent<{ value: string; attachments?: [TdAttachmentItem](#tdattachmentitem)[]; e: MouseEvent \| KeyboardEvent }>) | 点击消息发送时触发 |
-| stop       | (e: CustomEvent<{ value: string; e: MouseEvent }>)                                                      | 点击消息终止时触发     |
+| blur       | `(e: CustomEvent<{ value: string; e: FocusEvent }>)`                                                      | 输入框失焦时触发       |
+| change     | `(e: CustomEvent<{ value: string; e: Event }>)`                                                           | 输入框值发生变化时触发 |
+| fileRemove | `(e: CustomEvent<[TdAttachmentItem](#tdattachmentitem)[]>)`                                               | 移除文件时触发         |
+| fileSelect | `(e: CustomEvent<{ files: FileList; name: [UploadActionType](#uploadactiontype) }>)`                      | 选择文件时触发 |
+| focus      | `(e: CustomEvent<{ value: string; e: FocusEvent }>)`                                                      | 输入框聚焦时触发       |
+| send       | `(e: CustomEvent<{ value: string; attachments?: [TdAttachmentItem](#tdattachmentitem)[]; e: MouseEvent \| KeyboardEvent }>)` | 点击消息发送时触发 |
+| stop       | `(e: CustomEvent<{ value: string; e: MouseEvent }>)`                                                      | 点击消息终止时触发     |
 
 ### ChatSender Slots
 
@@ -70,7 +70,7 @@ spline: base
 | 名称        | 参数                       | 说明             |
 | :---------- | :------------------------- | :--------------- |
 | blur        | -                          | 取消焦点         |
-| focus       | (options?: FocusOptions)   | 获取焦点         |
+| focus       | `(options?: FocusOptions)`   | 获取焦点         |
 | selectFile  | -                          | 触发文件选择     |
 | selectImage | -                          | 触发图片选择     |
 
