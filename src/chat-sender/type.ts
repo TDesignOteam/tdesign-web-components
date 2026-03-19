@@ -101,8 +101,7 @@ export interface TdChatSenderApi {
   focus: (opts?: FocusOptions) => void;
   /** 取消焦点 */
   blur: () => void;
-  /** 触发图片选择 */
-  selectImage: () => void;
+
   /** 触发文件选择 */
   selectFile: () => void;
 }

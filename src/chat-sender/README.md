@@ -67,7 +67,6 @@ spline: base
 | :---------- | :------------------------- | :----------- |
 | focus       | `(options?: FocusOptions)` | 获取焦点     |
 | blur        | -                          | 取消焦点     |
-| selectImage | -                          | 触发图片选择 |
 | selectFile  | -                          | 触发文件选择 |
 
 ### 类型定义

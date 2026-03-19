@@ -130,11 +130,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     this.uploadRef.current?.click();
   };
 
-  /** 选择图片 */
-  selectImage = () => {
-    this.imageUploadRef.current?.click();
-  };
-
   private handleFileSelected = () => {
     const files = Array.from(this.uploadRef.current?.files || []);
     if (!files.length) {
