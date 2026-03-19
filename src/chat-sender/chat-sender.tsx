@@ -30,6 +30,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     disabled: Boolean,
     value: String,
     actions: [Array, Function, Boolean, Object],
+    suffix: [Array, Function, Boolean, Object],
     defaultValue: String,
     loading: Boolean,
     autosize: [Boolean, Object],
@@ -246,13 +247,16 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   }
 
   private renderActions = () => {
-    const { actions } = this.props;
+    // 优先使用 actions，如果没有则使用 suffix
+    const { actions, suffix } = this.props;
+    const effectiveActions = actions !== undefined ? actions : suffix;
+
     // false 或 undefined/null 时不显示
-    if (!actions) {
+    if (!effectiveActions) {
       return null;
     }
     // true 时显示默认按钮
-    if (actions === true) {
+    if (effectiveActions === true) {
       return this.presetActions.slice(-1).map((item) => (
         <div key={item.name} class={`${className}__actions__item__wrapper`} tabIndex={-1}>
           {item.render}
@@ -260,8 +264,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       ));
     }
     // 数组类型：区分字符串数组和对象数组
-    if (Array.isArray(actions)) {
-      const arrayActions = (actions as Array<string | TdChatSenderAction>).map((action) => {
+    if (Array.isArray(effectiveActions)) {
+      const arrayActions = (effectiveActions as Array<string | TdChatSenderAction>).map((action) => {
         // 字符串类型：直接查找预设按钮
         if (typeof action === 'string') {
           return this.presetActions.find((item) => item.name === action);
@@ -276,8 +280,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       ));
     }
     // 函数类型：(preset) => Array<{ name: string; render: TNode }>
-    if (typeof actions === 'function') {
-      const arrayActions = actions(this.presetActions) as Array<{ name: string; render: TNode }>;
+    if (typeof effectiveActions === 'function') {
+      const arrayActions = effectiveActions(this.presetActions) as Array<{ name: string; render: TNode }>;
       return arrayActions.map((item: { name: string; render: TNode }) => (
         <div key={item.name} class={`${className}__actions__item__wrapper`} tabIndex={-1}>
           {item.render}
@@ -285,7 +289,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
       ));
     }
     // TNode 类型（Object）直接渲染
-    return actions as TNode;
+    return effectiveActions as TNode;
   };
 
   render(props: TdChatSenderProps) {

@@ -47,6 +47,16 @@ export interface TdChatSenderProps {
     | ((preset: Array<{ name: string; render: TNode }>) => Array<{ name: string; render: TNode }>)
     | TNode
     | boolean;
+  /**
+   * 操作按钮配置（内部属性，不对外暴露）
+   * 功能与 actions 完全相同，当 actions 存在时优先使用 actions
+   * @internal
+   */
+  suffix?:
+    | Array<TdChatSenderActionName | TdChatSenderAction>
+    | ((preset: Array<{ name: string; render: TNode }>) => Array<{ name: string; render: TNode }>)
+    | TNode
+    | boolean;
   /** 是否加载中 */
   loading?: boolean;
   /** 透传attachment参数 */
