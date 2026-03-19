@@ -202,7 +202,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           },
         ])}
         onClick={this.clickSend}
-        disabled={disabled}
+        disabled={disabled || this.isSendBtnDisabled}
       >
         {convertToLightDomNode(
           this.props.loading ? (
@@ -404,6 +404,10 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         composed: true,
       },
     );
+
+    // 当非外部受控时，重置输入框和附件
+    this.pValue.value = '';
+    this.pAttachments.value = [];
   };
 
   private handleStop = () => {
