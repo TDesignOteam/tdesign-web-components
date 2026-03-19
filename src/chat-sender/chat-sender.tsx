@@ -94,7 +94,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   private handleAttachmentsRemove = (e: CustomEvent<TdAttachmentItem>) => {
     const removed = e.detail;
     const rest = this.attachmentsValue.filter((item) => item !== removed);
-    this.pAttachments.value = rest;
+    console.log('handleAttachmentsRemove', this.attachmentsValue, removed, rest);
+
     this.fire('fileRemove', rest, {
       composed: true,
     });
@@ -239,10 +240,11 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     const { sendBtnDisabled } = this.props;
     const inputValue = this.inputValue || '';
 
-    // 输入为空时始终禁用发送
-    if (inputValue.trim() === '') return true;
     if (typeof sendBtnDisabled === 'boolean') return sendBtnDisabled;
     if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(inputValue);
+    // 输入为空时始终禁用发送
+    if (inputValue.trim() === '') return true;
+
     return false;
   }
 
@@ -402,8 +404,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         composed: true,
       },
     );
-    this.pValue.value = '';
-    this.pAttachments.value = [];
   };
 
   private handleStop = () => {
