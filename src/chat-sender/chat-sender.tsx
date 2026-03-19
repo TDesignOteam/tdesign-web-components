@@ -15,7 +15,7 @@ import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
-import { TdChatSenderProps } from './type';
+import { TdChatSenderAction, TdChatSenderProps } from './type';
 
 import styles from './style/chat-sender.less';
 
@@ -36,8 +36,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
-    imageUploadProps: Object,
-    fileUploadProps: Object,
     sendBtnDisabled: [Boolean, Function],
     onFileSelect: Function,
     onFileRemove: Function,
@@ -261,9 +259,16 @@ export default class ChatSender extends Component<TdChatSenderProps> {
         </div>
       ));
     }
-    // 数组类型：预设名称数组
+    // 数组类型：区分字符串数组和对象数组
     if (Array.isArray(actions)) {
-      const arrayActions = (actions as string[]).map((name) => this.presetActions.find((item) => item.name === name));
+      const arrayActions = (actions as Array<string | TdChatSenderAction>).map((action) => {
+        // 字符串类型：直接查找预设按钮
+        if (typeof action === 'string') {
+          return this.presetActions.find((item) => item.name === action);
+        }
+        // 对象类型：从 presetActions 中找到对应的 render
+        return this.presetActions.find((item) => item.name === action.name);
+      });
       return arrayActions.map((item, idx) => (
         <div key={item?.name || idx} class={`${className}__actions__item__wrapper`} tabIndex={-1}>
           {item?.render}
@@ -284,12 +289,24 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   };
 
   render(props: TdChatSenderProps) {
-    // 文件上传配置优先级：fileUploadProps > uploadProps
-    const fileUploadConfig = this.props.fileUploadProps || this.props.uploadProps || {};
-    // 图片上传配置：imageUploadProps，默认 accept: 'image/*'
+    // 从 actions 中提取上传配置
+    const getUploadConfigFromActions = (actionName: string) => {
+      const { actions } = this.props;
+      if (Array.isArray(actions)) {
+        const action = (actions as TdChatSenderAction[]).find((item) =>
+          typeof item === 'object' && 'name' in item ? item.name === actionName : false,
+        );
+        return (action as TdChatSenderAction)?.uploadProps || {};
+      }
+      return {};
+    };
+
+    // 文件上传配置优先级：actions 中的 uploadAttachment 配置 > uploadProps
+    const fileUploadConfig = getUploadConfigFromActions('uploadAttachment') || this.props.uploadProps || {};
+    // 图片上传配置优先级：actions 中的 uploadImage 配置 > 默认 accept: 'image/*'
     const imageUploadConfig = {
+      ...getUploadConfigFromActions('uploadImage'),
       accept: 'image/*',
-      ...this.props.imageUploadProps,
     };
 
     return (

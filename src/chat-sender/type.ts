@@ -14,6 +14,13 @@ export interface TdChatSenderUploadProps {
   multiple?: boolean;
 }
 
+export interface TdChatSenderAction {
+  /** 按钮名称，对应预设按钮 */
+  name: TdChatSenderActionName;
+  /** 上传配置，仅对 uploadImage 和 uploadAttachment 有效 */
+  uploadProps?: TdChatSenderUploadProps;
+}
+
 export interface TdChatSenderParams {
   /** 输入内容 */
   value: string;
@@ -28,7 +35,7 @@ export interface TdChatSenderProps {
   defaultValue?: string;
   /**
    * 操作按钮配置
-   * - TdChatSenderActionName[]: 仅支持预设按钮名称数组，如 ['send']、['uploadImage', 'send']
+   * - Array<TdChatSenderActionName | TdChatSenderAction>: 支持字符串或对象数组，如 ['send']、[{ name: 'uploadImage', uploadProps: { accept: '.png' } }, 'send']
    * - Function: (preset: Array<{ name: string; render: TNode }>) => Array<{ name: string; render: TNode }>，接收全部预设按钮后返回最终渲染项
    * - TNode: 完全自定义操作区内容
    * - boolean: true 等价于默认值 ['send']，false 表示不显示操作区
@@ -36,7 +43,7 @@ export interface TdChatSenderProps {
    * @default ['send']
    */
   actions?:
-    | TdChatSenderActionName[]
+    | Array<TdChatSenderActionName | TdChatSenderAction>
     | ((preset: Array<{ name: string; render: TNode }>) => Array<{ name: string; render: TNode }>)
     | TNode
     | boolean;
@@ -54,14 +61,10 @@ export interface TdChatSenderProps {
   /** 透传textarea参数 */
   textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
   /**
-   * 文件上传配置，仅作用于上传附件按钮和 selectFile
-   * @deprecated 请使用 fileUploadProps 替代，优先级低于 fileUploadProps
+   * 文件上传配置
+   * @deprecated 已废弃，建议使用 actions 配置上传属性。例如：actions: [{ name: 'uploadImage', uploadProps: { accept: '.png' } }]
    */
   uploadProps?: TdChatSenderUploadProps;
-  /** 图片上传配置，仅作用于上传图片按钮和 selectImage，默认 accept: 'image/*' */
-  imageUploadProps?: TdChatSenderUploadProps;
-  /** 文件上传配置，仅作用于上传附件按钮和 selectFile，优先级高于 uploadProps */
-  fileUploadProps?: TdChatSenderUploadProps;
   /**
    * 禁用发送按钮，支持布尔值或函数形式；输入为空时始终禁用
    * @default false
