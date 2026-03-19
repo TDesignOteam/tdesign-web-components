@@ -94,7 +94,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   private handleAttachmentsRemove = (e: CustomEvent<TdAttachmentItem>) => {
     const removed = e.detail;
     const rest = this.attachmentsValue.filter((item) => item !== removed);
-    console.log('handleAttachmentsRemove', this.attachmentsValue, removed, rest);
 
     this.fire('fileRemove', rest, {
       composed: true,

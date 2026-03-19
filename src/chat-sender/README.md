@@ -18,9 +18,7 @@ spline: base
 
 {{ custom }}
 
-### 自定义事件（CustomEvent 格式）
 
-{{ event-custom }}
 
 ## API
 
