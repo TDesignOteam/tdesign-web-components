@@ -13,8 +13,9 @@ import { Component, createRef, OmiProps, signal, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
+import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
-import { TdChatSenderAction, TdChatSenderProps } from './type';
+import { TdChatSenderProps } from './type';
 
 import styles from './style/chat-sender.less';
 
@@ -28,19 +29,23 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     placeholder: String,
     disabled: Boolean,
     value: String,
-    actions: [Array, Function, Boolean],
+    actions: [Array, Function, Boolean, Object],
     defaultValue: String,
     loading: Boolean,
-    autosize: Object,
+    autosize: [Boolean, Object],
     attachmentsProps: Object,
     textareaProps: Object,
     uploadProps: Object,
+    imageUploadProps: Object,
+    fileUploadProps: Object,
     sendBtnDisabled: [Boolean, Function],
     onFileSelect: Function,
     onFileRemove: Function,
     onSend: Function,
     onStop: Function,
     onChange: Function,
+    onFocus: Function,
+    onBlur: Function,
   };
 
   static defaultProps: Partial<TdChatSenderProps> = {
@@ -51,7 +56,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     },
     autosize: { minRows: 2 },
     textareaProps: {},
-    actions: (presets) => [presets[presets.length - 1]],
+    actions: ['send'],
   };
 
   pValue: Omi.SignalValue<string> = signal('');
@@ -59,6 +64,8 @@ export default class ChatSender extends Component<TdChatSenderProps> {
   pAttachments: Omi.SignalValue<TdAttachmentItem[]> = signal([]);
 
   uploadRef = createRef<HTMLInputElement>();
+
+  imageUploadRef = createRef<HTMLInputElement>();
 
   inputRef = createRef<HTMLTextAreaElement>();
 
@@ -124,6 +131,11 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     this.uploadRef.current?.click();
   };
 
+  /** 选择图片 */
+  selectImage = () => {
+    this.imageUploadRef.current?.click();
+  };
+
   private handleFileSelected = () => {
     const files = Array.from(this.uploadRef.current?.files || []);
     if (!files.length) {
@@ -134,6 +146,31 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     });
     this.uploadRef.current.value = '';
   };
+
+  private handleImageSelected = () => {
+    const files = Array.from(this.imageUploadRef.current?.files || []);
+    if (!files.length) {
+      return;
+    }
+    this.fire('fileSelect', files, {
+      composed: true,
+    });
+    this.imageUploadRef.current.value = '';
+  };
+
+  /** 上传图片按钮 */
+  private renderUploadImage = () => (
+    <t-tooltip content="上传图片" className={`${className}__actions__tooltip`}>
+      <span
+        className={`${className}__actions__item`}
+        onClick={() => {
+          this.imageUploadRef.current?.click();
+        }}
+      >
+        {convertToLightDomNode(<t-icon-image className={`${className}__actions__icon`} />)}
+      </span>
+    </t-tooltip>
+  );
 
   /** 上传附件按钮 */
   private renderUploadAttachment = () => (
@@ -177,8 +214,16 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     );
   };
 
-  get presetActions(): TdChatSenderAction[] {
+  get presetActions(): Array<{ name: string; render: TNode }> {
     return [
+      {
+        name: 'uploadImage',
+        render: this.renderUploadImage(),
+      },
+      {
+        name: 'uploadAttachment',
+        render: this.renderUploadAttachment(),
+      },
       {
         name: 'attachment',
         render: this.renderUploadAttachment(),
@@ -192,40 +237,70 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   get isSendBtnDisabled() {
     const { sendBtnDisabled } = this.props;
+    const inputValue = this.inputValue || '';
+
+    // 输入为空时始终禁用发送
+    if (inputValue.trim() === '') return true;
     if (typeof sendBtnDisabled === 'boolean') return sendBtnDisabled;
-    if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(this.inputValue);
-    // 默认：输入为空时禁用
-    return !this.inputValue || this.inputValue.trim() === '';
+    if (typeof sendBtnDisabled === 'function') return sendBtnDisabled(inputValue);
+    return false;
   }
 
   private renderActions = () => {
     const { actions } = this.props;
+    // false 或 undefined/null 时不显示
     if (!actions) {
       return null;
     }
-    let arrayActions: TdChatSenderAction[] = this.presetActions;
+    // true 时显示默认按钮
+    if (actions === true) {
+      return this.presetActions.slice(-1).map((item) => (
+        <div key={item.name} class={`${className}__actions__item__wrapper`} tabIndex={-1}>
+          {item.render}
+        </div>
+      ));
+    }
+    // 数组类型：预设名称数组
     if (Array.isArray(actions)) {
-      arrayActions = (actions as string[]).map((name) => arrayActions.find((item) => item.name === name));
+      const arrayActions = (actions as string[]).map((name) => this.presetActions.find((item) => item.name === name));
+      return arrayActions.map((item, idx) => (
+        <div key={item?.name || idx} class={`${className}__actions__item__wrapper`} tabIndex={-1}>
+          {item?.render}
+        </div>
+      ));
     }
+    // 函数类型：(preset) => Array<{ name: string; render: TNode }>
     if (typeof actions === 'function') {
-      arrayActions = actions(this.presetActions);
+      const arrayActions = actions(this.presetActions) as Array<{ name: string; render: TNode }>;
+      return arrayActions.map((item: { name: string; render: TNode }) => (
+        <div key={item.name} class={`${className}__actions__item__wrapper`} tabIndex={-1}>
+          {item.render}
+        </div>
+      ));
     }
-    return arrayActions.map((item, idx) => (
-      <div
-        key={item.name}
-        class={`${className}__actions__item__wrapper`}
-        tabIndex={-1}
-        onClick={() => this.handleAction(item.name, idx)}
-      >
-        {item.render}
-      </div>
-    ));
+    // TNode 类型（Object）直接渲染
+    return actions as TNode;
   };
 
   render(props: TdChatSenderProps) {
+    // 文件上传配置优先级：fileUploadProps > uploadProps
+    const fileUploadConfig = this.props.fileUploadProps || this.props.uploadProps || {};
+    // 图片上传配置：imageUploadProps，默认 accept: 'image/*'
+    const imageUploadConfig = {
+      accept: 'image/*',
+      ...this.props.imageUploadProps,
+    };
+
     return (
       <div className={`${className}`}>
-        <input {...this.props.uploadProps} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />
+        <input {...fileUploadConfig} ref={this.uploadRef} type="file" onChange={this.handleFileSelected} hidden />
+        <input
+          {...imageUploadConfig}
+          ref={this.imageUploadRef}
+          type="file"
+          onChange={this.handleImageSelected}
+          hidden
+        />
         <slot name="header"></slot>
         <div className={`${className}__content`}>
           <slot name="inner-header"></slot>
@@ -311,16 +386,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
     this.fire('blur', this.inputValue, {
       composed: true,
     });
-  };
-
-  private handleAction = (action: string, index: number) => {
-    this.fire(
-      'action',
-      { action, index },
-      {
-        composed: true,
-      },
-    );
   };
 
   private handleSend = () => {
