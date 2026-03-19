@@ -202,7 +202,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
           },
         ])}
         onClick={this.clickSend}
-        disabled={disabled || this.isSendBtnDisabled}
+        disabled={disabled || (!this.props.loading && this.isSendBtnDisabled)}
       >
         {convertToLightDomNode(
           this.props.loading ? (
