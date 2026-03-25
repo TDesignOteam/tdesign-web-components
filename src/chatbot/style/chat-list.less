@@ -57,4 +57,31 @@
     box-shadow: var(--td-chat-list-scroll-button-shadow);
     cursor: pointer;
   }
+
+  &__load-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 12px 0;
+
+    &__spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      border: 2px solid var(--td-brand-color-light, #ecf2fe);
+      border-top-color: var(--td-brand-color, #0052d9);
+      border-radius: 50%;
+      animation: t-chat-list-spin 0.8s linear infinite;
+    }
+
+    &__text {
+      font-size: var(--td-font-size-body-small, 12px);
+      color: var(--td-text-color-placeholder, rgba(0, 0, 0, 0.35));
+    }
+  }
+
+  @keyframes t-chat-list-spin {
+    to { transform: rotate(360deg); }
+  }
 }
