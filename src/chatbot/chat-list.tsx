@@ -21,6 +21,7 @@ export default class Chatlist extends Component<TdChatListProps> {
     onScroll: Function,
     hasMore: Boolean,
     loadMoreThreshold: Number,
+    onLoadMore: Function,
   };
 
   static defaultProps = {
