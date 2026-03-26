@@ -1,4 +1,4 @@
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components/chatbot/chat-list';
 import 'tdesign-web-components/chat-message';
 
 import { Component, signal } from 'omi';
@@ -85,14 +85,14 @@ export default class DataPagingInnerExample extends Component {
     `,
   ];
 
-  /** 全量消息数据（模拟后端返回的 100 条历史消息） */
-  allMessages = generateAllMessages(100);
+  /** 全量消息数据源 */
+  allMessages: ChatMessagesData[] = generateAllMessages(100);
 
-  /** 当前渲染的消息切片 */
+  /** 当前渲染的消息切片（初始为最后一页） */
   visibleMessages = signal<ChatMessagesData[]>(this.allMessages.slice(-PAGE_SIZE));
 
   /** 是否还有更多历史消息 */
-  hasMore = signal(true);
+  hasMore = signal(this.allMessages.length > PAGE_SIZE);
 
   /**
    * 加载更多历史消息
@@ -137,7 +137,7 @@ export default class DataPagingInnerExample extends Component {
     return (
       <div className="data-paging-inner-demo">
         <div className="data-paging-inner-demo__header">
-          <span>外部数据分页 - 组件内控示例</span>
+          <span>数据分页示例</span>
           <div className="data-paging-inner-demo__info">
             <span className="data-paging-inner-demo__tag">
               DOM 节点：{visible.length} / {total}
@@ -146,7 +146,7 @@ export default class DataPagingInnerExample extends Component {
         </div>
 
         {/*
-          核心用法：
+          数据分页：
           - hasMore: 告诉 chat-list 还有更多数据
           - onLoadMore: chat-list 在滚动到顶部阈值时自动触发此回调
           - chat-list 内部自动处理：阈值判断 + 滚动位置维持 + 加载状态管理

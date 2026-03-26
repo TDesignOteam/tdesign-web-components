@@ -157,6 +157,17 @@ export default class Chatlist extends Component<TdChatListProps> {
     );
   };
 
+  receiveProps(props, oldProps): void {
+    // 当 hasMore 从 false 变为 true 时（例如外部数据分页场景中 setMessages 后），
+    // 如果当前已在顶部（scrollTop < threshold），主动触发一次加载更多检查，
+    // 因为此时用户无法再往上滚动来产生 scroll 事件
+    if (props.hasMore && !oldProps.hasMore) {
+      requestAnimationFrame(() => {
+        this.checkExternalLoadMore();
+      });
+    }
+  }
+
   ready(): void {
     const { defaultScrollTo } = this.props;
     defaultScrollTo === 'bottom' && (this.isAutoScrollEnabled = true);
