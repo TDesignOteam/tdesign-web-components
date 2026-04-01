@@ -147,7 +147,12 @@ export interface TdChatListProps {
   autoScroll?: boolean;
   /** 初始滚动条停留的位置 */
   defaultScrollTo?: ScrollPosition;
+  /** 外部数据分页：是否还有更多历史数据可加载。设置后启用外部数据分页模式 */
+  hasMore?: boolean;
+  /** 外部数据分页：触发加载更多的滚动阈值（距离顶部的像素值），默认为 80 */
+  loadMoreThreshold?: number;
   onScroll?: (e: CustomEvent<{ scrollTop: number }>) => void;
+  onLoadMore?: () => void;
 }
 
 export interface TdChatListApi {

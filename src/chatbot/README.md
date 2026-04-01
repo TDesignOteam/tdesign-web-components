@@ -34,6 +34,10 @@ spline: base
 
 {{ nostream }}
 
+### 数据分页
+
+{{ dataPaging }}
+
 ## API
 
 ## Chatbot Props
