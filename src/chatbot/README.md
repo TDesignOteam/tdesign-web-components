@@ -34,10 +34,6 @@ spline: base
 
 {{ nostream }}
 
-### Chat数据分页
-
-{{ dataPagingChat }}
-
 ### 数据分页
 
 {{ dataPaging }}

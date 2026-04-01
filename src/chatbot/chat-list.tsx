@@ -1,7 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/arrow-down';
 import '../chat-message';
 
-import { debounce, throttle } from 'lodash-es';
+import { debounce, isNil, throttle } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
@@ -81,7 +81,7 @@ export default class Chatlist extends Component<TdChatListProps> {
   private checkAutoScroll = throttle(() => {
     const { scrollTop, scrollHeight, clientHeight } = this.listRef.current;
     // 判断上滚：总高度未变更 && 滚动diff大于阈值
-    const upScroll = scrollHeight === this.scrollHeightTmp && this.scrollTopTmp - scrollTop >= 10 ? true : false;
+    const upScroll = scrollHeight === this.scrollHeightTmp && this.scrollTopTmp - scrollTop >= 10;
 
     // 用户主动上滚，取消自动滚动，标记为手动阻止
     if (upScroll) {
@@ -158,11 +158,25 @@ export default class Chatlist extends Component<TdChatListProps> {
   };
 
   receiveProps(props, oldProps): void {
-    // 当 hasMore 从 false 变为 true 时（例如外部数据分页场景中 setMessages 后），
-    // 如果当前已在顶部（scrollTop < threshold），主动触发一次加载更多检查，
-    // 因为此时用户无法再往上滚动来产生 scroll 事件
+    // 当 hasMore 从 false/undefined 变为 true 时（例如外部数据分页场景中首次 setMessages 后），
+    // 需要处理：
+    // 1. 重置内部加载状态，防止残留的 isExternalLoading 阻塞后续 loadMore
+    // 2. 如果自动滚动开启，先确保滚到底部（因为 "加载更多" 区域出现改变了 scrollHeight，
+    //    而 handleAutoScroll 可能被 throttle 掉了）
+    // 3. 如果当前已在顶部（scrollTop < threshold），主动触发一次加载更多检查
     if (props.hasMore && !oldProps.hasMore) {
+      this.isExternalLoading.value = false;
+      this.waitingForDOMUpdate = false;
       requestAnimationFrame(() => {
+        if (this.isAutoScrollEnabled) {
+          this.scrollList({ to: 'bottom' });
+          // 更新缓存，防止 checkAutoScroll 误判
+          const list = this.listRef.current;
+          if (list) {
+            this.scrollHeightTmp = list.scrollHeight;
+            this.scrollTopTmp = list.scrollTop;
+          }
+        }
         this.checkExternalLoadMore();
       });
     }
@@ -186,28 +200,7 @@ export default class Chatlist extends Component<TdChatListProps> {
       this.observer.observe(inner);
     }
 
-    // 外部数据分页模式：监听子元素变化，自动维持滚动位置
-    if (this.props.hasMore !== undefined) {
-      this.externalPagingObserver = new MutationObserver(() => {
-        if (!this.waitingForDOMUpdate) return;
-        this.waitingForDOMUpdate = false;
-        this.isExternalLoading.value = false;
-
-        // 在 DOM 更新后修正滚动位置，避免跳动
-        const newScrollHeight = list?.scrollHeight || 0;
-        const scrollDiff = newScrollHeight - this.prevScrollHeightBeforeLoad;
-        if (list && scrollDiff > 0) {
-          list.scrollTop = this.prevScrollTopBeforeLoad + scrollDiff;
-          // 更新缓存，防止 checkAutoScroll 误判
-          this.scrollHeightTmp = list.scrollHeight;
-          this.scrollTopTmp = list.scrollTop;
-        }
-      });
-      this.externalPagingObserver.observe(this, {
-        childList: true,
-        subtree: false,
-      });
-    }
+    this.initPagingObserver();
 
     // defaultScrollTo="bottom" 的初始滚动：
     // 确保外部数据分页场景下，初始位置能正确滚动到底部
@@ -221,6 +214,34 @@ export default class Chatlist extends Component<TdChatListProps> {
     }
 
     setExportparts(this);
+  }
+
+  /**
+   * 数据分页：初始化 MutationObserver，监听子元素变化以自动维持滚动位置
+   */
+  initPagingObserver(): void {
+    const list = this.listRef.current;
+
+    this.externalPagingObserver = new MutationObserver(() => {
+      if (isNil(this.props.hasMore)) return;
+      if (!this.waitingForDOMUpdate) return;
+      this.waitingForDOMUpdate = false;
+      this.isExternalLoading.value = false;
+
+      // 在 DOM 更新后修正滚动位置，避免跳动
+      const newScrollHeight = list?.scrollHeight || 0;
+      const scrollDiff = newScrollHeight - this.prevScrollHeightBeforeLoad;
+      if (list && scrollDiff > 0) {
+        list.scrollTop = this.prevScrollTopBeforeLoad + scrollDiff;
+        // 更新缓存，防止 checkAutoScroll 误判
+        this.scrollHeightTmp = list.scrollHeight;
+        this.scrollTopTmp = list.scrollTop;
+      }
+    });
+    this.externalPagingObserver.observe(this, {
+      childList: true,
+      subtree: false,
+    });
   }
 
   uninstall(): void {

@@ -1,7 +1,7 @@
 import 'tdesign-web-components/chatbot/chat-list';
 import 'tdesign-web-components/chat-message';
 
-import { Component, signal } from 'omi';
+import { Component, createRef, signal } from 'omi';
 
 import type { ChatMessagesData } from '../../chat-engine/type';
 
@@ -70,6 +70,7 @@ export default class DataPagingInnerExample extends Component {
       .data-paging-inner-demo__info {
         display: flex;
         gap: 16px;
+        align-items: center;
       }
       .data-paging-inner-demo__tag {
         padding: 2px 8px;
@@ -81,6 +82,30 @@ export default class DataPagingInnerExample extends Component {
       .data-paging-inner-demo__tag--success {
         background: var(--td-success-color-1, #e8f8e8);
         color: var(--td-success-color, #2ba471);
+      }
+      .data-paging-inner-demo__custom-load-more {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 0;
+        font-size: 13px;
+        color: var(--td-text-color-placeholder, rgba(0, 0, 0, 0.35));
+      }
+      .data-paging-inner-demo__custom-load-more--loading {
+        color: var(--td-brand-color, #0052d9);
+      }
+      .data-paging-inner-demo__custom-spinner {
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border: 2px solid var(--td-brand-color, #0052d9);
+        border-top-color: transparent;
+        border-radius: 50%;
+        animation: custom-spin 0.8s linear infinite;
+      }
+      @keyframes custom-spin {
+        to { transform: rotate(360deg); }
       }
     `,
   ];
@@ -94,12 +119,19 @@ export default class DataPagingInnerExample extends Component {
   /** 是否还有更多历史消息 */
   hasMore = signal(this.allMessages.length > PAGE_SIZE);
 
+  /** 加载中状态（用于自定义标记展示） */
+  isLoading = signal(false);
+
+  /** chat-list 组件引用 */
+  chatListRef = createRef<HTMLElement>();
+
   /**
    * 加载更多历史消息
    * chat-list 在滚动到顶部阈值时自动触发此回调，
    * 内部自动处理滚动位置维持，用户只需更新数据
    */
   handleLoadMore = () => {
+    this.isLoading.value = true;
     // 模拟异步加载延迟（实际场景中这里是接口请求）
     setTimeout(() => {
       const currentCount = this.visibleMessages.value.length;
@@ -126,13 +158,35 @@ export default class DataPagingInnerExample extends Component {
       }
 
       console.log(`[DataPagingInner] 已加载 ${this.visibleMessages.value.length}/${totalCount} 条消息`);
+      this.isLoading.value = false;
     }, 300);
+  };
+
+  /**
+   * 滚动事件回调
+   * 当列表滚动到底部时，重置分页消息数量到初始状态
+   */
+  handleScroll = (e: CustomEvent<{ scrollTop: number }>) => {
+    const listEl = this.chatListRef.current?.shadowRoot?.querySelector('.t-chat__list');
+    if (!listEl) return;
+
+    const { scrollTop } = e.detail;
+    const { scrollHeight, clientHeight } = listEl;
+    const isAtBottom = scrollHeight - (scrollTop + clientHeight) <= 10;
+
+    if (isAtBottom && this.visibleMessages.value.length > PAGE_SIZE) {
+      // 滚动到底部，重置为最后一页
+      this.visibleMessages.value = this.allMessages.slice(-PAGE_SIZE);
+      this.hasMore.value = this.allMessages.length > PAGE_SIZE;
+      console.log('[DataPagingInner] 已滚动到底部，重置分页消息数量');
+    }
   };
 
   render() {
     const visible = this.visibleMessages.value;
     const total = this.allMessages.length;
     const hasMore = this.hasMore.value;
+    const loading = this.isLoading.value;
 
     return (
       <div className="data-paging-inner-demo">
@@ -142,16 +196,37 @@ export default class DataPagingInnerExample extends Component {
             <span className="data-paging-inner-demo__tag">
               DOM 节点：{visible.length} / {total}
             </span>
+            {visible.length > PAGE_SIZE && (
+              <span className="data-paging-inner-demo__tag data-paging-inner-demo__tag--success">
+                滚动到底部将重置分页
+              </span>
+            )}
           </div>
         </div>
 
-        {/*
-          数据分页：
-          - hasMore: 告诉 chat-list 还有更多数据
-          - onLoadMore: chat-list 在滚动到顶部阈值时自动触发此回调
-          - chat-list 内部自动处理：阈值判断 + 滚动位置维持 + 加载状态管理
-        */}
-        <t-chat-list defaultScrollTo="bottom" hasMore={hasMore} onLoadMore={this.handleLoadMore}>
+        <t-chat-list
+          ref={this.chatListRef}
+          defaultScrollTo="bottom"
+          hasMore={hasMore}
+          onLoadMore={this.handleLoadMore}
+          onScroll={this.handleScroll}
+        >
+          {/* 自定义 load-more 标记：通过 slot="load-more" 替换默认的加载提示 */}
+          <div
+            slot="load-more"
+            className={`data-paging-inner-demo__custom-load-more${
+              loading ? ' data-paging-inner-demo__custom-load-more--loading' : ''
+            }`}
+          >
+            {loading ? (
+              <>
+                <span className="data-paging-inner-demo__custom-spinner" />
+                <span>正在加载历史消息...</span>
+              </>
+            ) : (
+              <span>📜 继续上滑查看更早的消息</span>
+            )}
+          </div>
           {visible.map((msg) => (
             <t-chat-item
               key={msg.id}
