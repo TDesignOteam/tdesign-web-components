@@ -296,6 +296,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 处理发送消息事件
    */
   private handleSend = async (e: CustomEvent<TdChatSenderParams>) => {
+    this.props.senderProps?.onSend?.(e);
     const { value, attachments } = e.detail;
     const params = {
       prompt: value,
@@ -307,7 +308,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   /**
    * 处理停止聊天事件
    */
-  private handleStop = () => {
+  private handleStop = (e?: CustomEvent<string>) => {
+    this.props.senderProps?.onStop?.(e);
     this.chatEngine.abortChat();
     this.fire(
       'chat_stop',
