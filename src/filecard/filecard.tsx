@@ -287,9 +287,14 @@ export default class FileCard extends Component<TdFileCardProps> {
     }
     return (
       <>
-        <div className={`${className}-icon ${className}-icon__${item.status}`} style={{ color: iconColor }}>
-          {icon}
-        </div>
+        {item.url ? (
+          <t-image className={`${className}-overview-image-mini`} src={item.url} shape="round" fit="cover" />
+        ) : (
+          <div className={`${className}-icon ${className}-icon__${item.status}`} style={{ color: iconColor }}>
+            {icon}
+          </div>
+        )}
+
         <div className={`${className}-content`}>
           <div className={`${className}-name`}>
             <span className={`${className}-name-prefix`}>{namePrefix || this.EMPTY}</span>
