@@ -294,7 +294,6 @@ export default class FileCard extends Component<TdFileCardProps> {
             {icon}
           </div>
         )}
-
         <div className={`${className}-content`}>
           <div className={`${className}-name`}>
             <span className={`${className}-name-prefix`}>{namePrefix || this.EMPTY}</span>
