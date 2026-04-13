@@ -119,7 +119,7 @@ export default [
         title: 'Button 按钮',
         name: 'button',
         path: '/webcomponents/components/button',
-        component: () => import('tdesign-web-components/button/README.md'),
+        component: () => import('tdesign-web-components/button/button.md'),
       },
       {
         title: 'Icon 图标',
@@ -131,7 +131,7 @@ export default [
         title: 'Link 链接',
         name: 'link',
         path: '/webcomponents/components/link',
-        component: () => import('tdesign-web-components/link/README.md'),
+        component: () => import('tdesign-web-components/link/link.md'),
       },
     ],
     tag: '',
