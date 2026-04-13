@@ -8,6 +8,8 @@
 -- | -- | -- | -- | --
 className | String | - | 类名 | N
 style | Object | - | 样式 | N
+innerClass | String | - | shadowDOM 类名 | N
+innerStyle | Object | - | shadowDOM 样式 | N
 block | Boolean | false | 是否为块级元素 | N
 children | TNode | - | 按钮内容，同 content。TS 类型：`string \| TNode`。[通用类型定义](https://github.com/TDesignOteam/tdesign-web-components/blob/develop/src/common.ts) | N
 content | TNode | - | 按钮内容。TS 类型：`string \| TNode`。[通用类型定义](https://github.com/TDesignOteam/tdesign-web-components/blob/develop/src/common.ts) | N

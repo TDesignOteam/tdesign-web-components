@@ -8,6 +8,8 @@ name | type | default | description | required
 -- | -- | -- | -- | --
 className | String | - | className of component | N
 style | Object | - | CSS(Cascading Style Sheets) | N
+innerClass | String | - | shadowDOM className of component | N
+innerStyle | Object | - | shadowDOM CSS(Cascading Style Sheets) | N
 block | Boolean | false | make button to be a block-level element | N
 children | TNode | - | button's children elements。Typescript: `string \| TNode`。[see more ts definition](https://github.com/TDesignOteam/tdesign-web-components/blob/develop/src/common.ts) | N
 content | TNode | - | button's children elements。Typescript: `string \| TNode`。[see more ts definition](https://github.com/TDesignOteam/tdesign-web-components/blob/develop/src/common.ts) | N
