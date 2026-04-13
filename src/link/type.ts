@@ -1,4 +1,10 @@
-import { SizeEnum, TElement, TNode } from '../common';
+/* eslint-disable */
+
+/**
+ * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
+ * */
+
+import type { TNode, TElement, SizeEnum } from '../common';
 
 export interface TdLinkProps {
   /**
@@ -10,9 +16,13 @@ export interface TdLinkProps {
    */
   content?: TNode;
   /**
-   * 禁用链接
+   * 禁用链接。优先级：Link.disabled > Form.disabled
    */
   disabled?: boolean;
+  /**
+   * 使得浏览器将链接的 URL 视为可下载资源
+   */
+  download?: string | boolean;
   /**
    * 链接悬浮态样式，有 文本颜色变化、添加下划线等 2 种方法
    * @default underline
@@ -47,7 +57,7 @@ export interface TdLinkProps {
    */
   theme?: 'default' | 'primary' | 'danger' | 'warning' | 'success';
   /**
-   * 普通状态是否显示链接下划线
+   * 是否显示链接下划线
    */
   underline?: boolean;
   /**

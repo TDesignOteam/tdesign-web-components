@@ -46,16 +46,37 @@ export type TreeOptionData<T = string | number> = {
   content?: string | TNode;
 } & PlainObject;
 
+export type ExtendedElement = (HTMLElement | SVGAElement | HTMLInputElement) & {
+  receiveProps: Function;
+  update: Function;
+  queuedUpdate: Function;
+  store?: unknown;
+  className?: string;
+  props: Record<string, unknown>;
+  splitText?: Function;
+  prevProps?: Record<string, unknown> & {
+    ref?:
+      | {
+          current?: unknown;
+        }
+      | Function;
+  };
+  attributes: NamedNodeMap;
+  _component?: Component;
+  _listeners: Record<string, Function>;
+} & Record<string, unknown>;
+/**
+ * 通用全局类型
+ * */
 export type SizeEnum = 'small' | 'medium' | 'large';
+
+export type ShapeEnum = 'circle' | 'round';
 
 export type HorizontalAlignEnum = 'left' | 'center' | 'right';
 
 export type VerticalAlignEnum = 'top' | 'middle' | 'bottom';
 
-export enum LayoutEnum {
-  VERTICAL = 'vertical',
-  HORIZONTAL = 'horizontal',
-}
+export type LayoutEnum = 'vertical' | 'horizontal';
 
 export type ClassName = { [className: string]: any } | ClassName[] | string;
 
@@ -119,23 +140,3 @@ export interface ScrollToElementParams {
 export interface ComponentScrollToElementParams extends ScrollToElementParams {
   key?: string | number;
 }
-
-export type ExtendedElement = (HTMLElement | SVGAElement | HTMLInputElement) & {
-  receiveProps: Function;
-  update: Function;
-  queuedUpdate: Function;
-  store?: unknown;
-  className?: string;
-  props: Record<string, unknown>;
-  splitText?: Function;
-  prevProps?: Record<string, unknown> & {
-    ref?:
-      | {
-          current?: unknown;
-        }
-      | Function;
-  };
-  attributes: NamedNodeMap;
-  _component?: Component;
-  _listeners: Record<string, Function>;
-} & Record<string, unknown>;

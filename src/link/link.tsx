@@ -3,6 +3,7 @@ import { Component, createRef, OmiProps, tag } from 'omi';
 import classname, { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps } from '../common';
+import { linkDefaultProps } from './defaultProps';
 import { TdLinkProps } from './type';
 
 export interface LinkProps extends TdLinkProps, StyledProps {}
@@ -21,11 +22,7 @@ export default class Link extends Component<LinkProps> {
     content: String,
   };
 
-  static defaultProps = {
-    hover: 'underline',
-    size: 'medium',
-    theme: 'default',
-  };
+  static defaultProps = linkDefaultProps;
 
   linkRef = createRef<any>();
 
