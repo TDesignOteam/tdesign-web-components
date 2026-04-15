@@ -1,0 +1,52 @@
+{
+  "name": "@tdesign/web-components-chat",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "module": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "author": "tdesign",
+  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf es lib dist esm cjs",
+    "build": "NODE_ENV=production rollup -c rollup.config.mjs",
+    "build:tsc": "npm-run-all --parallel build:tsc-*",
+    "build:tsc-lib": "tsc --emitDeclarationOnly -d -p ./tsconfig.json --outDir lib/",
+    "build:tsc-esm": "tsc --emitDeclarationOnly -d -p ./tsconfig.json --outDir esm/"
+  },
+  "files": [
+    "esm",
+    "es",
+    "lib",
+    "cjs",
+    "dist",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "sideEffects": [
+    "dist/*",
+    "src/**/*.{ts,tsx}",
+    "cjs/**",
+    "esm/**",
+    "lib/**"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "dependencies": {
+    "cherry-markdown": "0.11.0-alpha-2",
+    "fast-json-patch": "3.1.1",
+    "markdown-it-fence": "^0.1.3",
+    "nanostores": "^0.11.4",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@tdesign/web-components-shared": "workspace:^"
+  },
+  "peerDependencies": {
+    "@tdesign/web-components-ui": "workspace:^",
+    "omi": "^7.7.0"
+  }
+}

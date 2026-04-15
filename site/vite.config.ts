@@ -27,8 +27,13 @@ export default ({ mode }) => {
         '@': resolve('../'),
         '@site': resolve('./'),
         '@docs': resolve('./docs'),
-        '@common': resolve('../src/_common/'),
-        'tdesign-web-components': resolve('../src/'),
+        '@common': resolve('../_common/'),
+        // Monorepo packages
+        '@tdesign/web-components-ui': resolve('../packages/ui/src/'),
+        '@tdesign/web-components-chat': resolve('../packages/chat/src/'),
+        '@tdesign/web-components-shared': resolve('../packages/shared/src/'),
+        // 兼容旧路径
+        'tdesign-web-components': resolve('../packages/ui/src/'),
       },
     },
     server: {

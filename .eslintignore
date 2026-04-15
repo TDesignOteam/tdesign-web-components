@@ -12,4 +12,5 @@ script/test/cypress
 _site
 temp*
 static/
-src/_common
+_common
+packages/*/src/_common

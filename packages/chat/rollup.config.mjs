@@ -1,0 +1,31 @@
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { createRollupConfig } from '../../script/rollup.base.mjs';
+import pkg from './package.json' assert { type: 'json' };
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default createRollupConfig({
+  pkg,
+  packageName: 'tdesign-web-components-chat',
+  packageDir: __dirname,
+  input: 'src/index.ts',
+  inputList: [
+    'src/**/*.ts',
+    'src/**/*.tsx',
+    '!src/**/_example/**',
+    '!src/**/*.d.ts',
+    '!src/**/__tests__/**',
+    '!src/**/_usage/**',
+    '!src/**/mock/**',
+  ],
+  umdGlobalName: 'TDesignChat',
+  globals: { 
+    omi: 'omi', 
+    'lodash-es': '_',
+    '@tdesign/web-components-ui': 'TDesignUI',
+  },
+  additionalExternal: ['@tdesign/web-components-ui', '@tdesign/web-components-ui/button', '@tdesign/web-components-ui/textarea', '@tdesign/web-components-ui/tooltip', '@tdesign/web-components-ui/dropdown', '@tdesign/web-components-ui/collapse', '@tdesign/web-components-ui/image', '@tdesign/web-components-ui/loading', '@tdesign/web-components-ui/skeleton', '@tdesign/web-components-ui/message'],
+  skipCss: true,
+});

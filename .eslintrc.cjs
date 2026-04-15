@@ -20,7 +20,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/**/_example/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
+      files: ['packages/*/src/**/_example/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
       rules: {
         'no-restricted-imports': 'off',
       },

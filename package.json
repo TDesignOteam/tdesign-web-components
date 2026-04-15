@@ -1,94 +1,39 @@
 {
-  "name": "tdesign-web-components",
-  "purename": "tdesign",
-  "version": "1.2.10",
+  "name": "tdesign-web-components-monorepo",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "start": "npm run dev",
+    "start": "pnpm run dev",
     "dev": "cd site && vite --force",
     "site": "cd site && vite build",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
-    "prebuild": "rimraf es/* lib/* dist/* esm/* cjs/*",
-    "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc",
-    "build:analyze": "cross-env NODE_ENV=production ANALYZE=true rollup -c script/rollup.config.js && npm run build:tsc",
-    "build:analyze:all": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=all rollup -c script/rollup.config.js && npm run build:tsc",
-    "build:analyze:umd": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=umd rollup -c script/rollup.config.js && npm run build:tsc",
-    "build:analyze:lib": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=lib rollup -c script/rollup.config.js && npm run build:tsc",
-    "build:analyze:esm": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=esm rollup -c script/rollup.config.js && npm run build:tsc",
-    "analyze": "npm run build:analyze && echo '分析报告已生成到 dist/ 目录'",
-    "analyze:open": "npm run build:analyze && open dist/stats-umd.html",
-    "analyze:view": "node script/view-analysis.js",
-    "build:tsc": "run-p build:tsc-*",
-    "build:tsc-lib": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir lib/",
-    "build:tsc-esm": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir esm/",
-    "build:tsc-cjs": "tsc --emitDeclarationOnly -d -p ./tsconfig.build.json --outDir cjs/",
+    "build": "pnpm -r run build",
+    "build:ui": "cd packages/ui && pnpm run build",
+    "build:chat": "cd packages/chat && pnpm run build",
     "preview": "vite preview",
-    "lint": "eslint --ext .ts,.tsx .",
-    "lint:fix": "eslint --fix --ext .ts,.tsx .",
+    "lint": "eslint --ext .ts,.tsx packages/*/src site",
+    "lint:fix": "eslint --fix --ext .ts,.tsx packages/*/src site",
     "generate:entry": "node ./script/generate-entry.js",
     "prepare": "husky",
     "test": "echo 'test to do'"
   },
-  "files": [
-    "esm",
-    "es",
-    "lib",
-    "cjs",
-    "dist",
-    "plugins",
-    "LICENSE",
-    "README.md",
-    "CHANGELOG.md"
-  ],
-  "sideEffects": [
-    "dist/*",
-    "site/**/*.{ts,tsx}",
-    "src/**/*.{ts,tsx}",
-    "cjs/**",
-    "esm/**",
-    "lib/**"
-  ],
   "lint-staged": {
-    "src/**/*.{ts,tsx}": [
+    "packages/*/src/**/*.{ts,tsx}": [
       "prettier --write",
-      "npm run lint:fix"
+      "eslint --fix"
     ],
     "site/**/*.{ts,tsx}": [
       "prettier --write",
-      "npm run lint:fix"
+      "eslint --fix"
     ]
   },
   "config": {
     "commitizen": {
       "path": "@commitlint/cz-commitlint"
     }
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/"
-  },
-  "dependencies": {
-    "@babel/runtime": "^7.24.7",
-    "@popperjs/core": "^2.11.8",
-    "cherry-markdown": "0.11.0-alpha-2",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.1.0",
-    "copy-to-clipboard": "^3.3.3",
-    "dayjs": "^1.11.19",
-    "fast-json-patch": "3.1.1",
-    "htm": "^3.1.1",
-    "immer": "^10.1.1",
-    "lodash-es": "^4.17.21",
-    "markdown-it-fence": "^0.1.3",
-    "nanostores": "^0.11.4",
-    "omi": "^7.7.13",
-    "omi-transition": "^0.1.11",
-    "tailwind-merge": "^2.2.1",
-    "tdesign-icons-web-components": "^0.3.2",
-    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@babel/core": "^7.24.7",
@@ -152,5 +97,6 @@
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-tdoc": "^2.0.4",
     "workbox-precaching": "^7.1.0"
-  }
+  },
+  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
 }

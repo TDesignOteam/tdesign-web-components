@@ -1,0 +1,30 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "lib",
+    "paths": {
+      "@tdesign/web-components-chat": ["src"],
+      "@tdesign/web-components-chat/*": ["src/*"],
+      "@tdesign/web-components-ui": ["../ui/src"],
+      "@tdesign/web-components-ui/*": ["../ui/src/*"],
+      "@tdesign/web-components-shared": ["../shared/src"],
+      "@tdesign/web-components-shared/*": ["../shared/src/*"],
+      "@common/*": ["src/_common/*"],
+      "@": ["src"],
+      "../button": ["../ui/src/button"],
+      "../textarea": ["../ui/src/textarea"],
+      "../tooltip": ["../ui/src/tooltip"],
+      "../dropdown": ["../ui/src/dropdown"],
+      "../collapse": ["../ui/src/collapse"],
+      "../image": ["../ui/src/image"],
+      "../loading": ["../ui/src/loading"],
+      "../skeleton": ["../ui/src/skeleton"],
+      "../avatar": ["../ui/src/avatar"],
+      "../popup": ["../ui/src/popup"],
+      "../dialog": ["../ui/src/dialog"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"]
+}
