@@ -1,7 +1,7 @@
+import classname from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
-import classname from '../_util/classname';
-import { StyledProps, TNode } from '../common';
 import { TdTabPanelProps } from './type';
 import { useTabClass } from './useTabClass';
 

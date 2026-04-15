@@ -1,4 +1,4 @@
-import { TElement, TNode } from '../common';
+import { TElement, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdAlertProps {
   /**

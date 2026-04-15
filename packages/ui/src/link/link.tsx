@@ -1,8 +1,8 @@
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { TdLinkProps } from './type';
 
 export interface LinkProps extends TdLinkProps, StyledProps {}

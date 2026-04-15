@@ -2,12 +2,12 @@ import 'tdesign-icons-web-components/esm/components/chevron-right';
 import 'tdesign-icons-web-components/esm/components/chevron-left';
 import './swiper-item';
 
+import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { getChildrenArray } from '@tdesign/web-components-shared/_util/component';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { isEqual } from 'lodash-es';
 import { bind, cloneElement, Component, createRef, signal, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
-import { getChildrenArray } from '../_util/component';
-import { StyledProps, TNode } from '../common';
 import { SwiperChangeSource, SwiperNavigation, TdSwiperProps } from './type';
 
 export interface SwiperProps extends TdSwiperProps, StyledProps {

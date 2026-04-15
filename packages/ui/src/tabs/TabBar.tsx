@@ -1,7 +1,7 @@
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, Styles } from '@tdesign/web-components-shared/common';
 import { Component, createRef, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { StyledProps, Styles } from '../common';
 import { TabValue } from './type';
 
 interface TabBarProps extends StyledProps {

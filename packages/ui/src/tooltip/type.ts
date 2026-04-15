@@ -6,7 +6,7 @@
 
 import { PopupPlacement } from '../popup';
 import { TdPopupProps } from '../popup';
-import { Styles, TNode } from '../common';
+import { Styles, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdTooltipProps extends TdPopupProps {
   /**

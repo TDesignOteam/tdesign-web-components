@@ -1,7 +1,7 @@
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { type TooltipProps } from '@tdesign/web-components-ui/tooltip';
 
 import { type ChatComment } from '../chat-engine';
-import { StyledProps, TNode } from '../common';
 
 export type TdChatActionsName = 'copy' | 'good' | 'bad' | 'replay' | 'share';
 

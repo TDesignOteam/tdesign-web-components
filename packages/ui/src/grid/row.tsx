@@ -1,11 +1,11 @@
+import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { getChildrenArray } from '@tdesign/web-components-shared/_util/component';
+import { canUseDocument, getCssVarsValue } from '@tdesign/web-components-shared/_util/dom';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { isObject } from 'lodash-es';
 import { cloneElement, Component, createElement, tag } from 'omi';
 
-import classNames, { getClassPrefix } from '../_util/classname';
-import { getChildrenArray } from '../_util/component';
-import { canUseDocument, getCssVarsValue } from '../_util/dom';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps, TNode } from '../common';
 import { rowDefaultProps } from './defaultProps';
 import { TdRowProps } from './type';
 

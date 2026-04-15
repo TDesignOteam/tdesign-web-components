@@ -5,11 +5,11 @@ import 'tdesign-icons-web-components/esm/components/check';
 import 'tdesign-icons-web-components/esm/components/close';
 import 'tdesign-icons-web-components/esm/components/error';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import getBackgroundColor from '@tdesign/web-components-shared/_util/linearGradient';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import getBackgroundColor from '../_util/linearGradient';
-import { StyledProps } from '../common';
 import { TdProgressProps } from './type';
 
 // 获取直径

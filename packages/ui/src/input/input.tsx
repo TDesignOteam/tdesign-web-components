@@ -2,13 +2,13 @@ import 'tdesign-icons-web-components/esm/components/browse';
 import 'tdesign-icons-web-components/esm/components/browse-off';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { flexIcon } from '@tdesign/web-components-shared/_util/icon';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps, TElement, TNode } from '@tdesign/web-components-shared/common';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { flexIcon } from '../_util/icon';
-import { convertToLightDomNode } from '../_util/lightDom';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps, TElement, TNode } from '../common';
 import { InputValue, TdInputProps } from './type';
 import useLengthLimit from './useLengthLimit';
 

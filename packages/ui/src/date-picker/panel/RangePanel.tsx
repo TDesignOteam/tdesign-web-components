@@ -14,12 +14,12 @@ import {
   getYears,
   isSame,
 } from '@common/js/date-picker/utils';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import classNames from 'classnames';
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
 import { PaginationMini } from '../../pagination/PaginationMini';
 import { TdPaginationMiniProps } from '../../pagination/type';
 import { DateValue, DisableDate, PresetRange, TdDateRangePickerProps } from '../type';

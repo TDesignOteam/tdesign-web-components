@@ -3,14 +3,14 @@ import 'tdesign-icons-web-components/esm/components/info-circle';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/error-circle';
 import 'omi-transition';
-import '../common/portal';
+import '@tdesign/web-components-shared/common/portal';
 
+import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { ClassName, StyledProps, Styles } from '@tdesign/web-components-shared/common';
 import { isNumber, isObject, isString } from 'lodash-es';
 import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
 import type { ButtonProps } from '../button';
-import { ClassName, StyledProps, Styles } from '../common';
 import stack from './stack';
 import type { TdDialogProps } from './type';
 

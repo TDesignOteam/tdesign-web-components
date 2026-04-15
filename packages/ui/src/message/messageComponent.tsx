@@ -1,11 +1,11 @@
 import './messageClose';
 import './messageIcon';
 
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import classNames from 'classnames';
 import Omi, { Component, createRef, signal, tag } from 'omi';
 
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps, TNode } from '../common';
 import { tdClassIsGenerator, tdMessageClassGenerator, tdMessagePrefix } from './const';
 // 依赖组件引入
 import { TdMessageProps } from './type';

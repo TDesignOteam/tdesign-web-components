@@ -2,9 +2,9 @@ import 'tdesign-web-components-chat/chatbot';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 import 'tdesign-icons-web-components/esm/components/system-2';
 
+import classname from '@tdesign/web-components-shared/_util/classname';
 import { Component, signal } from 'omi';
 
-import classname from '../../_util/classname';
 import { TdChatSenderParams } from '../../chat-sender';
 import { TdAttachmentItem } from '../../filecard';
 

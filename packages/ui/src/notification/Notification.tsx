@@ -2,12 +2,12 @@ import 'tdesign-icons-web-components/esm/components/close';
 import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 import 'tdesign-icons-web-components/esm/components/check-circle-filled';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import parseTNode, { parseContentTNode } from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import parseTNode, { parseContentTNode } from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { notificationDefaultProps } from './defaultProps';
 import { NotificationInstance, TdNotificationProps } from './type';
 

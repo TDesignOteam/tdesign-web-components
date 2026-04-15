@@ -1,8 +1,8 @@
+import { TNode } from '@tdesign/web-components-shared/common';
 import { TdTextareaProps } from '@tdesign/web-components-ui/textarea';
 
 import { TdAttachmentsProps } from '../attachments';
 import { ChatRequestParams } from '../chat-engine';
-import { TNode } from '../common';
 import { TdAttachmentItem } from '../filecard';
 
 export type TdChatSenderActionName = 'attachment' | 'send';

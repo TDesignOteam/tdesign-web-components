@@ -17,12 +17,12 @@ import {
   InputNumberErrorType,
   largeNumberToFixed,
 } from '@common/js/input-number/number';
+import classname, { getClassPrefix, getCommonClassName } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { isEqual, pick } from 'lodash-es';
 import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import classname, { getClassPrefix, getCommonClassName } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps } from '../common';
 import { ChangeContext, InputNumberValue, TdInputNumberProps } from './type';
 
 const classPrefix = getClassPrefix();

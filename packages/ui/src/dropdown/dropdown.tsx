@@ -2,11 +2,11 @@ import './dropdownItem';
 import './dropdownMenu';
 import '../popup';
 
+import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { isFunction, omit } from 'lodash-es';
 import { Component, css, tag } from 'omi';
 
-import classNames, { getClassPrefix } from '../_util/classname';
-import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext } from '../popup';
 import { dropdownDefaultProps } from './defaultProps';
 import { propTypes } from './dropdownMenu';

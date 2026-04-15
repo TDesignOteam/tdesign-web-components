@@ -1,4 +1,4 @@
-import { SizeEnum, TElement, TNode } from '../common';
+import { SizeEnum, TElement, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdLinkProps {
   /**

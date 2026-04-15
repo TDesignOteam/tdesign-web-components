@@ -5,7 +5,7 @@
  * */
 
 import { ButtonProps } from '../button';
-import { TNode, Styles, AttachNode } from '../common';
+import { TNode, Styles, AttachNode } from '@tdesign/web-components-shared/common';
 
 export interface TdDialogProps {
   /**

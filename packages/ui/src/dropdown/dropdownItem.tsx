@@ -1,8 +1,8 @@
+import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { pxCompat, removeEmptyAttrs } from '@tdesign/web-components-shared/_util/helper';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
-import classNames, { getClassPrefix } from '../_util/classname';
-import { pxCompat, removeEmptyAttrs } from '../_util/helper';
-import { StyledProps, TNode } from '../common';
 import { dropdownItemDefaultProps } from './defaultProps';
 import { DropdownItemTheme, DropdownOption, TdDropdownProps } from './type';
 

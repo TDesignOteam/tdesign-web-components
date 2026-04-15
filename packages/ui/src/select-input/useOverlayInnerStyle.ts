@@ -1,7 +1,7 @@
+import useControlled from '@tdesign/web-components-shared/_util/useControlled';
 import { isFunction } from 'lodash-es';
 import { Component } from 'omi';
 
-import useControlled from '../_util/useControlled';
 import { PopupVisibleChangeContext, TdPopupProps } from '../popup';
 import { TdSelectInputProps } from './type';
 

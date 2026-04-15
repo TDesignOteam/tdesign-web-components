@@ -3,12 +3,12 @@ import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/close';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { isObject } from 'lodash-es';
 import { Component, createRef, signal, SignalValue, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { TdAlertProps } from './type';
 
 export interface AlertProps extends TdAlertProps, StyledProps {}

@@ -1,11 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/chevron-right';
 import '../tooltip';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { isNodeOverflow } from '@tdesign/web-components-shared/_util/dom';
+import { TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, OmiDOMAttributes, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { isNodeOverflow } from '../_util/dom';
-import { TNode } from '../common';
 import { TdBreadcrumbItemProps } from './type';
 
 interface BreadcrumbItemProps extends TdBreadcrumbItemProps, OmiDOMAttributes {}

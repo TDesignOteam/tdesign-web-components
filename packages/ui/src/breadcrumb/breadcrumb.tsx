@@ -1,10 +1,10 @@
 import './breadcrumb-item';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { getChildrenArray } from '@tdesign/web-components-shared/_util/component';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { getChildrenArray } from '../_util/component';
-import { StyledProps } from '../common';
 import { TdBreadcrumbProps } from './type';
 
 interface BreadcrumbProps extends TdBreadcrumbProps, StyledProps {}

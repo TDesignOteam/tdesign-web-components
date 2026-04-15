@@ -4,9 +4,9 @@ import 'tdesign-icons-web-components/esm/components/error-circle-filled';
 import 'tdesign-icons-web-components/esm/components/help-circle-filled';
 import '../loading';
 
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { Component, tag } from 'omi';
 
-import { convertToLightDomNode } from '../_util/lightDom';
 import { classPrefix } from './const';
 import { TdMessageProps } from './type';
 

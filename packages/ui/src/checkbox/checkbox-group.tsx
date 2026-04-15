@@ -1,9 +1,9 @@
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { intersection, isObject, isString, isUndefined, toArray } from 'lodash-es';
 import { bind, Component, signal, tag, VNode } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps, TNode } from '../common';
 import { CheckboxContextKey } from './checkbox';
 import {
   CheckboxGroupChangeContext,

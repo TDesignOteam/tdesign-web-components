@@ -1,12 +1,12 @@
 import '../md/chat-md-code';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import MermaidPlugin from 'cherry-markdown/dist/addons/cherry-code-block-mermaid-plugin.esm.js';
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { escape, merge } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
-import { setExportparts } from '../../_util/dom';
 import { AddPartHook } from '../md/utils';
 
 import styles from '../style/chat-content.less';

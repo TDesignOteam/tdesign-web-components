@@ -13,10 +13,10 @@ import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '@tdesign/web-components-ui/image';
 import '@tdesign/web-components-ui/loading';
 
+import classname from '@tdesign/web-components-shared/_util/classname';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, tag } from 'omi';
 
-import classname from '../_util/classname';
-import { getClassPrefix } from '../_util/classname';
 import { TdFileCardProps } from './type';
 
 import styles from './style/filecard.less';

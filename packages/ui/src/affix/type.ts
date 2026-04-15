@@ -1,4 +1,4 @@
-import { ScrollContainer, TNode } from '../common';
+import { ScrollContainer, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdAffixProps {
   /**

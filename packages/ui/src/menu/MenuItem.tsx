@@ -1,10 +1,10 @@
 import '../tooltip';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { bind, Component, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps } from '../common';
 import { TdMenuItemProps } from './type';
 
 export interface MenuItemProps extends TdMenuItemProps, StyledProps {}

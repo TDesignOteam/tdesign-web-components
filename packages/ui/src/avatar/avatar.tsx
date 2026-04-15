@@ -1,7 +1,7 @@
+import { getClassPrefix, getCommonClassName } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 
-import { getClassPrefix, getCommonClassName } from '../_util/classname';
-import { StyledProps } from '../common';
 import { ImageProps } from '../image';
 import { TdAvatarProps } from './type';
 

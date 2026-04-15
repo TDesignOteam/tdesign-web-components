@@ -13,10 +13,10 @@ import '../loading';
 
 import zhCn from '@common/js/global-config/locale/zh_CN';
 import { abridgeName } from '@common/js/upload/utils';
+import { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { classNames, Component, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
-import { classPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
 import { ButtonProps } from '../button';
 import useUpload from './hooks/useUpload';
 import renderCustomFile from './CustomFile';

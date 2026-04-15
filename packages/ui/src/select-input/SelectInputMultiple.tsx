@@ -1,10 +1,10 @@
 import '../tag-input';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import classNames from 'classnames';
 import { isObject } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
 import { TagInputValue } from '../tag-input';
 import { SelectInputCommonProperties } from './interface';
 import { SelectInputChangeContext, SelectInputKeys, SelectInputValue, TdSelectInputProps } from './type';

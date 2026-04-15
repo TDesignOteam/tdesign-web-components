@@ -6,9 +6,9 @@ import '../loading';
 
 import zhCn from '@common/js/global-config/locale/zh_CN';
 import { abridgeName } from '@common/js/upload/utils';
+import classNames from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 
-import classNames from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
 // import ImageViewer from '../../image-viewer';
 import { CommonDisplayFileProps } from './interface';
 import { TdUploadProps, UploadFile } from './type';

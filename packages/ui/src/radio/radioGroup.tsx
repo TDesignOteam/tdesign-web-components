@@ -1,12 +1,12 @@
 import './radio';
 
+import { getClassPrefix, getCommonClassName } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
+import { CheckContextKey, CheckProps } from '@tdesign/web-components-shared/common/check';
 import { toArray } from 'lodash-es';
 import { classNames, cloneElement, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix, getCommonClassName } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps, TNode } from '../common';
-import { CheckContextKey, CheckProps } from '../common/check';
 import { TdRadioGroupProps } from './type';
 
 export interface RadioGroupProps<T> extends TdRadioGroupProps<T>, StyledProps {

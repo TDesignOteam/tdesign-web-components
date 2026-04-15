@@ -1,9 +1,9 @@
 import '../../src/loading';
 
+import classname, { getClassPrefix, getCommonClassName } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix, getCommonClassName } from '../_util/classname';
-import { StyledProps } from '../common';
 import { TdCardProps } from './type';
 
 export interface CardProps extends TdCardProps, StyledProps {}

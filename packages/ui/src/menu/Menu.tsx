@@ -1,9 +1,9 @@
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { getChildrenArray, hasSlot } from '@tdesign/web-components-shared/_util/component';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { bind, Component, OmiDOMAttributes, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { getChildrenArray, hasSlot } from '../_util/component';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { StyledProps } from '../common';
 import { DEFAULT_MENU_WIDTH } from './_util/constant';
 import { MenuValue, TdMenuProps } from './type';
 

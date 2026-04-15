@@ -1,10 +1,10 @@
-import '../common/fake-arrow';
+import '@tdesign/web-components-shared/common/fake-arrow';
 import 'omi-transition';
 
+import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, computed, signal, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
-import { StyledProps, TNode } from '../common';
 import { getCollapseAnimation } from './collapse-animation';
 import type { TdCollapsePanelProps } from './type';
 

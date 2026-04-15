@@ -2,11 +2,11 @@ import './chat-list';
 import '../chat-sender';
 import '@tdesign/web-components-ui/button';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertNodeListToVNodes, getSlotNodes } from '@tdesign/web-components-shared/_util/component';
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { ChatEngine, getMessageContentForCopy, isAIMessage } from '../chat-engine';

@@ -1,9 +1,9 @@
 import '../popup';
 import './popcontent';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
 import { PopconfirmVisibleChangeContext, TdPopconfirmProps } from './type';
 
 export type PopconfirmProps = TdPopconfirmProps;

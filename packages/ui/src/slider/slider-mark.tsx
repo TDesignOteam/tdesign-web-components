@@ -1,6 +1,6 @@
+import { classPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { bind, Component, tag } from 'omi';
 
-import { classPrefix } from '../_util/classname';
 import { TdSliderProps } from './type';
 
 interface SliderMarkProps {

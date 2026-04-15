@@ -1,4 +1,4 @@
-import { StyledProps } from '../common';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 
 export type ChatLoadingAnimationType = 'skeleton' | 'moving' | 'gradient' | 'circle' | 'dots';
 

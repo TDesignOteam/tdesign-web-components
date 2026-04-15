@@ -1,10 +1,10 @@
 import '@tdesign/web-components-ui/skeleton';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import classname from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import classname from '../_util/classname';
-import { setExportparts } from '../_util/dom';
 import { TdChatLoadingProps } from './type';
 
 import styles from './style/loading.less';

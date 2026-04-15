@@ -1,4 +1,4 @@
-import '../common/check';
+import '@tdesign/web-components-shared/common/check';
 
 import { OmiProps, tag } from 'omi';
 

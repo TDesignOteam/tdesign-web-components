@@ -1,7 +1,7 @@
+import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { TNode } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
-import { TNode } from '../common';
 import { TdSwiperProps } from './type';
 
 export interface SwiperItemProps extends TdSwiperProps {

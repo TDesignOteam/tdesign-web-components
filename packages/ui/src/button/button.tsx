@@ -1,16 +1,16 @@
 import '../loading/gradient';
 import '../loading/style';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { getChildrenArray } from '@tdesign/web-components-shared/_util/component';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import eventDispose from '@tdesign/web-components-shared/_util/eventDispose';
+import { flexIcon } from '@tdesign/web-components-shared/_util/icon';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { getChildrenArray } from '../_util/component';
-import { setExportparts } from '../_util/dom';
-import eventDispose from '../_util/eventDispose';
-import { flexIcon } from '../_util/icon';
-import { convertToLightDomNode } from '../_util/lightDom';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { TdButtonProps } from './type';
 
 export interface ButtonProps extends TdButtonProps, StyledProps {}

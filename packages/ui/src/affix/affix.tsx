@@ -1,9 +1,9 @@
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { getScrollContainer } from '@tdesign/web-components-shared/_util/dom';
+import { ScrollContainerElement, StyledProps } from '@tdesign/web-components-shared/common';
 import { isFunction } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { getScrollContainer } from '../_util/dom';
-import { ScrollContainerElement, StyledProps } from '../common';
 import { AffixRef, TdAffixProps } from './type';
 
 export interface AffixProps extends TdAffixProps, StyledProps, AffixRef {}

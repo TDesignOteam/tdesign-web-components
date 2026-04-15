@@ -1,4 +1,4 @@
-import { SizeEnum, StyledProps, TNode } from '../common';
+import { SizeEnum, StyledProps, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TagProps extends StyledProps {
   /**

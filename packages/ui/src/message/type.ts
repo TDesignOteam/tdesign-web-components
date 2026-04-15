@@ -1,4 +1,4 @@
-import { AttachNode, StyledProps, Styles, TNode } from '../common';
+import { AttachNode, StyledProps, Styles, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdMessageProps {
   /**

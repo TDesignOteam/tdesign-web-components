@@ -2,10 +2,10 @@ import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '../input';
 import '../tag';
 
+import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import classNames, { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
 import { InputValue } from '../input';
 import { TagInputValue, TdTagInputProps } from './type';
 

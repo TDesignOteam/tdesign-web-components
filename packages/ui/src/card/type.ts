@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { LoadingProps } from '../loading';
-import { TNode } from '../common';
+import { TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdCardProps {
   /**

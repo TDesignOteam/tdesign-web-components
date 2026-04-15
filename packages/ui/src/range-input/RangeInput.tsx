@@ -2,12 +2,12 @@ import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '../input';
 import './RangeInputInner';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { bind, classNames, Component, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { RangeInputPosition, RangeInputValue, TdRangeInputProps } from './type';
 
 export interface RangeInputProps extends TdRangeInputProps, StyledProps {}

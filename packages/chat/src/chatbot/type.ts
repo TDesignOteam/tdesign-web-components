@@ -1,3 +1,5 @@
+import type { StyledProps, TNode } from '@tdesign/web-components-shared/common';
+
 import type {
   AIMessageContent,
   ChatMessagesData,
@@ -8,7 +10,6 @@ import type {
 } from '../chat-engine';
 import type { TdChatMessageProps } from '../chat-message';
 import type { TdChatSenderProps } from '../chat-sender';
-import type { StyledProps, TNode } from '../common';
 
 export interface TdChatProps extends StyledProps {
   children?: TNode;

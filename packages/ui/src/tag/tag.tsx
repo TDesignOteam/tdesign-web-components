@@ -1,11 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/close';
 
+import { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { flexIcon } from '@tdesign/web-components-shared/_util/icon';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
 import { classNames, Component, createRef, tag } from 'omi';
 
-import { classPrefix } from '../_util/classname';
-import { flexIcon } from '../_util/icon';
-import { convertToLightDomNode } from '../_util/lightDom';
-import parseTNode from '../_util/parseTNode';
 import { TagProps } from './type';
 
 const TagClassNamePrefix = (className: string) => `${classPrefix}-tag${className}`;

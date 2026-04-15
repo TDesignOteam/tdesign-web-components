@@ -2,11 +2,11 @@ import '../filecard';
 import 'tdesign-icons-web-components/esm/components/chevron-left';
 import 'tdesign-icons-web-components/esm/components/chevron-right';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import classname from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import classname from '../_util/classname';
-import { setExportparts } from '../_util/dom';
 import { TdAttachmentsProps } from './type';
 
 import styles from './style/attachments.less';

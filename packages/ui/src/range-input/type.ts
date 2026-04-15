@@ -1,4 +1,5 @@
-import { TNode } from '../common';
+import { TNode } from '@tdesign/web-components-shared/common';
+
 import { InputFormatType, InputValue } from '../input';
 import { PopupProps } from '../popup';
 import { RangeInputProps } from './RangeInput';

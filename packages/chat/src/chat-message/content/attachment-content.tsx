@@ -1,8 +1,8 @@
 import '../../attachments';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
 import { type AttachmentItem } from '../../chat-engine';
 import { TdAttachmentItem } from '../../filecard';
 

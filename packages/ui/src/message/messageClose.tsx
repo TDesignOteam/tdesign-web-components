@@ -4,10 +4,10 @@
 
 import 'tdesign-icons-web-components/esm/components/close';
 
+import { parseContentTNode } from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import Omi, { classNames, Component, tag } from 'omi';
 
-import { parseContentTNode } from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { tdMessageClassGenerator } from './const';
 import { TdMessageProps } from './type';
 

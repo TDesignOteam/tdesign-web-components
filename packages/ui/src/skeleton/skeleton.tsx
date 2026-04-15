@@ -1,10 +1,10 @@
 import { pxCompat } from '@common/js/utils/helper';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps, Styles, TNode } from '@tdesign/web-components-shared/common';
 import { isNumber } from 'lodash-es';
 import { classNames, Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps, Styles, TNode } from '../common';
 import { SkeletonRowCol, SkeletonRowColObj, TdSkeletonProps } from './type';
 
 export type SkeletonProps = TdSkeletonProps & StyledProps & { children: TNode };

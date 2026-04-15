@@ -13,12 +13,12 @@ import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
-import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import type { ChatMessagesData } from '../chat-engine';
 import {

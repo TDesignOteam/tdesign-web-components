@@ -1,4 +1,5 @@
-import { TNode } from '../common';
+import { TNode } from '@tdesign/web-components-shared/common';
+
 import { InputProps } from '../input/input';
 
 export interface TdInputNumberProps<T = InputNumberValue> {

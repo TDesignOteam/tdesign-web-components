@@ -1,6 +1,6 @@
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { VNode } from 'omi';
 
-import { StyledProps } from '../common';
 import { TdUploadProps, UploadFile, UploadInstanceFunctions, UploadRemoveContext } from './type';
 
 export interface CommonDisplayFileProps {

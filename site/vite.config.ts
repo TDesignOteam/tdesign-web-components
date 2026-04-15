@@ -29,8 +29,8 @@ export default ({ mode }) => {
         '@docs': resolve('./docs'),
         '@common': resolve('../packages/_common/'),
         // AI Core packages (submodule)
-        '@tdesign/ai-chat-engine': resolve('../packages/ai-core/packages/chat-engine/index.ts'),
-        '@tdesign/ai-shared': resolve('../packages/ai-core/packages/shared/index.ts'),
+        '@tdesign/ai-chat-engine': resolve('../packages/_ai-core/packages/chat-engine/index.ts'),
+        '@tdesign/ai-shared': resolve('../packages/_ai-core/packages/shared/index.ts'),
         // Monorepo packages
         '@tdesign/web-components-ui': resolve('../packages/ui/src/'),
         '@tdesign/web-components-chat': resolve('../packages/chat/src/'),

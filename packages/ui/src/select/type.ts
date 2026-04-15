@@ -11,7 +11,7 @@ import { TagInputProps } from '../tag-input';
 import { TagProps } from '../tag';
 import { SelectInputValueChangeContext } from '../select-input';
 import { PopupVisibleChangeContext } from '../popup';
-import { PlainObject, TNode, TElement, SizeEnum, InfinityScroll } from '../common';
+import { PlainObject, TNode, TElement, SizeEnum, InfinityScroll } from '@tdesign/web-components-shared/common';
 
 export interface TdSelectProps<T extends SelectOption = SelectOption> {
   /**

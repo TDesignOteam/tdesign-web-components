@@ -1,9 +1,9 @@
 import './dropdownItem';
 import './dropdownMenu';
 
+import { TElement, TNode } from '@tdesign/web-components-shared/common';
 import { toArray } from 'lodash-es';
 
-import { TElement, TNode } from '../common';
 import { DropdownOption } from './type';
 
 export const getOptionsFromChildren = (children: TElement | any): DropdownOption[] => {

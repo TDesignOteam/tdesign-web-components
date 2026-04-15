@@ -6,9 +6,9 @@ import 'tdesign-icons-web-components/esm/components/close';
 import '../loading';
 
 import { abridgeName } from '@common/js/upload/utils';
+import classNames from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 
-import classNames from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
 import { CommonDisplayFileProps } from './interface';
 import { UploadFile } from './type';
 

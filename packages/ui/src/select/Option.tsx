@@ -1,7 +1,7 @@
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
 import { optionDefaultProps } from './defaultProps';
 import { TdOptionProps, TdSelectProps } from './type';
 

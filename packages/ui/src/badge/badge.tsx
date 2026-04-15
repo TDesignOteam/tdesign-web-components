@@ -1,7 +1,7 @@
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, Styles } from '@tdesign/web-components-shared/common';
 import { classNames, Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { StyledProps, Styles } from '../common';
 import { TdBadgeProps } from './type';
 
 export interface BadgeProps extends TdBadgeProps, StyledProps {}

@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { StyledProps, TNode } from '../common';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 
 export interface ListProps extends StyledProps {
   children?: TNode;

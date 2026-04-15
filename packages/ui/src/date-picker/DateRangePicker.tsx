@@ -4,13 +4,13 @@ import 'tdesign-icons-web-components/esm/components/calendar';
 
 import { formatDate, getDefaultFormat, isValidDate, parseToDayjs } from '@common/js/date-picker/format';
 import { addMonth, subtractMonth } from '@common/js/date-picker/utils';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import useControlled from '@tdesign/web-components-shared/_util/useControlled';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import dayjs from 'dayjs';
 import { classNames, Component, OmiProps, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
-import useControlled from '../_util/useControlled';
-import { StyledProps } from '../common';
 import { dateRangePickerDefaultProps } from './defaultProps';
 import { DateRangeValue, DateValue, PresetRange, TdDateRangePickerProps } from './type';
 

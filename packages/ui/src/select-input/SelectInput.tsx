@@ -3,13 +3,13 @@ import './SelectInputMultiple';
 import './SelectInputSingle';
 import '../popup';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import classNames from 'classnames';
 import { pick } from 'lodash-es';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
-import { StyledProps } from '../common';
 import { PopupVisibleChangeContext } from '../popup';
 import { selectInputDefaultProps } from './defaultProps';
 import { SelectInputCommonProperties } from './interface';

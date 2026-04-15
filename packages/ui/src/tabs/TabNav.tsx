@@ -5,13 +5,13 @@ import './TabNavItem';
 import './TabBar';
 
 import { calcMaxOffset, calcPrevOrNextOffset, calculateOffset, calcValidOffset } from '@common/js/tabs/base';
+import classname from '@tdesign/web-components-shared/_util/classname';
+import noop from '@tdesign/web-components-shared/_util/noop';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { DragSortInnerProps } from '@tdesign/web-components-shared/_util/useDragSorter';
 import { debounce, omit, toArray } from 'lodash-es';
 import { Component, createRef, signal, tag, VNode } from 'omi';
 
-import classname from '../_util/classname';
-import noop from '../_util/noop';
-import parseTNode from '../_util/parseTNode';
-import { DragSortInnerProps } from '../_util/useDragSorter';
 import { TabValue, TdTabPanelProps, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 

@@ -11,7 +11,13 @@
     "build": "echo 'shared is internal, no build needed'"
   },
   "dependencies": {
-    "lodash-es": "^4.17.21"
+    "clsx": "^2.1.1",
+    "lodash-es": "^4.17.21",
+    "raf": "^3.4.1",
+    "tailwind-merge": "^2.6.0"
+  },
+  "peerDependencies": {
+    "omi": "^7.0.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12"

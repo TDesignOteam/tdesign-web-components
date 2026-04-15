@@ -1,10 +1,10 @@
 import generateBase64Url from '@common/js/watermark/generateBase64Url';
 import randomMovingStyle from '@common/js/watermark/randomMovingStyle';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { createStyleSheet } from '@tdesign/web-components-shared/_util/lightDom';
+import type { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, createRef, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { createStyleSheet } from '../_util/lightDom';
-import type { StyledProps } from '../common';
 import { TdWatermarkProps } from './type';
 import { createMutationObservable, getStyleStr } from './utils';
 

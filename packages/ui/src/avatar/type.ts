@@ -6,7 +6,7 @@
 
 import { ImageProps } from '../image';
 import { PopupProps } from '../popup';
-import { TNode, TElement } from '../common';
+import { TNode, TElement } from '@tdesign/web-components-shared/common';
 
 export interface TdAvatarProps {
   /**

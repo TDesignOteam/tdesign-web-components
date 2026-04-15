@@ -1,7 +1,7 @@
+import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, OmiProps, signal, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
-import { StyledProps, TNode } from '../common';
 import { TdCollapseProps } from './type';
 
 export interface CollapseProps extends TdCollapseProps, StyledProps {}

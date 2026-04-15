@@ -1,11 +1,11 @@
 import '../input';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import classNames from 'classnames';
 import { isObject } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-// import useControlled from '../_util/useControlled';
+// import useControlled from '@tdesign/web-components-shared/_util/useControlled';
 import { TdInputProps } from '../input';
 import { TdSelectInputProps } from './type';
 

@@ -1,12 +1,12 @@
 import './TabNav';
 import './tabPanel';
 
+import classname from '@tdesign/web-components-shared/_util/classname';
+import UseDragSorter from '@tdesign/web-components-shared/_util/useDragSorter';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { toArray } from 'lodash-es';
 import { Component, tag, VNode } from 'omi';
 
-import classname from '../_util/classname';
-import UseDragSorter from '../_util/useDragSorter';
-import { StyledProps, TNode } from '../common';
 import { TabValue, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 

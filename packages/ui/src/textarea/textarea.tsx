@@ -1,9 +1,9 @@
 import calcTextareaHeight from '@common/js/utils/calcTextareaHeight';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, createRef, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
-import { StyledProps } from '../common';
 import useLengthLimit from '../input/useLengthLimit';
 import { TdTextareaProps } from './type';
 

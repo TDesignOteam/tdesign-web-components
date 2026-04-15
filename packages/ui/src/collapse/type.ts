@@ -4,8 +4,8 @@
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
-import { TNode } from '../common';
-import type { ArrowDirection } from '../common/fake-arrow';
+import { TNode } from '@tdesign/web-components-shared/common';
+import type { ArrowDirection } from '@tdesign/web-components-shared/common/fake-arrow';
 
 export interface TdCollapseProps {
   /**

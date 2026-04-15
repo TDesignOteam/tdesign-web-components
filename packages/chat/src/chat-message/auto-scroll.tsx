@@ -1,10 +1,9 @@
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
-
-import { getClassPrefix } from '../_util/classname';
 
 import styles from '../chatbot/style/auto-scroll.less';
 

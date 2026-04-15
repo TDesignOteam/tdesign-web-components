@@ -1,9 +1,9 @@
 import 'tdesign-icons-web-components/esm/components/swap-right';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { Component, tag } from 'omi';
 
-import { getClassPrefix } from '../../_util/classname';
-import { convertToLightDomNode } from '../../_util/lightDom';
 import { type SuggestionItem } from '../../chat-engine';
 
 import styles from '../style/chat-item.less';

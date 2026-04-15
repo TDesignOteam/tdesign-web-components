@@ -1,8 +1,8 @@
-import '../common/check';
+import '@tdesign/web-components-shared/common/check';
 
+import { CheckProps } from '@tdesign/web-components-shared/common/index';
 import { Component, OmiProps, tag } from 'omi';
 
-import { CheckProps } from '../common/index';
 import { TdRadioProps } from './type';
 
 export type RadioProps = Omit<CheckProps, 'type'>;

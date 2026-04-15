@@ -1,6 +1,6 @@
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
 import { TdInputGroupProps } from './type';
 
 const classPrefix = getClassPrefix();

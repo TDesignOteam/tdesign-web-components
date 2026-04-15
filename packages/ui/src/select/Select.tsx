@@ -1,12 +1,12 @@
 import '../select-input';
 import './Option';
-import '../common/fake-arrow';
+import '@tdesign/web-components-shared/common/fake-arrow';
 import '../loading';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
 import { selectDefaultProps } from './defaultProps';
 import { SelectValue, TdOptionProps, TdSelectProps } from './type';
 

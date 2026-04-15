@@ -1,6 +1,6 @@
 import 'tdesign-web-components-chat/chatbot';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/switch';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/switch';
 // 公式能力引入，参考cherryMarkdown示例
 import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 

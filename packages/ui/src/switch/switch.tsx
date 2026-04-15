@@ -1,9 +1,9 @@
 import log from '@common/js/log';
+import classname, { classPrefix, getCommonClassName } from '@tdesign/web-components-shared/_util/classname';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, signal, tag } from 'omi';
 
-import classname, { classPrefix, getCommonClassName } from '../_util/classname';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps, TNode } from '../common';
 // import Loading from '../loading';
 import { SwitchValue, TdSwitchProps } from './type';
 

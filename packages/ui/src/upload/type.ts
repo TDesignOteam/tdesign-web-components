@@ -1,7 +1,7 @@
 import { FormatResponseContext, ResponseType, SizeLimitObj } from '@common/js/upload/types';
+import { PlainObject, StyledProps, TNode } from '@tdesign/web-components-shared/common';
 
 import { ButtonProps } from '../button';
-import { PlainObject, StyledProps, TNode } from '../common';
 
 export interface UploadProps extends TdUploadProps, StyledProps {}
 

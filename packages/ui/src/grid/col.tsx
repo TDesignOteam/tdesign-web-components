@@ -1,9 +1,9 @@
+import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setStyle } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { isObject } from 'lodash-es';
 import { Component, tag } from 'omi';
 
-import classNames, { getClassPrefix } from '../_util/classname';
-import { setStyle } from '../_util/dom';
-import { StyledProps, TNode } from '../common';
 import { colDefaultProps } from './defaultProps';
 import { TdColProps, TdRowProps } from './type';
 

@@ -1,11 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/arrow-down';
 import '../chat-message';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { debounce, throttle } from 'lodash-es';
 import { Component, createRef, signal, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
 import type { TdChatListProps, TdChatListScrollToOptions } from './type';
 
 import styles from './style/chat-list.less';

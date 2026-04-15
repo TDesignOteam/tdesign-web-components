@@ -1,11 +1,11 @@
 import './gradient';
-import '../common/portal';
+import '@tdesign/web-components-shared/common/portal';
 
+import classnames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { addClass, canUseDocument, removeClass } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps, Styles } from '@tdesign/web-components-shared/common';
 import { Component, OmiProps, tag } from 'omi';
 
-import classnames, { getClassPrefix } from '../_util/classname';
-import { addClass, canUseDocument, removeClass } from '../_util/dom';
-import { StyledProps, Styles } from '../common';
 import { TdLoadingProps } from './type';
 
 export interface LoadingProps extends TdLoadingProps, StyledProps {}

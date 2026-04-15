@@ -1,6 +1,6 @@
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
 import { ListItemMetaProps } from './types';
 
 const ListItemMetaClassNamePrefix = (className: string) => `${getClassPrefix()}-list-item__meta${className}`;

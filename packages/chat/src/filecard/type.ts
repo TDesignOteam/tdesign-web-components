@@ -1,7 +1,7 @@
 import { type UploadFile } from '@common/js/upload/types';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 
 import { AttachmentType } from '../chat-engine';
-import { StyledProps } from '../common';
 
 export interface TdAttachmentItem extends UploadFile {
   key?: string;

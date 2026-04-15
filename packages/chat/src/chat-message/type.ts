@@ -1,3 +1,5 @@
+import type { TNode } from '@tdesign/web-components-shared/common';
+
 import type { TdChatActionsName } from '../chat-action';
 import type {
   AIMessageContent,
@@ -8,7 +10,6 @@ import type {
   UserMessageContent,
 } from '../chat-engine';
 import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
-import type { TNode } from '../common';
 import type { TdChatMarkdownContentProps } from './content/markdown-content';
 
 type TdChatContentSearchProps = {

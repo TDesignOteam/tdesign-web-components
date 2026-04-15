@@ -1,11 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/close';
 
+import classname from '@tdesign/web-components-shared/_util/classname';
+import noop from '@tdesign/web-components-shared/_util/noop';
+import { DragSortInnerProps } from '@tdesign/web-components-shared/_util/useDragSorter';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, tag } from 'omi';
 
-import classname from '../_util/classname';
-import noop from '../_util/noop';
-import { DragSortInnerProps } from '../_util/useDragSorter';
-import { StyledProps } from '../common';
 import type { TdTabPanelProps, TdTabsProps } from './type';
 import { useTabClass } from './useTabClass';
 

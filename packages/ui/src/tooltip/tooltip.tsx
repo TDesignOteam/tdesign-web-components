@@ -1,9 +1,9 @@
 import '../popup';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createElement, createRef, OmiProps, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
 import { type PopupVisibleChangeContext } from '../popup';
 import { defaultProps as popupDefaultProps } from '../popup/popup';
 import { PopupTypes } from '../popup/popup';

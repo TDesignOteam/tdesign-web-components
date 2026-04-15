@@ -7,11 +7,11 @@ import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
 import '@tdesign/web-components-ui/tooltip';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { MessagePlugin } from '@tdesign/web-components-ui/message';
 import { Component, signal, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { setExportparts } from '../_util/dom';
 import { type ChatComment } from '../chat-engine';
 import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
 

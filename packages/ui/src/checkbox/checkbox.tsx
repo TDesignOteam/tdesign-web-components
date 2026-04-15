@@ -1,7 +1,7 @@
+import clsx, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, signal, tag } from 'omi';
 
-import clsx, { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
 import { TdCheckboxProps } from './type';
 
 export const CheckboxContextKey = 'CheckboxContextKey';

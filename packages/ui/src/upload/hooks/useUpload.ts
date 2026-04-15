@@ -9,9 +9,9 @@ import {
 } from '@common/js/upload/main';
 import { OnResponseErrorContext, SizeLimitObj } from '@common/js/upload/types';
 import { getFileList } from '@common/js/upload/utils';
+import { classPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { computed, createRef, signal, SignalValue } from 'omi';
 
-import { classPrefix } from '../../_util/classname';
 import { TdUploadProps, UploadChangeContext, UploadFile, UploadProps, UploadRemoveContext } from '../type';
 import { t, toRef } from '../utils';
 

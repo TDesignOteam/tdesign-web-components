@@ -1,4 +1,4 @@
-import { SizeEnum, TNode } from '../common';
+import { SizeEnum, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdSpaceProps {
   /**

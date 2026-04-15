@@ -1,4 +1,4 @@
-import { getClassPrefix } from '../_util/classname';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 
 export const useTabClass = () => {
   const classPrefix = getClassPrefix();

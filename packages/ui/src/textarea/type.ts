@@ -1,4 +1,4 @@
-import { TNode } from '../common';
+import { TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdTextareaProps {
   /**

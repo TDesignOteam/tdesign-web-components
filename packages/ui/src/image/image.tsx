@@ -5,10 +5,10 @@ import 'tdesign-icons-web-components/esm/components/image-error';
 import 'tdesign-icons-web-components/esm/components/image-1';
 
 import observe from '@common/js/utils/observe';
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
 import { TdImageProps } from './type';
 
 export interface ImageProps extends TdImageProps, StyledProps {}

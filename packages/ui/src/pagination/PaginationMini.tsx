@@ -5,10 +5,10 @@ import 'tdesign-icons-web-components/esm/components/chevron-up';
 import 'tdesign-icons-web-components/esm/components/round';
 import '../button';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import classNames from 'classnames';
 
-import { getClassPrefix } from '../_util/classname';
-import { StyledProps } from '../common';
 import { paginationMiniDefaultProps } from './defaultProps';
 import { JumperDisabledConfig, JumperTipsConfig, TdPaginationMiniProps } from './type';
 

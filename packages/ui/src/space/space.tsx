@@ -1,8 +1,8 @@
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { type StyledProps } from '@tdesign/web-components-shared/common';
 import { toArray } from 'lodash-es';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { type StyledProps } from '../common';
 import { TdSpaceProps } from './type';
 
 export interface SpaceProps extends TdSpaceProps, StyledProps {}

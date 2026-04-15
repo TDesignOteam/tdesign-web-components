@@ -1,12 +1,12 @@
 import './avatar';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { toArray } from 'lodash-es';
 import { classNames, cloneElement, Component, OmiProps, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import parseTNode from '../_util/parseTNode';
-import { StyledProps } from '../common';
 import { TdAvatarGroupProps } from './type';
 
 export interface AvatarGroupProps extends TdAvatarGroupProps, StyledProps {}

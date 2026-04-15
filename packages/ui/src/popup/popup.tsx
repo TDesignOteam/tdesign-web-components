@@ -1,16 +1,16 @@
 import 'omi-transition';
 import './popupTrigger';
-import '../common/portal';
+import '@tdesign/web-components-shared/common/portal';
 
 import { getIEVersion } from '@common/js/utils/helper';
 import { createPopper, Instance } from '@popperjs/core';
+import classname from '@tdesign/web-components-shared/_util/classname';
+import { getChildrenArray } from '@tdesign/web-components-shared/_util/component';
+import { domContains, setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { debounce, throttle } from 'lodash-es';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
-import classname from '../_util/classname';
-import { getChildrenArray } from '../_util/component';
-import { domContains, setExportparts } from '../_util/dom';
-import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext, TdPopupProps } from './type';
 import { attachListeners, getPopperPlacement, triggers } from './utils';
 

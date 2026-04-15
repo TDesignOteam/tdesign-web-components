@@ -9,7 +9,7 @@ import { PopupProps } from '../popup';
 import { TagInputProps, TagInputValue, TagInputChangeContext } from '../tag-input';
 import { TagProps } from '../tag';
 import { PopupVisibleChangeContext } from '../popup';
-import { TNode, TElement, SizeEnum } from '../common';
+import { TNode, TElement, SizeEnum } from '@tdesign/web-components-shared/common';
 
 export interface TdSelectInputProps {
   /**

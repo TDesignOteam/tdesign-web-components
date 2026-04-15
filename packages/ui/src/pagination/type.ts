@@ -1,4 +1,4 @@
-import { SizeEnum } from '../common';
+import { SizeEnum } from '@tdesign/web-components-shared/common';
 
 export type JumperTrigger = 'prev' | 'current' | 'next';
 

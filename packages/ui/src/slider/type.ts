@@ -1,4 +1,5 @@
-import { TNode } from '../common';
+import { TNode } from '@tdesign/web-components-shared/common';
+
 import { InputNumberProps } from '../input-number';
 import { TooltipProps } from '../tooltip';
 

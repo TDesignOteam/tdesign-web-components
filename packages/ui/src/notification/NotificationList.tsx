@@ -1,11 +1,11 @@
 import './Notification';
 
+import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { Styles } from '@tdesign/web-components-shared/common';
 import { noop } from 'lodash-es';
 import { Component, createRef, OmiProps, render, tag } from 'omi';
 
-import { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { Styles } from '../common';
 import {
   NotificationInfoOptions,
   NotificationInstance,

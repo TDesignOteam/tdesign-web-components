@@ -1,9 +1,9 @@
 // import './list-item-meta'
 import '../loading/loading';
 
+import classnames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, OmiProps, tag } from 'omi';
 
-import classnames, { getClassPrefix } from '../_util/classname';
 import { ListItemProps } from './types';
 
 const ListItemClassNamePrefix = (className: string) => `${getClassPrefix()}-list-item${className}`;

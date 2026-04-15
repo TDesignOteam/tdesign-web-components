@@ -1,11 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/info-circle-filled';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
+import { parseContentTNode } from '@tdesign/web-components-shared/_util/parseTNode';
 import { isString } from 'lodash-es';
 import { cloneElement, Component, OmiProps, tag, VNode } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { convertToLightDomNode } from '../_util/lightDom';
-import { parseContentTNode } from '../_util/parseTNode';
 import { ButtonProps } from '../button';
 import { PopconfirmProps } from './popconfirm';
 import { PopconfirmVisibleChangeContext, TdPopconfirmProps } from './type';

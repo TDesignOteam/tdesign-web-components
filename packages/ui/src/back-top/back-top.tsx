@@ -1,10 +1,10 @@
 import 'tdesign-icons-web-components/esm/components/align-top';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { scrollTo } from '@tdesign/web-components-shared/_util/dom';
+import { AttachNode, StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, OmiProps, signal, SignalValue, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../_util/classname';
-import { scrollTo } from '../_util/dom';
-import { AttachNode, StyledProps } from '../common';
 import { TdBackTopProps } from './type';
 
 export interface BackTopProps extends TdBackTopProps, StyledProps {}

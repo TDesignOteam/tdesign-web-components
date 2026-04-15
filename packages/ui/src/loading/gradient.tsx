@@ -1,7 +1,6 @@
 import circleAdapter from '@common/js/loading/circle-adapter';
+import classnames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, createRef, tag } from 'omi';
-
-import classnames, { getClassPrefix } from '../_util/classname';
 
 /**
  * Loading组件 渐变部分实现

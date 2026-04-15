@@ -1,4 +1,4 @@
-import { ClassName, SizeEnum, TElement, TNode } from '../common';
+import { ClassName, SizeEnum, TElement, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdInputProps {
   /**

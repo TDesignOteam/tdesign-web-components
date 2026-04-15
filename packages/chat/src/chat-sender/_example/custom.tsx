@@ -1,13 +1,13 @@
 import 'tdesign-icons-web-components/esm/components/clear';
 import 'tdesign-icons-web-components/esm/components/focus';
 import 'tdesign-web-components-chat/chatbot';
-import 'tdesign-web-components/tooltip';
-import 'tdesign-web-components/button';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/tooltip';
+import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components-ui/space';
 
+import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { Component, createRef, signal } from 'omi';
 
-import { convertToLightDomNode } from '../../_util/lightDom';
 import ChatSender from '../chat-sender';
 
 export default class CustomExample extends Component {

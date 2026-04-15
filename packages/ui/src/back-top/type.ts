@@ -1,4 +1,4 @@
-import { AttachNode, TNode } from '../common';
+import { AttachNode, TNode } from '@tdesign/web-components-shared/common';
 
 export interface TdBackTopProps {
   /**

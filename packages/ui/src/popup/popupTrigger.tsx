@@ -1,7 +1,6 @@
+import { TNode } from '@tdesign/web-components-shared/common';
 import { toArray } from 'lodash-es';
 import { cloneElement, Component, tag, VNode } from 'omi';
-
-import { TNode } from '../common';
 
 @tag('t-trigger')
 export default class Trigger extends Component {

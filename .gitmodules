@@ -1,6 +1,6 @@
 [submodule "packages/_common"]
 	path = packages/_common
 	url = https://github.com/Tencent/tdesign-common.git
-[submodule "packages/ai-core"]
-	path = packages/ai-core
+[submodule "packages/_ai-core"]
+	path = packages/_ai-core
 	url = https://github.com/TDesignOteam/tdesign-ai-core.git

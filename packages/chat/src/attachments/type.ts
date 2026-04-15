@@ -1,4 +1,5 @@
-import { StyledProps } from '../common';
+import { StyledProps } from '@tdesign/web-components-shared/common';
+
 import { TdAttachmentItem } from '../filecard';
 
 export interface TdAttachmentsProps extends StyledProps {

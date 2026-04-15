@@ -2,10 +2,10 @@ import './slider-button';
 import './slider-mark';
 import '../input-number';
 
+import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import classname, { classPrefix } from '../_util/classname';
-import { StyledProps, TNode } from '../common';
 import { SliderValue, TdSliderProps } from './type';
 
 export interface SliderProps extends TdSliderProps, StyledProps {}

@@ -1,6 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/file-copy';
 import '@tdesign/web-components-ui/message';
 
+import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { MessagePlugin } from '@tdesign/web-components-ui/message';
 import hljs from 'highlight.js/lib/core';
 // 只导入常用语言包
@@ -29,7 +30,6 @@ import yaml from 'highlight.js/lib/languages/yaml';
 import { escape } from 'lodash-es';
 import { Component, tag } from 'omi';
 
-import classname, { getClassPrefix } from '../../_util/classname';
 import type { TdChatCodeProps } from '../../chatbot/type';
 
 const className = `${getClassPrefix()}-chat__text__markdown__code`;
