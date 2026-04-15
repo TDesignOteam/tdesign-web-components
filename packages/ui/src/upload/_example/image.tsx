@@ -1,5 +1,5 @@
+import { getFileUrlByFileRaw } from '@common/js/upload/utils';
 import { Component, createRef, signal } from 'omi';
-import { getFileUrlByFileRaw } from 'tdesign-web-components/_common/js/upload/utils';
 import Button from 'tdesign-web-components/button';
 import Space from 'tdesign-web-components/space';
 import type { UploadFile, UploadProps } from 'tdesign-web-components/upload';

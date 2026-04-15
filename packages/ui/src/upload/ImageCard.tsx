@@ -4,8 +4,9 @@ import 'tdesign-icons-web-components/esm/components/add';
 import '../image';
 import '../loading';
 
-import zhCn from '../_common/js/global-config/locale/zh_CN';
-import { abridgeName } from '../_common/js/upload/utils';
+import zhCn from '@common/js/global-config/locale/zh_CN';
+import { abridgeName } from '@common/js/upload/utils';
+
 import classNames from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 // import ImageViewer from '../../image-viewer';

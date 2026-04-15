@@ -1,4 +1,5 @@
-import { type UploadFile } from '../_common/js/upload/types';
+import { type UploadFile } from '@common/js/upload/types';
+
 import { AttachmentType } from '../chat-engine';
 import { StyledProps } from '../common';
 

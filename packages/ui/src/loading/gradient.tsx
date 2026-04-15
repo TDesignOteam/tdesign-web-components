@@ -1,6 +1,6 @@
+import circleAdapter from '@common/js/loading/circle-adapter';
 import { Component, createRef, tag } from 'omi';
 
-import circleAdapter from '../_common/js/loading/circle-adapter';
 import classnames, { getClassPrefix } from '../_util/classname';
 
 /**

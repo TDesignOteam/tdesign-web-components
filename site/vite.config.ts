@@ -27,7 +27,7 @@ export default ({ mode }) => {
         '@': resolve('../'),
         '@site': resolve('./'),
         '@docs': resolve('./docs'),
-        '@common': resolve('../_common/'),
+        '@common': resolve('../packages/_common/'),
         // Monorepo packages
         '@tdesign/web-components-ui': resolve('../packages/ui/src/'),
         '@tdesign/web-components-chat': resolve('../packages/chat/src/'),

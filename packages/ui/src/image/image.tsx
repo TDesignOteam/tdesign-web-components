@@ -4,9 +4,9 @@ import '../space';
 import 'tdesign-icons-web-components/esm/components/image-error';
 import 'tdesign-icons-web-components/esm/components/image-1';
 
+import observe from '@common/js/utils/observe';
 import { classNames, Component, createRef, OmiProps, tag } from 'omi';
 
-import observe from '../_common/js/utils/observe';
 import { getClassPrefix } from '../_util/classname';
 import { StyledProps } from '../common';
 import { TdImageProps } from './type';

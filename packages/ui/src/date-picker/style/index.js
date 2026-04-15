@@ -1,6 +1,6 @@
 import { css, globalCSS } from 'omi';
 
-import styles from '../../_common/style/web/components/date-picker/_index.less';
+import styles from '@common/style/web/components/date-picker/_index.less';
 import baseStyles from './index.less'
 
 export const styleSheet = css`

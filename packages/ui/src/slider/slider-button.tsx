@@ -1,8 +1,8 @@
 import '../tooltip';
 
+import { formatLabel } from '@common/js/slider/utils';
 import { bind, Component, createRef, signal, tag } from 'omi';
 
-import { formatLabel } from '../_common/js/slider/utils';
 import classname, { classPrefix } from '../_util/classname';
 import { TdSliderProps } from './type';
 

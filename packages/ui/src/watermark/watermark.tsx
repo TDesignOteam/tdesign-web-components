@@ -1,7 +1,7 @@
+import generateBase64Url from '@common/js/watermark/generateBase64Url';
+import randomMovingStyle from '@common/js/watermark/randomMovingStyle';
 import { classNames, Component, createRef, signal, tag } from 'omi';
 
-import generateBase64Url from '../_common/js/watermark/generateBase64Url';
-import randomMovingStyle from '../_common/js/watermark/randomMovingStyle';
 import { getClassPrefix } from '../_util/classname';
 import { createStyleSheet } from '../_util/lightDom';
 import type { StyledProps } from '../common';

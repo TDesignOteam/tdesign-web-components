@@ -1,7 +1,7 @@
+import { pxCompat } from '@common/js/utils/helper';
 import { isNumber } from 'lodash-es';
 import { classNames, Component, createRef, tag } from 'omi';
 
-import { pxCompat } from '../_common/js/utils/helper';
 import { getClassPrefix } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, Styles, TNode } from '../common';

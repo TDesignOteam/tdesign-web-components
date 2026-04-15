@@ -1,6 +1,6 @@
+import calcTextareaHeight from '@common/js/utils/calcTextareaHeight';
 import { classNames, Component, createRef, tag } from 'omi';
 
-import calcTextareaHeight from '../_common/js/utils/calcTextareaHeight';
 import { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
 import { StyledProps } from '../common';

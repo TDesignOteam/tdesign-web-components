@@ -4,10 +4,10 @@ import 'tdesign-icons-web-components/esm/components/chevron-right';
 import './TabNavItem';
 import './TabBar';
 
+import { calcMaxOffset, calcPrevOrNextOffset, calculateOffset, calcValidOffset } from '@common/js/tabs/base';
 import { debounce, omit, toArray } from 'lodash-es';
 import { Component, createRef, signal, tag, VNode } from 'omi';
 
-import { calcMaxOffset, calcPrevOrNextOffset, calculateOffset, calcValidOffset } from '../_common/js/tabs/base';
 import classname from '../_util/classname';
 import noop from '../_util/noop';
 import parseTNode from '../_util/parseTNode';

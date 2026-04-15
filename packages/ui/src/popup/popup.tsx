@@ -2,11 +2,11 @@ import 'omi-transition';
 import './popupTrigger';
 import '../common/portal';
 
+import { getIEVersion } from '@common/js/utils/helper';
 import { createPopper, Instance } from '@popperjs/core';
 import { debounce, throttle } from 'lodash-es';
 import { cloneElement, Component, createRef, OmiProps, tag, VNode } from 'omi';
 
-import { getIEVersion } from '../_common/js/utils/helper';
 import classname from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
 import { domContains, setExportparts } from '../_util/dom';

@@ -5,9 +5,6 @@ import 'tdesign-icons-web-components/esm/components/remove';
 import '../button';
 import '../input';
 
-import { isEqual, pick } from 'lodash-es';
-import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
-
 import {
   canAddNumber,
   canInputNumber,
@@ -19,7 +16,10 @@ import {
   getStepValue,
   InputNumberErrorType,
   largeNumberToFixed,
-} from '../_common/js/input-number/number';
+} from '@common/js/input-number/number';
+import { isEqual, pick } from 'lodash-es';
+import { bind, Component, createRef, OmiProps, signal, tag } from 'omi';
+
 import classname, { getClassPrefix, getCommonClassName } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { StyledProps } from '../common';

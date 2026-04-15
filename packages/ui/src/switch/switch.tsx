@@ -1,6 +1,6 @@
+import log from '@common/js/log';
 import { bind, Component, signal, tag } from 'omi';
 
-import log from '../_common/js/log';
 import classname, { classPrefix, getCommonClassName } from '../_util/classname';
 import parseTNode from '../_util/parseTNode';
 import { StyledProps, TNode } from '../common';

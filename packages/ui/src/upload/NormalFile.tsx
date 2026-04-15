@@ -5,7 +5,8 @@ import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import 'tdesign-icons-web-components/esm/components/close';
 import '../loading';
 
-import { abridgeName } from '../_common/js/upload/utils';
+import { abridgeName } from '@common/js/upload/utils';
+
 import classNames from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { CommonDisplayFileProps } from './interface';

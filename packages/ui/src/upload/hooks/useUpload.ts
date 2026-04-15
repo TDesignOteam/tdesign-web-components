@@ -1,6 +1,4 @@
-import { computed, createRef, signal, SignalValue } from 'omi';
-
-import zhCn from '../../_common/js/global-config/locale/zh_CN';
+import zhCn from '@common/js/global-config/locale/zh_CN';
 import {
   formatToUploadFile,
   getDisplayFiles,
@@ -8,9 +6,11 @@ import {
   getTriggerTextField,
   upload,
   validateFile,
-} from '../../_common/js/upload/main';
-import { OnResponseErrorContext, SizeLimitObj } from '../../_common/js/upload/types';
-import { getFileList } from '../../_common/js/upload/utils';
+} from '@common/js/upload/main';
+import { OnResponseErrorContext, SizeLimitObj } from '@common/js/upload/types';
+import { getFileList } from '@common/js/upload/utils';
+import { computed, createRef, signal, SignalValue } from 'omi';
+
 import { classPrefix } from '../../_util/classname';
 import { TdUploadProps, UploadChangeContext, UploadFile, UploadProps, UploadRemoveContext } from '../type';
 import { t, toRef } from '../utils';

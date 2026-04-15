@@ -4,12 +4,7 @@ import 'tdesign-icons-web-components/esm/components/chevron-right';
 import '../../select-input';
 import 'dayjs/locale/zh-cn';
 
-import classNames from 'classnames';
-import dayjs from 'dayjs';
-import isoWeek from 'dayjs/plugin/isoWeek';
-import { Component, createRef, OmiProps, tag } from 'omi';
-
-import { parseToDayjs } from '../../_common/js/date-picker/format';
+import { parseToDayjs } from '@common/js/date-picker/format';
 import {
   extractTimeObj,
   flagActive,
@@ -18,7 +13,12 @@ import {
   getWeeks,
   getYears,
   isSame,
-} from '../../_common/js/date-picker/utils';
+} from '@common/js/date-picker/utils';
+import classNames from 'classnames';
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+import { Component, createRef, OmiProps, tag } from 'omi';
+
 import { getClassPrefix } from '../../_util/classname';
 import { PaginationMini } from '../../pagination/PaginationMini';
 import { TdPaginationMiniProps } from '../../pagination/type';

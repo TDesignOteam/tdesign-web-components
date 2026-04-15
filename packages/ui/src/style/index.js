@@ -1,8 +1,8 @@
 import { css, globalCSS } from 'omi';
 
-import globalStye from '../_common/style/web/_global.less';
-import popupStyle from '../_common/style/web/components/popup/_index.less';
-import theme from '../_common/style/web/theme/_index.less';
+import globalStye from '@common/style/web/_global.less';
+import popupStyle from '@common/style/web/components/popup/_index.less';
+import theme from '@common/style/web/theme/_index.less';
 
 const tdesignGlobalStyleId = 'tdesign-wc-global-style';
 

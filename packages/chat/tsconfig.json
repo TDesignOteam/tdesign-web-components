@@ -10,7 +10,7 @@
       "@tdesign/web-components-ui/*": ["../ui/src/*"],
       "@tdesign/web-components-shared": ["../shared/src"],
       "@tdesign/web-components-shared/*": ["../shared/src/*"],
-      "@common/*": ["src/_common/*"],
+      "@common/*": ["../_common/*"],
       "@": ["src"],
       "../button": ["../ui/src/button"],
       "../textarea": ["../ui/src/textarea"],
@@ -26,5 +26,5 @@
     }
   },
   "include": ["src"],
-  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"]
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "../_common", "dist", "lib", "esm", "cjs", "es"]
 }

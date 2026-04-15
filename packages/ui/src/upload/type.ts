@@ -1,4 +1,5 @@
-import { FormatResponseContext, ResponseType, SizeLimitObj } from '../_common/js/upload/types';
+import { FormatResponseContext, ResponseType, SizeLimitObj } from '@common/js/upload/types';
+
 import { ButtonProps } from '../button';
 import { PlainObject, StyledProps, TNode } from '../common';
 

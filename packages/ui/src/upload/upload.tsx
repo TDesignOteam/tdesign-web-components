@@ -11,10 +11,10 @@ import '../input';
 import '../image';
 import '../loading';
 
+import zhCn from '@common/js/global-config/locale/zh_CN';
+import { abridgeName } from '@common/js/upload/utils';
 import { classNames, Component, css, OmiProps, signal, SignalValue, tag } from 'omi';
 
-import zhCn from '../_common/js/global-config/locale/zh_CN';
-import { abridgeName } from '../_common/js/upload/utils';
 import { classPrefix } from '../_util/classname';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { ButtonProps } from '../button';

@@ -1,7 +1,7 @@
+import log from '@common/js/log';
 import { isFunction } from 'lodash-es';
 import { cloneElement, VNode } from 'omi';
 
-import log from '../_common/js/log';
 import { TNode } from '../common';
 
 // 解析 TNode 数据结构
