@@ -1,4 +1,4 @@
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 import 'tdesign-icons-web-components/esm/components/system-2';
 

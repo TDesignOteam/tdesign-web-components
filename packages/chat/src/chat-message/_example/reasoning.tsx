@@ -1,8 +1,8 @@
-import 'tdesign-web-components/chat-message';
+import 'tdesign-web-components-chat/chat-message';
 
 import { Component } from 'omi';
 
-import type { AIMessageContent, ChatMessagesData } from '../../chat-engine/type';
+import type { AIMessageContent, ChatMessagesData } from '../../chat-engine';
 
 export default class ReasoningExample extends Component {
   // 模拟 AGUI 协议中的推理内容数据

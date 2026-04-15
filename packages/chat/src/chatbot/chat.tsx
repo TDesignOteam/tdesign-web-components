@@ -9,7 +9,7 @@ import classname, { getClassPrefix } from '../_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '../_util/component';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
-import ChatEngine, { getMessageContentForCopy, isAIMessage } from '../chat-engine';
+import { ChatEngine, getMessageContentForCopy, isAIMessage } from '../chat-engine';
 import {
   AIMessageContent,
   type AttachmentItem,
@@ -18,7 +18,7 @@ import {
   type ChatMessageStore,
   type ChatRequestParams,
   type ChatStatus,
-} from '../chat-engine/type';
+} from '../chat-engine';
 import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-message/type';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';

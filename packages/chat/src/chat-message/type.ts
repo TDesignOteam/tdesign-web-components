@@ -6,7 +6,7 @@ import type {
   ChatMessagesData,
   ChatMessageStatus,
   UserMessageContent,
-} from '../chat-engine/type';
+} from '../chat-engine';
 import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
 import type { TNode } from '../common';
 import type { TdChatMarkdownContentProps } from './content/markdown-content';

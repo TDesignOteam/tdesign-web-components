@@ -5,7 +5,7 @@ import type {
   ChatRequestParams,
   ChatServiceConfigSetter,
   ChatStatus,
-} from '../chat-engine/type';
+} from '../chat-engine';
 import type { TdChatMessageProps } from '../chat-message';
 import type { TdChatSenderProps } from '../chat-sender';
 import type { StyledProps, TNode } from '../common';

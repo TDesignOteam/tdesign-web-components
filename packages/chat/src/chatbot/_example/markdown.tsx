@@ -1,4 +1,4 @@
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 import 'tdesign-web-components/space';
 import 'tdesign-web-components/switch';
 // 公式能力引入，参考cherryMarkdown示例

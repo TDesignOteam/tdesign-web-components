@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { Component } from 'omi';
-import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components/chatbot';
+import type { TdChatMessageConfig, TdChatMessageProps } from 'tdesign-web-components-chat/chatbot';
 
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../../chat-engine/type';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '../../chat-engine';
 import { TdChatMarkdownContentProps } from '../../chat-message/content/markdown-content';
 
 const defaultChunkParser = (chunk): AIMessageContent => {

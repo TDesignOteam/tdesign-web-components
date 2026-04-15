@@ -1,4 +1,4 @@
-import 'tdesign-web-components/filecard';
+import 'tdesign-web-components-chat/filecard';
 import 'tdesign-web-components/space';
 
 import { Component } from 'omi';

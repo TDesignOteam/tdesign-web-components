@@ -1,4 +1,4 @@
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 import 'tdesign-web-components/space';
 
 import { Component } from 'omi';
@@ -6,7 +6,7 @@ import { Component } from 'omi';
 import { TdChatMessageProps } from '../../chat-message/type';
 
 // customThinking扩展类型定义
-declare module '../../chat-engine/type' {
+declare global {
   interface AIContentTypeOverrides {
     customThinking: {
       type: 'customThinking';

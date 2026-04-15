@@ -1,6 +1,6 @@
 import 'tdesign-icons-web-components/esm/components/clear';
 import 'tdesign-icons-web-components/esm/components/focus';
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 import 'tdesign-web-components/tooltip';
 import 'tdesign-web-components/button';
 import 'tdesign-web-components/space';

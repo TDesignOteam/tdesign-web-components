@@ -20,6 +20,7 @@ import classname, { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
 import { convertToLightDomNode } from '../_util/lightDom';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
+import type { ChatMessagesData } from '../chat-engine';
 import {
   isAttachmentContent,
   isImageContent,
@@ -31,7 +32,6 @@ import {
   isThinkingContent,
   isUserMessage,
 } from '../chat-engine';
-import type { ChatMessagesData } from '../chat-engine/type';
 import { renderAttachments } from './content/attachment-content';
 import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';

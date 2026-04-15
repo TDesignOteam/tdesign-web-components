@@ -1,4 +1,4 @@
-import 'tdesign-web-components/attachments';
+import 'tdesign-web-components-chat/attachments';
 import 'tdesign-web-components/space';
 
 import { Component } from 'omi';

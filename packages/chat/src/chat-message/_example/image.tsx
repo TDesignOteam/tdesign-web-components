@@ -1,7 +1,7 @@
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 
 import { Component, signal } from 'omi';
-import { ChatStatus } from 'tdesign-web-components/chat-engine';
+import { ChatStatus } from 'tdesign-web-components-chat/chat-engine';
 
 export default class BasicExample extends Component {
   inputValue = signal('输入内容');

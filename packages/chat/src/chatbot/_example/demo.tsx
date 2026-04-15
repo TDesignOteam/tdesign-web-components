@@ -1,14 +1,14 @@
 /* eslint-disable no-await-in-loop */
-import 'tdesign-web-components/chatbot';
+import 'tdesign-web-components-chat/chatbot';
 
 import { Component, createRef } from 'omi';
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from 'tdesign-web-components/chat-engine';
-import type { TdChatMessageConfig } from 'tdesign-web-components/chatbot';
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from 'tdesign-web-components-chat/chat-engine';
+import type { TdChatMessageConfig } from 'tdesign-web-components-chat/chatbot';
 
 import Chatbot from '../chat';
 
 // 天气扩展类型定义
-declare module 'tdesign-web-components/chat-engine/type' {
+declare global {
   interface AIContentTypeOverrides {
     weather: ChatBaseContent<
       'weather',
