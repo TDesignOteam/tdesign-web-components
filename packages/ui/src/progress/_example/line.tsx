@@ -1,6 +1,6 @@
-import 'tdesign-web-components/progress';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/divider';
+import '@tdesign/web-components-ui/progress';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/divider';
 
 import { Component } from 'omi';
 

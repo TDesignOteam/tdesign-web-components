@@ -1,5 +1,5 @@
-import 'tdesign-web-components/card';
-import 'tdesign-web-components/comment';
+import '@tdesign/web-components-ui/card';
+import '@tdesign/web-components-ui/comment';
 
 import { Component } from 'omi';
 

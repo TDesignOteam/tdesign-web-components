@@ -1,11 +1,11 @@
 import 'tdesign-icons-web-components/esm/components/jump';
 import '@tdesign/web-components-ui/collapse';
 
+import { ChatMessageStatus, ReferenceItem } from '@tdesign/web-components-chat/chat-engine';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { CollapseValue } from '@tdesign/web-components-ui/collapse';
 import { Component, OmiProps, signal, tag } from 'omi';
 
-import { ChatMessageStatus, ReferenceItem } from '../../chat-engine';
 import type { TdChatContentProps } from '../type';
 
 import styles from '../style/chat-item.less';

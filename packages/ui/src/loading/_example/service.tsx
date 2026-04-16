@@ -1,8 +1,8 @@
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/button';
 import '../../button';
 
+import { loading } from '@tdesign/web-components-ui/loading';
 import { Component } from 'omi';
-import { loading } from 'tdesign-web-components/loading';
 
 export default class LoadingService extends Component {
   //   static isLightDOM = true

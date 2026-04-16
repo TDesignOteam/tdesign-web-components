@@ -1,7 +1,7 @@
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 
+import { ChatStatus } from '@tdesign/web-components-chat/chat-engine';
 import { Component, signal } from 'omi';
-import { ChatStatus } from 'tdesign-web-components-chat/chat-engine';
 
 // 用户消息数据
 const userMsgData = {

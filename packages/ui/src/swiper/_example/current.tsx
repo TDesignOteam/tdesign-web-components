@@ -1,5 +1,5 @@
-import 'tdesign-web-components/swiper';
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/swiper';
+import '@tdesign/web-components-ui/button';
 
 import { Component } from 'omi';
 

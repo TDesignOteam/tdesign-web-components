@@ -1,7 +1,7 @@
-import 'tdesign-web-components/tag-input';
+import '@tdesign/web-components-ui/tag-input';
 
+import { MessagePlugin } from '@tdesign/web-components-ui/message';
 import { Component } from 'omi';
-import { MessagePlugin } from 'tdesign-web-components/message';
 
 export default class TagInputLimit extends Component {
   tags = [];

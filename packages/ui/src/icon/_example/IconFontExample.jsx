@@ -1,6 +1,6 @@
 import 'tdesign-icons-web-components/esm/iconfont/index.css';
 import 'tdesign-icons-web-components/esm/iconfont';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/space';
 
 export default function IconFontExample() {
   return (

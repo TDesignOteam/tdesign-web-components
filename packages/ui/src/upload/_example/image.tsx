@@ -1,9 +1,9 @@
 import { getFileUrlByFileRaw } from '@common/js/upload/utils';
+import Button from '@tdesign/web-components-ui/button';
+import Space from '@tdesign/web-components-ui/space';
+import type { UploadFile, UploadProps } from '@tdesign/web-components-ui/upload';
+import Upload from '@tdesign/web-components-ui/upload';
 import { Component, createRef, signal } from 'omi';
-import Button from 'tdesign-web-components/button';
-import Space from 'tdesign-web-components/space';
-import type { UploadFile, UploadProps } from 'tdesign-web-components/upload';
-import Upload from 'tdesign-web-components/upload';
 
 export default class UploadExample extends Component {
   uploadRef1 = createRef<InstanceType<typeof Upload>>();

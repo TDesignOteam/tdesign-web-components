@@ -10,7 +10,6 @@ export * from './_util/eventDispose';
 export * from './_util/helper';
 export * from './_util/icon';
 export * from './_util/lightDom';
-export * from './_util/linearGradient';
 export * from './_util/noop';
 export * from './_util/parseTNode';
 export * from './_util/useControlled';

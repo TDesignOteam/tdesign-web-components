@@ -1,5 +1,5 @@
-import 'tdesign-web-components/tag';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/tag';
+import '@tdesign/web-components-ui/space';
 import 'tdesign-icons-web-components/esm/components/discount';
 import 'tdesign-icons-web-components/esm/components/add';
 

@@ -1,7 +1,7 @@
-import 'tdesign-web-components/button';
-import 'tdesign-web-components/dropdown';
+import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components-ui/dropdown';
 
-import { MessagePlugin } from '../../message';
+import { MessagePlugin } from '@tdesign/web-components-ui/message';
 
 export default function BasicDropdown() {
   const options = Array.from({ length: 20 }).map((v, k) => ({

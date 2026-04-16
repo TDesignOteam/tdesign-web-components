@@ -6,7 +6,7 @@ import 'tdesign-icons-web-components/esm/components/close';
 import 'tdesign-icons-web-components/esm/components/error';
 
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
-import getBackgroundColor from '@tdesign/web-components-shared/_util/linearGradient';
+import { getBackgroundColor } from '@tdesign/web-components-shared/_util/helper';
 import { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, OmiProps, tag } from 'omi';
 

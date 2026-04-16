@@ -1,4 +1,4 @@
-import 'tdesign-web-components/card';
+import '@tdesign/web-components-ui/card';
 
 import { Component } from 'omi';
 

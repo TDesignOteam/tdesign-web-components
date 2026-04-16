@@ -1,4 +1,4 @@
-import 'tdesign-web-components/input';
+import '@tdesign/web-components-ui/input';
 
 import { Component } from 'omi';
 

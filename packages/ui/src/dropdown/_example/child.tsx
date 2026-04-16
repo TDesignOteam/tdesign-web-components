@@ -1,10 +1,9 @@
-import 'tdesign-web-components/button';
-import 'tdesign-web-components/dropdown';
+import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components-ui/dropdown';
 import 'tdesign-icons-web-components';
 
-import { DropdownProps } from 'tdesign-web-components';
-
-import { MessagePlugin } from '../../message';
+import { DropdownProps } from '@tdesign/web-components-ui';
+import { MessagePlugin } from '@tdesign/web-components-ui/message';
 
 export default function BasicDropdown() {
   const clickHandler: DropdownProps['onClick'] = (data) => {

@@ -1,4 +1,4 @@
-import 'tdesign-web-components/tabs';
+import '@tdesign/web-components-ui/tabs';
 
 import { Component, signal } from 'omi';
 

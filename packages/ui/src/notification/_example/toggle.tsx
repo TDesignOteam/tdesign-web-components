@@ -1,9 +1,9 @@
-import 'tdesign-web-components/notification';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/notification';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/button';
 
+import { NotificationPlugin } from '@tdesign/web-components-ui/notification';
 import { Component } from 'omi';
-import { NotificationPlugin } from 'tdesign-web-components/notification';
 
 export default class ToggleExample extends Component {
   openNotification = () => {

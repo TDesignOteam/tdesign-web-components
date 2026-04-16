@@ -101,7 +101,10 @@ module.exports = {
             message: 'Please use lodash-es instead.',
           },
         ],
-        patterns: ['tdesign-web-components/*'],
+        patterns: [
+          'tdesign-web-components/*',
+          'tdesign-web-components-chat/*',
+        ],
       },
     ],
   },

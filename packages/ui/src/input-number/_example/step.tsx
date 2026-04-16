@@ -1,4 +1,4 @@
-import 'tdesign-web-components/input-number';
+import '@tdesign/web-components-ui/input-number';
 
 import { Component, signal } from 'omi';
 

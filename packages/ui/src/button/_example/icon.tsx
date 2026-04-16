@@ -1,6 +1,6 @@
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/button';
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/space';
 
 export default function Button() {
   return (

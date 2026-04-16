@@ -1,5 +1,5 @@
-import 'tdesign-web-components/back-top';
-import 'tdesign-web-components/list';
+import '@tdesign/web-components-ui/back-top';
+import '@tdesign/web-components-ui/list';
 
 import { Component, createRef } from 'omi';
 

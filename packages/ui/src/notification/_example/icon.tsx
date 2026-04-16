@@ -1,5 +1,5 @@
-import 'tdesign-web-components/notification';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/notification';
+import '@tdesign/web-components-ui/space';
 
 import { Component } from 'omi';
 

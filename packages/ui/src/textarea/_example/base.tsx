@@ -1,4 +1,4 @@
-import 'tdesign-web-components/textarea';
+import '@tdesign/web-components-ui/textarea';
 
 export default function Textarea() {
   return (

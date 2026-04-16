@@ -1,12 +1,11 @@
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 import '@tdesign/web-components-ui/space';
 import '@tdesign/web-components-ui/switch';
 // 公式能力引入，参考cherryMarkdown示例
 import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
+import { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type';
 import { Component, signal } from 'omi';
-
-import { TdChatMessageProps } from '../../chat-message/type';
 // TODO: Fix path after monorepo migration
 const mdContent = '# Test Markdown\n\nThis is test markdown content.';
 

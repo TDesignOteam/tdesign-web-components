@@ -1,4 +1,4 @@
-import 'tdesign-web-components/date-picker';
+import '@tdesign/web-components-ui/date-picker';
 
 import { Component } from 'omi';
 

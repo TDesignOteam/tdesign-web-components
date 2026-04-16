@@ -1,4 +1,4 @@
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 
 import { Component, signal } from 'omi';
 

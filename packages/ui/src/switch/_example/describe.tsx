@@ -1,6 +1,6 @@
-import 'tdesign-web-components/switch';
+import '@tdesign/web-components-ui/switch';
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/space';
 
 export default function SwitchBasic() {
   const renderActiveContent = () => <t-icon name={'check'}></t-icon>;

@@ -1,5 +1,5 @@
-import 'tdesign-web-components/image';
-import 'tdesign-web-components/tag';
+import '@tdesign/web-components-ui/image';
+import '@tdesign/web-components-ui/tag';
 
 export default function ImageGalleryCover() {
   const label = (

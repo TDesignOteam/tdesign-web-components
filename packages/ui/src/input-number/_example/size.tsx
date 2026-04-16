@@ -1,5 +1,5 @@
-import 'tdesign-web-components/input-number';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/input-number';
+import '@tdesign/web-components-ui/space';
 
 import { Component } from 'omi';
 

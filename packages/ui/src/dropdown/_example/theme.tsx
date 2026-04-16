@@ -1,9 +1,8 @@
-import 'tdesign-web-components/button';
-import 'tdesign-web-components/dropdown';
+import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components-ui/dropdown';
 
-import type { DropdownOption, DropdownProps } from 'tdesign-web-components/dropdown';
-
-import { MessagePlugin } from '../../message';
+import type { DropdownOption, DropdownProps } from '@tdesign/web-components-ui/dropdown';
+import { MessagePlugin } from '@tdesign/web-components-ui/message';
 
 export default function ThemeDropdown() {
   const options: DropdownOption[] = [

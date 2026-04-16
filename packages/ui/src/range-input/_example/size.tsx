@@ -1,5 +1,5 @@
-import 'tdesign-web-components/range-input';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/range-input';
+import '@tdesign/web-components-ui/space';
 
 export default function RangeInput() {
   return (

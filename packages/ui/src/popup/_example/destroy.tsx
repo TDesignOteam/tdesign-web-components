@@ -1,5 +1,5 @@
-import 'tdesign-web-components/button';
-import 'tdesign-web-components/popup';
+import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components-ui/popup';
 
 export default function PopupDestroy() {
   return (

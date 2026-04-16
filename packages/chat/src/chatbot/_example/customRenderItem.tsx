@@ -1,9 +1,8 @@
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 import '@tdesign/web-components-ui/space';
 
+import { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type';
 import { Component } from 'omi';
-
-import { TdChatMessageProps } from '../../chat-message/type';
 
 // customThinking扩展类型定义
 declare global {

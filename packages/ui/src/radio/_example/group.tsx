@@ -1,7 +1,7 @@
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/space';
 
+import { type RadioOption } from '@tdesign/web-components-ui/radio';
 import { Component } from 'omi';
-import { type RadioOption } from 'tdesign-web-components/radio';
 
 const objOptions: RadioOption[] = [
   {

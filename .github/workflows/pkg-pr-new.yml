@@ -11,12 +11,15 @@ jobs:
         with:
           submodules: recursive
 
+      - uses: pnpm/action-setup@v4
+
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
+          cache: pnpm
 
-      - run: npm install
+      - run: pnpm install
 
-      - run: npm run build
+      - run: pnpm run build
 
       - run: npx pkg-pr-new publish --packageManager=pnpm,npm,yarn

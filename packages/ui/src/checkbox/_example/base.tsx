@@ -1,5 +1,5 @@
-import 'tdesign-web-components/checkbox';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/checkbox';
+import '@tdesign/web-components-ui/space';
 
 export default function CheckboxExample() {
   return (

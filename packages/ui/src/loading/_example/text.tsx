@@ -1,4 +1,4 @@
-import 'tdesign-web-components/loading';
+import '@tdesign/web-components-ui/loading';
 
 export default function TextExample() {
   return <t-loading loading={true} text="静态文字加载中..." indicator={false}></t-loading>;

@@ -8,7 +8,8 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const distDir = path.join(__dirname, '..', 'dist');
+const uiPkgDir = path.join(__dirname, '..', 'packages', 'ui');
+const distDir = path.join(uiPkgDir, 'dist');
 const analysisFiles = [
   'stats-umd.html',
   'stats-umd-sunburst.html', 
@@ -55,13 +56,13 @@ if (process.platform === 'darwin') {
 // 显示构建产物大小信息
 console.log('\n📦 构建产物大小:');
 const buildFiles = [
-  { name: 'UMD (开发版)', path: 'dist/TDesign Web Components.js' },
-  { name: 'UMD (生产版)', path: 'dist/TDesign Web Components.min.js' },
-  { name: 'CSS 样式', path: 'dist/tdesign.css' }
+  { name: 'UMD (开发版)', path: 'dist/tdesign-web-components-ui.js' },
+  { name: 'UMD (生产版)', path: 'dist/tdesign-web-components-ui.min.js' },
+  { name: 'CSS 样式', path: 'lib/style/index.css' }
 ];
 
 buildFiles.forEach(({ name, path: filePath }) => {
-  const fullPath = path.join(distDir, '..', filePath);
+  const fullPath = path.join(uiPkgDir, filePath);
   if (fs.existsSync(fullPath)) {
     const stats = fs.statSync(fullPath);
     const size = (stats.size / 1024).toFixed(2);

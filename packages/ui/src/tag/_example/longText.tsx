@@ -1,4 +1,4 @@
-import 'tdesign-web-components/tag';
+import '@tdesign/web-components-ui/tag';
 
 import { Component } from 'omi';
 

@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 
+import { type ChatMessagesData, findTargetElement } from '@tdesign/web-components-chat/chat-engine';
+import { TdChatMessageConfigItem } from '@tdesign/web-components-chat/chatbot';
+import type { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import { Component, createRef } from 'omi';
-import { type ChatMessagesData, findTargetElement } from 'tdesign-web-components-chat/chat-engine';
-import { TdChatMessageConfigItem } from 'tdesign-web-components-chat/chatbot';
 
-import type { TdAttachmentItem } from '../../filecard';
 import Chatbot from '../chat';
 
 // 天气扩展类型定义

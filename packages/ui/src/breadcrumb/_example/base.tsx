@@ -1,4 +1,4 @@
-import 'tdesign-web-components/breadcrumb';
+import '@tdesign/web-components-ui/breadcrumb';
 
 import { Component } from 'omi';
 

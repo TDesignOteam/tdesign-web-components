@@ -1,4 +1,4 @@
-import 'tdesign-web-components-chat/chat-action';
+import '@tdesign/web-components-chat/chat-action';
 import '@tdesign/web-components-ui/space';
 
 import { Component } from 'omi';

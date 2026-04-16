@@ -1,6 +1,6 @@
-import 'tdesign-web-components/dialog';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/dialog';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/button';
 
 import { bind, Component, signal } from 'omi';
 

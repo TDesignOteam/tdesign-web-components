@@ -1,8 +1,8 @@
-import 'tdesign-web-components/select-input';
+import '@tdesign/web-components-ui/select-input';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 
+import { PopupVisibleChangeContext } from '@tdesign/web-components-ui/popup';
 import { Component, signal } from 'omi';
-import { PopupVisibleChangeContext } from 'tdesign-web-components/popup';
 
 const classStyles = `
 <style>

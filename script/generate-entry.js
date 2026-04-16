@@ -5,7 +5,7 @@ import { fileURLToPath } from 'node:url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const componentsPath = path.resolve(__dirname, '../src');
+const componentsPath = path.resolve(__dirname, '../packages/ui/src');
 
 const components = fs.readdirSync(componentsPath).filter((name) => {
   if (['style', 'icon'].includes(name) || name.startsWith('_')) return false;

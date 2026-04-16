@@ -1,11 +1,11 @@
 /* eslint-disable no-await-in-loop */
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 
+import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '@tdesign/web-components-chat/chat-engine';
+import { findTargetElement } from '@tdesign/web-components-chat/chat-engine';
+import { TdChatMessageConfigItem } from '@tdesign/web-components-chat/chatbot';
+import type { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import { Component, createRef } from 'omi';
-import type { AIMessageContent, ChatMessagesData, SSEChunkData } from 'tdesign-web-components-chat/chat-engine';
-import { findTargetElement } from 'tdesign-web-components-chat/chat-engine';
-import { TdChatMessageConfigItem } from 'tdesign-web-components-chat/chatbot';
-import type { TdAttachmentItem } from 'tdesign-web-components-chat/filecard';
 
 import Chatbot from '../chat';
 // TODO: Fix path after monorepo migration

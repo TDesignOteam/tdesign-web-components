@@ -1,8 +1,8 @@
-import 'tdesign-web-components/avatar';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/avatar/avatar-group';
+import '@tdesign/web-components-ui/avatar';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/avatar/avatar-group';
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/image';
+import '@tdesign/web-components-ui/image';
 
 import { Component } from 'omi';
 

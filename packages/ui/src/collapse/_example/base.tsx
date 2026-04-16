@@ -1,4 +1,4 @@
-import 'tdesign-web-components/collapse';
+import '@tdesign/web-components-ui/collapse';
 
 import { bind, Component, signal } from 'omi';
 

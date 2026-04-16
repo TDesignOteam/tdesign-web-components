@@ -1,8 +1,7 @@
-import 'tdesign-web-components-chat/chat-message';
+import '@tdesign/web-components-chat/chat-message';
 
+import type { AIMessageContent, ChatMessagesData } from '@tdesign/web-components-chat/chat-engine';
 import { Component } from 'omi';
-
-import type { AIMessageContent, ChatMessagesData } from '../../chat-engine';
 
 export default class SimpleReasoningExample extends Component {
   // 简化的推理内容数据 - 只包含文本和插槽

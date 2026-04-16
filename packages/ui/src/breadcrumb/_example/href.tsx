@@ -1,5 +1,5 @@
-import 'tdesign-web-components/breadcrumb';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/breadcrumb';
+import '@tdesign/web-components-ui/space';
 
 import { Component, signal } from 'omi';
 

@@ -1,6 +1,6 @@
-import 'tdesign-web-components/image';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/tag';
+import '@tdesign/web-components-ui/image';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/tag';
 
 export default function ImageExtraAlways() {
   const mask = (

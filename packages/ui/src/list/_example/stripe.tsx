@@ -1,6 +1,6 @@
-import 'tdesign-web-components/list';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/link';
+import '@tdesign/web-components-ui/list';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/link';
 
 import { Component } from 'omi';
 

@@ -1,3 +1,4 @@
+import alias from '@rollup/plugin-alias';
 import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
@@ -5,6 +6,10 @@ import replace from '@rollup/plugin-replace';
 import url from '@rollup/plugin-url';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+
+const __rollupFilename = fileURLToPath(import.meta.url);
+const __rollupDirname = dirname(__rollupFilename);
+const monorepoRoot = resolve(__rollupDirname, '..');
 import atImport from 'postcss-import';
 import analyzer from 'rollup-plugin-analyzer';
 import esbuild from 'rollup-plugin-esbuild';
@@ -100,7 +105,24 @@ export function createRollupConfig({
 
   const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
     const plugins = [
-      nodeResolve(),
+      alias({
+        entries: [
+          { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_common/$1') },
+          { find: /^@tdesign\/web-components-shared\/(.*)/, replacement: resolve(monorepoRoot, 'packages/shared/src/$1') },
+          { find: '@tdesign/web-components-shared', replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts') },
+          { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/ui/src/$1') },
+          { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/ui/src/index.ts') },
+          { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/chat/src/$1') },
+          { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
+          { find: /^@tdesign\/ai-chat-engine\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/$1') },
+          { find: '@tdesign/ai-chat-engine', replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/index.ts') },
+          { find: /^@tdesign\/ai-shared\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/$1') },
+          { find: '@tdesign/ai-shared', replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/index.ts') },
+        ],
+      }),
+      nodeResolve({
+        extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'],
+      }),
       commonjs(),
       esbuild({
         include: /\.[jt]sx?$/,
@@ -124,6 +146,23 @@ export function createRollupConfig({
       }),
     ];
 
+  // Less 别名插件：将 @common/ 解析为 packages/_common/
+  const lessAliasPlugin = {
+    install(less, pluginManager) {
+      class AliasFileManager extends less.FileManager {
+        supportsSync() { return false; }
+        supports(filename) {
+          return filename.startsWith('@common/');
+        }
+        loadFile(filename, currentDirectory, options, environment) {
+          const resolved = filename.replace(/^@common\//, resolve(monorepoRoot, 'packages/_common') + '/');
+          return super.loadFile(resolved, currentDirectory, options, environment);
+        }
+      }
+      pluginManager.addFileManager(new AliasFileManager());
+    },
+  };
+
     if (!ignoreLess) {
       plugins.push(
         postcss({
@@ -133,12 +172,16 @@ export function createRollupConfig({
           inject: false,
           extensions: ['.sass', '.scss', '.css', '.less'],
           plugins: [atImport()],
+          use: [['less', {
+            javascriptEnabled: true,
+            plugins: [lessAliasPlugin],
+          }]],
         }),
       );
     } else {
       plugins.push(
         staticImport({
-          include: ['src/**/style/index.js', 'src/_common/style/web/**/*.less', 'src/**/style/*.less'],
+          include: ['src/**/style/index.js', 'src/**/style/*.less'],
         }),
         ignoreImport({
           include: ['src/*/style/*'],
@@ -150,6 +193,7 @@ export function createRollupConfig({
           use: ['less', 'css-loader'],
           less: {
             javascriptEnabled: true,
+            plugins: [lessAliasPlugin],
           },
           url: {
             inline: true,
@@ -187,7 +231,15 @@ export function createRollupConfig({
   // CSS 配置
   const cssConfig = {
     input: [resolve(packageDir, 'src/style/index.js')],
-    plugins: [multiInput(), styles({ mode: 'extract' })],
+    plugins: [
+      alias({
+        entries: [
+          { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_common/$1') },
+        ],
+      }),
+      multiInput(),
+      styles({ mode: 'extract' }),
+    ],
     output: {
       banner,
       dir: resolve(packageDir, 'lib/'),
@@ -243,10 +295,12 @@ export function createRollupConfig({
     },
   };
 
+  const umdExternal = [...externalPeerDeps, ...additionalExternal];
+
   // UMD 配置
   const umdConfig = {
     input: resolve(packageDir, input),
-    external: externalPeerDeps,
+    external: umdExternal,
     plugins: getPlugins({
       env: 'development',
     }).concat(getAnalyzePlugins('umd')),
@@ -265,7 +319,7 @@ export function createRollupConfig({
   // UMD 压缩版
   const umdMinConfig = {
     input: resolve(packageDir, input),
-    external: externalPeerDeps,
+    external: umdExternal,
     plugins: getPlugins({
       isProd: true,
       env: 'production',

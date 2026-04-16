@@ -1,5 +1,5 @@
-import 'tdesign-web-components/tag-input';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/tag-input';
+import '@tdesign/web-components-ui/space';
 
 import { Component } from 'omi';
 

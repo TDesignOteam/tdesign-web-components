@@ -1,5 +1,5 @@
-import 'tdesign-web-components/alert';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/alert';
+import '@tdesign/web-components-ui/space';
 
 import { Component } from 'omi';
 

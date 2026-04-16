@@ -1,6 +1,6 @@
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/button';
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/menu';
+import '@tdesign/web-components-ui/menu';
 
 import { Component, signal } from 'omi';
 

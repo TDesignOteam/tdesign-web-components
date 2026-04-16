@@ -1,4 +1,4 @@
-import 'tdesign-web-components/notification';
+import '@tdesign/web-components-ui/notification';
 
 import { Component } from 'omi';
 

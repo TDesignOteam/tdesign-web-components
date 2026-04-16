@@ -1,6 +1,6 @@
-import 'tdesign-web-components/checkbox';
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/checkbox';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/button';
 
 import { Component, signal } from 'omi';
 

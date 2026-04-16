@@ -1,7 +1,7 @@
 // import 'tdesign-icons-omi/browse-off';
 // import 'tdesign-icons-omi/lock-on';
-import 'tdesign-web-components/input';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/input';
+import '@tdesign/web-components-ui/space';
 
 import { Component } from 'omi';
 

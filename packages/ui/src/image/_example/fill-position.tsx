@@ -1,5 +1,5 @@
-import 'tdesign-web-components/space';
-import 'tdesign-web-components/image';
+import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components-ui/image';
 
 export default function ImageFillPosition() {
   return (

@@ -1,5 +1,5 @@
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/space';
 
 export default function SvgSpriteExample() {
   return (

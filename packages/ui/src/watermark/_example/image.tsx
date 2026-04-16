@@ -1,4 +1,4 @@
-import 'tdesign-web-components/watermark';
+import '@tdesign/web-components-ui/watermark';
 
 import { Component } from 'omi';
 

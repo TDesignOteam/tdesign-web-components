@@ -1,4 +1,4 @@
-import 'tdesign-web-components/image';
+import '@tdesign/web-components-ui/image';
 
 export default function ImageAvif() {
   return (

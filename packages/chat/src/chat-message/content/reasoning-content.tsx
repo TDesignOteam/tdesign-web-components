@@ -4,14 +4,14 @@ import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 
+import type { AIMessageContent, ChatMessageStatus } from '@tdesign/web-components-chat/chat-engine';
+import { isTextContent } from '@tdesign/web-components-chat/chat-engine';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { CollapseValue } from '@tdesign/web-components-ui/collapse';
 import { isNil } from 'lodash-es';
 import { Component, signal, tag } from 'omi';
 
-import type { AIMessageContent, ChatMessageStatus } from '../../chat-engine';
-import { isTextContent } from '../../chat-engine';
 import type { TdChatContentProps } from '../type';
 
 import styles from '../style/chat-item.less';

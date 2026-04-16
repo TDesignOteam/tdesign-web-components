@@ -1,8 +1,8 @@
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 
+import { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import { Component, signal } from 'omi';
 
-import { TdAttachmentItem } from '../../filecard';
 import { TdChatSenderParams } from '../type';
 
 export default class AttachmentExample extends Component {

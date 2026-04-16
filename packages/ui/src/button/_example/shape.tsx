@@ -1,5 +1,5 @@
-import 'tdesign-web-components/button';
-import 'tdesign-web-components/space';
+import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components-ui/space';
 import 'tdesign-icons-web-components/esm/components/calendar';
 
 export default function Button() {

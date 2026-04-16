@@ -1,14 +1,14 @@
 /* eslint-disable no-await-in-loop */
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 
-import { Component, createRef, signal } from 'omi';
 import type {
   AIContentChunkUpdate,
   AIMessageContent,
   ChatMessagesData,
   SSEChunkData,
-} from 'tdesign-web-components-chat/chat-engine';
-import type { TdChatMessageConfig } from 'tdesign-web-components-chat/chatbot';
+} from '@tdesign/web-components-chat/chat-engine';
+import type { TdChatMessageConfig } from '@tdesign/web-components-chat/chatbot';
+import { Component, createRef, signal } from 'omi';
 
 import Chatbot from '../chat';
 

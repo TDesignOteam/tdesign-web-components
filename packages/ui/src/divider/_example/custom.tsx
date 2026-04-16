@@ -1,4 +1,4 @@
-import 'tdesign-web-components/divider';
+import '@tdesign/web-components-ui/divider';
 
 export default function DividerCustom() {
   return (

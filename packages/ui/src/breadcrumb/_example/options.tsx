@@ -1,4 +1,4 @@
-import 'tdesign-web-components/breadcrumb';
+import '@tdesign/web-components-ui/breadcrumb';
 
 export default function Breadcrumb() {
   const options = [{ content: '页面1' }, { content: '页面2' }, { content: '页面3', href: 'https://github.com/' }];

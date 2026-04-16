@@ -1,8 +1,8 @@
 import 'tdesign-icons-web-components';
-import 'tdesign-web-components/dropdown';
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/dropdown';
+import '@tdesign/web-components-ui/button';
 
-import { MessagePlugin } from 'tdesign-web-components/message';
+import { MessagePlugin } from '@tdesign/web-components-ui/message';
 
 export default function LeftDropdown() {
   const options = [

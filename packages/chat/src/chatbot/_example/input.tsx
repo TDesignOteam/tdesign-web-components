@@ -1,12 +1,11 @@
-import 'tdesign-web-components-chat/chatbot';
+import '@tdesign/web-components-chat/chatbot';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 import 'tdesign-icons-web-components/esm/components/system-2';
 
+import { TdChatSenderParams } from '@tdesign/web-components-chat/chat-sender';
+import { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import classname from '@tdesign/web-components-shared/_util/classname';
 import { Component, signal } from 'omi';
-
-import { TdChatSenderParams } from '../../chat-sender';
-import { TdAttachmentItem } from '../../filecard';
 
 import styles from './style/chat-model.less';
 

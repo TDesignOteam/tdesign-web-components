@@ -1,5 +1,5 @@
-import 'tdesign-web-components/affix';
-import 'tdesign-web-components/button';
+import '@tdesign/web-components-ui/affix';
+import '@tdesign/web-components-ui/button';
 
 import { bind, Component, signal } from 'omi';
 
