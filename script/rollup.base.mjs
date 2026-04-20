@@ -3,25 +3,21 @@ import commonjs from '@rollup/plugin-commonjs';
 import json from '@rollup/plugin-json';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
+import terser from '@rollup/plugin-terser';
 import url from '@rollup/plugin-url';
+import fg from 'fast-glob';
 import { dirname, resolve } from 'path';
 import atImport from 'postcss-import';
 import analyzer from 'rollup-plugin-analyzer';
 import esbuild from 'rollup-plugin-esbuild';
-import ignoreImport from 'rollup-plugin-ignore-import';
-import multiInput from 'rollup-plugin-multi-input';
 import postcss from 'rollup-plugin-postcss';
-import staticImportModule from 'rollup-plugin-static-import';
 import styles from 'rollup-plugin-styles';
-import { terser } from 'rollup-plugin-terser';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 
 const __rollupFilename = fileURLToPath(import.meta.url);
 const __rollupDirname = dirname(__rollupFilename);
 const monorepoRoot = resolve(__rollupDirname, '..');
-
-const staticImport = staticImportModule.default || staticImportModule;
 
 // 分析模式配置
 const isAnalyze = process.env.ANALYZE === 'true';
@@ -71,6 +67,9 @@ export function createRollupConfig({
  */
 `;
 
+  // 使用 fast-glob 解析 inputList（替代 rollup-plugin-multi-input）
+  const resolvedInput = fg.sync(inputList, { cwd: packageDir, absolute: true });
+
   // 获取分析插件
   const getAnalyzePlugins = (buildType = 'umd') => {
     if (!isAnalyze && buildType !== 'umd') return [];
@@ -103,41 +102,65 @@ export function createRollupConfig({
     return plugins;
   };
 
+  // monorepo 路径别名
+  const aliasPlugin = alias({
+    entries: [
+      { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_common/$1') },
+      {
+        find: /^@tdesign\/web-components-shared\/(.*)/,
+        replacement: resolve(monorepoRoot, 'packages/shared/src/$1'),
+      },
+      {
+        find: '@tdesign/web-components-shared',
+        replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts'),
+      },
+      { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/ui/src/$1') },
+      { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/ui/src/index.ts') },
+      { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/chat/src/$1') },
+      { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
+      {
+        find: /^@tdesign\/ai-chat-engine\/(.*)/,
+        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/$1'),
+      },
+      {
+        find: '@tdesign/ai-chat-engine',
+        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/index.ts'),
+      },
+      {
+        find: /^@tdesign\/ai-shared\/(.*)/,
+        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/$1'),
+      },
+      {
+        find: '@tdesign/ai-shared',
+        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/index.ts'),
+      },
+    ],
+  });
+
+  // Less 别名插件：将 @common/ 解析为 packages/_common/
+  const lessAliasPlugin = {
+    install(less, pluginManager) {
+      class AliasFileManager extends less.FileManager {
+        supportsSync() {
+          return false;
+        }
+
+        supports(filename) {
+          return filename.startsWith('@common/');
+        }
+
+        loadFile(filename, currentDirectory, options, environment) {
+          const resolved = filename.replace(/^@common\//, `${resolve(monorepoRoot, 'packages/_common')}/`);
+          return super.loadFile(resolved, currentDirectory, options, environment);
+        }
+      }
+      pluginManager.addFileManager(new AliasFileManager());
+    },
+  };
+
   const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
     const plugins = [
-      alias({
-        entries: [
-          { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_common/$1') },
-          {
-            find: /^@tdesign\/web-components-shared\/(.*)/,
-            replacement: resolve(monorepoRoot, 'packages/shared/src/$1'),
-          },
-          {
-            find: '@tdesign/web-components-shared',
-            replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts'),
-          },
-          { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/ui/src/$1') },
-          { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/ui/src/index.ts') },
-          { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/chat/src/$1') },
-          { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
-          {
-            find: /^@tdesign\/ai-chat-engine\/(.*)/,
-            replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/$1'),
-          },
-          {
-            find: '@tdesign/ai-chat-engine',
-            replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/index.ts'),
-          },
-          {
-            find: /^@tdesign\/ai-shared\/(.*)/,
-            replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/$1'),
-          },
-          {
-            find: '@tdesign/ai-shared',
-            replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/index.ts'),
-          },
-        ],
-      }),
+      aliasPlugin,
       nodeResolve({
         extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'],
       }),
@@ -164,27 +187,6 @@ export function createRollupConfig({
       }),
     ];
 
-    // Less 别名插件：将 @common/ 解析为 packages/_common/
-    const lessAliasPlugin = {
-      install(less, pluginManager) {
-        class AliasFileManager extends less.FileManager {
-          supportsSync() {
-            return false;
-          }
-
-          supports(filename) {
-            return filename.startsWith('@common/');
-          }
-
-          loadFile(filename, currentDirectory, options, environment) {
-            const resolved = filename.replace(/^@common\//, `${resolve(monorepoRoot, 'packages/_common')}/`);
-            return super.loadFile(resolved, currentDirectory, options, environment);
-          }
-        }
-        pluginManager.addFileManager(new AliasFileManager());
-      },
-    };
-
     if (!ignoreLess) {
       plugins.push(
         postcss({
@@ -206,14 +208,8 @@ export function createRollupConfig({
         }),
       );
     } else {
+      // ESM 构建：提取 less 为独立 CSS 文件
       plugins.push(
-        staticImport({
-          include: ['src/**/style/index.js', 'src/**/style/*.less'],
-        }),
-        ignoreImport({
-          include: ['src/*/style/*'],
-          body: 'import "./style/index.js";',
-        }),
         styles({
           mode: 'extract',
           extensions: ['.less', '.css'],
@@ -257,12 +253,9 @@ export function createRollupConfig({
 
   // CSS 配置
   const cssConfig = {
-    input: [resolve(packageDir, 'src/style/index.js')],
+    input: resolve(packageDir, 'src/style/index.js'),
     plugins: [
-      alias({
-        entries: [{ find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_common/$1') }],
-      }),
-      multiInput(),
+      aliasPlugin,
       styles({ mode: 'extract' }),
     ],
     output: {
@@ -273,54 +266,55 @@ export function createRollupConfig({
     },
   };
 
-  // 将 inputList 中的相对路径解析为绝对路径（包括 `!` 前缀的负向 pattern）
-  // 避免 fast-glob 因正负 pattern 路径形式不一致（绝对 vs 相对）而无法正确排除文件
-  const resolveInputList = (list) =>
-    list.map((p) => (p.startsWith('!') ? `!${resolve(packageDir, p.slice(1))}` : resolve(packageDir, p)));
-
-  // 按需加载组件 (lib)
+  // 按需加载组件 (lib) — 使用 preserveModules 替代 rollup-plugin-multi-input
   const libConfig = {
-    input: resolveInputList(inputList),
+    input: resolvedInput,
     external: allExternal,
-    plugins: [multiInput()]
-      .concat(getPlugins())
-      .concat(isAnalyze && (analyzeMode === 'all' || analyzeMode === 'lib') ? getAnalyzePlugins('lib') : []),
+    plugins: getPlugins().concat(
+      isAnalyze && (analyzeMode === 'all' || analyzeMode === 'lib') ? getAnalyzePlugins('lib') : [],
+    ),
     output: {
       banner,
       dir: resolve(packageDir, 'lib/'),
       format: 'esm',
       sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: resolve(packageDir, 'src'),
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
 
   // ESM 配置（带原始 less）
   const esmConfig = {
-    input: resolveInputList(inputList),
+    input: resolvedInput,
     external: allExternal,
-    plugins: [multiInput()]
-      .concat(getPlugins({ ignoreLess: true }))
-      .concat(isAnalyze && (analyzeMode === 'all' || analyzeMode === 'esm') ? getAnalyzePlugins('esm') : []),
+    plugins: getPlugins({ ignoreLess: true }).concat(
+      isAnalyze && (analyzeMode === 'all' || analyzeMode === 'esm') ? getAnalyzePlugins('esm') : [],
+    ),
     output: {
       banner,
       dir: resolve(packageDir, 'esm/'),
       format: 'esm',
       sourcemap: true,
+      preserveModules: true,
+      preserveModulesRoot: resolve(packageDir, 'src'),
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
 
   // CJS 配置
   const cjsConfig = {
-    input: resolveInputList(inputList),
+    input: resolvedInput,
     external: allExternal,
-    plugins: [multiInput()].concat(getPlugins()),
+    plugins: getPlugins(),
     output: {
       banner,
       dir: resolve(packageDir, 'cjs/'),
       format: 'cjs',
       sourcemap: true,
       exports: 'named',
+      preserveModules: true,
+      preserveModulesRoot: resolve(packageDir, 'src'),
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
