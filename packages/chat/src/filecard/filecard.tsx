@@ -8,6 +8,7 @@ import 'tdesign-icons-web-components/esm/components/file-zip-filled';
 import 'tdesign-icons-web-components/esm/components/video-filled';
 import 'tdesign-icons-web-components/esm/components/file-music-filled';
 import 'tdesign-icons-web-components/esm/components/loading';
+import 'tdesign-icons-web-components/esm/components/image-error';
 import 'tdesign-icons-web-components/esm/components/file';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
 import '@tdesign/web-components-ui/image';
@@ -270,18 +271,29 @@ export default class FileCard extends Component<TdFileCardProps> {
   private renderFileOverview(namePrefix: string, nameSuffix: string, icon: any, iconColor: string, desc: string) {
     const { cardType, item, style } = this.props;
     if (cardType === 'image') {
+      const imageWidth = 'var(--td-attachment-image-width, 52px)';
+      const imageHeight = 'var(--td-attachment-image-height, 52px)';
+      const iconSize = `calc(min(${imageWidth}, ${imageHeight}) * 0.35)`;
       const newstyle = {
-        ...{
-          width: 'var(--td-attachment-image-width, 52px)',
-          height: 'var(--td-attachment-image-height, 52px)',
-        },
+        width: imageWidth,
+        height: imageHeight,
         ...style,
       };
+
       return item.url ? (
-        <t-image src={item.url} shape="round" fit="cover" className={`${className}-image`} style={newstyle}></t-image>
+        <t-image
+          src={item.url}
+          shape="round"
+          fit="cover"
+          position="center"
+          className={`${className}-image`}
+          style={newstyle}
+          loading={<t-icon-loading size={iconSize} />}
+          error={<t-icon-image-error size={iconSize} />}
+        />
       ) : (
         <div className={`${className}-icon ${className}-icon__progress`} style={{ flex: 1, ...newstyle }}>
-          <t-icon-loading size="24px" />
+          <t-icon-loading size={iconSize} />
         </div>
       );
     }
