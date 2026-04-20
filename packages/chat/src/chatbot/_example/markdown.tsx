@@ -4,6 +4,8 @@ import '@tdesign/web-components-ui/switch';
 // 公式能力引入，参考cherryMarkdown示例
 import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
+import { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type';
+import mdContent from '@tdesign/web-components-chat/common/testMarkdown.md?raw';
 // 自定义代码块示例引入
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
@@ -12,10 +14,7 @@ import json from 'highlight.js/lib/languages/json';
 import python from 'highlight.js/lib/languages/python';
 import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
-import { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type';
 import { Component, signal } from 'omi';
-// TODO: Fix path after monorepo migration
-const mdContent = '# Test Markdown\n\nThis is test markdown content.';
 
 // 注册常用语言
 hljs.registerLanguage('javascript', javascript);

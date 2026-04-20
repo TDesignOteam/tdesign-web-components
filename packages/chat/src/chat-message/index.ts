@@ -1,3 +1,5 @@
+import './style/index.js';
+
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 
 import _MarkdownContent from './content/markdown-content';

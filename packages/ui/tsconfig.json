@@ -12,6 +12,6 @@
       "@": ["src"]
     }
   },
-  "include": ["src"],
+  "include": ["src", "../../typings.d.ts"],
   "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "../_common", "dist", "lib", "esm", "cjs", "es"]
 }

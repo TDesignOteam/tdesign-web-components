@@ -1,9 +1,7 @@
 import '../content/markdown-content';
 
+import mdContent from '@tdesign/web-components-chat/common/testMarkdown.md?raw';
 import { Component, signal } from 'omi';
-
-// TODO: Fix path after monorepo migration
-const mdContent = '# Test Markdown\n\nThis is a test markdown content.';
 
 export default class BasicExample extends Component {
   displayText = signal('');

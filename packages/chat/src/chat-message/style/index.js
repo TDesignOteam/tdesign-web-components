@@ -1,7 +1,7 @@
 import { css, globalCSS } from 'omi';
 
-import cherryIconFont from './cherry-icon-font.less';
 import styles from './_index.less';
+import cherryIconFont from './cherry-icon-font.less';
 
 // Cherry Markdown 字体 - 需要在 Light DOM 中加载，解决 Shadow DOM 字体加载问题
 const cherryIconFontStyleId = 'tdesign-wc-cherry-icon-font';
