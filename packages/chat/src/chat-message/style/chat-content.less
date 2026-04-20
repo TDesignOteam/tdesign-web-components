@@ -27,6 +27,40 @@
         border-left: none;
         background-color: transparent;
       }
+
+      .cherry-previewer-codeBlock-hover-handler {
+        & > div {
+          display: var(--td-chat-md-code-button-display);
+          align-items: var(--td-chat-md-code-button-align-items);
+          justify-content: var(--td-chat-md-code-button-justify-content);
+          top: var(--td-chat-md-code-button-top);
+          border: var(--td-chat-md-code-button-border);
+          color: var(--td-chat-md-code-button-color);
+          background: var(--td-chat-md-code-button-bg);
+          box-shadow: var(--td-chat-md-code-button-shadow);
+
+          &:hover {
+            color: var(--td-chat-md-code-button-hover-color);
+            background: var(--td-chat-md-code-button-hover-bg);
+            transform: var(--td-chat-md-code-button-hover-transform);
+          }
+        }
+      }
+
+      // 针对带有 data-code-block-theme 属性且值包含 -dark 的暗黑主题样式
+      &[data-code-block-theme*="-dark"] {
+        .cherry-previewer-codeBlock-hover-handler {
+          & > div {
+            color: var(--td-chat-md-code-button-dark-color);
+            background: var(--td-chat-md-code-button-dark-bg);
+
+            &:hover {
+              color: var(--td-chat-md-code-button-dark-hover-color);
+              background: var(--td-chat-md-code-button-dark-hover-bg);
+            }
+          }
+        }
+      }
     }
 
     &__markdown {
@@ -58,7 +92,13 @@
       }
 
       div[data-type=codeBlock] {
-        margin-bottom: 0;
+        margin: var(--td-chat-md-code-margin);
+        overflow: hidden;
+
+        pre[class*=language-] {
+          margin: 0;
+          border-radius: var(--td-chat-md-code-radius);
+        }
       }
 
       // override cherry markdown code style
