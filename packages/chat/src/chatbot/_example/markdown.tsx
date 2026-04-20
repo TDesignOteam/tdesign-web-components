@@ -154,7 +154,7 @@ export default class MarkdownExample extends Component {
                         ],
                       },
                     }),
-              },
+              } as any,
             },
           },
         },
