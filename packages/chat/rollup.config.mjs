@@ -1,7 +1,8 @@
-import { resolve, dirname } from 'path';
+import { dirname } from 'path';
 import { fileURLToPath } from 'url';
+
 import { createRollupConfig } from '../../script/rollup.base.mjs';
-import pkg from './package.json' assert { type: 'json' };
+import pkg from './package.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,8 +22,8 @@ export default createRollupConfig({
     '!src/**/mock/**',
   ],
   umdGlobalName: 'TDesignChat',
-  globals: { 
-    omi: 'omi', 
+  globals: {
+    omi: 'omi',
     'lodash-es': '_',
     '@tdesign/web-components-ui': 'TDesignUI',
   },

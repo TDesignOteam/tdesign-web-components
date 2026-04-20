@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "@tdesign/ai-chat-engine": "workspace:^",
-    "cherry-markdown": "0.11.0-alpha-2",
+    "cherry-markdown": "0.11.0-alpha-5",
     "immer": "^10.1.1",
     "lodash-es": "^4.17.21",
     "markdown-it-fence": "^0.1.3",
