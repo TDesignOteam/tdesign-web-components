@@ -243,7 +243,11 @@ export default class ChatItem extends Component<ChatMessageProps> {
       // 用户消息渲染
       if (role === 'user') {
         if (isAttachmentContent(content)) {
-          return renderAttachments({ key: elementKey, content: content.data }, this);
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderAttachments({ content: content.data, ...chatContentProps?.attachments })}
+            </slot>
+          );
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           return (
