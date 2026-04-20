@@ -156,7 +156,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
   }
 
   renderBody() {
-    const isActive = this.injection.getCollapseValue().includes(this.innerValue.value);
+    const isActive = this.injection.getCollapseValue?.().includes(this.innerValue.value);
     const { destroyOnCollapse } = this.props;
     if (this.afterLeaved.value === null && !isActive) {
       return null;
