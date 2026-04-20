@@ -272,6 +272,14 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       };
 
     case 'text': {
+      // 如果是空内容，返回 pending 状态来过滤
+      if (!rest?.msg || rest?.msg === '') {
+        return {
+          type: 'text',
+          data: '',
+          status: 'pending',
+        };
+      }
       return {
         type: 'markdown',
         data: rest?.msg || '',
