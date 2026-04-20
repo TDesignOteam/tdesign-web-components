@@ -3,8 +3,6 @@ import '@tdesign/web-components-chat/chatbot';
 import { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import { Component, signal } from 'omi';
 
-import { TdChatSenderParams } from '../type';
-
 export default class AttachmentExample extends Component {
   inputValue = signal('输入内容');
 
@@ -42,7 +40,7 @@ export default class AttachmentExample extends Component {
     this.files.value = e.detail.concat(this.files.value);
   };
 
-  onSend = (e: CustomEvent<TdChatSenderParams>) => {
+  onSend = (e: CustomEvent<{ value: string; attachments?: TdAttachmentItem[] }>) => {
     console.log('提交', e);
     this.inputValue.value = '';
     this.files.value = [];
