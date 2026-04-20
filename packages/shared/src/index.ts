@@ -16,4 +16,4 @@ export * from './_util/useControlled';
 
 // Common components
 export { Check, Portal, Partal } from './common';
-export type { CheckProps, PortalProps } from './common';
+export type * from './common';

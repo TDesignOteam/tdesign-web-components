@@ -3,6 +3,7 @@ import _Portal from './portal';
 
 export type { CheckProps } from './check';
 export type { PortalProps } from './portal';
+export type * from './types';
 
 export const Portal = _Portal;
 /** @deprecated Use `Portal` instead */
