@@ -8,6 +8,7 @@ import 'tdesign-icons-web-components/esm/components/share-1';
 import '@tdesign/web-components-ui/tooltip';
 
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { copy as fallbackCopy } from '@tdesign/web-components-shared/_util/copyToClipboard';
 import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { MessagePlugin } from '@tdesign/web-components-ui/message';
 import { Component, signal, tag } from 'omi';
@@ -30,14 +31,20 @@ export const renderActions = (
   const clickCopyHandler = () => {
     const text = copyText.toString();
     if (!text) return;
-    navigator.clipboard
-      .writeText(copyText.toString())
-      .then(() => {
-        MessagePlugin.success('复制成功');
-      })
-      .catch(() => {
-        MessagePlugin.success('复制失败，请手动复制');
-      });
+    if (navigator.clipboard) {
+      navigator.clipboard
+        .writeText(copyText.toString())
+        .then(() => {
+          MessagePlugin.success('复制成功');
+        })
+        .catch(() => {
+          MessagePlugin.success('复制失败，请手动复制');
+        });
+    } else {
+      const success = fallbackCopy(text);
+      if (success) MessagePlugin.success('复制成功');
+      else MessagePlugin.error('复制失败，请手动复制');
+    }
   };
 
   const handleClickAction = (action: TdChatActionsName, data: any) => {
