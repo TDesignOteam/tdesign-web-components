@@ -1,4 +1,5 @@
 name: pkg-pr-new
+
 on: [push, pull_request]
 
 jobs:
@@ -18,8 +19,12 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
 
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
 
-      - run: pnpm run build
+      - run: pnpm run "/^build:/"
 
-      - run: npx pkg-pr-new publish --packageManager=pnpm,npm,yarn
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - run: pnpm dlx pkg-pr-new publish './packages/ui' './packages/chat' --pnpm --packageManager=pnpm,npm,yarn

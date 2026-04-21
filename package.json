@@ -1,5 +1,5 @@
 {
-  "name": "tdesign-web-components-monorepo",
+  "name": "tdesign-web-components",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "dev": "cd site && vite --force",
     "site": "cd site && vite build",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
-    "build": "pnpm --filter @tdesign/web-components-ui --filter @tdesign/web-components-chat run build",
+    "build": "pnpm run \"/^build:/\"",
     "build:ui": "cd packages/ui && pnpm run build",
     "build:chat": "cd packages/chat && pnpm run build",
     "preview": "vite preview",
