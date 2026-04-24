@@ -8,15 +8,15 @@
   "scripts": {
     "init": "git submodule init && git submodule update",
     "start": "pnpm run dev",
-    "dev": "cd site && vite --force",
-    "site": "cd site && vite build",
-    "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
+    "dev": "cd playground/site && vite --force",
+    "site": "cd playground/site && vite build",
+    "site:preview": "cd playground/site && vite build --mode preview && cd ../../_site && cp index.html 404.html",
     "build": "pnpm run \"/^build:/\"",
     "build:ui": "cd packages/ui && pnpm run build",
     "build:chat": "cd packages/chat && pnpm run build",
     "preview": "vite preview",
-    "lint": "eslint --ext .ts,.tsx packages/*/src site",
-    "lint:fix": "eslint --fix --ext .ts,.tsx packages/*/src site",
+    "lint": "eslint --ext .ts,.tsx packages/*/src playground/site",
+    "lint:fix": "eslint --fix --ext .ts,.tsx packages/*/src playground/site",
     "generate:entry": "node ./script/generate-entry.js",
     "prepare": "husky",
     "test": "echo 'test to do'"
@@ -26,7 +26,7 @@
       "prettier --write",
       "eslint --fix"
     ],
-    "site/**/*.{ts,tsx}": [
+    "playground/site/**/*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ]
@@ -44,6 +44,7 @@
     "@babel/types": "^7.26.9",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/format": "^20.5.0",
     "@rollup/plugin-alias": "^5.1.0",
     "@rollup/plugin-commonjs": "^26.0.1",
     "@rollup/plugin-json": "^6.1.0",

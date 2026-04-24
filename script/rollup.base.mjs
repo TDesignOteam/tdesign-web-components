@@ -15,9 +15,11 @@ import styles from 'rollup-plugin-styles';
 import { visualizer } from 'rollup-plugin-visualizer';
 import { fileURLToPath } from 'url';
 
+import { getWorkspaceRoot } from './lib/get-root-path.mjs';
+
 const __rollupFilename = fileURLToPath(import.meta.url);
 const __rollupDirname = dirname(__rollupFilename);
-const monorepoRoot = resolve(__rollupDirname, '..');
+const monorepoRoot = getWorkspaceRoot(__rollupDirname);
 
 // 分析模式配置
 const isAnalyze = process.env.ANALYZE === 'true';
@@ -105,7 +107,7 @@ export function createRollupConfig({
   // monorepo 路径别名
   const aliasPlugin = alias({
     entries: [
-      { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'packages/_common/$1') },
+      { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'common-utils/_common/$1') },
       {
         find: /^@tdesign\/web-components-shared\/(.*)/,
         replacement: resolve(monorepoRoot, 'packages/shared/src/$1'),
@@ -120,24 +122,24 @@ export function createRollupConfig({
       { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
       {
         find: /^@tdesign\/ai-chat-engine\/(.*)/,
-        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/$1'),
+        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/$1'),
       },
       {
         find: '@tdesign/ai-chat-engine',
-        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/chat-engine/index.ts'),
+        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
       },
       {
         find: /^@tdesign\/ai-shared\/(.*)/,
-        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/$1'),
+        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/shared/$1'),
       },
       {
         find: '@tdesign/ai-shared',
-        replacement: resolve(monorepoRoot, 'packages/_ai-core/packages/shared/index.ts'),
+        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/shared/index.ts'),
       },
     ],
   });
 
-  // Less 别名插件：将 @common/ 解析为 packages/_common/
+  // Less 别名插件：将 @common/ 解析为 common-utils/_common/
   const lessAliasPlugin = {
     install(less, pluginManager) {
       class AliasFileManager extends less.FileManager {
@@ -150,7 +152,7 @@ export function createRollupConfig({
         }
 
         loadFile(filename, currentDirectory, options, environment) {
-          const resolved = filename.replace(/^@common\//, `${resolve(monorepoRoot, 'packages/_common')}/`);
+          const resolved = filename.replace(/^@common\//, `${resolve(monorepoRoot, 'common-utils/_common')}/`);
           return super.loadFile(resolved, currentDirectory, options, environment);
         }
       }

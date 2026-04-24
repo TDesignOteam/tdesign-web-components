@@ -4,11 +4,13 @@ import fs from 'fs';
 import path from 'path';
 import { execSync } from 'child_process';
 import { fileURLToPath } from 'url';
+import { getWorkspaceRoot } from './lib/get-root-path.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const rootDir = getWorkspaceRoot(__dirname);
 
-const uiPkgDir = path.join(__dirname, '..', 'packages', 'ui');
+const uiPkgDir = path.join(rootDir, 'packages', 'ui');
 const distDir = path.join(uiPkgDir, 'dist');
 const analysisFiles = [
   'stats-umd.html',

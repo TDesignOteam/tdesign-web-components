@@ -10,16 +10,16 @@
       "@tdesign/web-components-chat/*": ["packages/chat/src/*"],
       "@tdesign/web-components-shared": ["packages/shared/src"],
       "@tdesign/web-components-shared/*": ["packages/shared/src/*"],
-      "@tdesign/ai-chat-engine": ["packages/_ai-core/packages/chat-engine/index.ts"],
-      "@tdesign/ai-chat-engine/*": ["packages/_ai-core/packages/chat-engine/*"],
-      "@tdesign/ai-shared": ["packages/_ai-core/packages/shared/index.ts"],
-      "@tdesign/ai-shared/*": ["packages/_ai-core/packages/shared/*"],
+      "@tdesign/ai-chat-engine": ["common-utils/_ai-core/packages/chat-engine/index.ts"],
+      "@tdesign/ai-chat-engine/*": ["common-utils/_ai-core/packages/chat-engine/*"],
+      "@tdesign/ai-shared": ["common-utils/_ai-core/packages/shared/index.ts"],
+      "@tdesign/ai-shared/*": ["common-utils/_ai-core/packages/shared/*"],
       "tdesign-web-components": ["packages/ui/src"],
       "tdesign-web-components/*": ["packages/ui/src/*"],
       "tdesign-web-components-chat": ["packages/chat/src"],
       "tdesign-web-components-chat/*": ["packages/chat/src/*"],
       "@test/utils": ["test/utils"],
-      "@common/*": ["packages/_common/*"],
+      "@common/*": ["common-utils/_common/*"],
       "@": ["packages/ui/src"],
       "@/*": ["packages/ui/src/*"]
     },
@@ -28,7 +28,7 @@
       "vitest/globals"
     ]
   },
-  "include": ["packages/*/src", "site", "typings.d.ts"],
+  "include": ["packages/*/src", "playground/site", "typings.d.ts"],
   "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "_common", "dist", "lib", "esm", "cjs", "es"],
   "compileOnSave": false
 }

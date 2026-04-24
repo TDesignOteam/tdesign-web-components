@@ -1,3 +1,19 @@
 packages:
+  # 核心包
   - 'packages/*'
-  - 'packages/_ai-core/packages/**'
+
+  # 公共工具（外部或独立维护）
+  - 'common-utils/_common'
+  - 'common-utils/_ai-core/packages/chat-engine'
+  - 'common-utils/_ai-core/packages/shared'
+
+  # 文档站点
+  - 'playground/site'
+
+  # Vue Next 集成
+  - 'playground/_tdesign-vue-next/packages/pro-components'
+  - 'playground/_tdesign-vue-next/packages/tdesign-vue-next-chat'
+
+  # React 集成
+  - 'playground/_tdesign-react/packages/pro-components'
+  - 'playground/_tdesign-react/packages/tdesign-react-chat'

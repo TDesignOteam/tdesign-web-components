@@ -1,8 +1,8 @@
 // @ts-nocheck
-import t from '@babel/types'; // 新增导入
+import * as t from '@babel/types';
 import { createFilter } from '@rollup/pluginutils';
 
-import babelAddPartAttributePlugin from '../plugins/babel-plugin-add-part-attribute.cjs'
+import babelAddPartAttributePlugin from '../../plugins/babel-plugin-add-part-attribute.cjs'
 
 const { visitor } = babelAddPartAttributePlugin({ types: t, jsxFactoryName: 'OmiComponent' })
 

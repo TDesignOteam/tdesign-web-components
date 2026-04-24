@@ -13,10 +13,11 @@ import { execSync } from 'child_process';
 import { writeFileSync, readFileSync } from 'fs';
 import { resolve, dirname } from 'path';
 import { fileURLToPath } from 'url';
+import { getWorkspaceRoot } from './lib/get-root-path.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-const rootDir = resolve(__dirname, '..');
+const rootDir = getWorkspaceRoot(__dirname);
 
 // 解析命令行参数
 const args = process.argv.slice(2);

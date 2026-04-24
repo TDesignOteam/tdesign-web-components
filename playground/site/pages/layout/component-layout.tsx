@@ -1,9 +1,9 @@
 import './td-wc-content/index.tsx';
 
+import packageJson from '@ui-pkg/package.json';
 import { Component, tag, VNode } from 'omi';
 import styles from 'tdesign-site-components/lib/styles/style.css?raw';
 
-import packageJson from '../../../packages/ui/package.json';
 import sidebarConfig from '../../sidebar.config.ts';
 
 const routerList = JSON.parse(JSON.stringify(sidebarConfig).replace(/component:.+/g, ''));
