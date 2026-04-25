@@ -4,3 +4,9 @@
 [submodule "common-utils/_ai-core"]
 	path = common-utils/_ai-core
 	url = https://github.com/TDesignOteam/tdesign-ai-core.git
+[submodule "playground/_tdesign-vue-next"]
+	path = playground/_tdesign-vue-next
+	url = https://github.com/Tencent/tdesign-vue-next.git
+[submodule "playground/_tdesign-react"]
+	path = playground/_tdesign-react
+	url = https://github.com/Tencent/tdesign-react.git
