@@ -3,6 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "lib",
+    "skipLibCheck": true,
+    "noEmitOnError": false,
     "paths": {
       "@tdesign/web-components-chat": ["src"],
       "@tdesign/web-components-chat/*": ["src/*"],
@@ -21,5 +23,5 @@
     }
   },
   "include": ["src", "../../typings.d.ts"],
-  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "../../common-utils/_common", "dist", "lib", "esm", "cjs", "es"]
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "**/**/_example/*", "node_modules", "../../common-utils/_common", "dist", "lib", "esm", "cjs", "es"]
 }
