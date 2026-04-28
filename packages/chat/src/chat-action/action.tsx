@@ -1,3 +1,4 @@
+import '@tdesign/web-components-ui';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
 import 'tdesign-icons-web-components/esm/components/thumb-up-filled';
@@ -5,7 +6,6 @@ import 'tdesign-icons-web-components/esm/components/thumb-down-filled';
 import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
-import '@tdesign/web-components-ui/tooltip';
 
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { copy as fallbackCopy } from '@tdesign/web-components-shared/_util/copyToClipboard';

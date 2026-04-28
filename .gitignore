@@ -22,10 +22,10 @@ dist-ssr
 *.sln
 *.sw?
 _site
-lib
-es
-esm
-cjs
+packages/*/lib
+packages/*/es
+packages/*/esm
+packages/*/cjs
 plugins/*.js
 plugins/*.js.map
 

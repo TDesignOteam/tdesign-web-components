@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/collapse';
+import '@tdesign/web-components-ui';
 import '../auto-scroll';
 import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';

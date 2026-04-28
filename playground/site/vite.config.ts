@@ -56,6 +56,7 @@ export default ({ mode }) => {
       https: false,
       fs: {
         strict: false,
+        allow: [resolve(ROOT, '.'), resolve(ROOT, 'node_modules')],
       },
       proxy: {
         '/api/sse': {

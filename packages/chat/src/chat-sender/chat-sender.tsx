@@ -1,11 +1,9 @@
+import '@tdesign/web-components-ui';
 import 'tdesign-icons-web-components/esm/components/send-filled';
 import 'tdesign-icons-web-components/esm/components/stop';
 import 'tdesign-icons-web-components/esm/components/image';
 import 'tdesign-icons-web-components/esm/components/file-attachment';
 import '../attachments';
-import '@tdesign/web-components-ui/textarea';
-import '@tdesign/web-components-ui/button';
-import '@tdesign/web-components-ui/tooltip';
 
 import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { setExportparts } from '@tdesign/web-components-shared/_util/dom';

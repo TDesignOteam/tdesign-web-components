@@ -1,7 +1,7 @@
 import { css, globalCSS } from 'omi';
 
-import avatarStyle from '@common/style/web/components/avatar/_index.less';
 import wcStyles from './wc.less';
+import avatarStyle from '@common/style/web/components/avatar/_index.less';
 
 export const styleSheet = css`
   ${avatarStyle}

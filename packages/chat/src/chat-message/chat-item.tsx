@@ -1,10 +1,9 @@
+import '@tdesign/web-components-ui';
 import './content/markdown-content';
 import './content/reasoning-content';
-import '@tdesign/web-components-ui/collapse';
 import '../chat-loading';
 import '../attachments';
 import '../chat-action';
-import '@tdesign/web-components-ui/image';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
 import 'tdesign-icons-web-components/esm/components/thumb-up-filled';
@@ -25,7 +24,6 @@ import {
   isAttachmentContent,
   isImageContent,
   isMarkdownContent,
-  isReasoningContent,
   isSearchContent,
   isSuggestionContent,
   isTextContent,
@@ -40,6 +38,9 @@ import { renderThinking } from './content/thinking-content';
 import type { TdChatMessageActionName, TdChatMessageProps } from './type';
 
 import styles from './style/chat-item.less';
+
+// isReasoningContent: exists in _ai-core dist but tsc can't resolve via paths alias
+declare function isReasoningContent(content: unknown): boolean;
 
 const className = `${getClassPrefix()}-chat__item`;
 

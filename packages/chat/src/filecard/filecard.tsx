@@ -1,3 +1,4 @@
+import '@tdesign/web-components-ui';
 import 'tdesign-icons-web-components/esm/components/file-excel-filled';
 import 'tdesign-icons-web-components/esm/components/file-image-filled';
 import 'tdesign-icons-web-components/esm/components/file-code-1-filled';
@@ -11,8 +12,6 @@ import 'tdesign-icons-web-components/esm/components/loading';
 import 'tdesign-icons-web-components/esm/components/image-error';
 import 'tdesign-icons-web-components/esm/components/file';
 import 'tdesign-icons-web-components/esm/components/close-circle-filled';
-import '@tdesign/web-components-ui/image';
-import '@tdesign/web-components-ui/loading';
 
 import classname from '@tdesign/web-components-shared/_util/classname';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';

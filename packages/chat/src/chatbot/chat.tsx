@@ -1,6 +1,6 @@
+import '@tdesign/web-components-ui';
 import './chat-list';
 import '../chat-sender';
-import '@tdesign/web-components-ui/button';
 
 import classname, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { convertNodeListToVNodes, getSlotNodes } from '@tdesign/web-components-shared/_util/component';
