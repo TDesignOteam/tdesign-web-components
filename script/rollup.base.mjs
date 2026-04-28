@@ -9,6 +9,7 @@ import fg from 'fast-glob';
 import { dirname, resolve } from 'path';
 import atImport from 'postcss-import';
 import analyzer from 'rollup-plugin-analyzer';
+import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import postcss from 'rollup-plugin-postcss';
 import styles from 'rollup-plugin-styles';
@@ -17,9 +18,42 @@ import { fileURLToPath } from 'url';
 
 import { getWorkspaceRoot } from './lib/get-root-path.mjs';
 
-const __rollupFilename = fileURLToPath(import.meta.url);
-const __rollupDirname = dirname(__rollupFilename);
-const monorepoRoot = getWorkspaceRoot(__rollupDirname);
+const monorepoRoot = getWorkspaceRoot(dirname(fileURLToPath(import.meta.url)));
+
+// monorepo 路径别名（模块级，createRollupConfig 和 createDtsConfig 共享）
+const aliasPlugin = alias({
+  entries: [
+    { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'common-utils/_common/$1') },
+    {
+      find: /^@tdesign\/web-components-shared\/(.*)/,
+      replacement: resolve(monorepoRoot, 'packages/shared/src/$1'),
+    },
+    {
+      find: '@tdesign/web-components-shared',
+      replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts'),
+    },
+    { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/ui/src/$1') },
+    { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/ui/src/index.ts') },
+    { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/chat/src/$1') },
+    { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
+    {
+      find: /^@tdesign\/ai-chat-engine\/(.*)/,
+      replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/$1'),
+    },
+    {
+      find: '@tdesign/ai-chat-engine',
+      replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
+    },
+    {
+      find: /^@tdesign\/ai-shared\/(.*)/,
+      replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/shared/$1'),
+    },
+    {
+      find: '@tdesign/ai-shared',
+      replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/shared/index.ts'),
+    },
+  ],
+});
 
 // 分析模式配置
 const isAnalyze = process.env.ANALYZE === 'true';
@@ -44,7 +78,14 @@ export function createRollupConfig({
   packageName,
   packageDir,
   input = 'src/index.ts',
-  inputList = [
+  inputList: _inputList,
+  umdGlobalName = 'TDesign',
+  globals = { omi: 'omi', lodash: '_' },
+  additionalExternal = [],
+  skipCss = false,
+}) {
+  // 默认 inputList，允许外部覆盖
+  const inputList = _inputList || [
     'src/**/*.ts',
     'src/**/*.jsx',
     'src/**/*.tsx',
@@ -53,12 +94,7 @@ export function createRollupConfig({
     '!src/**/__tests__/**',
     '!src/**/_usage/**',
     '!src/**/mock/**',
-  ],
-  umdGlobalName = 'TDesign',
-  globals = { omi: 'omi', lodash: '_' },
-  additionalExternal = [],
-  skipCss = false,
-}) {
+  ];
   const externalDeps = Object.keys(pkg.dependencies || {});
   const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
 
@@ -103,41 +139,6 @@ export function createRollupConfig({
 
     return plugins;
   };
-
-  // monorepo 路径别名
-  const aliasPlugin = alias({
-    entries: [
-      { find: /^@common\/(.*)/, replacement: resolve(monorepoRoot, 'common-utils/_common/$1') },
-      {
-        find: /^@tdesign\/web-components-shared\/(.*)/,
-        replacement: resolve(monorepoRoot, 'packages/shared/src/$1'),
-      },
-      {
-        find: '@tdesign/web-components-shared',
-        replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts'),
-      },
-      { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/ui/src/$1') },
-      { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/ui/src/index.ts') },
-      { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/chat/src/$1') },
-      { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
-      {
-        find: /^@tdesign\/ai-chat-engine\/(.*)/,
-        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/$1'),
-      },
-      {
-        find: '@tdesign/ai-chat-engine',
-        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
-      },
-      {
-        find: /^@tdesign\/ai-shared\/(.*)/,
-        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/shared/$1'),
-      },
-      {
-        find: '@tdesign/ai-shared',
-        replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/shared/index.ts'),
-      },
-    ],
-  });
 
   // Less 别名插件：将 @common/ 解析为 common-utils/_common/
   const lessAliasPlugin = {
@@ -256,10 +257,7 @@ export function createRollupConfig({
   // CSS 配置
   const cssConfig = {
     input: resolve(packageDir, 'src/style/index.js'),
-    plugins: [
-      aliasPlugin,
-      styles({ mode: 'extract' }),
-    ],
+    plugins: [aliasPlugin, styles({ mode: 'extract' })],
     output: {
       banner,
       dir: resolve(packageDir, 'lib/'),
@@ -370,6 +368,59 @@ export function createRollupConfig({
   }
 
   return configs;
+}
+
+/**
+ * 创建 .d.ts 类型声明构建配置（独立步骤，替代 tsc + generate-declarations）
+ *
+ * 使用 rollup-plugin-dts 从源码直接生成与 Rollup 输出结构匹配的 .d.ts 文件。
+ * 必须作为独立命令运行（不能与其他 config 合并），因为插件需要独占 Rollup 实例。
+ */
+export function createDtsConfig({ pkg, packageName, packageDir, input = 'src/index.ts', additionalExternal = [] }) {
+  const banner = `/**
+ * ${packageName} v${pkg.version}
+ * (c) ${new Date().getFullYear()} ${pkg.author}
+ * @license ${pkg.license}
+ */
+`;
+
+  // 所有依赖 + peerDependencies 均视为外部（dts 只生成本包的类型声明）
+  const externalDeps = Object.keys(pkg.dependencies || {});
+  const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
+  const allExternal = [...externalDeps, ...externalPeerDeps, ...additionalExternal];
+
+  return {
+    input: resolve(packageDir, input),
+    external: [...allExternal, /^node_modules\//, /^cherry-markdown/, /^lodash-es/, /^@types/],
+    plugins: [
+      aliasPlugin,
+      {
+        // 忽略 node_modules 中无法解析的类型引用（如 cherry-markdown 的 broken .d.ts）
+        resolveId(source) {
+          // 跳过无法解析的 node_modules 内部类型路径
+          if (source.includes('node_modules') && source.includes('../')) {
+            return false; // 标记为外部，不报错
+          }
+          return null; // 继续正常解析
+        },
+      },
+      dts({
+        tsconfig: resolve(packageDir, 'tsconfig.json'),
+        respectExternal: true,
+        compilerOptions: {
+          // 不设 rootDir，允许 tsc 解析 paths alias 指向的外部源码
+          // preserveModulesRoot 控制输出路径结构，与 Rollup JS 输出保持一致
+        },
+      }),
+    ],
+    output: {
+      banner,
+      dir: resolve(packageDir, 'lib/'),
+      format: 'esm',
+      preserveModules: true,
+      preserveModulesRoot: resolve(packageDir, 'src'),
+    },
+  };
 }
 
 export default createRollupConfig;

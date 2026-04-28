@@ -34,25 +34,25 @@ importers:
         version: 20.5.0
       '@rollup/plugin-alias':
         specifier: ^5.1.0
-        version: 5.1.1(rollup@4.60.1)
+        version: 5.1.1(rollup@2.80.0)
       '@rollup/plugin-commonjs':
         specifier: ^26.0.1
-        version: 26.0.3(rollup@4.60.1)
+        version: 26.0.3(rollup@2.80.0)
       '@rollup/plugin-json':
         specifier: ^6.1.0
-        version: 6.1.0(rollup@4.60.1)
+        version: 6.1.0(rollup@2.80.0)
       '@rollup/plugin-node-resolve':
         specifier: ^15.2.3
-        version: 15.3.1(rollup@4.60.1)
+        version: 15.3.1(rollup@2.80.0)
       '@rollup/plugin-replace':
         specifier: ^5.0.7
-        version: 5.0.7(rollup@4.60.1)
+        version: 5.0.7(rollup@2.80.0)
       '@rollup/plugin-terser':
         specifier: ^0.4.4
-        version: 0.4.4(rollup@4.60.1)
+        version: 0.4.4(rollup@2.80.0)
       '@rollup/plugin-url':
         specifier: ^8.0.2
-        version: 8.0.2(rollup@4.60.1)
+        version: 8.0.2(rollup@2.80.0)
       '@tailwindcss/typography':
         specifier: ^0.5.10
         version: 0.5.19(tailwindcss@3.4.19(yaml@2.8.3))
@@ -137,18 +137,21 @@ importers:
       rollup-plugin-analyzer:
         specifier: ^4.0.0
         version: 4.0.0
+      rollup-plugin-dts:
+        specifier: 5.3.1
+        version: 5.3.1(rollup@2.80.0)(typescript@5.9.3)
       rollup-plugin-esbuild:
         specifier: ^6.1.1
-        version: 6.2.1(esbuild@0.27.7)(rollup@4.60.1)
+        version: 6.2.1(esbuild@0.27.7)(rollup@2.80.0)
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.5.9)(ts-node@10.9.2(@types/node@25.6.0)(typescript@5.9.3))
       rollup-plugin-styles:
         specifier: ^4.0.0
-        version: 4.0.0(rollup@4.60.1)
+        version: 4.0.0(rollup@2.80.0)
       rollup-plugin-visualizer:
         specifier: ^6.0.3
-        version: 6.0.11(rollup@4.60.1)
+        version: 6.0.11(rollup@2.80.0)
       sass:
         specifier: ^1.55.0
         version: 1.99.0
@@ -5630,6 +5633,13 @@ packages:
     resolution: {integrity: sha512-LL9GEt3bkXp6Wa19SNR5MWcvHNMvuTFYg+eYBZN2OIFhSWN+pEJUQXEKu5BsOeABob3x9PDaLKW7w5iOJnsESQ==}
     engines: {node: '>=8.0.0'}
 
+  rollup-plugin-dts@5.3.1:
+    resolution: {integrity: sha512-gusMi+Z4gY/JaEQeXnB0RUdU82h1kF0WYzCWgVmV4p3hWXqelaKuCvcJawfeg+EKn2T1Ie+YWF2OiN1/L8bTVg==}
+    engines: {node: '>=v14.21.3'}
+    peerDependencies:
+      rollup: ^3.0
+      typescript: ^4.1 || ^5.0
+
   rollup-plugin-esbuild@6.2.1:
     resolution: {integrity: sha512-jTNOMGoMRhs0JuueJrJqbW8tOwxumaWYq+V5i+PD+8ecSCVkuX27tGW7BXqDgoULQ55rO7IdNxPcnsWtshz3AA==}
     engines: {node: '>=14.18.0'}
@@ -7665,7 +7675,7 @@ snapshots:
       '@types/node': 20.5.1
       chalk: 4.1.2
       cosmiconfig: 8.3.6(typescript@5.9.3)
-      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.9.3))(typescript@5.9.3)
+      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@22.19.17)(typescript@5.9.3))(typescript@5.9.3)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -8117,9 +8127,9 @@ snapshots:
 
   '@popperjs/core@2.11.8': {}
 
-  '@rollup/plugin-alias@5.1.1(rollup@4.60.1)':
+  '@rollup/plugin-alias@5.1.1(rollup@2.80.0)':
     optionalDependencies:
-      rollup: 4.60.1
+      rollup: 2.80.0
 
   '@rollup/plugin-babel@5.3.1(@babel/core@7.29.0)(rollup@2.80.0)':
     dependencies:
@@ -8130,22 +8140,22 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@rollup/plugin-commonjs@26.0.3(rollup@4.60.1)':
+  '@rollup/plugin-commonjs@26.0.3(rollup@2.80.0)':
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.60.1)
+      '@rollup/pluginutils': 5.3.0(rollup@2.80.0)
       commondir: 1.0.1
       estree-walker: 2.0.2
       glob: 10.5.0
       is-reference: 1.2.1
       magic-string: 0.30.21
     optionalDependencies:
-      rollup: 4.60.1
+      rollup: 2.80.0
 
-  '@rollup/plugin-json@6.1.0(rollup@4.60.1)':
+  '@rollup/plugin-json@6.1.0(rollup@2.80.0)':
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.60.1)
+      '@rollup/pluginutils': 5.3.0(rollup@2.80.0)
     optionalDependencies:
-      rollup: 4.60.1
+      rollup: 2.80.0
 
   '@rollup/plugin-node-resolve@15.3.1(rollup@2.80.0)':
     dependencies:
@@ -8157,28 +8167,18 @@ snapshots:
     optionalDependencies:
       rollup: 2.80.0
 
-  '@rollup/plugin-node-resolve@15.3.1(rollup@4.60.1)':
-    dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.60.1)
-      '@types/resolve': 1.20.2
-      deepmerge: 4.3.1
-      is-module: 1.0.0
-      resolve: 1.22.12
-    optionalDependencies:
-      rollup: 4.60.1
-
   '@rollup/plugin-replace@2.4.2(rollup@2.80.0)':
     dependencies:
       '@rollup/pluginutils': 3.1.0(rollup@2.80.0)
       magic-string: 0.25.9
       rollup: 2.80.0
 
-  '@rollup/plugin-replace@5.0.7(rollup@4.60.1)':
+  '@rollup/plugin-replace@5.0.7(rollup@2.80.0)':
     dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.60.1)
+      '@rollup/pluginutils': 5.3.0(rollup@2.80.0)
       magic-string: 0.30.21
     optionalDependencies:
-      rollup: 4.60.1
+      rollup: 2.80.0
 
   '@rollup/plugin-terser@0.4.4(rollup@2.80.0)':
     dependencies:
@@ -8188,21 +8188,13 @@ snapshots:
     optionalDependencies:
       rollup: 2.80.0
 
-  '@rollup/plugin-terser@0.4.4(rollup@4.60.1)':
+  '@rollup/plugin-url@8.0.2(rollup@2.80.0)':
     dependencies:
-      serialize-javascript: 6.0.2
-      smob: 1.6.1
-      terser: 5.46.1
-    optionalDependencies:
-      rollup: 4.60.1
-
-  '@rollup/plugin-url@8.0.2(rollup@4.60.1)':
-    dependencies:
-      '@rollup/pluginutils': 5.3.0(rollup@4.60.1)
+      '@rollup/pluginutils': 5.3.0(rollup@2.80.0)
       make-dir: 3.1.0
       mime: 3.0.0
     optionalDependencies:
-      rollup: 4.60.1
+      rollup: 2.80.0
 
   '@rollup/pluginutils@3.1.0(rollup@2.80.0)':
     dependencies:
@@ -8223,14 +8215,6 @@ snapshots:
       picomatch: 4.0.4
     optionalDependencies:
       rollup: 2.80.0
-
-  '@rollup/pluginutils@5.3.0(rollup@4.60.1)':
-    dependencies:
-      '@types/estree': 1.0.8
-      estree-walker: 2.0.2
-      picomatch: 4.0.4
-    optionalDependencies:
-      rollup: 4.60.1
 
   '@rollup/rollup-android-arm-eabi@4.60.1':
     optional: true
@@ -9440,7 +9424,7 @@ snapshots:
       layout-base: 2.0.1
     optional: true
 
-  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.9.3))(typescript@5.9.3):
+  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.9.3))(ts-node@10.9.2(@types/node@22.19.17)(typescript@5.9.3))(typescript@5.9.3):
     dependencies:
       '@types/node': 20.5.1
       cosmiconfig: 8.3.6(typescript@5.9.3)
@@ -12566,13 +12550,21 @@ snapshots:
 
   rollup-plugin-analyzer@4.0.0: {}
 
-  rollup-plugin-esbuild@6.2.1(esbuild@0.27.7)(rollup@4.60.1):
+  rollup-plugin-dts@5.3.1(rollup@2.80.0)(typescript@5.9.3):
+    dependencies:
+      magic-string: 0.30.21
+      rollup: 2.80.0
+      typescript: 5.9.3
+    optionalDependencies:
+      '@babel/code-frame': 7.29.0
+
+  rollup-plugin-esbuild@6.2.1(esbuild@0.27.7)(rollup@2.80.0):
     dependencies:
       debug: 4.4.3
       es-module-lexer: 1.7.0
       esbuild: 0.27.7
       get-tsconfig: 4.13.8
-      rollup: 4.60.1
+      rollup: 2.80.0
       unplugin-utils: 0.2.5
     transitivePeerDependencies:
       - supports-color
@@ -12596,7 +12588,7 @@ snapshots:
     transitivePeerDependencies:
       - ts-node
 
-  rollup-plugin-styles@4.0.0(rollup@4.60.1):
+  rollup-plugin-styles@4.0.0(rollup@2.80.0):
     dependencies:
       '@rollup/pluginutils': 4.2.1
       '@types/cssnano': 5.1.3(postcss@8.5.9)
@@ -12614,18 +12606,18 @@ snapshots:
       postcss-value-parser: 4.2.0
       query-string: 7.1.3
       resolve: 1.22.12
-      rollup: 4.60.1
+      rollup: 2.80.0
       source-map-js: 1.2.1
       tslib: 2.8.1
 
-  rollup-plugin-visualizer@6.0.11(rollup@4.60.1):
+  rollup-plugin-visualizer@6.0.11(rollup@2.80.0):
     dependencies:
       open: 8.4.2
       picomatch: 4.0.4
       source-map: 0.7.6
       yargs: 17.7.2
     optionalDependencies:
-      rollup: 4.60.1
+      rollup: 2.80.0
 
   rollup-pluginutils@2.8.2:
     dependencies:

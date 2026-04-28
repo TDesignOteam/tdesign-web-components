@@ -22,10 +22,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf es lib dist esm cjs",
-    "build": "NODE_ENV=production rollup -c rollup.config.mjs",
-    "build:tsc": "npm-run-all --parallel build:tsc-*",
-    "build:tsc-lib": "tsc --emitDeclarationOnly -d --noEmitOnError false -p ./tsconfig.json --outDir lib/",
-    "build:tsc-esm": "tsc --emitDeclarationOnly -d -p ./tsconfig.json --outDir esm/"
+    "build": "NODE_ENV=production rollup -c rollup.config.mjs && NODE_ENV=production rollup --config rollup.dts.config.mjs"
   },
   "files": [
     "esm",
