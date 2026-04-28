@@ -1,7 +1,10 @@
 @import '@common/style/web/base.less';
 
 // :host的样式直接应用到t-date-picker和t-date-range-picker标签本身，而非仅影响shadow dom内部的元素
-:host {
+// 注意：该样式经 globalCSS 被注入到所有组件的 shadow root，必须使用 :host(selector) 限定宿主，
+// 否则裸 :host 会把 inline-block 作用到每一个组件（含 demo 容器 t-demo-example-* 等）的宿主元素上。
+:host(t-date-picker),
+:host(t-date-range-picker) {
   display: inline-block;
 }
 
