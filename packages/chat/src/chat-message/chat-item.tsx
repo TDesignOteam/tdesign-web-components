@@ -31,16 +31,12 @@ import {
   isUserMessage,
 } from '../chat-engine';
 import { renderAttachments } from './content/attachment-content';
-import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
 import type { TdChatMessageActionName, TdChatMessageProps } from './type';
 
 import styles from './style/chat-item.less';
-
-// isReasoningContent: exists in _ai-core dist but tsc can't resolve via paths alias
-declare function isReasoningContent(content: unknown): boolean;
 
 const className = `${getClassPrefix()}-chat__item`;
 
@@ -298,20 +294,6 @@ export default class ChatItem extends Component<ChatMessageProps> {
                 content: content.data,
                 status: content.status,
                 ...chatContentProps?.thinking,
-                ...content?.ext,
-              })}
-            </slot>
-          );
-        }
-        if (isReasoningContent(content)) {
-          // 推理过程
-          return (
-            <slot key={elementKey} name={`${content.type}-${index}`}>
-              {renderReasoning({
-                key: elementKey,
-                content: content.data,
-                status: content.status,
-                ...chatContentProps?.reasoning,
                 ...content?.ext,
               })}
             </slot>
