@@ -1,0 +1,17 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "lib",
+    "paths": {
+      "@tdesign/web-components-ui": ["src"],
+      "@tdesign/web-components-ui/*": ["src/*"],
+      "@tdesign/web-components-shared": ["../shared/src"],
+      "@tdesign/web-components-shared/*": ["../shared/src/*"],
+      "@common/*": ["../../common-utils/_common/*"],
+      "@": ["src"]
+    }
+  },
+  "include": ["src", "../../typings.d.ts"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "../../common-utils/_common", "dist", "lib", "esm", "cjs", "es"]
+}

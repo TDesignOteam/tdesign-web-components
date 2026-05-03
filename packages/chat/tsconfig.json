@@ -1,0 +1,27 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "lib",
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "paths": {
+      "@tdesign/web-components-chat": ["src"],
+      "@tdesign/web-components-chat/*": ["src/*"],
+      "@tdesign/web-components-ui": ["../ui/src"],
+      "@tdesign/web-components-ui/*": ["../ui/src/*"],
+      "@tdesign/web-components-shared": ["../shared/src"],
+      "@tdesign/web-components-shared/*": ["../shared/src/*"],
+      "@tdesign/ai-chat-engine": ["../../common-utils/_ai-core/packages/chat-engine/index.ts"],
+      "@tdesign/ai-chat-engine/*": ["../../common-utils/_ai-core/packages/chat-engine/*"],
+      "@tdesign/ai-shared": ["../../common-utils/_ai-core/packages/shared/index.ts"],
+      "@tdesign/ai-shared/*": ["../../common-utils/_ai-core/packages/shared/*"],
+      "tdesign-web-components-chat": ["src"],
+      "tdesign-web-components-chat/*": ["src/*"],
+      "@common/*": ["../../common-utils/_common/*"],
+      "@": ["src"]
+    }
+  },
+  "include": ["src", "../../typings.d.ts"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "**/**/_example/*", "node_modules", "../../common-utils/_common", "dist", "lib", "esm", "cjs", "es"]
+}

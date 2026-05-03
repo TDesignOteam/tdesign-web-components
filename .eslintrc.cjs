@@ -20,7 +20,7 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/**/_example/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
+      files: ['packages/*/src/**/_example/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
       rules: {
         'no-restricted-imports': 'off',
       },
@@ -92,6 +92,7 @@ module.exports = {
     'no-script-url': 'warn',
     'no-underscore-dangle': ['error', { allow: ['__filename', '__dirname', '__TDESIGN_THEME_PREFIX__'] }],
     'import/no-duplicates': 'off',
+    'import/order': 'off',
     'no-restricted-imports': [
       'error',
       {
@@ -101,7 +102,10 @@ module.exports = {
             message: 'Please use lodash-es instead.',
           },
         ],
-        patterns: ['tdesign-web-components/*'],
+        patterns: [
+          'tdesign-web-components/*',
+          'tdesign-web-components-chat/*',
+        ],
       },
     ],
   },

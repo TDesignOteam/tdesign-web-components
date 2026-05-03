@@ -1,0 +1,21 @@
+import { type UploadFile } from '@common/js/upload/types';
+import { StyledProps } from '@tdesign/web-components-shared/common';
+
+import { AttachmentType } from '../chat-engine';
+
+export interface TdAttachmentItem extends UploadFile {
+  key?: string;
+  fileType?: AttachmentType;
+  description?: string;
+  extension?: string;
+}
+
+export interface TdFileCardProps extends StyledProps {
+  item: TdAttachmentItem;
+  removable?: boolean;
+  onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
+  onRemove?: (event: CustomEvent<TdAttachmentItem>) => void;
+  disabled?: boolean;
+  imageViewer?: boolean;
+  cardType?: 'file' | 'image';
+}
