@@ -1,4 +1,4 @@
-import { TNode } from '../../common';
+import { TNode } from '../types';
 
 export interface TdCheckProps {
   /**

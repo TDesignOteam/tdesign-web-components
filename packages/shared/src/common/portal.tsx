@@ -2,7 +2,7 @@ import { Component, render, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
 import { canUseDocument } from '../_util/dom';
-import { AttachNode, AttachNodeReturnValue, TNode } from '../common';
+import { AttachNode, AttachNodeReturnValue, TNode } from './types';
 
 export interface PortalProps {
   /**

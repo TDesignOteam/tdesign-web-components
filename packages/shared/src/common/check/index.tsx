@@ -2,7 +2,7 @@ import { isBoolean, omit } from 'lodash-es';
 import { classNames, Component, tag } from 'omi';
 
 import { getClassPrefix } from '../../_util/classname';
-import { StyledProps, TNode } from '../../common';
+import { StyledProps, TNode } from '../types';
 import { TdCheckProps } from './types';
 
 export interface CheckProps extends TdCheckProps, StyledProps {

@@ -8,8 +8,22 @@ import { TNode } from '@tdesign/web-components-shared/common';
 import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { DropdownProps } from './dropdown';
 import { DropdownOption } from './type';
+
+interface DropdownMenuProps {
+  direction?: string;
+  disabled?: boolean;
+  hideAfterItemClick?: boolean;
+  maxColumnWidth?: number;
+  maxHeight?: number;
+  minColumnWidth?: number;
+  options?: DropdownOption[];
+  panelBottomContent?: TNode;
+  panelTopContent?: TNode;
+  placement?: string;
+  popupCss?: string;
+  onClick?: (data: DropdownOption, context: { e: MouseEvent }) => void;
+}
 
 export const propTypes = {
   direction: String,
@@ -28,7 +42,7 @@ export const propTypes = {
   onClick: Function,
 };
 @tag('t-dropdown-menu')
-export default class DropdownMenu extends Component<DropdownProps> {
+export default class DropdownMenu extends Component<DropdownMenuProps> {
   static propTypes = propTypes;
 
   static defaultProps = {
@@ -185,7 +199,7 @@ export default class DropdownMenu extends Component<DropdownProps> {
     this.update();
   }
 
-  render(props: DropdownProps) {
+  render(props: DropdownMenuProps) {
     const { options, maxHeight, direction, panelTopContent, panelBottomContent } = props;
     return (
       <div
