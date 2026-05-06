@@ -6,25 +6,25 @@ import { TNode } from '@tdesign/web-components-shared/common';
 import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { PopupProps } from '../popup';
-import { DropdownOption } from './type';
+import { DropdownOption, TdDropdownProps } from './type';
 
-interface DropdownMenuProps {
-  direction?: string;
-  disabled?: boolean;
-  hideAfterItemClick?: boolean;
-  maxColumnWidth?: number;
-  maxHeight?: number;
-  minColumnWidth?: number;
-  options?: DropdownOption[];
-  panelBottomContent?: TNode;
-  panelTopContent?: TNode;
-  placement?: string;
-  popupProps?: PopupProps;
-  trigger?: string;
-  popupCss?: string;
-  onClick?: (data: DropdownOption, context: { e: MouseEvent }) => void;
-}
+type DropdownMenuProps = Pick<
+  TdDropdownProps,
+  | 'direction'
+  | 'disabled'
+  | 'hideAfterItemClick'
+  | 'maxColumnWidth'
+  | 'maxHeight'
+  | 'minColumnWidth'
+  | 'options'
+  | 'panelBottomContent'
+  | 'panelTopContent'
+  | 'placement'
+  | 'popupProps'
+  | 'trigger'
+  | 'popupCss'
+  | 'onClick'
+>;
 
 export const propTypes = {
   direction: String,
