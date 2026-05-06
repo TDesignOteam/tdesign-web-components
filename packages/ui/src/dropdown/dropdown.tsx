@@ -1,9 +1,6 @@
 import './dropdownItem';
 import './dropdownMenu';
 import '../popup';
-import './dropdownItem';
-import './dropdownMenu';
-import '../popup';
 
 import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { StyledProps, TNode } from '@tdesign/web-components-shared/common';

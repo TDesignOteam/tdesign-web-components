@@ -160,7 +160,7 @@ export interface TdRangeInputPopupProps {
   /**
    * 透传 RangeInput 组件全部属性
    */
-  rangeInputProps?: any;
+  rangeInputProps?: TdRangeInputProps;
   /**
    * 只读状态，值为真会隐藏输入框，且无法打开下拉框
    * @default false

@@ -1,6 +1,4 @@
 import 'tdesign-icons-web-components/esm/components/chevron-right';
-import './dropdownItem';
-import '../divider';
 
 import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
@@ -8,6 +6,7 @@ import { TNode } from '@tdesign/web-components-shared/common';
 import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
+import { PopupProps } from '../popup';
 import { DropdownOption } from './type';
 
 interface DropdownMenuProps {
@@ -21,6 +20,8 @@ interface DropdownMenuProps {
   panelBottomContent?: TNode;
   panelTopContent?: TNode;
   placement?: string;
+  popupProps?: PopupProps;
+  trigger?: string;
   popupCss?: string;
   onClick?: (data: DropdownOption, context: { e: MouseEvent }) => void;
 }
