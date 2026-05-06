@@ -1,0 +1,26 @@
+@import "../../_common/style/web/base.less";
+@import "../../_common/style/web/components/avatar/_mixin.less";
+
+// for web-component
+.@{prefix}-avatar-group {
+  &.@{prefix}-avatar--offset-right {
+    & @{prefix}-avatar-light-dom {
+      &:not(:last-child) {
+        .avatar-group-offset-right(@avatar-group-offset-medium);
+        &.@{prefix}-size-s {
+          .avatar-group-offset-right(@avatar-group-offset-small);
+        }
+        &.@{prefix}-size-l {
+          .avatar-group-offset-right(@avatar-group-offset-large);
+        }
+      }
+    }
+  }
+  &.@{prefix}-avatar--offset-left {
+    & @{prefix}-avatar-light-dom {
+      &:not(:first-child) {
+        .avatar-group-size--left();
+      }
+    }
+  }
+}

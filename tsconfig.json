@@ -1,34 +1,39 @@
 {
-  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "baseUrl": "./",
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "module": "esnext",
+    "target": "esnext",
     "outDir": "lib",
+    "declaration": true,
+    "sourceMap": true,
+    "lib": ["esnext", "dom", "DOM.Iterable"],
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./",
     "paths": {
-      "@tdesign/web-components-ui": ["packages/ui/src"],
-      "@tdesign/web-components-ui/*": ["packages/ui/src/*"],
-      "@tdesign/web-components-chat": ["packages/chat/src"],
-      "@tdesign/web-components-chat/*": ["packages/chat/src/*"],
-      "@tdesign/web-components-shared": ["packages/shared/src"],
-      "@tdesign/web-components-shared/*": ["packages/shared/src/*"],
-      "@tdesign/ai-chat-engine": ["common-utils/_ai-core/packages/chat-engine/index.ts"],
-      "@tdesign/ai-chat-engine/*": ["common-utils/_ai-core/packages/chat-engine/*"],
-      "@tdesign/ai-shared": ["common-utils/_ai-core/packages/shared/index.ts"],
-      "@tdesign/ai-shared/*": ["common-utils/_ai-core/packages/shared/*"],
-      "tdesign-web-components": ["packages/ui/src"],
-      "tdesign-web-components/*": ["packages/ui/src/*"],
-      "tdesign-web-components-chat": ["packages/chat/src"],
-      "tdesign-web-components-chat/*": ["packages/chat/src/*"],
+      "tdesign-web-components": ["src"],
+      "tdesign-web-components/*": ["src/*"],
       "@test/utils": ["test/utils"],
-      "@common/*": ["common-utils/_common/*"],
-      "@": ["packages/ui/src"],
-      "@/*": ["packages/ui/src/*"]
+      "@common/*": ["src/_common/*"],
+      "@": ["src"]
     },
-    "types": [
-      "node",
-      "vitest/globals"
-    ]
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "jsx": "preserve",
+    "jsxFactory": "Component.h",
+    "jsxFragmentFactory": "Component.f",
+    "allowJs": true,
+    "checkJs": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true
   },
-  "include": ["packages/*/src", "playground/site", "typings.d.ts"],
-  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "_common", "dist", "lib", "esm", "cjs", "es"],
+  "include": ["src", "site", "typings.d.ts"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "src/_common", "dist", "lib", "esm", "cjs", "es"],
+  "types": [
+    "node",
+    "vitest/globals",
+  ],
   "compileOnSave": false
 }

@@ -174,20 +174,42 @@ export * from './button';
 
 ```bash
 # 启动项目
-pnpm run start
+npm run start
+# 更新网站组件单元覆盖率徽章
+npm run update:coverage-badge
 # 编译站点
-pnpm run site
+npm run site
 # 编译站点预览
-pnpm run site:preview
+npm run site:preview
 # 编译组件库
-pnpm run build
-# 编译 UI 组件库
-pnpm run build:ui
-# 编译 Chat 组件库
-pnpm run build:chat
+npm run build
+# 快速创建组件及其相关文件（暂不支持）
+npm run init
+
+# 运行全部单元测试用例(包括所有example的ssr测试)
+npm run test
+# 运行全部单元测试用例
+npm run test:unit
+# 运行指定组件单元测试用例，xxx表示组件目录名称, 多个组件用空格分开
+# eg: npm run test:unit button affix
+npm run test:unit xxx
+
+# 运行全部e2e测试用例
+npm run test:e2e
+# 运行指定组件（空格分割）e2e测试用例，xxx表示组件目录名称
+npm run test:e2e xxx
+# gui模式运行查看e2e测试用例
+npm run test:e2e-gui
+
+# 更新测试用例snapshot
+npm run test:update
+
+# 生成测试覆盖率
+npm run update:coverage-badge
+# 生成分组件格式化后的覆盖率到site/test-coverage.js，区分unit和e2e
 
 # 自动修复 eslint 错误
-pnpm run lint:fix
+npm run lint:fix
 # 查看 eslint 错误
-pnpm run lint
+npm run lint
 ```

@@ -1,0 +1,45 @@
+@import "../../_common/style/web/base.less";
+
+.@{prefix}-dialog {
+  transition: all @anim-duration-base linear;
+  transform: scale(0.01);
+  opacity: 0;
+
+  &-web-zoom-enter-from,
+  &-web-zoom-leave-active,
+  &-web-zoom-leave-to {
+    transform: scale(0.01);
+    opacity: 0;
+  }
+  &-web-zoom-enter-active,
+  &-web-zoom-enter-to,
+  &-web-zoom-leave-from {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  &__mask {
+    transition: all .3s;
+    opacity: 0;
+  }
+
+  &__ctx {
+    .@{prefix}-dialog__mask {
+      &-web-zoom-enter-from,
+      &-web-zoom-leave-active,
+      &-web-zoom-leave-to {
+        opacity: 0;
+      }
+      &-web-zoom-enter-active,
+      &-web-zoom-enter-to,
+      &-web-zoom-leave-from {
+        opacity: 1;
+      }
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+}

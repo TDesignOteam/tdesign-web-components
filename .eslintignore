@@ -12,7 +12,4 @@ script/test/cypress
 _site
 temp*
 static/
-_common
-packages/_common
-packages/_ai-core
-packages/*/src/_common
+src/_common
