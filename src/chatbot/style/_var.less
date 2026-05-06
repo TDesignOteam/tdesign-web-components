@@ -1,0 +1,219 @@
+// 组件变量
+// 名称可按如下规则定义：
+// <component>-[type]-[attrtype]-<attr>-[status]
+
+// component: 组件名，如 button
+// type: 组件类型，如 button 的次要按钮（line）
+// attrtype: 属性的具体应用场景。如颜色，用于背景（bg）、文本（text）、边框（border）等
+// attr: 属性名称，如 color、height、radius 等
+// status: 表示组件状态或尺寸，如 hover、disabled、s、l 等
+
+// 如：@button-line-bg-color-hover
+// 如：@button-line-height-s
+
+@import "../../_common/style/web/components/chat/_var.less";
+
+:root {
+  // 盒模型
+  --td-chat-list-padding-bottom: 0;
+  --td-chat-list-scroll-button-top: calc(100% - 64px);
+  --td-chat-list-scroll-button-left: 50%;
+  --td-chat-list-scroll-button-index: 1;
+  --td-chat-list-scroll-button-w: 40px;
+  --td-chat-list-scroll-button-h: 40px;
+  --td-chat-list-scroll-button-border: 0.5px solid rgba(220, 220, 220, 1);
+  --td-chat-list-scroll-button-radius: 20px;
+  --td-chat-list-scroll-button-index: 50;
+  --td-chat-list-scroll-button-transform: translate(-50%, 0);
+
+  --td-chat-item-gap: 38px;
+  --td-chat-item-header-padding: 0;
+  --td-chat-item-text-header-padding: 0;
+  --td-chat-item-header-padding-right: 0;
+  --td-chat-item-name-padding: 0 var(--td-comp-paddingLR-s) 0 0;
+  --td-chat-item-name-padding-right: 0 0 0 var(--td-comp-paddingLR-l);
+  --td-chat-item-name-font: var(--td-font-body-medium);
+  --td-chat-item-content-gap: var(--td-comp-margin-s);
+  --td-chat-item-content-max-width: 800px;
+  --td-chat-item-content-base-margin: 0 0 var(--td-comp-margin-xs) 0;
+  --td-chat-item-content-base-padding: var(--td-comp-paddingTB-m) var(--td-comp-paddingLR-l);
+  --td-chat-item-content-base-border-color: transparent;
+  --td-chat-item-content-padding: var(--td-comp-paddingTB-m) 0;
+  --td-chat-item-text-error-color: var(--td-error-color);
+  --td-chat-item-user-text-color: var(--td-text-color-secondary);
+  --td-chat-item-text-max-width: 100%;
+  --td-chat-item-text-padding: var(--td-comp-paddingTB-m) var(--td-comp-paddingLR-l);
+  --td-chat-item-status-margin: var(--td-comp-margin-s) 0 0;
+  --td-chat-item-text-content-padding: 0;
+  --td-chat-item-text-detail-padding: 0;
+  --td-chat-item-text-detail-margin: 0;
+  --td-chat-item-text-detail-text-margin: 0;
+  --td-chat-item-text-radius: var(--td-radius-extraLarge);
+  --td-chat-item-text-border: 1px solid transparent;
+  --td-chat-item-content-border: 1px solid transparent;
+  --td-chat-item-content-radius: var(--td-radius-extraLarge);
+  --td-chat-item-system-margin: 0;
+  --td-chat-item-system-padding: var(--td-comp-paddingTB-xs) var(--td-comp-paddingLR-s);
+  --td-chat-item-system-radius: var(--td-radius-medium);;
+  --td-chat-item-system-bg-color: var(--td-bg-color-secondarycontainer);
+  --td-chat-item-system-color: #afafaf;
+  --td-chat-item-left-avatar-margin: 0 var(--td-comp-margin-xl) 0 var(--td-comp-margin-xs);
+  --td-chat-item-right-avatar-margin: 0 var(--td-comp-margin-xs) 0 var(--td-comp-margin-xl);
+  --td-chat-item-avatar-padding: 6px 0 0 0;
+  --td-chat-item-avatar-has-header-padding: 30px 0 0 0;
+  --td-chat-item-image-margin: var(--td-comp-margin-m) 0;
+  --td-chat-item-think-gap-p: 0 0 var(--td-comp-margin-s) 0;
+  --td-chat-item-think-padding-tb: var(--td-comp-paddingTB-s);
+  --td-chat-item-think-padding-lr: var(--td-comp-paddingLR-m);
+  --td-chat-item-think-border: none;
+  --td-chat-item-think-radius: var(--td-radius-medium);
+  --td-chat-item-think-title-gap: var(--td-comp-margin-s);
+  --td-chat-item-think-status-wh: 20px;
+  --td-chat-item-think-pending-border-width: 2px;
+  --td-chat-item-think-header-border: none;
+  --td-chat-item-think-body-bg: none;
+  --td-chat-item-think-body-border: none;
+  --td-chat-item-think-content-margin-top: 2px;
+  --td-chat-item-think-shadow-top: 0;
+  --td-chat-item-think-shadow-bottom: 0;
+  --td-chat-item-think-shadow-margin-top: 0;
+  --td-chat-item-think-shadow-margin-bottom: 0;
+  --td-chat-item-think-shadow-top-height: 24px;
+  --td-chat-item-think-shadow-bottom-height: 24px;
+  --td-chat-item-think-inner-padding: 0 var(--td-comp-paddingLR-m) var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-m);
+  --td-chat-item-think-inner-border: solid 2px var(--td-component-stroke);
+  --td-chat-item-think-inner-border-margin-left: 0px;
+  --td-chat-item-actions-list-margin: var(--td-comp-margin-xs) 0;
+  --td-chat-item-text-actions-list-margin: var(--td-comp-margin-xs) 0 0 var(--td-comp-margin-l);
+  --td-chat-item-actions-list-gap: var(--td-comp-margin-xs);
+  --td-chat-item-actions-list-padding: var(--td-comp-paddingTB-xs) var(--td-comp-paddingLR-xs);
+  --td-chat-item-actions-list-radius: var(--td-radius-medium);
+  --td-chat-item-actions-list-border: 1px solid var(--td-component-border);
+  --td-chat-item-actions-item-padding: var(--td-comp-paddingTB-xs) var(--td-comp-paddingLR-xs);
+  --td-chat-item-actions-item-radius: 4px;
+  --td-chat-item-attachments-margin-top: 12px;
+  --td-chat-item-image-max-width: 150px; 
+  --td-attachment-image-width: 150px;
+  --td-chat-item-search-height: 36px;
+  --td-chat-item-search-padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-s);
+  --td-chat-item-search-radius: 20px;
+  --td-chat-item-search-icons-margin-right: 3px;
+  --td-chat-item-search-icon-width: 16px;
+  --td-chat-item-search-icon-radius: var(--td-radius-circle);
+  --td-chat-item-search-icon-margin-left: -3px;
+  --td-chat-item-search-icon-before-left: -1px;
+  --td-chat-item-search-icon-before-width: 1px;
+  --td-chat-item-search-icon-before-height: 100%;
+  --td-chat-item-search-icon-before-radius: 1px;
+  --td-chat-item-search-link-color: var(--td-brand-color);
+  --td-chat-item-search-link-hov-color: var(--td-brand-color-hover);
+  --td-chat-item-suggestion-gap: var(--td-comp-margin-s);
+  --td-chat-item-suggestion-height: 38px;
+  --td-chat-item-suggestion-padding: var(--td-comp-paddingTB-s) var(--td-comp-paddingLR-m);
+  --td-chat-item-suggestion-radius: var(--td-radius-medium);
+  --td-chat-item-suggestion-border: solid 1px var(--td-component-border);
+  --td-chat-item-suggestion-arrow-margin: var(--td-comp-margin-s);
+
+  // 字体尺寸、行高
+  --td-chat-font-size: 16px;
+  --td-chat-item-system-font-size: 12px;
+  --td-chat-item-suggestion-font-size: 14px;
+  --td-chat-item-search-link-line-height: 24px;
+  --td-chat-list-scroll-button-font-size: 24px;
+  --td-chat-search-font-size: 12px;
+  --td-chat-item-content-text-align: left;
+  --td-chat-item-right-content-text-align: right;
+  --td-chat-item-text-text-align: left;
+
+  // 颜色
+  --td-chat-list-scroll-button-bg: var(--td-bg-color-container);
+  --td-chat-list-scroll-button-shadow: 
+    0px 8px 10px -5px rgba(0, 0, 0, 0.08),
+    0px 16px 24px 2px rgba(0, 0, 0, 0.04),
+    0px 6px 30px 5px rgba(0, 0, 0, 0.05);
+  --td-chat-item-error-color: var(--td-error-color);
+
+  --td-chat-item-primary-bg: var(--td-bg-color-secondarycontainer);
+  --td-chat-item-default-bg: var(--td-bg-color-container);
+  --td-chat-item-outline-border-color: var(--td-component-border);
+  --td-chat-item-think-bg: var(--td-bg-color-secondarycontainer);
+  --td-chat-item-think-pending-border-bg-color: #e0f0ff;
+  --td-chat-item-think-status-pending-color: var(--td-brand-color);
+  --td-chat-item-think-status-sent-color: var(--td-success-color);
+  --td-chat-item-think-status-error-color: var(--td-error-color);
+  --td-chat-item-think-content-color: var(--td-text-color-placeholder);
+  --td-chat-item-actions-list-bg: var(--td-bg-color-secondarycontainer);
+  --td-chat-item-actions-item-hover-bg: var(--td-bg-color-component-hover);
+  --td-chat-item-suggestion-color: var(--td-text-color-primary);
+  --td-chat-item-suggestion-background: var(--td-bg-color-secondarycontainer);
+  --td-chat-item-suggestion-arrow-color: var(--td-text-color-placeholder);
+
+  // markdown相关
+  // 覆盖
+  --md-heading-color: @gray-color-7;
+
+  --td-chat-md-content-gap-main: 0 0 8px 0;
+  --td-chat-md-content-gap-t1: 24px 0 20px 0;
+  --td-chat-md-content-gap-t2: 20px 0 16px 0;
+  --td-chat-md-content-gap-t3: 16px 0 12px 0;
+  --td-chat-md-font: var(--td-text-color-primary);
+  --td-chat-md-padding: var(--td-comp-paddingTB-m) 0;
+  --td-chat-md-h1-font: 700 22px / 1.6 @font-family;
+  --td-chat-md-h2-font: 600 20px / 1.6 @font-family;
+  --td-chat-md-h3-font: 600 18px / 1.6 @font-family;
+
+  --td-chat-md-s-color: var(--td-gray-color-7);
+
+  --td-chat-md-list-margin: 0 0 8px 2em;
+  --td-chat-md-list-padding: 0;
+  --td-chat-md-ul-style: disc;
+  --td-chat-md-ol-style: decimal;
+  --td-chat-md-li-margin: 0.5em 0;
+
+  --td-chat-md-link-color: var(--td-brand-color-5);
+  --td-chat-md-link-decoration: none;
+  --td-chat-md-link-hover-color: var(--td-brand-color-6);
+
+  --td-chat-md-code-radius: 8px;
+  --td-chat-md-code-margin: 0 0 16px 0;
+  --td-chat-md-code-header-height: 36px;
+  --td-chat-md-code-header-padding: 0 16px 0 12px;
+  --td-chat-md-code-header-font: 500 14px / 1.6 @font-family;
+  --td-chat-md-code-header-bg: #f3f3f3;
+  --td-chat-md-code-header-bg-dark: #282c34;
+  --td-chat-md-code-header-color-dark: #abb2bf;
+  --td-chat-md-code-header-copy-color: var(--td-gray-color-7);
+  --td-chat-md-code-header-copy-hover-color: var(--td-gray-color-9);
+  --td-chat-md-code-body-padding: 10px 16px !important;
+  --td-chat-md-code-body-bg: #f8f8f8;
+  --td-chat-md-code-body-overflow: auto;
+  --td-chat-md-code-body-code-font-size: 14px;
+
+  --td-chat-md-katex-block-margin: 1em 0;
+  --td-chat-md-katex-font: normal 1.21em / 1.2 KaTeX_Main, Times New Roman, serif;
+
+  --td-chat-md-blockquote-margin: 16px 0;
+  --td-chat-md-blockquote-padding: 10px 15px;
+  --td-chat-md-blockquote-border-left: 4px solid #d9d9d9;
+  --td-chat-md-blockquote-color: var(--td-gray-color-7);
+
+  --td-chat-md-footnote-bg: var(--td-bg-color-page);
+  
+  --td-chat-md-hr-margin: 16px 0;
+  --td-chat-md-hr-border: 1px solid rgba(0, 0, 0, 0.08);
+  
+  --td-chat-md-table-border: 1px solid var(--td-bg-color-secondarycontainer);
+  --td-chat-md-table-radius: 8px;
+  --td-chat-md-table-margin: 8px 0;
+  --td-chat-md-table-font-size: 14px;
+  --td-chat-md-table-th-padding: 0.66em 1em;
+  --td-chat-md-table-th-max-width: 448px;
+  --td-chat-md-table-th-bg: var(--td-bg-color-secondarycontainer);
+  --td-chat-md-table-th-color: var(--td-text-color-primary);
+  --td-chat-md-table-th-font: 700 14px / 1.6 @font-family;
+
+  --td-chat-md-table-td-bg-odd: var(--td-bg-color-container);
+  --td-chat-md-table-td-bg-even: var(--td-bg-color-secondarycontainer);
+  --td-chat-md-table-td-color: var(--td-text-color-primary);
+  --td-chat-md-table-td-font: 400 14px / 1.6 @font-family;
+}

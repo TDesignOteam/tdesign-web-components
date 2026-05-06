@@ -1,5 +1,4 @@
 name: pkg-pr-new
-
 on: [push, pull_request]
 
 jobs:
@@ -12,19 +11,12 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: pnpm/action-setup@v5
-
       - uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
-          cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: npm install
 
-      - run: pnpm run "/^build:/"
+      - run: npm run build
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-
-      - run: pnpm dlx pkg-pr-new publish './packages/ui' './packages/chat' --pnpm --packageManager=pnpm,npm,yarn
+      - run: npx pkg-pr-new publish --packageManager=pnpm,npm,yarn

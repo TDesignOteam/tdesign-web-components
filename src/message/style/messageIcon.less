@@ -1,0 +1,39 @@
+@import "../../_common/style/web/base.less";
+
+@import "../../_common/style/web/components/message/_var.less";
+
+// 处理wc组件嵌套样式不生效
+:host {
+  display: flex;
+}
+
+.@{prefix}-message {
+  .@{prefix}-icon, .@{prefix}-loading {
+    display: block;
+    color: @msg-primary-color;
+    margin-right: @msg-icon-margin-right;
+    flex-shrink: 0;
+    font-size: @msg-icon-size;
+  }
+  
+  &.@{prefix}-is-success {
+  
+    .@{prefix}-icon {
+      color: @msg-success-color;
+    }
+  }
+
+  &.@{prefix}-is-warning {
+
+    .@{prefix}-icon {
+      color: @msg-warning-color;
+    }
+  }
+
+  &.@{prefix}-is-error {
+
+    .@{prefix}-icon {
+      color: @msg-error-color;
+    }
+  }
+}
