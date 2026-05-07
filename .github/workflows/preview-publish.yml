@@ -32,6 +32,9 @@ jobs:
           name: vue-next-chat-site
           path: ./chat-site
 
+      - name: Create 200.html for SPA fallback
+        run: cp ./chat-site/index.html ./chat-site/200.html
+
       - name: Deploy to Surge.sh
         id: deploy
         run: |
@@ -91,6 +94,9 @@ jobs:
           run_id: ${{ github.event.workflow_run.id }}
           name: webc-site
           path: ./webc-site
+
+      - name: Create 200.html for SPA fallback
+        run: cp ./webc-site/index.html ./webc-site/200.html
 
       - name: Deploy to Surge.sh
         id: deploy
