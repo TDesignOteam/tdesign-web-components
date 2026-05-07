@@ -9,11 +9,6 @@ on:
       - completed
 
 jobs:
-  call-preview:
-    uses: TDesignOteam/workflows/.github/workflows/reusable-pr-preview.yml@main
-    secrets:
-      TDESIGN_SURGE_TOKEN: ${{ secrets.TDESIGN_SURGE_TOKEN }}
-
   deploy-vue-next-chat:
     runs-on: ubuntu-latest
     steps:
@@ -80,7 +75,7 @@ jobs:
       - name: Download PR ID artifact
         uses: dawidd6/action-download-artifact@v21
         with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow: ${{ github.event.workflow_run.name }}
           run_id: ${{ github.event.workflow_run.id }}
           name: webc-site-pr-id
           path: ./pr-id
@@ -92,7 +87,7 @@ jobs:
       - name: Download webc site artifact
         uses: dawidd6/action-download-artifact@v21
         with:
-          workflow: ${{ github.event.workflow_run.workflow_id }}
+          workflow: ${{ github.event.workflow_run.name }}
           run_id: ${{ github.event.workflow_run.id }}
           name: webc-site
           path: ./webc-site
