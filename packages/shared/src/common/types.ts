@@ -1,4 +1,35 @@
+import type { CSSSelector, PlainObject, Styles } from '@common/js/common';
 import { Component, VNode, WeElement } from 'omi';
+
+// Re-export from @common to avoid duplication with submodule
+export type {
+  PlainObject,
+  OptionData,
+  SizeEnum,
+  HorizontalAlignEnum,
+  VerticalAlignEnum,
+  ClassName,
+  CSSSelector,
+  Styles,
+} from '@common/js/common';
+
+export {
+  EKeyboardDirection,
+  ARROW_DOWN_REG,
+  ARROW_UP_REG,
+  ARROW_LEFT_REG,
+  ARROW_RIGHT_REG,
+  ESCAPE_REG,
+  SPACE_REG,
+  ENTER_REG,
+  SHIFT_REG,
+  CLEAR_REG,
+  ALL_REG,
+  CHECKED_CODE_REG,
+  THEME_MODE,
+} from '@common/js/common';
+
+// ---- Omi-specific types (no equivalent in _common) ----
 
 export type TElement<T = undefined> = T extends undefined ? WeElement : (props: T) => WeElement;
 export type TNode<T = any> = VNode<T> | ((props: T) => VNode) | object | string | number | boolean | null;
@@ -13,8 +44,6 @@ export type ScrollContainer = (() => ScrollContainerElement) | CSSSelector;
 // 组件 TS 类型，暂定 any，可能调整为 () => JSX.Element
 export type ComponentType = any;
 
-export type Styles = Record<string, string | number>;
-
 export interface StyledProps {
   className?: string;
   style?: Styles;
@@ -24,16 +53,7 @@ export interface StyledProps {
   innerStyle?: Styles;
 }
 
-/**
- * 通用全局类型
- * */
-export type PlainObject = { [key: string]: any };
-
-export type OptionData = {
-  label?: string;
-  value?: string | number;
-} & PlainObject;
-
+// TreeOptionData overrides label to support TNode
 export type TreeOptionData<T = string | number> = {
   children?: Array<TreeOptionData<T>> | boolean;
   /** option label content */
@@ -46,20 +66,10 @@ export type TreeOptionData<T = string | number> = {
   content?: string | TNode;
 } & PlainObject;
 
-export type SizeEnum = 'small' | 'medium' | 'large';
-
-export type HorizontalAlignEnum = 'left' | 'center' | 'right';
-
-export type VerticalAlignEnum = 'top' | 'middle' | 'bottom';
-
 export enum LayoutEnum {
   VERTICAL = 'vertical',
   HORIZONTAL = 'horizontal',
 }
-
-export type ClassName = { [className: string]: any } | ClassName[] | string;
-
-export type CSSSelector = string;
 
 export interface KeysType {
   value?: string;
@@ -101,9 +111,7 @@ export interface TScroll {
   type: 'lazy' | 'virtual';
 }
 
-/**
- * @deprecated use TScroll instead
- */
+/** @deprecated use TScroll instead */
 export type InfinityScroll = TScroll;
 
 export interface ScrollToElementParams {
@@ -129,11 +137,7 @@ export type ExtendedElement = (HTMLElement | SVGAElement | HTMLInputElement) & {
   props: Record<string, unknown>;
   splitText?: Function;
   prevProps?: Record<string, unknown> & {
-    ref?:
-      | {
-          current?: unknown;
-        }
-      | Function;
+    ref?: { current?: unknown } | Function;
   };
   attributes: NamedNodeMap;
   _component?: Component;

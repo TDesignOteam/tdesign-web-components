@@ -100,7 +100,7 @@ export default class Popup extends Component<PopupProps> {
 
   popperInstance: Instance = null;
 
-  pendingPopperUpdate: number = null;
+  pendingPopperUpdate: number | null = null;
 
   getPopperElements = () => {
     const triggerEl = this.triggerRef.current as HTMLElement;

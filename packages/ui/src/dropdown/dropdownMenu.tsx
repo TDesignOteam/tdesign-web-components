@@ -1,6 +1,4 @@
 import 'tdesign-icons-web-components/esm/components/chevron-right';
-import './dropdownItem';
-import '../divider';
 
 import classNames, { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
@@ -8,8 +6,25 @@ import { TNode } from '@tdesign/web-components-shared/common';
 import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { DropdownProps } from './dropdown';
-import { DropdownOption } from './type';
+import { DropdownOption, TdDropdownProps } from './type';
+
+type DropdownMenuProps = Pick<
+  TdDropdownProps,
+  | 'direction'
+  | 'disabled'
+  | 'hideAfterItemClick'
+  | 'maxColumnWidth'
+  | 'maxHeight'
+  | 'minColumnWidth'
+  | 'options'
+  | 'panelBottomContent'
+  | 'panelTopContent'
+  | 'placement'
+  | 'popupProps'
+  | 'trigger'
+  | 'popupCss'
+  | 'onClick'
+>;
 
 export const propTypes = {
   direction: String,
@@ -28,7 +43,7 @@ export const propTypes = {
   onClick: Function,
 };
 @tag('t-dropdown-menu')
-export default class DropdownMenu extends Component<DropdownProps> {
+export default class DropdownMenu extends Component<DropdownMenuProps> {
   static propTypes = propTypes;
 
   static defaultProps = {
@@ -185,7 +200,7 @@ export default class DropdownMenu extends Component<DropdownProps> {
     this.update();
   }
 
-  render(props: DropdownProps) {
+  render(props: DropdownMenuProps) {
     const { options, maxHeight, direction, panelTopContent, panelBottomContent } = props;
     return (
       <div

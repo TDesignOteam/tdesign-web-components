@@ -1,4 +1,3 @@
-import '../range-input';
 import '../popup';
 
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';

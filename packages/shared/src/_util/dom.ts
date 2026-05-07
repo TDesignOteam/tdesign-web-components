@@ -1,9 +1,9 @@
+import { easeInOutCubic, EasingFunction } from '@common/js/utils/easing';
 import { isString } from 'lodash-es';
 import { Component } from 'omi';
 import raf from 'raf';
 
 import { ScrollContainer, ScrollContainerElement } from '../common';
-import { easeInOutCubic, EasingFunction } from './easing';
 // 用于判断是否可使用 dom
 export const canUseDocument = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 

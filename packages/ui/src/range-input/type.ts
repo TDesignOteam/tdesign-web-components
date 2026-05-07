@@ -1,8 +1,7 @@
-import { TNode } from '@tdesign/web-components-shared/common';
+import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 
 import { InputFormatType, InputValue } from '../input';
 import { PopupProps } from '../popup';
-import { RangeInputProps } from './RangeInput';
 
 export interface TdRangeInputProps {
   /**
@@ -161,7 +160,7 @@ export interface TdRangeInputPopupProps {
   /**
    * 透传 RangeInput 组件全部属性
    */
-  rangeInputProps?: RangeInputProps;
+  rangeInputProps?: TdRangeInputProps & StyledProps;
   /**
    * 只读状态，值为真会隐藏输入框，且无法打开下拉框
    * @default false

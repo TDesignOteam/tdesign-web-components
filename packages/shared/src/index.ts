@@ -5,7 +5,6 @@
 export * from './_util/classname';
 export * from './_util/component';
 export * from './_util/dom';
-export * from './_util/easing';
 export * from './_util/eventDispose';
 export * from './_util/helper';
 export * from './_util/icon';

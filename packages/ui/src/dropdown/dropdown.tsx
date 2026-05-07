@@ -11,7 +11,7 @@ import { PopupVisibleChangeContext } from '../popup';
 import { dropdownDefaultProps } from './defaultProps';
 import { propTypes } from './dropdownMenu';
 import getDropdownOptions from './getDropdownOptions';
-import { DropdownOption, TdDropdownProps } from './type';
+import type { DropdownOption, TdDropdownProps } from './type';
 
 export interface DropdownProps extends TdDropdownProps, StyledProps {
   children?: TNode;

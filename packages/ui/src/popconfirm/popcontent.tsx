@@ -7,8 +7,9 @@ import { isString } from 'lodash-es';
 import { cloneElement, Component, OmiProps, tag, VNode } from 'omi';
 
 import { ButtonProps } from '../button';
-import { PopconfirmProps } from './popconfirm';
 import { PopconfirmVisibleChangeContext, TdPopconfirmProps } from './type';
+
+type PopconfirmProps = TdPopconfirmProps;
 
 interface PopcontentProps {
   onClose?: (context: PopconfirmVisibleChangeContext) => any;
