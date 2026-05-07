@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download PR ID artifact
-        uses: dawidd6/action-download-artifact@v8
+        uses: dawidd6/action-download-artifact@v21
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           run_id: ${{ github.event.workflow_run.id }}
@@ -30,7 +30,7 @@ jobs:
         run: echo "id=$(cat ./pr-id/vue-next-chat-pr-id.txt)" >> $GITHUB_OUTPUT
 
       - name: Download chat site artifact
-        uses: dawidd6/action-download-artifact@v8
+        uses: dawidd6/action-download-artifact@v21
         with:
           workflow: ${{ github.event.workflow_run.workflow_id }}
           run_id: ${{ github.event.workflow_run.id }}
@@ -46,7 +46,7 @@ jobs:
 
       - name: Comment preview URL on PR
         if: success()
-        uses: actions-cool/maintain-one-comment@v3
+        uses: actions-cool/maintain-one-comment@v3.3.0
         with:
           token: ${{ secrets.TDESIGN_BOT_TOKEN }}
           number: ${{ steps.pr.outputs.id }}
@@ -61,7 +61,7 @@ jobs:
 
       - name: Comment failure on PR
         if: failure()
-        uses: actions-cool/maintain-one-comment@v3
+        uses: actions-cool/maintain-one-comment@v3.3.0
         with:
           token: ${{ secrets.TDESIGN_BOT_TOKEN }}
           number: ${{ steps.pr.outputs.id }}
@@ -73,3 +73,63 @@ jobs:
 
             <!-- AUTO_VUE_NEXT_CHAT_PREVIEW_HOOK -->
           body-include: '<!-- AUTO_VUE_NEXT_CHAT_PREVIEW_HOOK -->'
+
+  deploy-webc-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download PR ID artifact
+        uses: dawidd6/action-download-artifact@v21
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          run_id: ${{ github.event.workflow_run.id }}
+          name: webc-site-pr-id
+          path: ./pr-id
+
+      - name: Set PR ID
+        id: pr
+        run: echo "id=$(cat ./pr-id/webc-site-pr-id.txt)" >> $GITHUB_OUTPUT
+
+      - name: Download webc site artifact
+        uses: dawidd6/action-download-artifact@v21
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          run_id: ${{ github.event.workflow_run.id }}
+          name: webc-site
+          path: ./webc-site
+
+      - name: Deploy to Surge.sh
+        id: deploy
+        run: |
+          export DEPLOY_DOMAIN=https://preview-pr-${{ steps.pr.outputs.id }}-tdesign-webc.surge.sh
+          npx surge --project ./webc-site --domain $DEPLOY_DOMAIN --token ${{ secrets.TDESIGN_SURGE_TOKEN }}
+          echo "url=$DEPLOY_DOMAIN" >> $GITHUB_OUTPUT
+
+      - name: Comment preview URL on PR
+        if: success()
+        uses: actions-cool/maintain-one-comment@v3.3.0
+        with:
+          token: ${{ secrets.TDESIGN_BOT_TOKEN }}
+          number: ${{ steps.pr.outputs.id }}
+          body: |-
+            ## 🌐 Web Components Site Preview
+            | Site | Preview |
+            | ---- | :-----: |
+            | @tdesign/web-components | [🟢 Online](${{ steps.deploy.outputs.url }}) |
+
+            <!-- AUTO_WEBC_SITE_PREVIEW_HOOK -->
+          body-include: '<!-- AUTO_WEBC_SITE_PREVIEW_HOOK -->'
+
+      - name: Comment failure on PR
+        if: failure()
+        uses: actions-cool/maintain-one-comment@v3.3.0
+        with:
+          token: ${{ secrets.TDESIGN_BOT_TOKEN }}
+          number: ${{ steps.pr.outputs.id }}
+          body: |-
+            ## 🌐 Web Components Site Preview
+            | Site | Preview |
+            | ---- | :-----: |
+            | @tdesign/web-components | [🔴 Failed](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}) |
+
+            <!-- AUTO_WEBC_SITE_PREVIEW_HOOK -->
+          body-include: '<!-- AUTO_WEBC_SITE_PREVIEW_HOOK -->'
