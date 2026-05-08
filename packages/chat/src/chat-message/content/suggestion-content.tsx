@@ -1,6 +1,6 @@
 import 'tdesign-icons-web-components/esm/components/swap-right';
 
-import { type SuggestionItem } from '@tdesign/web-components-chat/chat-engine';
+import { type SuggestionItem } from '@tdesign/ai-chat-engine';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
 import { Component, tag } from 'omi';

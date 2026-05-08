@@ -1,9 +1,10 @@
 import '../../attachments';
 
-import { type AttachmentItem } from '@tdesign/web-components-chat/chat-engine';
-import { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
+import { type AttachmentItem } from '@tdesign/ai-chat-engine';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, tag } from 'omi';
+
+import { TdAttachmentItem } from '../../filecard';
 
 import styles from '../style/chat-item.less';
 

@@ -20,6 +20,30 @@ module.exports = {
   },
   overrides: [
     {
+      files: ['packages/ui/src/**/*.{ts,tsx}'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [],
+            patterns: ['@tdesign/web-components-ui/*'],
+          },
+        ],
+      },
+    },
+    {
+      files: ['packages/chat/src/**/*.{ts,tsx}'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [],
+            patterns: ['@tdesign/web-components-chat/*'],
+          },
+        ],
+      },
+    },
+    {
       files: ['packages/*/src/**/_example/**/*.{ts,tsx}', 'site/**/*.{ts,tsx}'],
       rules: {
         'no-restricted-imports': 'off',
@@ -101,10 +125,6 @@ module.exports = {
             name: 'lodash',
             message: 'Please use lodash-es instead.',
           },
-        ],
-        patterns: [
-          '@tdesign/web-components-ui/*',
-          '@tdesign/web-components-chat/*',
         ],
       },
     ],
