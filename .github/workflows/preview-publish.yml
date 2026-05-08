@@ -1,7 +1,16 @@
 # =============================================================================
 # PREVIEW_PUBLISH
-# 触发时机: MAIN_PULL_REQUEST workflow 完成时
-# 主要流程: 获取上下文 → 部署站点 → 汇总报告评论
+# 触发时机: MAIN_PULL_REQUEST workflow 成功完成时
+# 主要流程: preflight 闸门 → 并行部署各站点 → 汇总评论
+#
+# 设计说明:
+# - 使用 workflow_run 是为了让 fork PR 也能访问 secrets 进行部署
+# - preflight 作为统一闸门: conclusion == success 且事件来自 pull_request 才继续
+#   其他情况 (失败 / 取消 / push 触发等) 整体 skipped，不会出现 "No jobs were run"
+# - 每个 deploy job 通过 artifact 存在性独立判断:
+#     * artifact 存在  → 正常部署
+#     * artifact 不存在 → 跳过该站点（chat 失败时的典型场景）
+#   不依赖上游 job 的成功状态，实现松耦合
 # =============================================================================
 name: PREVIEW_PUBLISH
 
@@ -11,20 +20,33 @@ on:
     types:
       - completed
 
+# 同一个 PR 的并发部署，新的顶掉旧的，避免竞态覆盖
+concurrency:
+  group: preview-publish-${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_repository.full_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
 jobs:
   # ─────────────────────────────────────────────────────────────────────────
-  # 1. 获取上下文: PR ID 和域名配置
+  # 0. Preflight: 统一闸门
+  #    - 仅当 MAIN_PULL_REQUEST conclusion == success 且事件来自 pull_request 时继续
+  #    - 其他情况下游 jobs 因 needs 级联 skip，整个 workflow 标记为 skipped
   # ─────────────────────────────────────────────────────────────────────────
-  get-context:
-    if: github.event.workflow_run.conclusion == 'success'
+  preflight:
     runs-on: ubuntu-latest
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'pull_request'
     outputs:
       pr_id: ${{ steps.pr.outputs.id }}
-      web_components_domain: ${{ steps.web-components-domain.outputs.web_components_domain }}
-      chat_domain: ${{ steps.chat-domain.outputs.chat_domain }}
+      web_components_domain: ${{ steps.domains.outputs.web_components_domain }}
+      chat_domain: ${{ steps.domains.outputs.chat_domain }}
     steps:
-      # ── Download Metadata ──────────────────────────────────────────────────
-      - name: Download web-components PR metadata
+      - name: Download PR metadata
         uses: dawidd6/action-download-artifact@v21
         with:
           workflow: ${{ github.event.workflow_run.name }}
@@ -32,38 +54,33 @@ jobs:
           name: web-components-pr-id
           path: ./pr-id
 
-      - name: Download chat PR metadata
-        uses: dawidd6/action-download-artifact@v21
-        with:
-          workflow: ${{ github.event.workflow_run.name }}
-          run_id: ${{ github.event.workflow_run.id }}
-          name: chat-pr-id
-          path: ./pr-id
-
-      # ── Extract & Config ──────────────────────────────────────────────────
       - name: Extract PR number
         id: pr
         run: |
-          PR_ID=$(cat ./pr-id/web-components-pr-id.txt 2>/dev/null || cat ./pr-id/chat-pr-id.txt)
-          echo "id=$PR_ID" >> $GITHUB_OUTPUT
+          PR_ID=$(cat ./pr-id/web-components-pr-id.txt)
+          if [ -z "$PR_ID" ]; then
+            echo "::error::Failed to extract PR id from artifact"
+            exit 1
+          fi
+          echo "id=$PR_ID" >> "$GITHUB_OUTPUT"
 
-      - name: Set web-components domain
-        id: web-components-domain
-        run: echo "web_components_domain=https://preview-pr-${{ steps.pr.outputs.id }}-tdesign-web-components.surge.sh" >> $GITHUB_OUTPUT
-
-      - name: Set chat domain
-        id: chat-domain
-        run: echo "chat_domain=https://preview-pr-${{ steps.pr.outputs.id }}-tdesign-web-components-chat.surge.sh" >> $GITHUB_OUTPUT
+      - name: Compute preview domains
+        id: domains
+        env:
+          PR_ID: ${{ steps.pr.outputs.id }}
+        run: |
+          {
+            echo "web_components_domain=https://preview-pr-${PR_ID}-tdesign-web-components.surge.sh"
+            echo "chat_domain=https://preview-pr-${PR_ID}-tdesign-web-components-chat.surge.sh"
+          } >> "$GITHUB_OUTPUT"
 
   # ─────────────────────────────────────────────────────────────────────────
-  # 2. 部署 Web Components Site
+  # 1. 部署 Web Components Site (主链路)
   # ─────────────────────────────────────────────────────────────────────────
   deploy-web-components:
-    if: github.event.workflow_run.conclusion == 'success'
+    needs: preflight
     runs-on: ubuntu-latest
-    needs: get-context
     steps:
-      # ── Download Artifact ─────────────────────────────────────────────────
       - name: Download artifact
         uses: dawidd6/action-download-artifact@v21
         with:
@@ -72,120 +89,112 @@ jobs:
           name: web-components-site
           path: ./web-components-site
 
-      # ── Deploy ────────────────────────────────────────────────────────────
       - name: Prepare SPA fallback
         run: cp ./web-components-site/index.html ./web-components-site/200.html
 
       - name: Deploy to Surge.sh
         run: |
           npx surge --project ./web-components-site \
-            --domain ${{ needs.get-context.outputs.web_components_domain }} \
+            --domain ${{ needs.preflight.outputs.web_components_domain }} \
             --token ${{ secrets.TDESIGN_SURGE_TOKEN }}
 
   # ─────────────────────────────────────────────────────────────────────────
-  # 3. 部署 Vue Next Chat Site
+  # 2. 部署 Vue Next Chat Site (辅链路)
+  #
+  # 通过 artifact 存在性自主判断:
+  # - artifact 存在 → 正常部署
+  # - artifact 不存在 (chat 构建失败) → 优雅跳过，不污染整体状态
   # ─────────────────────────────────────────────────────────────────────────
   deploy-chat:
-    if: github.event.workflow_run.conclusion == 'success'
+    needs: preflight
     runs-on: ubuntu-latest
-    needs: get-context
     steps:
-      # ── Download Artifact ─────────────────────────────────────────────────
+      # if_no_artifact_found: warn 使 artifact 不存在时不 fail，
+      # 通过 download.outputs.found_artifact 判断是否继续部署
       - name: Download artifact
+        id: download
         uses: dawidd6/action-download-artifact@v21
         with:
           workflow: ${{ github.event.workflow_run.name }}
           run_id: ${{ github.event.workflow_run.id }}
           name: chat-site
           path: ./chat-site
+          if_no_artifact_found: warn
 
-      # ── Deploy ────────────────────────────────────────────────────────────
+      - name: Skip if artifact missing
+        if: steps.download.outputs.found_artifact != 'true'
+        run: |
+          echo "::notice::chat-site artifact not found, skipping chat deployment"
+          echo "CHAT_SKIPPED=true" >> "$GITHUB_ENV"
+
       - name: Prepare SPA fallback
+        if: steps.download.outputs.found_artifact == 'true'
         run: cp ./chat-site/index.html ./chat-site/200.html
 
       - name: Deploy to Surge.sh
+        if: steps.download.outputs.found_artifact == 'true'
         run: |
           npx surge --project ./chat-site \
-            --domain ${{ needs.get-context.outputs.chat_domain }} \
+            --domain ${{ needs.preflight.outputs.chat_domain }} \
             --token ${{ secrets.TDESIGN_SURGE_TOKEN }}
 
   # ─────────────────────────────────────────────────────────────────────────
-  # 4. 汇总报告评论
+  # 3. 汇总报告评论
   # ─────────────────────────────────────────────────────────────────────────
   report-comment:
-    if: always()
+    if: always() && needs.preflight.result == 'success'
     needs:
-      - get-context
+      - preflight
       - deploy-web-components
       - deploy-chat
     runs-on: ubuntu-latest
     steps:
-      # ── Collect Job Results ───────────────────────────────────────────────
       - name: Collect job results
         id: report
         uses: actions/github-script@v7
+        env:
+          WEB_COMPONENTS_DOMAIN: ${{ needs.preflight.outputs.web_components_domain }}
+          CHAT_DOMAIN: ${{ needs.preflight.outputs.chat_domain }}
+          WEB_COMPONENTS_RESULT: ${{ needs.deploy-web-components.result }}
+          CHAT_RESULT: ${{ needs.deploy-chat.result }}
         with:
           script: |
-            const pr_id = ${{ needs.get-context.outputs.pr_id }};
-            const web_components_domain = "${{ needs.get-context.outputs.web_components_domain }}";
-            const chat_domain = "${{ needs.get-context.outputs.chat_domain }}";
-
-            const { data: { jobs } } = await github.rest.actions.listJobsForWorkflowRun({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              run_id: context.runId,
-              per_page: 100
-            });
-
-            const sites = {
-              "deploy-web-components": { status: "", report_url: "", package_name: "@tdesign/web-components" },
-              "deploy-chat": { status: "", report_url: "", package_name: "@tdesign/web-components-chat (vue-next)" },
-            };
-
-            const success_icon = `<img width="16" alt="完成" src="https://user-images.githubusercontent.com/15634204/150816437-9f5bb788-cd67-4cbc-9897-b82d74e9aa65.png" />`;
-            const failure_icon = `<img width="16" alt="失败" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png" />`;
-
-            jobs
-              .filter((job) => job.name.startsWith("deploy-"))
-              .map((job) => {
-                sites[job.name].status = failure_icon;
-                sites[job.name].report_url = job.html_url;
-
-                if (job.conclusion === "success") {
-                  sites[job.name].status = success_icon;
-                  if (job.name === "deploy-web-components") {
-                    sites[job.name].report_url = web_components_domain;
-                  }
-                  if (job.name === "deploy-chat") {
-                    sites[job.name].report_url = chat_domain;
-                  }
-                }
-              });
+            const {
+              WEB_COMPONENTS_DOMAIN,
+              CHAT_DOMAIN,
+              WEB_COMPONENTS_RESULT,
+              CHAT_RESULT,
+            } = process.env;
 
             const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
-            const comment = `
-# 🌐 TDesign Web Components Preview [Open](${runUrl})
+            const successIcon = `<img width="16" alt="完成" src="https://user-images.githubusercontent.com/15634204/150816437-9f5bb788-cd67-4cbc-9897-b82d74e9aa65.png" />`;
+            const failureIcon = `<img width="16" alt="失败" src="https://user-images.githubusercontent.com/5378891/75333447-1e63a280-58c1-11ea-975d-235367fd1522.png" />`;
 
-| Component | Preview |
-| --------- | :--: |
-${Object.keys(sites)
-  .map((site) => {
-    const preview_text = `[${sites[site].status}](${sites[site].report_url})`;
-    return `| ${sites[site].package_name} | ${preview_text} |`;
-  })
-  .join("\n")}
+            const buildRow = (name, result, domain) => {
+              const ok = result === 'success';
+              const icon = ok ? successIcon : failureIcon;
+              const link = ok ? domain : runUrl;
+              return `| ${name} | [${icon}](${link}) |`;
+            };
 
-<!-- AUTO_PREVIEW_HOOK -->
-`;
+            const comment = [
+              `# 🌐 TDesign Web Components Preview [Open](${runUrl})`,
+              '',
+              '| Component | Preview |',
+              '| --------- | :--: |',
+              buildRow('@tdesign/web-components', WEB_COMPONENTS_RESULT, WEB_COMPONENTS_DOMAIN),
+              buildRow('@tdesign/web-components-chat (vue-next)', CHAT_RESULT, CHAT_DOMAIN),
+              '',
+              '<!-- AUTO_PREVIEW_HOOK -->',
+            ].join('\n');
 
             core.setOutput('comment', comment);
 
-      # ── Publish Comment ──────────────────────────────────────────────────
       - name: Post comment
         uses: actions-cool/maintain-one-comment@v3
         with:
           token: ${{ secrets.TDESIGN_BOT_TOKEN }}
-          number: ${{ needs.get-context.outputs.pr_id }}
+          number: ${{ needs.preflight.outputs.pr_id }}
           body: ${{ steps.report.outputs.comment }}
           body-include: '<!-- AUTO_PREVIEW_HOOK -->'
