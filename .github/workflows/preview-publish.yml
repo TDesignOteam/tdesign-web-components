@@ -210,13 +210,14 @@ jobs:
               .map((c) => `| ${c.package_name} | [${c.status}](${c.report_url}) |`)
               .join('\n');
 
-            const comment = `# TDesign Component Site Preview [Open](${runUrl})
-| Component | Preview |
-| --------- | :--: |
-${rows}
-
-<!-- AUTO_PREVIEW_HOOK -->
-`;
+            const comment = [
+              `# TDesign Component Site Preview [Open](${runUrl})`,
+              '| Component | Preview |',
+              '| --------- | :--: |',
+              rows,
+              '',
+              '<!-- AUTO_PREVIEW_HOOK -->',
+            ].join('\n');
 
             core.setOutput('comment', comment);
 
