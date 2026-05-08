@@ -18,7 +18,7 @@ export default function lessCompilerPlugin(
     lessOptions?: Less.Options;
   } = {},
 ) {
-  const { include = /tdesign-web-components.*\.js/, exclude, lessOptions = {} } = options;
+  const { include = /@tdesign\/web-components.*\.js/, exclude, lessOptions = {} } = options;
 
   return {
     name: 'vite-plugin-less-compiler',

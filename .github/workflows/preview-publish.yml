@@ -1,18 +1,3 @@
-# =============================================================================
-# PREVIEW_PUBLISH
-# 触发时机: MAIN_PULL_REQUEST workflow 成功完成时
-# 主要流程: preflight 闸门 → 并行部署各站点 → 汇总评论
-#
-# 设计说明:
-# - 使用 workflow_run 是为了让 fork PR 也能访问 secrets 进行部署
-# - preflight 作为统一闸门: conclusion == success 且事件来自 pull_request 才继续
-#   其他情况 (失败 / 取消 / push 触发等) 整体 skipped，不会出现 "No jobs were run"
-# - 每个 deploy job 通过 artifact 存在性独立判断:
-#     * artifact 存在  → 正常部署
-#     * artifact 不存在 → 跳过该站点（chat 失败时的典型场景）
-#   不依赖上游 job 的成功状态，实现松耦合
-# - 域名根据 owner/repo 动态生成，未来迁移到任意 org 都无需改配置
-# =============================================================================
 name: PREVIEW_PUBLISH
 
 on:
@@ -21,7 +6,6 @@ on:
     types:
       - completed
 
-# 同一个 PR 的并发部署，新的顶掉旧的，避免竞态覆盖
 concurrency:
   group: preview-publish-${{ github.event.workflow_run.head_branch }}-${{ github.event.workflow_run.head_repository.full_name }}
   cancel-in-progress: true
@@ -32,12 +16,6 @@ permissions:
   pull-requests: write
 
 jobs:
-  # ─────────────────────────────────────────────────────────────────────────
-  # 0. Preflight: 统一闸门 + 计算上下文
-  #    - 仅当 MAIN_PULL_REQUEST conclusion == success 且事件来自 pull_request 时继续
-  #    - 域名按 owner/repo 动态推导：preview-pr-{id}-{owner}-{repo}.surge.sh
-  #      其中 owner 强制小写以满足 surge 域名规范
-  # ─────────────────────────────────────────────────────────────────────────
   preflight:
     runs-on: ubuntu-latest
     if: >-
@@ -70,23 +48,14 @@ jobs:
         id: domains
         env:
           PR_ID: ${{ steps.pr.outputs.id }}
-          # owner 转小写，避免大写 owner 造成的非法 surge 域名
           OWNER: ${{ github.repository_owner }}
         run: |
           OWNER_LOWER=$(echo "$OWNER" | tr '[:upper:]' '[:lower:]')
-          # 域名规则: preview-pr-{id}-{owner}-{component}.surge.sh
-          # 加 owner 前缀做命名空间隔离, 不同 fork 互不冲突, owner 切换时自动适配:
-          #   RSS1102        → preview-pr-1-rss1102-tdesign-web-components.surge.sh
-          #   TDesignOteam   → preview-pr-1-tdesignoteam-tdesign-web-components.surge.sh
-          # chat 子站源自 Tencent/tdesign-vue-next, 故域名沿用 tdesign-vue-next-chat
           {
             echo "web_components_domain=https://preview-pr-${PR_ID}-${OWNER_LOWER}-tdesign-web-components.surge.sh"
             echo "chat_domain=https://preview-pr-${PR_ID}-${OWNER_LOWER}-tdesign-vue-next-chat.surge.sh"
           } >> "$GITHUB_OUTPUT"
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 1. 部署 Web Components Site (主链路)
-  # ─────────────────────────────────────────────────────────────────────────
   tdesign-web-components:
     needs: preflight
     runs-on: ubuntu-latest
@@ -108,13 +77,6 @@ jobs:
             --domain ${{ needs.preflight.outputs.web_components_domain }} \
             --token ${{ secrets.TDESIGN_SURGE_TOKEN }}
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 2. 部署 Chat Site (辅链路)
-  #
-  # 通过 artifact 存在性自主判断:
-  # - artifact 存在 → 正常部署
-  # - artifact 不存在 (chat 构建失败) → 优雅跳过，不污染整体状态
-  # ─────────────────────────────────────────────────────────────────────────
   tdesign-vue-next-chat:
     needs: preflight
     runs-on: ubuntu-latest
@@ -144,9 +106,6 @@ jobs:
             --domain ${{ needs.preflight.outputs.chat_domain }} \
             --token ${{ secrets.TDESIGN_SURGE_TOKEN }}
 
-  # ─────────────────────────────────────────────────────────────────────────
-  # 3. 汇总报告评论 (对齐 tdesign-vue-next 官方风格)
-  # ─────────────────────────────────────────────────────────────────────────
   preview-comment:
     if: always() && needs.preflight.result == 'success'
     needs:
@@ -172,10 +131,9 @@ jobs:
               per_page: 100,
             });
 
-            // job name → 显示包名 + 域名 的映射
             const components = {
               'tdesign-web-components': {
-                package_name: 'tdesign-web-components',
+                package_name: '@tdesign/web-components-ui<br>@tdesign/web-components-chat',
                 domain: WEB_COMPONENTS_DOMAIN,
                 status: '',
                 report_url: '',

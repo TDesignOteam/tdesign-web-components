@@ -118,7 +118,7 @@ npm run start
         title: 'Button 按钮',
         name: 'button',
         path: '/components/button',
-        component: () => import('tdesign-web-components/button/README.md'),
+        component: () => import('@tdesign/web-components-ui/button/README.md'),
     },
     ...
   ],

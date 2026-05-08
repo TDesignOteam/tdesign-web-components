@@ -36,10 +36,9 @@ if (!config.includes(pathImport)) {
   );
 }
 
-// 2. Add aliases for tdesign-web-components and internal packages
+// 2. Add aliases for @tdesign/web-components and internal packages
 const aliasEntries = `
         // === Patched: point to current repo web-components source ===
-        'tdesign-web-components': resolve('${WEBC_SRC}'),
         '@tdesign/web-components-ui': resolve('${WEBC_SRC}'),
         '@tdesign/web-components-shared': resolve('${SHARED_SRC}'),
         '@tdesign/web-components-chat': resolve('${CHAT_SRC}'),
@@ -69,7 +68,6 @@ if (!config.includes('esbuild:')) {
 
 // 4. Add optimizeDeps.exclude for patched packages
 const excludeEntries = [
-  'tdesign-web-components',
   '@tdesign/web-components-ui',
   '@tdesign/web-components-chat',
   '@tdesign/ai-chat-engine',

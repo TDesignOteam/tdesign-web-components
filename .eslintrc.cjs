@@ -103,8 +103,8 @@ module.exports = {
           },
         ],
         patterns: [
-          'tdesign-web-components/*',
-          'tdesign-web-components-chat/*',
+          '@tdesign/web-components-ui/*',
+          '@tdesign/web-components-chat/*',
         ],
       },
     ],

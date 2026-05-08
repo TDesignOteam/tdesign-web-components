@@ -8,6 +8,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export default createDtsConfig({
   pkg,
-  packageName: 'tdesign-web-components-ui',
+  packageName: '@tdesign/web-components-ui',
   packageDir: __dirname,
 });

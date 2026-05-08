@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 
 export default createRollupConfig({
   pkg,
-  packageName: 'tdesign-web-components-ui',
+  packageName: '@tdesign/web-components-ui',
   packageDir: __dirname,
   input: 'src/index.ts',
   umdGlobalName: 'TDesignUI',

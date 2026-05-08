@@ -9,7 +9,7 @@ const __dirname = dirname(__filename);
 
 export default createRollupConfig({
   pkg,
-  packageName: 'tdesign-web-components-chat',
+  packageName: '@tdesign/web-components-chat',
   packageDir: __dirname,
   input: 'src/index.ts',
   inputList: [

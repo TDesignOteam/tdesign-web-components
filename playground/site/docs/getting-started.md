@@ -12,25 +12,33 @@ isGettingStarted: true
 推荐使用 npm 方式进行开发
 
 ```bash
-npm i tdesign-web-components
+npm i @tdesign/web-components-chat
 ```
+
+> `@tdesign/web-components-ui` 会作为 peer dependency 自动安装，无需单独安装。
 
 #### 浏览器引入（敬请期待）
 
 ### 基础使用
 
-无需额外配置即可实现组件按需引入：
+Chat 组件：
 
 ```javascript
-import 'tdesign-web-components/lib/style/index.css'; // 少量公共样式
-import 'tdesign-web-components/lib/button';
+import '@tdesign/web-components-chat';
 ```
 
-也可以整体引入
+基础 UI 组件按需引入：
 
 ```javascript
-import 'tdesign-web-components/lib/style/index.css'; // 少量公共样式
-import 'tdesign-web-components';
+import '@tdesign/web-components-ui/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components-ui/lib/button';
+```
+
+也可以整体引入基础 UI 组件
+
+```javascript
+import '@tdesign/web-components-ui/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components-ui';
 ```
 然后按照以下写法使用即可
 
@@ -55,7 +63,7 @@ export default defineConfig({
 > 注意：在`vite >= 5.x` 版本中，需要使用下面的vite插件，其它版本可跳过
 
 ```js
-import lessCompilerPlugin from 'tdesign-web-components/plugins/vite-plugin-less-compiler';
+import lessCompilerPlugin from '@tdesign/web-components-ui/plugins/vite-plugin-less-compiler';
 
 // vite.config.ts
 export default defineConfig({
@@ -90,8 +98,8 @@ export default defineConfig({
 更多 less 变量定义 [查看这里](https://github.com/Tencent/tdesign-common/blob/main/style/web/_variables.less)
 
 ```javascript
-import 'tdesign-web-components/esm/button'
-import 'tdesign-web-components/esm/style/index.js' // 少量公共样式
+import '@tdesign/web-components-ui/esm/button'
+import '@tdesign/web-components-ui/esm/style/index.js' // 少量公共样式
 ```
 
 在 vite 中定制主题
@@ -134,7 +142,7 @@ module.exports = {
 +       },
 +     },
     }],
-+   include: /node_modules\/tdesign-web-components/, // 建议对组件库中的less单独处理
++   include: /node_modules\/@tdesign\/web-components-ui/, // 建议对组件库中的less单独处理
   }],
 }
 ```

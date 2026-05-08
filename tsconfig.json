@@ -14,10 +14,7 @@
       "@tdesign/ai-chat-engine/*": ["common-utils/_ai-core/packages/chat-engine/*"],
       "@tdesign/ai-shared": ["common-utils/_ai-core/packages/shared/index.ts"],
       "@tdesign/ai-shared/*": ["common-utils/_ai-core/packages/shared/*"],
-      "tdesign-web-components": ["packages/ui/src"],
-      "tdesign-web-components/*": ["packages/ui/src/*"],
-      "tdesign-web-components-chat": ["packages/chat/src"],
-      "tdesign-web-components-chat/*": ["packages/chat/src/*"],
+
       "@test/utils": ["test/utils"],
       "@common/*": ["common-utils/_common/*"],
       "@": ["packages/ui/src"],

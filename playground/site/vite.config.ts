@@ -44,9 +44,6 @@ export default ({ mode }) => {
         '@tdesign/web-components-ui': resolve(ROOT, 'packages/ui/src/'),
         '@tdesign/web-components-chat': resolve(ROOT, 'packages/chat/src/'),
         '@tdesign/web-components-shared': resolve(ROOT, 'packages/shared/src/'),
-        // 兼容旧路径
-        'tdesign-web-components-chat': resolve(ROOT, 'packages/chat/src/'),
-        'tdesign-web-components': resolve(ROOT, 'packages/ui/src/'),
       },
     },
     server: {
