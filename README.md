@@ -4,8 +4,6 @@
   </a>
 </p>
 
-<!-- CI Test: $(date) -->
-
 <p align="center">
    <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
     <img src="https://img.shields.io/npm/l/@tdesign/web-components-chat.svg?sanitize=true" alt="License" />

@@ -41,7 +41,7 @@ jobs:
         run: echo "${{ github.event.pull_request.number }}" > pr-id.txt
 
       - name: Upload PR metadata
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         with:
           name: pr-id
           path: pr-id.txt
@@ -64,15 +64,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.5
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
           cache: pnpm
@@ -85,7 +85,7 @@ jobs:
         run: pnpm -C playground/site run build
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         with:
           name: tdesign-web-components-site
           path: _site
@@ -103,12 +103,12 @@ jobs:
     continue-on-error: true
     steps:
       - name: Checkout current repo
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6
         with:
           submodules: recursive
 
       - name: Checkout tdesign-vue-next
-        uses: actions/checkout@v6.0.2
+        uses: actions/checkout@v6
         with:
           # chat 子站源码固定来自社区上游仓库
           repository: Tencent/tdesign-vue-next
@@ -117,10 +117,10 @@ jobs:
           path: _vue-next
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.5
+        uses: pnpm/action-setup@v6
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
+        uses: actions/setup-node@v6
         with:
           node-version-file: .node-version
           cache: pnpm
@@ -144,7 +144,7 @@ jobs:
 
       # 构建失败则此 step 不执行, artifact 不会生成, 下游会自动跳过部署
       - name: Upload artifact
-        uses: actions/upload-artifact@v7.0.1
+        uses: actions/upload-artifact@v7
         with:
           name: tdesign-vue-next-chat-site
           path: _vue-next/packages/tdesign-vue-next-chat/site/dist
