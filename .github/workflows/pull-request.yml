@@ -1,86 +1,36 @@
-# 文件名建议统一为 pull-request.yml
-# 应用 test-build.yml 的 demo
-
+# =============================================================================
+# MAIN_PULL_REQUEST - 主 PR 工作流：测试 → 构建 → 打包产物
+# =============================================================================
 name: MAIN_PULL_REQUEST
 
 on:
   pull_request:
 
+# ─────────────────────────────────────────────────────────────────────────────
+# BUILD: 构建阶段
+# ─────────────────────────────────────────────────────────────────────────────
 jobs:
-  call-test-build:
+  # 单元测试
+  unit-test:
     uses: TDesignOteam/workflows/.github/workflows/reusable-unit-test.yml@main
     with:
       node-version-file: .node-version
       skip-site: true
       package-manager: pnpm
 
-  build-vue-next-chat:
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout current repo
-        uses: actions/checkout@v6.0.2
-        with:
-          submodules: recursive
-
-      - name: Checkout tdesign-vue-next
-        uses: actions/checkout@v6.0.2
-        with:
-          repository: ${{ github.repository_owner }}/tdesign-vue-next
-          ref: develop
-          submodules: recursive
-          path: _vue-next
-
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v6.0.5
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6.4.0
-        with:
-          node-version-file: .node-version
-          cache: pnpm
-
-      - name: Install dependencies for vue-next
-        working-directory: _vue-next
-        run: pnpm install --no-frozen-lockfile
-
-      - name: Patch chat site to use current repo web-components
-        run: |
-          node script/patch-vite-config.mjs \
-            _vue-next/packages/tdesign-vue-next-chat/site/vite.config.ts \
-            $GITHUB_WORKSPACE
-
-      - name: Build vue-next chat site
-        working-directory: _vue-next
-        run: pnpm -C packages/tdesign-vue-next-chat/site run preview
-
-      - name: Upload chat site artifact
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: vue-next-chat-site
-          path: _vue-next/packages/tdesign-vue-next-chat/site/dist
-          retention-days: 5
-
-      - name: Save PR ID
-        if: always()
-        run: echo ${{ github.event.number }} > vue-next-chat-pr-id.txt
-
-      - name: Upload PR ID artifact
-        if: always()
-        uses: actions/upload-artifact@v7.0.1
-        with:
-          name: vue-next-chat-pr-id
-          path: vue-next-chat-pr-id.txt
-          retention-days: 5
-
-  build-webc-site:
+  # ===========================================================================
+  # BUILD: Web Components Site 构建
+  # ===========================================================================
+  build-web-components:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current repo
+      # ── Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout repository
         uses: actions/checkout@v6.0.2
         with:
           submodules: recursive
 
+      # ── Setup ─────────────────────────────────────────────────────────────
       - name: Setup pnpm
         uses: pnpm/action-setup@v6.0.5
 
@@ -94,24 +44,94 @@ jobs:
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
 
-      - name: Build webc site
+      # ── Build ─────────────────────────────────────────────────────────────
+      - name: Build site
         run: pnpm -C playground/site run build
 
-      - name: Upload webc site artifact
+      # ── Package ───────────────────────────────────────────────────────────
+      - name: Package artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: webc-site
+          name: web-components-site
           path: _site
           retention-days: 5
 
-      - name: Save PR ID
+      # ── Metadata ──────────────────────────────────────────────────────────
+      - name: Save PR number
         if: always()
-        run: echo ${{ github.event.number }} > webc-site-pr-id.txt
+        run: echo ${{ github.event.number }} > web-components-pr-id.txt
 
-      - name: Upload PR ID artifact
+      - name: Package PR metadata
         if: always()
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: webc-site-pr-id
-          path: webc-site-pr-id.txt
+          name: web-components-pr-id
+          path: web-components-pr-id.txt
+          retention-days: 5
+
+  # ===========================================================================
+  # BUILD: Vue Next Chat Site 构建
+  # ===========================================================================
+  build-chat:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      # ── Checkout ──────────────────────────────────────────────────────────
+      - name: Checkout current repo
+        uses: actions/checkout@v6.0.2
+        with:
+          submodules: recursive
+
+      - name: Checkout tdesign-vue-next
+        uses: actions/checkout@v6.0.2
+        with:
+          repository: ${{ github.repository_owner }}/tdesign-vue-next
+          ref: develop
+          submodules: recursive
+          path: _vue-next
+
+      # ── Setup ─────────────────────────────────────────────────────────────
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6.0.5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6.4.0
+        with:
+          node-version-file: .node-version
+          cache: pnpm
+
+      - name: Install dependencies
+        working-directory: _vue-next
+        run: pnpm install --no-frozen-lockfile
+
+      # ── Build ─────────────────────────────────────────────────────────────
+      - name: Patch vite config
+        run: |
+          node script/patch-vite-config.mjs \
+            _vue-next/packages/tdesign-vue-next-chat/site/vite.config.ts \
+            $GITHUB_WORKSPACE
+
+      - name: Build site
+        working-directory: _vue-next
+        run: pnpm -C packages/tdesign-vue-next-chat/site run preview
+
+      # ── Package ───────────────────────────────────────────────────────────
+      - name: Package artifact
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: chat-site
+          path: _vue-next/packages/tdesign-vue-next-chat/site/dist
+          retention-days: 5
+
+      # ── Metadata ──────────────────────────────────────────────────────────
+      - name: Save PR number
+        if: always()
+        run: echo ${{ github.event.number }} > chat-pr-id.txt
+
+      - name: Package PR metadata
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: chat-pr-id
+          path: chat-pr-id.txt
           retention-days: 5
