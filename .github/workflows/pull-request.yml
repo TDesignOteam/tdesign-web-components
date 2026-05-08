@@ -3,14 +3,17 @@
 # 触发时机: PR 创建/更新时
 # 主要流程: 单元测试 + 上传 PR 元信息 + 并行构建两个站点
 #
-# 与下游 PREVIEW_PUBLISH 的契约:
-# - 上游整体 conclusion == 'success' 才触发下游
-# - 下游通过各自 artifact 独立判断是否需要部署该站点：
-#     * web-components-pr-id  (必有，PR 元信息)
-#     * web-components-site   (必有，web-components 构建产物)
-#     * chat-site             (可选，chat 构建失败时不存在)
-# - build-chat 使用 `continue-on-error: true` 使 chat 构建失败不阻塞主链路，
-#   下游 deploy-chat 通过 artifact 是否存在来决定是否部署
+# 与下游 PREVIEW_PUBLISH 的契约 (artifact 命名):
+# - pr-id                          (必有, PR 元信息)
+# - tdesign-web-components-site    (必有, web-components 主站构建产物)
+# - tdesign-vue-next-chat-site     (可选, chat 构建失败时不存在；
+#                                   源固定来自 Tencent/tdesign-vue-next)
+#
+# 设计原则:
+# - 每个构建 job 只负责构建并上传自己的 artifact
+# - PR 元信息由独立 job 上传，与构建解耦
+# - build-chat 用 continue-on-error 让其失败不阻塞主链路；下游通过 artifact
+#   存在性独立判断，避免上游 conclusion 误导
 # =============================================================================
 name: MAIN_PULL_REQUEST
 
@@ -29,20 +32,19 @@ permissions:
 
 jobs:
   # ─────────────────────────────────────────────────────────────────────────
-  # 1. 上传 PR 元信息 (独立 job，与构建解耦)
-  #    下游 workflow 通过此 artifact 获取 PR number 用于评论
+  # 1. 上传 PR 元信息 (独立 job, 与构建解耦)
   # ─────────────────────────────────────────────────────────────────────────
   upload-pr-meta:
     runs-on: ubuntu-latest
     steps:
       - name: Write PR number
-        run: echo "${{ github.event.pull_request.number }}" > web-components-pr-id.txt
+        run: echo "${{ github.event.pull_request.number }}" > pr-id.txt
 
       - name: Upload PR metadata
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: web-components-pr-id
-          path: web-components-pr-id.txt
+          name: pr-id
+          path: pr-id.txt
           retention-days: 2
 
   # ─────────────────────────────────────────────────────────────────────────
@@ -56,7 +58,7 @@ jobs:
       package-manager: pnpm
 
   # ─────────────────────────────────────────────────────────────────────────
-  # 3. 构建 Web Components Site (主链路，必须成功)
+  # 3. 构建 Web Components Site (主链路, 必须成功)
   # ─────────────────────────────────────────────────────────────────────────
   build-web-components:
     runs-on: ubuntu-latest
@@ -85,17 +87,16 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: web-components-site
+          name: tdesign-web-components-site
           path: _site
           retention-days: 5
 
   # ─────────────────────────────────────────────────────────────────────────
-  # 4. 构建 Vue Next Chat Site (辅链路，失败不阻塞主链路)
+  # 4. 构建 Chat Site (辅链路, 失败不阻塞主链路)
   #
-  # 使用 `continue-on-error: true` 让此 job 失败不影响整体 workflow
-  # 的 success conclusion，保证下游 PREVIEW_PUBLISH 仍会触发，使
-  # web-components 的预览链路完整执行。
-  # 下游 deploy-chat 通过 artifact 存在性独立判断是否部署，不依赖本 job 的状态。
+  # 使用 continue-on-error: true 让此 job 失败不影响整体 workflow 的 success
+  # conclusion，保证下游 PREVIEW_PUBLISH 仍会触发，使主站预览链路完整执行。
+  # 下游 deploy-chat 通过 artifact 存在性独立判断是否部署，不依赖本 job 状态。
   # ─────────────────────────────────────────────────────────────────────────
   build-chat:
     runs-on: ubuntu-latest
@@ -109,7 +110,8 @@ jobs:
       - name: Checkout tdesign-vue-next
         uses: actions/checkout@v6.0.2
         with:
-          repository: ${{ github.repository_owner }}/tdesign-vue-next
+          # chat 子站源码固定来自社区上游仓库
+          repository: Tencent/tdesign-vue-next
           ref: develop
           submodules: recursive
           path: _vue-next
@@ -122,7 +124,6 @@ jobs:
         with:
           node-version-file: .node-version
           cache: pnpm
-          # 明确指定 lockfile 路径，否则默认只在根目录找，命中不了缓存
           cache-dependency-path: |
             pnpm-lock.yaml
             _vue-next/pnpm-lock.yaml
@@ -141,10 +142,10 @@ jobs:
         working-directory: _vue-next
         run: pnpm -C packages/tdesign-vue-next-chat/site run preview
 
-      # 构建失败则此 step 不执行，artifact 不会生成，下游会自动跳过部署
+      # 构建失败则此 step 不执行, artifact 不会生成, 下游会自动跳过部署
       - name: Upload artifact
         uses: actions/upload-artifact@v7.0.1
         with:
-          name: chat-site
+          name: tdesign-vue-next-chat-site
           path: _vue-next/packages/tdesign-vue-next-chat/site/dist
           retention-days: 5
