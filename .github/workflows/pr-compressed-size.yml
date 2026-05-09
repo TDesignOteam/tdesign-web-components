@@ -22,7 +22,7 @@ jobs:
           install-script: 'pnpm install --no-frozen-lockfile'
           build-script: 'build:ui'
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          pattern: './packages/tdesign-web-components/{dist,lib,esm}/**/*.{js,css}'
+          pattern: './packages/tdesign-web-components/{dist,lib,esm}/**/*.{js,mjs,css}'
           comment-key: tdesign-web-components
 
   tdesign-web-components-chat:
@@ -43,5 +43,5 @@ jobs:
           install-script: 'pnpm install --no-frozen-lockfile'
           build-script: 'build:chat'
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          pattern: './packages/tdesign-web-components-chat/{dist,lib,esm}/**/*.{mjs,css}'
+          pattern: './packages/tdesign-web-components-chat/{dist,lib,esm}/**/*.{js,mjs,css}'
           comment-key: tdesign-web-components-chat
