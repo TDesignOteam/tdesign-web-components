@@ -27,4 +27,4 @@ jobs:
         with:
           node-version: 24
 
-      - run: pnpm dlx pkg-pr-new publish './packages/ui' './packages/chat' --pnpm --packageManager=pnpm,npm,yarn
+      - run: pnpm dlx pkg-pr-new publish './packages/*' --pnpm --packageManager=pnpm,npm,yarn
