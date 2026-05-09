@@ -1,4 +1,4 @@
-name: MAIN_PULL_REQUEST
+name: main-pull-request
 
 on:
   pull_request:
