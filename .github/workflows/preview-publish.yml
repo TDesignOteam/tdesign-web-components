@@ -1,9 +1,9 @@
-name: PREVIEW_PUBLISH
+name: preview-publish
 
 on:
   workflow_run:
     workflows:
-      - PREVIEW_BUILD
+      - preview-build
     types:
       - completed
 
