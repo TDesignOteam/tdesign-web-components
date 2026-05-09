@@ -353,9 +353,6 @@ importers:
       '@tdesign/ai-chat-engine':
         specifier: workspace:^
         version: link:../../../common-utils/_ai-core/packages/chat-engine
-      '@tdesign/web-components-ui':
-        specifier: workspace:^
-        version: link:../../components
       cherry-markdown:
         specifier: 0.11.0-alpha-5
         version: 0.11.0-alpha-5
@@ -375,6 +372,9 @@ importers:
         specifier: ^7.7.0
         version: 7.7.13
     devDependencies:
+      '@tdesign/components':
+        specifier: workspace:^
+        version: link:../../components
       '@tdesign/web-components-shared':
         specifier: workspace:^
         version: link:../../shared
@@ -406,24 +406,77 @@ importers:
 
   packages/tdesign-web-components:
     dependencies:
-      '@tdesign/web-components-ui':
+      '@babel/runtime':
+        specifier: ^7.24.7
+        version: 7.29.2
+      '@popperjs/core':
+        specifier: ^2.11.8
+        version: 2.11.8
+      copy-to-clipboard:
+        specifier: ^3.3.3
+        version: 3.3.3
+      dayjs:
+        specifier: ^1.11.19
+        version: 1.11.20
+      htm:
+        specifier: ^3.1.1
+        version: 3.1.1
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.18.1
+      omi:
+        specifier: ^7.7.13
+        version: 7.7.13
+      omi-transition:
+        specifier: ^0.1.11
+        version: 0.1.11
+      tdesign-icons-web-components:
+        specifier: ^0.3.2
+        version: 0.3.4(omi@7.7.13)
+    devDependencies:
+      '@tdesign/components':
         specifier: workspace:^
         version: link:../components
-      omi:
-        specifier: ^7.7.0
-        version: 7.7.13
+      '@tdesign/web-components-shared':
+        specifier: workspace:^
+        version: link:../shared
 
   packages/tdesign-web-components-chat:
     dependencies:
-      '@tdesign/web-components-chat':
+      '@tdesign/ai-chat-engine':
         specifier: workspace:^
-        version: link:../pro-components/chat
-      '@tdesign/web-components-ui':
-        specifier: workspace:^
-        version: link:../components
+        version: link:../../common-utils/_ai-core/packages/chat-engine
+      cherry-markdown:
+        specifier: 0.11.0-alpha-5
+        version: 0.11.0-alpha-5
+      immer:
+        specifier: ^10.1.1
+        version: 10.2.0
+      lodash-es:
+        specifier: ^4.17.21
+        version: 4.18.1
+      markdown-it-fence:
+        specifier: ^0.1.3
+        version: 0.1.3
+      nanostores:
+        specifier: ^0.11.4
+        version: 0.11.4
       omi:
         specifier: ^7.7.0
         version: 7.7.13
+    devDependencies:
+      '@tdesign/pro-components-chat':
+        specifier: workspace:^
+        version: link:../pro-components/chat
+      '@tdesign/web-components-shared':
+        specifier: workspace:^
+        version: link:../shared
+      '@types/lodash-es':
+        specifier: ^4.17.12
+        version: 4.17.12
+      tdesign-web-components:
+        specifier: workspace:^
+        version: link:../tdesign-web-components
 
 packages:
 

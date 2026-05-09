@@ -1,4 +1,4 @@
-import { dirname } from 'path';
+import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
 import { createRollupConfig } from '../../script/rollup.base.mjs';
@@ -7,26 +7,32 @@ import pkg from './package.json' with { type: 'json' };
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// 源码目录（@tdesign/pro-components-chat）
+const srcDir = resolve(__dirname, '../pro-components/chat');
+
 export default createRollupConfig({
   pkg,
-  packageName: '@tdesign/web-components-chat',
+  packageName: 'tdesign-web-components-chat',
   packageDir: __dirname,
-  input: 'index.ts',
+  srcDir,
+  input: resolve(srcDir, 'index.ts'),
   inputList: [
-    '**/*.ts',
-    '**/*.tsx',
-    '!node_modules/**',
-    '!_example/**',
-    '!*.d.ts',
-    '!**/__tests__/**',
-    '!_usage/**',
-    '!mock/**',
+    `${srcDir}/**/*.ts`,
+    `${srcDir}/**/*.tsx`,
+    `!${srcDir}/**/node_modules/**`,
+    `!${srcDir}/**/_example/**`,
+    `!${srcDir}/**/*.d.ts`,
+    `!${srcDir}/**/__tests__/**`,
+    `!${srcDir}/**/_usage/**`,
+    `!${srcDir}/**/mock/**`,
+    `!${srcDir}/site/**`,
   ],
   umdGlobalName: 'TDesignChat',
   globals: {
     omi: 'omi',
     'lodash-es': '_',
     '@tdesign/web-components-ui': 'TDesignUI',
+    'tdesign-web-components': 'TDesignUI',
   },
   additionalExternal: [
     '@tdesign/web-components-ui',
@@ -39,6 +45,7 @@ export default createRollupConfig({
     '@tdesign/web-components-ui/loading',
     '@tdesign/web-components-ui/skeleton',
     '@tdesign/web-components-ui/message',
+    'tdesign-web-components',
     '@tdesign/ai-chat-engine',
     '@tdesign/ai-shared',
   ],

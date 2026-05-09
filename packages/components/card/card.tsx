@@ -1,4 +1,4 @@
-import '../../src/loading';
+import '../loading';
 
 import classname, { getClassPrefix, getCommonClassName } from '@tdesign/web-components-shared/_util/classname';
 import { StyledProps } from '@tdesign/web-components-shared/common';

@@ -77,23 +77,29 @@ export function createRollupConfig({
   pkg,
   packageName,
   packageDir,
-  input = 'src/index.ts',
+  srcDir: _srcDir,
+  input = 'index.ts',
   inputList: _inputList,
   umdGlobalName = 'TDesign',
   globals = { omi: 'omi', lodash: '_' },
   additionalExternal = [],
   skipCss = false,
 }) {
+  // 源码目录，默认等于 packageDir（源码与产物同目录时）
+  const srcDir = _srcDir || packageDir;
+
   // 默认 inputList，允许外部覆盖
   const inputList = _inputList || [
-    'src/**/*.ts',
-    'src/**/*.jsx',
-    'src/**/*.tsx',
-    '!src/**/_example/**',
-    '!src/**/*.d.ts',
-    '!src/**/__tests__/**',
-    '!src/**/_usage/**',
-    '!src/**/mock/**',
+    `${srcDir}/**/*.ts`,
+    `${srcDir}/**/*.jsx`,
+    `${srcDir}/**/*.tsx`,
+    `!${srcDir}/**/node_modules/**`,
+    `!${srcDir}/**/_example/**`,
+    `!${srcDir}/**/*.d.ts`,
+    `!${srcDir}/**/__tests__/**`,
+    `!${srcDir}/**/_usage/**`,
+    `!${srcDir}/**/mock/**`,
+    `!${srcDir}/site/**`,
   ];
   const externalDeps = Object.keys(pkg.dependencies || {});
   const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
@@ -105,8 +111,8 @@ export function createRollupConfig({
  */
 `;
 
-  // 使用 fast-glob 解析 inputList（替代 rollup-plugin-multi-input）
-  const resolvedInput = fg.sync(inputList, { cwd: packageDir, absolute: true });
+  // 使用 fast-glob 解析 inputList
+  const resolvedInput = fg.sync(inputList, { absolute: true });
 
   // 获取分析插件
   const getAnalyzePlugins = (buildType = 'umd') => {
@@ -256,7 +262,7 @@ export function createRollupConfig({
 
   // CSS 配置
   const cssConfig = {
-    input: resolve(packageDir, 'style/index.js'),
+    input: resolve(srcDir, 'style/index.js'),
     plugins: [aliasPlugin, styles({ mode: 'extract' })],
     output: {
       banner,
@@ -279,7 +285,7 @@ export function createRollupConfig({
       format: 'esm',
       sourcemap: true,
       preserveModules: true,
-      preserveModulesRoot: packageDir,
+      preserveModulesRoot: srcDir,
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
@@ -297,7 +303,7 @@ export function createRollupConfig({
       format: 'esm',
       sourcemap: true,
       preserveModules: true,
-      preserveModulesRoot: packageDir,
+      preserveModulesRoot: srcDir,
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
@@ -314,16 +320,18 @@ export function createRollupConfig({
       sourcemap: true,
       exports: 'named',
       preserveModules: true,
-      preserveModulesRoot: packageDir,
+      preserveModulesRoot: srcDir,
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
 
   const umdExternal = [...externalPeerDeps, ...additionalExternal];
 
-  // UMD 配置
+  // UMD 配置（input 在外部已解析为绝对路径）
+  const umdInput = typeof input === 'string' && !input.startsWith('/') ? resolve(srcDir, input) : input;
+
   const umdConfig = {
-    input: resolve(packageDir, input),
+    input: umdInput,
     external: umdExternal,
     plugins: getPlugins({
       env: 'development',
@@ -342,7 +350,7 @@ export function createRollupConfig({
 
   // UMD 压缩版
   const umdMinConfig = {
-    input: resolve(packageDir, input),
+    input: umdInput,
     external: umdExternal,
     plugins: getPlugins({
       isProd: true,
@@ -376,7 +384,8 @@ export function createRollupConfig({
  * 使用 rollup-plugin-dts 从源码直接生成与 Rollup 输出结构匹配的 .d.ts 文件。
  * 必须作为独立命令运行（不能与其他 config 合并），因为插件需要独占 Rollup 实例。
  */
-export function createDtsConfig({ pkg, packageName, packageDir, input = 'src/index.ts', additionalExternal = [] }) {
+export function createDtsConfig({ pkg, packageName, packageDir, srcDir: _srcDir, input = 'index.ts', additionalExternal = [] }) {
+  const srcDir = _srcDir || packageDir;
   const banner = `/**
  * ${packageName} v${pkg.version}
  * (c) ${new Date().getFullYear()} ${pkg.author}
@@ -389,8 +398,10 @@ export function createDtsConfig({ pkg, packageName, packageDir, input = 'src/ind
   const externalPeerDeps = Object.keys(pkg.peerDependencies || {});
   const allExternal = [...externalDeps, ...externalPeerDeps, ...additionalExternal];
 
+  const dtsInput = typeof input === 'string' && !input.startsWith('/') ? resolve(srcDir, input) : input;
+
   return {
-    input: resolve(packageDir, input),
+    input: dtsInput,
     external: [...allExternal, /^node_modules\//, /^cherry-markdown/, /^lodash-es/, /^@types/],
     plugins: [
       aliasPlugin,
@@ -418,7 +429,7 @@ export function createDtsConfig({ pkg, packageName, packageDir, input = 'src/ind
       dir: resolve(packageDir, 'lib/'),
       format: 'esm',
       preserveModules: true,
-      preserveModulesRoot: packageDir,
+      preserveModulesRoot: srcDir,
     },
   };
 }
