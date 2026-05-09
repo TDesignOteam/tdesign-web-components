@@ -13,3 +13,5 @@ packages:
   - 'common-utils/_common/style'
   - 'common-utils/_ai-core/packages/chat-engine'
   - 'common-utils/_ai-core/packages/shared'
+
+shamefullyHoist: true
