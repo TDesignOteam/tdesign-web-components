@@ -5,10 +5,6 @@
   "type": "module",
   "author": "tdesign",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Tencent/tdesign-web-components.git"
-  },
   "scripts": {
     "init": "git submodule update --init",
     "start": "pnpm run dev:prepare && pnpm run dev:ui",
