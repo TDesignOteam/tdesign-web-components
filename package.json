@@ -6,7 +6,7 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "init": "git submodule init && git submodule update --recursive",
+    "init": "git submodule update --init",
     "start": "pnpm run dev:prepare && pnpm run dev:ui",
     "dev:ui": "cd packages/tdesign-web-components/site && vite --force",
     "dev:chat": "cd packages/tdesign-web-components-chat/site && vite --force",
