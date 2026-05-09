@@ -30,7 +30,7 @@ export default [
         titleEn: 'CHANGELOG',
         name: 'changelog',
         path: '/webcomponents/changelog',
-        component: () => import('../../CHANGELOG.md'),
+        component: () => import('../../../CHANGELOG.md'),
       },
       {
         title: '组件概览',
@@ -59,56 +59,6 @@ export default [
         component: () => import('@docs/vue.md'),
       },
     ],
-  },
-  {
-    title: 'aigc',
-    name: 'aigc',
-    type: 'component', // 组件文档
-    children: [
-      {
-        title: 'Chatbot 智能对话',
-        name: 'chatbot',
-        path: '/webcomponents/components/chatbot',
-        component: () => import('@tdesign/web-components-chat/chatbot/README.md'),
-      },
-      {
-        title: 'ChatSender 对话输入框',
-        name: 'chat-sender',
-        path: '/webcomponents/components/chat-sender',
-        component: () => import('@tdesign/web-components-chat/chat-sender/README.md'),
-      },
-      {
-        title: 'ChatMessage 对话消息体',
-        name: 'chat-message',
-        path: '/webcomponents/components/chat-message',
-        component: () => import('@tdesign/web-components-chat/chat-message/README.md'),
-      },
-      {
-        title: 'ChatAction 对话操作',
-        name: 'chat-action',
-        path: '/webcomponents/components/chat-action',
-        component: () => import('@tdesign/web-components-chat/chat-action/README.md'),
-      },
-      {
-        title: 'ChatLoading 对话加载',
-        name: 'chat-loading',
-        path: '/webcomponents/components/chat-loading',
-        component: () => import('@tdesign/web-components-chat/chat-loading/README.md'),
-      },
-      {
-        title: 'Filecard 文件缩略卡片',
-        name: 'filecard',
-        path: '/webcomponents/components/filecard',
-        component: () => import('@tdesign/web-components-chat/filecard/README.md'),
-      },
-      {
-        title: 'Attachments 文件附件',
-        name: 'attachments',
-        path: '/webcomponents/components/attachments',
-        component: () => import('@tdesign/web-components-chat/attachments/README.md'),
-      },
-    ],
-    tag: '',
   },
   {
     title: '基础',

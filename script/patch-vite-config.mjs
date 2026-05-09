@@ -18,9 +18,9 @@ if (!viteConfigPath || !webcRoot) {
   process.exit(1);
 }
 
-const WEBC_SRC = resolve(webcRoot, 'packages/ui/src');
+const WEBC_SRC = resolve(webcRoot, 'packages/components');
 const SHARED_SRC = resolve(webcRoot, 'packages/shared/src');
-const CHAT_SRC = resolve(webcRoot, 'packages/chat/src');
+const CHAT_SRC = resolve(webcRoot, 'packages/pro-components/chat');
 const AI_ENGINE_SRC = resolve(webcRoot, 'common-utils/_ai-core/packages/chat-engine');
 const AI_SHARED_SRC = resolve(webcRoot, 'common-utils/_ai-core/packages/shared');
 const COMMON_SRC = resolve(webcRoot, 'common-utils/_common');

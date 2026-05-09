@@ -4,8 +4,8 @@ import { resolve } from 'path';
 import { dirname } from 'path';
 import { defineConfig } from 'vite';
 
-import { getWorkspaceRoot } from '../../script/lib/get-root-path.mjs';
-import tdocPlugin from '../../script/plugin-tdoc';
+import { getWorkspaceRoot } from '../../../script/lib/get-root-path.mjs';
+import tdocPlugin from '../../../script/plugin-tdoc';
 import addPartAttributePlugin from './vite-plugin-add-part';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -13,13 +13,13 @@ const ROOT = getWorkspaceRoot(__dirname);
 
 const publicPathMap = {
   preview: '/',
-  production: '/webcomponents/',
+  production: '/pro-webcomponents/',
 };
 
 // https://vitejs.dev/config/
 export default ({ mode }) => {
-  if (mode !== 'development' && fs.existsSync(resolve(ROOT, '_site/'))) {
-    fs.rmdirSync(resolve(ROOT, '_site/'), { recursive: true });
+  if (mode !== 'development' && fs.existsSync(resolve(ROOT, '_pro-site/'))) {
+    fs.rmdirSync(resolve(ROOT, '_pro-site/'), { recursive: true });
   }
   return defineConfig({
     base: publicPathMap[mode] || './',
@@ -30,25 +30,25 @@ export default ({ mode }) => {
     },
     resolve: {
       alias: {
-        '@': resolve(ROOT, 'packages/ui/src/'),
+        '@': resolve(ROOT, 'packages/components/'),
         '@site': resolve('./'),
         '@docs': resolve('./docs'),
         '@common': resolve(ROOT, 'common-utils/_common/'),
         // 包元数据（package.json 等）
-        '@ui-pkg': resolve(ROOT, 'packages/ui'),
-        '@chat-pkg': resolve(ROOT, 'packages/chat'),
+        '@ui-pkg': resolve(ROOT, 'packages/components'),
+        '@chat-pkg': resolve(ROOT, 'packages/pro-components/chat'),
         // AI Core packages (submodule)
         '@tdesign/ai-chat-engine': resolve(ROOT, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
         '@tdesign/ai-shared': resolve(ROOT, 'common-utils/_ai-core/packages/shared/index.ts'),
         // Monorepo packages
-        '@tdesign/web-components-ui': resolve(ROOT, 'packages/ui/src/'),
-        '@tdesign/web-components-chat': resolve(ROOT, 'packages/chat/src/'),
+        '@tdesign/web-components-ui': resolve(ROOT, 'packages/components/'),
+        '@tdesign/web-components-chat': resolve(ROOT, 'packages/pro-components/chat/'),
         '@tdesign/web-components-shared': resolve(ROOT, 'packages/shared/src/'),
       },
     },
     server: {
       host: '0.0.0.0',
-      port: 15000,
+      port: 15001,
       open: '/',
       https: false,
       fs: {
@@ -76,7 +76,7 @@ export default ({ mode }) => {
       },
     },
     build: {
-      outDir: resolve(ROOT, '_site'),
+      outDir: resolve(ROOT, '_pro-site'),
       rollupOptions: {
         treeshake: false, // 防止不是具名的export，会被tree-shaking
         input: {

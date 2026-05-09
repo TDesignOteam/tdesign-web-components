@@ -32,10 +32,10 @@ const aliasPlugin = alias({
       find: '@tdesign/web-components-shared',
       replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts'),
     },
-    { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/ui/src/$1') },
-    { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/ui/src/index.ts') },
-    { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/chat/src/$1') },
-    { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/chat/src/index.ts') },
+    { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/components/$1') },
+    { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/components/index.ts') },
+    { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/pro-components/chat/$1') },
+    { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/pro-components/chat/index.ts') },
     {
       find: /^@tdesign\/ai-chat-engine\/(.*)/,
       replacement: resolve(monorepoRoot, 'common-utils/_ai-core/packages/chat-engine/$1'),
@@ -256,7 +256,7 @@ export function createRollupConfig({
 
   // CSS 配置
   const cssConfig = {
-    input: resolve(packageDir, 'src/style/index.js'),
+    input: resolve(packageDir, 'style/index.js'),
     plugins: [aliasPlugin, styles({ mode: 'extract' })],
     output: {
       banner,
@@ -279,7 +279,7 @@ export function createRollupConfig({
       format: 'esm',
       sourcemap: true,
       preserveModules: true,
-      preserveModulesRoot: resolve(packageDir, 'src'),
+      preserveModulesRoot: packageDir,
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
@@ -297,7 +297,7 @@ export function createRollupConfig({
       format: 'esm',
       sourcemap: true,
       preserveModules: true,
-      preserveModulesRoot: resolve(packageDir, 'src'),
+      preserveModulesRoot: packageDir,
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
@@ -314,7 +314,7 @@ export function createRollupConfig({
       sourcemap: true,
       exports: 'named',
       preserveModules: true,
-      preserveModulesRoot: resolve(packageDir, 'src'),
+      preserveModulesRoot: packageDir,
       chunkFileNames: '_chunks/dep-[hash].js',
     },
   };
@@ -418,7 +418,7 @@ export function createDtsConfig({ pkg, packageName, packageDir, input = 'src/ind
       dir: resolve(packageDir, 'lib/'),
       format: 'esm',
       preserveModules: true,
-      preserveModulesRoot: resolve(packageDir, 'src'),
+      preserveModulesRoot: packageDir,
     },
   };
 }

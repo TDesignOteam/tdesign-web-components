@@ -11,7 +11,7 @@ export default createRollupConfig({
   pkg,
   packageName: '@tdesign/web-components-ui',
   packageDir: __dirname,
-  input: 'src/index.ts',
+  input: 'index.ts',
   umdGlobalName: 'TDesignUI',
   globals: { omi: 'omi', 'lodash-es': '_' },
 });

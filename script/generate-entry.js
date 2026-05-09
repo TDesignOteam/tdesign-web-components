@@ -7,7 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = getWorkspaceRoot(__dirname);
 
-const componentsPath = path.resolve(rootDir, 'packages/ui/src');
+const componentsPath = path.resolve(rootDir, 'packages/components');
 
 const components = fs.readdirSync(componentsPath).filter((name) => {
   if (['style', 'icon'].includes(name) || name.startsWith('_')) return false;

@@ -92,19 +92,21 @@ npm run start
 
 ```shell
 .
-├── playground/site/        # 站点代码
-├── packages/               # 组件包
-│   ├── ui/                 # UI 组件库 (@tdesign/web-components-ui)
-│   │   └── src/
-│   │       ├── _common/   # 公共资源和样式（tdesign-common子仓库）
-│   │       └── [组件]/
-│   │           ├── _example/  # 演示文件
-│   │           └── index.ts   # 组件导出入口
-│   ├── chat/               # Chat 组件库 (@tdesign/web-components-chat)
-│   └── shared/             # 共享工具 (@tdesign/web-components-shared)
-├── common-utils/           # 公共工具和子模块
-│   ├── _common/            # tdesign-common 子仓库
-│   └── _ai-core/           # tdesign-ai-core 子仓库
+├── packages/                              # 组件包
+│   ├── components/                       # UI 组件源码 (@tdesign/web-components-ui)
+│   │   └── [组件]/
+│   │       ├── _example/                # 演示文件
+│   │       └── index.ts                 # 组件导出入口
+│   ├── pro-components/                  # Pro 组件源码
+│   │   └── chat/                       # Chat 组件库 (@tdesign/web-components-chat)
+│   ├── tdesign-web-components/          # UI 主包（站点）
+│   │   └── site/
+│   ├── tdesign-web-components-chat/    # Chat 主包（站点）
+│   │   └── site/
+│   └── shared/                         # 共享工具 (@tdesign/web-components-shared)
+├── common-utils/                         # 公共工具和子模块
+│   ├── _common/                        # tdesign-common 子仓库
+│   └── _ai-core/                       # tdesign-ai-core 子仓库
 ```
 
 ### 新增开发组件
@@ -132,7 +134,7 @@ npm run start
 },
 ```
 
-`packages/ui/src/index.ts` 中也需要导出你新添加的组件，如：
+`packages/components/index.ts` 中也需要导出你新添加的组件，如：
 
 ```typescript
 export * from './button';
