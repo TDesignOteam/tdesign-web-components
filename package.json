@@ -22,7 +22,7 @@
     "dev:prepare": "pnpm run build:chat && pnpm run build:ui",
     "dev:vue-next-chat": "pnpm run build:chat && cd playground/_tdesign-vue-next && pnpm install --no-frozen-lockfile && pnpm dev",
     "dev:react-chat": "pnpm run build:chat && cd playground/_tdesign-react && pnpm install --no-frozen-lockfile && pnpm dev",
-    "preview": "vite preview",
+    "test": "echo \"no test specified,work in process\"",
     "lint": "eslint --ext .ts,.tsx packages/components packages/pro-components/chat",
     "lint:fix": "eslint --fix --ext .ts,.tsx packages/components packages/pro-components/chat",
     "generate:entry": "node ./script/generate-entry.js",
