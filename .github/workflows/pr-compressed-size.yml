@@ -43,21 +43,3 @@ jobs:
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           pattern: './packages/tdesign-web-components-chat/es/**/*.{mjs,css}'
           comment-key: tdesign-web-components-chat
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-        with:
-          submodules: recursive
-
-      - uses: pnpm/action-setup@v4
-
-      - uses: actions/setup-node@v6
-        with:
-          node-version-file: .node-version
-
-      - uses: preactjs/compressed-size-action@v2
-        with:
-          build-script: 'build:auto-import-resolver'
-          repo-token: '${{ secrets.GITHUB_TOKEN }}'
-          pattern: './packages/auto-import-resolver/dist/*.{js,cjs,mjs}'
-          comment-key: auto-import-resolver
