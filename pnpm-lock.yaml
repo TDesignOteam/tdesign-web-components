@@ -384,6 +384,10 @@ importers:
         specifier: workspace:^
         version: link:../tdesign-web-components
 
+  packages/tdesign-web-components-chat/site: {}
+
+  packages/tdesign-web-components/site: {}
+
 packages:
 
   '@alloc/quick-lru@5.2.0':

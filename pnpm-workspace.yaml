@@ -4,6 +4,9 @@ packages:
   # Pro 组件包
   - 'packages/pro-components/*'
 
+  # 组件站点
+  - 'packages/*/site'
+
   # 公共工具（外部独立仓库，通过 git submodule 管理）
   - 'common-utils/_common/js'
   - 'common-utils/_common/docs'
