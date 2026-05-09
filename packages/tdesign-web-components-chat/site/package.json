@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "vite --force",
     "build": "vite build",
-    "build:preview": "vite build --mode preview",
-    "preview": "vite preview"
+    "preview": "vite build --mode preview"
   }
 }

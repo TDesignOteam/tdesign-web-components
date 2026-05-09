@@ -1,4 +1,3 @@
-import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { resolve } from 'path';
 import { dirname } from 'path';
@@ -17,11 +16,8 @@ const publicPathMap = {
 };
 
 // https://vitejs.dev/config/
-export default ({ mode }) => {
-  if (mode !== 'development' && fs.existsSync(resolve(ROOT, '_pro-site/'))) {
-    fs.rmdirSync(resolve(ROOT, '_pro-site/'), { recursive: true });
-  }
-  return defineConfig({
+export default ({ mode }) =>
+  defineConfig({
     base: publicPathMap[mode] || './',
     esbuild: {
       jsxFactory: 'OmiComponent.h',
@@ -76,7 +72,7 @@ export default ({ mode }) => {
       },
     },
     build: {
-      outDir: resolve(ROOT, '_pro-site'),
+      outDir: 'dist',
       rollupOptions: {
         treeshake: false, // 防止不是具名的export，会被tree-shaking
         input: {
@@ -92,4 +88,3 @@ export default ({ mode }) => {
     ],
     logLevel: 'error',
   });
-};
