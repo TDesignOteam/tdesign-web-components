@@ -29,7 +29,7 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 
 ### API 规范
 
-[API](./src/_common/api.md)
+[API](./common-utils/_common/api.md)
 
 ### 前缀
 
@@ -92,12 +92,19 @@ npm run start
 
 ```shell
 .
-├── site/                   # 站点代码
-├── src/                    # 组件代码
-│   ├── _common/           # 公共资源和样式（tdesign-common子仓库）
-│   └── [组件]/            
-│       ├── _example/      # 演示文件
-│       ├── index.ts       # 组件导出入口
+├── playground/site/        # 站点代码
+├── packages/               # 组件包
+│   ├── ui/                 # UI 组件库 (@tdesign/web-components-ui)
+│   │   └── src/
+│   │       ├── _common/   # 公共资源和样式（tdesign-common子仓库）
+│   │       └── [组件]/
+│   │           ├── _example/  # 演示文件
+│   │           └── index.ts   # 组件导出入口
+│   ├── chat/               # Chat 组件库 (@tdesign/web-components-chat)
+│   └── shared/             # 共享工具 (@tdesign/web-components-shared)
+├── common-utils/           # 公共工具和子模块
+│   ├── _common/            # tdesign-common 子仓库
+│   └── _ai-core/           # tdesign-ai-core 子仓库
 ```
 
 ### 新增开发组件
@@ -125,7 +132,7 @@ npm run start
 },
 ```
 
-`src/index.ts` 中也需要导出你新添加的组件，如：
+`packages/ui/src/index.ts` 中也需要导出你新添加的组件，如：
 
 ```typescript
 export * from './button';
@@ -137,7 +144,7 @@ export * from './button';
 
 ### 组件 Demo 演示配置
 
-为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `src/_common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
+为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `common-utils/_common/_docs/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
 
 例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.tsx`、 `noArrow.tsx` 文件
 
