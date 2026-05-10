@@ -20,11 +20,11 @@ function createComponentRoutes(config: any[] = []) {
 export const routes = [
   {
     path: '/',
-    redirect: '/pro-webcomponents/getting-started',
+    redirect: '/pro-web-components/getting-started',
   },
   ...createComponentRoutes(sidebar),
   {
-    path: '/pro-webcomponents/test',
+    path: '/pro-web-components/test',
     render() {
       return <test-parent-component />;
     },

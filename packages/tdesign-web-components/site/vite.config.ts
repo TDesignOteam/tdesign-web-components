@@ -12,7 +12,7 @@ const ROOT = getWorkspaceRoot(__dirname);
 
 const publicPathMap = {
   preview: '/',
-  production: '/webcomponents/',
+  production: '/web-components/',
 };
 
 // https://vitejs.dev/config/

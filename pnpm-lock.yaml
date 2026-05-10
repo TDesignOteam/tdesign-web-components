@@ -377,12 +377,12 @@ importers:
       '@tdesign/web-components-shared':
         specifier: workspace:^
         version: link:../shared
+      '@tdesign/web-components-ui':
+        specifier: workspace:^
+        version: link:../tdesign-web-components
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
-      tdesign-web-components:
-        specifier: workspace:^
-        version: link:../tdesign-web-components
 
   packages/tdesign-web-components-chat/site: {}
 
