@@ -12,54 +12,7 @@
       "types": "./lib/index.d.ts"
     },
     "./lib/style/index.css": "./lib/style/index.css",
-    "./lib/style/*.css": "./lib/style/*.css",
-    "./lib/attachments": {
-      "import": "./lib/attachments/index.js",
-      "require": "./lib/attachments/index.js",
-      "types": "./lib/attachments/index.d.ts"
-    },
-    "./lib/chat-action": {
-      "import": "./lib/chat-action/index.js",
-      "require": "./lib/chat-action/index.js",
-      "types": "./lib/chat-action/index.d.ts"
-    },
-    "./lib/chat-engine": {
-      "import": "./lib/chat-engine/index.js",
-      "require": "./lib/chat-engine/index.js",
-      "types": "./lib/chat-engine/index.d.ts"
-    },
-    "./lib/chat-loading": {
-      "import": "./lib/chat-loading/index.js",
-      "require": "./lib/chat-loading/index.js",
-      "types": "./lib/chat-loading/index.d.ts"
-    },
-    "./lib/chat-message": {
-      "import": "./lib/chat-message/index.js",
-      "require": "./lib/chat-message/index.js",
-      "types": "./lib/chat-message/index.d.ts"
-    },
-    "./lib/chat-sender": {
-      "import": "./lib/chat-sender/index.js",
-      "require": "./lib/chat-sender/index.js",
-      "types": "./lib/chat-sender/index.d.ts"
-    },
-    "./lib/chatbot": {
-      "import": "./lib/chatbot/index.js",
-      "require": "./lib/chatbot/index.js",
-      "types": "./lib/chatbot/index.d.ts"
-    },
-    "./lib/filecard": {
-      "import": "./lib/filecard/index.js",
-      "require": "./lib/filecard/index.js",
-      "types": "./lib/filecard/index.d.ts"
-    },
-    "./lib/*": {
-      "import": "./lib/*.js",
-      "require": "./lib/*.js",
-      "types": "./lib/*.d.ts"
-    },
-    "./style/*": "./lib/style/*",
-    "./package.json": "./package.json"
+    "./lib/style/*.css": "./lib/style/*.css"
   },
   "author": "tdesign",
   "license": "MIT",
@@ -83,8 +36,7 @@
     "site/**/*.{ts,tsx}",
     "src/**/*.{ts,tsx}",
     "cjs/**",
-    "esm/**",
-    "lib/**"
+    "esm/**"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -119,7 +71,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tencent/tdesign-web-components.git",
-    "directory": "packages/tdesign-web-components-chat"
+    "directory": "packages/pro-components/chat"
   },
   "homepage": "https://github.com/Tencent/tdesign-web-components/blob/main/README.md",
   "bugs": {
