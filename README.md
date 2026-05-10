@@ -5,17 +5,17 @@
 </p>
 
 <p align="center">
-   <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
-    <img src="https://img.shields.io/npm/l/@tdesign/web-components-chat.svg?sanitize=true" alt="License" />
+   <a href="https://www.npmjs.com/package/@tdesign/web-components-ui">
+    <img src="https://img.shields.io/npm/l/@tdesign/web-components-ui.svg?sanitize=true" alt="License" />
   </a>
-  <a href="https://app.codecov.io/gh/Tencent/tdesign-web-components">
-    <img src="https://img.shields.io/codecov/c/github/Tencent/tdesign-web-components/develop.svg?style=flat-square" alt="codecov">
+  <a href="https://app.codecov.io/gh/TDesignOteam/tdesign-web-components">
+    <img src="https://img.shields.io/codecov/c/github/TDesignOteam/tdesign-web-components/develop.svg?style=flat-square" alt="codecov">
   </a>
-  <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
-    <img src="https://img.shields.io/npm/v/@tdesign/web-components-chat.svg?sanitize=true" alt="Version">
+  <a href="https://www.npmjs.com/package/@tdesign/web-components-ui">
+    <img src="https://img.shields.io/npm/v/@tdesign/web-components-ui.svg?sanitize=true" alt="Version">
   </a>
-  <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
-    <img src="https://img.shields.io/npm/dm/@tdesign/web-components-chat.svg?sanitize=true" alt="Downloads" />
+  <a href="https://www.npmjs.com/package/@tdesign/web-components-ui">
+    <img src="https://img.shields.io/npm/dm/@tdesign/web-components-ui.svg?sanitize=true" alt="Downloads" />
   </a>
 </p>
 
@@ -34,28 +34,20 @@ TDesign Web Components is a UI component and is suitable for use in any front-en
 # 📦 Installation
 
 ```shell
-npm i @tdesign/web-components-chat
+npm i @tdesign/web-components-ui
 ```
 
 ```shell
-yarn add @tdesign/web-components-chat
+yarn add @tdesign/web-components-ui
 ```
 
 ```shell
-pnpm add @tdesign/web-components-chat
+pnpm add @tdesign/web-components-ui
 ```
 
-> `@tdesign/web-components-ui` will be installed automatically as a peer dependency.
+> `@tdesign/web-components-ui` is the base UI component library.
 
 # 🔨 Usage
-
-```tsx
-import '@tdesign/web-components-chat';
-
-document.body.innerHTML = `<t-chatbot></t-chatbot>`;
-```
-
-If you only need the base UI components:
 
 ```tsx
 import '@tdesign/web-components-ui/lib/style/index.css'
@@ -64,9 +56,17 @@ import '@tdesign/web-components-ui/lib/button'
 document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
 
+If you need AI Chat components, install `@tdesign/pro-components-chat` separately:
+
+```tsx
+import '@tdesign/pro-components-chat';
+
+document.body.innerHTML = `<t-chatbot></t-chatbot>`;
+```
+
 More ways to use please click 👉🏻 [getting-started](./site/docs/getting-started.md)
 
-The package of @tdesign/web-components-chat provides AI Chat components, and @tdesign/web-components-ui provides the base UI components. Read [the documentation](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) for more details.
+The package of @tdesign/web-components-ui provides base UI components. For AI Chat components, install @tdesign/pro-components-chat separately. Read [the documentation](./site/docs/getting-started.md) for more details.
 
 # Quick Start
 
