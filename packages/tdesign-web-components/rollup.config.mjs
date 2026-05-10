@@ -12,7 +12,7 @@ const srcDir = resolve(__dirname, '../components');
 
 export default createRollupConfig({
   pkg,
-  packageName: 'tdesign-web-components',
+  packageName: '@tdesign/web-components-ui',
   packageDir: __dirname,
   // 输入源码目录（相对于 packageDir）
   srcDir,

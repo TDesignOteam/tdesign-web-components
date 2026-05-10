@@ -11,7 +11,7 @@ const srcDir = resolve(__dirname, '../pro-components/chat');
 
 export default createDtsConfig({
   pkg,
-  packageName: 'tdesign-web-components-chat',
+  packageName: '@tdesign/web-components-chat',
   packageDir: __dirname,
   srcDir,
   input: resolve(srcDir, 'index.ts'),

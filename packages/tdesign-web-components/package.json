@@ -1,5 +1,5 @@
 {
-  "name": "tdesign-web-components",
+  "name": "@tdesign/web-components-ui",
   "version": "1.3.1-alpha.11",
   "type": "module",
   "main": "lib/index.js",
@@ -508,7 +508,6 @@
     "omi": "^7.7.0"
   },
   "description": "TDesign Web Components Library",
-  "title": "tdesign-web-components",
   "keywords": [
     "omi",
     "web-components",

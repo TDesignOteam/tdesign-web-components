@@ -12,7 +12,7 @@ const srcDir = resolve(__dirname, '../pro-components/chat');
 
 export default createRollupConfig({
   pkg,
-  packageName: 'tdesign-web-components-chat',
+  packageName: '@tdesign/web-components-chat',
   packageDir: __dirname,
   srcDir,
   input: resolve(srcDir, 'index.ts'),
@@ -32,7 +32,6 @@ export default createRollupConfig({
     omi: 'omi',
     'lodash-es': '_',
     '@tdesign/web-components-ui': 'TDesignUI',
-    'tdesign-web-components': 'TDesignUI',
   },
   additionalExternal: [
     '@tdesign/web-components-ui',
@@ -45,7 +44,6 @@ export default createRollupConfig({
     '@tdesign/web-components-ui/loading',
     '@tdesign/web-components-ui/skeleton',
     '@tdesign/web-components-ui/message',
-    'tdesign-web-components',
     '@tdesign/ai-chat-engine',
     '@tdesign/ai-shared',
   ],
