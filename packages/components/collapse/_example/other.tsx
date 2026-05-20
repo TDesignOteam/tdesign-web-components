@@ -1,6 +1,6 @@
-import '@tdesign/web-components-ui/switch';
-import '@tdesign/web-components-ui/collapse';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/switch';
+import '@tdesign/web-components/collapse';
+import '@tdesign/web-components/space';
 
 import { Component, signal } from 'omi';
 

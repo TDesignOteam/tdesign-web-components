@@ -5,17 +5,17 @@
 </p>
 
 <p align="center">
-   <a href="https://www.npmjs.com/package/@tdesign/web-components-ui">
-    <img src="https://img.shields.io/npm/l/@tdesign/web-components-ui.svg?sanitize=true" alt="License" />
+   <a href="https://www.npmjs.com/package/@tdesign/web-components">
+    <img src="https://img.shields.io/npm/l/@tdesign/web-components.svg?sanitize=true" alt="License" />
   </a>
   <a href="https://app.codecov.io/gh/TDesignOteam/tdesign-web-components">
     <img src="https://img.shields.io/codecov/c/github/TDesignOteam/tdesign-web-components/develop.svg?style=flat-square" alt="codecov">
   </a>
-  <a href="https://www.npmjs.com/package/@tdesign/web-components-ui">
-    <img src="https://img.shields.io/npm/v/@tdesign/web-components-ui.svg?sanitize=true" alt="Version">
+  <a href="https://www.npmjs.com/package/@tdesign/web-components">
+    <img src="https://img.shields.io/npm/v/@tdesign/web-components.svg?sanitize=true" alt="Version">
   </a>
-  <a href="https://www.npmjs.com/package/@tdesign/web-components-ui">
-    <img src="https://img.shields.io/npm/dm/@tdesign/web-components-ui.svg?sanitize=true" alt="Downloads" />
+  <a href="https://www.npmjs.com/package/@tdesign/web-components">
+    <img src="https://img.shields.io/npm/dm/@tdesign/web-components.svg?sanitize=true" alt="Downloads" />
   </a>
 </p>
 
@@ -34,24 +34,24 @@ TDesign Web Components is a UI component and is suitable for use in any front-en
 # 📦 Installation
 
 ```shell
-npm i @tdesign/web-components-ui
+npm i @tdesign/web-components
 ```
 
 ```shell
-yarn add @tdesign/web-components-ui
+yarn add @tdesign/web-components
 ```
 
 ```shell
-pnpm add @tdesign/web-components-ui
+pnpm add @tdesign/web-components
 ```
 
-> `@tdesign/web-components-ui` is the base UI component library.
+> `@tdesign/web-components` is the base UI component library.
 
 # 🔨 Usage
 
 ```tsx
-import '@tdesign/web-components-ui/lib/style/index.css'
-import '@tdesign/web-components-ui/lib/button'
+import '@tdesign/web-components/lib/style/index.css';
+import '@tdesign/web-components/lib/button';
 
 document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
@@ -66,7 +66,7 @@ document.body.innerHTML = `<t-chatbot></t-chatbot>`;
 
 More ways to use please click 👉🏻 [getting-started](./site/docs/getting-started.md)
 
-The package of @tdesign/web-components-ui provides base UI components. For AI Chat components, install @tdesign/pro-components-chat separately. Read [the documentation](./site/docs/getting-started.md) for more details.
+The package of @tdesign/web-components provides base UI components. For AI Chat components, install @tdesign/pro-components-chat separately. Read [the documentation](./site/docs/getting-started.md) for more details.
 
 # Quick Start
 

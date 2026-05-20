@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/list';
+import '@tdesign/web-components/list';
 
 import { Component } from 'omi';
 

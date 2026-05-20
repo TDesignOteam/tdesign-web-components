@@ -1,7 +1,7 @@
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/button';
 import '../../button';
 
-import { DialogPlugin } from '@tdesign/web-components-ui';
+import { DialogPlugin } from '@tdesign/web-components';
 import { Component } from 'omi';
 
 const buttonStyle = { marginRight: 16 };

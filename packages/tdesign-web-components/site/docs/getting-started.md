@@ -15,7 +15,7 @@ isGettingStarted: true
 npm i @tdesign/web-components-chat
 ```
 
-> `@tdesign/web-components-ui` 会作为 peer dependency 自动安装，无需单独安装。
+> `@tdesign/web-components` 会作为 peer dependency 自动安装，无需单独安装。
 
 #### 浏览器引入（敬请期待）
 
@@ -30,16 +30,17 @@ import '@tdesign/web-components-chat';
 基础 UI 组件按需引入：
 
 ```javascript
-import '@tdesign/web-components-ui/lib/style/index.css'; // 少量公共样式
-import '@tdesign/web-components-ui/lib/button';
+import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components/lib/button';
 ```
 
 也可以整体引入基础 UI 组件
 
 ```javascript
-import '@tdesign/web-components-ui/lib/style/index.css'; // 少量公共样式
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components';
 ```
+
 然后按照以下写法使用即可
 
 ```js
@@ -63,14 +64,16 @@ export default defineConfig({
 > 注意：在`vite >= 5.x` 版本中，需要使用下面的vite插件，其它版本可跳过
 
 ```js
-import lessCompilerPlugin from '@tdesign/web-components-ui/plugins/vite-plugin-less-compiler';
+import lessCompilerPlugin from '@tdesign/web-components/plugins/vite-plugin-less-compiler';
 
 // vite.config.ts
 export default defineConfig({
-  plugins: [lessCompilerPlugin({
-    lessOptions: {} // less 相关参数
-  })]
-})
+  plugins: [
+    lessCompilerPlugin({
+      lessOptions: {}, // less 相关参数
+    }),
+  ],
+});
 ```
 
 如果使用webpack打包工具，并且使用了`jsx`语法，需要在`babel`中设置`jsx`的解析逻辑：
@@ -98,8 +101,8 @@ export default defineConfig({
 更多 less 变量定义 [查看这里](https://github.com/Tencent/tdesign-common/blob/main/style/web/_variables.less)
 
 ```javascript
-import '@tdesign/web-components-ui/esm/button'
-import '@tdesign/web-components-ui/esm/style/index.js' // 少量公共样式
+import '@tdesign/web-components/esm/button';
+import '@tdesign/web-components/esm/style/index.js'; // 少量公共样式
 ```
 
 在 vite 中定制主题
@@ -152,7 +155,7 @@ module.exports = {
 有些业务场景需要更改组件的样式，但是`shadowDOM`具有天然样式隔离的特点，组件外部的样式影响不到组件内部，为此 TDesign Web Components 提供了几种方式来对样式进行更改：
 
 #### 通过设置`css`属性，来修改样式（推荐）
-  
+
 目前每一个组件，都默认有一个`css`的属性，设置该值时会在`shadowDOM`内部创建`style`标签：
 
 ```html
@@ -190,7 +193,7 @@ module.exports = {
 ```
 
 约定`innerStyle`只在`shadowDOM`内部第一层标签上起作用：
- 
+
 ```html
 <!-- 设置innerStyle -->
 <t-button innerStyle={{ color: 'red' }}>填充按钮</t-button>
@@ -213,7 +216,7 @@ module.exports = {
 <!-- 对应DOM结构 -->
 <t-button class="customClass">
   #shadow-root
-    <button>...</button>
+  <button>...</button>
 </t-button>
 ```
 
@@ -226,7 +229,7 @@ module.exports = {
 <!-- 对应DOM结构 -->
 <t-button>
   #shadow-root
-    <button class="customClass">...</button>
+  <button class="customClass">...</button>
 </t-button>
 ```
 
@@ -243,4 +246,3 @@ module.exports = {
 Q: 是否内置 reset 样式统一页面元素的默认样式 ？
 
 A: 我们不引入 `reset.less`
-

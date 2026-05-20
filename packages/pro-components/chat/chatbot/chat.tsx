@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import './chat-list';
 import '../chat-sender';
 

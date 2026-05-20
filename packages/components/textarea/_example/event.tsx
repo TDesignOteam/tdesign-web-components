@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/textarea';
+import '@tdesign/web-components/textarea';
 
 import { Component, signal } from 'omi';
 

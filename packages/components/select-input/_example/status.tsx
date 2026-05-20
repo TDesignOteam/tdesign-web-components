@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/select-input';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/select-input';
+import '@tdesign/web-components/space';
 
 import { Component } from 'omi';
 

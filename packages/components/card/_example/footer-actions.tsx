@@ -1,10 +1,10 @@
-import '@tdesign/web-components-ui/card';
-import '@tdesign/web-components-ui/avatar';
-import '@tdesign/web-components-ui/button';
-import '@tdesign/web-components-ui/divider';
-import '@tdesign/web-components-ui/grid';
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/dropdown';
+import '@tdesign/web-components/card';
+import '@tdesign/web-components/avatar';
+import '@tdesign/web-components/button';
+import '@tdesign/web-components/divider';
+import '@tdesign/web-components/grid';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/dropdown';
 import 'tdesign-icons-web-components/esm/components/user-1';
 import 'tdesign-icons-web-components/esm/components/thumb-up-1';
 import 'tdesign-icons-web-components/esm/components/chat';
@@ -12,7 +12,7 @@ import 'tdesign-icons-web-components/esm/components/share';
 import 'tdesign-icons-web-components/esm/components/heart';
 import 'tdesign-icons-web-components/esm/components/more';
 
-import { MessagePlugin } from '@tdesign/web-components-ui/message/message';
+import { MessagePlugin } from '@tdesign/web-components/message/message';
 import { Component } from 'omi';
 
 interface Option {

@@ -1,13 +1,13 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import '../auto-scroll';
 import '../../chat-loading';
 import 'tdesign-icons-web-components/esm/components/check-circle';
 import 'tdesign-icons-web-components/esm/components/close-circle';
 
 import type { ChatMessageStatus } from '@tdesign/ai-chat-engine';
+import type { CollapseValue } from '@tdesign/web-components/collapse';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/lightDom';
-import type { CollapseValue } from '@tdesign/web-components-ui/collapse';
 import { isNil } from 'lodash-es';
 import { Component, signal } from 'omi';
 

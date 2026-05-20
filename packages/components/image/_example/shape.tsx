@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/image';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/image';
+import '@tdesign/web-components/space';
 
 export default function ImageShape() {
   return (

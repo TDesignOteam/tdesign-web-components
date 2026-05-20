@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/skeleton';
+import '@tdesign/web-components/skeleton';
 
 import { Component } from 'omi';
 

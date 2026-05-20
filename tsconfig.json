@@ -4,8 +4,8 @@
     "baseUrl": "./",
     "outDir": "lib",
     "paths": {
-      "@tdesign/web-components-ui": ["packages/components"],
-      "@tdesign/web-components-ui/*": ["packages/components/*"],
+      "@tdesign/web-components": ["packages/components"],
+      "@tdesign/web-components/*": ["packages/components/*"],
       "@tdesign/web-components-chat": ["packages/pro-components/chat"],
       "@tdesign/web-components-chat/*": ["packages/pro-components/chat/*"],
       "@tdesign/web-components-shared": ["packages/shared/src"],

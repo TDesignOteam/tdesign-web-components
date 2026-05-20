@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import 'tdesign-icons-web-components/esm/components/send-filled';
 import 'tdesign-icons-web-components/esm/components/stop';
 import 'tdesign-icons-web-components/esm/components/image';

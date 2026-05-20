@@ -12,7 +12,7 @@ isGettingStarted: true
 npm i @tdesign/web-components-chat
 ```
 
-> `@tdesign/web-components-ui` 会作为 peer dependency 自动安装。
+> `@tdesign/web-components` 会作为 peer dependency 自动安装。
 
 ### 使用 Chat 组件
 

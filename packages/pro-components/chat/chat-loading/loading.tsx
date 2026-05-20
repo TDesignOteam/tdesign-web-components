@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import classname from '@tdesign/web-components-shared/_util/classname';

@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/space';
 import 'tdesign-icons-web-components/esm/components/letters-t';
 import 'tdesign-icons-web-components/esm/components/letters-d';
 import 'tdesign-icons-web-components/esm/components/letters-e';

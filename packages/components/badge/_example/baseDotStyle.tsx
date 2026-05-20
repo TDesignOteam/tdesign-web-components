@@ -1,6 +1,6 @@
-import '@tdesign/web-components-ui/badge';
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/badge';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/button';
 import 'tdesign-icons-web-components/esm/components/user';
 
 import { Component } from 'omi';

@@ -33,7 +33,7 @@ const aliasPlugin = alias({
       replacement: resolve(monorepoRoot, 'packages/shared/src/index.ts'),
     },
     { find: /^@tdesign\/web-components-ui\/(.*)/, replacement: resolve(monorepoRoot, 'packages/components/$1') },
-    { find: '@tdesign/web-components-ui', replacement: resolve(monorepoRoot, 'packages/components/index.ts') },
+    { find: '@tdesign/web-components', replacement: resolve(monorepoRoot, 'packages/components/index.ts') },
     { find: /^@tdesign\/web-components-chat\/(.*)/, replacement: resolve(monorepoRoot, 'packages/pro-components/chat/$1') },
     { find: '@tdesign/web-components-chat', replacement: resolve(monorepoRoot, 'packages/pro-components/chat/index.ts') },
     {

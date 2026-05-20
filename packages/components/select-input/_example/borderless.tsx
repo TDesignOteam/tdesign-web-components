@@ -1,7 +1,7 @@
-import '@tdesign/web-components-ui/select-input';
+import '@tdesign/web-components/select-input';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
 
-import { SelectInputProps } from '@tdesign/web-components-ui/select-input';
+import { SelectInputProps } from '@tdesign/web-components/select-input';
 import { Component, signal } from 'omi';
 
 const classStyles = `

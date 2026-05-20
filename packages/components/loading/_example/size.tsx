@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/loading';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/loading';
+import '@tdesign/web-components/space';
 
 export default function LoadingSize() {
   return (

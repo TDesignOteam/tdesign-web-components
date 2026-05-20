@@ -1,7 +1,7 @@
-import '@tdesign/web-components-ui/grid';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/grid';
+import '@tdesign/web-components/space';
 
-import css from '@tdesign/web-components-ui/grid/_example/common.css';
+import css from '@tdesign/web-components/grid/_example/common.css';
 
 export default function OrderGrid() {
   return (

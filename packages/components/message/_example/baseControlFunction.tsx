@@ -1,8 +1,8 @@
-import '@tdesign/web-components-ui/message';
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/message';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/button';
 
-import { MessagePlugin } from '@tdesign/web-components-ui';
+import { MessagePlugin } from '@tdesign/web-components';
 import { Component } from 'omi';
 
 export default class MessageRender extends Component {

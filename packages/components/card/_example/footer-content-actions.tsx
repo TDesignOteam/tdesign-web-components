@@ -1,9 +1,9 @@
-import '@tdesign/web-components-ui/card';
-import '@tdesign/web-components-ui/button';
-import '@tdesign/web-components-ui/comment';
-import '@tdesign/web-components-ui/grid';
+import '@tdesign/web-components/card';
+import '@tdesign/web-components/button';
+import '@tdesign/web-components/comment';
+import '@tdesign/web-components/grid';
 
-import { MessagePlugin } from '@tdesign/web-components-ui/message/message';
+import { MessagePlugin } from '@tdesign/web-components/message/message';
 import { Component } from 'omi';
 
 interface Option {

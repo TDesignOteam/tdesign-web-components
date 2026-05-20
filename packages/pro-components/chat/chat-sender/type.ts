@@ -1,5 +1,5 @@
+import { TdTextareaProps } from '@tdesign/web-components/textarea';
 import { TNode } from '@tdesign/web-components-shared/common';
-import { TdTextareaProps } from '@tdesign/web-components-ui/textarea';
 
 import { TdAttachmentsProps } from '../attachments';
 import { TdAttachmentItem } from '../filecard';

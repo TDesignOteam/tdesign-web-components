@@ -1,9 +1,9 @@
-import '@tdesign/web-components-ui/select-input';
+import '@tdesign/web-components/select-input';
 import 'tdesign-icons-web-components/esm/components/chevron-down';
-import '@tdesign/web-components-ui/checkbox';
+import '@tdesign/web-components/checkbox';
 
-import { CheckboxGroupProps, CheckboxOptionObj } from '@tdesign/web-components-ui/checkbox';
-import { TagInputChangeContext, TagInputValue } from '@tdesign/web-components-ui/tag-input';
+import { CheckboxGroupProps, CheckboxOptionObj } from '@tdesign/web-components/checkbox';
+import { TagInputChangeContext, TagInputValue } from '@tdesign/web-components/tag-input';
 import { Component, signal } from 'omi';
 
 const classStyles = `

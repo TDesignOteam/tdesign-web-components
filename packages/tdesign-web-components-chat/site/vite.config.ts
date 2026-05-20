@@ -37,7 +37,7 @@ export default ({ mode }) =>
         '@tdesign/ai-chat-engine': resolve(ROOT, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
         '@tdesign/ai-shared': resolve(ROOT, 'common-utils/_ai-core/packages/shared/index.ts'),
         // Monorepo packages
-        '@tdesign/web-components-ui': resolve(ROOT, 'packages/components/'),
+        '@tdesign/web-components': resolve(ROOT, 'packages/components/'),
         '@tdesign/web-components-chat': resolve(ROOT, 'packages/pro-components/chat/'),
         '@tdesign/web-components-shared': resolve(ROOT, 'packages/shared/src/'),
       },

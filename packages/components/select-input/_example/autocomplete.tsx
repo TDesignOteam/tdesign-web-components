@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/select-input';
+import '@tdesign/web-components/select-input';
 import 'tdesign-icons-web-components/esm/components/search';
 
 import { Component, signal } from 'omi';

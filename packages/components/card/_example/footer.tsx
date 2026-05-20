@@ -1,9 +1,9 @@
-import '@tdesign/web-components-ui/card';
-import '@tdesign/web-components-ui/tag';
-import '@tdesign/web-components-ui/avatar';
-import '@tdesign/web-components-ui/button';
-import '@tdesign/web-components-ui/divider';
-import '@tdesign/web-components-ui/grid';
+import '@tdesign/web-components/card';
+import '@tdesign/web-components/tag';
+import '@tdesign/web-components/avatar';
+import '@tdesign/web-components/button';
+import '@tdesign/web-components/divider';
+import '@tdesign/web-components/grid';
 import 'tdesign-icons-web-components/esm/components/user-1';
 import 'tdesign-icons-web-components/esm/components/thumb-up-1';
 import 'tdesign-icons-web-components/esm/components/chat';

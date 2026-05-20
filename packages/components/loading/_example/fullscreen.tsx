@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/loading';
-import '@tdesign/web-components-ui/switch';
+import '@tdesign/web-components/loading';
+import '@tdesign/web-components/switch';
 
 import { Component } from 'omi';
 

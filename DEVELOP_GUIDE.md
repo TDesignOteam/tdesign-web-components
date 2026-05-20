@@ -93,7 +93,7 @@ npm run start
 ```shell
 .
 ├── packages/                              # 组件包
-│   ├── components/                       # UI 组件源码 (@tdesign/web-components-ui)
+│   ├── components/                       # UI 组件源码 (@tdesign/web-components)
 │   │   └── [组件]/
 │   │       ├── _example/                # 演示文件
 │   │       └── index.ts                 # 组件导出入口
@@ -113,7 +113,6 @@ npm run start
 
 暂不支持命令行方式，需要参考button的组件结构手动复制一份目录结构，再改成自己的组件名.
 
-
 ### 组件页路由配置
 
 每一个组件页，都是一个 md 文件，参考 `/site/sidebar.config.ts` 已有定义，直接按照模板添加即可
@@ -127,7 +126,7 @@ npm run start
         title: 'Button 按钮',
         name: 'button',
         path: '/components/button',
-        component: () => import('@tdesign/web-components-ui/button/README.md'),
+        component: () => import('@tdesign/web-components/button/README.md'),
     },
     ...
   ],

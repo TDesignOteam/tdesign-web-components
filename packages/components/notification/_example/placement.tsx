@@ -1,10 +1,10 @@
-import '@tdesign/web-components-ui/notification';
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/input';
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/notification';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/input';
+import '@tdesign/web-components/button';
 
-import { InputValue } from '@tdesign/web-components-ui/input';
-import { NotificationInfoOptions, NotificationPlugin } from '@tdesign/web-components-ui/notification';
+import { InputValue } from '@tdesign/web-components/input';
+import { NotificationInfoOptions, NotificationPlugin } from '@tdesign/web-components/notification';
 import { Component } from 'omi';
 
 export default class PlacementExample extends Component {

@@ -8,8 +8,8 @@
     "paths": {
       "@tdesign/web-components-chat": ["."],
       "@tdesign/web-components-chat/*": ["./*"],
-      "@tdesign/web-components-ui": ["../../components"],
-      "@tdesign/web-components-ui/*": ["../../components/*"],
+      "@tdesign/web-components": ["../../components"],
+      "@tdesign/web-components/*": ["../../components/*"],
       "@tdesign/web-components-shared": ["../../shared/src"],
       "@tdesign/web-components-shared/*": ["../../shared/src/*"],
       "@tdesign/ai-chat-engine": ["../../../common-utils/_ai-core/packages/chat-engine/index.ts"],

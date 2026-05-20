@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import 'tdesign-icons-web-components/esm/components/file-excel-filled';
 import 'tdesign-icons-web-components/esm/components/file-image-filled';
 import 'tdesign-icons-web-components/esm/components/file-code-1-filled';

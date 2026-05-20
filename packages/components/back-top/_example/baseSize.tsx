@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/back-top';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/back-top';
 
 import { Component } from 'omi';
 

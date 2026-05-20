@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/link';
+import '@tdesign/web-components/link';
 
 import { Component } from 'omi';
 

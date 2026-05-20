@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/range-input';
+import '@tdesign/web-components/range-input';
 
 export default function RangeInput() {
   return <t-range-input />;

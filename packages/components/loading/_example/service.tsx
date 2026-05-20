@@ -1,7 +1,7 @@
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/button';
 import '../../button';
 
-import { loading } from '@tdesign/web-components-ui/loading';
+import { loading } from '@tdesign/web-components/loading';
 import { Component } from 'omi';
 
 export default class LoadingService extends Component {

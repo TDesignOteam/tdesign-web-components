@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/slider';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/slider';
+import '@tdesign/web-components/space';
 
 import { Component, signal } from 'omi';
 

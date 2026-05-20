@@ -1,6 +1,6 @@
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/popup';
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/popup';
+import '@tdesign/web-components/button';
 
 export default function TriggerElement() {
   return (

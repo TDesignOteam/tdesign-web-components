@@ -1,6 +1,6 @@
-import Button from '@tdesign/web-components-ui/button';
-import Space from '@tdesign/web-components-ui/space';
-import Upload from '@tdesign/web-components-ui/upload';
+import Button from '@tdesign/web-components/button';
+import Space from '@tdesign/web-components/space';
+import Upload from '@tdesign/web-components/upload';
 import { Component, createRef, signal } from 'omi';
 
 export default class UploadSingleInput extends Component {

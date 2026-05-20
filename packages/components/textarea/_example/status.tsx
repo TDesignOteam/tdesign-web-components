@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/textarea';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/textarea';
+import '@tdesign/web-components/space';
 
 export default function Textarea() {
   return (

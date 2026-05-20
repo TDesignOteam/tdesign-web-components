@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/breadcrumb';
+import '@tdesign/web-components/breadcrumb';
 
 export default function Breadcrumb() {
   return (

@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/swiper';
+import '@tdesign/web-components/swiper';
 
 import { Component } from 'omi';
 

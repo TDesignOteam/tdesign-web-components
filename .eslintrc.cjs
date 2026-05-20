@@ -26,7 +26,7 @@ module.exports = {
           'error',
           {
             paths: [],
-            patterns: ['@tdesign/web-components-ui/*'],
+            patterns: ['@tdesign/web-components/*'],
           },
         ],
       },

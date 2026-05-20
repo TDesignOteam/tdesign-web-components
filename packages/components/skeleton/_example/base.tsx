@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/skeleton';
-import '@tdesign/web-components-ui/switch';
+import '@tdesign/web-components/skeleton';
+import '@tdesign/web-components/switch';
 
 import { Component } from 'omi';
 

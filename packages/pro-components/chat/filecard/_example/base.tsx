@@ -1,5 +1,5 @@
 import '@tdesign/web-components-chat/filecard';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/space';
 
 import { Component } from 'omi';
 

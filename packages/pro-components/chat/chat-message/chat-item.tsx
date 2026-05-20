@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import './content/markdown-content';
 import './content/reasoning-content';
 import '../chat-loading';

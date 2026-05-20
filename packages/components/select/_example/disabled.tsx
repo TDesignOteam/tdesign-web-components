@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/select';
+import '@tdesign/web-components/select';
 
 import { Component } from 'omi';
 

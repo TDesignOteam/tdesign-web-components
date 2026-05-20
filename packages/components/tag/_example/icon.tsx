@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui/tag';
+import '@tdesign/web-components/tag';
 import 'tdesign-icons-web-components/esm/components/discount';
 
 import { Component } from 'omi';

@@ -54,10 +54,10 @@
     "@tdesign/web-components-shared": "workspace:^",
     "@types/lodash-es": "^4.17.12",
     "@tdesign/pro-components-chat": "workspace:^",
-    "@tdesign/web-components-ui": "workspace:^"
+    "@tdesign/web-components": "workspace:^"
   },
   "peerDependencies": {
-    "@tdesign/web-components-ui": "workspace:^",
+    "@tdesign/web-components": "workspace:^",
     "omi": "^7.7.0"
   },
   "description": "TDesign Web Components Chat Library",

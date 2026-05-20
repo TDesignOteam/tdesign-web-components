@@ -1,7 +1,7 @@
-import '@tdesign/web-components-ui/dropdown';
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/dropdown';
+import '@tdesign/web-components/button';
 
-import { MessagePlugin } from '@tdesign/web-components-ui/message';
+import { MessagePlugin } from '@tdesign/web-components/message';
 
 export default function BasicDropdown() {
   const getContent = () => <div>操作四</div>;

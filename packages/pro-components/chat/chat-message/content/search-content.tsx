@@ -1,9 +1,9 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import 'tdesign-icons-web-components/esm/components/jump';
 
 import { ChatMessageStatus, ReferenceItem } from '@tdesign/ai-chat-engine';
+import type { CollapseValue } from '@tdesign/web-components/collapse';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
-import type { CollapseValue } from '@tdesign/web-components-ui/collapse';
 import { Component, OmiProps, signal, tag } from 'omi';
 
 import type { TdChatContentProps } from '../type';

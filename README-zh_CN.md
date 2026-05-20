@@ -34,15 +34,15 @@ TDesign Web Components 适配桌面端的组件库，适合在任何前端项目
 # 📦 安装
 
 ```shell
-npm i @tdesign/web-components-ui
+npm i @tdesign/web-components
 ```
 
 ```shell
-yarn add @tdesign/web-components-ui
+yarn add @tdesign/web-components
 ```
 
 ```shell
-pnpm add @tdesign/web-components-ui
+pnpm add @tdesign/web-components
 ```
 
 # 🔨 基础使用
@@ -50,15 +50,15 @@ pnpm add @tdesign/web-components-ui
 推荐使用 Webpack 或 Rollup 等支持 tree-shaking 特性的构建工具，无需额外配置即可实现组件按需引入：
 
 ```tsx
-import '@tdesign/web-components-ui/lib/style/index.css'
-import '@tdesign/web-components-ui/lib/button'
+import '@tdesign/web-components/lib/style/index.css';
+import '@tdesign/web-components/lib/button';
 
 document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
 
 更多使用方式请点击 👉🏻 [快速开始](./site/docs/getting-started.md)
 
-`@tdesign/web-components-chat` 提供 AI Chat 组件，`@tdesign/web-components-ui` 提供基础 UI 组件。可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解更多。
+`@tdesign/web-components-chat` 提供 AI Chat 组件，`@tdesign/web-components` 提供基础 UI 组件。可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解更多。
 
 # 快速体验
 

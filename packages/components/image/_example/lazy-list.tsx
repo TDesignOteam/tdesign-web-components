@@ -1,6 +1,6 @@
-import '@tdesign/web-components-ui/image';
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/button';
+import '@tdesign/web-components/image';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/button';
 
 import { Component } from 'omi';
 

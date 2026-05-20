@@ -1,5 +1,5 @@
 import '@tdesign/web-components-chat/chatbot';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/space';
 
 import { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type';
 import { Component } from 'omi';

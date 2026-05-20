@@ -1,4 +1,4 @@
-import '@tdesign/web-components-ui';
+import '@tdesign/web-components';
 import 'tdesign-icons-web-components/esm/components/refresh';
 import 'tdesign-icons-web-components/esm/components/copy';
 import 'tdesign-icons-web-components/esm/components/thumb-up-filled';
@@ -7,10 +7,10 @@ import 'tdesign-icons-web-components/esm/components/thumb-up';
 import 'tdesign-icons-web-components/esm/components/thumb-down';
 import 'tdesign-icons-web-components/esm/components/share-1';
 
+import { MessagePlugin } from '@tdesign/web-components/message';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { copy as fallbackCopy } from '@tdesign/web-components-shared/_util/copyToClipboard';
 import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
-import { MessagePlugin } from '@tdesign/web-components-ui/message';
 import { Component, signal, tag } from 'omi';
 
 import { type ChatComment } from '../chat-engine';

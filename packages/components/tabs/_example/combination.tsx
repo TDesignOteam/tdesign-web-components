@@ -1,6 +1,6 @@
-import '@tdesign/web-components-ui/radio';
-import '@tdesign/web-components-ui/space';
-import '@tdesign/web-components-ui/tabs';
+import '@tdesign/web-components/radio';
+import '@tdesign/web-components/space';
+import '@tdesign/web-components/tabs';
 
 import { Component, signal } from 'omi';
 

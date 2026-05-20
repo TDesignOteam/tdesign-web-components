@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/date-picker';
-import '@tdesign/web-components-ui/space';
+import '@tdesign/web-components/date-picker';
+import '@tdesign/web-components/space';
 
 import dayjs from 'dayjs';
 import { Component } from 'omi';

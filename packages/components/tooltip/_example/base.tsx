@@ -1,5 +1,5 @@
-import '@tdesign/web-components-ui/button';
-import '@tdesign/web-components-ui/tooltip';
+import '@tdesign/web-components/button';
+import '@tdesign/web-components/tooltip';
 
 const styles = {
   container: {

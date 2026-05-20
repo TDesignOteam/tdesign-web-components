@@ -11,7 +11,7 @@ const srcDir = resolve(__dirname, '../components');
 
 export default createDtsConfig({
   pkg,
-  packageName: '@tdesign/web-components-ui',
+  packageName: '@tdesign/web-components',
   packageDir: __dirname,
   srcDir,
   input: resolve(srcDir, 'index.ts'),
