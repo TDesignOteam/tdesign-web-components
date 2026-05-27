@@ -7,8 +7,7 @@ import { Component, signal } from 'omi';
 import classname from '../../_util/classname';
 import { TdChatSenderParams } from '../../chat-sender';
 import { TdAttachmentItem } from '../../filecard';
-
-import styles from './style/chat-model.less';
+import styles from './style/chat-model.less?inline';
 
 const className = `t-chat__input`;
 export default class ChatSender extends Component {

@@ -5,8 +5,7 @@ import { throttle } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
 import { getClassPrefix } from '../_util/classname';
-
-import styles from '../chatbot/style/auto-scroll.less';
+import styles from '../chatbot/style/auto-scroll.less?inline';
 
 const className = `${getClassPrefix()}-scroll`;
 

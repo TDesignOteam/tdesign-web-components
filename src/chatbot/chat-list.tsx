@@ -6,9 +6,8 @@ import { Component, createRef, signal, tag } from 'omi';
 
 import classname, { getClassPrefix } from '../_util/classname';
 import { setExportparts } from '../_util/dom';
+import styles from './style/chat-list.less?inline';
 import type { TdChatListProps, TdChatListScrollToOptions } from './type';
-
-import styles from './style/chat-list.less';
 
 const className = `${getClassPrefix()}-chat__list`;
 @tag('t-chat-list')

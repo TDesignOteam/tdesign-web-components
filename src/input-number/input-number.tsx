@@ -415,6 +415,7 @@ export default class InputNumber extends Component<InputNumberProps> {
             />,
           )}
         <t-input
+          ignoreFire
           style={{ display: 'block' }}
           className={`${classPrefix}-input__wrap`}
           autocomplete="off"

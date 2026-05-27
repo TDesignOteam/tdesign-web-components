@@ -5,9 +5,8 @@ import { Component, createRef, tag } from 'omi';
 import { getClassPrefix } from '../_util/classname';
 import classname from '../_util/classname';
 import { setExportparts } from '../_util/dom';
+import styles from './style/loading.less?inline';
 import { TdChatLoadingProps } from './type';
-
-import styles from './style/loading.less';
 
 const className = `${getClassPrefix()}-chat-loading`;
 @tag('t-chat-loading')

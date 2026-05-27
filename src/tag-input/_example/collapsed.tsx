@@ -1,38 +1,49 @@
-import 'tdesign-web-components/tag-input';
-import 'tdesign-web-components/space';
 import 'tdesign-web-components/popup';
+import 'tdesign-web-components/space';
+import 'tdesign-web-components/tag';
+import 'tdesign-web-components/tag-input';
 
 import { Component } from 'omi';
 
-export default class TagInputCollapse extends Component {
-  tags = ['Vue', 'React', 'Omi', 'Miniprogram', 'Angular', 'Flutter'];
+export default class TagInputCollapsed extends Component {
+  tags = ['Vue', 'React', 'Miniprogram', 'Angular', 'Flutter'];
+
+  renderCollapsedItems = ({ collapsedSelectedItems: items = [] }: { collapsedSelectedItems?: string[] }) => (
+    <t-popup
+      showArrow={false}
+      destroyOnClose
+      content={
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '400px', padding: '4px' }}>
+          {items.map((item: string, index: number) => (
+            <t-tag key={`${item}-${index}`}>{item}</t-tag>
+          ))}
+        </div>
+      }
+    >
+      <t-tag>More({items.length})</t-tag>
+    </t-popup>
+  );
 
   render() {
-    const setTags = (value) => {
-      this.tags = value;
-      this.update();
-    };
-
-    const renderCollapsedItems = ({ collapsedTags }) => {
-      console.log(collapsedTags);
-      return (
-        <t-popup
-          key={'tags'}
-          content={collapsedTags.map((item, index) => (
-            <t-tag key={index} style={{ marginRight: '4px' }}>
-              {item}
-            </t-tag>
-          ))}
-        >
-          <t-tag part="pop-tag">More({collapsedTags?.length})</t-tag>
-        </t-popup>
-      );
-    };
-
     return (
-      <t-space direction="vertical" style={{ width: '80%' }}>
-        <t-tag-input value={this.tags} onChange={setTags} minCollapsedNum={1} />
-        <t-tag-input value={this.tags} onChange={setTags} minCollapsedNum={3} collapsedItems={renderCollapsedItems} />
+      <t-space direction="vertical" style={{ width: '100%' }}>
+        <t-tag-input
+          value={this.tags}
+          minCollapsedNum={1}
+          onChange={(e: CustomEvent) => {
+            this.tags = e.detail.value;
+            this.update();
+          }}
+        />
+        <t-tag-input
+          value={this.tags}
+          minCollapsedNum={3}
+          collapsedItems={this.renderCollapsedItems}
+          onChange={(e: CustomEvent) => {
+            this.tags = e.detail.value;
+            this.update();
+          }}
+        />
       </t-space>
     );
   }

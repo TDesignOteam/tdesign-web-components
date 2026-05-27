@@ -1,21 +1,21 @@
-import '../index';
+import 'tdesign-web-components/tag-input';
 
 import { Component } from 'omi';
 
-export default class TagInputAuto extends Component {
+export default class TagInputAutoWidth extends Component {
   tags = ['Vue', 'React'];
 
   render() {
-    const onChange = (val, context) => {
-      this.tags = val;
-      this.update();
-      console.log('onChange', val, context);
-    };
-
     return (
-      <div style={{ width: '100%' }}>
-        <t-tag-input value={this.tags} onChange={onChange} autoWidth clearable />
-      </div>
+      <t-tag-input
+        value={this.tags}
+        autoWidth
+        clearable
+        onChange={(e: CustomEvent) => {
+          this.tags = e.detail.value;
+          this.update();
+        }}
+      />
     );
   }
 }

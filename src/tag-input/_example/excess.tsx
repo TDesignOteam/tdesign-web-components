@@ -6,30 +6,36 @@ import { Component } from 'omi';
 export default class TagInputExcess extends Component {
   tags1 = ['Vue', 'React', 'Omi'];
 
-  render() {
-    const onChange = (val, context) => {
-      this.tags1 = val;
-      this.update();
-      console.log('onChange', val, context);
-    };
+  tags2 = ['Vue', 'React', 'Omi'];
 
+  render() {
     return (
       <t-space direction="vertical" style={{ width: '80%' }}>
+        Scroll:
         <t-tag-input
-          label={'scroll: '}
           value={this.tags1}
-          onChange={onChange}
-          clearable
           excessTagsDisplayType="scroll"
           placeholder="请输入"
-        />
-        <t-tag-input
-          label={'Break-Line: '}
-          value={this.tags1}
-          onChange={onChange}
+          style={{ width: '300px' }}
           clearable
-          excessTagsDisplayType="break-line"
+          onChange={(e: CustomEvent) => {
+            this.tags1 = e.detail.value;
+            this.update();
+            console.log('onChange', e.detail.value);
+          }}
+        />
+        BreakLine:
+        <t-tag-input
+          value={this.tags2}
           placeholder="请输入"
+          excessTagsDisplayType="break-line"
+          style={{ width: '300px' }}
+          clearable
+          onChange={(e: CustomEvent) => {
+            this.tags2 = e.detail.value;
+            this.update();
+            console.log('onChange', e.detail.value);
+          }}
         />
       </t-space>
     );

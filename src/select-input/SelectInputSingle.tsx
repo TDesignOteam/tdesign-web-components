@@ -116,6 +116,7 @@ export default class SingleSelectInput extends Component<
 
     return (
       <t-input
+        ignoreFire
         ref={this.inputRef}
         {...commonInputProps}
         autoWidth={props.autoWidth}

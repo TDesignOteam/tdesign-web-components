@@ -10,6 +10,7 @@ import { getIEVersion } from '../_common/js/utils/helper';
 import classname from '../_util/classname';
 import { getChildrenArray } from '../_util/component';
 import { domContains, setExportparts } from '../_util/dom';
+import { createEmit } from '../_util/emit';
 import { StyledProps, TNode } from '../common';
 import { PopupVisibleChangeContext, TdPopupProps } from './type';
 import { attachListeners, getPopperPlacement, triggers } from './utils';
@@ -93,6 +94,8 @@ export default class Popup extends Component<PopupProps> {
 
   visible = false;
 
+  private emit = createEmit(this);
+
   // 防止多次触发显隐
   leaveFlag = false;
 
@@ -152,7 +155,7 @@ export default class Popup extends Component<PopupProps> {
 
   getVisible = () => {
     // controlled
-    if (this.props.visible !== undefined) return this.props.visible;
+    if (this.props.visible != null) return this.props.visible;
     return this.visible;
   };
 
@@ -162,9 +165,10 @@ export default class Popup extends Component<PopupProps> {
     if (typeof this.props.onVisibleChange === 'function') {
       this.props.onVisibleChange(visible, context);
     }
+    this.emit('visibleChange', { visible, context });
 
     // 受控模式下仅触发事件，状态更新由receiveProps处理
-    if (this.props.visible !== undefined) return;
+    if (this.props.visible != null) return;
 
     this.visible = visible;
     this.handleDocumentEvent(visible);
@@ -322,7 +326,11 @@ export default class Popup extends Component<PopupProps> {
 
   handleScroll(e: WheelEvent) {
     this.props.onScroll?.({ e });
-    const debounceOnScrollBottom = debounce((e) => this.props.onScrollToBottom?.({ e }), 100);
+    this.emit('scroll', { e });
+    const debounceOnScrollBottom = debounce((e) => {
+      this.props.onScrollToBottom?.({ e });
+      this.emit('scrollToBottom', { e });
+    }, 100);
     const { scrollTop, clientHeight, scrollHeight } = e.target as HTMLDivElement;
     if (clientHeight + Math.floor(scrollTop) === scrollHeight) {
       debounceOnScrollBottom(e);
@@ -417,7 +425,7 @@ export default class Popup extends Component<PopupProps> {
   };
 
   // window resize时更新popper位置并重新计算样式
-  handleWindowResize = throttle(() => {
+  handleWindowResize: () => void = throttle(() => {
     if (this.visible) {
       // 重新渲染，目的是更新overlayInnerStyle
       this.update();
@@ -474,7 +482,7 @@ export default class Popup extends Component<PopupProps> {
     this.addTriggerEvent();
     this.setupTriggerResizeObserver();
 
-    this.visible = this.props.visible;
+    this.visible = this.props.visible ?? false;
 
     // 初始化就显示时
     if (this.visible) {
@@ -486,10 +494,15 @@ export default class Popup extends Component<PopupProps> {
     // 注意：此时 popperRef 可能还未设置（popup 内容还未渲染）
     // createPopperInstance 会在 onDOMReady 中调用
     setExportparts(this);
+    if (!this.triggerRef.current) {
+      requestAnimationFrame(() => {
+        this.addTriggerEvent();
+      });
+    }
   }
 
   receiveProps(props, oldProps) {
-    if (props.visible !== undefined && props.visible !== oldProps.visible) {
+    if (props.visible != null && props.visible !== oldProps.visible) {
       this.visible = props.visible;
       this.handleDocumentEvent(this.visible);
 

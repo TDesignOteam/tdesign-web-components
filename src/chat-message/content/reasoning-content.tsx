@@ -12,9 +12,8 @@ import { convertToLightDomNode } from '../../_util/lightDom';
 import type { AIMessageContent, ChatMessageStatus } from '../../chat-engine';
 import { isTextContent } from '../../chat-engine';
 import { CollapseValue } from '../../collapse';
+import styles from '../style/chat-item.less?inline';
 import type { TdChatContentProps } from '../type';
-
-import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
