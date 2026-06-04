@@ -20,6 +20,12 @@ export interface DateRangePickerProps extends Omit<TdDateRangePickerProps, 'styl
 
 @tag('t-date-range-picker')
 export default class DateRangePicker extends Component<DateRangePickerProps> {
+  static css = `
+    :host {
+      display: inline-block;
+    }
+  `;
+
   static defaultProps = dateRangePickerDefaultProps;
 
   static propTypes = {
@@ -571,6 +577,7 @@ export default class DateRangePicker extends Component<DateRangePickerProps> {
           popupProps={{
             ...popupProps,
             onVisibleChange: this.handlePopupVisibleChange,
+            overlayClassName: classNames(`${this.classPrefix}-date-picker__dropdown`, popupProps?.overlayClassName),
           }}
           rangeInputProps={{
             label,
