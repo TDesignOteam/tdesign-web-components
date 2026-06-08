@@ -3,6 +3,7 @@ import fs from 'fs';
 import matter from 'gray-matter';
 import { spawn } from 'node:child_process';
 import path from 'path';
+
 import { getWorkspaceRoot } from '../lib/get-root-path.mjs';
 // import camelCase from 'camelcase';
 // import { compileUsage } from '../../src/_common/docs/compile';
@@ -177,7 +178,7 @@ async function customRender({ source, file, md }) {
   };
 
   // md filename
-  const reg = file.match(/src\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
+  const reg = file.match(/\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
   const componentName = reg && reg[1];
 
   // split md
@@ -236,7 +237,10 @@ async function customRender({ source, file, md }) {
 
   // 设计指南内容 不展示 design Tab 则不解析
   if (pageData.isComponent && pageData.tdDocTabs.some((item) => item.tab === 'design')) {
-    const designDocPath = path.resolve(getWorkspaceRoot(__dirname), `common-utils/_common/docs/web/design/${componentName}.md`);
+    const designDocPath = path.resolve(
+      getWorkspaceRoot(__dirname),
+      `common-utils/_common/docs/web/design/${componentName}.md`,
+    );
 
     if (fs.existsSync(designDocPath)) {
       const designDocLastUpdated =

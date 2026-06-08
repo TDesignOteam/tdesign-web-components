@@ -18,9 +18,9 @@ if (!viteConfigPath || !webcRoot) {
   process.exit(1);
 }
 
-const WEBC_SRC = resolve(webcRoot, 'packages/ui/src');
+const WEBC_SRC = resolve(webcRoot, 'packages/components');
 const SHARED_SRC = resolve(webcRoot, 'packages/shared/src');
-const CHAT_SRC = resolve(webcRoot, 'packages/chat/src');
+const CHAT_SRC = resolve(webcRoot, 'packages/pro-components/chat');
 const AI_ENGINE_SRC = resolve(webcRoot, 'common-utils/_ai-core/packages/chat-engine');
 const AI_SHARED_SRC = resolve(webcRoot, 'common-utils/_ai-core/packages/shared');
 const COMMON_SRC = resolve(webcRoot, 'common-utils/_common');
@@ -36,11 +36,10 @@ if (!config.includes(pathImport)) {
   );
 }
 
-// 2. Add aliases for tdesign-web-components and internal packages
+// 2. Add aliases for @tdesign/web-components and internal packages
 const aliasEntries = `
         // === Patched: point to current repo web-components source ===
-        'tdesign-web-components': resolve('${WEBC_SRC}'),
-        '@tdesign/web-components-ui': resolve('${WEBC_SRC}'),
+        '@tdesign/web-components': resolve('${WEBC_SRC}'),
         '@tdesign/web-components-shared': resolve('${SHARED_SRC}'),
         '@tdesign/web-components-chat': resolve('${CHAT_SRC}'),
         '@tdesign/ai-chat-engine': resolve('${AI_ENGINE_SRC}'),
@@ -69,8 +68,7 @@ if (!config.includes('esbuild:')) {
 
 // 4. Add optimizeDeps.exclude for patched packages
 const excludeEntries = [
-  'tdesign-web-components',
-  '@tdesign/web-components-ui',
+  '@tdesign/web-components',
   '@tdesign/web-components-chat',
   '@tdesign/ai-chat-engine',
   '@tdesign/ai-shared',

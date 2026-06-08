@@ -1,0 +1,10 @@
+{
+  "name": "@tdesign/web-components-site",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vite --force",
+    "build": "vite build",
+    "preview": "vite build --mode preview"
+  }
+}

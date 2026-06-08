@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "outDir": "lib",
+    "paths": {
+      "@tdesign/web-components": ["../components"],
+      "@tdesign/web-components/*": ["../components/*"],
+      "@tdesign/components": ["../components"],
+      "@tdesign/components/*": ["../components/*"],
+      "@tdesign/web-components-shared": ["../shared/src"],
+      "@tdesign/web-components-shared/*": ["../shared/src/*"],
+      "@common/*": ["../../common-utils/_common/*"],
+      "@": ["../components"]
+    }
+  },
+  "include": ["../components", "../../typings.d.ts"],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "**/**/_example/*", "node_modules", "../../common-utils/_common", "dist", "lib", "esm", "cjs", "es", "site", "../components/site"]
+}

@@ -1,35 +1,34 @@
 {
-  "name": "tdesign-web-components",
-  "version": "0.0.0",
   "private": true,
+  "packageManager": "pnpm@10.33.0",
   "type": "module",
-  "author": "tdesign",
-  "license": "MIT",
   "scripts": {
-    "init": "git submodule init && git submodule update --recursive",
-    "start": "pnpm run dev:prepare && pnpm run dev",
-    "dev": "cd playground/site && vite --force",
-    "site": "cd playground/site && vite build",
-    "site:preview": "cd playground/site && vite build --mode preview && cd ../../_site && cp index.html 404.html",
+    "init": "git submodule update --init",
+    "start": "pnpm run dev:prepare && pnpm run dev:ui",
+    "dev:ui": "cd packages/tdesign-web-components/site && vite --force",
+    "dev:chat": "cd packages/tdesign-web-components-chat/site && vite --force",
+    "site:ui": "cd packages/tdesign-web-components/site && vite build",
+    "site:chat": "cd packages/tdesign-web-components-chat/site && vite build",
     "build": "pnpm run \"/^build:/\"",
-    "build:ui": "cd packages/ui && pnpm run build",
-    "build:chat": "cd packages/chat && pnpm run build",
+    "build:ui": "cd packages/tdesign-web-components && pnpm run build",
+    "build:chat": "cd packages/tdesign-web-components-chat && pnpm run build",
     "dev:prepare": "pnpm run build:chat && pnpm run build:ui",
-    "dev:vue-next-chat": "pnpm run build:chat && cd playground/_tdesign-vue-next && pnpm install --no-frozen-lockfile && pnpm dev",
-    "dev:react-chat": "pnpm run build:chat && cd playground/_tdesign-react && pnpm install --no-frozen-lockfile && pnpm dev",
-    "preview": "vite preview",
-    "lint": "eslint --ext .ts,.tsx packages/*/src playground/site",
-    "lint:fix": "eslint --fix --ext .ts,.tsx packages/*/src playground/site",
+    "test": "echo \"no test specified,work in process\"",
+    "lint": "eslint --ext .ts,.tsx packages/components packages/pro-components/chat",
+    "lint:fix": "eslint --fix --ext .ts,.tsx packages/components packages/pro-components/chat",
     "generate:entry": "node ./script/generate-entry.js",
-    "prepare": "husky",
-    "test": "echo 'test to do'"
+    "prepare": "husky"
   },
   "lint-staged": {
-    "packages/*/src/**/*.{ts,tsx}": [
+    "packages/components/**/*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ],
-    "playground/site/**/*.{ts,tsx}": [
+    "packages/pro-components/chat/**/*.{ts,tsx}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "packages/tdesign-web-components/site/**/*.{ts,tsx}": [
       "prettier --write",
       "eslint --fix"
     ]
@@ -99,6 +98,5 @@
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-tdoc": "^2.0.4",
     "workbox-precaching": "^7.1.0"
-  },
-  "packageManager": "pnpm@10.33.0+sha512.10568bb4a6afb58c9eb3630da90cc9516417abebd3fabbe6739f0ae795728da1491e9db5a544c76ad8eb7570f5c4bb3d6c637b2cb41bfdcdb47fa823c8649319"
+  }
 }

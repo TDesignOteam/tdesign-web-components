@@ -18,13 +18,13 @@ jobs:
       startsWith(github.head_ref, 'release/')
     steps:
       - run: echo "The head of this PR starts with 'release/'"
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - uses: TDesignOteam/tdesign-changelog-action@main
         id: changelog
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Add comment
-        uses: peter-evans/create-or-update-comment@v1
+        uses: peter-evans/create-or-update-comment@v5
         with:
           issue-number: ${{ github.event.pull_request.number }}
           body: |
@@ -50,7 +50,7 @@ jobs:
           fi
           echo "::set-output name=branch::${BASH_REMATCH[1]}"
       # zsh $match[1]
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           ref: ${{ steps.comment.outputs.branch }}
       - name: Commit and push if needed
@@ -72,7 +72,7 @@ jobs:
       github.event.pull_request.merged == true &&
       startsWith(github.head_ref, 'release/')
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
         with:
           ref: develop
           token: ${{ secrets.PERSONAL_TOKEN }}

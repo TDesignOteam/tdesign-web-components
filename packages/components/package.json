@@ -1,0 +1,24 @@
+{
+  "name": "@tdesign/components",
+  "private": true,
+  "main": "index.ts",
+  "author": "tdesign",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/runtime": "^7.24.7",
+    "@popperjs/core": "^2.11.8",
+    "copy-to-clipboard": "^3.3.3",
+    "dayjs": "^1.11.19",
+    "htm": "^3.1.1",
+    "lodash-es": "^4.17.21",
+    "omi": "^7.7.13",
+    "omi-transition": "^0.1.11",
+    "tdesign-icons-web-components": "^0.3.2"
+  },
+  "devDependencies": {
+    "@tdesign/web-components-shared": "workspace:^"
+  },
+  "peerDependencies": {
+    "omi": "^7.7.0"
+  }
+}

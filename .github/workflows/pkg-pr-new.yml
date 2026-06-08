@@ -8,11 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
         with:
           submodules: recursive
 
-      - uses: pnpm/action-setup@v5
+      - uses: pnpm/action-setup@v6
 
       - uses: actions/setup-node@v6
         with:
@@ -23,8 +23,4 @@ jobs:
 
       - run: pnpm run "/^build:/"
 
-      - uses: actions/setup-node@v6
-        with:
-          node-version: 24
-
-      - run: pnpm dlx pkg-pr-new publish './packages/ui' './packages/chat' --pnpm --packageManager=pnpm,npm,yarn
+      - run: pnpm dlx pkg-pr-new publish './packages/*' --no-compact --packageManager=pnpm,npm,yarn

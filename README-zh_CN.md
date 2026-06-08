@@ -5,17 +5,17 @@
 </p>
 
 <p align="center">
-   <a href="https://www.npmjs.com/package/tdesign-web-components">
-    <img src="https://img.shields.io/npm/l/tdesign-web-components.svg?sanitize=true" alt="License" />
+   <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
+    <img src="https://img.shields.io/npm/l/@tdesign/web-components-chat.svg?sanitize=true" alt="License" />
   </a>
   <a href="https://app.codecov.io/gh/Tencent/tdesign-web-components">
     <img src="https://img.shields.io/codecov/c/github/Tencent/tdesign-web-components/develop.svg?style=flat-square" alt="codecov">
   </a>
-  <a href="https://www.npmjs.com/package/tdesign-web-components">
-    <img src="https://img.shields.io/npm/v/tdesign-web-components.svg?sanitize=true" alt="Version">
+  <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
+    <img src="https://img.shields.io/npm/v/@tdesign/web-components-chat.svg?sanitize=true" alt="Version">
   </a>
-  <a href="https://www.npmjs.com/package/tdesign-web-components">
-    <img src="https://img.shields.io/npm/dm/tdesign-web-components.svg?sanitize=true" alt="Downloads" />
+  <a href="https://www.npmjs.com/package/@tdesign/web-components-chat">
+    <img src="https://img.shields.io/npm/dm/@tdesign/web-components-chat.svg?sanitize=true" alt="Downloads" />
   </a>
 </p>
 
@@ -34,15 +34,15 @@ TDesign Web Components 适配桌面端的组件库，适合在任何前端项目
 # 📦 安装
 
 ```shell
-npm i tdesign-web-components
+npm i @tdesign/web-components
 ```
 
 ```shell
-yarn add tdesign-web-components
+yarn add @tdesign/web-components
 ```
 
 ```shell
-pnpm add tdesign-web-components
+pnpm add @tdesign/web-components
 ```
 
 # 🔨 基础使用
@@ -50,15 +50,15 @@ pnpm add tdesign-web-components
 推荐使用 Webpack 或 Rollup 等支持 tree-shaking 特性的构建工具，无需额外配置即可实现组件按需引入：
 
 ```tsx
-import 'tdesign-web-components/lib/style/index.css'
-import 'tdesign-web-components/lib/button'
+import '@tdesign/web-components/lib/style/index.css';
+import '@tdesign/web-components/lib/button';
 
 document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
 
 更多使用方式请点击 👉🏻 [快速开始](./site/docs/getting-started.md)
 
-npm package 中提供了多种构建产物，可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解不同目录下产物的差别。
+`@tdesign/web-components-chat` 提供 AI Chat 组件，`@tdesign/web-components` 提供基础 UI 组件。可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解更多。
 
 # 快速体验
 

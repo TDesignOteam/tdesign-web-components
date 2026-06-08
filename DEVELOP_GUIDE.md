@@ -29,7 +29,7 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 
 ### API 规范
 
-[API](./src/_common/api.md)
+[API](./common-utils/_common/api.md)
 
 ### 前缀
 
@@ -92,18 +92,26 @@ npm run start
 
 ```shell
 .
-├── site/                   # 站点代码
-├── src/                    # 组件代码
-│   ├── _common/           # 公共资源和样式（tdesign-common子仓库）
-│   └── [组件]/            
-│       ├── _example/      # 演示文件
-│       ├── index.ts       # 组件导出入口
+├── packages/                              # 组件包
+│   ├── components/                       # UI 组件源码 (@tdesign/web-components)
+│   │   └── [组件]/
+│   │       ├── _example/                # 演示文件
+│   │       └── index.ts                 # 组件导出入口
+│   ├── pro-components/                  # Pro 组件源码
+│   │   └── chat/                       # Chat 组件库 (@tdesign/web-components-chat)
+│   ├── tdesign-web-components/          # UI 主包（站点）
+│   │   └── site/
+│   ├── tdesign-web-components-chat/    # Chat 主包（站点）
+│   │   └── site/
+│   └── shared/                         # 共享工具 (@tdesign/web-components-shared)
+├── common-utils/                         # 公共工具和子模块
+│   ├── _common/                        # tdesign-common 子仓库
+│   └── _ai-core/                       # tdesign-ai-core 子仓库
 ```
 
 ### 新增开发组件
 
 暂不支持命令行方式，需要参考button的组件结构手动复制一份目录结构，再改成自己的组件名.
-
 
 ### 组件页路由配置
 
@@ -118,14 +126,14 @@ npm run start
         title: 'Button 按钮',
         name: 'button',
         path: '/components/button',
-        component: () => import('tdesign-web-components/button/README.md'),
+        component: () => import('@tdesign/web-components/button/README.md'),
     },
     ...
   ],
 },
 ```
 
-`src/index.ts` 中也需要导出你新添加的组件，如：
+`packages/components/index.ts` 中也需要导出你新添加的组件，如：
 
 ```typescript
 export * from './button';
@@ -137,7 +145,7 @@ export * from './button';
 
 ### 组件 Demo 演示配置
 
-为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `src/_common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
+为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `common-utils/_common/_docs/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
 
 例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.tsx`、 `noArrow.tsx` 文件
 
