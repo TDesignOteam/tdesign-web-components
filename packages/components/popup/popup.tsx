@@ -73,6 +73,27 @@ export default class Popup extends Component<PopupProps> {
       animation: t-fade-in .2s ease-in-out;
       margin: 3px var(--td-comp-margin-xs) 3px 0;
     }
+    .t-range-input-popup__dropdown .t-popup__content,
+    .t-range-input-popup__dropdown .t-popup__content--arrow {
+      margin-top: 16px;
+    }
+    .t-select__dropdown .t-popup__content,
+    .t-select__dropdown .t-popup__content--arrow {
+      margin-top: 8px;
+    }
+    .t-date-picker__dropdown .t-popup__content,
+    .t-date-picker__dropdown .t-popup__content--arrow {
+      margin-top: 8px;
+      padding: 0;
+    }
+    .t-date-picker__header-controller-month-popup > .t-popup__content,
+    .t-date-picker__header-controller-month-popup > .t-popup__content--arrow,
+    .t-date-picker__header-controller-year-popup > .t-popup__content,
+    .t-date-picker__header-controller-year-popup > .t-popup__content--arrow {
+      max-height: 160px;
+      overflow-y: auto;
+      padding: 6px;
+    }
   `;
 
   static propTypes = PopupTypes;

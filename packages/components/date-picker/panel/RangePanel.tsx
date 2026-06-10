@@ -88,6 +88,94 @@ export interface RangePanelProps
 
 @tag('t-date-range-picker-panel')
 export default class RangePanel extends Component<RangePanelProps> {
+  static css = `
+    .t-date-picker__header {
+      position: relative;
+    }
+
+    .t-date-picker__header > .t-portal-wrapper {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0;
+    }
+
+    .t-date-picker-header__panel-list {
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+      gap: 2px;
+      list-style: none;
+    }
+
+    .t-date-picker-header__panel-item {
+      display: block;
+      border-radius: 3px;
+      line-height: 22px;
+      cursor: pointer;
+      padding: 3px 8px;
+      color: var(--td-text-color-primary);
+      transition: background-color 0.2s linear;
+      white-space: nowrap;
+      word-wrap: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .t-date-picker-header__panel-item:hover {
+      background-color: var(--td-bg-color-container-hover);
+    }
+
+    .t-date-range-picker__panel {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--td-bg-color-container);
+      border-radius: var(--td-radius-medium);
+      box-shadow: var(--td-shadow-2);
+    }
+
+    .t-date-range-picker__panel--direction-row {
+      flex-direction: row;
+    }
+
+    .t-date-range-picker__panel-content-wrapper {
+      display: flex;
+      flex-direction: row;
+    }
+
+    .t-date-range-picker__presets {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 12px;
+      border-top: 1px solid var(--td-component-stroke);
+    }
+
+    .t-date-range-picker__presets--vertical {
+      flex-direction: column;
+      border-top: none;
+      border-left: 1px solid var(--td-component-stroke);
+      padding: 12px;
+    }
+
+    .t-date-range-picker__presets-item {
+      padding: 4px 8px;
+      font-size: var(--td-font-size-body-small);
+      color: var(--td-text-color-primary);
+      cursor: pointer;
+      border-radius: var(--td-radius-default);
+      transition: background-color 0.2s linear;
+      white-space: nowrap;
+    }
+
+    .t-date-range-picker__presets-item:hover {
+      background-color: var(--td-bg-color-container-hover);
+      color: var(--td-brand-color);
+    }
+  `;
+
   static defaultProps: Partial<RangePanelProps> = {
     mode: 'date',
     firstDayOfWeek: 1,

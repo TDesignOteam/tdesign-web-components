@@ -116,7 +116,6 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
       const merged = {
         ...resolvedBase,
         ...resolvedExternal,
-        marginTop: '16px',
       } as Record<string, any>;
 
       if (!autoWidth && this.cachedOverlayWidth) {
@@ -134,6 +133,7 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
     const rangeInputConfig = rangeInputProps ?? {};
     const value = inputValue !== undefined ? inputValue : this.innerInputValue ?? [];
     const name = `${this.classPrefix}-range-input-popup`;
+    const overlayClassName = classNames(`${name}__dropdown`, popupConfig.overlayClassName);
     const wrapperClassName = classNames(name, className, {
       [`${name}--visible`]: isVisible,
     });
@@ -151,6 +151,7 @@ export default class RangeInputPopup extends Component<RangeInputPopupProps> {
           onVisibleChange={onInnerPopupVisibleChange}
           disabled={disabled}
           {...popupConfig}
+          overlayClassName={overlayClassName}
           overlayInnerStyle={overlayInnerStyle}
         >
           <t-range-input

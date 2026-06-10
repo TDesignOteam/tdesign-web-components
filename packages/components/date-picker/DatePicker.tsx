@@ -20,6 +20,12 @@ export interface DatePickerProps extends Omit<TdDatePickerProps, 'style'>, Omit<
 
 @tag('t-date-picker')
 export default class DatePicker extends Component<DatePickerProps> {
+  static css = `
+    :host {
+      display: inline-block;
+    }
+  `;
+
   static defaultProps = datePickerDefaultProps;
 
   static propTypes = {
@@ -432,7 +438,10 @@ export default class DatePicker extends Component<DatePickerProps> {
           clearable={clearable}
           allowInput={allowInput}
           placeholder={displayPlaceholder}
-          popupProps={popupProps}
+          popupProps={{
+            ...popupProps,
+            overlayClassName: classNames(`${this.classPrefix}-date-picker__dropdown`, popupProps?.overlayClassName),
+          }}
           inputProps={inputProps}
           tagInputProps={tagInputProps}
           popupVisible={visible}
