@@ -8,7 +8,6 @@
   "exports": {
     ".": {
       "import": "./lib/index.js",
-      "require": "./lib/index.js",
       "types": "./lib/index.d.ts"
     },
     "./lib/style/index.css": "./lib/style/index.css",
@@ -17,33 +16,22 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf es lib dist esm cjs",
+    "prebuild": "rimraf lib",
     "build": "NODE_ENV=production rollup -c rollup.config.mjs && NODE_ENV=production rollup --config rollup.dts.config.mjs"
   },
   "files": [
-    "esm",
-    "es",
     "lib",
-    "cjs",
-    "dist",
-    "plugins",
     "LICENSE",
-    "README.md",
-    "CHANGELOG.md"
+    "README.md"
   ],
   "sideEffects": [
-    "dist/*",
-    "site/**/*.{ts,tsx}",
-    "src/**/*.{ts,tsx}",
-    "cjs/**",
-    "esm/**"
+    "lib/style/**/*"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public"
   },
   "dependencies": {
-    "@tdesign/ai-chat-engine": "workspace:^",
     "cherry-markdown": "0.11.0-alpha-5",
     "immer": "^10.1.1",
     "lodash-es": "^4.17.21",
@@ -51,13 +39,13 @@
     "nanostores": "^0.11.4"
   },
   "devDependencies": {
-    "@tdesign/web-components-shared": "workspace:^",
-    "@types/lodash-es": "^4.17.12",
+    "@tdesign/ai-chat-engine": "workspace:^",
     "@tdesign/pro-components-chat": "workspace:^",
-    "@tdesign/web-components": "workspace:^"
+    "@tdesign/web-components": "workspace:^",
+    "@tdesign/web-components-shared": "workspace:^",
+    "@types/lodash-es": "^4.17.12"
   },
   "peerDependencies": {
-    "@tdesign/web-components": "workspace:^",
     "omi": "^7.7.0"
   },
   "description": "TDesign Web Components Chat Library",

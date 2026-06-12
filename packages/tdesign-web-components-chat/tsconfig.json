@@ -25,6 +25,10 @@
       "@": ["../pro-components/chat"]
     }
   },
-  "include": ["../pro-components/chat", "../../typings.d.ts"],
+  "include": [
+    "../pro-components/chat/**/*",
+    "../../common-utils/_ai-core/packages/shared/**/*",
+    "../../typings.d.ts"
+  ],
   "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "**/**/_example/*", "node_modules", "../../common-utils/_common", "dist", "lib", "esm", "cjs", "es", "site", "../pro-components/chat/site"]
 }
