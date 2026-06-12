@@ -1,7 +1,7 @@
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
-import { createRollupConfig, createDtsConfig } from '../../script/rollup.base.mjs';
+import { createDtsConfig, createPostcssConfig,createRollupConfig, createSharedPlugins } from '../../script/rollup.base.mjs';
 import pkg from './package.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
@@ -26,5 +26,8 @@ const dtsConfig = createDtsConfig({
   srcDir,
   input: dtsInput,
 });
+
+// 为 JS 配置添加 postcss 插件
+jsConfig.plugins = [...createSharedPlugins(pkg), createPostcssConfig(__dirname)];
 
 export default [jsConfig, dtsConfig];

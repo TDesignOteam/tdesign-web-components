@@ -64,37 +64,45 @@ const alwaysExternal = [/tailwind-merge/];
 // 检查是否为 workspace 包
 const isWorkspacePkg = (id) => workspacePkgs.some((p) => id === p || id.startsWith(`${p}/`));
 
-// 共享插件配置
-const createPlugins = (pkg, packageDir) => [
-  aliasPlugin,
-  nodeResolve({ extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'] }),
-  commonjs(),
-  esbuild({
-    include: /\.[jt]sx?$/,
-    target: 'esnext',
-    minify: false,
-    jsxFactory: 'Component.h',
-    jsxFragment: 'Component.f',
-    loaders: { '.less': 'css', '.ts': 'ts', '.tsx': 'tsx' },
-  }),
-  json(),
-  url(),
-  replace({
-    preventAssignment: true,
-    values: {
-      __VERSION__: JSON.stringify(pkg.version),
-      'process.env.NODE_ENV': JSON.stringify('production'),
-    },
-  }),
-  postcss({
+// 创建 PostCSS 配置
+export function createPostcssConfig(packageDir) {
+  return postcss({
     extract: resolve(packageDir, 'lib/style/[name].css'),
     minimize: true,
     sourceMap: true,
     extensions: ['.css', '.less'],
     plugins: [atImport()],
     use: [['less', { plugins: [lessAliasPlugin] }]],
-  }),
-];
+    // 构建时不使用 tailwindcss，避免 content 警告
+    config: false,
+  });
+}
+
+// 共享插件配置（不含 postcss）
+export function createSharedPlugins(pkg) {
+  return [
+    aliasPlugin,
+    nodeResolve({ extensions: ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.json'] }),
+    commonjs(),
+    esbuild({
+      include: /\.[jt]sx?$/,
+      target: 'esnext',
+      minify: false,
+      jsxFactory: 'Component.h',
+      jsxFragment: 'Component.f',
+      loaders: { '.less': 'css', '.ts': 'ts', '.tsx': 'tsx' },
+    }),
+    json(),
+    url(),
+    replace({
+      preventAssignment: true,
+      values: {
+        __VERSION__: JSON.stringify(pkg.version),
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      },
+    }),
+  ];
+}
 
 /**
  * 创建 JS 构建配置
@@ -118,7 +126,7 @@ export function createRollupConfig({ pkg, packageDir, srcDir: _srcDir }) {
   return {
     input: fg.sync(inputList, { absolute: true }),
     external,
-    plugins: createPlugins(pkg, packageDir),
+    plugins: [], // plugins 由各包配置添加 postcss
     output: {
       banner: createBanner(pkg),
       dir: resolve(packageDir, 'lib/'),
