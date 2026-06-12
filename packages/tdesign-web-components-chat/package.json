@@ -17,7 +17,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "rimraf lib",
-    "build": "NODE_ENV=production rollup -c rollup.config.mjs && NODE_ENV=production rollup --config rollup.dts.config.mjs"
+    "build": "NODE_ENV=production rollup -c rollup.config.mjs"
   },
   "files": [
     "lib",

@@ -1,19 +1,30 @@
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
-import { createRollupConfig } from '../../script/rollup.base.mjs';
+import { createRollupConfig, createDtsConfig } from '../../script/rollup.base.mjs';
 import pkg from './package.json' with { type: 'json' };
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// 源码目录（@tdesign/components）
 const srcDir = resolve(__dirname, '../components');
+const dtsInput = resolve(srcDir, 'index.ts');
 
-export default createRollupConfig({
+// JS 构建配置
+const jsConfig = createRollupConfig({
   pkg,
   packageName: '@tdesign/web-components',
   packageDir: __dirname,
   srcDir,
-  dtsEntry: resolve(srcDir, 'index.ts'),
 });
+
+// DTS 构建配置
+const dtsConfig = createDtsConfig({
+  pkg,
+  packageName: '@tdesign/web-components',
+  packageDir: __dirname,
+  srcDir,
+  input: dtsInput,
+});
+
+export default [jsConfig, dtsConfig];
