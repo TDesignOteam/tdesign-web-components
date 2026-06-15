@@ -10,6 +10,9 @@ const __dirname = dirname(__filename);
 const srcDir = resolve(__dirname, '../pro-components/chat');
 const dtsInput = resolve(srcDir, 'index.ts');
 
+// 内联 UI、AI 引擎等 workspace 包，Chat 发布物可独立使用，无需用户额外安装 @tdesign/web-components
+// bundleWorkspacePkgs 使用 rollup.base.mjs 默认值
+
 // JS 构建配置
 const jsConfig = createRollupConfig({
   pkg,

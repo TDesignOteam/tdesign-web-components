@@ -24,12 +24,18 @@ export function createAliasConfig(root: string): Record<string, string> {
   };
 }
 
-// 共享的 esbuild 配置（Omi JSX）
-export const omiEsbuildConfig = {
-  jsxFactory: 'OmiComponent.h',
-  jsxFragment: 'OmiComponent.f',
+// 共享的 Omi JSX 配置（Vite 8 使用 Oxc，esbuild 选项会自动转换）
+export const omiOxcConfig = {
+  jsx: {
+    runtime: 'classic' as const,
+    pragma: 'OmiComponent.h',
+    pragmaFrag: 'OmiComponent.f',
+  },
   jsxInject: `import { Component as OmiComponent } from 'omi'`,
 };
+
+/** @deprecated 请使用 omiOxcConfig，保留别名以兼容旧引用 */
+export const omiEsbuildConfig = omiOxcConfig;
 
 // 创建 SSE 代理配置
 export function createSseProxy(): Record<string, unknown> {

@@ -55,14 +55,15 @@ const lessAliasPlugin = {
   },
 };
 
-// workspace 包列表（这些包会被打包进产物，而非设为 external）
-const workspacePkgs = ['@tdesign/web-components', '@tdesign/ai-chat-engine', '@tdesign/ai-shared'];
+// 默认内联打包的 workspace 包（UI 包构建时使用）
+const defaultBundleWorkspacePkgs = ['@tdesign/web-components', '@tdesign/ai-chat-engine', '@tdesign/ai-shared'];
 
 // 需要设为 external 的包
 const alwaysExternal = [/tailwind-merge/];
 
-// 检查是否为 workspace 包
-const isWorkspacePkg = (id) => workspacePkgs.some((p) => id === p || id.startsWith(`${p}/`));
+// 检查是否为需要内联打包的 workspace 包
+const isBundledWorkspacePkg = (id, bundleWorkspacePkgs) =>
+  bundleWorkspacePkgs.some((p) => id === p || id.startsWith(`${p}/`));
 
 // 创建 PostCSS 配置
 export function createPostcssConfig(packageDir) {
@@ -107,7 +108,12 @@ export function createSharedPlugins(pkg) {
 /**
  * 创建 JS 构建配置
  */
-export function createRollupConfig({ pkg, packageDir, srcDir: _srcDir }) {
+export function createRollupConfig({
+  pkg,
+  packageDir,
+  srcDir: _srcDir,
+  bundleWorkspacePkgs = defaultBundleWorkspacePkgs,
+}) {
   const srcDir = _srcDir || packageDir;
   const inputList = [
     `${srcDir}/**/*.ts`,
@@ -118,10 +124,13 @@ export function createRollupConfig({ pkg, packageDir, srcDir: _srcDir }) {
     `!${srcDir}/**/*.d.ts`,
   ];
 
-  // 只将非 workspace 包设为 external
+  // 只将非内联 workspace 包设为 external
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
-  const external = [...new Set([...deps, ...peerDeps].filter((p) => !isWorkspacePkg(p))), ...alwaysExternal];
+  const external = [
+    ...new Set([...deps, ...peerDeps].filter((p) => !isBundledWorkspacePkg(p, bundleWorkspacePkgs))),
+    ...alwaysExternal,
+  ];
 
   return {
     input: fg.sync(inputList, { absolute: true }),
@@ -141,12 +150,21 @@ export function createRollupConfig({ pkg, packageDir, srcDir: _srcDir }) {
 /**
  * 创建 DTS 构建配置
  */
-export function createDtsConfig({ pkg, packageDir, srcDir: _srcDir, input = 'index.ts' }) {
+export function createDtsConfig({
+  pkg,
+  packageDir,
+  srcDir: _srcDir,
+  input = 'index.ts',
+  bundleWorkspacePkgs = defaultBundleWorkspacePkgs,
+}) {
   const srcDir = _srcDir || packageDir;
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
-  // 只将非 workspace 包设为 external
-  const allExternal = [...new Set([...deps, ...peerDeps].filter((p) => !isWorkspacePkg(p))), ...alwaysExternal];
+  // 只将非内联 workspace 包设为 external
+  const allExternal = [
+    ...new Set([...deps, ...peerDeps].filter((p) => !isBundledWorkspacePkg(p, bundleWorkspacePkgs))),
+    ...alwaysExternal,
+  ];
 
   return {
     input: typeof input === 'string' ? resolve(srcDir, input) : input,

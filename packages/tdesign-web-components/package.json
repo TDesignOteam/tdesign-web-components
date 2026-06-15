@@ -10,13 +10,14 @@
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
     },
+    "./lib/*": "./lib/*",
     "./lib/style/index.css": "./lib/style/index.css",
     "./lib/style/*.css": "./lib/style/*.css"
   },
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf lib",
+    "prebuild": "node ../../script/generate-entry.js && rimraf lib",
     "build": "NODE_ENV=production rollup -c rollup.config.mjs"
   },
   "files": [
@@ -66,6 +67,6 @@
     "url": "https://github.com/Tencent/tdesign-web-components/issues"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">=22.12.0"
   }
 }

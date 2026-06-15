@@ -10,6 +10,7 @@
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
     },
+    "./lib/*": "./lib/*",
     "./lib/style/index.css": "./lib/style/index.css",
     "./lib/style/*.css": "./lib/style/*.css"
   },
@@ -25,7 +26,8 @@
     "README.md"
   ],
   "sideEffects": [
-    "lib/style/**/*"
+    "lib/style/**/*",
+    "lib/packages/**/style/**/*"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
@@ -66,6 +68,6 @@
     "url": "https://github.com/Tencent/tdesign-web-components/issues"
   },
   "engines": {
-    "node": ">= 18"
+    "node": ">=22.12.0"
   }
 }

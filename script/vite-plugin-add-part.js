@@ -2,10 +2,13 @@
 import * as t from '@babel/types';
 import { createFilter } from '@rollup/pluginutils';
 
-import babelAddPartAttributePlugin from '../../../plugins/babel-plugin-add-part-attribute.cjs'
+import babelAddPartAttributePlugin from '../plugins/babel-plugin-add-part-attribute.cjs';
 
-const { visitor } = babelAddPartAttributePlugin({ types: t, jsxFactoryName: 'OmiComponent' })
+const { visitor } = babelAddPartAttributePlugin({ types: t, jsxFactoryName: 'OmiComponent' });
 
+/**
+ * Vite 插件：为 Omi JSX 自动注入 part 属性
+ */
 export default function addPartAttributePlugin(options = {}) {
   const filter = createFilter(options.include || /\.(jsx?|tsx?|mjs)$/, options.exclude || /node_modules/);
 
@@ -23,7 +26,7 @@ export default function addPartAttributePlugin(options = {}) {
           plugins: [
             function originalPlugin() {
               return {
-                visitor
+                visitor,
               };
             },
           ],
