@@ -34,8 +34,17 @@ export const omiOxcConfig = {
   jsxInject: `import { Component as OmiComponent } from 'omi'`,
 };
 
-/** @deprecated 请使用 omiOxcConfig，保留别名以兼容旧引用 */
+/** @deprecated 请使用 omiOxcConfig */
 export const omiEsbuildConfig = omiOxcConfig;
+
+// 文档站预构建排除：workspace 包走源码 alias
+export const workspaceOptimizeDepsExclude = [
+  '@tdesign/web-components',
+  '@tdesign/web-components-chat',
+  '@tdesign/web-components-shared',
+  '@tdesign/ai-chat-engine',
+  '@tdesign/ai-shared',
+];
 
 // 创建 SSE 代理配置
 export function createSseProxy(): Record<string, unknown> {

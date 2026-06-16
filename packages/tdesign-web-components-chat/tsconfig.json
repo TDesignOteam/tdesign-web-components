@@ -5,6 +5,8 @@
     "outDir": "lib",
     "skipLibCheck": true,
     "noEmitOnError": false,
+    // Rollup DTS 生成沿用 node 解析，避免 bundler 条件导出差异
+    "moduleResolution": "node",
     "paths": {
       "@tdesign/web-components-chat": ["../pro-components/chat"],
       "@tdesign/web-components-chat/*": ["../pro-components/chat/*"],

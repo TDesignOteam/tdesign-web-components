@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
- * Patch tdesign-vue-next chat site's vite.config.ts
- * to use current repo's web-components source code
- * instead of the npm package.
+ * 为外部项目（如 tdesign-vue-next chat site）补丁 vite.config，
+ * 使其通过 alias 使用本仓库 web-components 源码。
  *
  * Usage: node patch-vite-config.mjs <vite-config-path> <webc-root>
  */
@@ -27,16 +26,13 @@ const COMMON_SRC = resolve(webcRoot, 'common-utils/_common');
 
 let config = readFileSync(viteConfigPath, 'utf8');
 
-// 1. Add path import if not present
+// 1. 补充 path import
 const pathImport = "import { resolve } from 'path';";
 if (!config.includes(pathImport)) {
-  config = config.replace(
-    /import \{ defineConfig/,
-    `${pathImport}\nimport { defineConfig`
-  );
+  config = config.replace(/import \{ defineConfig/, `${pathImport}\nimport { defineConfig`);
 }
 
-// 2. Add aliases for @tdesign/web-components and internal packages
+// 2. alias 指向 monorepo 源码
 const aliasEntries = `
         // === Patched: point to current repo web-components source ===
         '@tdesign/web-components': resolve('${WEBC_SRC}'),
@@ -47,39 +43,55 @@ const aliasEntries = `
         '@common': resolve('${COMMON_SRC}'),
         // === End patch ===`;
 
-config = config.replace(
-  /resolve:\s*\{/,
-  `resolve: {${aliasEntries}`
-);
+config = config.replace(/resolve:\s*\{/, `resolve: {${aliasEntries}`);
 
-// 3. Add esbuild config for Omi JSX support
-const esbuildConfig = `
-    esbuild: {
-      jsxFactory: 'Component.h',
-      jsxFragment: 'Component.f',
+// 3. Vite 8 使用 Oxc 处理 Omi JSX（兼容仍写 esbuild 的旧配置）
+const oxcConfig = `
+    oxc: {
+      jsx: {
+        runtime: 'classic',
+        pragma: 'Component.h',
+        pragmaFrag: 'Component.f',
+      },
+      jsxInject: "import { Component } from 'omi'",
     },`;
 
-if (!config.includes('esbuild:')) {
+if (!config.includes('oxc:') && !config.includes('esbuild:')) {
+  config = config.replace(/plugins:/, `${oxcConfig}\n    plugins:`);
+} else if (config.includes('esbuild:') && !config.includes('oxc:')) {
   config = config.replace(
-    /plugins:/,
-    `${esbuildConfig}\n    plugins:`
+    /esbuild:\s*\{[^}]*\},?/s,
+    `oxc: {
+      jsx: {
+        runtime: 'classic',
+        pragma: 'Component.h',
+        pragmaFrag: 'Component.f',
+      },
+      jsxInject: "import { Component } from 'omi'",
+    },`,
   );
 }
 
-// 4. Add optimizeDeps.exclude for patched packages
+// 4. workspace 包不走 dep 预构建
 const excludeEntries = [
   '@tdesign/web-components',
   '@tdesign/web-components-chat',
+  '@tdesign/web-components-shared',
   '@tdesign/ai-chat-engine',
   '@tdesign/ai-shared',
 ];
 
 for (const pkg of excludeEntries) {
   if (!config.includes(`'${pkg}'`)) {
-    config = config.replace(
-      /exclude:\s*\[/,
-      `exclude: [\n        '${pkg}',`
-    );
+    if (config.includes('optimizeDeps:')) {
+      config = config.replace(/exclude:\s*\[/, `exclude: [\n        '${pkg}',`);
+    } else {
+      config = config.replace(
+        /plugins:/,
+        `optimizeDeps: {\n      exclude: [\n        '${pkg}',\n      ],\n    },\n    plugins:`,
+      );
+      break;
+    }
   }
 }
 
