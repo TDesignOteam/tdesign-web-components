@@ -1,4 +1,3 @@
-/* eslint-disable */
 export class SSEResponse {
   constructor(private isErrorScenario = false) {
     // 默认为非错误场景

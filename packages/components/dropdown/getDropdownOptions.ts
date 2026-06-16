@@ -19,7 +19,7 @@ export const getOptionsFromChildren = (children: TElement | any): DropdownOption
   return toArray(children)
     .map((item: TElement) => {
       const groupChildren = item?.children;
-      // eslint-disable-next-line no-param-reassign
+
       // delete (item.attributes as any).ignoreAttrs;
       const contextRes = (item.attributes as any)?.content;
 

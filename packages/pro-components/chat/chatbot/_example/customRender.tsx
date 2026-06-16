@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import '@tdesign/web-components-chat/chatbot';
 
 import type {

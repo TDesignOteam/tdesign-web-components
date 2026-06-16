@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import '@tdesign/web-components-chat/chatbot';
 
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '@tdesign/web-components-chat/chat-engine';
@@ -31,7 +30,6 @@ function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string 
   const matches = [];
   let match;
 
-  // eslint-disable-next-line no-cond-assign
   while ((match = linkRegex.exec(msg)) !== null) {
     matches.push({
       title: match[1].trim(),

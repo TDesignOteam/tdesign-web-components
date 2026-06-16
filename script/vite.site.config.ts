@@ -19,6 +19,8 @@ export interface SiteViteOptions {
   siteDir: string;
   /** 开发服务器端口 */
   port: number;
+  /** 预览服务器端口 */
+  previewPort: number;
   /** 各 mode 对应的 publicPath */
   publicPathMap: Record<string, string>;
 }
@@ -26,7 +28,7 @@ export interface SiteViteOptions {
 /**
  * 创建文档站 Vite 配置（UI / Chat 站点共用）
  */
-export function createSiteViteConfig({ siteDir, port, publicPathMap }: SiteViteOptions) {
+export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap }: SiteViteOptions) {
   const ROOT = getWorkspaceRoot(siteDir);
 
   return ({ mode }: { mode: string }) =>
@@ -52,6 +54,11 @@ export function createSiteViteConfig({ siteDir, port, publicPathMap }: SiteViteO
           allow: [resolve(ROOT, '.'), resolve(ROOT, 'node_modules')],
         },
         proxy: createSseProxy(),
+      },
+      preview: {
+        host: '127.0.0.1',
+        port: previewPort,
+        open: true,
       },
       build: {
         outDir: 'dist',

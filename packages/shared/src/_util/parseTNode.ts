@@ -31,7 +31,7 @@ export function parseContentTNode<T>(tnode: TNode<T>, props: T) {
   if (!tnode || ['string', 'number', 'boolean'].includes(typeof tnode)) return tnode as TNode;
   try {
     return cloneElement(tnode as VNode, { ...props });
-  } catch (e) {
+  } catch {
     log.warn('parseContentTNode', `${tnode} is not a valid ReactNode`);
     return null;
   }

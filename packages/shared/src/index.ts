@@ -14,5 +14,5 @@ export * from './_util/parseTNode';
 export * from './_util/useControlled';
 
 // Common components
-export { Check, Portal, Partal } from './common';
 export type * from './common';
+export { Check, Partal,Portal } from './common';

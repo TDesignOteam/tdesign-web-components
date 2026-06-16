@@ -8,6 +8,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 export default createSiteViteConfig({
   siteDir: __dirname,
   port: 15001,
+  previewPort: 15011,
   publicPathMap: {
     preview: '/',
     production: '/pro-web-components/',

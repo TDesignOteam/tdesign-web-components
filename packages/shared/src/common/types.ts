@@ -3,29 +3,28 @@ import { Component, VNode, WeElement } from 'omi';
 
 // Re-export from @common to avoid duplication with submodule
 export type {
-  PlainObject,
-  OptionData,
-  SizeEnum,
-  HorizontalAlignEnum,
-  VerticalAlignEnum,
   ClassName,
   CSSSelector,
+  HorizontalAlignEnum,
+  OptionData,
+  PlainObject,
+  SizeEnum,
   Styles,
+  VerticalAlignEnum,
 } from '@common/js/common';
-
 export {
-  EKeyboardDirection,
+  ALL_REG,
   ARROW_DOWN_REG,
-  ARROW_UP_REG,
   ARROW_LEFT_REG,
   ARROW_RIGHT_REG,
-  ESCAPE_REG,
-  SPACE_REG,
-  ENTER_REG,
-  SHIFT_REG,
-  CLEAR_REG,
-  ALL_REG,
+  ARROW_UP_REG,
   CHECKED_CODE_REG,
+  CLEAR_REG,
+  EKeyboardDirection,
+  ENTER_REG,
+  ESCAPE_REG,
+  SHIFT_REG,
+  SPACE_REG,
   THEME_MODE,
 } from '@common/js/common';
 

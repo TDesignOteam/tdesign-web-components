@@ -7,7 +7,7 @@ import { TabValue } from './type';
 interface TabBarProps extends StyledProps {
   tabPosition: string;
   activeId: TabValue;
-  containerRef: Object;
+  containerRef: object;
 }
 
 @tag('t-tab-bar')

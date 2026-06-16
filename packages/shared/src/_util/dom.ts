@@ -119,7 +119,7 @@ export const addClass = function (el: Element, cls: string) {
     }
   }
   if (!el.classList) {
-    // eslint-disable-next-line
+     
     el.className = curClass;
   }
 };
@@ -142,7 +142,7 @@ export const removeClass = function (el: Element, cls: string) {
     }
   }
   if (!el.classList) {
-    // eslint-disable-next-line
+     
     el.className = trim(curClass);
   }
 };
@@ -185,13 +185,13 @@ export function setStyle(style: CSSStyleDeclaration, key: string, value: string 
   if (key[0] === '-') {
     style.setProperty(key, value == null ? '' : value.toString());
   } else if (value == null) {
-    // eslint-disable-next-line no-param-reassign
+     
     (style as any)[key] = '';
   } else if (typeof value !== 'number' || IS_NON_DIMENSIONAL.test(key)) {
-    // eslint-disable-next-line no-param-reassign
+     
     (style as any)[key] = value.toString();
   } else {
-    // eslint-disable-next-line no-param-reassign
+     
     (style as any)[key] = `${value}px`;
   }
 }

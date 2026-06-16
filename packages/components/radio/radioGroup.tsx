@@ -83,7 +83,7 @@ export default class RadioGroup<T = string | number> extends Component<RadioGrou
 
   private radioGroupRef: HTMLDivElement | null = null;
 
-  barStyle: Object = {};
+  barStyle: object = {};
 
   classPrefix = getClassPrefix();
 
@@ -106,7 +106,7 @@ export default class RadioGroup<T = string | number> extends Component<RadioGrou
     this.update();
   };
 
-  setBarStyle(value: Object) {
+  setBarStyle(value: object) {
     this.barStyle = value;
     this.update();
   }

@@ -1,15 +1,15 @@
 import { camelCase } from 'lodash-es';
 
 // Re-export from @common to avoid duplication with submodule
+export type { FromTo, Gradients, LinearGradient } from '@common/js/utils/helper';
 export {
-  omit,
-  removeEmptyAttrs,
-  getTabElementByValue,
   firstUpperCase,
   getBackgroundColor,
+  getTabElementByValue,
+  omit,
   pxCompat,
+  removeEmptyAttrs,
 } from '@common/js/utils/helper';
-export type { Gradients, FromTo, LinearGradient } from '@common/js/utils/helper';
 
 // shared-only utility: keyboard-event => onKeyboardEvent
 export function getPropsApiByEvent(eventName: string) {

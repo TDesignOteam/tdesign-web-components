@@ -28,4 +28,4 @@ function attachListeners(elm: Element) {
   };
 }
 
-export { getPopperPlacement, attachListeners, triggers };
+export { attachListeners, getPopperPlacement, triggers };
