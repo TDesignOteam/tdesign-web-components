@@ -3,7 +3,19 @@
  *
  * Omi 组件通过 `import styles from './foo.less'` 将样式作为字符串传入 css``，
  * Vite 8（Rolldown）对裸 .less/.css 默认导入更严格，需转为 ?inline 才能导出 default。
+ *
+ * 注意：仅作用于组件源码目录；文档站 side-effect 样式（如 docs.less、站点 CSS）
+ * 必须走 Vite 默认注入，不能转 ?inline，否则样式不会进入页面。
  */
+
+/** 需要使用 ?inline 的组件源码目录 */
+const COMPONENT_ROOT_RE = /\/packages\/(components|pro-components\/chat)\//;
+
+function shouldUseInlineImport(importer) {
+  if (!importer) return false;
+  return COMPONENT_ROOT_RE.test(importer.replace(/\\/g, '/'));
+}
+
 export default function omiStyleImportPlugin() {
   return {
     name: 'vite-plugin-omi-style-import',
@@ -12,6 +24,10 @@ export default function omiStyleImportPlugin() {
 
     resolveId(source, importer, options) {
       if (!/\.(less|css)$/.test(source) || /[?&](inline|raw|url)/.test(source)) {
+        return null;
+      }
+
+      if (!shouldUseInlineImport(importer)) {
         return null;
       }
 

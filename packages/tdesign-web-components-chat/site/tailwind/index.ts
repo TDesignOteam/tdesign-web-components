@@ -1,5 +1,3 @@
-import './tailwind.css';
-
 import { css, globalCSS } from 'omi';
 
 import tailwindStyle from './tailwind.css?inline';

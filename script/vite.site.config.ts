@@ -6,7 +6,13 @@ import { getWorkspaceRoot } from './lib/get-root-path.mjs';
 import tdocPlugin from './plugin-tdoc';
 import addPartAttributePlugin from './vite-plugin-add-part.js';
 import omiStyleImportPlugin from './vite-plugin-omi-style.js';
-import { createAliasConfig, createSseProxy, omiOxcConfig, workspaceOptimizeDepsExclude } from './vite.shared';
+import {
+  createLessPreprocessorOptions,
+  createMonorepoAliasConfig,
+  createSseProxy,
+  siteOxcConfig,
+  workspaceOptimizeDepsExclude,
+} from './vite.shared';
 
 export interface SiteViteOptions {
   /** 站点目录绝对路径，用于定位 monorepo 根目录 */
@@ -26,9 +32,12 @@ export function createSiteViteConfig({ siteDir, port, publicPathMap }: SiteViteO
   return ({ mode }: { mode: string }) =>
     defineConfig({
       base: publicPathMap[mode] || './',
-      oxc: omiOxcConfig,
+      oxc: siteOxcConfig,
       resolve: {
-        alias: createAliasConfig(ROOT),
+        alias: createMonorepoAliasConfig(ROOT, siteDir),
+      },
+      css: {
+        preprocessorOptions: createLessPreprocessorOptions(ROOT),
       },
       optimizeDeps: {
         exclude: workspaceOptimizeDepsExclude,

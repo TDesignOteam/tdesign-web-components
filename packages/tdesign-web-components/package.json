@@ -18,7 +18,7 @@
   "license": "MIT",
   "scripts": {
     "prebuild": "node ../../script/generate-entry.js && rimraf lib",
-    "build": "NODE_ENV=production rollup -c rollup.config.mjs"
+    "build": "NODE_ENV=production vite build"
   },
   "files": [
     "lib",
