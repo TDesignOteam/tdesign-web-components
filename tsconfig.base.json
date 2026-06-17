@@ -7,7 +7,6 @@
     "declaration": true,
     "sourceMap": true,
     "lib": ["esnext", "dom", "DOM.Iterable"],
-    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,

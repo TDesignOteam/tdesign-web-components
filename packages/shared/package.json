@@ -18,8 +18,5 @@
   },
   "peerDependencies": {
     "omi": "^7.0.0"
-  },
-  "devDependencies": {
-    "@types/lodash-es": "^4.17.12"
   }
 }
