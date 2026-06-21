@@ -80,7 +80,7 @@ export function createLibViteConfig({
     plugins: [
       omiStyleImportPlugin(),
       dts({
-        tsconfigPath: resolve(packageDir, 'tsconfig.json'),
+        tsconfigPath: resolve(packageDir, 'tsconfig.build.json'),
         entryRoot: srcDir,
         outDir,
         rollupTypes: true,

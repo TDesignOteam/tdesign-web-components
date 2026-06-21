@@ -4,7 +4,6 @@
     "baseUrl": "./",
     "outDir": "lib",
     "skipLibCheck": true,
-    "noEmitOnError": false,
     "paths": {
       "@tdesign/web-components-chat": ["."],
       "@tdesign/web-components-chat/*": ["./*"],

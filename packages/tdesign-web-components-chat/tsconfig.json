@@ -4,8 +4,7 @@
     "baseUrl": "./",
     "outDir": "lib",
     "skipLibCheck": true,
-    "noEmitOnError": false,
-    // Vite DTS 生成沿用 node 解析，避免 bundler 条件导出差异
+    // vite-plugin-dts 使用 tsconfig.build.json；此处 moduleResolution 供类型检查与声明生成
     "moduleResolution": "node",
     "paths": {
       "@tdesign/web-components-chat": ["../pro-components/chat"],
