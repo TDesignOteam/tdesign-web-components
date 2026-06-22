@@ -18,7 +18,6 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "generate:entry": "node ./script/generate-entry.js",
-    "preinstall": "node ./script/check-node-version.mjs",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -82,6 +81,6 @@
     "vite-plugin-tdoc": "^2.0.4"
   },
   "engines": {
-    "node": ">=22.12.0"
+    "node": ">=22.13.0"
   }
 }

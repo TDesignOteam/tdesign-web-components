@@ -21,8 +21,7 @@
       "@/*": ["packages/components/*"]
     },
     "types": [
-      "node",
-      "vitest/globals"
+      "node"
     ]
   },
   "include": ["packages/components", "packages/pro-components/chat", "packages/shared/src", "packages/tdesign-web-components/site", "packages/tdesign-web-components-chat/site", "typings.d.ts"],
