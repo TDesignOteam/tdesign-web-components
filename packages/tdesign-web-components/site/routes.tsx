@@ -2,7 +2,8 @@ import './index.css';
 import './pages/test';
 import './pages/layout/component-layout';
 
-import { createSiteRootRedirects } from '../../../script/site-routes.shared';
+import { createSiteRootRedirects } from '@tdesign/vite-config/site-routes';
+
 import sidebar from './sidebar.config';
 
 function createComponentRoutes(config: any[] = []) {

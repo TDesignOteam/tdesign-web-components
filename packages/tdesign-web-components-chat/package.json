@@ -41,6 +41,7 @@
   "devDependencies": {
     "@tdesign/ai-chat-engine": "workspace:^",
     "@tdesign/pro-components-chat": "workspace:^",
+    "@tdesign/vite-config": "workspace:^",
     "@tdesign/web-components": "workspace:^",
     "@tdesign/web-components-shared": "workspace:^"
   },

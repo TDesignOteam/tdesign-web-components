@@ -1,5 +1,5 @@
-import { dirname, resolve } from 'path';
 import { existsSync } from 'fs';
+import { dirname, resolve } from 'path';
 
 /**
  * 获取 workspace 根目录

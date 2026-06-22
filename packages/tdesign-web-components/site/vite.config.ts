@@ -1,7 +1,6 @@
+import { createSiteViteConfig } from '@tdesign/vite-config/site';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'path';
-
-import { createSiteViteConfig } from '../../../script/vite.site.config';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 

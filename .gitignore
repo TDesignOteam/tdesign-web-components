@@ -26,7 +26,5 @@ packages/*/lib
 packages/*/es
 packages/*/esm
 packages/*/cjs
-plugins/*.js
-plugins/*.js.map
 
 .codebuddy/plans/

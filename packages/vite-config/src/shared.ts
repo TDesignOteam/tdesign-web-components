@@ -1,18 +1,11 @@
-import { fileURLToPath } from 'node:url';
 import fg from 'fast-glob';
-import { dirname, resolve } from 'path';
+import { resolve } from 'path';
 
-import { getWorkspaceRoot } from './lib/get-root-path.mjs';
-import { createLessAliasPlugin } from './lib/less-alias-plugin.mjs';
+import { createLessAliasPlugin } from './less-alias-plugin.mjs';
 
 // ---------------------------------------------------------------------------
 // Monorepo 路径
 // ---------------------------------------------------------------------------
-
-/** 获取 monorepo 根目录 */
-export function getMonorepoRoot(): string {
-  return getWorkspaceRoot(dirname(fileURLToPath(import.meta.url)));
-}
 
 /**
  * 创建 monorepo 路径别名
@@ -37,7 +30,6 @@ export function createMonorepoAliasConfig(root: string, siteDir?: string): Recor
       '@docs': resolve(siteDir, 'docs'),
       '@ui-pkg': resolve(root, 'packages/components'),
       '@chat-pkg': resolve(root, 'packages/pro-components/chat'),
-      // 文档站 AI 包指向 index.ts，避免子路径解析歧义
       '@tdesign/ai-chat-engine': resolve(root, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
       '@tdesign/ai-shared': resolve(root, 'common-utils/_ai-core/packages/shared/index.ts'),
       '@tdesign/web-components': resolve(root, 'packages/components/'),
@@ -47,11 +39,6 @@ export function createMonorepoAliasConfig(root: string, siteDir?: string): Recor
   }
 
   return aliases;
-}
-
-/** @deprecated 请使用 createMonorepoAliasConfig(root, siteDir) */
-export function createAliasConfig(root: string): Record<string, string> {
-  return createMonorepoAliasConfig(root, resolve('./'));
 }
 
 // ---------------------------------------------------------------------------
@@ -76,12 +63,6 @@ export const libOxcConfig = {
     pragmaFrag: 'Component.f',
   },
 };
-
-/** @deprecated 请使用 siteOxcConfig */
-export const omiOxcConfig = siteOxcConfig;
-
-/** @deprecated 请使用 siteOxcConfig */
-export const omiEsbuildConfig = siteOxcConfig;
 
 // ---------------------------------------------------------------------------
 // 样式（文档站 + 库构建共用）
@@ -119,7 +100,6 @@ export function createSseProxy(): Record<string, unknown> {
       configure: (proxy: { on: (event: string, handler: (...args: unknown[]) => void) => void }) => {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         proxy.on('proxyReq', ((proxyReq: any, req: any) => {
-          // 处理 POST 请求体转发
           if (req.body) {
             const bodyData = JSON.stringify(req.body);
             proxyReq.setHeader('Content-Type', 'application/json');
@@ -184,6 +164,3 @@ export function collectLibInputs(srcDir: string) {
   ];
   return fg.sync(inputList, { absolute: true });
 }
-
-/** @deprecated 请使用 createMonorepoAliasConfig */
-export const createLibAliasConfig = createMonorepoAliasConfig;

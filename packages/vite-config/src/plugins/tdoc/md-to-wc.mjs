@@ -4,13 +4,7 @@ import matter from 'gray-matter';
 import { spawn } from 'node:child_process';
 import path from 'path';
 
-import { getWorkspaceRoot } from '../lib/get-root-path.mjs';
-// import camelCase from 'camelcase';
-// import { compileUsage } from '../../src/_common/docs/compile';
-
-// import testCoverage from '../test-coverage';
-
-// import { transformSync } from '@babel/core';
+import { getWorkspaceRoot } from '../../get-root-path.mjs';
 
 /**
  * 获取文件 git 最后更新时间
@@ -201,19 +195,6 @@ async function customRender({ source, file, md }) {
     designMd: '<td-doc-empty></td-doc-empty>',
   };
 
-  // 渲染 live demo
-  // if (pageData.usage && pageData.isComponent) {
-  //   const usageObj = compileUsage({
-  //     componentName,
-  //     usage: pageData.usage,
-  //     demoPath: path.posix.resolve(__dirname, `../../src/${componentName}/_usage/index.jsx`),
-  //   });
-  //   if (usageObj) {
-  //     mdSegment.usage = usageObj;
-  //     demoMd = `${usageObj.markdownStr} ${demoMd}`;
-  //   }
-  // }
-
   if (pageData.isComponent) {
     mdSegment.demoMd = md.render.call(
       md,
@@ -238,7 +219,7 @@ async function customRender({ source, file, md }) {
   // 设计指南内容 不展示 design Tab 则不解析
   if (pageData.isComponent && pageData.tdDocTabs.some((item) => item.tab === 'design')) {
     const designDocPath = path.resolve(
-      getWorkspaceRoot(__dirname),
+      getWorkspaceRoot(import.meta.dirname),
       `common-utils/_common/docs/web/design/${componentName}.md`,
     );
 

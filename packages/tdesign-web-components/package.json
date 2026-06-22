@@ -17,7 +17,7 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "node ../../script/generate-entry.js && rimraf lib",
+    "prebuild": "rimraf lib",
     "build": "NODE_ENV=production vite build"
   },
   "files": [
@@ -41,8 +41,9 @@
     "tdesign-icons-web-components": "^0.3.2"
   },
   "devDependencies": {
-    "@tdesign/web-components-shared": "workspace:^",
-    "@tdesign/components": "workspace:^"
+    "@tdesign/components": "workspace:^",
+    "@tdesign/vite-config": "workspace:^",
+    "@tdesign/web-components-shared": "workspace:^"
   },
   "peerDependencies": {
     "omi": "^7.7.0"

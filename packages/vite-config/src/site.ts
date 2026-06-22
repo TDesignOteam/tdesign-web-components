@@ -2,17 +2,17 @@ import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
-import { getWorkspaceRoot } from './lib/get-root-path.mjs';
-import tdocPlugin from './plugin-tdoc';
-import addPartAttributePlugin from './vite-plugin-add-part.js';
-import omiStyleImportPlugin from './vite-plugin-omi-style.js';
+import { getWorkspaceRoot } from './get-root-path.mjs';
+import tdocPlugin from './plugins/tdoc/index.js';
+import addPartAttributePlugin from './plugins/add-part.js';
+import omiStyleImportPlugin from './plugins/omi-style.js';
 import {
   createLessPreprocessorOptions,
   createMonorepoAliasConfig,
   createSseProxy,
   siteOxcConfig,
   workspaceOptimizeDepsExclude,
-} from './vite.shared';
+} from './shared.ts';
 
 export interface SiteViteOptions {
   /** 站点目录绝对路径，用于定位 monorepo 根目录 */
@@ -48,7 +48,6 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
         host: '0.0.0.0',
         port,
         open: '/',
-        https: false,
         fs: {
           strict: false,
           allow: [resolve(ROOT, '.'), resolve(ROOT, 'node_modules')],
@@ -63,7 +62,7 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
       build: {
         outDir: 'dist',
         rolldownOptions: {
-          treeshake: false, // 防止非具名 export 被 tree-shaking
+          treeshake: false,
           input: {
             index: 'index.html',
           },

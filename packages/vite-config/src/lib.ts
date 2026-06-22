@@ -2,8 +2,9 @@ import { resolve } from 'path';
 import { defineConfig } from 'vite';
 import dts from 'vite-plugin-dts';
 
-import { getWorkspaceRoot } from './lib/get-root-path.mjs';
-import omiStyleImportPlugin from './vite-plugin-omi-style.js';
+import { generateEntryPlugin } from './generate-entry.mjs';
+import { getWorkspaceRoot } from './get-root-path.mjs';
+import omiStyleImportPlugin from './plugins/omi-style.js';
 import {
   collectLibInputs,
   createBanner,
@@ -12,7 +13,7 @@ import {
   createMonorepoAliasConfig,
   defaultBundleWorkspacePkgs,
   libOxcConfig,
-} from './vite.shared';
+} from './shared.ts';
 
 export interface LibViteOptions {
   /** 包 package.json 内容 */
@@ -30,6 +31,8 @@ export interface LibViteOptions {
   srcDir: string;
   /** 内联打包的 workspace 包名 */
   bundleWorkspacePkgs?: string[];
+  /** 构建前自动生成 packages/components/index.ts */
+  generateEntry?: boolean;
 }
 
 /**
@@ -40,10 +43,28 @@ export function createLibViteConfig({
   packageDir,
   srcDir,
   bundleWorkspacePkgs = defaultBundleWorkspacePkgs,
+  generateEntry = false,
 }: LibViteOptions) {
   const monorepoRoot = getWorkspaceRoot(packageDir);
   const outDir = resolve(packageDir, 'lib');
   const input = collectLibInputs(srcDir);
+
+  const plugins = [
+    ...(generateEntry
+      ? [generateEntryPlugin(resolve(monorepoRoot, 'packages/components'))]
+      : []),
+    omiStyleImportPlugin(),
+    dts({
+      tsconfigPath: resolve(packageDir, 'tsconfig.build.json'),
+      entryRoot: srcDir,
+      outDirs: outDir,
+      bundleTypes: {
+        bundledPackages: bundleWorkspacePkgs,
+      },
+      insertTypesEntry: true,
+      copyDtsFiles: false,
+    }),
+  ];
 
   return defineConfig({
     root: packageDir,
@@ -77,19 +98,7 @@ export function createLibViteConfig({
         },
       },
     },
-    plugins: [
-      omiStyleImportPlugin(),
-      dts({
-        tsconfigPath: resolve(packageDir, 'tsconfig.build.json'),
-        entryRoot: srcDir,
-        outDir,
-        rollupTypes: true,
-        bundledPackages: bundleWorkspacePkgs,
-        insertTypesEntry: true,
-        copyDtsFiles: false,
-        logLevel: 'warn',
-      }),
-    ],
+    plugins,
     logLevel: 'warn',
   });
 }

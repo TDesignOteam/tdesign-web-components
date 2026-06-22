@@ -1,4 +1,0 @@
-# Try to use /dev/tty if available, otherwise skip the hook
-if [ -t 0 ] || exec < /dev/tty 2>/dev/null; then
-    npx git-cz --hook || exit 0
-fi

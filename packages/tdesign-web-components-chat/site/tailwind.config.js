@@ -2,7 +2,7 @@
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'path';
 
-import { getWorkspaceRoot } from '../../../script/lib/get-root-path.mjs';
+import { getWorkspaceRoot } from '@tdesign/vite-config/get-root-path';
 // 根 tailwind 配置作为 base 覆盖
 import rootTailwindConfig from '../../../tailwind.config';
 

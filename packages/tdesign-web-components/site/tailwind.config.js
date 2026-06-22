@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import { getWorkspaceRoot } from '../../../script/lib/get-root-path.mjs';
+import { getWorkspaceRoot } from '@tdesign/vite-config/get-root-path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'path';
 
