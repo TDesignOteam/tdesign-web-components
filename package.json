@@ -16,6 +16,7 @@
     "build:chat": "pnpm --filter @tdesign/web-components-chat build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
+    "test": "echo \"暂无单元测试，跳过\"",
     "generate:entry": "node ./packages/vite-config/src/generate-entry.mjs",
     "prepare": "husky"
   },
