@@ -1,9 +1,39 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": "../components",
+    "outDir": "./lib",
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "sourceMap": true
-  }
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "paths": {
+      "@tdesign/web-components": ["../components"],
+      "@tdesign/web-components/*": ["../components/*"],
+      "@tdesign/components": ["../components"],
+      "@tdesign/components/*": ["../components/*"],
+      "@tdesign/web-components-shared": ["./lib/packages/shared/src"],
+      "@tdesign/web-components-shared/*": ["./lib/packages/shared/src/*"],
+      "@common/*": ["../../common-utils/_common/*"],
+      "@": ["../components"]
+    }
+  },
+  "include": ["../components/**/*.ts", "../components/**/*.tsx", "../../typings.d.ts"],
+  "exclude": [
+    "**/*.jsx",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "**/_example/**",
+    "../../packages/components/**/_example/**",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site",
+    "../../packages/components/site"
+  ]
 }

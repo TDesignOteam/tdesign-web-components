@@ -5,7 +5,7 @@
     "module": "esnext",
     "target": "esnext",
     "lib": ["esnext", "dom", "DOM.Iterable"],
-    // 仅类型检查，JS / .d.ts 由 Vite + Oxc / vite-plugin-dts 产出
+    // 仅类型检查，JS / .d.ts 由 Vite + Oxc / tsc 产出
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,

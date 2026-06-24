@@ -39,7 +39,6 @@
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
-    "@tdesign/ai-chat-engine": "workspace:^",
     "@tdesign/pro-components-chat": "workspace:^",
     "@tdesign/vite-config": "workspace:^",
     "@tdesign/web-components": "workspace:^",

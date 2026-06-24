@@ -1,9 +1,48 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": {
+    "rootDir": "../pro-components/chat",
+    "outDir": "./lib",
     "noEmit": false,
     "declaration": true,
     "emitDeclarationOnly": true,
-    "sourceMap": true
-  }
+    "sourceMap": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "paths": {
+      "@tdesign/web-components-chat": ["../pro-components/chat"],
+      "@tdesign/web-components-chat/*": ["../pro-components/chat/*"],
+      "@tdesign/pro-components-chat": ["../pro-components/chat"],
+      "@tdesign/pro-components-chat/*": ["../pro-components/chat/*"],
+      "@tdesign/web-components": ["./lib/packages/components"],
+      "@tdesign/web-components/*": ["./lib/packages/components/*"],
+      "@tdesign/components": ["./lib/packages/components"],
+      "@tdesign/components/*": ["./lib/packages/components/*"],
+      "@tdesign/web-components-shared": ["./lib/packages/shared/src"],
+      "@tdesign/web-components-shared/*": ["./lib/packages/shared/src/*"],
+      "@tdesign/ai-chat-engine": ["../../common-utils/_ai-core/packages/chat-engine/index.ts"],
+      "@tdesign/ai-chat-engine/*": ["../../common-utils/_ai-core/packages/chat-engine/*"],
+      "@tdesign/ai-shared": ["../../common-utils/_ai-core/packages/shared/index.ts"],
+      "@tdesign/ai-shared/*": ["../../common-utils/_ai-core/packages/shared/*"],
+      "@common/*": ["../../common-utils/_common/*"],
+      "@": ["../pro-components/chat"]
+    }
+  },
+  "include": ["../pro-components/chat/**/*.ts", "../pro-components/chat/**/*.tsx", "../../typings.d.ts"],
+  "exclude": [
+    "**/*.jsx",
+    "**/_example/**",
+    "../pro-components/chat/**/_example/**",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site",
+    "../pro-components/chat/site",
+    "../../packages/components/site"
+  ]
 }

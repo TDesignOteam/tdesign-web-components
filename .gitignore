@@ -23,6 +23,7 @@ dist-ssr
 *.sw?
 _site
 packages/*/lib
+packages/shared/src/**/*.d.ts
 packages/*/es
 packages/*/esm
 packages/*/cjs

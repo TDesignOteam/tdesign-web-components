@@ -55,7 +55,9 @@ class useDragSorter<T> implements DragSortInnerProps {
     if (this.props.onDragOverCheck?.x) {
       if (!this.startInfo.nodeWidth) return;
 
-      const { x, width } = e.target.getBoundingClientRect();
+      const rect = e.target.getBoundingClientRect();
+      const x = rect.x;
+      const width = rect.width;
       const targetNodeMiddleX = x + width / 2;
       const clientX = e.clientX || 0;
       const draggingNodeLeft = clientX - (this.startInfo.mouseX - this.startInfo.nodeX);
@@ -82,10 +84,10 @@ class useDragSorter<T> implements DragSortInnerProps {
     this.draggingIndex = index;
     this.dragStartData = record;
     if (this.props.onDragOverCheck) {
-      const { x, width } = e.target.getBoundingClientRect();
+      const rect = e.target.getBoundingClientRect();
       this.startInfo = {
-        nodeX: x,
-        nodeWidth: width,
+        nodeX: rect.x,
+        nodeWidth: rect.width,
         mouseX: e.clientX || 0,
       };
     }

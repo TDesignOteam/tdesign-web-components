@@ -1,7 +1,8 @@
+import autoprefixer from 'autoprefixer';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
-import dts from 'vite-plugin-dts';
 
+import { createEmitDtsPlugin } from './emit-dts.mjs';
 import { generateEntryPlugin } from './generate-entry.mjs';
 import { getWorkspaceRoot } from './get-root-path.mjs';
 import omiStyleImportPlugin from './plugins/omi-style.js';
@@ -54,16 +55,7 @@ export function createLibViteConfig({
       ? [generateEntryPlugin(resolve(monorepoRoot, 'packages/components'))]
       : []),
     omiStyleImportPlugin(),
-    dts({
-      tsconfigPath: resolve(packageDir, 'tsconfig.build.json'),
-      entryRoot: srcDir,
-      outDirs: outDir,
-      bundleTypes: {
-        bundledPackages: bundleWorkspacePkgs,
-      },
-      insertTypesEntry: true,
-      copyDtsFiles: false,
-    }),
+    createEmitDtsPlugin({ packageDir, outDir }),
   ];
 
   return defineConfig({
@@ -77,6 +69,10 @@ export function createLibViteConfig({
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
     css: {
+      // 库构建仅处理组件 Less，不走文档站 Tailwind（避免空 content 警告与无效 CSS 处理）
+      postcss: {
+        plugins: [autoprefixer()],
+      },
       preprocessorOptions: createLessPreprocessorOptions(monorepoRoot),
     },
     build: {

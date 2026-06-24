@@ -11,8 +11,6 @@ packages:
   - 'common-utils/_common/js'
   - 'common-utils/_common/docs'
   - 'common-utils/_common/style'
-  - 'common-utils/_ai-core'
   - 'common-utils/_ai-core/packages/chat-engine'
-  - 'common-utils/_ai-core/packages/shared'
 
 shamefullyHoist: true
