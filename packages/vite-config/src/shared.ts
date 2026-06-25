@@ -130,15 +130,18 @@ export function createBanner(pkg: { name: string; version: string; author?: stri
   return `/**\n * ${pkg.name} v${pkg.version}\n * (c) ${new Date().getFullYear()} ${pkg.author || 'TDesign'}\n * @license ${pkg.license || 'MIT'}\n */\n`;
 }
 
-/** 库构建 external 判断 */
+/** 库构建 external 判断（preserveModules：esm/cjs/lib） */
 export function createLibExternal(
   pkg: { dependencies?: Record<string, string>; peerDependencies?: Record<string, string> },
   bundleWorkspacePkgs: string[] = defaultBundleWorkspacePkgs,
+  additionalExternal: string[] = [],
 ) {
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
   const externalPkgs = new Set(
-    [...deps, ...peerDeps].filter((p) => !isBundledWorkspacePkg(p, bundleWorkspacePkgs)),
+    [...deps, ...peerDeps, ...additionalExternal].filter(
+      (p) => !bundleWorkspacePkgs.includes(p),
+    ),
   );
 
   return (id: string) => {
@@ -146,6 +149,17 @@ export function createLibExternal(
     if (alwaysExternal.some((re) => re.test(id))) return true;
     return [...externalPkgs].some((dep) => id === dep || id.startsWith(`${dep}/`));
   };
+}
+
+/** UMD 构建 external（仅 peer + 额外声明） */
+export function createUmdExternal(
+  pkg: { peerDependencies?: Record<string, string> },
+  additionalExternal: string[] = [],
+) {
+  const peerDeps = Object.keys(pkg.peerDependencies || {});
+  const externalPkgs = [...new Set([...peerDeps, ...additionalExternal])];
+
+  return (id: string) => externalPkgs.some((dep) => id === dep || id.startsWith(`${dep}/`));
 }
 
 /** 收集库构建入口（preserveModules 多入口） */

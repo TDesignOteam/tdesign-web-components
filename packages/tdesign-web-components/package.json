@@ -8,6 +8,7 @@
   "exports": {
     ".": {
       "import": "./lib/index.js",
+      "require": "./lib/index.js",
       "types": "./lib/index.d.ts"
     },
     "./*": {
@@ -21,16 +22,23 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf lib && node ../../script/build.mjs cleanup-dts",
-    "build": "pnpm --filter @tdesign/common-js build && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/components build && NODE_ENV=production vite build && node ../../script/build.mjs sync-dts ui"
+    "prebuild": "rimraf es lib dist esm cjs && node ../../script/build.mjs cleanup-dts",
+    "build": "pnpm --filter @tdesign/common-js build && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/components build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts ui"
   },
   "files": [
+    "esm",
+    "es",
     "lib",
+    "cjs",
+    "dist",
     "LICENSE",
     "README.md"
   ],
   "sideEffects": [
-    "lib/style/**/*"
+    "dist/*",
+    "lib/style/**/*",
+    "cjs/**",
+    "esm/**"
   ],
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",

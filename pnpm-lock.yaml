@@ -193,9 +193,6 @@ importers:
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
-      '@tdesign/web-components-shared':
-        specifier: workspace:^
-        version: link:../shared
       dayjs:
         specifier: ^1.11.19
         version: 1.11.20
@@ -218,6 +215,9 @@ importers:
       '@tdesign/vite-config':
         specifier: workspace:^
         version: link:../vite-config
+      '@tdesign/web-components-shared':
+        specifier: workspace:^
+        version: link:../shared
 
   packages/tdesign-web-components-chat:
     dependencies:
@@ -4317,7 +4317,7 @@ snapshots:
   '@vue/compiler-sfc@2.7.14':
     dependencies:
       '@babel/parser': 7.29.2
-      postcss: 8.5.9
+      postcss: 8.5.15
       source-map: 0.6.1
 
   abab@2.0.6: {}
