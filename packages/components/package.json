@@ -1,9 +1,10 @@
 {
   "name": "@tdesign/components",
   "private": true,
-  "main": "index.ts",
-  "author": "tdesign",
-  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf dist tsconfig.build.tsbuildinfo && node ../../script/build/generate-less-types.mjs",
+    "build": "tsc -b tsconfig.build.json"
+  },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "dayjs": "^1.11.19",

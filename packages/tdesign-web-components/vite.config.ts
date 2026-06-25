@@ -10,6 +10,6 @@ export default createLibViteConfig({
   pkg,
   packageDir: __dirname,
   srcDir: resolve(__dirname, '../components'),
-  bundleWorkspacePkgs: [],
+  bundleWorkspacePkgs: ['@tdesign/web-components-shared'],
   generateEntry: true,
 });

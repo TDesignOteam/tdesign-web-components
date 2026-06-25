@@ -2,6 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./",
+    "noEmit": true,
     "paths": {
       "@tdesign/web-components-shared": ["src"],
       "@tdesign/web-components-shared/*": ["src/*"],
@@ -9,5 +10,5 @@
     }
   },
   "include": ["src"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }

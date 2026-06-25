@@ -180,19 +180,27 @@ export * from './button';
 
 ### 项目常用脚本说明
 
+各源码包通过 TypeScript Project References 独立 `tsc -b` 输出到 `dist/`。发布包 Vite 打包 JS 时会将 `@tdesign/web-components-shared` **内联**进 `lib/packages/shared/src/`（不单独发布）；再将 `dist/` 类型同步到 `lib/` 并改写为相对路径。
+
 ```bash
-# 启动项目
+# 启动 UI 文档站
 pnpm run start
-# 编译站点
-pnpm run site
-# 编译站点预览
-pnpm run site:preview
-# 编译组件库
+# 编译 UI 文档站
+pnpm run site:ui
+# 编译 Chat 文档站
+pnpm run site:chat
+# 预览 UI 文档站
+pnpm run preview:ui
+# 编译全部组件库
 pnpm run build
-# 编译 UI 组件库
+# 编译 UI 组件库（common-js → shared → components tsc → vite → sync d.ts）
 pnpm run build:ui
-# 编译 Chat 组件库
+# 编译 Chat 组件库（需先 build:ui 生成 peer 类型）
 pnpm run build:chat
+# 仅构建各源码包类型（Project References，Chat 类型依赖已构建的 UI lib/）
+pnpm run build:types
+# 清理误生成在源码目录的 .d.ts（也可: node script/build.mjs cleanup-dts）
+pnpm run cleanup:source-dts
 
 # 自动修复 eslint 错误
 pnpm run lint:fix

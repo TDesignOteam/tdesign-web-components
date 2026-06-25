@@ -1,0 +1,9 @@
+{
+  "files": [],
+  "references": [
+    { "path": "common-utils/_common/js/tsconfig.build.json" },
+    { "path": "packages/shared/tsconfig.build.json" },
+    { "path": "packages/components/tsconfig.build.json" },
+    { "path": "packages/pro-components/chat/tsconfig.build.json" }
+  ]
+}

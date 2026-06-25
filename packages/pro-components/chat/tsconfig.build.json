@@ -1,0 +1,48 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@tdesign/web-components-chat": ["."],
+      "@tdesign/web-components-chat/*": ["./*"],
+      "@tdesign/pro-components-chat": ["."],
+      "@tdesign/pro-components-chat/*": ["./*"],
+      "@tdesign/web-components": ["../../tdesign-web-components/lib"],
+      "@tdesign/web-components/*": ["../../tdesign-web-components/lib/*"],
+      "@tdesign/components": ["../../tdesign-web-components/lib"],
+      "@tdesign/components/*": ["../../tdesign-web-components/lib/*"],
+      "@tdesign/web-components-shared": ["../../shared/dist"],
+      "@tdesign/web-components-shared/*": ["../../shared/dist/*"],
+      "@tdesign/ai-chat-engine": ["../../../common-utils/_ai-core/packages/chat-engine/dist/index.d.mts"],
+      "@common/js/*": ["../../../common-utils/_common/js/dist/*"],
+      "@": ["."]
+    }
+  },
+  "references": [{ "path": "../../shared/tsconfig.build.json" }],
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/generated-less.d.ts", "../../../typings.d.ts"],
+  "exclude": [
+    "**/*.jsx",
+    "**/_example/**",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site"
+  ]
+}

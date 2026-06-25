@@ -10,6 +10,10 @@
       "import": "./lib/index.js",
       "types": "./lib/index.d.ts"
     },
+    "./*": {
+      "import": "./lib/*/index.js",
+      "types": "./lib/*/index.d.ts"
+    },
     "./lib/*": "./lib/*",
     "./lib/style/index.css": "./lib/style/index.css",
     "./lib/style/*.css": "./lib/style/*.css"
@@ -17,8 +21,8 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf lib",
-    "build": "NODE_ENV=production vite build"
+    "prebuild": "rimraf lib && node ../../script/build.mjs cleanup-dts",
+    "build": "pnpm --filter @tdesign/common-js build && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/components build && NODE_ENV=production vite build && node ../../script/build.mjs sync-dts ui"
   },
   "files": [
     "lib",
@@ -58,7 +62,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Tencent/tdesign-web-components.git",
-    "directory": "packages/components"
+    "directory": "packages/tdesign-web-components"
   },
   "homepage": "https://github.com/Tencent/tdesign-web-components/blob/main/README.md",
   "bugs": {

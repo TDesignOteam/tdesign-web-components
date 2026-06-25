@@ -11,3 +11,53 @@ jobs:
       node-version-file: .node-version
       skip-site: true
       package-manager: pnpm
+
+  build-lib:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Prepare ai-chat-engine types
+        working-directory: common-utils/_ai-core
+        run: |
+          pnpm install --frozen-lockfile
+          cd packages/chat-engine && pnpm exec tsdown
+
+      - name: Build UI library
+        run: pnpm run build:ui
+
+      - name: Build Chat library
+        run: pnpm --filter @tdesign/web-components-chat build
+
+      - name: Verify declaration paths
+        run: |
+          if rg "from ['\"]@tdesign/|import\(['\"]@tdesign/|import ['\"]@tdesign/" packages/tdesign-web-components/lib --glob "*.d.ts"; then
+            echo "Found @tdesign package imports in UI lib/*.d.ts (shared should be bundled as relative paths)"
+            exit 1
+          fi
+          if rg "from ['\"]@tdesign/|import\(['\"]@tdesign/|import ['\"]@tdesign/" packages/tdesign-web-components-chat/lib --glob "*.d.ts" | grep -vE '@tdesign/(web-components|ai-chat-engine)'; then
+            echo "Found unexpected @tdesign/* imports in chat lib/*.d.ts"
+            exit 1
+          fi
+          if rg "@tdesign/web-components-shared" packages/tdesign-web-components/lib packages/tdesign-web-components-chat/lib --glob "*.{js,d.ts}"; then
+            echo "shared should be bundled inside lib, not imported as external package"
+            exit 1
+          fi
+          if rg "packages/components/|common-utils/_ai-core/packages" packages/tdesign-web-components/lib packages/tdesign-web-components-chat/lib --glob "*.{js,d.ts}"; then
+            echo "Found non-flattened monorepo paths in lib/"
+            exit 1
+          fi
+          if find packages/shared/src packages/components packages/pro-components/chat -name '*.d.ts' ! -path '*/types/*' ! -path '*/dist/*' 2>/dev/null | grep -q .; then
+            echo "Found .d.ts pollution in source directories"
+            exit 1
+          fi

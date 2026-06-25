@@ -1,4 +1,4 @@
-import log from '@common/js/log';
+import log from '@tdesign/common-js/log';
 import { isFunction } from 'lodash-es';
 import { cloneElement, VNode } from 'omi';
 

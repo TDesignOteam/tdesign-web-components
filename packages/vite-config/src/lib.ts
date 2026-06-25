@@ -2,7 +2,6 @@ import autoprefixer from 'autoprefixer';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
 
-import { createEmitDtsPlugin } from './emit-dts.mjs';
 import { generateEntryPlugin } from './generate-entry.mjs';
 import { getWorkspaceRoot } from './get-root-path.mjs';
 import omiStyleImportPlugin from './plugins/omi-style.js';
@@ -55,7 +54,6 @@ export function createLibViteConfig({
       ? [generateEntryPlugin(resolve(monorepoRoot, 'packages/components'))]
       : []),
     omiStyleImportPlugin(),
-    createEmitDtsPlugin({ packageDir, outDir }),
   ];
 
   return defineConfig({

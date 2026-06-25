@@ -1,4 +1,4 @@
-import { easeInOutCubic, EasingFunction } from '@common/js/utils/easing';
+import { easeInOutCubic, EasingFunction } from '@tdesign/common-js/utils/easing';
 import { isString } from 'lodash-es';
 import { Component } from 'omi';
 import raf from 'raf';

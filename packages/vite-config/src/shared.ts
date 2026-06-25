@@ -116,12 +116,8 @@ export function createSseProxy(): Record<string, unknown> {
 // 库构建
 // ---------------------------------------------------------------------------
 
-/** 默认内联打包的 workspace 包（Chat 发布物可独立使用） */
-export const defaultBundleWorkspacePkgs = [
-  '@tdesign/web-components',
-  '@tdesign/ai-chat-engine',
-  '@tdesign/ai-shared',
-];
+/** 默认内联打包的 workspace 包；各包在 vite.config 中按需覆盖 */
+export const defaultBundleWorkspacePkgs: string[] = [];
 
 const alwaysExternal = [/tailwind-merge/];
 

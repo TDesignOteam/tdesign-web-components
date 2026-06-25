@@ -10,4 +10,5 @@ export default createLibViteConfig({
   pkg,
   packageDir: __dirname,
   srcDir: resolve(__dirname, '../pro-components/chat'),
+  bundleWorkspacePkgs: ['@tdesign/web-components-shared'],
 });
