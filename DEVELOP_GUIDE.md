@@ -8,28 +8,28 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 
 ## 公共子仓库 tdesign-common
 
-本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 src/\_common 文件夹，由于Tdesign React/Vue等组件库已相对成熟，我们涉及到开发common部分的比较少，主要是复用其中已经定义过的样式class和方法，包括：
+本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 `packages/tdesign-common` 目录，由于 Tdesign React/Vue 等组件库已相对成熟，我们涉及到开发 common 部分的比较少，主要是复用其中已经定义过的样式 class 和方法，包括：
 
 - 一些公共的工具函数
 - 组件库 UI 开发内容，即 html 结构和 css 样式（React/Vue 等多技术栈共用）
 
 ### 初始化子仓库
 
-- 初次克隆代码后需要初始化子仓库： git submodule init && git submodule update
+- 初次克隆代码后需要初始化子仓库：`git submodule update --init packages/tdesign-common`
 - git submodule update 之后子仓库不指向任何分支，只是一个指向某一个提交的游离状态
 
 ### 子仓库开发
 
 子仓库组件分支从 develop checkout 示例：feature/button，提交代码时先进入子仓库完成提交，然在回到主仓库完成提交
 
-- 先进入 common 文件夹，正常将样式修改添加提交
-- 回到主仓库，此时应该会看到 common 文件夹是修改状态，按照正常步骤添加提交即可
+- 先进入 `packages/tdesign-common` 文件夹，正常将样式修改添加提交
+- 回到主仓库，此时应该会看到 `packages/tdesign-common` 是修改状态，按照正常步骤添加提交即可
 
 ## 开发规范
 
 ### API 规范
 
-[API](./common-utils/_common/api.md)
+[API](./packages/tdesign-common/api.md)
 
 ### 前缀
 
@@ -92,8 +92,9 @@ npm run start
 
 ```shell
 .
-├── packages/                              # 组件包
-│   ├── components/                       # UI 组件源码 (@tdesign/web-components)
+├── packages/
+│   ├── tdesign-common/                 # tdesign-common 子仓库（submodule）
+│   ├── components/                     # UI 组件源码
 │   │   └── [组件]/
 │   │       ├── _example/                # 演示文件
 │   │       └── index.ts                 # 组件导出入口
@@ -104,9 +105,21 @@ npm run start
 │   ├── tdesign-web-components-chat/    # Chat 主包（站点）
 │   │   └── site/
 │   └── shared/                         # 共享工具 (@tdesign/web-components-shared)
-├── common-utils/                         # 公共工具和子模块
-│   ├── _common/                        # tdesign-common 子仓库
-│   └── _ai-core/                       # tdesign-ai-core 子仓库
+```
+
+Chat 依赖 `@tdesign/ai-chat-engine`（`^0.1.0`）。npm 尚未发布时，需先在 [tdesign-ai-core](https://github.com/TDesignOteam/tdesign-ai-core) 的 `packages/chat-engine` 目录执行 `pnpm link --global`，再在本仓库根目录执行：
+
+```bash
+pnpm run link:ai
+# 等价于 pnpm link --global @tdesign/ai-chat-engine
+```
+
+`@tdesign/ai-shared` 为 chat-engine 内部依赖，无需在主仓库单独安装或 link。
+
+克隆后需初始化子模块：
+
+```bash
+git submodule update --init packages/tdesign-common
 ```
 
 ### 新增开发组件
@@ -145,7 +158,7 @@ export * from './button';
 
 ### 组件 Demo 演示配置
 
-为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `common-utils/_common/_docs/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
+为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `packages/tdesign-common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
 
 例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.tsx`、 `noArrow.tsx` 文件
 
@@ -193,14 +206,12 @@ pnpm run site:chat
 pnpm run preview:ui
 # 编译全部组件库
 pnpm run build
-# 编译 UI 组件库（common-js → shared → components tsc → vite → sync d.ts）
+# 编译 UI 组件库（shared → components tsc → vite 直引 common 源码 → sync d.ts）
 pnpm run build:ui
 # 编译 Chat 组件库（需先 build:ui 生成 peer 类型）
 pnpm run build:chat
 # 仅构建各源码包类型（Project References，Chat 类型依赖已构建的 UI lib/）
 pnpm run build:types
-# 清理误生成在源码目录的 .d.ts（也可: node script/build.mjs cleanup-dts）
-pnpm run cleanup:source-dts
 
 # 自动修复 eslint 错误
 pnpm run lint:fix

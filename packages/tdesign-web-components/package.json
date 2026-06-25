@@ -22,8 +22,8 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf es lib dist esm cjs && node ../../script/build.mjs cleanup-dts",
-    "build": "pnpm --filter @tdesign/common-js build && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/components build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts ui"
+    "prebuild": "rimraf es lib dist esm cjs",
+    "build": "node ../../script/build.mjs emit-common-types && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/components build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts ui"
   },
   "files": [
     "esm",

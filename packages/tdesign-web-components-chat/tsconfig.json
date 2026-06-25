@@ -16,11 +16,7 @@
       "@tdesign/components/*": ["../components/*"],
       "@tdesign/web-components-shared": ["../shared/src"],
       "@tdesign/web-components-shared/*": ["../shared/src/*"],
-      "@tdesign/ai-chat-engine": ["../../common-utils/_ai-core/packages/chat-engine/index.ts"],
-      "@tdesign/ai-chat-engine/*": ["../../common-utils/_ai-core/packages/chat-engine/*"],
-      "@tdesign/ai-shared": ["../../common-utils/_ai-core/packages/shared/index.ts"],
-      "@tdesign/ai-shared/*": ["../../common-utils/_ai-core/packages/shared/*"],
-      "@common/*": ["../../common-utils/_common/*"],
+      "@common/*": ["../tdesign-common/*"],
       "@": ["../pro-components/chat"]
     }
   },
@@ -31,7 +27,7 @@
     "**/**/_usage/*",
     "**/**/__tests__/*",
     "node_modules",
-    "../../common-utils/_common",
+    "../tdesign-common",
     "dist",
     "lib",
     "esm",

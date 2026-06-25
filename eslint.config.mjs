@@ -81,7 +81,7 @@ export default defineConfig(
       '**/cjs/**',
       '**/es/**',
       '**/node_modules/**',
-      'common-utils/**',
+      'packages/tdesign-common/**',
       'server/**',
       'packages/vite-config/**',
       '**/public/**',

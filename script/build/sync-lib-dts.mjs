@@ -1,9 +1,10 @@
 /**
- * 将源码包 dist 中的 .d.ts 同步到发布包 lib，并内联 shared / common-js 类型路径
+ * 将源码包 dist 中的 .d.ts 同步到发布包 lib，并内联 shared / common 类型路径
  */
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
 
+import { emitCommonLibDts } from './emit-common-dts.mjs';
 import { getWorkspaceRoot } from '../../packages/vite-config/src/get-root-path.mjs';
 
 const PACKAGE_DTS_MAP = {
@@ -23,20 +24,17 @@ const BUNDLED_TYPE_SOURCES = [
     srcDist: 'packages/shared/dist',
     destLibSubpath: 'packages/shared/src',
   },
-  {
-    srcDist: 'common-utils/_common/js/dist',
-    destLibSubpath: 'common-utils/_common/js/dist',
-  },
 ];
 
-/** 包名 → lib 内相对根目录 */
+/** 包名 / alias → lib 内相对根目录 */
 const PKG_LIB_ROOT = {
   '@tdesign/web-components-shared': 'packages/shared/src',
-  '@tdesign/common-js': 'common-utils/_common/js/dist',
+  '@tdesign/common-js': 'packages/tdesign-common/js',
+  '@common/js': 'packages/tdesign-common/js',
 };
 
 const PKG_IMPORT_RE =
-  /(?<=(?:import|export)\s+(?:type\s+)?(?:[\w*{}\s,]*\s+from\s+|))['"](@tdesign\/(?:web-components-shared|common-js)(?:\/[^'"]*)?)['"]|import\(['"](@tdesign\/(?:web-components-shared|common-js)(?:\/[^'"]*)?)['"]\)/g;
+  /(?<=(?:import|export)\s+(?:type\s+)?(?:[\w*{}\s,]*\s+from\s+|))['"](@(?:tdesign\/(?:web-components-shared|common-js)|common\/js)(?:\/[^'"]*)?)['"]|import\(['"](@(?:tdesign\/(?:web-components-shared|common-js)|common\/js)(?:\/[^'"]*)?)['"]\)/g;
 
 function walkDts(srcDir, callback) {
   if (!existsSync(srcDir)) return;
@@ -60,18 +58,26 @@ function copyDistTree(srcDir, destDir) {
 }
 
 /**
- * 将 @tdesign/web-components-shared/*、@tdesign/common-js/* 转为相对路径
- * @param {string} pkgImport 如 @tdesign/web-components-shared/_util/dom
+ * 将 workspace 包名 / @common alias 转为 lib 内相对路径
+ * @param {string} pkgImport 如 @common/js/upload/types
  */
 function toBundledRelativeImport(pkgImport, fromDtsFile, destLibRoot) {
-  const match = pkgImport.match(/^@tdesign\/(web-components-shared|common-js)(\/(.*))?$/);
-  if (!match) return pkgImport;
+  let libRoot;
+  let subPath;
 
-  const pkgName = `@tdesign/${match[1]}`;
-  const libRoot = PKG_LIB_ROOT[pkgName];
+  const commonJsAlias = pkgImport.match(/^@common\/js\/(.*)$/);
+  if (commonJsAlias) {
+    libRoot = PKG_LIB_ROOT['@common/js'];
+    subPath = commonJsAlias[1];
+  } else {
+    const match = pkgImport.match(/^@tdesign\/(web-components-shared|common-js)(\/(.*))?$/);
+    if (!match) return pkgImport;
+    libRoot = PKG_LIB_ROOT[`@tdesign/${match[1]}`];
+    subPath = match[3] || 'index';
+  }
+
   if (!libRoot) return pkgImport;
 
-  const subPath = match[3] || 'index';
   const targetBase = resolve(destLibRoot, libRoot, subPath);
   let rel = relative(dirname(fromDtsFile), targetBase).replace(/\\/g, '/');
   if (!rel.startsWith('.')) {
@@ -122,7 +128,10 @@ export function syncLibDts(monorepoRoot, pkg) {
   // 1. 同步组件源码包类型
   copyDistTree(srcDir, destDir);
 
-  // 2. 同步内联 shared / common-js 类型（与 Vite JS 目录一致）
+  // 2. 从 common 源码 emit 声明到 lib（与 Vite JS 目录一致，不单独 build common-js）
+  emitCommonLibDts(monorepoRoot, mapping.destLib);
+
+  // 3. 同步内联 shared 类型
   for (const { srcDist, destLibSubpath } of BUNDLED_TYPE_SOURCES) {
     const bundledSrc = resolve(monorepoRoot, srcDist);
     const bundledDest = resolve(destDir, destLibSubpath);
@@ -132,6 +141,6 @@ export function syncLibDts(monorepoRoot, pkg) {
     copyDistTree(bundledSrc, bundledDest);
   }
 
-  // 3. 将包名 import 改写为 lib 内相对路径
+  // 4. 将包名 / alias import 改写为 lib 内相对路径
   rewriteAllLibDts(destDir);
 }

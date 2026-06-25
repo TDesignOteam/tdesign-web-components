@@ -9,11 +9,7 @@
       "@tdesign/web-components-chat/*": ["packages/pro-components/chat/*"],
       "@tdesign/web-components-shared": ["packages/shared/src"],
       "@tdesign/web-components-shared/*": ["packages/shared/src/*"],
-      "@tdesign/ai-chat-engine": ["common-utils/_ai-core/packages/chat-engine/index.ts"],
-      "@tdesign/ai-chat-engine/*": ["common-utils/_ai-core/packages/chat-engine/*"],
-      "@tdesign/ai-shared": ["common-utils/_ai-core/packages/shared/index.ts"],
-      "@tdesign/ai-shared/*": ["common-utils/_ai-core/packages/shared/*"],
-      "@common/*": ["common-utils/_common/*"]
+      "@common/*": ["packages/tdesign-common/*"]
     },
     "types": ["node"]
   },

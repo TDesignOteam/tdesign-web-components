@@ -4,7 +4,6 @@
     "noEmit": true
   },
   "references": [
-    { "path": "../shared/tsconfig.build.json" },
-    { "path": "../../common-utils/_common/js/tsconfig.build.json" }
+    { "path": "../shared/tsconfig.build.json" }
   ]
 }

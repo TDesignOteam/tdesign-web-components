@@ -25,8 +25,7 @@
       "@tdesign/components/*": ["../../tdesign-web-components/lib/*"],
       "@tdesign/web-components-shared": ["../../shared/dist"],
       "@tdesign/web-components-shared/*": ["../../shared/dist/*"],
-      "@tdesign/ai-chat-engine": ["../../../common-utils/_ai-core/packages/chat-engine/dist/index.d.mts"],
-      "@common/js/*": ["../../../common-utils/_common/js/dist/*"],
+      "@common/js/*": ["../../../.cache/common-js-types/*"],
       "@": ["."]
     }
   },

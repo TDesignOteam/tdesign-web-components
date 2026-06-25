@@ -1,6 +1,5 @@
 {
   "extends": "../../tsconfig.base.json",
-  "references": [{ "path": "../../common-utils/_common/js/tsconfig.build.json" }],
   "compilerOptions": {
     "composite": true,
     "declaration": true,
@@ -8,12 +7,16 @@
     "rootDir": "src",
     "outDir": "dist",
     "noEmit": false,
-    "emitDeclarationOnly": false,
+    "emitDeclarationOnly": true,
     "module": "ESNext",
     "moduleResolution": "node",
     "allowImportingTsExtensions": false,
     "skipLibCheck": true,
-    "noEmitOnError": false
+    "noEmitOnError": false,
+    "baseUrl": ".",
+    "paths": {
+      "@tdesign/common-js/*": ["../.cache/common-js-types/*"]
+    }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "**/__tests__/**"]

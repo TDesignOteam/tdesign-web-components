@@ -20,6 +20,5 @@ export default createLibViteConfigFromEnv({
   additionalExternal: [
     '@tdesign/web-components',
     '@tdesign/ai-chat-engine',
-    '@tdesign/ai-shared',
   ],
 });

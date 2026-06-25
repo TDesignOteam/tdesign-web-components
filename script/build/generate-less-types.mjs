@@ -16,7 +16,7 @@ const outFile = resolve(componentsDir, 'types/generated-less.d.ts');
 const chatOutFile = resolve(chatDir, 'types/generated-less.d.ts');
 
 const commonLess = fg.sync('web/components/**/_index.less', {
-  cwd: resolve(monorepoRoot, 'common-utils/_common/style'),
+  cwd: resolve(monorepoRoot, 'packages/tdesign-common/style'),
   absolute: false,
 });
 

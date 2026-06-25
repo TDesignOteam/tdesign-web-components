@@ -22,8 +22,8 @@
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "prebuild": "rimraf es lib dist esm cjs && node ../../script/build.mjs cleanup-dts",
-    "build": "node ../../script/build.mjs ensure-ai-types && pnpm --filter @tdesign/common-js build && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/pro-components-chat build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts chat"
+    "prebuild": "rimraf es lib dist esm cjs",
+    "build": "node ../../script/build.mjs emit-common-types && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/pro-components-chat build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts chat"
   },
   "files": [
     "esm",
@@ -52,7 +52,7 @@
     }
   },
   "dependencies": {
-    "@tdesign/ai-chat-engine": "workspace:^",
+    "@tdesign/ai-chat-engine": "^0.1.0",
     "cherry-markdown": "0.11.0-alpha-5",
     "immer": "^10.1.1",
     "lodash-es": "^4.17.21"

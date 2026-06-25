@@ -3,7 +3,8 @@
   "packageManager": "pnpm@10.33.0",
   "type": "module",
   "scripts": {
-    "init": "git submodule update --init",
+    "init": "git submodule update --init packages/tdesign-common",
+    "link:ai": "pnpm link --global @tdesign/ai-chat-engine",
     "start": "pnpm run dev:ui",
     "dev:ui": "pnpm --filter @tdesign/web-components-site dev",
     "dev:chat": "pnpm --filter @tdesign/web-components-chat-site dev",
@@ -12,11 +13,10 @@
     "preview:ui": "pnpm --filter @tdesign/web-components-site preview",
     "preview:chat": "pnpm --filter @tdesign/web-components-chat-site preview",
     "build": "pnpm run \"/^build:/\"",
-    "build:shared": "pnpm --filter @tdesign/common-js build && pnpm --filter @tdesign/web-components-shared build",
+    "build:shared": "pnpm --filter @tdesign/web-components-shared build",
     "build:types": "node ./script/build/generate-less-types.mjs && tsc -b tsconfig.build.json",
     "build:ui": "pnpm --filter @tdesign/web-components build",
     "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
-    "cleanup:source-dts": "node ./script/build.mjs cleanup-dts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "test": "echo \"暂无单元测试，跳过\"",
@@ -44,6 +44,7 @@
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
+    "@commitlint/format": "^20.5.0",
     "@eslint/js": "^10.0.1",
     "@tailwindcss/typography": "^0.5.10",
     "@types/lodash-es": "^4.17.12",
@@ -72,5 +73,10 @@
   },
   "engines": {
     "node": ">=22.13.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@commitlint/format": "20.5.0"
+    }
   }
 }

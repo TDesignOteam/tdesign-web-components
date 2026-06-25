@@ -21,14 +21,13 @@
       "@tdesign/components/*": ["./*"],
       "@tdesign/web-components-shared": ["../shared/dist"],
       "@tdesign/web-components-shared/*": ["../shared/dist/*"],
-      "@common/js/*": ["../../common-utils/_common/js/dist/*"],
-      "@common/style/*": ["../../common-utils/_common/style/*"],
+      "@common/js/*": ["../.cache/common-js-types/*"],
+      "@common/style/*": ["../tdesign-common/style/*"],
       "@": ["."]
     }
   },
   "references": [
-    { "path": "../shared/tsconfig.build.json" },
-    { "path": "../../common-utils/_common/js/tsconfig.build.json" }
+    { "path": "../shared/tsconfig.build.json" }
   ],
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/generated-less.d.ts", "../../typings.d.ts"],
   "exclude": [

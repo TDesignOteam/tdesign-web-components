@@ -31,8 +31,6 @@ packages/*/cjs
 packages/components/**/*.d.ts
 packages/shared/src/**/*.d.ts
 packages/pro-components/**/*.d.ts
-common-utils/_common/js/dist
-common-utils/_common/js/tsconfig.build.tsbuildinfo
-common-utils/_ai-core/packages/**/*.d.ts
+packages/.cache
 
 .codebuddy/plans/

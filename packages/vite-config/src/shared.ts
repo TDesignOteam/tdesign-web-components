@@ -13,14 +13,13 @@ import { createLessAliasPlugin } from './less-alias-plugin.mjs';
  * @param siteDir 文档站目录；传入时追加 @site / @docs 等站点专用别名
  */
 export function createMonorepoAliasConfig(root: string, siteDir?: string): Record<string, string> {
-  const commonDir = resolve(root, 'common-utils/_common');
+  const commonDir = resolve(root, 'packages/tdesign-common');
   const aliases: Record<string, string> = {
     '@common': commonDir,
+    '@tdesign/common-js': resolve(commonDir, 'js'),
     '@tdesign/web-components': resolve(root, 'packages/components'),
     '@tdesign/web-components-chat': resolve(root, 'packages/pro-components/chat'),
     '@tdesign/web-components-shared': resolve(root, 'packages/shared/src'),
-    '@tdesign/ai-chat-engine': resolve(root, 'common-utils/_ai-core/packages/chat-engine'),
-    '@tdesign/ai-shared': resolve(root, 'common-utils/_ai-core/packages/shared'),
   };
 
   if (siteDir) {
@@ -30,8 +29,6 @@ export function createMonorepoAliasConfig(root: string, siteDir?: string): Recor
       '@docs': resolve(siteDir, 'docs'),
       '@ui-pkg': resolve(root, 'packages/components'),
       '@chat-pkg': resolve(root, 'packages/pro-components/chat'),
-      '@tdesign/ai-chat-engine': resolve(root, 'common-utils/_ai-core/packages/chat-engine/index.ts'),
-      '@tdesign/ai-shared': resolve(root, 'common-utils/_ai-core/packages/shared/index.ts'),
       '@tdesign/web-components': resolve(root, 'packages/components/'),
       '@tdesign/web-components-chat': resolve(root, 'packages/pro-components/chat/'),
       '@tdesign/web-components-shared': resolve(root, 'packages/shared/src/'),
@@ -87,7 +84,6 @@ export const workspaceOptimizeDepsExclude = [
   '@tdesign/web-components-chat',
   '@tdesign/web-components-shared',
   '@tdesign/ai-chat-engine',
-  '@tdesign/ai-shared',
 ];
 
 /** 创建 SSE 代理配置 */
