@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-const COMMON_SRC_REL = 'packages/tdesign-common/js';
+const COMMON_SRC_REL = 'packages/common/js';
 /** 类型缓存在主仓，不写入 submodule */
 const COMMON_TYPES_CACHE_REL = 'packages/.cache/common-js-types';
 
@@ -63,7 +63,7 @@ export function emitCommonTypesCache(monorepoRoot) {
 
 /** sync-dts：将 common 声明写入发布包 lib（与 Vite JS 目录对齐） */
 export function emitCommonLibDts(monorepoRoot, destLibRel) {
-  emitCommonDtsTo(monorepoRoot, `${destLibRel}/packages/tdesign-common/js`);
+  emitCommonDtsTo(monorepoRoot, `${destLibRel}/packages/common/js`);
 }
 
 /** @param {string} monorepoRoot */

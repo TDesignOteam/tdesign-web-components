@@ -16,7 +16,7 @@
       "@tdesign/components/*": ["../components/*"],
       "@tdesign/web-components-shared": ["../shared/src"],
       "@tdesign/web-components-shared/*": ["../shared/src/*"],
-      "@common/*": ["../tdesign-common/*"],
+      "@common/*": ["../common/*"],
       "@": ["../pro-components/chat"]
     }
   },
@@ -27,7 +27,7 @@
     "**/**/_usage/*",
     "**/**/__tests__/*",
     "node_modules",
-    "../tdesign-common",
+    "../common",
     "dist",
     "lib",
     "esm",

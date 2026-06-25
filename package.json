@@ -3,7 +3,7 @@
   "packageManager": "pnpm@10.33.0",
   "type": "module",
   "scripts": {
-    "init": "git submodule update --init packages/tdesign-common",
+    "init": "git submodule update --init packages/common",
     "link:ai": "pnpm link --global @tdesign/ai-chat-engine",
     "start": "pnpm run dev:ui",
     "dev:ui": "pnpm --filter @tdesign/web-components-site dev",
@@ -78,5 +78,8 @@
     "overrides": {
       "@commitlint/format": "20.5.0"
     }
+  },
+  "dependencies": {
+    "@tdesign/ai-chat-engine": "link:../../cursor/tdesign-ai-core/packages/chat-engine"
   }
 }

@@ -29,8 +29,8 @@ const BUNDLED_TYPE_SOURCES = [
 /** 包名 / alias → lib 内相对根目录 */
 const PKG_LIB_ROOT = {
   '@tdesign/web-components-shared': 'packages/shared/src',
-  '@tdesign/common-js': 'packages/tdesign-common/js',
-  '@common/js': 'packages/tdesign-common/js',
+  '@tdesign/common-js': 'packages/common/js',
+  '@common/js': 'packages/common/js',
 };
 
 const PKG_IMPORT_RE =

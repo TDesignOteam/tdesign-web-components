@@ -22,7 +22,7 @@
       "@tdesign/web-components-shared": ["../shared/dist"],
       "@tdesign/web-components-shared/*": ["../shared/dist/*"],
       "@common/js/*": ["../.cache/common-js-types/*"],
-      "@common/style/*": ["../tdesign-common/style/*"],
+      "@common/style/*": ["../common/style/*"],
       "@": ["."]
     }
   },

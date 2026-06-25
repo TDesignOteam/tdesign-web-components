@@ -153,7 +153,7 @@ importers:
     dependencies:
       '@tdesign/common-js':
         specifier: workspace:^
-        version: link:../tdesign-common/js
+        version: link:../common/js
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -170,7 +170,7 @@ importers:
         specifier: ^2.6.0
         version: 2.6.1
 
-  packages/tdesign-common:
+  packages/common:
     dependencies:
       lodash-es:
         specifier: ^4.17.21
@@ -270,11 +270,11 @@ importers:
         specifier: ^3.1.4
         version: 3.2.6(@types/node@22.20.0)(jiti@2.6.1)(jsdom@19.0.0)(less@4.6.4)(lightningcss@1.32.0)(sass@1.99.0)(terser@5.46.1)(yaml@2.9.0)
 
-  packages/tdesign-common/docs: {}
+  packages/common/docs: {}
 
-  packages/tdesign-common/js: {}
+  packages/common/js: {}
 
-  packages/tdesign-common/style: {}
+  packages/common/style: {}
 
   packages/tdesign-web-components:
     dependencies:

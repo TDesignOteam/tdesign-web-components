@@ -8,28 +8,28 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 
 ## 公共子仓库 tdesign-common
 
-本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 `packages/tdesign-common` 目录，由于 Tdesign React/Vue 等组件库已相对成熟，我们涉及到开发 common 部分的比较少，主要是复用其中已经定义过的样式 class 和方法，包括：
+本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 `packages/common` 目录，由于 Tdesign React/Vue 等组件库已相对成熟，我们涉及到开发 common 部分的比较少，主要是复用其中已经定义过的样式 class 和方法，包括：
 
 - 一些公共的工具函数
 - 组件库 UI 开发内容，即 html 结构和 css 样式（React/Vue 等多技术栈共用）
 
 ### 初始化子仓库
 
-- 初次克隆代码后需要初始化子仓库：`git submodule update --init packages/tdesign-common`
+- 初次克隆代码后需要初始化子仓库：`git submodule update --init packages/common`
 - git submodule update 之后子仓库不指向任何分支，只是一个指向某一个提交的游离状态
 
 ### 子仓库开发
 
 子仓库组件分支从 develop checkout 示例：feature/button，提交代码时先进入子仓库完成提交，然在回到主仓库完成提交
 
-- 先进入 `packages/tdesign-common` 文件夹，正常将样式修改添加提交
-- 回到主仓库，此时应该会看到 `packages/tdesign-common` 是修改状态，按照正常步骤添加提交即可
+- 先进入 `packages/common` 文件夹，正常将样式修改添加提交
+- 回到主仓库，此时应该会看到 `packages/common` 是修改状态，按照正常步骤添加提交即可
 
 ## 开发规范
 
 ### API 规范
 
-[API](./packages/tdesign-common/api.md)
+[API](./packages/common/api.md)
 
 ### 前缀
 
@@ -93,7 +93,7 @@ npm run start
 ```shell
 .
 ├── packages/
-│   ├── tdesign-common/                 # tdesign-common 子仓库（submodule）
+│   ├── common/                         # tdesign-common 子仓库（submodule）
 │   ├── components/                     # UI 组件源码
 │   │   └── [组件]/
 │   │       ├── _example/                # 演示文件
@@ -119,7 +119,7 @@ pnpm run link:ai
 克隆后需初始化子模块：
 
 ```bash
-git submodule update --init packages/tdesign-common
+git submodule update --init packages/common
 ```
 
 ### 新增开发组件
@@ -158,7 +158,7 @@ export * from './button';
 
 ### 组件 Demo 演示配置
 
-为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `packages/tdesign-common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
+为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `packages/common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
 
 例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.tsx`、 `noArrow.tsx` 文件
 

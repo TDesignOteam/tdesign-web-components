@@ -9,7 +9,7 @@
       "@tdesign/web-components-chat/*": ["packages/pro-components/chat/*"],
       "@tdesign/web-components-shared": ["packages/shared/src"],
       "@tdesign/web-components-shared/*": ["packages/shared/src/*"],
-      "@common/*": ["packages/tdesign-common/*"]
+      "@common/*": ["packages/common/*"]
     },
     "types": ["node"]
   },

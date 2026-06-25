@@ -220,7 +220,7 @@ async function customRender({ source, file, md }) {
   if (pageData.isComponent && pageData.tdDocTabs.some((item) => item.tab === 'design')) {
     const designDocPath = path.resolve(
       getWorkspaceRoot(import.meta.dirname),
-      `packages/tdesign-common/docs/web/design/${componentName}.md`,
+      `packages/common/docs/web/design/${componentName}.md`,
     );
 
     if (fs.existsSync(designDocPath)) {

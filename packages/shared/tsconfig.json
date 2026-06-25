@@ -6,7 +6,7 @@
     "paths": {
       "@tdesign/web-components-shared": ["src"],
       "@tdesign/web-components-shared/*": ["src/*"],
-      "@common/*": ["../tdesign-common/*"]
+      "@common/*": ["../common/*"]
     }
   },
   "include": ["src"],

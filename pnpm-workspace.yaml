@@ -8,8 +8,8 @@ packages:
   - 'packages/*/site'
 
   # 公共工具（外部独立仓库，通过 git submodule 管理）
-  - 'packages/tdesign-common/js'
-  - 'packages/tdesign-common/docs'
-  - 'packages/tdesign-common/style'
+  - 'packages/common/js'
+  - 'packages/common/docs'
+  - 'packages/common/style'
 
 shamefullyHoist: true

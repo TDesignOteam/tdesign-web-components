@@ -13,7 +13,7 @@ import { createLessAliasPlugin } from './less-alias-plugin.mjs';
  * @param siteDir 文档站目录；传入时追加 @site / @docs 等站点专用别名
  */
 export function createMonorepoAliasConfig(root: string, siteDir?: string): Record<string, string> {
-  const commonDir = resolve(root, 'packages/tdesign-common');
+  const commonDir = resolve(root, 'packages/common');
   const aliases: Record<string, string> = {
     '@common': commonDir,
     '@tdesign/common-js': resolve(commonDir, 'js'),
