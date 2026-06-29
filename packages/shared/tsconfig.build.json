@@ -15,7 +15,7 @@
     "noEmitOnError": false,
     "baseUrl": ".",
     "paths": {
-      "@tdesign/common-js/*": ["../.cache/common-js-types/*"]
+      "@common/js/*": ["../.cache/common-js-types/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],

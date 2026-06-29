@@ -27,24 +27,28 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - name: Build UI library
-        run: pnpm run build:ui
+      - name: Type check
+        run: pnpm run check:types
 
-      - name: Build Chat library
-        run: pnpm --filter @tdesign/web-components-chat build
+      - name: Build libraries
+        run: pnpm run build:chat
 
       - name: Verify declaration paths
         run: |
-          if rg "from ['\"]@tdesign/|import\(['\"]@tdesign/|import ['\"]@tdesign/" packages/tdesign-web-components/lib --glob "*.d.ts"; then
-            echo "Found @tdesign package imports in UI lib/*.d.ts (shared should be bundled as relative paths)"
+          if rg "@tdesign/common-js" packages/tdesign-web-components/lib packages/tdesign-web-components-chat/lib --glob "*.{js,d.ts}"; then
+            echo "Found external @tdesign/common-js in publish lib (common-js should be bundled)"
+            exit 1
+          fi
+          if rg "@tdesign/web-components-shared" packages/tdesign-web-components/lib packages/tdesign-web-components-chat/lib --glob "*.{js,d.ts}"; then
+            echo "Found external @tdesign/web-components-shared in publish lib (shared should be bundled)"
+            exit 1
+          fi
+          if ! rg "packages/shared" packages/tdesign-web-components/lib --glob "*.js" -q; then
+            echo "UI lib should bundle shared under lib/packages/shared"
             exit 1
           fi
           if rg "from ['\"]@tdesign/|import\(['\"]@tdesign/|import ['\"]@tdesign/" packages/tdesign-web-components-chat/lib --glob "*.d.ts" | grep -vE '@tdesign/(web-components|ai-chat-engine)'; then
             echo "Found unexpected @tdesign/* imports in chat lib/*.d.ts"
-            exit 1
-          fi
-          if rg "@tdesign/web-components-shared" packages/tdesign-web-components/lib packages/tdesign-web-components-chat/lib --glob "*.{js,d.ts}"; then
-            echo "shared should be bundled inside lib, not imported as external package"
             exit 1
           fi
           if rg "packages/components/" packages/tdesign-web-components/lib packages/tdesign-web-components-chat/lib --glob "*.{js,d.ts}"; then

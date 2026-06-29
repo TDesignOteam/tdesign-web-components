@@ -22,7 +22,6 @@
     "build": "tsc -b tsconfig.build.json"
   },
   "dependencies": {
-    "@tdesign/common-js": "workspace:^",
     "clsx": "^2.1.1",
     "lodash-es": "^4.17.21",
     "raf": "^3.4.1",

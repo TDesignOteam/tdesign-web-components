@@ -2,7 +2,7 @@
   "name": "@tdesign/components",
   "private": true,
   "scripts": {
-    "prebuild": "rimraf dist tsconfig.build.tsbuildinfo && node ../../script/build/generate-less-types.mjs",
+    "prebuild": "rimraf dist tsconfig.build.tsbuildinfo",
     "build": "tsc -b tsconfig.build.json"
   },
   "dependencies": {

@@ -1,66 +1,27 @@
 {
   "name": "@tdesign/web-components",
   "version": "1.3.1-alpha.11",
+  "description": "TDesign Web Components Library",
   "type": "module",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
     },
     "./*": {
-      "import": "./lib/*/index.js",
-      "types": "./lib/*/index.d.ts"
+      "types": "./lib/*/index.d.ts",
+      "import": "./esm/*/index.js",
+      "require": "./cjs/*/index.js"
     },
-    "./lib/*": "./lib/*",
     "./lib/style/index.css": "./lib/style/index.css",
     "./lib/style/*.css": "./lib/style/*.css"
   },
   "author": "tdesign",
   "license": "MIT",
-  "scripts": {
-    "prebuild": "rimraf es lib dist esm cjs",
-    "build": "node ../../script/build.mjs emit-common-types && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/components build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts ui"
-  },
-  "files": [
-    "esm",
-    "es",
-    "lib",
-    "cjs",
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
-  "sideEffects": [
-    "dist/*",
-    "lib/style/**/*",
-    "cjs/**",
-    "esm/**"
-  ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
-  "dependencies": {
-    "@popperjs/core": "^2.11.8",
-    "dayjs": "^1.11.19",
-    "lodash-es": "^4.17.21",
-    "omi": "^7.7.13",
-    "omi-transition": "^0.1.11",
-    "tdesign-icons-web-components": "^0.3.2"
-  },
-  "devDependencies": {
-    "@tdesign/components": "workspace:^",
-    "@tdesign/vite-config": "workspace:^",
-    "@tdesign/web-components-shared": "workspace:^"
-  },
-  "peerDependencies": {
-    "omi": "^7.7.0"
-  },
-  "description": "TDesign Web Components Library",
   "keywords": [
     "omi",
     "web-components",
@@ -76,7 +37,40 @@
   "bugs": {
     "url": "https://github.com/Tencent/tdesign-web-components/issues"
   },
-  "engines": {
-    "node": ">=22.13.0"
+  "scripts": {
+    "build": "vite build"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "esm",
+    "cjs",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": [
+    "dist/**",
+    "**/style/**",
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "dayjs": "^1.11.19",
+    "lodash-es": "^4.17.21",
+    "omi-transition": "^0.1.11",
+    "tdesign-icons-web-components": "^0.3.2"
+  },
+  "peerDependencies": {
+    "omi": "^7.7.0"
+  },
+  "devDependencies": {
+    "@tdesign/components": "workspace:^",
+    "@tdesign/vite-config": "workspace:^",
+    "omi": "^7.7.13"
   }
 }

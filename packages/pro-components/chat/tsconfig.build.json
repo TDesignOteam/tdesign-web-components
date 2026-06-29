@@ -19,17 +19,17 @@
       "@tdesign/web-components-chat/*": ["./*"],
       "@tdesign/pro-components-chat": ["."],
       "@tdesign/pro-components-chat/*": ["./*"],
-      "@tdesign/web-components": ["../../tdesign-web-components/lib"],
-      "@tdesign/web-components/*": ["../../tdesign-web-components/lib/*"],
-      "@tdesign/components": ["../../tdesign-web-components/lib"],
-      "@tdesign/components/*": ["../../tdesign-web-components/lib/*"],
+      "@tdesign/web-components": ["../../components/dist"],
+      "@tdesign/web-components/*": ["../../components/dist/*"],
+      "@tdesign/components": ["../../components/dist"],
+      "@tdesign/components/*": ["../../components/dist/*"],
       "@tdesign/web-components-shared": ["../../shared/dist"],
       "@tdesign/web-components-shared/*": ["../../shared/dist/*"],
-      "@common/js/*": ["../../../.cache/common-js-types/*"],
+      "@common/js/*": ["../../.cache/common-js-types/*"],
+      "@common/style/*": ["../../common/style/*"],
       "@": ["."]
     }
   },
-  "references": [{ "path": "../../shared/tsconfig.build.json" }],
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/generated-less.d.ts", "../../../typings.d.ts"],
   "exclude": [
     "**/*.jsx",

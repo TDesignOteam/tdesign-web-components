@@ -193,7 +193,7 @@ export * from './button';
 
 ### 项目常用脚本说明
 
-各源码包通过 TypeScript Project References 独立 `tsc -b` 输出到 `dist/`。发布包 Vite 打包 JS 时会将 `@tdesign/web-components-shared` **内联**进 `lib/packages/shared/src/`（不单独发布）；再将 `dist/` 类型同步到 `lib/` 并改写为相对路径。
+各源码包通过 `check:types`（`build:shared` → `components` 出 dist 声明 → `chat --noEmit`）做全仓类型检查。发布构建由 `vite build` 直写 `packages/tdesign-web-components/{lib,esm,cjs,dist}`：`@tdesign/common-js`（submodule）与 `@tdesign/web-components-shared` 均 **内联进发布包**，用户只需安装主包即可使用。
 
 ```bash
 # 启动 UI 文档站
@@ -206,12 +206,13 @@ pnpm run site:chat
 pnpm run preview:ui
 # 编译全部组件库
 pnpm run build
-# 编译 UI 组件库（shared → components tsc → vite 直引 common 源码 → sync d.ts）
+# 编译 UI 组件库（统一 pipeline：prepare → tsc → vite → sync-dts）
 pnpm run build:ui
-# 编译 Chat 组件库（需先 build:ui 生成 peer 类型）
+# 编译 Chat（含 UI；或先 build:ui 再 build:chat-only）
 pnpm run build:chat
-# 仅构建各源码包类型（Project References，Chat 类型依赖已构建的 UI lib/）
-pnpm run build:types
+pnpm run build:chat-only
+# 仅生成 less 声明 + common 类型缓存 + shared/components 声明 + chat 类型检查
+pnpm run check:types
 
 # 自动修复 eslint 错误
 pnpm run lint:fix

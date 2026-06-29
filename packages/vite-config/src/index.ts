@@ -1,6 +1,6 @@
-export { createLibViteConfig, type LibViteOptions } from './lib.ts';
-export { createSiteViteConfig, type SiteViteOptions } from './site.ts';
-export { createSiteRootRedirects } from './site-routes.ts';
+/** @tdesign/vite-config 公共导出（lib + site + 工具） */
+export * from './lib/index.ts';
+export * from './site/index.ts';
 export {
   createMonorepoAliasConfig,
   createLessPreprocessorOptions,
@@ -9,4 +9,3 @@ export {
   libOxcConfig,
 } from './shared.ts';
 export { getWorkspaceRoot } from './get-root-path.mjs';
-export { generateComponentsEntry, generateEntryPlugin, runGenerateEntryFromCwd } from './generate-entry.mjs';

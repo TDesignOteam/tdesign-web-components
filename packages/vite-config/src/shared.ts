@@ -16,7 +16,6 @@ export function createMonorepoAliasConfig(root: string, siteDir?: string): Recor
   const commonDir = resolve(root, 'packages/common');
   const aliases: Record<string, string> = {
     '@common': commonDir,
-    '@tdesign/common-js': resolve(commonDir, 'js'),
     '@tdesign/web-components': resolve(root, 'packages/components'),
     '@tdesign/web-components-chat': resolve(root, 'packages/pro-components/chat'),
     '@tdesign/web-components-shared': resolve(root, 'packages/shared/src'),
@@ -112,14 +111,7 @@ export function createSseProxy(): Record<string, unknown> {
 // 库构建
 // ---------------------------------------------------------------------------
 
-/** 默认内联打包的 workspace 包；各包在 vite.config 中按需覆盖 */
-export const defaultBundleWorkspacePkgs: string[] = [];
-
 const alwaysExternal = [/tailwind-merge/];
-
-export function isBundledWorkspacePkg(id: string, bundleWorkspacePkgs: string[]) {
-  return bundleWorkspacePkgs.some((p) => id === p || id.startsWith(`${p}/`));
-}
 
 /** 产物 banner */
 export function createBanner(pkg: { name: string; version: string; author?: string; license?: string }) {
@@ -129,19 +121,13 @@ export function createBanner(pkg: { name: string; version: string; author?: stri
 /** 库构建 external 判断（preserveModules：esm/cjs/lib） */
 export function createLibExternal(
   pkg: { dependencies?: Record<string, string>; peerDependencies?: Record<string, string> },
-  bundleWorkspacePkgs: string[] = defaultBundleWorkspacePkgs,
   additionalExternal: string[] = [],
 ) {
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
-  const externalPkgs = new Set(
-    [...deps, ...peerDeps, ...additionalExternal].filter(
-      (p) => !bundleWorkspacePkgs.includes(p),
-    ),
-  );
+  const externalPkgs = new Set([...deps, ...peerDeps, ...additionalExternal]);
 
   return (id: string) => {
-    if (isBundledWorkspacePkg(id, bundleWorkspacePkgs)) return false;
     if (alwaysExternal.some((re) => re.test(id))) return true;
     return [...externalPkgs].some((dep) => id === dep || id.startsWith(`${dep}/`));
   };

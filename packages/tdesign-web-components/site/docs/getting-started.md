@@ -31,7 +31,7 @@ import '@tdesign/web-components-chat';
 
 ```javascript
 import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
-import '@tdesign/web-components/lib/button';
+import '@tdesign/web-components/button';
 ```
 
 也可以整体引入基础 UI 组件
@@ -86,8 +86,8 @@ export default defineConfig({
 更多 less 变量定义 [查看这里](https://github.com/Tencent/tdesign-common/blob/main/style/web/_variables.less)
 
 ```javascript
-import '@tdesign/web-components/esm/button';
-import '@tdesign/web-components/esm/style/index.js'; // 少量公共样式
+import '@tdesign/web-components/button';
+import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
 ```
 
 在 vite 中定制主题

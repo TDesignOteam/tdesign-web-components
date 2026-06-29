@@ -26,9 +26,6 @@
       "@": ["."]
     }
   },
-  "references": [
-    { "path": "../shared/tsconfig.build.json" }
-  ],
   "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/generated-less.d.ts", "../../typings.d.ts"],
   "exclude": [
     "**/*.jsx",

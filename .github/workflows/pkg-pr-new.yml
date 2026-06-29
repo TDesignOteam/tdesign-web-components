@@ -21,6 +21,9 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Type check
+        run: pnpm run check:types
+
       - run: pnpm run "/^build:/"
 
       - run: pnpm dlx pkg-pr-new publish './packages/*' --no-compact --packageManager=pnpm,npm,yarn

@@ -1,7 +1,7 @@
 import { camelCase } from 'lodash-es';
 
 // Re-export from @common to avoid duplication with submodule
-export type { FromTo, Gradients, LinearGradient } from '@tdesign/common-js/utils/helper';
+export type { FromTo, Gradients, LinearGradient } from '@common/js/utils/helper';
 export {
   firstUpperCase,
   getBackgroundColor,
@@ -9,7 +9,7 @@ export {
   omit,
   pxCompat,
   removeEmptyAttrs,
-} from '@tdesign/common-js/utils/helper';
+} from '@common/js/utils/helper';
 
 // shared-only utility: keyboard-event => onKeyboardEvent
 export function getPropsApiByEvent(eventName: string) {

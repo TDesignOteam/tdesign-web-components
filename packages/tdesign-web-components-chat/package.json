@@ -1,73 +1,27 @@
 {
   "name": "@tdesign/web-components-chat",
   "version": "1.3.1-alpha.11",
+  "description": "TDesign Web Components Chat Library",
   "type": "module",
-  "main": "lib/index.js",
-  "module": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "./cjs/index.js",
+  "module": "./esm/index.js",
+  "types": "./lib/index.d.ts",
   "exports": {
     ".": {
-      "import": "./lib/index.js",
-      "require": "./lib/index.js",
-      "types": "./lib/index.d.ts"
+      "types": "./lib/index.d.ts",
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
     },
     "./*": {
-      "import": "./lib/*/index.js",
-      "types": "./lib/*/index.d.ts"
+      "types": "./lib/*/index.d.ts",
+      "import": "./esm/*/index.js",
+      "require": "./cjs/*/index.js"
     },
-    "./lib/*": "./lib/*",
     "./lib/style/index.css": "./lib/style/index.css",
     "./lib/style/*.css": "./lib/style/*.css"
   },
   "author": "tdesign",
   "license": "MIT",
-  "scripts": {
-    "prebuild": "rimraf es lib dist esm cjs",
-    "build": "node ../../script/build.mjs emit-common-types && pnpm --filter @tdesign/web-components-shared build && pnpm --filter @tdesign/pro-components-chat build && node ../../script/build/vite-lib-build.mjs . && node ../../script/build.mjs sync-dts chat"
-  },
-  "files": [
-    "esm",
-    "es",
-    "lib",
-    "cjs",
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
-  "sideEffects": [
-    "dist/*",
-    "lib/style/**/*",
-    "cjs/**",
-    "esm/**"
-  ],
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public",
-    "peerDependencies": {
-      "@tdesign/web-components": "^1.3.1",
-      "omi": "^7.7.0"
-    },
-    "dependencies": {
-      "@tdesign/ai-chat-engine": "^0.1.0"
-    }
-  },
-  "dependencies": {
-    "@tdesign/ai-chat-engine": "^0.1.0",
-    "cherry-markdown": "0.11.0-alpha-5",
-    "immer": "^10.1.1",
-    "lodash-es": "^4.17.21"
-  },
-  "devDependencies": {
-    "@tdesign/pro-components-chat": "workspace:^",
-    "@tdesign/vite-config": "workspace:^",
-    "@tdesign/web-components": "workspace:^",
-    "@tdesign/web-components-shared": "workspace:^"
-  },
-  "peerDependencies": {
-    "@tdesign/web-components": "workspace:^",
-    "omi": "^7.7.0"
-  },
-  "description": "TDesign Web Components Chat Library",
   "keywords": [
     "omi",
     "web-components",
@@ -84,7 +38,41 @@
   "bugs": {
     "url": "https://github.com/Tencent/tdesign-web-components/issues"
   },
-  "engines": {
-    "node": ">=22.13.0"
+  "scripts": {
+    "build": "vite build"
+  },
+  "files": [
+    "lib",
+    "dist",
+    "esm",
+    "cjs",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": [
+    "dist/**",
+    "**/style/**",
+    "**/*.css"
+  ],
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "@tdesign/ai-chat-engine": "^0.1.0",
+    "cherry-markdown": "0.11.0-alpha-5",
+    "immer": "^10.1.1",
+    "lodash-es": "^4.17.21"
+  },
+  "peerDependencies": {
+    "@tdesign/web-components": "^1.3.1",
+    "omi": "^7.7.0"
+  },
+  "devDependencies": {
+    "@tdesign/pro-components-chat": "workspace:^",
+    "@tdesign/vite-config": "workspace:^",
+    "@tdesign/web-components": "workspace:^",
+    "omi": "^7.7.13"
   }
 }

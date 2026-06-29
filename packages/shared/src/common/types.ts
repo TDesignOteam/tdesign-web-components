@@ -1,6 +1,6 @@
-import type { CSSSelector, PlainObject, Styles } from '@tdesign/common-js/common';
+import type { CSSSelector, PlainObject, Styles } from '@common/js/common';
 
-// Re-export from @tdesign/common-js to avoid duplication with submodule
+// 从 common 子仓库再导出，避免与本地类型重复定义
 export type {
   ClassName,
   CSSSelector,
@@ -10,7 +10,7 @@ export type {
   SizeEnum,
   Styles,
   VerticalAlignEnum,
-} from '@tdesign/common-js/common';
+} from '@common/js/common';
 export {
   ALL_REG,
   ARROW_DOWN_REG,
@@ -25,7 +25,7 @@ export {
   SHIFT_REG,
   SPACE_REG,
   THEME_MODE,
-} from '@tdesign/common-js/common';
+} from '@common/js/common';
 import { Component, VNode, WeElement } from 'omi';
 
 // ---- Omi-specific types (no equivalent in _common) ----

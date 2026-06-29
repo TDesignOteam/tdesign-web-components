@@ -14,10 +14,12 @@
     "preview:chat": "pnpm --filter @tdesign/web-components-chat-site preview",
     "build": "pnpm run \"/^build:/\"",
     "build:shared": "pnpm --filter @tdesign/web-components-shared build",
-    "build:types": "node ./script/build/generate-less-types.mjs && tsc -b tsconfig.build.json",
+    "build:prepare": "node ./packages/vite-config/src/lib-prepare.mjs",
+    "check:types": "pnpm run build:prepare && pnpm run build:shared && tsc -p packages/components/tsconfig.build.json && tsc -p packages/pro-components/chat/tsconfig.build.json --noEmit",
     "build:ui": "pnpm --filter @tdesign/web-components build",
-    "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
-    "lint": "eslint .",
+    "build:chat": "pnpm run build:ui && pnpm run build:chat-only",
+    "build:chat-only": "pnpm --filter @tdesign/web-components-chat build",
+    "lint": "pnpm run check:types && eslint .",
     "lint:fix": "eslint . --fix",
     "test": "echo \"暂无单元测试，跳过\"",
     "generate:entry": "node ./packages/vite-config/src/generate-entry.mjs",
@@ -76,10 +78,9 @@
   },
   "pnpm": {
     "overrides": {
-      "@commitlint/format": "20.5.0"
+      "@commitlint/format": "20.5.0",
+      "@tdesign/ai-chat-engine": "git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/chat-engine",
+      "@tdesign/ai-shared": "git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/shared"
     }
-  },
-  "dependencies": {
-    "@tdesign/ai-chat-engine": "link:../../cursor/tdesign-ai-core/packages/chat-engine"
   }
 }
