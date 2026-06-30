@@ -56,14 +56,17 @@ import '@tdesign/web-components/button';
 document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
 
-If you need AI Chat components, install `@tdesign/web-components-chat` separately:
+If you need AI Chat components, install `@tdesign/web-components` and `@tdesign/web-components-chat`:
 
 ```tsx
-import '@tdesign/web-components-chat/lib/style/index.css';
+import '@tdesign/web-components';
 import '@tdesign/web-components-chat/chatbot';
+import '@tdesign/web-components/lib/style/index.css';
 
 document.body.innerHTML = `<t-chatbot></t-chatbot>`;
 ```
+
+Changelogs: [UI](./packages/tdesign-web-components/CHANGELOG.md) · [Chat](./packages/tdesign-web-components-chat/CHANGELOG.md)
 
 More ways to use please click 👉🏻 [getting-started](./site/docs/getting-started.md)
 

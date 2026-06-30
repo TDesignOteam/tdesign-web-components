@@ -30,7 +30,7 @@ export default [
         titleEn: 'CHANGELOG',
         name: 'changelog',
         path: '/web-components/changelog',
-        component: () => import('../../../CHANGELOG.md'),
+        component: () => import('../CHANGELOG.md'),
       },
       {
         title: '组件概览',

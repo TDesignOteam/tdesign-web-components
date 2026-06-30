@@ -58,7 +58,7 @@ document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 
 更多使用方式请点击 👉🏻 [快速开始](./site/docs/getting-started.md)
 
-`@tdesign/web-components-chat` 提供 AI Chat 组件，`@tdesign/web-components` 提供基础 UI 组件。可以阅读 [这里](https://github.com/Tencent/tdesign/blob/main/docs/develop-install.md) 了解更多。
+`@tdesign/web-components-chat` 提供 AI Chat 组件，需与 `@tdesign/web-components` 一并安装。更新日志：[UI](./packages/tdesign-web-components/CHANGELOG.md) · [Chat](./packages/tdesign-web-components-chat/CHANGELOG.md)。更多说明见 [DEVELOP_GUIDE](./DEVELOP_GUIDE.md)。
 
 # 快速体验
 

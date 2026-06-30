@@ -5,7 +5,7 @@ TDesign AI Chat Web Components（Omi）。依赖基础 UI 包 `@tdesign/web-comp
 ## 安装
 
 ```bash
-npm i @tdesign/web-components @tdesign/web-components-chat omi
+npm i @tdesign/web-components @tdesign/web-components-chat
 ```
 
 ## 使用
@@ -28,7 +28,6 @@ import '@tdesign/web-components/lib/style/index.css';
 ## Peer Dependencies
 
 - `@tdesign/web-components` — 提供 `t-collapse`、`t-message` 等基础组件
-- `omi` — Web Components 运行时
 
 ## License
 

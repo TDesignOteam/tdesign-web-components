@@ -94,18 +94,53 @@ npm run start
 .
 ├── packages/
 │   ├── common/                         # tdesign-common 子仓库（submodule）
-│   ├── components/                     # UI 组件源码
-│   │   └── [组件]/
-│   │       ├── _example/                # 演示文件
-│   │       └── index.ts                 # 组件导出入口
-│   ├── pro-components/                  # Pro 组件源码
-│   │   └── chat/                       # Chat 组件库 (@tdesign/web-components-chat)
-│   ├── tdesign-web-components/          # UI 主包（站点）
-│   │   └── site/
-│   ├── tdesign-web-components-chat/    # Chat 主包（站点）
-│   │   └── site/
-│   └── shared/                         # 共享工具 (@tdesign/web-components-shared)
+│   │   ├── js/                         # 跨端公共 JS（构建时 bundle 进 UI/Chat 发布包）
+│   │   └── style/                      # 跨端公共 Less 样式
+│   ├── components/                     # UI 组件源码 (@tdesign/components)
+│   ├── pro-components/
+│   │   └── chat/                       # Chat 组件源码
+│   ├── shared/                         # WC 专用工具源码（构建时 bundle 进发布包）
+│   ├── tdesign-web-components/         # UI npm 发布包 @tdesign/web-components
+│   │   ├── CHANGELOG.md
+│   │   ├── lib|esm|cjs|dist/           # vite build 产物
+│   │   └── site/                       # UI 文档站
+│   ├── tdesign-web-components-chat/    # Chat npm 发布包 @tdesign/web-components-chat
+│   │   ├── CHANGELOG.md
+│   │   └── site/                       # Chat 文档站
+│   └── vite-config/                    # 共享构建配置
 ```
+
+### 发布包架构
+
+| 包名 | 源码 | 用户安装 |
+|------|------|----------|
+| `@tdesign/web-components` | `packages/components` | 基础 UI 组件 |
+| `@tdesign/web-components-chat` | `packages/pro-components/chat` | AI Chat（peer 依赖 UI 包） |
+
+**构建与依赖策略**
+
+- 构建入口：各发布包 `pnpm run build` → `vite build`（`@tdesign/vite-config`）
+- 产物格式：`lib`（类型 + 声明邻近 JS）、`esm`、`cjs`、`dist`（UMD）
+- `packages/common/js`、`packages/shared`：**内联进** `lib/esm/cjs`，不单独发 npm
+- Chat 额外依赖：`@tdesign/ai-chat-engine`（dependencies）；`@tdesign/web-components`（peer）
+
+**按需引入（Web Components）**
+
+```javascript
+// 注册自定义元素（副作用 import）
+import '@tdesign/web-components/button';
+import '@tdesign/web-components-chat/chatbot';
+
+// 样式
+import '@tdesign/web-components/lib/style/index.css';
+```
+
+`package.json` 的 `exports` 约定：`"."` 全量入口，`"./*"` 单组件（如 `/button`、`/chatbot`）。
+
+**更新日志**
+
+- UI：`packages/tdesign-web-components/CHANGELOG.md`
+- Chat：`packages/tdesign-web-components-chat/CHANGELOG.md`
 
 Chat 依赖 `@tdesign/ai-chat-engine`（`^0.1.0`）。npm 尚未发布时，需先在 [tdesign-ai-core](https://github.com/TDesignOteam/tdesign-ai-core) 的 `packages/chat-engine` 目录执行 `pnpm link --global`，再在本仓库根目录执行：
 
@@ -206,7 +241,7 @@ pnpm run site:chat
 pnpm run preview:ui
 # 编译全部组件库
 pnpm run build
-# 编译 UI 组件库（统一 pipeline：prepare → tsc → vite → sync-dts）
+# 编译 UI 组件库（vite build → lib/esm/cjs/dist）
 pnpm run build:ui
 # 编译 Chat（含 UI；或先 build:ui 再 build:chat-only）
 pnpm run build:chat

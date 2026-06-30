@@ -59,3 +59,7 @@ jobs:
             echo "Found .d.ts pollution in source directories"
             exit 1
           fi
+          if find packages/tdesign-web-components-chat/lib -path '*/mock/*' -name '*.js' 2>/dev/null | grep -q .; then
+            echo "Found mock demo files in chat publish lib (should be excluded from build)"
+            exit 1
+          fi

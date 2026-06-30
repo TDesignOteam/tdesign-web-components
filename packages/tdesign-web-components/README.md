@@ -5,10 +5,8 @@ TDesign Web Components 组件库（Omi）。完整文档见 [tdesign.tencent.com
 ## 安装
 
 ```bash
-npm i @tdesign/web-components omi
+npm i @tdesign/web-components
 ```
-
-`omi` 为 peer dependency，需与组件库一并安装。
 
 ## 使用
 

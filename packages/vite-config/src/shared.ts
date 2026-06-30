@@ -133,13 +133,17 @@ export function createLibExternal(
   };
 }
 
-/** UMD 构建 external（仅 peer + 额外声明） */
+/** UMD 构建 external（dependencies + peer + 额外声明） */
 export function createUmdExternal(
-  pkg: { peerDependencies?: Record<string, string> },
+  pkg: {
+    dependencies?: Record<string, string>;
+    peerDependencies?: Record<string, string>;
+  },
   additionalExternal: string[] = [],
 ) {
+  const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
-  const externalPkgs = [...new Set([...peerDeps, ...additionalExternal])];
+  const externalPkgs = [...new Set([...deps, ...peerDeps, ...additionalExternal])];
 
   return (id: string) => externalPkgs.some((dep) => id === dep || id.startsWith(`${dep}/`));
 }
@@ -151,6 +155,7 @@ export function collectLibInputs(srcDir: string) {
     `${srcDir}/**/*.tsx`,
     `!${srcDir}/**/node_modules/**`,
     `!${srcDir}/**/_example/**`,
+    `!${srcDir}/**/mock/**`,
     `!${srcDir}/**/__tests__/**`,
     `!${srcDir}/**/*.d.ts`,
   ];

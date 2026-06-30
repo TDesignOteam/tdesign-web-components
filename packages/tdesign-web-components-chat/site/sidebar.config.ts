@@ -12,6 +12,13 @@ export default [
         component: () => import('@docs/getting-started.md'),
       },
       {
+        title: '更新日志',
+        titleEn: 'CHANGELOG',
+        name: 'changelog',
+        path: '/pro-web-components/changelog',
+        component: () => import('../CHANGELOG.md'),
+      },
+      {
         title: '组件概览',
         titleEn: 'Overview',
         name: 'overview',

@@ -12,10 +12,10 @@ isGettingStarted: true
 推荐使用 npm 方式进行开发
 
 ```bash
-npm i @tdesign/web-components-chat
+npm i @tdesign/web-components @tdesign/web-components-chat
 ```
 
-> `@tdesign/web-components` 会作为 peer dependency 自动安装，无需单独安装。
+> `@tdesign/web-components` 为 **peer dependency**，请与 Chat 包一并安装。
 
 #### 浏览器引入（敬请期待）
 
