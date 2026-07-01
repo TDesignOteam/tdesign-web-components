@@ -19,3 +19,10 @@ export {
   runWorkspaceTsc,
 } from '../lib-pipeline-utils.mjs';
 export { generateComponentsEntry, generateEntryPlugin, runGenerateEntryFromCwd } from '../generate-entry.mjs';
+export {
+  emitChatStyleReexport,
+  emitGlobalStyleCss,
+  emitPublishStyleCss,
+  patchBarrelIndexDts,
+  runLibPostProcess,
+} from '../lib-post-process.mjs';

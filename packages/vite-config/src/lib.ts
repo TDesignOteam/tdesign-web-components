@@ -6,6 +6,7 @@ import { libBuildPipelinePlugin } from './lib-pipeline-plugin.ts';
 import { createLibDtsPlugin, libDtsOxcConfig } from './lib-dts.ts';
 import { generateEntryPlugin } from './generate-entry.mjs';
 import { getWorkspaceRoot } from './get-root-path.mjs';
+import { runLibPostProcess } from './lib-post-process.mjs';
 import omiStyleImportPlugin from './plugins/omi-style.js';
 import {
   collectLibInputs,
@@ -240,6 +241,8 @@ export function libMultiFormatPlugin(options: LibViteOptions): Plugin {
           ...createLibViteConfigForTarget(options, target, { emptyOutDir: i === 0 }),
         });
       }
+
+      await runLibPostProcess(options, getWorkspaceRoot(options.packageDir));
     },
   };
 }

@@ -135,7 +135,7 @@ import '@tdesign/web-components-chat/chatbot';
 import '@tdesign/web-components/lib/style/index.css';
 ```
 
-`package.json` 的 `exports` 约定：`"."` 全量入口，`"./*"` 单组件（如 `/button`、`/chatbot`）。
+`package.json` 的 `exports` 约定：`"."` 全量入口，`"./*"` 单组件（如 `/button`、`/chatbot`），`./lib/style/index.css` 公共样式。
 
 **更新日志**
 

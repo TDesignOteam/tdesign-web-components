@@ -11,9 +11,8 @@ npm i @tdesign/web-components @tdesign/web-components-chat
 ## 使用
 
 ```js
-import '@tdesign/web-components';
 import '@tdesign/web-components-chat/chatbot';
-import '@tdesign/web-components/lib/style/index.css';
+import '@tdesign/web-components-chat/lib/style/index.css';
 ```
 
 ## 产物说明

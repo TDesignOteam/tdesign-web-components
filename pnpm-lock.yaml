@@ -31,9 +31,6 @@ importers:
       '@types/lodash-es':
         specifier: ^4.17.12
         version: 4.17.12
-      autoprefixer:
-        specifier: ^10.4.16
-        version: 10.5.0(postcss@8.5.9)
       cors:
         specifier: ^2.8.5
         version: 2.8.6
@@ -280,12 +277,6 @@ importers:
       '@popperjs/core':
         specifier: ^2.11.8
         version: 2.11.8
-      '@tdesign/common-js':
-        specifier: workspace:^
-        version: link:../common/js
-      '@tdesign/web-components-shared':
-        specifier: workspace:^
-        version: link:../shared
       dayjs:
         specifier: ^1.11.19
         version: 1.11.20
@@ -314,12 +305,6 @@ importers:
       '@tdesign/ai-chat-engine':
         specifier: git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/chat-engine
         version: https://codeload.github.com/TDesignOteam/tdesign-ai-core/tar.gz/7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee#path:packages/chat-engine(immer@10.2.0)
-      '@tdesign/common-js':
-        specifier: workspace:^
-        version: link:../common/js
-      '@tdesign/web-components-shared':
-        specifier: workspace:^
-        version: link:../shared
       cherry-markdown:
         specifier: 0.11.0-alpha-5
         version: 0.11.0-alpha-5
@@ -329,9 +314,6 @@ importers:
       lodash-es:
         specifier: ^4.17.21
         version: 4.18.1
-      omi:
-        specifier: ^7.7.0
-        version: 7.7.13
     devDependencies:
       '@tdesign/pro-components-chat':
         specifier: workspace:^
@@ -342,6 +324,9 @@ importers:
       '@tdesign/web-components':
         specifier: workspace:^
         version: link:../tdesign-web-components
+      omi:
+        specifier: ^7.7.13
+        version: 7.7.13
 
   packages/tdesign-web-components-chat/site:
     devDependencies:
@@ -7098,15 +7083,6 @@ snapshots:
       fraction.js: 5.3.4
       picocolors: 1.1.1
       postcss: 8.5.15
-      postcss-value-parser: 4.2.0
-
-  autoprefixer@10.5.0(postcss@8.5.9):
-    dependencies:
-      browserslist: 4.28.2
-      caniuse-lite: 1.0.30001788
-      fraction.js: 5.3.4
-      picocolors: 1.1.1
-      postcss: 8.5.9
       postcss-value-parser: 4.2.0
 
   available-typed-arrays@1.0.7:
