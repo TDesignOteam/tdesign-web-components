@@ -1,9 +1,5 @@
 name: pkg-pr-new
-on:
-  push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -17,7 +13,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 18
+          node-version-file: .node-version
 
       - run: npm install
 
