@@ -226,14 +226,15 @@ const defaultChunkParser = (chunk): AIMessageContent => {
 };
 
 function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
-  if (!chunk?.data || typeof chunk === 'string') {
-    return {
-      type: 'markdown',
-      data: String(chunk),
-    };
-  }
+  // if (!chunk?.data || typeof chunk === 'string') {
+  //   return {
+  //     type: 'markdown',
+  //     data: String(chunk),
+  //   };
+  // }
 
   const { type, ...rest } = chunk.data;
+
   switch (type) {
     case 'error':
       return {
@@ -271,6 +272,14 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       };
 
     case 'text': {
+      // 如果是空内容，返回 pending 状态来过滤
+      if (!rest?.msg || rest?.msg === '') {
+        return {
+          type: 'text',
+          data: '',
+          status: 'pending',
+        };
+      }
       return {
         type: 'markdown',
         data: rest?.msg || '',
@@ -313,7 +322,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
 // 测试用的回调配置
 const mockModelsWithCallbacks = {
   // endpoint: 'http://localhost:3000/sse/normal',
-  endpoint: 'https://1257786608-9i9j1kpa67.ap-guangzhou.tencentscf.com/sse/normal',
+  endpoint: 'http://localhost:9001/sse/normal',
   stream: true,
 
   // === 业务层回调测试 ===
@@ -340,7 +349,9 @@ const mockModelsWithCallbacks = {
       reason: 'user_initiated',
     });
   },
-
+  // 过滤掉 msg 为空字符串的 chunk
+  isValidChunk: (chunk) => chunk?.data?.msg && chunk.data.msg !== '',
+  // 经过isValidChunk过滤后的chunk进入onmessage
   onMessage: (chunk) => defaultChunkParser(chunk),
 
   onRequest: (params) => {
@@ -424,7 +435,7 @@ export default class BasicChat extends Component {
       const search = content.find((item) => item.type === 'search');
       return {
         // variant: 'text',
-        variant: 'outline',
+        // variant: 'outline',
         avatar: 'https://tdesign.gtimg.com/site/chat-avatar.png',
         actions: ['replay', 'copy', 'good', 'bad'],
         handleActions: {

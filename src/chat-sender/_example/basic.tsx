@@ -7,12 +7,6 @@ export default class BasicExample extends Component {
 
   loading = signal<boolean>(false);
 
-  handleReadyToSend = (v: string): boolean => {
-    console.log('handleReadyToSend', v);
-    // 无论内容是否为空，始终允许发送
-    return true;
-  };
-
   onChange = (e: CustomEvent) => {
     console.log('onChange', e);
     this.inputValue.value = e.detail;
@@ -44,7 +38,6 @@ export default class BasicExample extends Component {
         placeholder="请输入内容"
         loading={this.loading.value}
         autosize={{ minRows: 2 }}
-        readyToSend={this.handleReadyToSend}
         onChange={this.onChange}
         onSend={this.onSend}
         onStop={this.onStop}

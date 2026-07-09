@@ -75,8 +75,9 @@ export function handleMessagesSnapshot(messages: any[]): any[] {
 
 /**
  * 处理自定义事件
+ * 直接将 CUSTOM 事件转换为通用格式，由业务层自行处理
  * @param event 自定义事件对象
- * @returns 处理结果或undefined
+ * @returns 处理结果
  */
 export function handleCustomEvent(event: any): any {
   if (event.name === 'suggestion') {
@@ -86,7 +87,14 @@ export function handleCustomEvent(event: any): any {
       status: 'complete',
     };
   }
-  return undefined;
+  return {
+    type: 'custom',
+    data: {
+      name: event.name,
+      value: event.value,
+    },
+    status: 'complete',
+  };
 }
 
 /**
@@ -229,18 +237,63 @@ export function createToolCallContent(
 }
 
 /**
+ * 创建 activity 类型的 AIMessageContent
+ * @param activityType 活动类型
+ * @param content 活动内容
+ * @param status 状态
+ * @param strategy 策略
+ * @param deltaInfo 增量信息（可选，用于 A2UI 等场景的增量处理）
+ * @returns activity 类型的 AIMessageContent
+ *
+ * type 格式: activity-${activityType}
+ * - activityType: 用于查找对应的渲染组件和区分不同类型的 Activity
+ * - 支持并行多个不同类型的 Activity
+ */
+export function createActivityContent(
+  activityType: string,
+  content: Record<string, any>,
+  status: 'streaming' | 'complete' = 'complete',
+  strategy: 'append' | 'merge' = 'append',
+  deltaInfo?: { fromIndex: number; toIndex: number },
+): any {
+  // 使用 activity-${activityType} 格式，支持并行不同类型的 Activity
+  const type = `activity-${activityType}`;
+
+  const ext = deltaInfo ? { deltaInfo } : undefined;
+
+  return createAIMessageContent(
+    type,
+    {
+      activityType,
+      content,
+    },
+    status,
+    strategy,
+    ext,
+  );
+}
+
+/**
  * 创建 markdown 类型的 AIMessageContent
  * @param data markdown 数据
  * @param status 状态
  * @param strategy 策略
+ * @param role 消息角色（可选，默认 assistant），通过 ext.role 传递给业务层
  * @returns markdown 类型的 AIMessageContent
  */
 export function createMarkdownContent(
   data: string,
   status: 'streaming' | 'complete' = 'complete',
   strategy: 'append' | 'merge' = 'append',
+  role?: 'assistant' | 'system',
 ): any {
-  return createAIMessageContent('markdown', data, status, strategy);
+  const notAssistant = role && role !== 'assistant';
+  // TODO: 这里对于textchunk中设置了role的情况delta没做合并（暂时type=`${role}-text`业务自行处理)
+  const content = createAIMessageContent(notAssistant ? `${role}-text` : 'markdown', data, status, strategy);
+  if (notAssistant) {
+    content.ext = { ...content.ext, role };
+  }
+  return content;
 }
 
 /**

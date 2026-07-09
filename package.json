@@ -1,7 +1,7 @@
 {
   "name": "tdesign-web-components",
   "purename": "tdesign",
-  "version": "1.2.10",
+  "version": "1.3.1-alpha.12",
   "type": "module",
   "main": "lib/index.js",
   "module": "lib/index.js",
@@ -13,7 +13,8 @@
     "site": "cd site && vite build",
     "site:preview": "cd site && vite build --mode preview && cd ../_site && cp index.html 404.html",
     "prebuild": "rimraf es/* lib/* dist/* esm/* cjs/*",
-    "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc",
+    "build": "cross-env NODE_ENV=production rollup -c script/rollup.config.js && npm run build:tsc && npm run copy:fonts",
+    "copy:fonts": "mkdir -p lib/assets && cp node_modules/cherry-markdown/dist/fonts/ch-icon.* lib/assets/",
     "build:analyze": "cross-env NODE_ENV=production ANALYZE=true rollup -c script/rollup.config.js && npm run build:tsc",
     "build:analyze:all": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=all rollup -c script/rollup.config.js && npm run build:tsc",
     "build:analyze:umd": "cross-env NODE_ENV=production ANALYZE=true ANALYZE_MODE=umd rollup -c script/rollup.config.js && npm run build:tsc",

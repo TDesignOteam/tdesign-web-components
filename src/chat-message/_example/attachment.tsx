@@ -36,6 +36,34 @@ export default class BasicExample extends Component {
             console.log('fileclick', e.detail);
           }}
         ></t-chat-attachment-content>
+        <t-chat-item
+          message={{
+            id: 'user-1',
+            role: 'user',
+            content: [
+              {
+                type: 'text',
+                data: '请帮我p图',
+              },
+              {
+                type: 'attachment',
+                data: [
+                  {
+                    fileType: 'image',
+                    url: 'https://tdesign.gtimg.com/site/avatar.jpg',
+                  },
+                ],
+              },
+            ],
+          }}
+          chatContentProps={{
+            attachments: {
+              onFileClick: (e) => {
+                console.log('我是自定义点击逻辑', e.detail);
+              },
+            },
+          }}
+        ></t-chat-item>
       </t-space>
     );
   }

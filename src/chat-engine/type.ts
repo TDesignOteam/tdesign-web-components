@@ -1,4 +1,4 @@
-import type { ToolCallEventType } from './adapters/agui/events';
+import type { ToolCallEventType } from './adapters/agui/types/events';
 
 export type ChatMessageRole = 'user' | 'assistant' | 'system';
 export type ChatMessageStatus = 'pending' | 'streaming' | 'complete' | 'stop' | 'error';
@@ -14,7 +14,8 @@ export type ChatContentType =
   | 'video'
   | 'suggestion'
   | 'reasoning'
-  | 'toolcall';
+  | 'toolcall'
+  | 'activity';
 
 export type AttachmentType = 'image' | 'video' | 'audio' | 'pdf' | 'doc' | 'ppt' | 'txt';
 
@@ -106,6 +107,20 @@ export type ToolCall = {
 
 export type ToolCallContent = ChatBaseContent<'toolcall', ToolCall>;
 
+// Activity 内容
+export type ActivityData<TContent = Record<string, any>> = {
+  activityType: string;
+  messageId?: string;
+  content: TContent;
+  /** 增量更新信息 */
+  deltaInfo?: {
+    fromIndex: number;
+    toIndex: number;
+  };
+};
+
+export type ActivityContent<TContent = Record<string, any>> = ChatBaseContent<'activity', ActivityData<TContent>>;
+
 // 消息主体
 // 基础消息结构
 
@@ -131,6 +146,7 @@ type AIContentTypeMap = {
   suggestion: SuggestionContent;
   reasoning: ReasoningContent;
   toolcall: ToolCallContent;
+  activity: ActivityContent;
 } & AIContentTypeOverrides;
 
 export type AIContentType = keyof AIContentTypeMap;
@@ -199,6 +215,25 @@ export interface DefaultEngineCallbacks {
     params: ChatRequestParams,
   ) => (ChatRequestParams & RequestInit) | Promise<ChatRequestParams & RequestInit>;
   onStart?: (chunk: string) => void;
+  /**
+   * Chunk 验证器 - 用于验证 SSE 数据块是否有效
+   *
+   * 当后端返回空内容或无效数据时，可以通过此配置判断 chunk 是否有效，
+   * 只有有效的 chunk 才会被处理，避免过早进入 streaming 状态。
+   *
+   * @param chunk SSE 数据块
+   * @returns 返回 true 表示该 chunk 有效（需要处理），返回 false 表示无效（跳过）
+   *
+   * @example
+   * ```ts
+   * // 只处理 content 不为空的 chunk
+   * isValidChunk: (chunk) => {
+   *   const content = chunk.data?.choices?.[0]?.delta?.content;
+   *   return content !== '' && content !== undefined;
+   * }
+   * ```
+   */
+  isValidChunk?: (chunk: SSEChunkData) => boolean;
   /** 接收到消息数据块 - 用于解析和处理聊天内容 */
   onMessage?: (
     chunk: SSEChunkData,

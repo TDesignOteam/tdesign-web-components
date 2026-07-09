@@ -262,13 +262,6 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   /**
-   * 选择文件
-   */
-  selectFile() {
-    this.ChatSenderRef.current.selectFile();
-  }
-
-  /**
    * 最后一条AI消息
    */
   get messagesStore(): ChatMessageStore {
@@ -280,6 +273,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   scrollList(options: TdChatListScrollToOptions) {
     this.listRef.current?.scrollList(options);
+  }
+
+  /**
+   * 选择文件
+   */
+  selectFile() {
+    this.ChatSenderRef.current?.selectFile();
   }
 
   /**

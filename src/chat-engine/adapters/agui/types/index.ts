@@ -3,6 +3,8 @@
 
 import { z } from 'zod';
 
+import type { UserMessageContent } from '../../../type';
+
 export const FunctionCallSchema = z.object({
   name: z.string(),
   arguments: z.string(),
@@ -14,7 +16,7 @@ export const ToolCallSchema = z.object({
   function: FunctionCallSchema,
 });
 
-export const BaseMessageSchema = z.object({
+const BaseMessageSchema = z.object({
   id: z.string(),
   role: z.string(),
   content: z.string().optional(),
@@ -22,48 +24,71 @@ export const BaseMessageSchema = z.object({
   timestamp: z.number().optional(), // 添加时间戳字段，用于历史消息
 });
 
-export const DeveloperMessageSchema = BaseMessageSchema.extend({
+const DeveloperMessageSchema = BaseMessageSchema.extend({
   role: z.literal('developer'),
   content: z.string(),
 });
 
-export const SystemMessageSchema = BaseMessageSchema.extend({
+const SystemMessageSchema = BaseMessageSchema.extend({
   role: z.literal('system'),
   content: z.string(),
 });
 
-export const AssistantMessageSchema = BaseMessageSchema.extend({
+const AssistantMessageSchema = BaseMessageSchema.extend({
   role: z.literal('assistant'),
   content: z.string().optional(),
   reasoningContent: z.string().optional(),
   toolCalls: z.array(ToolCallSchema).optional(),
 });
 
-export const UserMessageSchema = BaseMessageSchema.extend({
+/**
+ * 用户消息 Schema
+ * content 支持两种格式：
+ * 1. 字符串（标准 AG-UI 格式）
+ * 2. 数组（已转换为 ChatEngine 的 UserMessageContent[] 格式）
+ */
+const UserMessageSchema = BaseMessageSchema.extend({
   role: z.literal('user'),
-  content: z.string(),
+  content: z.union([z.string(), z.array(z.any())]),
 });
 
-export const ToolMessageSchema = z.object({
+// 扩展类型定义，支持两种 content 格式
+export type AGUIUserMessageContent = string | UserMessageContent[];
+
+const ToolMessageSchema = z.object({
   id: z.string(),
   content: z.string(),
   role: z.literal('tool'),
   toolCallId: z.string(),
+  timestamp: z.number().optional(),
 });
 
-export const MessageSchema = z.discriminatedUnion('role', [
+const ActivityMessageSchema = z.object({
+  id: z.string(),
+  role: z.literal('activity'),
+  activityType: z.string(),
+  content: z.record(z.any()),
+  timestamp: z.number().optional(),
+});
+
+export const AGUIMessageSchema = z.discriminatedUnion('role', [
   DeveloperMessageSchema,
   SystemMessageSchema,
   AssistantMessageSchema,
   UserMessageSchema,
   ToolMessageSchema,
+  ActivityMessageSchema,
 ]);
 
-// 历史消息相关的类型定义
+/**
+ * 历史消息相关的类型定义
+ *
+ */
 export const HistoryMessageSchema = z.discriminatedUnion('role', [
   UserMessageSchema,
   AssistantMessageSchema,
   ToolMessageSchema,
+  ActivityMessageSchema,
 ]);
 
 export const RoleSchema = z.union([
@@ -72,6 +97,7 @@ export const RoleSchema = z.union([
   z.literal('assistant'),
   z.literal('user'),
   z.literal('tool'),
+  z.literal('activity'),
 ]);
 
 export const ContextSchema = z.object({
@@ -89,7 +115,7 @@ export const RunAgentInputSchema = z.object({
   threadId: z.string(),
   runId: z.string(),
   state: z.any(),
-  messages: z.array(MessageSchema),
+  messages: z.array(AGUIMessageSchema),
   tools: z.array(ToolSchema),
   context: z.array(ContextSchema),
   forwardedProps: z.any(),
@@ -98,27 +124,30 @@ export const RunAgentInputSchema = z.object({
 export const StateSchema = z.any();
 
 export type AGUIToolCall = z.infer<typeof ToolCallSchema>;
-export type FunctionCall = z.infer<typeof FunctionCallSchema>;
-export type DeveloperMessage = z.infer<typeof DeveloperMessageSchema>;
-export type SystemMessage = z.infer<typeof SystemMessageSchema>;
-export type AssistantMessage = z.infer<typeof AssistantMessageSchema>;
-export type UserMessage = z.infer<typeof UserMessageSchema>;
-export type ToolMessage = z.infer<typeof ToolMessageSchema>;
-export type Message = z.infer<typeof MessageSchema>;
-export type Context = z.infer<typeof ContextSchema>;
-export type Tool = z.infer<typeof ToolSchema>;
+export type AGUIFunctionCall = z.infer<typeof FunctionCallSchema>;
+export type AGUIDeveloperMessage = z.infer<typeof DeveloperMessageSchema>;
+export type AGUISystemMessage = z.infer<typeof SystemMessageSchema>;
+export type AGUIAssistantMessage = z.infer<typeof AssistantMessageSchema>;
+export type AGUIUserMessage = z.infer<typeof UserMessageSchema>;
+export type AGUIToolMessage = z.infer<typeof ToolMessageSchema>;
+export type AGUIActivityMessage = z.infer<typeof ActivityMessageSchema>;
+export type AGUIMessage = z.infer<typeof AGUIMessageSchema>;
+export type AGUIContext = z.infer<typeof ContextSchema>;
+export type AGUITool = z.infer<typeof ToolSchema>;
 export type RunAgentInput = z.infer<typeof RunAgentInputSchema>;
-export type State = z.infer<typeof StateSchema>;
-export type Role = z.infer<typeof RoleSchema>;
+export type AGUIState = z.infer<typeof StateSchema>;
+export type AGUIRole = z.infer<typeof RoleSchema>;
 
 // 历史消息类型别名，复用已有的类型
-export type AGUIHistoryMessage = Message;
-export type AGUIUserHistoryMessage = UserMessage;
-export type AGUIAssistantHistoryMessage = AssistantMessage;
-export type AGUIToolHistoryMessage = ToolMessage;
+export type AGUIHistoryMessage = AGUIMessage;
+export type AGUIUserHistoryMessage = AGUIUserMessage;
+export type AGUIAssistantHistoryMessage = AGUIAssistantMessage;
+export type AGUIToolHistoryMessage = AGUIToolMessage;
 
 export class AGUIError extends Error {
   constructor(message: string) {
     super(message);
   }
 }
+
+export * from './events';
