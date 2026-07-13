@@ -6,9 +6,7 @@ import babelAddPartAttributePlugin from './babel-plugin-add-part-attribute.cjs';
 
 const { visitor } = babelAddPartAttributePlugin({ types: t, jsxFactoryName: 'OmiComponent' });
 
-/**
- * Vite 插件：为 Omi JSX 自动注入 part 属性
- */
+/** Vite 插件：为 Omi JSX 自动注入 part 属性 */
 export default function addPartAttributePlugin(options = {}) {
   const filter = createFilter(options.include || /\.(jsx?|tsx?|mjs)$/, options.exclude || /node_modules/);
 

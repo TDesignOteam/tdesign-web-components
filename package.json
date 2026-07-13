@@ -12,17 +12,13 @@
     "site:chat": "pnpm --filter @tdesign/web-components-chat-site build",
     "preview:ui": "pnpm --filter @tdesign/web-components-site preview",
     "preview:chat": "pnpm --filter @tdesign/web-components-chat-site preview",
-    "build": "pnpm run \"/^build:/\"",
-    "build:shared": "pnpm --filter @tdesign/web-components-shared build",
-    "build:prepare": "node ./packages/vite-config/src/lib-prepare.mjs",
-    "check:types": "pnpm run build:prepare && pnpm run build:shared && tsc -p packages/components/tsconfig.build.json && tsc -p packages/pro-components/chat/tsconfig.build.json --noEmit",
+    "build": "pnpm run build:chat",
+    "check:types": "node --import tsx/esm ./packages/vite-config/src/prepare.cli.mjs && pnpm --filter @tdesign/web-components-shared build && tsc -p packages/components/tsconfig.build.json && tsc -p packages/pro-components/chat/tsconfig.build.json --noEmit",
     "build:ui": "pnpm --filter @tdesign/web-components build",
-    "build:chat": "pnpm run build:ui && pnpm run build:chat-only",
-    "build:chat-only": "pnpm --filter @tdesign/web-components-chat build",
+    "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
     "lint": "pnpm run check:types && eslint .",
     "lint:fix": "eslint . --fix",
     "test": "echo \"暂无单元测试，跳过\"",
-    "generate:entry": "node ./packages/vite-config/src/generate-entry.mjs",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -68,6 +64,7 @@
     "tdesign-icons-view": "^0.2.7",
     "tdesign-site-components": "^0.15.4",
     "tdesign-theme-generator": "^1.0.16",
+    "tsx": "^4.21.0",
     "typescript": "^5.8.2",
     "typescript-eslint": "^8.61.1",
     "vite": "^8.0.16"

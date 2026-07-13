@@ -228,7 +228,7 @@ export * from './button';
 
 ### 项目常用脚本说明
 
-各源码包通过 `check:types`（`build:shared` → `components` 出 dist 声明 → `chat --noEmit`）做全仓类型检查。发布构建由 `vite build` 直写 `packages/tdesign-web-components/{lib,esm,cjs,dist}`：`@tdesign/common-js`（submodule）与 `@tdesign/web-components-shared` 均 **内联进发布包**，用户只需安装主包即可使用。
+各源码包通过 `check:types`（prepare → shared 声明 → components 声明 → chat `--noEmit`）做全仓类型检查。发布构建由 `vite build` 直写 `packages/tdesign-web-components/{lib,esm,cjs,dist}`：`packages/common` 与 `packages/shared` 均作为包内 `_internal/*` 私有实现进入发布包，用户只需安装主包即可使用。
 
 ```bash
 # 启动 UI 文档站
@@ -243,10 +243,9 @@ pnpm run preview:ui
 pnpm run build
 # 编译 UI 组件库（vite build → lib/esm/cjs/dist）
 pnpm run build:ui
-# 编译 Chat（含 UI；或先 build:ui 再 build:chat-only）
+# 编译 Chat（含 UI）
 pnpm run build:chat
-pnpm run build:chat-only
-# 仅生成 less 声明 + common 类型缓存 + shared/components 声明 + chat 类型检查
+# 生成 less 声明 + common 类型缓存 + shared/components 声明 + chat 类型检查
 pnpm run check:types
 
 # 自动修复 eslint 错误

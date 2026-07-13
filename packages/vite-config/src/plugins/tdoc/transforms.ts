@@ -1,24 +1,24 @@
 /* eslint-disable no-param-reassign */
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
-import mdToWc from './md-to-wc.mjs';
+import mdToWc from './md-to-wc.ts';
 
-let demoImports = {};
-let demoCodesImports = {};
+let demoImports: Record<string, string> = {};
+let demoCodesImports: Record<string, string> = {};
 
 const ignoreReplaceDemoRegExp = /getting-started\.md/;
 
 export default {
-  before({ source, file }) {
+  before({ source, file }: { source: string; file: string }) {
     const resourceDir = path.dirname(file);
     const reg = file.match(/src\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
     const name = reg && reg[1];
     demoImports = {};
     demoCodesImports = {};
-    // 替换成对应 demo 文件
+
     if (!ignoreReplaceDemoRegExp.test(file)) {
-      source = source.replace(/\{\{\s+(.+)\s+\}\}/g, (demoStr, demoFileName) => {
+      source = source.replace(/\{\{\s+(.+)\s+\}\}/g, (_demoStr, demoFileName) => {
         const jsxDemoPath = path.resolve(resourceDir, `./_example/${demoFileName}.jsx`);
         const tsxDemoPath = path.resolve(resourceDir, `./_example/${demoFileName}.tsx`);
 
@@ -31,16 +31,17 @@ export default {
       });
     }
 
-    source.replace(/:::\s*demo\s+([\\/.\w-]+)/g, (demoStr, relativeDemoPath) => {
+    source.replace(/:::\s*demo\s+([\\/.\w-]+)/g, (_demoStr, relativeDemoPath) => {
       const demoPathOnlyLetters = relativeDemoPath.replace(/[^a-zA-Z\d]/g, '');
       const demoDefName = `Demo${demoPathOnlyLetters}`;
       const demoCodeDefName = `Demo${demoPathOnlyLetters}Code`;
       demoImports[demoDefName] = `import ${demoDefName} from './${relativeDemoPath}';`;
       demoCodesImports[demoCodeDefName] = `import ${demoCodeDefName} from './${relativeDemoPath}?raw';`;
+      return '';
     });
     return source;
   },
-  render({ source, file, md }) {
+  render({ source, file, md }: { source: string; file: string; md: any }) {
     const demoDefsStr = Object.keys(demoImports)
       .map((key) => demoImports[key])
       .join('\n');
@@ -62,7 +63,7 @@ export default {
       )
       .join('\n');
 
-    const sfc = mdToWc({
+    return mdToWc({
       md,
       file,
       source,
@@ -70,6 +71,5 @@ export default {
       demoCodesDefsStr,
       components,
     });
-    return sfc;
   },
 };

@@ -1,10 +1,10 @@
-import Markdownitfence from 'markdown-it-fence';
-import path from 'path';
+import MarkdownItFence from 'markdown-it-fence';
+import path from 'node:path';
 
-function mdInJsx(_md) {
-  return new Markdownitfence(_md, 'md_in_jsx', {
+function mdInJsx(md: any) {
+  return new MarkdownItFence(md, 'md_in_jsx', {
     validate: () => true,
-    render(tokens, idx) {
+    render(tokens: any[], idx: number) {
       const { content, info } = tokens[idx];
       return `<pre className="language-${info}"><code className="language-${info}">{\`${content.replace(
         /`/g,
@@ -14,12 +14,12 @@ function mdInJsx(_md) {
   });
 }
 
-export default function renderDemo(md, container) {
+export default function renderDemo(md: any, container: any) {
   md.use(mdInJsx).use(container, 'demo', {
-    validate(params) {
+    validate(params: string) {
       return params.trim().match(/^demo\s+([\\/.\w-]+)(\s+(.+?))?(\s+--dev)?$/);
     },
-    render(tokens, idx) {
+    render(tokens: any, idx: number) {
       if (tokens[idx].nesting === 1) {
         const match = tokens[idx].info.trim().match(/^demo\s+([\\/.\w-]+)(\s+(.+?))?(\s+--dev)?$/);
         const [, demoPath, componentName = ''] = match;
@@ -39,7 +39,6 @@ export default function renderDemo(md, container) {
             </td-doc-demo>
           `;
 
-        // eslint-disable-next-line no-param-reassign
         tokens.tttpl = tpl;
 
         return `<div className="tdesign-demo-wrapper tdesign-demo-item--${componentName.trim()}-${demoName} tdesign-demo-item--${componentName.trim()}">`;

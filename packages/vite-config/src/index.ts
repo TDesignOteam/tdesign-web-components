@@ -8,4 +8,4 @@ export {
   siteOxcConfig,
   libOxcConfig,
 } from './shared.ts';
-export { getWorkspaceRoot } from './get-root-path.mjs';
+export { getWorkspaceRoot } from './get-root-path.ts';

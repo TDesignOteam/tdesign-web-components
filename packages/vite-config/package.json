@@ -6,10 +6,10 @@
     ".": "./src/index.ts",
     "./lib": "./src/lib/index.ts",
     "./site": "./src/site/index.ts",
-    "./prepare": "./src/lib-prepare.mjs",
+    "./prepare": "./src/prepare.ts",
     "./site-routes": "./src/site-routes.ts",
-    "./get-root-path": "./src/get-root-path.mjs",
-    "./generate-entry": "./src/generate-entry.mjs"
+    "./get-root-path": "./src/get-root-path.ts",
+    "./generate-entry": "./src/generate-entry.ts"
   },
   "dependencies": {
     "@babel/core": "^7.24.7",

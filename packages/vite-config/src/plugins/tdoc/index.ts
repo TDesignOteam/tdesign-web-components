@@ -1,15 +1,15 @@
 import vitePluginTdoc from 'vite-plugin-tdoc';
 
-import renderDemo from './demo.js';
-import transforms from './transforms.js';
+import renderDemo from './demo.ts';
+import transforms from './transforms.ts';
 
 export default () =>
   vitePluginTdoc({
-    transforms, // 解析 markdown 数据
+    transforms,
     markdown: {
       anchor: {
         tabIndex: false,
-        config: (anchor) => ({
+        config: (anchor: any) => ({
           permalink: anchor.permalink.linkInsideHeader({ symbol: '' }),
         }),
       },
@@ -19,7 +19,7 @@ export default () =>
         linkClass: 'tdesign-toc_list_item_a',
         containerClass: 'tdesign-toc_container',
       },
-      container(md, container) {
+      container(md: any, container: any) {
         renderDemo(md, container);
       },
     },

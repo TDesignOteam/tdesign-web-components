@@ -1,22 +1,20 @@
 import { execSync } from 'node:child_process';
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
 
 import fg from 'fast-glob';
 
-import { getWorkspaceRoot } from './get-root-path.mjs';
-import { LIB_BUILD_PATHS } from './lib-pipeline-utils.mjs';
+import { LIB_BUILD_PATHS } from './lib-pipeline-utils.ts';
 
 /** 生成 components / chat 的 less 模块声明 */
-export function generateLessTypes(monorepoRoot) {
+export function generateLessTypes(monorepoRoot: string) {
   const componentsDir = resolve(monorepoRoot, 'packages/components');
   const chatDir = resolve(monorepoRoot, 'packages/pro-components/chat');
   const commonLess = fg.sync('web/components/**/_index.less', {
     cwd: resolve(monorepoRoot, LIB_BUILD_PATHS.commonStyle),
   });
 
-  function writeDeclarations(baseDir, lessFiles, outFile) {
+  function writeDeclarations(baseDir: string, lessFiles: string[], outFile: string) {
     const lines = [
       '// 由 @tdesign/vite-config 自动生成，请勿手改',
       "declare module '*.less' { const classes: string; export default classes; }",
@@ -50,24 +48,22 @@ export function generateLessTypes(monorepoRoot) {
 }
 
 /** 编译 common 类型到 .cache */
-export function emitCommonTypesCache(monorepoRoot) {
+export function emitCommonTypesCache(monorepoRoot: string) {
   execSync('tsc -p tsconfig.common-dts.json', { cwd: monorepoRoot, stdio: 'inherit' });
 }
 
-function ensureCommonTypesCache(monorepoRoot) {
+function ensureCommonTypesCache(monorepoRoot: string) {
   if (!existsSync(resolve(monorepoRoot, LIB_BUILD_PATHS.commonTypesCache))) {
     emitCommonTypesCache(monorepoRoot);
   }
 }
 
 /** less 声明 + common 类型缓存 */
-export function runPrepare(monorepoRoot, { refreshCommonTypes = true } = {}) {
+export function runPrepare(
+  monorepoRoot: string,
+  { refreshCommonTypes = true }: { refreshCommonTypes?: boolean } = {},
+) {
   generateLessTypes(monorepoRoot);
   if (refreshCommonTypes) emitCommonTypesCache(monorepoRoot);
   else ensureCommonTypesCache(monorepoRoot);
-}
-
-// CLI：pnpm run build:prepare / node lib-prepare.mjs
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  runPrepare(getWorkspaceRoot(fileURLToPath(new URL('.', import.meta.url))));
 }

@@ -2,9 +2,9 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Plugin } from 'vite';
 
-import { cleanPublishArtifacts, LIB_BUILD_PATHS, runWorkspaceTsc } from './lib-pipeline-utils.mjs';
-import { runPrepare } from './lib-prepare.mjs';
-import { getWorkspaceRoot } from './get-root-path.mjs';
+import { cleanPublishArtifacts, LIB_BUILD_PATHS, runWorkspaceTsc } from './lib-pipeline-utils.ts';
+import { runPrepare } from './prepare.ts';
+import { getWorkspaceRoot } from './get-root-path.ts';
 import type { LibViteOptions } from './lib.ts';
 
 /**

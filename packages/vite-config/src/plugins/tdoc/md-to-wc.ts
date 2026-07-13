@@ -1,23 +1,27 @@
 import esbuild from 'esbuild';
-import fs from 'fs';
+import fs from 'node:fs';
 import matter from 'gray-matter';
 import { spawn } from 'node:child_process';
-import path from 'path';
+import path from 'node:path';
 
-import { getWorkspaceRoot } from '../../get-root-path.mjs';
+import { getWorkspaceRoot } from '../../get-root-path.ts';
 
-/**
- * 获取文件 git 最后更新时间
- * @param {string} file
- * @returns {Promise<number>}
- */
+type MdToWcOptions = {
+  md: any;
+  file: string;
+  source: string;
+  demoDefsStr: string;
+  demoCodesDefsStr: string;
+  components: string;
+};
 
-function getGitTimestamp(file) {
-  return new Promise((resolve, reject) => {
+/** 获取文件 git 最后更新时间 */
+function getGitTimestamp(file: string) {
+  return new Promise<number>((resolve, reject) => {
     const child = spawn('git', ['log', '-1', '--pretty="%ci"', file]);
     let output = '';
-    child.stdout.on('data', (d) => {
-      output += String(d);
+    child.stdout.on('data', (data) => {
+      output += String(data);
     });
     child.on('close', () => {
       resolve(+new Date(output));
@@ -26,7 +30,7 @@ function getGitTimestamp(file) {
   });
 }
 
-export default async function mdToWebC(options) {
+export default async function mdToWebC(options: MdToWcOptions) {
   const mdSegment = await customRender(options);
   const { demoDefsStr, demoCodesDefsStr, components } = options;
 
@@ -149,12 +153,15 @@ const DEFAULT_TABS = [
   { tab: 'design', name: '指南' },
 ];
 
+function normalizeJsxHtml(html: string) {
+  return html.replace(/<hr>/g, '<hr />');
+}
+
 // 解析 markdown 内容
-async function customRender({ source, file, md }) {
+async function customRender({ source, file, md }: MdToWcOptions) {
   const { content, data } = matter(source);
   const lastUpdated = (await getGitTimestamp(file)) || Math.round(fs.statSync(file).mtimeMs);
 
-  // md top data
   const pageData = {
     spline: '',
     toc: true,
@@ -171,18 +178,14 @@ async function customRender({ source, file, md }) {
     ...data,
   };
 
-  // md filename
   const reg = file.match(/\/(\w+-?\w+)\/(\w+-?\w+)\.md/);
   const componentName = reg && reg[1];
 
-  // split md
-  // eslint-disable-next-line prefer-const
   let [demoMd = '', apiMd = ''] = content.split(pageData.apiFlag);
 
-  // fix table | render error
   demoMd = demoMd.replace(
     /`([^`\r\n]+)`/g,
-    (str, codeStr) => `<td-code text="${codeStr.replace(/"/g, "'")}"></td-code>`,
+    (_str, codeStr) => `<td-code text="${codeStr.replace(/"/g, "'")}"></td-code>`,
   );
 
   const mdSegment = {
@@ -196,28 +199,30 @@ async function customRender({ source, file, md }) {
   };
 
   if (pageData.isComponent) {
-    mdSegment.demoMd = md.render.call(
-      md,
-      `${pageData.toc ? '[toc]\n' : ''}${demoMd.replace(/<!--[\s\S]+?-->/g, '')}`,
-    ).html;
-    mdSegment.apiMd = md.render.call(
-      md,
-      `${pageData.toc ? '[toc]\n' : ''}${apiMd
-        .replace(/<!--[\s\S]+?-->/g, '')
-        .replace(/\{/g, '&#123;')
-        .replace(/\}/g, '&#125;')}`, // 防止esbuild编译报错
-    ).html;
+    mdSegment.demoMd = normalizeJsxHtml(
+      md.render.call(md, `${pageData.toc ? '[toc]\n' : ''}${demoMd.replace(/<!--[\s\S]+?-->/g, '')}`).html,
+    );
+    mdSegment.apiMd = normalizeJsxHtml(
+      md.render.call(
+        md,
+        `${pageData.toc ? '[toc]\n' : ''}${apiMd
+          .replace(/<!--[\s\S]+?-->/g, '')
+          .replace(/\{/g, '&#123;')
+          .replace(/\}/g, '&#125;')}`,
+      ).html,
+    );
   } else {
-    mdSegment.docMd = md.render.call(
-      md,
-      `${pageData.toc ? '[toc]\n' : ''}${
-        mdSegment?.isGettingStarted ? content : content.replace(/<!--[\s\S]+?-->/g, '')
-      }`,
-    ).html;
+    mdSegment.docMd = normalizeJsxHtml(
+      md.render.call(
+        md,
+        `${pageData.toc ? '[toc]\n' : ''}${
+          mdSegment?.isGettingStarted ? content : content.replace(/<!--[\s\S]+?-->/g, '')
+        }`,
+      ).html,
+    );
   }
 
-  // 设计指南内容 不展示 design Tab 则不解析
-  if (pageData.isComponent && pageData.tdDocTabs.some((item) => item.tab === 'design')) {
+  if (pageData.isComponent && pageData.tdDocTabs.some((item: { tab: string }) => item.tab === 'design')) {
     const designDocPath = path.resolve(
       getWorkspaceRoot(import.meta.dirname),
       `packages/common/docs/web/design/${componentName}.md`,
@@ -228,8 +233,8 @@ async function customRender({ source, file, md }) {
         (await getGitTimestamp(designDocPath)) || Math.round(fs.statSync(designDocPath).mtimeMs);
       mdSegment.designDocLastUpdated = designDocLastUpdated;
 
-      const designMd = fs.readFileSync(designDocPath, 'utf-8');
-      mdSegment.designMd = md.render.call(md, `${pageData.toc ? '[toc]\n' : ''}${designMd}`).html;
+      const designMd = fs.readFileSync(designDocPath, 'utf8');
+      mdSegment.designMd = normalizeJsxHtml(md.render.call(md, `${pageData.toc ? '[toc]\n' : ''}${designMd}`).html);
     } else {
       console.log(`[vite-plugin-tdoc]: 未找到 ${designDocPath} 文件`);
     }

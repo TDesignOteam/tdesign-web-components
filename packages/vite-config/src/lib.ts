@@ -4,17 +4,19 @@ import { build, type Plugin, type UserConfig } from 'vite';
 
 import { libBuildPipelinePlugin } from './lib-pipeline-plugin.ts';
 import { createLibDtsPlugin, libDtsOxcConfig } from './lib-dts.ts';
-import { generateEntryPlugin } from './generate-entry.mjs';
-import { getWorkspaceRoot } from './get-root-path.mjs';
-import { runLibPostProcess } from './lib-post-process.mjs';
-import omiStyleImportPlugin from './plugins/omi-style.js';
+import { generateEntryPlugin } from './generate-entry.ts';
+import { getWorkspaceRoot } from './get-root-path.ts';
+import { runLibPostProcess } from './lib-post-process.ts';
+import omiStyleImportPlugin from './plugins/omi-style.ts';
 import {
   collectLibInputs,
   createBanner,
   createLessPreprocessorOptions,
   createLibExternal,
   createMonorepoAliasConfig,
+  createPreserveModuleFileName,
   createUmdExternal,
+  createUmdGlobals,
   libOxcConfig,
 } from './shared.ts';
 
@@ -141,7 +143,7 @@ function createPreserveModulesConfig(
           preserveModules: true,
           preserveModulesRoot: srcDir,
           banner: createBanner(pkg),
-          entryFileNames: '[name].js',
+          entryFileNames: createPreserveModuleFileName(srcDir, monorepoRoot),
           chunkFileNames: '_chunks/dep-[hash].js',
           ...(target === 'cjs' ? { exports: 'named' as const } : {}),
         },
@@ -190,11 +192,10 @@ function createUmdConfig(
         output: {
           format: 'umd',
           name: umdGlobalName,
-          globals: umdGlobals,
+          globals: createUmdGlobals(umdGlobals),
           banner: createBanner(pkg),
           dir: outDir,
           entryFileNames: fileName,
-          inlineDynamicImports: true,
           exports: 'named',
         },
       },

@@ -1,7 +1,7 @@
 import fg from 'fast-glob';
-import { resolve } from 'path';
+import { relative, resolve } from 'path';
 
-import { createLessAliasPlugin } from './less-alias-plugin.mjs';
+import { createLessAliasPlugin } from './less-alias-plugin.ts';
 
 // ---------------------------------------------------------------------------
 // Monorepo 路径
@@ -111,7 +111,7 @@ export function createSseProxy(): Record<string, unknown> {
 // 库构建
 // ---------------------------------------------------------------------------
 
-const alwaysExternal = [/tailwind-merge/];
+const alwaysExternal = [/^tailwind-merge(\/.*)?$/];
 
 /** 产物 banner */
 export function createBanner(pkg: { name: string; version: string; author?: string; license?: string }) {
@@ -133,6 +133,45 @@ export function createLibExternal(
   };
 }
 
+/**
+ * preserveModules 文件名策略。
+ *
+ * UI / Chat 仍需发布 lib / esm / cjs 分文件产物；workspace shared/common 会作为包内
+ * 实现被吸进发布包，但不能泄露 packages/shared/src、packages/shared/dist、packages/common
+ * 这类 monorepo 路径。这里统一收敛到 _internal/*，表达“包内私有实现，非 public API”。
+ */
+export function createPreserveModuleFileName(srcDir: string, monorepoRoot: string) {
+  const normalizePath = (path: string) => path.replace(/\\/g, '/');
+  const stripExtension = (path: string) => normalizePath(path).replace(/\.[^.]+$/, '');
+  const normalizedRoot = normalizePath(monorepoRoot);
+  const normalizedSrcDir = normalizePath(srcDir);
+
+  return (chunkInfo: { facadeModuleId?: string | null; name: string }) => {
+    const facadeModuleId = chunkInfo.facadeModuleId ? normalizePath(chunkInfo.facadeModuleId) : undefined;
+    let name = normalizePath(chunkInfo.name);
+
+    if (facadeModuleId?.startsWith(`${normalizedSrcDir}/`)) {
+      name = stripExtension(relative(normalizedSrcDir, facadeModuleId));
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/shared/src/`)) {
+      name = `_internal/shared/${stripExtension(relative(`${normalizedRoot}/packages/shared/src`, facadeModuleId))}`;
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/shared/dist/`)) {
+      name = `_internal/shared/${stripExtension(relative(`${normalizedRoot}/packages/shared/dist`, facadeModuleId))}`;
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/common/`)) {
+      name = `_internal/common/${stripExtension(relative(`${normalizedRoot}/packages/common`, facadeModuleId))}`;
+    } else {
+      name = name
+        .replace(/^packages\/shared\/src\//, '_internal/shared/')
+        .replace(/^packages\/shared\/dist\//, '_internal/shared/')
+        .replace(/^shared\/src\//, '_internal/shared/')
+        .replace(/^shared\/dist\//, '_internal/shared/')
+        .replace(/^packages\/common\//, '_internal/common/')
+        .replace(/^node_modules\/\.pnpm\/[^/]+\/node_modules\//, '');
+    }
+
+    return `${name}.js`;
+  };
+}
+
 /** UMD 构建 external（dependencies + peer + 额外声明） */
 export function createUmdExternal(
   pkg: {
@@ -146,6 +185,23 @@ export function createUmdExternal(
   const externalPkgs = [...new Set([...deps, ...peerDeps, ...additionalExternal])];
 
   return (id: string) => externalPkgs.some((dep) => id === dep || id.startsWith(`${dep}/`));
+}
+
+/** UMD external 全局名：已知包使用显式配置，其余 subpath 采用稳定兜底命名，避免构建器猜测警告。 */
+export function createUmdGlobals(globals: Record<string, string> = {}) {
+  return (id: string) => {
+    if (globals[id]) return globals[id];
+
+    if (id.startsWith('@tdesign/web-components/') && globals['@tdesign/web-components']) {
+      return globals['@tdesign/web-components'];
+    }
+
+    if (id.startsWith('lodash-es/') && globals['lodash-es']) {
+      return globals['lodash-es'];
+    }
+
+    return id.replace(/^@/, '_').replace(/[^\w$]/g, '_');
+  };
 }
 
 /** 收集库构建入口（preserveModules 多入口） */

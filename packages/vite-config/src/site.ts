@@ -2,10 +2,10 @@ import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
-import { getWorkspaceRoot } from './get-root-path.mjs';
-import tdocPlugin from './plugins/tdoc/index.js';
-import addPartAttributePlugin from './plugins/add-part.js';
-import omiStyleImportPlugin from './plugins/omi-style.js';
+import { getWorkspaceRoot } from './get-root-path.ts';
+import tdocPlugin from './plugins/tdoc/index.ts';
+import addPartAttributePlugin from './plugins/add-part.ts';
+import omiStyleImportPlugin from './plugins/omi-style.ts';
 import {
   createLessPreprocessorOptions,
   createMonorepoAliasConfig,
