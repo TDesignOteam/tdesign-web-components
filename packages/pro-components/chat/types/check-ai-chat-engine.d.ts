@@ -1,7 +1,6 @@
-// Temporary type-check bridge for the local, unpublished ai-core dependency.
-// The linked package currently exports source files (`./index.ts`) instead of built declarations,
-// so checking chat examples would pull ai-core internals into this repo's tsc program.
-// Remove this file once @tdesign/ai-chat-engine exposes built `dist/*.d.ts` types locally or on npm.
+// 当前 ai-core 仍是本地未发布依赖，入口直接暴露源码文件（`./index.ts`），还没有构建后的声明产物。
+// 如果直接检查 chat 示例，tsc 会把 ai-core 内部源码也拉入当前项目一起检查，导致类型边界被依赖内部问题污染。
+// 等 @tdesign/ai-chat-engine 在本地或 npm 包中提供 `dist/*.d.ts` 后，应删除这个仅用于类型检查的临时桥接声明。
 import type {
   AIMessage,
   AIMessageContent,
