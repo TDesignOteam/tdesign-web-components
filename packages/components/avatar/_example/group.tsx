@@ -1,6 +1,6 @@
 import '@tdesign/web-components/avatar';
 import '@tdesign/web-components/space';
-import '@tdesign/web-components/avatar/avatar-group';
+import '@tdesign/web-components/avatar';
 import 'tdesign-icons-web-components';
 
 // import 'tdesign-icons-omi/user'

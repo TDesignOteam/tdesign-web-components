@@ -4,7 +4,7 @@ import Upload from '@tdesign/web-components/upload';
 import { Component, createRef, signal } from 'omi';
 
 export default class UploadSingleInput extends Component {
-  uploadRef = createRef();
+  uploadRef = createRef<InstanceType<typeof Upload>>();
 
   files = signal([]);
 

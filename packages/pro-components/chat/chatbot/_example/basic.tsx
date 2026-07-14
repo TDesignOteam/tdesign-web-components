@@ -3,10 +3,10 @@ import '@tdesign/web-components-chat/chatbot';
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '@tdesign/web-components-chat/chat-engine';
 import { findTargetElement } from '@tdesign/web-components-chat/chat-engine';
 import { TdChatMessageConfigItem } from '@tdesign/web-components-chat/chatbot';
-import mdContent from '@tdesign/web-components-chat/common/testMarkdown.md?raw';
 import type { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import { Component, createRef } from 'omi';
 
+import mdContent from '../../common/_example/testMarkdown';
 import Chatbot from '../chat';
 
 // 天气扩展类型定义

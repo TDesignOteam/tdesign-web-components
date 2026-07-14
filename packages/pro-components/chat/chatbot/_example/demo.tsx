@@ -9,14 +9,16 @@ import Chatbot from '../chat';
 // 天气扩展类型定义
 declare global {
   interface AIContentTypeOverrides {
-    weather: ChatBaseContent<
-      'weather',
-      {
+    weather: {
+      type: 'weather';
+      data: {
         temp: number;
         city: string;
         conditions?: string;
-      }
-    >;
+      };
+      id?: string;
+      slotName?: string;
+    };
   }
 }
 

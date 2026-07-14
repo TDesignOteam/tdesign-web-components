@@ -1,5 +1,9 @@
 import '@tdesign/web-components/breadcrumb';
 
+import { Component } from 'omi';
+
+void Component;
+
 export default function Breadcrumb() {
   return (
     <>

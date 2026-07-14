@@ -20,6 +20,8 @@ spline: explain
 | 旧写法（develop） | 新写法 |
 |------------------|--------|
 | `import 'tdesign-web-components/chatbot'` | `import '@tdesign/web-components-chat/chatbot'` |
+| `import type { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type'` | `import type { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message'` |
+| `import type { TdChatMarkdownContentProps } from '@tdesign/web-components-chat/chat-message/content/markdown-content'` | `import type { TdChatMarkdownContentProps } from '@tdesign/web-components-chat/chat-message'` |
 | 无需单独装 UI 包 | `npm i @tdesign/web-components @tdesign/web-components-chat` |
 
 ### 🐞 构建修复

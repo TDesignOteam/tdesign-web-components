@@ -37,13 +37,17 @@ const mockData: ChatMessagesData[] = [
         data: '这张图里的帅哥是谁',
       },
       {
-        type: 'videoAttachment',
-        data: {
-          fileType: 'video',
-          url: 'test.mp4',
-          cover:
-            'https://asset.gdtimg.com/muse_svp_0bc3viaacaaaweanalstw5ud3kweagvaaaka.f0.jpg?dis_k=bfc5cc81010a9d443e91ce45d4fbe774&dis_t=1750323484',
-        },
+        type: 'attachment',
+        data: [
+          {
+            fileType: 'video',
+            url: 'test.mp4',
+            metadata: {
+              cover:
+                'https://asset.gdtimg.com/muse_svp_0bc3viaacaaaweanalstw5ud3kweagvaaaka.f0.jpg?dis_k=bfc5cc81010a9d443e91ce45d4fbe774&dis_t=1750323484',
+            },
+          },
+        ],
       },
     ],
   },
@@ -256,10 +260,12 @@ export default class BasicChat extends Component {
                       今天{item.data.city}天气{item.data.conditions}
                     </div>
                   );
-                case 'videoAttachment': {
+                case 'attachment': {
+                  const video = item.data.find((attachment) => attachment.fileType === 'video');
+                  if (!video) return null;
                   return (
                     <div slot={`${data.id}-${item.type}-${index}`} className="videoAttachment">
-                      <img src={item.data.cover} width={100} height={100} />
+                      <img src={video.metadata?.cover as string} width={100} height={100} />
                     </div>
                   );
                 }

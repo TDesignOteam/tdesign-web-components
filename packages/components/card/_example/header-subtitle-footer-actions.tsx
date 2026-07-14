@@ -7,7 +7,7 @@ import 'tdesign-icons-web-components/esm/components/chat';
 import 'tdesign-icons-web-components/esm/components/share';
 import 'tdesign-icons-web-components/esm/components/more';
 
-import { MessagePlugin } from '@tdesign/web-components/message/message';
+import { MessagePlugin } from '@tdesign/web-components/message';
 import { Component } from 'omi';
 
 interface Option {

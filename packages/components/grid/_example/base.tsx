@@ -1,7 +1,8 @@
 import '@tdesign/web-components/grid';
 
-import css from '@tdesign/web-components/grid/_example/common.css';
 import { Component } from 'omi';
+
+import css from './common-style';
 
 const demoCols = [
   Array(12).fill(1),

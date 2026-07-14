@@ -3,7 +3,7 @@ import '@tdesign/web-components/button';
 import '@tdesign/web-components/comment';
 import '@tdesign/web-components/grid';
 
-import { MessagePlugin } from '@tdesign/web-components/message/message';
+import { MessagePlugin } from '@tdesign/web-components/message';
 import { Component } from 'omi';
 
 interface Option {

@@ -1,7 +1,13 @@
 import '@tdesign/web-components-chat/chat-message';
 
-import type { AIMessageContent, ChatMessagesData } from '@tdesign/web-components-chat/chat-engine';
+import type { AIMessageContent, ChatBaseContent, ChatMessagesData } from '@tdesign/web-components-chat/chat-engine';
 import { Component } from 'omi';
+
+declare global {
+  interface AIContentTypeOverrides {
+    reasoning: ChatBaseContent<'reasoning', Array<ChatBaseContent<string, any>>>;
+  }
+}
 
 export default class ReasoningExample extends Component {
   // 模拟 AGUI 协议中的推理内容数据

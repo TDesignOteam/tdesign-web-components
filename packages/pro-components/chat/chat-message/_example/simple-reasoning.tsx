@@ -1,7 +1,13 @@
 import '@tdesign/web-components-chat/chat-message';
 
-import type { AIMessageContent, ChatMessagesData } from '@tdesign/web-components-chat/chat-engine';
+import type { AIMessageContent, ChatBaseContent, ChatMessagesData } from '@tdesign/web-components-chat/chat-engine';
 import { Component } from 'omi';
+
+declare global {
+  interface AIContentTypeOverrides {
+    reasoning: ChatBaseContent<'reasoning', Array<ChatBaseContent<string, any>>>;
+  }
+}
 
 export default class SimpleReasoningExample extends Component {
   // 简化的推理内容数据 - 只包含文本和插槽

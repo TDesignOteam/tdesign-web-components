@@ -4,8 +4,7 @@ import '@tdesign/web-components/switch';
 // 公式能力引入，参考cherryMarkdown示例
 import 'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js';
 
-import { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message/type';
-import mdContent from '@tdesign/web-components-chat/common/testMarkdown.md?raw';
+import type { TdChatMessageProps } from '@tdesign/web-components-chat/chat-message';
 // 自定义代码块示例引入
 import hljs from 'highlight.js/lib/core';
 import bash from 'highlight.js/lib/languages/bash';
@@ -15,6 +14,8 @@ import python from 'highlight.js/lib/languages/python';
 import typescript from 'highlight.js/lib/languages/typescript';
 import xml from 'highlight.js/lib/languages/xml';
 import { Component, signal } from 'omi';
+
+import mdContent from '../../common/_example/testMarkdown';
 
 // 注册常用语言
 hljs.registerLanguage('javascript', javascript);

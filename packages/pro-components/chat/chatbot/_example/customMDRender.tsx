@@ -1,8 +1,8 @@
 import '@tdesign/web-components-chat/chatbot';
 
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '@tdesign/web-components-chat/chat-engine';
-import { TdChatMarkdownContentProps } from '@tdesign/web-components-chat/chat-message/content/markdown-content';
-import type { TdChatMessageConfig, TdChatMessageProps } from '@tdesign/web-components-chat/chatbot';
+import type { TdChatMarkdownContentProps, TdChatMessageProps } from '@tdesign/web-components-chat/chat-message';
+import type { TdChatMessageConfig } from '@tdesign/web-components-chat/chatbot';
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { Component } from 'omi';
 
