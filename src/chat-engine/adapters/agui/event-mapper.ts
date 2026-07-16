@@ -3,9 +3,9 @@ import type { AIMessageContent, SSEChunkData, ToolCall } from '../../type';
 import {
   AGUIEventType,
   isActivityEvent,
+  isReasoningEvent,
   isStateEvent,
   isTextMessageEvent,
-  isThinkingEvent,
   isToolCallEvent,
 } from './types/events';
 import { activityManager } from './ActivityManager';
@@ -53,6 +53,9 @@ export class AGUIEventMapper {
     currentDataIndex: 0,
   };
 
+  // 简化模式（REASONING_MESSAGE_CHUNK）的状态跟踪
+  private currentReasoningMessageId: string | null = null;
+
   /**
    * 暴露 activityManager，供 AGUIAdapter 访问
    */
@@ -83,8 +86,8 @@ export class AGUIEventMapper {
       return this.handleTextMessageEvent(event);
     }
 
-    if (isThinkingEvent(event.type)) {
-      return this.handleThinkingEvent(event);
+    if (isReasoningEvent(event.type)) {
+      return this.handleReasoningEvent(event);
     }
 
     if (isToolCallEvent(event.type)) {
@@ -140,6 +143,7 @@ export class AGUIEventMapper {
     // 重置简化模式状态
     this.currentTextMessageId = null;
     this.currentTextMessageRole = null;
+    this.currentReasoningMessageId = null;
     this.toolCallChunkStarted.clear();
     // 清理 activityManager 状态
     activityManager.clear();
@@ -197,20 +201,35 @@ export class AGUIEventMapper {
   }
 
   /**
-   * 处理思考事件
+   * 处理推理（reasoning）/思考（thinking）事件
+   * 兼容旧版 THINKING_* 与新版 REASONING_* 协议
    */
-  private handleThinkingEvent(event: any): AIMessageContent | null {
+  private handleReasoningEvent(event: any): AIMessageContent | null {
     switch (event.type) {
       case AGUIEventType.THINKING_START:
-        return this.handleThinkingStart();
+      case AGUIEventType.REASONING_START:
+        return this.handleReasoningStart();
+
       case AGUIEventType.THINKING_TEXT_MESSAGE_START:
         return this.handleThinkingTextStart(event);
+      case AGUIEventType.REASONING_MESSAGE_START:
+        return this.handleReasoningMessageStart(event);
+
       case AGUIEventType.THINKING_TEXT_MESSAGE_CONTENT:
-        return this.handleThinkingTextContent(event);
+      case AGUIEventType.REASONING_MESSAGE_CONTENT:
+        return this.handleReasoningTextContent(event);
+
       case AGUIEventType.THINKING_TEXT_MESSAGE_END:
-        return this.handleThinkingTextEnd(event);
+      case AGUIEventType.REASONING_MESSAGE_END:
+        return this.handleReasoningTextEnd(event);
+
       case AGUIEventType.THINKING_END:
-        return this.handleThinkingEnd();
+      case AGUIEventType.REASONING_END:
+        return this.handleReasoningEnd();
+
+      case AGUIEventType.REASONING_MESSAGE_CHUNK:
+        return this.handleReasoningMessageChunk(event);
+
       default:
         return null;
     }
@@ -297,9 +316,9 @@ export class AGUIEventMapper {
   }
 
   /**
-   * 处理思考开始事件
+   * 处理推理/思考开始事件（REASONING_START / THINKING_START 共用）
    */
-  private handleThinkingStart(): AIMessageContent {
+  private handleReasoningStart(): AIMessageContent {
     // 激活 reasoning 上下文
     this.reasoningContext.active = true;
     this.reasoningContext.currentData = [];
@@ -309,7 +328,8 @@ export class AGUIEventMapper {
   }
 
   /**
-   * 处理思考文本开始事件
+   * 处理思考文本开始事件（旧版 THINKING_TEXT_MESSAGE_START）
+   * 保留独立的“thinking”渲染模式（当未处于 reasoning 上下文时）
    */
   private handleThinkingTextStart(event: any): AIMessageContent | null {
     if (this.reasoningContext.active) {
@@ -326,9 +346,76 @@ export class AGUIEventMapper {
   }
 
   /**
+   * 处理推理消息开始事件（新版 REASONING_MESSAGE_START）
+   * 新版协议中以该事件真正创建推理消息；若后端未发送 REASONING_START，
+   * 此处自动激活 reasoning 上下文以保证推理块正确分组。
+   */
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  private handleReasoningMessageStart(event: any): AIMessageContent | null {
+    if (!this.reasoningContext.active) {
+      this.handleReasoningStart();
+    }
+
+    // Reasoning 模式：添加新的 text 内容到 reasoning.data
+    const newTextContent = createTextContent('', 'streaming');
+    const { data, index } = addToReasoningData(this.reasoningContext.currentData, newTextContent);
+    this.reasoningContext.currentData = data;
+    this.reasoningContext.currentDataIndex = index;
+
+    return createReasoningContent(data, 'streaming', 'merge', false);
+  }
+
+  /**
+   * 处理推理消息分块事件（新版 REASONING_MESSAGE_CHUNK，简化模式）
+   * 自动补全 REASONING_MESSAGE_START → CONTENT → END 生命周期：
+   * - 首个 chunk 自动开始新的推理消息
+   * - 相同 messageId 的后续 chunk 追加内容
+   * - messageId 变化或流结束时自动结束上一个推理消息
+   */
+  private handleReasoningMessageChunk(event: any): AIMessageContent | null {
+    const messageId = event.messageId || 'default';
+
+    // messageId 变化，先结束上一个推理消息
+    if (this.currentReasoningMessageId !== null && this.currentReasoningMessageId !== messageId) {
+      this.handleReasoningTextEnd({});
+    }
+
+    // 新的推理消息：激活上下文并开始一个 text 内容块
+    if (this.currentReasoningMessageId !== messageId) {
+      this.currentReasoningMessageId = messageId;
+      if (!this.reasoningContext.active) {
+        this.handleReasoningStart();
+      }
+      const newTextContent = createTextContent('', 'streaming');
+      const { data, index } = addToReasoningData(this.reasoningContext.currentData, newTextContent);
+      this.reasoningContext.currentData = data;
+      this.reasoningContext.currentDataIndex = index;
+    }
+
+    // 追加内容增量
+    const currentIndex = this.reasoningContext.currentDataIndex;
+    if (currentIndex >= 0 && this.reasoningContext.currentData[currentIndex]) {
+      const currentContent = this.reasoningContext.currentData[currentIndex];
+      if (currentContent.type === 'text') {
+        const newText = mergeStringContent(currentContent.data || '', event.delta || '');
+        const updatedContent = { ...currentContent, data: newText, status: 'streaming' };
+
+        this.reasoningContext.currentData = updateReasoningData(
+          this.reasoningContext.currentData,
+          currentIndex,
+          updatedContent,
+        );
+
+        return createReasoningContent(this.reasoningContext.currentData, 'streaming', 'merge', false);
+      }
+    }
+    return null;
+  }
+
+  /**
    * 处理思考文本内容事件
    */
-  private handleThinkingTextContent(event: any): AIMessageContent | null {
+  private handleReasoningTextContent(event: any): AIMessageContent | null {
     if (this.reasoningContext.active) {
       // Reasoning 模式：更新最后一个 text 内容
       const currentIndex = this.reasoningContext.currentDataIndex;
@@ -357,7 +444,7 @@ export class AGUIEventMapper {
   /**
    * 处理思考文本结束事件
    */
-  private handleThinkingTextEnd(event: any): AIMessageContent | null {
+  private handleReasoningTextEnd(event: any): AIMessageContent | null {
     if (this.reasoningContext.active) {
       // Reasoning 模式：标记最后一个 text 内容为完成
       const currentIndex = this.reasoningContext.currentDataIndex;
@@ -383,7 +470,7 @@ export class AGUIEventMapper {
   /**
    * 处理思考结束事件
    */
-  private handleThinkingEnd(): AIMessageContent | null {
+  private handleReasoningEnd(): AIMessageContent | null {
     if (this.reasoningContext.active) {
       // 完成 reasoning 并重置上下文
       const finalData = [...this.reasoningContext.currentData];
@@ -607,6 +694,7 @@ export class AGUIEventMapper {
       currentData: [],
       currentDataIndex: 0,
     };
+    this.currentReasoningMessageId = null;
   }
 }
 
