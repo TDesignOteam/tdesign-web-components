@@ -20,6 +20,15 @@ export enum AGUIEventType {
   THINKING_START = 'THINKING_START',
   THINKING_END = 'THINKING_END',
 
+  // 新版 AG-UI 协议（THINKING_* 已废弃）
+  REASONING_START = 'REASONING_START',
+  REASONING_MESSAGE_START = 'REASONING_MESSAGE_START',
+  REASONING_MESSAGE_CONTENT = 'REASONING_MESSAGE_CONTENT',
+  REASONING_MESSAGE_END = 'REASONING_MESSAGE_END',
+  REASONING_MESSAGE_CHUNK = 'REASONING_MESSAGE_CHUNK',
+  REASONING_END = 'REASONING_END',
+  REASONING_ENCRYPTED_VALUE = 'REASONING_ENCRYPTED_VALUE',
+
   TOOL_CALL_START = 'TOOL_CALL_START',
   TOOL_CALL_ARGS = 'TOOL_CALL_ARGS',
   TOOL_CALL_END = 'TOOL_CALL_END',
@@ -51,17 +60,36 @@ export function isTextMessageEvent(eventType: string): boolean {
 }
 
 /**
- * 检查事件类型是否为思考相关
+ * 检查事件类型是否为思考/推理相关（兼容旧版 THINKING_* 与新版 REASONING_*）
  * @param eventType 事件类型
- * @returns 是否为思考事件
+ * @returns 是否为思考/推理事件
  */
 export function isThinkingEvent(eventType: string): boolean {
+  return isReasoningEvent(eventType);
+}
+
+/**
+ * 检查事件类型是否为推理（reasoning）相关
+ * 兼容旧版 THINKING_*（已废弃）与新版 REASONING_* 事件
+ * @param eventType 事件类型
+ * @returns 是否为推理事件
+ */
+export function isReasoningEvent(eventType: string): boolean {
   return [
+    // 旧版（已废弃，保留以兼容存量后端）
     'THINKING_START',
     'THINKING_TEXT_MESSAGE_START',
     'THINKING_TEXT_MESSAGE_CONTENT',
     'THINKING_TEXT_MESSAGE_END',
     'THINKING_END',
+    // 新版 AG-UI 协议
+    'REASONING_START',
+    'REASONING_MESSAGE_START',
+    'REASONING_MESSAGE_CONTENT',
+    'REASONING_MESSAGE_END',
+    'REASONING_MESSAGE_CHUNK',
+    'REASONING_END',
+    'REASONING_ENCRYPTED_VALUE',
   ].includes(eventType);
 }
 
@@ -137,6 +165,52 @@ export const ThinkingTextMessageContentEventSchema = TextMessageContentEventSche
 
 export const ThinkingTextMessageEndEventSchema = BaseEventSchema.extend({
   type: z.literal(AGUIEventType.THINKING_TEXT_MESSAGE_END),
+});
+
+// 新版 AG-UI 推理事件（替代已废弃的 THINKING_*）
+export const ReasoningStartEventSchema = BaseEventSchema.extend({
+  type: z.literal(AGUIEventType.REASONING_START),
+  messageId: z.string().optional(),
+});
+
+export const ReasoningMessageStartEventSchema = BaseEventSchema.extend({
+  type: z.literal(AGUIEventType.REASONING_MESSAGE_START),
+  messageId: z.string(),
+  role: z.literal('reasoning'),
+});
+
+export const ReasoningMessageContentEventSchema = TextMessageContentEventSchema.omit({
+  messageId: true,
+  type: true,
+})
+  .extend({
+    type: z.literal(AGUIEventType.REASONING_MESSAGE_CONTENT),
+    messageId: z.string(),
+  })
+  // 兼容部分实现：delta 可能为空的流式占位
+  .extend({ delta: z.string().optional() });
+
+export const ReasoningMessageEndEventSchema = BaseEventSchema.extend({
+  type: z.literal(AGUIEventType.REASONING_MESSAGE_END),
+  messageId: z.string(),
+});
+
+export const ReasoningMessageChunkEventSchema = BaseEventSchema.extend({
+  type: z.literal(AGUIEventType.REASONING_MESSAGE_CHUNK),
+  messageId: z.string().optional(),
+  delta: z.string().optional(),
+});
+
+export const ReasoningEndEventSchema = BaseEventSchema.extend({
+  type: z.literal(AGUIEventType.REASONING_END),
+  messageId: z.string().optional(),
+});
+
+export const ReasoningEncryptedValueEventSchema = BaseEventSchema.extend({
+  type: z.literal(AGUIEventType.REASONING_ENCRYPTED_VALUE),
+  subtype: z.enum(['tool-call', 'message']),
+  entityId: z.string(),
+  encryptedValue: z.string(),
 });
 
 export const ToolCallStartEventSchema = BaseEventSchema.extend({
@@ -263,6 +337,13 @@ export const EventSchemas = z.discriminatedUnion('type', [
   ThinkingTextMessageStartEventSchema,
   ThinkingTextMessageContentEventSchema,
   ThinkingTextMessageEndEventSchema,
+  ReasoningStartEventSchema,
+  ReasoningMessageStartEventSchema,
+  ReasoningMessageContentEventSchema,
+  ReasoningMessageEndEventSchema,
+  ReasoningMessageChunkEventSchema,
+  ReasoningEndEventSchema,
+  ReasoningEncryptedValueEventSchema,
   ToolCallStartEventSchema,
   ToolCallArgsEventSchema,
   ToolCallEndEventSchema,
@@ -290,6 +371,13 @@ export type TextMessageChunkEvent = z.infer<typeof TextMessageChunkEventSchema>;
 export type ThinkingTextMessageStartEvent = z.infer<typeof ThinkingTextMessageStartEventSchema>;
 export type ThinkingTextMessageContentEvent = z.infer<typeof ThinkingTextMessageContentEventSchema>;
 export type ThinkingTextMessageEndEvent = z.infer<typeof ThinkingTextMessageEndEventSchema>;
+export type ReasoningStartEvent = z.infer<typeof ReasoningStartEventSchema>;
+export type ReasoningMessageStartEvent = z.infer<typeof ReasoningMessageStartEventSchema>;
+export type ReasoningMessageContentEvent = z.infer<typeof ReasoningMessageContentEventSchema>;
+export type ReasoningMessageEndEvent = z.infer<typeof ReasoningMessageEndEventSchema>;
+export type ReasoningMessageChunkEvent = z.infer<typeof ReasoningMessageChunkEventSchema>;
+export type ReasoningEndEvent = z.infer<typeof ReasoningEndEventSchema>;
+export type ReasoningEncryptedValueEvent = z.infer<typeof ReasoningEncryptedValueEventSchema>;
 export type ToolCallStartEvent = z.infer<typeof ToolCallStartEventSchema>;
 export type ToolCallArgsEvent = z.infer<typeof ToolCallArgsEventSchema>;
 export type ToolCallEndEvent = z.infer<typeof ToolCallEndEventSchema>;
