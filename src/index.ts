@@ -52,6 +52,7 @@ export * from './chat-action';
 export * from './attachments';
 export * from './filecard';
 export * from './chat-engine';
+export * from './dialog';
 
 export type * from './chat-sender';
 export type * from './chatbot';
@@ -62,3 +63,4 @@ export type * from './chat-action';
 export type * from './chat-loading';
 export type * from './chat-action';
 export type * from './chat-engine';
+export type * from './dialog';
