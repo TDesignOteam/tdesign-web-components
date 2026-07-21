@@ -3,7 +3,7 @@ import { classNames, Component, createRef, signal, tag } from 'omi';
 import generateBase64Url from '../_common/js/watermark/generateBase64Url';
 import randomMovingStyle from '../_common/js/watermark/randomMovingStyle';
 import { getClassPrefix } from '../_util/classname';
-import { createStyleSheet } from '../_util/lightDom';
+import { adoptStyleSheet } from '../_util/lightDom';
 import type { StyledProps } from '../common';
 import { TdWatermarkProps } from './type';
 import { createMutationObservable, getStyleStr } from './utils';
@@ -95,7 +95,7 @@ export default class Watermark extends Component<WatermarkProps> {
     // 组件父节点 - 增加 keyframes
     const keyframesStyle = randomMovingStyle();
 
-    this.shadowRoot.adoptedStyleSheets.push(createStyleSheet(keyframesStyle));
+    adoptStyleSheet(this.shadowRoot, keyframesStyle);
   }
 
   async receiveProps(newProps) {

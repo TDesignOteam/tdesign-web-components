@@ -163,7 +163,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    */
   private syncState(state: ChatMessagesData[]) {
     this.chatMessages.value = state;
-    this.chatStatus = state.at(-1)?.status || 'idle';
+    this.chatStatus = state[state.length - 1]?.status || 'idle';
     this.fire('messageChange', state, {
       composed: true,
     });
@@ -399,7 +399,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   private getChatActionBar = (messageProps: TdChatMessageProps) => {
     const { actions, message } = messageProps;
     const ids = this.messagesStore.messageIds;
-    const isLast = message.id === ids.at(-1);
+    const isLast = message.id === ids[ids.length - 1];
     const isFirstAI = isAIMessage(message) && message.id === ids[0];
     if (!isAIMessage(message) || !actions || isFirstAI || ids.length === 1) return false;
     let filterActions = actions;

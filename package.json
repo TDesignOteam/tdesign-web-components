@@ -53,6 +53,9 @@
     "esm/**",
     "lib/**"
   ],
+  "browserslist": [
+    "Chrome >= 86"
+  ],
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
       "prettier --write",
