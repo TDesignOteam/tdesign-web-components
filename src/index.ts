@@ -53,6 +53,10 @@ export * from './attachments';
 export * from './filecard';
 export * from './chat-engine';
 export * from './dialog';
+export * from './message';
+export * from './dropdown';
+export * from './checkbox';
+export * from './select-input';
 
 export type * from './chat-sender';
 export type * from './chatbot';
@@ -64,3 +68,7 @@ export type * from './chat-loading';
 export type * from './chat-action';
 export type * from './chat-engine';
 export type * from './dialog';
+export type * from './message';
+export type * from './dropdown';
+export type * from './checkbox';
+export type * from './select-input';
