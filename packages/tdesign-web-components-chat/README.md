@@ -12,7 +12,7 @@ npm i @tdesign/web-components @tdesign/web-components-chat
 
 ```js
 import '@tdesign/web-components-chat/chatbot';
-import '@tdesign/web-components-chat/lib/style/index.css';
+import '@tdesign/web-components/style/index.css';
 ```
 
 ## 产物说明
@@ -20,9 +20,13 @@ import '@tdesign/web-components-chat/lib/style/index.css';
 | 目录 | 说明 |
 |------|------|
 | `esm/` | ESM 按需（`import`） |
-| `cjs/` | CommonJS 按需（`require`） |
-| `lib/` | 类型声明（`.d.ts`） |
-| `dist/` | UMD（CDN） |
+| `dist/` | IIFE 浏览器构建（CDN 直引） |
+
+```html
+<script src="https://unpkg.com/@tdesign/web-components@<version>/dist/web-components.min.js"></script>
+<script src="https://unpkg.com/@tdesign/web-components-chat@<version>/dist/web-components-chat.min.js"></script>
+<t-chatbot></t-chatbot>
+```
 
 ## Peer Dependencies
 

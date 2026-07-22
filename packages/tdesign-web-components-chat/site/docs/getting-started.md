@@ -17,7 +17,14 @@ npm i @tdesign/web-components @tdesign/web-components-chat
 
 > `@tdesign/web-components` 为 **peer dependency**，请与 Chat 包一并安装。
 
-#### 浏览器引入（敬请期待）
+#### 浏览器引入
+
+Chat 的浏览器构建会把运行时依赖打入产物，但 `@tdesign/web-components` 仍是 peer dependency，必须先加载基础 UI：
+
+```html
+<script src="https://unpkg.com/@tdesign/web-components@<version>/dist/web-components.min.js"></script>
+<script src="https://unpkg.com/@tdesign/web-components-chat@<version>/dist/web-components-chat.min.js"></script>
+```
 
 ### 基础使用
 
@@ -30,14 +37,14 @@ import '@tdesign/web-components-chat';
 基础 UI 组件按需引入：
 
 ```javascript
-import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components/style/index.css'; // 少量公共样式
 import '@tdesign/web-components/button';
 ```
 
 也可以整体引入基础 UI 组件
 
 ```javascript
-import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components/style/index.css'; // 少量公共样式
 import '@tdesign/web-components';
 ```
 
@@ -54,7 +61,7 @@ document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```javascript
 import { defineConfig } from 'vite'
 export default defineConfig({
-+   esbuild: {
++   oxc: {
 +     jsxFactory: 'Component.h',
 +     jsxFragment: 'Component.f',
 +   },
@@ -87,7 +94,7 @@ export default defineConfig({
 
 ```javascript
 import '@tdesign/web-components/button';
-import '@tdesign/web-components/lib/style/index.css'; // 少量公共样式
+import '@tdesign/web-components/style/index.css'; // 少量公共样式
 ```
 
 在 vite 中定制主题

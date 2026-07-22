@@ -118,14 +118,11 @@ export function createBanner(pkg: { name: string; version: string; author?: stri
   return `/**\n * ${pkg.name} v${pkg.version}\n * (c) ${new Date().getFullYear()} ${pkg.author || 'TDesign'}\n * @license ${pkg.license || 'MIT'}\n */\n`;
 }
 
-/** 库构建 external 判断（preserveModules：esm/cjs/lib） */
-export function createLibExternal(
-  pkg: { dependencies?: Record<string, string>; peerDependencies?: Record<string, string> },
-  additionalExternal: string[] = [],
-) {
+/** ESM 包构建 external 判断。 */
+export function createLibExternal(pkg: { dependencies?: Record<string, string>; peerDependencies?: Record<string, string> }) {
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
-  const externalPkgs = new Set([...deps, ...peerDeps, ...additionalExternal]);
+  const externalPkgs = new Set([...deps, ...peerDeps]);
 
   return (id: string) => {
     if (alwaysExternal.some((re) => re.test(id))) return true;
@@ -136,7 +133,7 @@ export function createLibExternal(
 /**
  * preserveModules 文件名策略。
  *
- * UI / Chat 仍需发布 lib / esm / cjs 分文件产物；workspace shared/common 会作为包内
+ * UI / Chat 只发布 esm 分文件产物；workspace shared/common 会作为包内
  * 实现被吸进发布包，但不能泄露 packages/shared/src、packages/shared/dist、packages/common
  * 这类 monorepo 路径。这里统一收敛到 _internal/*，表达“包内私有实现，非 public API”。
  */
@@ -172,32 +169,18 @@ export function createPreserveModuleFileName(srcDir: string, monorepoRoot: strin
   };
 }
 
-/** UMD 构建 external（dependencies + peer + 额外声明） */
-export function createUmdExternal(
-  pkg: {
-    dependencies?: Record<string, string>;
-    peerDependencies?: Record<string, string>;
-  },
-  additionalExternal: string[] = [],
-) {
-  const deps = Object.keys(pkg.dependencies || {});
-  const peerDeps = Object.keys(pkg.peerDependencies || {});
-  const externalPkgs = [...new Set([...deps, ...peerDeps, ...additionalExternal])];
-
-  return (id: string) => externalPkgs.some((dep) => id === dep || id.startsWith(`${dep}/`));
+/** IIFE 仅外置明确声明的浏览器 peer 依赖。 */
+export function createIifeExternal(externals: string[] = []) {
+  return (id: string) => externals.some((dep) => id === dep || id.startsWith(`${dep}/`));
 }
 
-/** UMD external 全局名：已知包使用显式配置，其余 subpath 采用稳定兜底命名，避免构建器猜测警告。 */
-export function createUmdGlobals(globals: Record<string, string> = {}) {
+/** IIFE 外部依赖的浏览器全局名。 */
+export function createIifeGlobals(globals: Record<string, string> = {}) {
   return (id: string) => {
     if (globals[id]) return globals[id];
 
     if (id.startsWith('@tdesign/web-components/') && globals['@tdesign/web-components']) {
       return globals['@tdesign/web-components'];
-    }
-
-    if (id.startsWith('lodash-es/') && globals['lodash-es']) {
-      return globals['lodash-es'];
     }
 
     return id.replace(/^@/, '_').replace(/[^\w$]/g, '_');
@@ -213,6 +196,7 @@ export function collectLibInputs(srcDir: string) {
     `!${srcDir}/**/_example/**`,
     `!${srcDir}/**/mock/**`,
     `!${srcDir}/**/__tests__/**`,
+    `!${srcDir}/browser.ts`,
     `!${srcDir}/**/*.d.ts`,
   ];
   return fg.sync(inputList, { absolute: true });

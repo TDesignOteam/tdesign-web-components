@@ -3,22 +3,22 @@
   "version": "1.3.1-alpha.11",
   "description": "TDesign Web Components Library",
   "type": "module",
-  "main": "./cjs/index.js",
+  "main": "./esm/index.js",
   "module": "./esm/index.js",
-  "types": "./lib/index.d.ts",
+  "types": "./esm/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
+      "types": "./esm/index.d.ts",
       "import": "./esm/index.js",
-      "require": "./cjs/index.js"
+      "default": "./esm/index.js"
     },
     "./*": {
-      "types": "./lib/*/index.d.ts",
+      "types": "./esm/*/index.d.ts",
       "import": "./esm/*/index.js",
-      "require": "./cjs/*/index.js"
+      "default": "./esm/*/index.js"
     },
-    "./lib/style/index.css": "./lib/style/index.css",
-    "./lib/style/*.css": "./lib/style/*.css"
+    "./style/index.css": "./esm/style/index.css",
+    "./style/*": "./esm/style/*"
   },
   "author": "tdesign",
   "license": "MIT",
@@ -41,10 +41,8 @@
     "build": "vite build"
   },
   "files": [
-    "lib",
     "dist",
     "esm",
-    "cjs",
     "LICENSE",
     "README.md",
     "CHANGELOG.md"
@@ -54,6 +52,8 @@
     "**/style/**",
     "**/*.css"
   ],
+  "unpkg": "./dist/web-components.min.js",
+  "jsdelivr": "./dist/web-components.min.js",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/",
     "access": "public",

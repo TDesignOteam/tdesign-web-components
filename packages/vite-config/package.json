@@ -3,13 +3,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
     "./lib": "./src/lib/index.ts",
     "./site": "./src/site/index.ts",
-    "./prepare": "./src/prepare.ts",
     "./site-routes": "./src/site-routes.ts",
-    "./get-root-path": "./src/get-root-path.ts",
-    "./generate-entry": "./src/generate-entry.ts"
+    "./get-root-path": "./src/get-root-path.ts"
   },
   "dependencies": {
     "@babel/core": "^7.24.7",

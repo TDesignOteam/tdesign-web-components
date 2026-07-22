@@ -2,10 +2,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
 import {
-  createLibViteConfigForTarget,
-  getLibBuildTargetFromEnv,
-  libBuildPipelinePlugin,
-  libMultiFormatPlugin,
+  createLibBuildConfig,
   type LibViteOptions,
 } from '@tdesign/vite-config/lib';
 import pkg from './package.json';
@@ -18,23 +15,8 @@ const libOptions: LibViteOptions = {
   packageDir: __dirname,
   srcDir: resolve(__dirname, '../components'),
   generateEntry: true,
-  umdGlobalName: 'TDesignUI',
-  umdGlobals: {
-    omi: 'omi',
-    'lodash-es': '_',
-  },
-  pipeline: {
-    tscFilters: [],
-  },
+  iifeGlobalName: 'TDesignWebComponents',
+  pipeline: {},
 };
 
-const debugTarget = getLibBuildTargetFromEnv();
-
-export default debugTarget
-  ? createLibViteConfigForTarget(libOptions, debugTarget, {
-      emptyOutDir: process.env.LIB_EMPTY_OUT_DIR === '1',
-    })
-  : {
-      root: libOptions.packageDir,
-      plugins: [libBuildPipelinePlugin(libOptions), libMultiFormatPlugin(libOptions)],
-    };
+export default createLibBuildConfig(libOptions);

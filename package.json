@@ -4,17 +4,10 @@
   "type": "module",
   "scripts": {
     "init": "git submodule update --init packages/common",
-    "link:ai": "pnpm link --global @tdesign/ai-chat-engine",
-    "start": "pnpm run dev:ui",
     "dev:ui": "pnpm --filter @tdesign/web-components-site dev",
     "dev:chat": "pnpm --filter @tdesign/web-components-chat-site dev",
-    "site:ui": "pnpm --filter @tdesign/web-components-site build",
-    "site:chat": "pnpm --filter @tdesign/web-components-chat-site build",
-    "preview:ui": "pnpm --filter @tdesign/web-components-site preview",
-    "preview:chat": "pnpm --filter @tdesign/web-components-chat-site preview",
-    "build": "pnpm run build:chat",
     "check:types": "node --import tsx/esm ./packages/vite-config/src/prepare.cli.mjs && pnpm --filter @tdesign/web-components-shared build && tsc -p packages/components/tsconfig.check.json && tsc -p packages/pro-components/chat/tsconfig.check.json",
-    "check:pack": "pnpm run build && node scripts/check-pack.mjs",
+    "check:pack": "pnpm run build:chat && node scripts/check-pack.mjs",
     "build:ui": "pnpm --filter @tdesign/web-components build",
     "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
     "lint": "pnpm run check:types && eslint .",
@@ -79,5 +72,8 @@
       "@tdesign/ai-chat-engine": "git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/chat-engine",
       "@tdesign/ai-shared": "git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/shared"
     }
+  },
+  "dependencies": {
+    "@tdesign/ai-chat-engine": "link:../tdesign-ai-core/packages/chat-engine"
   }
 }

@@ -13,7 +13,7 @@ npm i @tdesign/web-components
 ```js
 // 按需
 import '@tdesign/web-components/button';
-import '@tdesign/web-components/lib/style/index.css';
+import '@tdesign/web-components/style/index.css';
 
 // 或全量
 import '@tdesign/web-components';
@@ -24,9 +24,12 @@ import '@tdesign/web-components';
 | 目录 | 说明 |
 |------|------|
 | `esm/` | ESM 按需（`import`） |
-| `cjs/` | CommonJS 按需（`require`） |
-| `lib/` | 类型声明（`.d.ts`）与 lib 格式 JS |
-| `dist/` | UMD（CDN） |
+| `dist/` | IIFE 浏览器构建（CDN 直引） |
+
+```html
+<script src="https://unpkg.com/@tdesign/web-components@<version>/dist/web-components.min.js"></script>
+<t-button theme="primary">按钮</t-button>
+```
 
 ## License
 

@@ -1,27 +1,28 @@
 import autoprefixer from 'autoprefixer';
-import { resolve } from 'path';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { build, type Plugin, type UserConfig } from 'vite';
 
-import { libBuildPipelinePlugin } from './lib-pipeline-plugin.ts';
 import { createLibDtsPlugin, libDtsOxcConfig } from './lib-dts.ts';
 import { generateEntryPlugin } from './generate-entry.ts';
 import { getWorkspaceRoot } from './get-root-path.ts';
+import { cleanPublishArtifacts, LIB_BUILD_PATHS } from './lib-pipeline-utils.ts';
 import { runLibPostProcess } from './lib-post-process.ts';
-import omiStyleImportPlugin from './plugins/omi-style.ts';
+import { createComponentStylePlugin } from './component-plugins.ts';
+import { runPrepare } from './prepare.ts';
 import {
   collectLibInputs,
   createBanner,
+  createIifeExternal,
+  createIifeGlobals,
   createLessPreprocessorOptions,
   createLibExternal,
   createMonorepoAliasConfig,
   createPreserveModuleFileName,
-  createUmdExternal,
-  createUmdGlobals,
   libOxcConfig,
 } from './shared.ts';
 
 export interface LibViteOptions {
-  /** 包 package.json 内容 */
   pkg: {
     name: string;
     version: string;
@@ -30,47 +31,25 @@ export interface LibViteOptions {
     dependencies?: Record<string, string>;
     peerDependencies?: Record<string, string>;
   };
-  /** 发布包目录（含 package.json） */
   packageDir: string;
-  /** 源码根目录 */
   srcDir: string;
-  /** 额外 external（如 Chat 的 UI / ai） */
-  additionalExternal?: string[];
-  /** 构建前自动生成 packages/components/index.ts */
   generateEntry?: boolean;
-  /** UMD 全局变量名 */
-  umdGlobalName?: string;
-  /** UMD external 对应的全局名 */
-  umdGlobals?: Record<string, string>;
-  /** 发布包构建流水线（prepare + dts 后处理） */
-  pipeline?: {
-    /** vite build 前执行的 workspace tsc（仅依赖包，不含源码包） */
-    tscFilters: string[];
-    /** 是否刷新 common 类型缓存，chat 默认 false */
+  iifeGlobalName: string;
+  iifeExternals?: string[];
+  iifeGlobals?: Record<string, string>;
+  pipeline: {
     refreshCommonTypes?: boolean;
-    /** chat 构建前检查 UI 已构建 */
     requireUiBuilt?: boolean;
   };
 }
 
-type LibBuildTarget = 'lib' | 'esm' | 'cjs' | 'umd' | 'umd-min';
-
-export type { LibBuildTarget };
-
-const LIB_BUILD_TARGETS: LibBuildTarget[] = ['lib', 'esm', 'cjs', 'umd', 'umd-min'];
-const PRESERVE_MODULE_TARGETS: LibBuildTarget[] = ['lib', 'esm', 'cjs'];
-
-/** 占位入口，避免外层 vite build 写出多余产物 */
 const MULTI_FORMAT_NOOP_ID = '\0lib-multi-format:noop';
+const IIFE_PROCESS_SHIM = 'var process=globalThis.process||{env:{NODE_ENV:"production"}};\n';
 
-function createSharedPlugins(
-  monorepoRoot: string,
-  generateEntry: boolean,
-  componentsDir: string,
-) {
+function createSharedPlugins(monorepoRoot: string, generateEntry: boolean) {
   return [
-    ...(generateEntry ? [generateEntryPlugin(componentsDir)] : []),
-    omiStyleImportPlugin(),
+    ...(generateEntry ? [generateEntryPlugin(resolve(monorepoRoot, 'packages/components'))] : []),
+    createComponentStylePlugin(),
   ];
 }
 
@@ -78,224 +57,130 @@ function createSharedUserConfig(
   options: LibViteOptions,
   monorepoRoot: string,
 ): Pick<UserConfig, 'root' | 'oxc' | 'resolve' | 'define' | 'css' | 'logLevel'> {
-  const { pkg, packageDir } = options;
-
   return {
-    root: packageDir,
+    root: options.packageDir,
     oxc: libOxcConfig,
-    resolve: {
-      alias: createMonorepoAliasConfig(monorepoRoot),
-    },
+    resolve: { alias: createMonorepoAliasConfig(monorepoRoot) },
     define: {
-      __VERSION__: JSON.stringify(pkg.version),
+      __VERSION__: JSON.stringify(options.pkg.version),
       'process.env.NODE_ENV': JSON.stringify('production'),
     },
     css: {
-      postcss: {
-        plugins: [autoprefixer()],
-      },
+      postcss: { plugins: [autoprefixer()] },
       preprocessorOptions: createLessPreprocessorOptions(monorepoRoot),
     },
     logLevel: 'warn',
   };
 }
 
-function createPreserveModulesConfig(
-  options: LibViteOptions,
-  target: 'lib' | 'esm' | 'cjs',
-  emptyOutDir: boolean,
-): UserConfig {
-  const {
-    pkg,
-    packageDir,
-    srcDir,
-    additionalExternal = [],
-    generateEntry = false,
-  } = options;
-  const monorepoRoot = getWorkspaceRoot(packageDir);
-  const outDir = resolve(packageDir, target === 'lib' ? 'lib' : target);
-  const input = collectLibInputs(srcDir);
-  const format = target === 'cjs' ? 'cjs' : 'es';
-  const emitDts = target === 'lib';
+function createEsmConfig(options: LibViteOptions): UserConfig {
+  const monorepoRoot = getWorkspaceRoot(options.packageDir);
 
   return {
     ...createSharedUserConfig(options, monorepoRoot),
-    ...(emitDts
-      ? {
-          oxc: {
-            ...libOxcConfig,
-            ...libDtsOxcConfig,
-          },
-        }
-      : {}),
+    oxc: { ...libOxcConfig, ...libDtsOxcConfig },
     build: {
-      outDir,
-      emptyOutDir,
+      outDir: resolve(options.packageDir, 'esm'),
+      // 发布目录已由构建流水线统一清理，嵌套 Vite 构建不再各自处理目录。
+      emptyOutDir: false,
       sourcemap: true,
       minify: false,
       cssCodeSplit: true,
       rolldownOptions: {
-        input,
-        external: createLibExternal(pkg, additionalExternal),
-        treeshake: false,
+        input: collectLibInputs(options.srcDir),
+        external: createLibExternal(options.pkg),
         output: {
-          format,
+          format: 'es',
           preserveModules: true,
-          preserveModulesRoot: srcDir,
-          banner: createBanner(pkg),
-          entryFileNames: createPreserveModuleFileName(srcDir, monorepoRoot),
+          preserveModulesRoot: options.srcDir,
+          banner: createBanner(options.pkg),
+          entryFileNames: createPreserveModuleFileName(options.srcDir, monorepoRoot),
           chunkFileNames: '_chunks/dep-[hash].js',
-          ...(target === 'cjs' ? { exports: 'named' as const } : {}),
         },
       },
     },
-    plugins: [
-      ...createSharedPlugins(
-        monorepoRoot,
-        generateEntry,
-        resolve(monorepoRoot, 'packages/components'),
-      ),
-      ...(emitDts ? [createLibDtsPlugin(srcDir)] : []),
-    ],
+    plugins: [...createSharedPlugins(monorepoRoot, options.generateEntry ?? false), createLibDtsPlugin(options.srcDir)],
   };
 }
 
-function createUmdConfig(
-  options: LibViteOptions,
-  target: 'umd' | 'umd-min',
-  emptyOutDir: boolean,
-): UserConfig {
-  const {
-    pkg,
-    packageDir,
-    srcDir,
-    additionalExternal = [],
-    umdGlobalName = 'TDesign',
-    umdGlobals = { omi: 'omi', 'lodash-es': '_' },
-  } = options;
-  const monorepoRoot = getWorkspaceRoot(packageDir);
-  const outDir = resolve(packageDir, 'dist');
-  const fileName = target === 'umd-min' ? `${pkg.name}.min.js` : `${pkg.name}.js`;
+function createIifeConfig(options: LibViteOptions): UserConfig {
+  const monorepoRoot = getWorkspaceRoot(options.packageDir);
+  const fileName = `${options.pkg.name.split('/').at(-1)}.min.js`;
 
   return {
     ...createSharedUserConfig(options, monorepoRoot),
     build: {
-      outDir,
-      emptyOutDir,
+      outDir: resolve(options.packageDir, 'dist'),
+      emptyOutDir: false,
       sourcemap: true,
-      minify: target === 'umd-min',
+      minify: 'oxc',
       cssCodeSplit: false,
+      lib: {
+        entry: resolve(options.srcDir, 'browser.ts'),
+        name: options.iifeGlobalName,
+        formats: ['iife'],
+        fileName: () => fileName,
+      },
       rolldownOptions: {
-        input: resolve(srcDir, 'index.ts'),
-        external: createUmdExternal(pkg, additionalExternal),
-        treeshake: false,
+        external: createIifeExternal(options.iifeExternals),
         output: {
-          format: 'umd',
-          name: umdGlobalName,
-          globals: createUmdGlobals(umdGlobals),
-          banner: createBanner(pkg),
-          dir: outDir,
-          entryFileNames: fileName,
-          exports: 'named',
+          banner: `${createBanner(options.pkg)}${IIFE_PROCESS_SHIM}`,
+          globals: createIifeGlobals(options.iifeGlobals),
         },
       },
     },
-    plugins: [omiStyleImportPlugin()],
+    plugins: [createComponentStylePlugin()],
   };
 }
 
-/**
- * 在单次 `vite build` 内顺序产出 lib / esm / cjs / umd / umd-min
- * （Vite 8 不支持配置数组，由插件内多次调用 build()）
- */
-export function libMultiFormatPlugin(options: LibViteOptions): Plugin {
+function createEsmIifeBuildPlugin(options: LibViteOptions): Plugin {
   let dispatched = false;
+  const monorepoRoot = getWorkspaceRoot(options.packageDir);
+
+  function prepareBuild() {
+    if (options.pipeline.requireUiBuilt) {
+      const uiEsm = resolve(monorepoRoot, LIB_BUILD_PATHS.uiPublish, 'esm/index.d.ts');
+      if (!existsSync(uiEsm)) throw new Error('请先 pnpm run build:ui');
+    }
+
+    cleanPublishArtifacts(options.packageDir);
+    runPrepare(monorepoRoot, { refreshCommonTypes: options.pipeline.refreshCommonTypes ?? true });
+  }
 
   return {
-    name: 'lib-multi-format',
+    name: 'lib-esm-iife-build',
     apply: 'build',
     enforce: 'pre',
     config() {
-      return {
-        build: {
-          write: false,
-          emptyOutDir: false,
-          rolldownOptions: { input: MULTI_FORMAT_NOOP_ID },
-        },
-      };
+      // Vite 仅接受一个配置；实际的 ESM/IIFE 构建在 buildStart 中顺序执行。
+      return { build: { write: false, emptyOutDir: false, rolldownOptions: { input: MULTI_FORMAT_NOOP_ID } } };
     },
     resolveId(id) {
-      if (id === MULTI_FORMAT_NOOP_ID) return MULTI_FORMAT_NOOP_ID;
+      return id === MULTI_FORMAT_NOOP_ID ? MULTI_FORMAT_NOOP_ID : undefined;
     },
     load(id) {
-      if (id === MULTI_FORMAT_NOOP_ID) return 'export default {}';
+      return id === MULTI_FORMAT_NOOP_ID ? 'export default {}' : undefined;
     },
     async buildStart() {
       if (dispatched) return;
       dispatched = true;
 
-      for (let i = 0; i < LIB_BUILD_TARGETS.length; i += 1) {
-        const target = LIB_BUILD_TARGETS[i];
-        console.log(`[lib-multi-format] ${target}...`);
-        await build({
-          configFile: false,
-          ...createLibViteConfigForTarget(options, target, { emptyOutDir: i === 0 }),
-        });
-      }
+      prepareBuild();
+
+      console.log('[lib-esm-iife-build] esm...');
+      await build({ configFile: false, ...createEsmConfig(options) });
+
+      console.log('[lib-esm-iife-build] iife...');
+      await build({ configFile: false, ...createIifeConfig(options) });
 
       await runLibPostProcess(options, getWorkspaceRoot(options.packageDir));
     },
   };
 }
 
-/**
- * 创建组件库单格式 Vite 构建配置
- * @param target lib | esm | cjs | umd | umd-min
- */
-export function createLibViteConfigForTarget(
-  options: LibViteOptions,
-  target: LibBuildTarget,
-  { emptyOutDir = false }: { emptyOutDir?: boolean } = {},
-): UserConfig {
-  if (PRESERVE_MODULE_TARGETS.includes(target)) {
-    return createPreserveModulesConfig(options, target as 'lib' | 'esm' | 'cjs', emptyOutDir);
-  }
-  return createUmdConfig(options, target as 'umd' | 'umd-min', emptyOutDir);
-}
-
-export function createLibViteConfigs(options: LibViteOptions): UserConfig[] {
-  return LIB_BUILD_TARGETS.map((target, index) =>
-    createLibViteConfigForTarget(options, target, { emptyOutDir: index === 0 }),
-  );
-}
-
-/**
- * 调试单格式：LIB_BUILD_TARGET=umd LIB_EMPTY_OUT_DIR=1 vite build
- * @deprecated 推荐在 vite.config 内显式配置 plugins
- */
-export function createLibViteConfigFromEnv(options: LibViteOptions): UserConfig {
-  const singleTarget = getLibBuildTargetFromEnv();
-  if (singleTarget) {
-    return createLibViteConfigForTarget(options, singleTarget, {
-      emptyOutDir: process.env.LIB_EMPTY_OUT_DIR === '1',
-    });
-  }
-
+export function createLibBuildConfig(options: LibViteOptions): UserConfig {
   return {
     root: options.packageDir,
-    plugins: [
-      ...(options.pipeline ? [libBuildPipelinePlugin(options)] : []),
-      libMultiFormatPlugin(options),
-    ],
+    plugins: [createEsmIifeBuildPlugin(options)],
   };
-}
-
-/** 从环境变量读取单格式调试目标 */
-export function getLibBuildTargetFromEnv(): LibBuildTarget | undefined {
-  return process.env.LIB_BUILD_TARGET as LibBuildTarget | undefined;
-}
-
-/** @deprecated 请使用 createLibViteConfigFromEnv */
-export function createLibViteConfig(options: LibViteOptions) {
-  return createLibViteConfigFromEnv(options);
 }

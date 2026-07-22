@@ -1,11 +1,9 @@
-import { resolve } from 'path';
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
+import { createComponentSitePlugins } from './component-plugins.ts';
 import { getWorkspaceRoot } from './get-root-path.ts';
 import tdocPlugin from './plugins/tdoc/index.ts';
-import addPartAttributePlugin from './plugins/add-part.ts';
-import omiStyleImportPlugin from './plugins/omi-style.ts';
 import {
   createLessPreprocessorOptions,
   createMonorepoAliasConfig,
@@ -36,6 +34,8 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
       base: publicPathMap[mode] || './',
       oxc: siteOxcConfig,
       resolve: {
+        // 本地 pnpm link 的依赖保持其项目内路径，避免 Omi JSX 注入解析到链接源码之外。
+        preserveSymlinks: true,
         alias: createMonorepoAliasConfig(ROOT, siteDir),
       },
       css: {
@@ -49,8 +49,8 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
         port,
         open: '/',
         fs: {
-          strict: false,
-          allow: [resolve(ROOT, '.'), resolve(ROOT, 'node_modules')],
+          // 文档站通过 workspace alias 读取源码；其余路径仍由 Vite 默认严格限制。
+          allow: [ROOT],
         },
         proxy: createSseProxy(),
       },
@@ -59,22 +59,7 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
         port: previewPort,
         open: true,
       },
-      build: {
-        outDir: 'dist',
-        rolldownOptions: {
-          treeshake: false,
-          input: {
-            index: 'index.html',
-          },
-        },
-      },
-      plugins: [
-        omiStyleImportPlugin(),
-        addPartAttributePlugin({
-          include: /\.(js|jsx|ts|tsx)$/,
-        }) as Plugin,
-        tdocPlugin() as Plugin,
-      ],
+      plugins: [...createComponentSitePlugins(), tdocPlugin() as Plugin],
       logLevel: 'error',
     });
 }
