@@ -30,7 +30,6 @@
     "preview": "vite preview",
     "lint": "eslint --ext .ts,.tsx .",
     "lint:fix": "eslint --fix --ext .ts,.tsx .",
-    "compat:chrome86": "node script/chrome86-smoke.mjs",
     "generate:entry": "node ./script/generate-entry.js",
     "prepare": "husky",
     "test": "echo 'test to do'"
