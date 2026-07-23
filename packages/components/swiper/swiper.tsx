@@ -79,7 +79,7 @@ export default class Swiper extends Component<SwiperProps> {
 
   isHovering = signal(false);
 
-  swiperSwitchingTimer: NodeJS.Timeout | number = 0;
+  swiperSwitchingTimer: ReturnType<typeof setTimeout> | number = 0;
 
   isBeginToEnd = false;
 

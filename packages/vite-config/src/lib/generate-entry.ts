@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 
 import type { Plugin } from 'vite';
 
-import { getWorkspaceRoot } from './get-root-path.ts';
+import { getWorkspaceRoot } from '../shared/workspace.ts';
 
 /** 扫描组件目录并生成 packages/components/index.ts barrel 导出 */
 export function generateComponentsEntry(componentsDir: string) {

@@ -1,7 +1,7 @@
 import type { Plugin } from 'vite';
 import * as t from '@babel/types';
 
-import babelAddPartAttributePlugin from './plugins/babel-plugin-add-part-attribute.cjs';
+import babelAddPartAttributePlugin from './babel-plugin-add-part-attribute.cjs';
 
 const COMPONENT_SOURCE_RE = /\/packages\/(components|pro-components\/chat)\//;
 const STYLE_IMPORT_RE = /\.(less|css)$/;

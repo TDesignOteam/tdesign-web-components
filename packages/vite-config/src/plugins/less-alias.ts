@@ -15,9 +15,14 @@ export function createLessAliasPlugin(monorepoRoot: string): Less.Plugin {
           return filename.startsWith('@common/');
         }
 
-        loadFile(filename: string, ...args: unknown[]) {
+        loadFile(
+          filename: string,
+          currentDirectory: string,
+          options: Less.LoadFileOptions,
+          environment: Less.Environment,
+        ) {
           const resolved = filename.replace(/^@common\//, `${commonDir}/`);
-          return super.loadFile.call(this, resolved, ...args);
+          return super.loadFile(resolved, currentDirectory, options, environment);
         }
       }
       pluginManager.addFileManager(new AliasFileManager());

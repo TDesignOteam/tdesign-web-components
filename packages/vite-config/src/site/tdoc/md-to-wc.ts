@@ -4,7 +4,7 @@ import matter from 'gray-matter';
 import { spawn } from 'node:child_process';
 import path from 'node:path';
 
-import { getWorkspaceRoot } from '../../get-root-path.ts';
+import { getWorkspaceRoot } from '../../shared/workspace.ts';
 
 type MdToWcOptions = {
   md: any;

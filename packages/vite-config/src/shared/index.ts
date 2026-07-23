@@ -1,7 +1,7 @@
 import fg from 'fast-glob';
 import { relative, resolve } from 'path';
 
-import { createLessAliasPlugin } from './less-alias-plugin.ts';
+import { createLessAliasPlugin } from '../plugins/less-alias.ts';
 
 // ---------------------------------------------------------------------------
 // Monorepo 路径
@@ -119,7 +119,10 @@ export function createBanner(pkg: { name: string; version: string; author?: stri
 }
 
 /** ESM 包构建 external 判断。 */
-export function createLibExternal(pkg: { dependencies?: Record<string, string>; peerDependencies?: Record<string, string> }) {
+export function createLibExternal(pkg: {
+  dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+}) {
   const deps = Object.keys(pkg.dependencies || {});
   const peerDeps = Object.keys(pkg.peerDependencies || {});
   const externalPkgs = new Set([...deps, ...peerDeps]);

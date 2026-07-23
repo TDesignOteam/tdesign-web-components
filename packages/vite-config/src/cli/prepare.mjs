@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 
-import { getWorkspaceRoot } from './get-root-path.ts';
-import { runPrepare } from './prepare.ts';
+import { runPrepare } from '../prepare/index.ts';
+import { getWorkspaceRoot } from '../shared/workspace.ts';
 
 runPrepare(getWorkspaceRoot(fileURLToPath(new URL('.', import.meta.url))));

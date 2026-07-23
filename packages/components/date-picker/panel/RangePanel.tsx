@@ -62,11 +62,10 @@ export interface DatePickerTableCell {
   dayjsObj?: any;
 }
 
-export interface RangePanelProps
-  extends Pick<
-    TdDateRangePickerProps,
-    'mode' | 'firstDayOfWeek' | 'disableDate' | 'presets' | 'presetsPlacement' | 'panelPreselection'
-  > {
+export interface RangePanelProps extends Pick<
+  TdDateRangePickerProps,
+  'mode' | 'firstDayOfWeek' | 'disableDate' | 'presets' | 'presetsPlacement' | 'panelPreselection'
+> {
   format: string;
   value?: string[];
   hoverValue?: string[];
@@ -769,7 +768,7 @@ export default class RangePanel extends Component<RangePanelProps> {
       if (!val || !format) return null;
       const parsed = parseToDayjs(val, format);
       if (!parsed || !parsed.isValid()) return null;
-      const localized = parsed.locale(dayjs.locale());
+      const localized = dayjs(parsed.valueOf()).locale(dayjs.locale());
       return { year: localized.isoWeekYear(), week: localized.isoWeek() };
     };
 

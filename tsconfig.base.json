@@ -15,8 +15,10 @@
     "jsxFragmentFactory": "Component.f",
     "allowJs": true,
     "checkJs": true,
+    "strict": false,
     "downlevelIteration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0"
   },
   "compileOnSave": false
 }

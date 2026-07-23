@@ -57,8 +57,10 @@ export interface DatePickerTableCell {
   dayjsObj?: any;
 }
 
-export interface SinglePanelProps
-  extends Pick<TdDatePickerProps, 'mode' | 'firstDayOfWeek' | 'disableDate' | 'minDate' | 'maxDate'> {
+export interface SinglePanelProps extends Pick<
+  TdDatePickerProps,
+  'mode' | 'firstDayOfWeek' | 'disableDate' | 'minDate' | 'maxDate'
+> {
   format: string;
   value?: DateValue | DateValue[];
   formattedValue?: string;
@@ -747,7 +749,7 @@ export default class DatePickerPanel extends Component<SinglePanelProps> {
       if (!val) return null;
       const parsed = parseToDayjs(val, format);
       if (!parsed || !parsed.isValid()) return null;
-      const local = parsed.locale(dayjs.locale());
+      const local = dayjs(parsed.valueOf()).locale(dayjs.locale());
       return { year: local.isoWeekYear(), week: local.isoWeek() };
     };
 
@@ -798,9 +800,9 @@ export default class DatePickerPanel extends Component<SinglePanelProps> {
 
         const isRange = Boolean(
           start &&
-            end &&
-            (targetYear > start.year || (targetYear === start.year && targetWeek > start.week)) &&
-            (targetYear < end.year || (targetYear === end.year && targetWeek < end.week)),
+          end &&
+          (targetYear > start.year || (targetYear === start.year && targetWeek > start.week)) &&
+          (targetYear < end.year || (targetYear === end.year && targetWeek < end.week)),
         );
 
         return {

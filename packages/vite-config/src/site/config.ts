@@ -1,16 +1,16 @@
 import type { Plugin } from 'vite';
 import { defineConfig } from 'vite';
 
-import { createComponentSitePlugins } from './component-plugins.ts';
-import { getWorkspaceRoot } from './get-root-path.ts';
-import tdocPlugin from './plugins/tdoc/index.ts';
+import { createComponentSitePlugins } from '../plugins/component.ts';
+import { getWorkspaceRoot } from '../shared/workspace.ts';
+import tdocPlugin from './tdoc/index.ts';
 import {
   createLessPreprocessorOptions,
   createMonorepoAliasConfig,
   createSseProxy,
   siteOxcConfig,
   workspaceOptimizeDepsExclude,
-} from './shared.ts';
+} from '../shared/index.ts';
 
 export interface SiteViteOptions {
   /** 站点目录绝对路径，用于定位 monorepo 根目录 */

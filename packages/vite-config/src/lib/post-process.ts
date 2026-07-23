@@ -4,8 +4,8 @@ import { dirname, resolve } from 'node:path';
 import fg from 'fast-glob';
 import less from 'less';
 
-import { createLessAliasPlugin } from './less-alias-plugin.ts';
-import type { LibViteOptions } from './lib.ts';
+import { createLessAliasPlugin } from '../plugins/less-alias.ts';
+import type { LibViteOptions } from './config.ts';
 
 /** 与 packages/components/style/index.js 一致：主题 + 全局公共样式 */
 const UI_GLOBAL_STYLE_LESS = `@import '@common/style/web/theme/_index.less';

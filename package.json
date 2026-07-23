@@ -6,7 +6,7 @@
     "init": "git submodule update --init packages/common",
     "dev:ui": "pnpm --filter @tdesign/web-components-site dev",
     "dev:chat": "pnpm --filter @tdesign/web-components-chat-site dev",
-    "check:types": "node --import tsx/esm ./packages/vite-config/src/prepare.cli.mjs && pnpm --filter @tdesign/web-components-shared build && tsc -p packages/components/tsconfig.check.json && tsc -p packages/pro-components/chat/tsconfig.check.json",
+    "check:types": "tsc -p packages/vite-config/tsconfig.check.json && node --import tsx/esm ./packages/vite-config/src/cli/prepare.mjs && pnpm --filter @tdesign/web-components-shared build && tsc -p packages/components/tsconfig.check.json && tsc -p packages/pro-components/chat/tsconfig.check.json",
     "check:pack": "pnpm run build:chat && node scripts/check-pack.mjs",
     "build:ui": "pnpm --filter @tdesign/web-components build",
     "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
@@ -38,7 +38,8 @@
     "@commitlint/config-conventional": "^20.5.0",
     "@commitlint/format": "^20.5.0",
     "@eslint/js": "^10.0.1",
-    "@tailwindcss/typography": "^0.5.10",
+    "@tailwindcss/typography": "^0.5.20",
+    "@types/less": "catalog:tooling",
     "@types/lodash-es": "^4.17.12",
     "cors": "^2.8.5",
     "eslint": "^10.5.0",
@@ -47,21 +48,21 @@
     "express": "^4.17.3",
     "globals": "^16.2.0",
     "husky": "^9.0.11",
-    "less": "^4.2.2",
+    "less": "catalog:tooling",
     "lint-staged": "^15.2.5",
     "omi-router": "4.1.8",
-    "postcss": "^8.4.31",
-    "prettier": "3.0.3",
+    "postcss": "catalog:tooling",
+    "prettier": "catalog:tooling",
     "prismjs": "^1.29.0",
     "rimraf": "^5.0.7",
     "tailwindcss": "^3.3.3",
-    "tdesign-icons-view": "^0.2.7",
-    "tdesign-site-components": "^0.15.4",
-    "tdesign-theme-generator": "^1.0.16",
+    "tdesign-icons-view": "catalog:site",
+    "tdesign-site-components": "catalog:site",
+    "tdesign-theme-generator": "catalog:site",
     "tsx": "^4.21.0",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.61.1",
-    "vite": "^8.0.16"
+    "typescript": "catalog:tooling",
+    "typescript-eslint": "catalog:tooling",
+    "vite": "catalog:tooling"
   },
   "engines": {
     "node": ">=22.13.0"
@@ -69,11 +70,7 @@
   "pnpm": {
     "overrides": {
       "@commitlint/format": "20.5.0",
-      "@tdesign/ai-chat-engine": "git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/chat-engine",
-      "@tdesign/ai-shared": "git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/shared"
+      "@tdesign/ai-shared": "catalog:runtime"
     }
-  },
-  "dependencies": {
-    "@tdesign/ai-chat-engine": "link:../tdesign-ai-core/packages/chat-engine"
   }
 }

@@ -9,10 +9,10 @@
     "build": "tsc -b tsconfig.build.json"
   },
   "dependencies": {
-    "@tdesign/ai-chat-engine": "^0.1.0",
-    "cherry-markdown": "0.11.0-alpha-5",
-    "immer": "^10.1.1",
-    "lodash-es": "^4.17.21"
+    "@tdesign/ai-chat-engine": "catalog:runtime",
+    "cherry-markdown": "catalog:runtime",
+    "immer": "catalog:runtime",
+    "lodash-es": "catalog:runtime"
   },
   "devDependencies": {
     "@tdesign/components": "workspace:^",
@@ -21,6 +21,6 @@
   },
   "peerDependencies": {
     "@tdesign/components": "workspace:^",
-    "omi": "^7.7.0"
+    "omi": "catalog:runtime"
   }
 }

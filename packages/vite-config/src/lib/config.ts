@@ -3,13 +3,13 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { build, type Plugin, type UserConfig } from 'vite';
 
-import { createLibDtsPlugin, libDtsOxcConfig } from './lib-dts.ts';
+import { createLibDtsPlugin, libDtsOxcConfig } from './dts.ts';
 import { generateEntryPlugin } from './generate-entry.ts';
-import { getWorkspaceRoot } from './get-root-path.ts';
-import { cleanPublishArtifacts, LIB_BUILD_PATHS } from './lib-pipeline-utils.ts';
-import { runLibPostProcess } from './lib-post-process.ts';
-import { createComponentStylePlugin } from './component-plugins.ts';
-import { runPrepare } from './prepare.ts';
+import { cleanPublishArtifacts, LIB_BUILD_PATHS } from './pipeline-utils.ts';
+import { runLibPostProcess } from './post-process.ts';
+import { createComponentStylePlugin } from '../plugins/component.ts';
+import { runPrepare } from '../prepare/index.ts';
+import { getWorkspaceRoot } from '../shared/workspace.ts';
 import {
   collectLibInputs,
   createBanner,
@@ -20,7 +20,7 @@ import {
   createMonorepoAliasConfig,
   createPreserveModuleFileName,
   libOxcConfig,
-} from './shared.ts';
+} from '../shared/index.ts';
 
 export interface LibViteOptions {
   pkg: {

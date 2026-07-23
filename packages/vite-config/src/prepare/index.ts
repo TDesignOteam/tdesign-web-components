@@ -4,7 +4,7 @@ import { dirname, relative, resolve } from 'node:path';
 
 import fg from 'fast-glob';
 
-import { LIB_BUILD_PATHS } from './lib-pipeline-utils.ts';
+import { LIB_BUILD_PATHS } from '../lib/pipeline-utils.ts';
 
 /** 生成 components / chat 的 less 模块声明 */
 export function generateLessTypes(monorepoRoot: string) {
@@ -21,9 +21,7 @@ export function generateLessTypes(monorepoRoot: string) {
     ];
     for (const file of commonLess) {
       const key = file.replace(/\.less$/, '');
-      lines.push(
-        `declare module '@common/style/${key}' { const classes: string; export default classes; }`,
-      );
+      lines.push(`declare module '@common/style/${key}' { const classes: string; export default classes; }`);
     }
     for (const file of lessFiles) {
       const rel = `./${relative(baseDir, resolve(baseDir, file)).replace(/\.less$/, '')}`;
@@ -59,10 +57,7 @@ function ensureCommonTypesCache(monorepoRoot: string) {
 }
 
 /** less 声明 + common 类型缓存 */
-export function runPrepare(
-  monorepoRoot: string,
-  { refreshCommonTypes = true }: { refreshCommonTypes?: boolean } = {},
-) {
+export function runPrepare(monorepoRoot: string, { refreshCommonTypes = true }: { refreshCommonTypes?: boolean } = {}) {
   generateLessTypes(monorepoRoot);
   if (refreshCommonTypes) emitCommonTypesCache(monorepoRoot);
   else ensureCommonTypesCache(monorepoRoot);
