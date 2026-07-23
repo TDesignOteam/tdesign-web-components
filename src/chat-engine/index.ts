@@ -64,7 +64,7 @@ export default class ChatEngine implements IChatEngine {
    * @description 返回最后一条消息的状态，如果没有消息则返回'idle'
    */
   get status(): ChatStatus {
-    return this.messages.at(-1)?.status || 'idle';
+    return this.messages[this.messages.length - 1]?.status || 'idle';
   }
 
   /**

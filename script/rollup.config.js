@@ -136,9 +136,12 @@ const getPlugins = ({ env, isProd = false, ignoreLess = false } = {}) => {
     commonjs(),
     esbuild({
       include: /\.[jt]sx?$/,
-      target: 'esnext',
+      target: 'chrome86',
       minify: false,
-      loader: 'tsx',
+      loaders: {
+        '.ts': 'ts',
+        '.tsx': 'tsx',
+      },
       jsxFactory: 'Component.h',
       jsxFragment: 'Component.f',
       tsconfig: resolve(__dirname, '../tsconfig.build.json'),
@@ -339,9 +342,11 @@ const pluginConfig = buildPlugins.map((plugin) => ({
     commonjs(),
     esbuild({
       include: /\.[jt]s$/,
-      target: 'esnext',
+      target: 'chrome86',
       minify: false,
-      loader: 'ts',
+      loaders: {
+        '.ts': 'ts',
+      },
       tsconfig: resolve(__dirname, '../tsconfig.build.json'),
     }),
   ],

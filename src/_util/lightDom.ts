@@ -16,6 +16,41 @@ export const createStyleSheet = (style: string) => {
   return styleSheet;
 };
 
+const getStyleHost = (root: Document | ShadowRoot) => (root instanceof Document ? root.head : root);
+
+const injectStyleElement = (root: Document | ShadowRoot, style: string) => {
+  const styleHost = getStyleHost(root);
+  const styleElements = Array.from(styleHost.querySelectorAll('style[data-td-light-dom-style]'));
+  const hasSameStyle = styleElements.some((element) => element.textContent === style);
+
+  if (hasSameStyle) {
+    return;
+  }
+
+  const styleElement = document.createElement('style');
+  styleElement.setAttribute('data-td-light-dom-style', '');
+  styleElement.textContent = style;
+  styleHost.appendChild(styleElement);
+};
+
+export const adoptStyleSheet = (root: Document | ShadowRoot, style: string) => {
+  try {
+    const preStyleSheet = root.adoptedStyleSheets?.find((item) => (item as any).styleStr === style);
+    if (preStyleSheet) {
+      return;
+    }
+
+    const styleSheet = createStyleSheet(style);
+    if (root.adoptedStyleSheets) {
+      root.adoptedStyleSheets = root.adoptedStyleSheets.concat(styleSheet);
+    } else {
+      root.adoptedStyleSheets = [styleSheet];
+    }
+  } catch (error) {
+    injectStyleElement(root, style);
+  }
+};
+
 type CSSItem = { default: string } | string;
 
 type ComponentConstructor = {
@@ -65,17 +100,7 @@ const buildLightDomCtor = (nodeCtor: ComponentConstructor) => {
 
       const cssList = getCssList(nodeCtor.css);
       cssList.forEach((style) => {
-        const preStyleSheet = parentElement.adoptedStyleSheets?.find((item) => (item as any).styleStr === style);
-        if (preStyleSheet) {
-          return;
-        }
-
-        const styleSheet = createStyleSheet(style);
-        if (parentElement.adoptedStyleSheets) {
-          parentElement.adoptedStyleSheets.push(styleSheet);
-        } else {
-          parentElement.adoptedStyleSheets = [styleSheet];
-        }
+        adoptStyleSheet(parentElement, style);
       });
 
       super.beforeRender();

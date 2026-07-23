@@ -1,5 +1,7 @@
 import { enablePatches, produceWithPatches } from 'immer';
 
+const cloneState = <T>(state: T): T => JSON.parse(JSON.stringify(state));
+
 /**
  * 状态订阅者回调函数类型
  * @template T 状态类型
@@ -60,7 +62,7 @@ export default class ReactiveState<T extends object> {
    * @returns 当前状态的只读引用或克隆副本
    */
   public getState(cloned = false): Readonly<T> {
-    return cloned ? structuredClone(this.currentState) : this.currentState;
+    return cloned ? cloneState(this.currentState) : this.currentState;
   }
 
   /**
