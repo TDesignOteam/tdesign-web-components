@@ -19,6 +19,7 @@ declare global {
       };
       id?: string;
       slotName?: string;
+      strategy?: 'append' | 'merge';
     };
   }
 }

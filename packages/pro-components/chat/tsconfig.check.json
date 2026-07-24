@@ -9,7 +9,6 @@
       "@tdesign/web-components-chat/*": ["./*"],
       "@tdesign/pro-components-chat": ["."],
       "@tdesign/pro-components-chat/*": ["./*"],
-      "@tdesign/ai-chat-engine": ["./types/check-ai-chat-engine.d.ts"],
       "@tdesign/web-components": ["../../components/dist"],
       "@tdesign/web-components/*": ["../../components/dist/*"],
       "@tdesign/components": ["../../components/dist"],

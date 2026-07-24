@@ -15,8 +15,7 @@ packages:
 catalogs:
   runtime:
     '@popperjs/core': ^2.11.8
-    '@tdesign/ai-chat-engine': git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/chat-engine
-    '@tdesign/ai-shared': git+https://github.com/TDesignOteam/tdesign-ai-core.git#7e277aa55cfbfffd481f0149eb2e30edc8b4d8ee&path:packages/shared
+    '@tdesign/ai-chat-engine': ^0.0.2
     cherry-markdown: 0.11.6
     classnames: ^2.5.1
     clsx: ^2.1.1

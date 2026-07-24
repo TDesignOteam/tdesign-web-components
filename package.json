@@ -69,8 +69,7 @@
   },
   "pnpm": {
     "overrides": {
-      "@commitlint/format": "20.5.0",
-      "@tdesign/ai-shared": "catalog:runtime"
+      "@commitlint/format": "20.5.0"
     }
   }
 }

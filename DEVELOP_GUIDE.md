@@ -112,9 +112,9 @@ npm run start
 
 ### 发布包架构
 
-| 包名 | 源码 | 用户安装 |
-|------|------|----------|
-| `@tdesign/web-components` | `packages/components` | 基础 UI 组件 |
+| 包名                           | 源码                           | 用户安装                   |
+| ------------------------------ | ------------------------------ | -------------------------- |
+| `@tdesign/web-components`      | `packages/components`          | 基础 UI 组件               |
 | `@tdesign/web-components-chat` | `packages/pro-components/chat` | AI Chat（peer 依赖 UI 包） |
 
 **构建与依赖策略**
@@ -142,14 +142,7 @@ import '@tdesign/web-components/lib/style/index.css';
 - UI：`packages/tdesign-web-components/CHANGELOG.md`
 - Chat：`packages/tdesign-web-components-chat/CHANGELOG.md`
 
-Chat 依赖 `@tdesign/ai-chat-engine`（`^0.1.0`）。npm 尚未发布时，需先在 [tdesign-ai-core](https://github.com/TDesignOteam/tdesign-ai-core) 的 `packages/chat-engine` 目录执行 `pnpm link --global`，再在本仓库根目录执行：
-
-```bash
-pnpm run link:ai
-# 等价于 pnpm link --global @tdesign/ai-chat-engine
-```
-
-`@tdesign/ai-shared` 为 chat-engine 内部依赖，无需在主仓库单独安装或 link。
+Chat 依赖已通过 pnpm catalog 固定为已发布的 `@tdesign/ai-chat-engine`；安装依赖后即可使用，无需本地 link 或额外安装其内部依赖。
 
 克隆后需初始化子模块：
 

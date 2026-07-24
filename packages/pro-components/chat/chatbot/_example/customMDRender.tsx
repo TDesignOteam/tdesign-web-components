@@ -6,6 +6,8 @@ import type { TdChatMessageConfig } from '@tdesign/web-components-chat/chatbot';
 import CherryStream from 'cherry-markdown/dist/cherry-markdown.stream.esm.js';
 import { Component } from 'omi';
 
+import { getDemoSSEPayload, parseImageData } from './sse';
+
 const defaultChunkParser = (chunk): AIMessageContent => {
   try {
     return handleStructuredData(chunk);
@@ -19,35 +21,36 @@ const defaultChunkParser = (chunk): AIMessageContent => {
 };
 
 function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
-  if (!chunk?.data || typeof chunk === 'string') {
+  const payload = getDemoSSEPayload(chunk.data);
+  if (!payload) {
     return {
       type: 'markdown',
       data: String(chunk),
     };
   }
 
-  const { type, ...rest } = chunk.data;
+  const { type, ...rest } = payload;
   switch (type) {
     case 'think':
       return {
         type: 'thinking',
         data: {
           title: rest.title || '思考中...',
-          text: rest.content || '',
+          text: typeof rest.content === 'string' ? rest.content : '',
         },
       };
 
     case 'text': {
       return {
         type: 'markdown',
-        data: rest?.msg || '',
+        data: rest.msg || '',
       };
     }
 
     case 'image': {
       return {
         type: 'image',
-        data: { ...JSON.parse(chunk.data.content) },
+        data: parseImageData(payload.content),
       };
     }
 

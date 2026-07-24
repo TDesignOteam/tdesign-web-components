@@ -10,6 +10,7 @@ import type { TdChatMessageConfig } from '@tdesign/web-components-chat/chatbot';
 import { Component, createRef, signal } from 'omi';
 
 import Chatbot from '../chat';
+import { getDemoSSEPayload, parseImageData, parseWeatherData } from './sse';
 
 // 天气扩展类型定义
 declare global {
@@ -23,6 +24,7 @@ declare global {
       };
       id?: string;
       slotName?: string;
+      strategy?: 'append' | 'merge';
     };
   }
 }
@@ -97,43 +99,45 @@ const defaultChunkParser = (chunk): AIMessageContent => {
 };
 
 function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
-  if (!chunk?.data || typeof chunk === 'string') {
+  const payload = getDemoSSEPayload(chunk.data);
+  if (!payload) {
     return {
       type: 'markdown',
       data: String(chunk),
     };
   }
 
-  const { type, ...rest } = chunk.data;
+  const { type, ...rest } = payload;
   switch (type) {
     case 'think':
       return {
         type: 'thinking',
         data: {
           title: rest.title || '思考中...',
-          text: rest.content || '',
+          text: typeof rest.content === 'string' ? rest.content : '',
         },
       };
 
     case 'text': {
       return {
         type: 'markdown',
-        data: rest?.msg || '',
+        data: rest.msg || '',
       };
     }
 
     case 'image': {
       return {
         type: 'image',
-        data: { ...JSON.parse(chunk.data.content) },
+        data: parseImageData(payload.content),
       };
     }
 
     case 'weather': {
       return {
-        ...chunk.data,
-        slotName: `weather-${chunk.data.id}`,
-        data: { ...JSON.parse(chunk.data.content) },
+        type: 'weather',
+        id: payload.id,
+        slotName: `weather-${payload.id || ''}`,
+        data: parseWeatherData(payload.content),
         strategy: 'append',
       };
     }
