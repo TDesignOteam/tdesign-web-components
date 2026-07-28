@@ -45,6 +45,10 @@ export interface LibViteOptions {
 
 const MULTI_FORMAT_NOOP_ID = '\0lib-multi-format:noop';
 const IIFE_PROCESS_SHIM = 'var process=globalThis.process||{env:{NODE_ENV:"production"}};\n';
+const BROWSER_BUILD_TARGET = {
+  target: 'chrome86',
+  cssTarget: 'chrome86',
+} as const;
 
 function createSharedPlugins(monorepoRoot: string, generateEntry: boolean) {
   return [
@@ -81,6 +85,7 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
     oxc: { ...libOxcConfig, ...libDtsOxcConfig },
     build: {
       outDir: resolve(options.packageDir, 'esm'),
+      ...BROWSER_BUILD_TARGET,
       // 发布目录已由构建流水线统一清理，嵌套 Vite 构建不再各自处理目录。
       emptyOutDir: false,
       sourcemap: true,
@@ -105,12 +110,14 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
 
 function createIifeConfig(options: LibViteOptions): UserConfig {
   const monorepoRoot = getWorkspaceRoot(options.packageDir);
-  const fileName = `${options.pkg.name.split('/').at(-1)}.min.js`;
+  const packageNameParts = options.pkg.name.split('/');
+  const fileName = `${packageNameParts[packageNameParts.length - 1]}.min.js`;
 
   return {
     ...createSharedUserConfig(options, monorepoRoot),
     build: {
       outDir: resolve(options.packageDir, 'dist'),
+      ...BROWSER_BUILD_TARGET,
       emptyOutDir: false,
       sourcemap: true,
       minify: 'oxc',

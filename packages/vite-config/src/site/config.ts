@@ -34,9 +34,8 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
       base: publicPathMap[mode] || './',
       oxc: siteOxcConfig,
       resolve: {
-        // 本地 pnpm link 的依赖保持其项目内路径，避免 Omi JSX 注入解析到链接源码之外。
-        preserveSymlinks: true,
         alias: createMonorepoAliasConfig(ROOT, siteDir),
+        dedupe: ['omi'],
       },
       css: {
         preprocessorOptions: createLessPreprocessorOptions(ROOT),

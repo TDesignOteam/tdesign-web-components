@@ -5,14 +5,14 @@ toc: false
 spline: explain
 ---
 
-## 🌈 1.3.1-alpha.11 `2026-06-22`
+## 🌈 1.3.1-alpha.13 `2026-07-28`
 
 ### 🚧 Refactor（Breaking Changes）
 
 - **独立发布包**：Chat 从合包 `tdesign-web-components` 拆分为 `@tdesign/web-components-chat`
 - **Peer 依赖**：需安装 `@tdesign/web-components`（提供 `t-collapse`、`t-message` 等基础组件）
 - **按需引入**：`import '@tdesign/web-components-chat/chatbot'` 注册 `<t-chatbot>` 自定义元素
-- **构建**：`vite build` 产出 `lib` / `esm` / `cjs` / `dist`；`shared` 按需内联，`@tdesign/ai-chat-engine` 为 runtime 依赖
+- **构建**：`vite build` 产出 `esm` / `dist`；`shared` 按需内联，`@tdesign/ai-chat-engine` 为 runtime 依赖
 - **exports**：`"."` 全量 + `"./*"` 子模块（`chatbot`、`chat-message`、`chat-engine` 等）
 
 ### 📦 迁移说明（自 1.2.x 合包版本）

@@ -102,7 +102,7 @@ npm run start
 │   ├── shared/                         # WC 专用工具源码（构建时 bundle 进发布包）
 │   ├── tdesign-web-components/         # UI npm 发布包 @tdesign/web-components
 │   │   ├── CHANGELOG.md
-│   │   ├── lib|esm|cjs|dist/           # vite build 产物
+│   │   ├── esm|dist/                   # vite build 产物
 │   │   └── site/                       # UI 文档站
 │   ├── tdesign-web-components-chat/    # Chat npm 发布包 @tdesign/web-components-chat
 │   │   ├── CHANGELOG.md
@@ -120,8 +120,8 @@ npm run start
 **构建与依赖策略**
 
 - 构建入口：各发布包 `pnpm run build` → `vite build`（`@tdesign/vite-config`）
-- 产物格式：`lib`（类型 + 声明邻近 JS）、`esm`、`cjs`、`dist`（UMD）
-- `packages/common/js`、`packages/shared`：**内联进** `lib/esm/cjs`，不单独发 npm
+- 产物格式：`esm`（按组件入口 + 类型声明）、`dist`（IIFE/CDN）
+- `packages/common/js`、`packages/shared`：**内联进** `esm` / `dist`，不单独发 npm
 - Chat 额外依赖：`@tdesign/ai-chat-engine`（dependencies）；`@tdesign/web-components`（peer）
 
 **按需引入（Web Components）**
@@ -132,10 +132,10 @@ import '@tdesign/web-components/button';
 import '@tdesign/web-components-chat/chatbot';
 
 // 样式
-import '@tdesign/web-components/lib/style/index.css';
+import '@tdesign/web-components/style/index.css';
 ```
 
-`package.json` 的 `exports` 约定：`"."` 全量入口，`"./*"` 单组件（如 `/button`、`/chatbot`），`./lib/style/index.css` 公共样式。
+`package.json` 的 `exports` 约定：`"."` 全量入口，`"./*"` 单组件（如 `/button`、`/chatbot`），`./style/index.css` 公共样式。
 
 **更新日志**
 
@@ -221,7 +221,7 @@ export * from './button';
 
 ### 项目常用脚本说明
 
-各源码包通过 `check:types`（prepare → shared 声明 → components 声明 → chat `--noEmit`）做全仓类型检查。发布构建由 `vite build` 直写 `packages/tdesign-web-components/{lib,esm,cjs,dist}`：`packages/common` 与 `packages/shared` 均作为包内 `_internal/*` 私有实现进入发布包，用户只需安装主包即可使用。
+各源码包通过 `check:types`（prepare → shared 声明 → components 声明 → chat `--noEmit`）做全仓类型检查。发布构建由 `vite build` 直写 `packages/tdesign-web-components/{esm,dist}`：`packages/common` 与 `packages/shared` 均作为包内 `_internal/*` 私有实现进入发布包，用户只需安装主包即可使用。
 
 ```bash
 # 启动 UI 文档站
@@ -234,7 +234,7 @@ pnpm run site:chat
 pnpm run preview:ui
 # 编译全部组件库
 pnpm run build
-# 编译 UI 组件库（vite build → lib/esm/cjs/dist）
+# 编译 UI 组件库（vite build → esm/dist）
 pnpm run build:ui
 # 编译 Chat（含 UI）
 pnpm run build:chat

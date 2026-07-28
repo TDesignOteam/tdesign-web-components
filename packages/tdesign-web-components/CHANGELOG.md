@@ -5,14 +5,14 @@ toc: false
 spline: explain
 ---
 
-## 🌈 1.3.1-alpha.11 `2026-06-22`
+## 🌈 1.3.1-alpha.13 `2026-07-28`
 
 ### 🚧 Refactor（Breaking Changes）
 
 - **Monorepo 发布包**：自 `develop` 单包 `tdesign-web-components` 拆分为独立 npm 包 `@tdesign/web-components`（本包）
-- **构建**：由 Rollup 迁移为 `vite build`（`@tdesign/vite-config`），产出 `lib` / `esm` / `cjs` / `dist`
+- **构建**：由 Rollup 迁移为 `vite build`（`@tdesign/vite-config`），产出 `esm` / `dist`
 - **内联依赖**：`packages/common/js`（`@tdesign/common-js`）与 `packages/shared` 源码 **bundle 进发布产物**，用户无需单独安装
-- **exports**：支持 `"."` 全量入口与 `"./*"` 按需（如 `@tdesign/web-components/button`）；样式见 `@tdesign/web-components/lib/style/index.css`
+- **exports**：支持 `"."` 全量入口与 `"./*"` 按需（如 `@tdesign/web-components/button`）；样式见 `@tdesign/web-components/style/index.css`
 
 ### 📦 迁移说明（自 1.2.x 合包版本）
 

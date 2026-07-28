@@ -13,24 +13,21 @@ import { createLessAliasPlugin } from '../plugins/less-alias.ts';
  * @param siteDir 文档站目录；传入时追加 @site / @docs 等站点专用别名
  */
 export function createMonorepoAliasConfig(root: string, siteDir?: string): Record<string, string> {
-  const commonDir = resolve(root, 'packages/common');
+  const packagesDir = resolve(root, 'packages');
   const aliases: Record<string, string> = {
-    '@common': commonDir,
-    '@tdesign/web-components': resolve(root, 'packages/components'),
-    '@tdesign/web-components-chat': resolve(root, 'packages/pro-components/chat'),
-    '@tdesign/web-components-shared': resolve(root, 'packages/shared/src'),
+    '@common': resolve(packagesDir, 'common'),
+    '@tdesign/web-components': resolve(packagesDir, 'components'),
+    '@tdesign/web-components-chat': resolve(packagesDir, 'pro-components/chat'),
+    '@tdesign/web-components-shared': resolve(packagesDir, 'shared/src'),
   };
 
   if (siteDir) {
     Object.assign(aliases, {
-      '@': resolve(root, 'packages/components/'),
-      '@site': resolve(siteDir),
+      '@': resolve(packagesDir, 'components'),
+      '@site': siteDir,
       '@docs': resolve(siteDir, 'docs'),
-      '@ui-pkg': resolve(root, 'packages/components'),
-      '@chat-pkg': resolve(root, 'packages/pro-components/chat'),
-      '@tdesign/web-components': resolve(root, 'packages/components/'),
-      '@tdesign/web-components-chat': resolve(root, 'packages/pro-components/chat/'),
-      '@tdesign/web-components-shared': resolve(root, 'packages/shared/src/'),
+      '@ui-pkg': resolve(packagesDir, 'components'),
+      '@chat-pkg': resolve(packagesDir, 'pro-components/chat'),
     });
   }
 
@@ -137,8 +134,8 @@ export function createLibExternal(pkg: {
  * preserveModules 文件名策略。
  *
  * UI / Chat 只发布 esm 分文件产物；workspace shared/common 会作为包内
- * 实现被吸进发布包，但不能泄露 packages/shared/src、packages/shared/dist、packages/common
- * 这类 monorepo 路径。这里统一收敛到 _internal/*，表达“包内私有实现，非 public API”。
+ * 实现被吸进发布包。shared/src 是运行时源码，shared/dist 是声明构建输入，
+ * 两者都不能作为 monorepo 路径泄露到发布包，统一收敛到 _internal/*。
  */
 export function createPreserveModuleFileName(srcDir: string, monorepoRoot: string) {
   const normalizePath = (path: string) => path.replace(/\\/g, '/');
@@ -161,7 +158,6 @@ export function createPreserveModuleFileName(srcDir: string, monorepoRoot: strin
     } else {
       name = name
         .replace(/^packages\/shared\/src\//, '_internal/shared/')
-        .replace(/^packages\/shared\/dist\//, '_internal/shared/')
         .replace(/^shared\/src\//, '_internal/shared/')
         .replace(/^shared\/dist\//, '_internal/shared/')
         .replace(/^packages\/common\//, '_internal/common/')
