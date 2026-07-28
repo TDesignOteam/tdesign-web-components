@@ -1,5 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -46,7 +47,7 @@ function checkReleaseVersions() {
 
 function packFiles(packageDir) {
   const [pack] = JSON.parse(
-    execFileSync('npm', ['pack', '--dry-run', '--json', '--cache', '/private/tmp/npm-cache'], {
+    execFileSync('npm', ['pack', '--dry-run', '--json', '--cache', resolve(tmpdir(), 'npm-cache')], {
       cwd: resolve(repoRoot, packageDir),
       encoding: 'utf8',
     }),
