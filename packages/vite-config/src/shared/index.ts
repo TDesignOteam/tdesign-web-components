@@ -153,10 +153,16 @@ export function createPreserveModuleFileName(srcDir: string, monorepoRoot: strin
       name = `_internal/shared/${stripExtension(relative(`${normalizedRoot}/packages/shared/src`, facadeModuleId))}`;
     } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/shared/dist/`)) {
       name = `_internal/shared/${stripExtension(relative(`${normalizedRoot}/packages/shared/dist`, facadeModuleId))}`;
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/.cache/common-js-types/`)) {
+      name = `_internal/common/${stripExtension(
+        relative(`${normalizedRoot}/packages/.cache/common-js-types`, facadeModuleId),
+      )}`;
     } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/common/`)) {
       name = `_internal/common/${stripExtension(relative(`${normalizedRoot}/packages/common`, facadeModuleId))}`;
     } else {
       name = name
+        .replace(/^packages\/\.cache\/common-js-types\//, '_internal/common/')
+        .replace(/^\.cache\/common-js-types\//, '_internal/common/')
         .replace(/^packages\/shared\/src\//, '_internal/shared/')
         .replace(/^shared\/src\//, '_internal/shared/')
         .replace(/^shared\/dist\//, '_internal/shared/')

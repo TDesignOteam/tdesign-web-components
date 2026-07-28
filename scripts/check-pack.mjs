@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { existsSync, readdirSync, statSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
@@ -17,13 +17,31 @@ const packages = [
     name: 'chat',
     sourceDir: 'packages/pro-components/chat',
     packageDir: 'packages/tdesign-web-components-chat',
-    imports: ['@tdesign/web-components-chat', '@tdesign/web-components-chat/chatbot', '@tdesign/web-components-chat/chat-engine'],
+    imports: [
+      '@tdesign/web-components-chat',
+      '@tdesign/web-components-chat/chatbot',
+      '@tdesign/web-components-chat/chat-engine',
+    ],
     iife: 'dist/web-components-chat.min.js',
   },
 ];
 
+const uiPackage = JSON.parse(readFileSync(resolve(repoRoot, 'packages/tdesign-web-components/package.json'), 'utf8'));
+const chatPackage = JSON.parse(
+  readFileSync(resolve(repoRoot, 'packages/tdesign-web-components-chat/package.json'), 'utf8'),
+);
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
+}
+
+function checkReleaseVersions() {
+  assert(uiPackage.version === chatPackage.version, 'UI and Chat package versions must match');
+  assert(
+    chatPackage.peerDependencies?.['@tdesign/web-components'] === `^${uiPackage.version}`,
+    'Chat peer dependency must match the current UI package version',
+  );
+  console.log(`[check:pack] release versions aligned (${uiPackage.version})`);
 }
 
 function packFiles(packageDir) {
@@ -41,6 +59,7 @@ function checkPackList({ name, packageDir, iife }) {
   const forbidden = files.filter(
     (file) =>
       /^(cjs|lib|plugins|src|packages)\//.test(file) ||
+      /(^|\/)\.cache(\/|$)/.test(file) ||
       file.includes('node_modules/') ||
       file.includes('/packages/') ||
       file.includes('/shared/src/') ||
@@ -50,7 +69,10 @@ function checkPackList({ name, packageDir, iife }) {
   const required = ['esm/index.js', 'esm/index.d.ts', iife];
 
   assert(forbidden.length === 0, `[${name}] pack contains forbidden files:\n${forbidden.join('\n')}`);
-  assert(required.every((file) => files.includes(file)), `[${name}] pack is missing ESM or IIFE output`);
+  assert(
+    required.every((file) => files.includes(file)),
+    `[${name}] pack is missing ESM or IIFE output`,
+  );
 
   if (name === 'chat') {
     for (const ext of ['eot', 'svg', 'ttf', 'woff', 'woff2']) {
@@ -59,6 +81,37 @@ function checkPackList({ name, packageDir, iife }) {
   }
 
   console.log(`[check:pack] ${name} pack list ok (${files.length} files)`);
+}
+
+function collectDeclarationFiles(dir) {
+  if (!existsSync(dir)) return [];
+
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const path = resolve(dir, entry.name);
+    if (entry.isDirectory()) return collectDeclarationFiles(path);
+    return entry.name.endsWith('.d.ts') ? [path] : [];
+  });
+}
+
+function checkDeclarationReferences({ name, packageDir }) {
+  const declarationFiles = collectDeclarationFiles(resolve(repoRoot, packageDir, 'esm'));
+  const forbiddenPatterns = [
+    ['common type cache', /\.cache\/common-js-types/],
+    ['common source path', /packages\/common/],
+    ['shared source path', /shared\/(?:src|dist)\//],
+    ['workspace absolute path', /(?:\/Users\/|\/home\/runner\/work\/|[A-Za-z]:\\)/],
+  ];
+  const violations = [];
+
+  for (const file of declarationFiles) {
+    const source = readFileSync(file, 'utf8');
+    for (const [label, pattern] of forbiddenPatterns) {
+      if (pattern.test(source)) violations.push(`${file}: ${label}`);
+    }
+  }
+
+  assert(violations.length === 0, `[${name}] declarations expose internal paths:\n${violations.join('\n')}`);
+  console.log(`[check:pack] ${name} declaration references ok (${declarationFiles.length} files)`);
 }
 
 function checkResolvable({ name, packageDir, imports }) {
@@ -100,8 +153,11 @@ function checkComponentEntries({ name, sourceDir, packageDir }) {
   console.log(`[check:pack] ${name} ESM component entries ok`);
 }
 
+checkReleaseVersions();
+
 for (const pkg of packages) {
   checkPackList(pkg);
+  checkDeclarationReferences(pkg);
   checkResolvable(pkg);
   checkComponentEntries(pkg);
 }

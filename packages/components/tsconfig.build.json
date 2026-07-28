@@ -26,7 +26,7 @@
       "@": ["."]
     }
   },
-  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/generated-less.d.ts", "../../typings.d.ts"],
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/**/*.d.ts", "../../typings.d.ts"],
   "exclude": [
     "**/*.jsx",
     "**/**/_usage/*",

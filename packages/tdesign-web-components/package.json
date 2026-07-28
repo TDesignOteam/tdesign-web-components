@@ -30,12 +30,12 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Tencent/tdesign-web-components.git",
+    "url": "git+https://github.com/TDesignOteam/tdesign-web-components.git",
     "directory": "packages/tdesign-web-components"
   },
-  "homepage": "https://github.com/Tencent/tdesign-web-components/blob/main/README.md",
+  "homepage": "https://github.com/TDesignOteam/tdesign-web-components#readme",
   "bugs": {
-    "url": "https://github.com/Tencent/tdesign-web-components/issues"
+    "url": "https://github.com/TDesignOteam/tdesign-web-components/issues"
   },
   "scripts": {
     "build": "vite build"
