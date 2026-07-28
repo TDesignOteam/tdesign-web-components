@@ -32,6 +32,7 @@ packages/components/**/*.d.ts
 !packages/components/types/dayjs-plugins.d.ts
 packages/shared/src/**/*.d.ts
 packages/pro-components/**/*.d.ts
+!packages/pro-components/chat/types/cdn-imports.d.ts
 packages/.cache
 
 .codebuddy/plans/
