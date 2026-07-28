@@ -140,6 +140,8 @@
     }
     &.@{prefix}-chat__item__role--user {
       .@{prefix}-chat__item__content {
+        // Keep custom flex content from stretching short user text to the attachment width.
+        display: block;
         padding: 0;
       }
     }
