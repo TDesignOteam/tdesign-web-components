@@ -19,7 +19,8 @@ jobs:
 
       - uses: preactjs/compressed-size-action@v2
         with:
-          install-script: 'pnpm install --frozen-lockfile'
+          # The action checks out both PR and base trees without resetting submodules between them.
+          install-script: 'pnpm install --no-frozen-lockfile'
           build-script: 'build:ui'
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           pattern: './packages/tdesign-web-components/{dist,esm}/**/*.{js,mjs,css}'
@@ -40,7 +41,8 @@ jobs:
 
       - uses: preactjs/compressed-size-action@v2
         with:
-          install-script: 'pnpm install --frozen-lockfile'
+          # The action checks out both PR and base trees without resetting submodules between them.
+          install-script: 'pnpm install --no-frozen-lockfile'
           build-script: 'build:chat'
           repo-token: '${{ secrets.GITHUB_TOKEN }}'
           pattern: './packages/tdesign-web-components-chat/{dist,esm}/**/*.{js,mjs,css}'
