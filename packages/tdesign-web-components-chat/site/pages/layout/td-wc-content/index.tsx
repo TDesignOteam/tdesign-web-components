@@ -1,9 +1,9 @@
 import docStyles from '@common/style/web/docs.less?inline';
+import prismCss from '@tdesign/site-components/lib/styles/prism-theme.less?inline';
+import prismCssDark from '@tdesign/site-components/lib/styles/prism-theme-dark.less?inline';
+import siteStyles from '@tdesign/site-components/lib/styles/style.css?raw';
 import type { VNode } from 'omi';
 import { bind, Component, tag } from 'omi';
-import prismCss from 'tdesign-site-components/lib/styles/prism-theme.less?inline';
-import prismCssDark from 'tdesign-site-components/lib/styles/prism-theme-dark.less?inline';
-import siteStyles from 'tdesign-site-components/lib/styles/style.css?raw';
 
 import { fallback } from '../../components/fallback.tsx';
 import { pending } from '../../components/pending.tsx';

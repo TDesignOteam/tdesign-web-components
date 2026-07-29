@@ -33,7 +33,7 @@ catalogs:
     prismjs: ^1.30.0
     reactive-signal: ^2.0.1
     tdesign-icons-view: ^0.5.7
-    tdesign-site-components: ^0.16.7
+    '@tdesign/site-components': ^0.19.2
     tdesign-theme-generator: ^1.1.9
   tooling:
     '@types/less': ^3.0.8

@@ -46,6 +46,9 @@ catalogs:
       specifier: ^0.3.6
       version: 0.3.6
   site:
+    '@tdesign/site-components':
+      specifier: ^0.19.2
+      version: 0.19.2
     omi-router:
       specifier: 4.1.8
       version: 4.1.8
@@ -58,9 +61,6 @@ catalogs:
     tdesign-icons-view:
       specifier: ^0.5.7
       version: 0.5.7
-    tdesign-site-components:
-      specifier: ^0.16.7
-      version: 0.16.7
     tdesign-theme-generator:
       specifier: ^1.1.9
       version: 1.1.9
@@ -109,6 +109,9 @@ importers:
       '@tailwindcss/typography':
         specifier: ^0.5.20
         version: 0.5.20(tailwindcss@3.4.19(tsx@4.23.1)(yaml@2.8.3))
+      '@tdesign/site-components':
+        specifier: catalog:site
+        version: 0.19.2
       '@types/less':
         specifier: catalog:tooling
         version: 3.0.8
@@ -163,9 +166,6 @@ importers:
       tdesign-icons-view:
         specifier: catalog:site
         version: 0.5.7(typescript@6.0.3)
-      tdesign-site-components:
-        specifier: catalog:site
-        version: 0.16.7
       tdesign-theme-generator:
         specifier: catalog:site
         version: 1.1.9
@@ -303,6 +303,9 @@ importers:
 
   packages/tdesign-web-components-chat/site:
     devDependencies:
+      '@tdesign/site-components':
+        specifier: catalog:site
+        version: 0.19.2
       '@tdesign/vite-config':
         specifier: workspace:^
         version: link:../../vite-config
@@ -318,15 +321,15 @@ importers:
       tdesign-icons-view:
         specifier: catalog:site
         version: 0.5.7(typescript@6.0.3)
-      tdesign-site-components:
-        specifier: catalog:site
-        version: 0.16.7
       tdesign-theme-generator:
         specifier: catalog:site
         version: 1.1.9
 
   packages/tdesign-web-components/site:
     devDependencies:
+      '@tdesign/site-components':
+        specifier: catalog:site
+        version: 0.19.2
       '@tdesign/vite-config':
         specifier: workspace:^
         version: link:../../vite-config
@@ -342,9 +345,6 @@ importers:
       tdesign-icons-view:
         specifier: catalog:site
         version: 0.5.7(typescript@6.0.3)
-      tdesign-site-components:
-        specifier: catalog:site
-        version: 0.16.7
       tdesign-theme-generator:
         specifier: catalog:site
         version: 1.1.9
@@ -1038,6 +1038,9 @@ packages:
     resolution: {integrity: sha512-CS6ubPz2f9c1kstu+a4oHpvIs08TPg5XbNBcYdd58od4bY+pu3q3/zYZsYCSD1i70E9pUimH6KTQ3oJusnalfw==}
     peerDependencies:
       immer: ^10.0.0
+
+  '@tdesign/site-components@0.19.2':
+    resolution: {integrity: sha512-9mT+w5TbSYAqO2L/qV1UYPDYcBJkI8jzcuT49OxaZAxJJpMnM8jgeUJFuUDxjel3jeMvsCRMO4uDacwHNQIEDQ==}
 
   '@tootallnate/once@2.0.0':
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
@@ -3466,9 +3469,6 @@ packages:
     peerDependencies:
       omi: '>=7.6.17'
 
-  tdesign-site-components@0.16.7:
-    resolution: {integrity: sha512-+7b9ydtxcV3NwAeE0nG+K4h+6UTdOYBwTZ0TpcKl5hGFmy7QV/+xugmQAZIO4FrkUC/dQvPjdQWR95r86KJvuQ==}
-
   tdesign-theme-generator@1.1.9:
     resolution: {integrity: sha512-ZehAxDwkwLynGFcLq8hnRvDqy+5WW7Qajjyrz49ix/QBphb1ixUF+wZIhFAVfYhNiQb/J2PQ7G5R1+Asr+VDkw==}
 
@@ -4480,6 +4480,15 @@ snapshots:
       expr-eval: 2.0.2
       immer: 10.2.0
       zod: 4.4.3
+
+  '@tdesign/site-components@0.19.2':
+    dependencies:
+      '@popperjs/core': 2.11.8
+      hybrids: 8.2.2
+      nprogress: 0.2.0
+      prismjs: 1.30.0
+      qrcode: 1.5.4
+      tdesign-icons-svg: 0.0.1
 
   '@tootallnate/once@2.0.0': {}
 
@@ -7056,15 +7065,6 @@ snapshots:
       clsx: 2.1.1
       omi: 7.7.13
       tailwind-merge: 2.6.1
-
-  tdesign-site-components@0.16.7:
-    dependencies:
-      '@popperjs/core': 2.11.8
-      hybrids: 8.2.2
-      nprogress: 0.2.0
-      prismjs: 1.30.0
-      qrcode: 1.5.4
-      tdesign-icons-svg: 0.0.1
 
   tdesign-theme-generator@1.1.9:
     dependencies:

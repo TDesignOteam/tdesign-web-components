@@ -1,8 +1,8 @@
 import './td-wc-content/index.tsx';
 
+import styles from '@tdesign/site-components/lib/styles/style.css?raw';
 import packageJson from '@ui-pkg/package.json';
 import { Component, tag, VNode } from 'omi';
-import styles from 'tdesign-site-components/lib/styles/style.css?raw';
 
 import sidebarConfig from '../../sidebar.config';
 
