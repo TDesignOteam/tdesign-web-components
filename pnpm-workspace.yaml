@@ -8,6 +8,7 @@ packages:
   - 'packages/*/site'
 
   # 公共工具（外部独立仓库，通过 git submodule 管理）
+  - '!packages/common'
   - 'packages/common/js'
   - 'packages/common/docs'
   - 'packages/common/style'
