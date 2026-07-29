@@ -188,6 +188,12 @@ importers:
         specifier: catalog:tooling
         version: 8.1.5(@types/node@22.20.1)(esbuild@0.28.1)(jiti@2.6.1)(less@4.8.0)(tsx@4.23.1)(yaml@2.8.3)
 
+  packages/common/docs: {}
+
+  packages/common/js: {}
+
+  packages/common/style: {}
+
   packages/components:
     dependencies:
       '@popperjs/core':

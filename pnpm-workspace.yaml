@@ -12,6 +12,7 @@ packages:
   - 'packages/common/js'
   - 'packages/common/docs'
   - 'packages/common/style'
+
 catalogs:
   runtime:
     '@popperjs/core': ^2.11.8
