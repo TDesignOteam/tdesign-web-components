@@ -12,7 +12,6 @@ packages:
   - 'packages/common/js'
   - 'packages/common/docs'
   - 'packages/common/style'
-
 catalogs:
   runtime:
     '@popperjs/core': ^2.11.8
@@ -37,6 +36,7 @@ catalogs:
     '@tdesign/theme-generator': ^1.2.5
   tooling:
     '@types/less': ^3.0.8
+    '@types/node': ^22.20.1
     less: ^4.8.0
     postcss: ^8.5.22
     prettier: 3.9.6
