@@ -1,5 +1,5 @@
 import '@tdesign/site-components';
-import 'tdesign-theme-generator';
+import '@tdesign/theme-generator';
 import '@tdesign/site-components/lib/styles/style.css';
 import './tailwind/index.ts';
 import '@tdesign/web-components/style/index.js';

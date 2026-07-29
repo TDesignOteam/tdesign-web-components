@@ -49,6 +49,9 @@ catalogs:
     '@tdesign/site-components':
       specifier: ^0.19.2
       version: 0.19.2
+    '@tdesign/theme-generator':
+      specifier: ^1.2.5
+      version: 1.2.5
     omi-router:
       specifier: 4.1.8
       version: 4.1.8
@@ -61,9 +64,6 @@ catalogs:
     tdesign-icons-view:
       specifier: ^0.5.7
       version: 0.5.7
-    tdesign-theme-generator:
-      specifier: ^1.1.9
-      version: 1.1.9
   tooling:
     '@types/less':
       specifier: ^3.0.8
@@ -112,6 +112,9 @@ importers:
       '@tdesign/site-components':
         specifier: catalog:site
         version: 0.19.2
+      '@tdesign/theme-generator':
+        specifier: catalog:site
+        version: 1.2.5
       '@types/less':
         specifier: catalog:tooling
         version: 3.0.8
@@ -166,9 +169,6 @@ importers:
       tdesign-icons-view:
         specifier: catalog:site
         version: 0.5.7(typescript@6.0.3)
-      tdesign-theme-generator:
-        specifier: catalog:site
-        version: 1.1.9
       tsx:
         specifier: ^4.21.0
         version: 4.23.1
@@ -306,6 +306,9 @@ importers:
       '@tdesign/site-components':
         specifier: catalog:site
         version: 0.19.2
+      '@tdesign/theme-generator':
+        specifier: catalog:site
+        version: 1.2.5
       '@tdesign/vite-config':
         specifier: workspace:^
         version: link:../../vite-config
@@ -321,15 +324,15 @@ importers:
       tdesign-icons-view:
         specifier: catalog:site
         version: 0.5.7(typescript@6.0.3)
-      tdesign-theme-generator:
-        specifier: catalog:site
-        version: 1.1.9
 
   packages/tdesign-web-components/site:
     devDependencies:
       '@tdesign/site-components':
         specifier: catalog:site
         version: 0.19.2
+      '@tdesign/theme-generator':
+        specifier: catalog:site
+        version: 1.2.5
       '@tdesign/vite-config':
         specifier: workspace:^
         version: link:../../vite-config
@@ -345,9 +348,6 @@ importers:
       tdesign-icons-view:
         specifier: catalog:site
         version: 0.5.7(typescript@6.0.3)
-      tdesign-theme-generator:
-        specifier: catalog:site
-        version: 1.1.9
 
   packages/vite-config:
     dependencies:
@@ -1042,6 +1042,9 @@ packages:
   '@tdesign/site-components@0.19.2':
     resolution: {integrity: sha512-9mT+w5TbSYAqO2L/qV1UYPDYcBJkI8jzcuT49OxaZAxJJpMnM8jgeUJFuUDxjel3jeMvsCRMO4uDacwHNQIEDQ==}
 
+  '@tdesign/theme-generator@1.2.5':
+    resolution: {integrity: sha512-MPE+QRqm8E5ZcuG83LDmUp9cfZTZT4WvUkVOQIWWqvnBXqdrvnSZAihGsNV5IyXk3ujQh+0SwE9SasqtoZwU+A==}
+
   '@tootallnate/once@2.0.0':
     resolution: {integrity: sha512-XCuKFP5PS55gnMVu3dty8KPatLqUoy/ZYzDzAGCQ8JNFCkLXzmI7vNHCR+XpbZaMWQK/vQubr7PkYq8g470J/A==}
     engines: {node: '>= 10'}
@@ -1166,9 +1169,6 @@ packages:
 
   '@types/lodash-es@4.17.12':
     resolution: {integrity: sha512-0NgftHUcV4v34VhXm8QBSftKVXtbkBG3ViCjs6+eJ5a6y6Mi/jiFGPc1sC7QK+9BFhWrURE3EOggmWaSxL9OzQ==}
-
-  '@types/lodash@4.14.182':
-    resolution: {integrity: sha512-/THyiqyQAP9AfARo4pF+aCGcyiQ94tX/Is2I7HofNRqoYLgN1PBoOWu2/zTA5zMxzP5EFutMtWtGAFRKUe961Q==}
 
   '@types/lodash@4.17.24':
     resolution: {integrity: sha512-gIW7lQLZbue7lRSWEFql49QJJWThrTFFeIMJdp3eH4tKoxm1OvEPg02rm4wCCSHS0cL3/Fizimb35b7k8atwsQ==}
@@ -2876,11 +2876,6 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
-  nanoid@3.3.12:
-    resolution: {integrity: sha512-ZB9RH/39qpq5Vu6Y+NmUaFhQR6pp+M2Xt76XBnEwDaGcVAqhlvxrl3B2bKS5D3NH3QR76v3aSrKaF/Kiy7lEtQ==}
-    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
-    hasBin: true
-
   nanoid@3.3.16:
     resolution: {integrity: sha512-bzlKTyNJ7+LdGIIwy8ijFpIqEQIvafahV7eYykJ8Cvh42EdJeODoJ6gUJXpQJvej1BddH8OqTXZNE/KfbWAu8Q==}
     engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
@@ -3125,10 +3120,6 @@ packages:
 
   postcss-value-parser@4.2.0:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
-
-  postcss@8.5.15:
-    resolution: {integrity: sha512-FfR8sjd4em2T6fb3I2MwAJU7HWVMr9zba+enmQeeWFfCbm+UOC/0X4DS8XtpUTMwWMGbjKYP7xjfNekzyGmB3A==}
-    engines: {node: ^10 || ^12 || >=14}
 
   postcss@8.5.22:
     resolution: {integrity: sha512-KBDEIpLrvpv16pp3K0Fw+UCoZfopFjjgeB+0tA/aaThfEE74kKDLrgg603YvOWJyg3+WYtyq3xYsQWsIyZlPqQ==}
@@ -3459,8 +3450,8 @@ packages:
     peerDependencies:
       vue: ^2.6.12
 
-  tdesign-icons-vue@0.2.5:
-    resolution: {integrity: sha512-wKah1jB2JqLf4dj9fyTUrjl+JfdVqP91HiXyE368Nm2VFxbA1HiQcwhnvRixwqTh7S3++/whq3pzV8BLcRtOeA==}
+  tdesign-icons-vue@0.3.6:
+    resolution: {integrity: sha512-FXE5Ryihyamk0cYKY1wuppuAOtyV2W0k2HxgR4EaocbbdmnFUWIcSBL0buNeFAQqSi16HQOtr2KpP9v87IwLXw==}
     peerDependencies:
       vue: ^2.6.12
 
@@ -3469,17 +3460,14 @@ packages:
     peerDependencies:
       omi: '>=7.6.17'
 
-  tdesign-theme-generator@1.1.9:
-    resolution: {integrity: sha512-ZehAxDwkwLynGFcLq8hnRvDqy+5WW7Qajjyrz49ix/QBphb1ixUF+wZIhFAVfYhNiQb/J2PQ7G5R1+Asr+VDkw==}
-
   tdesign-vue-next@1.17.7:
     resolution: {integrity: sha512-mV/9mm/nIS+tfx1oUG1IMMmTPFeZfLmP8bIVEa7S9CpVke2+Yei5i8RBXmDwF/d+OaDoKVgwUq08goSIZfRePQ==}
     engines: {node: '>= 18'}
     peerDependencies:
       vue: '>=3.1.0'
 
-  tdesign-vue@1.9.4-naruto:
-    resolution: {integrity: sha512-o+K27STem9UWwimENVVVjVzW5HwTKuNLyH3jG06uMn5hJRwuXrFT3XEzaD/h8A/pjJ2cA5MIqJG4cFsK59ss8Q==}
+  tdesign-vue@1.13.1-naruto:
+    resolution: {integrity: sha512-GfSkK3xyMNowc4wkJ3cTev5VulfUjCqqrYti9f3PC6X5fLRDbumWTxcbozsZHYC4VbwXFaZHi9/p558FKCHsQA==}
     peerDependencies:
       vue: ~2.7.14
 
@@ -4490,6 +4478,16 @@ snapshots:
       qrcode: 1.5.4
       tdesign-icons-svg: 0.0.1
 
+  '@tdesign/theme-generator@1.2.5':
+    dependencies:
+      core-js: 3.49.0
+      cssbeautify: 0.3.1
+      lodash: 4.18.1
+      tdesign-icons-vue: 0.0.8(vue@2.7.14)
+      tdesign-vue: 1.13.1-naruto(vue@2.7.14)
+      tvision-color: 1.6.0
+      vue: 2.7.14
+
   '@tootallnate/once@2.0.0': {}
 
   '@tybys/wasm-util@0.10.3':
@@ -4666,8 +4664,6 @@ snapshots:
     dependencies:
       '@types/lodash': 4.17.24
 
-  '@types/lodash@4.14.182': {}
-
   '@types/lodash@4.17.24': {}
 
   '@types/markdown-it@14.1.2':
@@ -4800,8 +4796,8 @@ snapshots:
 
   '@vue/compiler-sfc@2.7.14':
     dependencies:
-      '@babel/parser': 7.29.2
-      postcss: 8.5.15
+      '@babel/parser': 7.29.7
+      postcss: 8.5.22
       source-map: 0.6.1
 
   '@vue/compiler-sfc@3.5.40':
@@ -6460,8 +6456,6 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
-  nanoid@3.3.12: {}
-
   nanoid@3.3.16: {}
 
   natural-compare@1.4.0: {}
@@ -6665,12 +6659,6 @@ snapshots:
       util-deprecate: 1.0.2
 
   postcss-value-parser@4.2.0: {}
-
-  postcss@8.5.15:
-    dependencies:
-      nanoid: 3.3.12
-      picocolors: 1.1.1
-      source-map-js: 1.2.1
 
   postcss@8.5.22:
     dependencies:
@@ -7053,7 +7041,7 @@ snapshots:
       classnames: 2.5.1
       vue: 2.7.14
 
-  tdesign-icons-vue@0.2.5(vue@2.7.14):
+  tdesign-icons-vue@0.3.6(vue@2.7.14):
     dependencies:
       '@babel/runtime': 7.29.2
       classnames: 2.5.1
@@ -7065,16 +7053,6 @@ snapshots:
       clsx: 2.1.1
       omi: 7.7.13
       tailwind-merge: 2.6.1
-
-  tdesign-theme-generator@1.1.9:
-    dependencies:
-      core-js: 3.49.0
-      cssbeautify: 0.3.1
-      lodash: 4.18.1
-      tdesign-icons-vue: 0.0.8(vue@2.7.14)
-      tdesign-vue: 1.9.4-naruto(vue@2.7.14)
-      tvision-color: 1.6.0
-      vue: 2.7.14
 
   tdesign-vue-next@1.17.7(vue@3.5.40(typescript@6.0.3)):
     dependencies:
@@ -7093,23 +7071,22 @@ snapshots:
       validator: 13.15.35
       vue: 3.5.40(typescript@6.0.3)
 
-  tdesign-vue@1.9.4-naruto(vue@2.7.14):
+  tdesign-vue@1.13.1-naruto(vue@2.7.14):
     dependencies:
       '@babel/runtime': 7.29.2
       '@popperjs/core': 2.11.8
       '@types/clipboard': 2.0.10
-      '@types/lodash': 4.14.182
       '@types/raf': 3.4.3
       '@types/sortablejs': 1.15.9
       '@types/tinycolor2': 1.4.6
       '@types/validator': 13.15.10
       clipboard: 2.0.11
       dayjs: 1.11.10
-      lodash: 4.18.1
+      lodash-es: 4.18.1
       mitt: 3.0.1
       raf: 3.4.1
       sortablejs: 1.15.7
-      tdesign-icons-vue: 0.2.5(vue@2.7.14)
+      tdesign-icons-vue: 0.3.6(vue@2.7.14)
       tinycolor2: 1.6.0
       validator: 13.15.35
       vue: 2.7.14

@@ -14,6 +14,6 @@
     "reactive-signal": "catalog:site",
     "tdesign-icons-view": "catalog:site",
     "@tdesign/site-components": "catalog:site",
-    "tdesign-theme-generator": "catalog:site"
+    "@tdesign/theme-generator": "catalog:site"
   }
 }

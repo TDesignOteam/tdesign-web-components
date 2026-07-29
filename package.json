@@ -59,7 +59,7 @@
     "tailwindcss": "^3.3.3",
     "tdesign-icons-view": "catalog:site",
     "@tdesign/site-components": "catalog:site",
-    "tdesign-theme-generator": "catalog:site",
+    "@tdesign/theme-generator": "catalog:site",
     "tsx": "^4.21.0",
     "typescript": "catalog:tooling",
     "typescript-eslint": "catalog:tooling",
