@@ -1,0 +1,47 @@
+name: pr-compressed-size
+
+on:
+  pull_request:
+
+jobs:
+  tdesign-web-components:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+
+      - uses: preactjs/compressed-size-action@v2
+        with:
+          install-script: 'bash -c "git clean -ffd packages/common && git submodule sync --recursive && git submodule update --init --recursive && pnpm install --no-frozen-lockfile"'
+          build-script: 'build:ui'
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          pattern: './packages/tdesign-web-components/{dist,esm}/**/*.{js,mjs,css}'
+          comment-key: tdesign-web-components
+
+  tdesign-web-components-chat:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+
+      - uses: preactjs/compressed-size-action@v2
+        with:
+          install-script: 'bash -c "git clean -ffd packages/common && git submodule sync --recursive && git submodule update --init --recursive && pnpm install --no-frozen-lockfile"'
+          build-script: 'build:chat'
+          repo-token: '${{ secrets.GITHUB_TOKEN }}'
+          pattern: './packages/tdesign-web-components-chat/{dist,esm}/**/*.{js,mjs,css}'
+          comment-key: tdesign-web-components-chat
