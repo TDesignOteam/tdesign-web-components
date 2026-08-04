@@ -185,7 +185,7 @@ export type Layout = 'single' | 'both';
 export interface FetchSSEOptions {
   success?: (res: SSEEvent) => void; // 流式数据解析成功回调
   fail?: () => void; // 流式请求失败回调
-  complete?: (isOk: Boolean, msg?: String, requestid?: String) => void; // 流式请求完成回调
+  complete?: (isOk: boolean, msg?: string, requestid?: string) => void; // 流式请求完成回调
 }
 export interface SSEEvent {
   type: string | null;

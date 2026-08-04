@@ -17,7 +17,7 @@ const useControlled: <P extends any[], R extends object, K extends keyof R>(
     [key in Defaultoptions<ToString<K>>]?: R[K];
   } & { [key: string]: any; activeComponent?: Component },
 ) => [SignalValue<R[K]> | R[K], ChangeHandler<R[K], P>] = (
-  // eslint-disable-next-line default-param-last
+   
   props = {} as any,
   valueKey,
   onChange,

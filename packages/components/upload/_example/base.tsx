@@ -1,7 +1,7 @@
 import 'tdesign-icons-web-components/esm/components/close';
 
 import Button from '@tdesign/web-components/button';
-import { MessagePlugin } from '@tdesign/web-components/message/message';
+import { MessagePlugin } from '@tdesign/web-components/message';
 import Space from '@tdesign/web-components/space';
 import type { UploadFile, UploadProps } from '@tdesign/web-components/upload';
 import Upload from '@tdesign/web-components/upload';

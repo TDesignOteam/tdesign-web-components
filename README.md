@@ -51,22 +51,26 @@ pnpm add @tdesign/web-components
 
 ```tsx
 import '@tdesign/web-components/lib/style/index.css';
-import '@tdesign/web-components/lib/button';
+import '@tdesign/web-components/button';
 
 document.body.innerHTML = `<t-button theme="success">按钮</t-button>`;
 ```
 
-If you need AI Chat components, install `@tdesign/pro-components-chat` separately:
+If you need AI Chat components, install `@tdesign/web-components` and `@tdesign/web-components-chat`:
 
 ```tsx
-import '@tdesign/pro-components-chat';
+import '@tdesign/web-components';
+import '@tdesign/web-components-chat/chatbot';
+import '@tdesign/web-components/lib/style/index.css';
 
 document.body.innerHTML = `<t-chatbot></t-chatbot>`;
 ```
 
+Changelogs: [UI](./packages/tdesign-web-components/CHANGELOG.md) · [Chat](./packages/tdesign-web-components-chat/CHANGELOG.md)
+
 More ways to use please click 👉🏻 [getting-started](./site/docs/getting-started.md)
 
-The package of @tdesign/web-components provides base UI components. For AI Chat components, install @tdesign/pro-components-chat separately. Read [the documentation](./site/docs/getting-started.md) for more details.
+The package of @tdesign/web-components provides base UI components. For AI Chat components, install @tdesign/web-components-chat separately. Read [the documentation](./site/docs/getting-started.md) for more details.
 
 # Quick Start
 

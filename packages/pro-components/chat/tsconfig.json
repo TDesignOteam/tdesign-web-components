@@ -1,10 +1,7 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "./tsconfig.build.json",
   "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "lib",
-    "skipLibCheck": true,
-    "noEmitOnError": false,
+    "noEmit": true,
     "paths": {
       "@tdesign/web-components-chat": ["."],
       "@tdesign/web-components-chat/*": ["./*"],
@@ -12,15 +9,9 @@
       "@tdesign/web-components/*": ["../../components/*"],
       "@tdesign/web-components-shared": ["../../shared/src"],
       "@tdesign/web-components-shared/*": ["../../shared/src/*"],
-      "@tdesign/ai-chat-engine": ["../../../common-utils/_ai-core/packages/chat-engine/index.ts"],
-      "@tdesign/ai-chat-engine/*": ["../../../common-utils/_ai-core/packages/chat-engine/*"],
-      "@tdesign/ai-shared": ["../../../common-utils/_ai-core/packages/shared/index.ts"],
-      "@tdesign/ai-shared/*": ["../../../common-utils/_ai-core/packages/shared/*"],
-
-      "@common/*": ["../../../common-utils/_common/*"],
+      "@common/*": ["../../common/*"],
       "@": ["."]
     }
   },
-  "include": [".", "../../../typings.d.ts"],
-  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "**/**/_example/*", "node_modules", "../../../common-utils/_common", "dist", "lib", "esm", "cjs", "es", "site"]
+  "references": [{ "path": "../../shared/tsconfig.build.json" }]
 }

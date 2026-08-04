@@ -8,28 +8,28 @@ tdesign-web-components 包含主代码和一个子仓库，子仓库指向 [tdes
 
 ## 公共子仓库 tdesign-common
 
-本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 src/\_common 文件夹，由于Tdesign React/Vue等组件库已相对成熟，我们涉及到开发common部分的比较少，主要是复用其中已经定义过的样式class和方法，包括：
+本项目以子仓库的形式引入 tdesign-common 公共仓库，对应 `packages/common` 目录，由于 Tdesign React/Vue 等组件库已相对成熟，我们涉及到开发 common 部分的比较少，主要是复用其中已经定义过的样式 class 和方法，包括：
 
 - 一些公共的工具函数
 - 组件库 UI 开发内容，即 html 结构和 css 样式（React/Vue 等多技术栈共用）
 
 ### 初始化子仓库
 
-- 初次克隆代码后需要初始化子仓库： git submodule init && git submodule update
+- 初次克隆代码后需要初始化子仓库：`git submodule update --init packages/common`
 - git submodule update 之后子仓库不指向任何分支，只是一个指向某一个提交的游离状态
 
 ### 子仓库开发
 
 子仓库组件分支从 develop checkout 示例：feature/button，提交代码时先进入子仓库完成提交，然在回到主仓库完成提交
 
-- 先进入 common 文件夹，正常将样式修改添加提交
-- 回到主仓库，此时应该会看到 common 文件夹是修改状态，按照正常步骤添加提交即可
+- 先进入 `packages/common` 文件夹，正常将样式修改添加提交
+- 回到主仓库，此时应该会看到 `packages/common` 是修改状态，按照正常步骤添加提交即可
 
 ## 开发规范
 
 ### API 规范
 
-[API](./common-utils/_common/api.md)
+[API](./packages/common/api.md)
 
 ### 前缀
 
@@ -92,21 +92,62 @@ npm run start
 
 ```shell
 .
-├── packages/                              # 组件包
-│   ├── components/                       # UI 组件源码 (@tdesign/web-components)
-│   │   └── [组件]/
-│   │       ├── _example/                # 演示文件
-│   │       └── index.ts                 # 组件导出入口
-│   ├── pro-components/                  # Pro 组件源码
-│   │   └── chat/                       # Chat 组件库 (@tdesign/web-components-chat)
-│   ├── tdesign-web-components/          # UI 主包（站点）
-│   │   └── site/
-│   ├── tdesign-web-components-chat/    # Chat 主包（站点）
-│   │   └── site/
-│   └── shared/                         # 共享工具 (@tdesign/web-components-shared)
-├── common-utils/                         # 公共工具和子模块
-│   ├── _common/                        # tdesign-common 子仓库
-│   └── _ai-core/                       # tdesign-ai-core 子仓库
+├── packages/
+│   ├── common/                         # tdesign-common 子仓库（submodule）
+│   │   ├── js/                         # 跨端公共 JS（构建时 bundle 进 UI/Chat 发布包）
+│   │   └── style/                      # 跨端公共 Less 样式
+│   ├── components/                     # UI 组件源码 (@tdesign/components)
+│   ├── pro-components/
+│   │   └── chat/                       # Chat 组件源码
+│   ├── shared/                         # WC 专用工具源码（构建时 bundle 进发布包）
+│   ├── tdesign-web-components/         # UI npm 发布包 @tdesign/web-components
+│   │   ├── CHANGELOG.md
+│   │   ├── esm|dist/                   # vite build 产物
+│   │   └── site/                       # UI 文档站
+│   ├── tdesign-web-components-chat/    # Chat npm 发布包 @tdesign/web-components-chat
+│   │   ├── CHANGELOG.md
+│   │   └── site/                       # Chat 文档站
+│   └── vite-config/                    # 共享构建配置
+```
+
+### 发布包架构
+
+| 包名                           | 源码                           | 用户安装                   |
+| ------------------------------ | ------------------------------ | -------------------------- |
+| `@tdesign/web-components`      | `packages/components`          | 基础 UI 组件               |
+| `@tdesign/web-components-chat` | `packages/pro-components/chat` | AI Chat（peer 依赖 UI 包） |
+
+**构建与依赖策略**
+
+- 构建入口：各发布包 `pnpm run build` → `vite build`（`@tdesign/vite-config`）
+- 产物格式：`esm`（按组件入口 + 类型声明）、`dist`（IIFE/CDN）
+- `packages/common/js`、`packages/shared`：**内联进** `esm` / `dist`，不单独发 npm
+- Chat 额外依赖：`@tdesign/ai-chat-engine`（dependencies）；`@tdesign/web-components`（peer）
+
+**按需引入（Web Components）**
+
+```javascript
+// 注册自定义元素（副作用 import）
+import '@tdesign/web-components/button';
+import '@tdesign/web-components-chat/chatbot';
+
+// 样式
+import '@tdesign/web-components/style/index.css';
+```
+
+`package.json` 的 `exports` 约定：`"."` 全量入口，`"./*"` 单组件（如 `/button`、`/chatbot`），`./style/index.css` 公共样式。
+
+**更新日志**
+
+- UI：`packages/tdesign-web-components/CHANGELOG.md`
+- Chat：`packages/tdesign-web-components-chat/CHANGELOG.md`
+
+Chat 依赖已通过 pnpm catalog 固定为已发布的 `@tdesign/ai-chat-engine`；安装依赖后即可使用，无需本地 link 或额外安装其内部依赖。
+
+克隆后需初始化子模块：
+
+```bash
+git submodule update --init packages/common
 ```
 
 ### 新增开发组件
@@ -145,7 +186,7 @@ export * from './button';
 
 ### 组件 Demo 演示配置
 
-为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `common-utils/_common/_docs/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
+为了保证与 vue 等其他仓库演示文档内容统一，目前将公共基础演示 demo 与说明归档在 `packages/common/docs/web/api/[组件].md` 中，其中需要各个技术栈的组件提供文档里面所要求的基础 demo 文件否则会编译警告。
 
 例如 `tooltip` 组件则需要 `_expample` 文件夹中包含有 `arrow.tsx`、 `noArrow.tsx` 文件
 
@@ -180,19 +221,25 @@ export * from './button';
 
 ### 项目常用脚本说明
 
+各源码包通过 `check:types`（prepare → shared 声明 → components 声明 → chat `--noEmit`）做全仓类型检查。发布构建由 `vite build` 直写 `packages/tdesign-web-components/{esm,dist}`：`packages/common` 与 `packages/shared` 均作为包内 `_internal/*` 私有实现进入发布包，用户只需安装主包即可使用。
+
 ```bash
-# 启动项目
+# 启动 UI 文档站
 pnpm run start
-# 编译站点
-pnpm run site
-# 编译站点预览
-pnpm run site:preview
-# 编译组件库
+# 编译 UI 文档站
+pnpm run site:ui
+# 编译 Chat 文档站
+pnpm run site:chat
+# 预览 UI 文档站
+pnpm run preview:ui
+# 编译全部组件库
 pnpm run build
-# 编译 UI 组件库
+# 编译 UI 组件库（vite build → esm/dist）
 pnpm run build:ui
-# 编译 Chat 组件库
+# 编译 Chat（含 UI）
 pnpm run build:chat
+# 生成 less 声明 + common 类型缓存 + shared/components 声明 + chat 类型检查
+pnpm run check:types
 
 # 自动修复 eslint 错误
 pnpm run lint:fix

@@ -1,33 +1,32 @@
 import type { CSSSelector, PlainObject, Styles } from '@common/js/common';
-import { Component, VNode, WeElement } from 'omi';
 
-// Re-export from @common to avoid duplication with submodule
+// 从 common 子仓库再导出，避免与本地类型重复定义
 export type {
-  PlainObject,
-  OptionData,
-  SizeEnum,
-  HorizontalAlignEnum,
-  VerticalAlignEnum,
   ClassName,
   CSSSelector,
+  HorizontalAlignEnum,
+  OptionData,
+  PlainObject,
+  SizeEnum,
   Styles,
+  VerticalAlignEnum,
 } from '@common/js/common';
-
 export {
-  EKeyboardDirection,
+  ALL_REG,
   ARROW_DOWN_REG,
-  ARROW_UP_REG,
   ARROW_LEFT_REG,
   ARROW_RIGHT_REG,
-  ESCAPE_REG,
-  SPACE_REG,
-  ENTER_REG,
-  SHIFT_REG,
-  CLEAR_REG,
-  ALL_REG,
+  ARROW_UP_REG,
   CHECKED_CODE_REG,
+  CLEAR_REG,
+  EKeyboardDirection,
+  ENTER_REG,
+  ESCAPE_REG,
+  SHIFT_REG,
+  SPACE_REG,
   THEME_MODE,
 } from '@common/js/common';
+import { Component, VNode, WeElement } from 'omi';
 
 // ---- Omi-specific types (no equivalent in _common) ----
 

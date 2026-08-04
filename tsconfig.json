@@ -2,7 +2,6 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": "./",
-    "outDir": "lib",
     "paths": {
       "@tdesign/web-components": ["packages/components"],
       "@tdesign/web-components/*": ["packages/components/*"],
@@ -10,22 +9,17 @@
       "@tdesign/web-components-chat/*": ["packages/pro-components/chat/*"],
       "@tdesign/web-components-shared": ["packages/shared/src"],
       "@tdesign/web-components-shared/*": ["packages/shared/src/*"],
-      "@tdesign/ai-chat-engine": ["common-utils/_ai-core/packages/chat-engine/index.ts"],
-      "@tdesign/ai-chat-engine/*": ["common-utils/_ai-core/packages/chat-engine/*"],
-      "@tdesign/ai-shared": ["common-utils/_ai-core/packages/shared/index.ts"],
-      "@tdesign/ai-shared/*": ["common-utils/_ai-core/packages/shared/*"],
-
-      "@test/utils": ["test/utils"],
-      "@common/*": ["common-utils/_common/*"],
-      "@": ["packages/components"],
-      "@/*": ["packages/components/*"]
+      "@common/*": ["packages/common/*"]
     },
-    "types": [
-      "node",
-      "vitest/globals"
-    ]
+    "types": ["node"]
   },
-  "include": ["packages/components", "packages/pro-components/chat", "packages/shared/src", "packages/tdesign-web-components/site", "packages/tdesign-web-components-chat/site", "typings.d.ts"],
-  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "_common", "dist", "lib", "esm", "cjs", "es"],
-  "compileOnSave": false
+  "include": [
+    "packages/components",
+    "packages/pro-components/chat",
+    "packages/shared/src",
+    "packages/tdesign-web-components/site",
+    "packages/tdesign-web-components-chat/site",
+    "typings.d.ts"
+  ],
+  "exclude": ["**/*.jsx", "**/**/_usage/*", "**/**/__tests__/*", "node_modules", "_common", "dist", "lib", "esm", "cjs", "es"]
 }

@@ -1,0 +1,47 @@
+{
+  "extends": "../../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@tdesign/web-components-chat": ["."],
+      "@tdesign/web-components-chat/*": ["./*"],
+      "@tdesign/pro-components-chat": ["."],
+      "@tdesign/pro-components-chat/*": ["./*"],
+      "@tdesign/web-components": ["../../components/dist"],
+      "@tdesign/web-components/*": ["../../components/dist/*"],
+      "@tdesign/components": ["../../components/dist"],
+      "@tdesign/components/*": ["../../components/dist/*"],
+      "@tdesign/web-components-shared": ["../../shared/dist"],
+      "@tdesign/web-components-shared/*": ["../../shared/dist/*"],
+      "@common/js/*": ["../../.cache/common-js-types/*"],
+      "@common/style/*": ["../../common/style/*"],
+      "@": ["."]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/**/*.d.ts", "../../../typings.d.ts"],
+  "exclude": [
+    "**/*.jsx",
+    "**/_example/**",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site"
+  ]
+}

@@ -29,7 +29,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm -C packages/tdesign-web-components/site run preview
+      - run: pnpm -C packages/tdesign-web-components/site run build
 
       - uses: actions/upload-artifact@v7
         with:
@@ -53,7 +53,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
-      - run: pnpm -C packages/tdesign-web-components-chat/site run preview
+      - run: pnpm -C packages/tdesign-web-components-chat/site run build
 
       - uses: actions/upload-artifact@v7
         with:

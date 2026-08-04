@@ -80,7 +80,7 @@ export default class Skeleton extends Component<SkeletonProps> {
 
   render() {
     const { animation, rowCol, theme, innerClass, innerStyle, children } = this.afterProps;
-    const renderCols = (_cols: Number | SkeletonRowColObj | Array<SkeletonRowColObj>) => {
+    const renderCols = (_cols: number | SkeletonRowColObj | Array<SkeletonRowColObj>) => {
       const getColItemStyle = (obj: SkeletonRowColObj): Styles => {
         const styleName = [
           'width',

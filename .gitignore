@@ -23,10 +23,16 @@ dist-ssr
 *.sw?
 _site
 packages/*/lib
+packages/*/dist
+packages/pro-components/*/dist
 packages/*/es
 packages/*/esm
 packages/*/cjs
-plugins/*.js
-plugins/*.js.map
+packages/components/**/*.d.ts
+!packages/components/types/dayjs-plugins.d.ts
+packages/shared/src/**/*.d.ts
+packages/pro-components/**/*.d.ts
+!packages/pro-components/chat/types/cdn-imports.d.ts
+packages/.cache
 
 .codebuddy/plans/

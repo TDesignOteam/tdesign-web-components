@@ -1,0 +1,208 @@
+import fg from 'fast-glob';
+import { relative, resolve } from 'path';
+
+import { createLessAliasPlugin } from '../plugins/less-alias.ts';
+
+// ---------------------------------------------------------------------------
+// Monorepo 路径
+// ---------------------------------------------------------------------------
+
+/**
+ * 创建 monorepo 路径别名
+ * @param root workspace 根目录
+ * @param siteDir 文档站目录；传入时追加 @site / @docs 等站点专用别名
+ */
+export function createMonorepoAliasConfig(root: string, siteDir?: string): Record<string, string> {
+  const packagesDir = resolve(root, 'packages');
+  const aliases: Record<string, string> = {
+    '@common': resolve(packagesDir, 'common'),
+    '@tdesign/web-components': resolve(packagesDir, 'components'),
+    '@tdesign/web-components-chat': resolve(packagesDir, 'pro-components/chat'),
+    '@tdesign/web-components-shared': resolve(packagesDir, 'shared/src'),
+  };
+
+  if (siteDir) {
+    Object.assign(aliases, {
+      '@': resolve(packagesDir, 'components'),
+      '@site': siteDir,
+      '@docs': resolve(siteDir, 'docs'),
+      '@ui-pkg': resolve(packagesDir, 'components'),
+      '@chat-pkg': resolve(packagesDir, 'pro-components/chat'),
+    });
+  }
+
+  return aliases;
+}
+
+// ---------------------------------------------------------------------------
+// Oxc / JSX
+// ---------------------------------------------------------------------------
+
+/** 文档站 Omi JSX（配合 add-part-attribute 插件使用 OmiComponent） */
+export const siteOxcConfig = {
+  jsx: {
+    runtime: 'classic' as const,
+    pragma: 'OmiComponent.h',
+    pragmaFrag: 'OmiComponent.f',
+  },
+  jsxInject: `import { Component as OmiComponent } from 'omi'`,
+};
+
+/** 库构建 Omi JSX（与 tsconfig jsxFactory 一致） */
+export const libOxcConfig = {
+  jsx: {
+    runtime: 'classic' as const,
+    pragma: 'Component.h',
+    pragmaFrag: 'Component.f',
+  },
+};
+
+// ---------------------------------------------------------------------------
+// 样式（文档站 + 库构建共用）
+// ---------------------------------------------------------------------------
+
+/** Less 预处理器配置（支持 @common 别名） */
+export function createLessPreprocessorOptions(monorepoRoot: string) {
+  return {
+    less: {
+      plugins: [createLessAliasPlugin(monorepoRoot)],
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 文档站
+// ---------------------------------------------------------------------------
+
+/** 文档站预构建排除：workspace 包走源码 alias */
+export const workspaceOptimizeDepsExclude = [
+  '@tdesign/web-components',
+  '@tdesign/web-components-chat',
+  '@tdesign/web-components-shared',
+  '@tdesign/ai-chat-engine',
+];
+
+/** 创建 SSE 代理配置 */
+export function createSseProxy(): Record<string, unknown> {
+  return {
+    '/api/sse': {
+      target: 'http://localhost:3000',
+      changeOrigin: true,
+      rewrite: (path: string) => path.replace(/^\/api\/sse/, '/sse'),
+      configure: (proxy: { on: (event: string, handler: (...args: unknown[]) => void) => void }) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        proxy.on('proxyReq', ((proxyReq: any, req: any) => {
+          if (req.body) {
+            const bodyData = JSON.stringify(req.body);
+            proxyReq.setHeader('Content-Type', 'application/json');
+            proxyReq.setHeader('Content-Length', String(Buffer.byteLength(bodyData)));
+            proxyReq.write(bodyData);
+          }
+        }) as (...args: unknown[]) => void);
+      },
+    },
+  };
+}
+
+// ---------------------------------------------------------------------------
+// 库构建
+// ---------------------------------------------------------------------------
+
+const alwaysExternal = [/^tailwind-merge(\/.*)?$/];
+
+/** 产物 banner */
+export function createBanner(pkg: { name: string; version: string; author?: string; license?: string }) {
+  return `/**\n * ${pkg.name} v${pkg.version}\n * (c) ${new Date().getFullYear()} ${pkg.author || 'TDesign'}\n * @license ${pkg.license || 'MIT'}\n */\n`;
+}
+
+/** ESM 包构建 external 判断。 */
+export function createLibExternal(pkg: {
+  dependencies?: Record<string, string>;
+  peerDependencies?: Record<string, string>;
+}) {
+  const deps = Object.keys(pkg.dependencies || {});
+  const peerDeps = Object.keys(pkg.peerDependencies || {});
+  const externalPkgs = new Set([...deps, ...peerDeps]);
+
+  return (id: string) => {
+    if (alwaysExternal.some((re) => re.test(id))) return true;
+    return [...externalPkgs].some((dep) => id === dep || id.startsWith(`${dep}/`));
+  };
+}
+
+/**
+ * preserveModules 文件名策略。
+ *
+ * UI / Chat 只发布 esm 分文件产物；workspace shared/common 会作为包内
+ * 实现被吸进发布包。shared/src 是运行时源码，shared/dist 是声明构建输入，
+ * 两者都不能作为 monorepo 路径泄露到发布包，统一收敛到 _internal/*。
+ */
+export function createPreserveModuleFileName(srcDir: string, monorepoRoot: string) {
+  const normalizePath = (path: string) => path.replace(/\\/g, '/');
+  const stripExtension = (path: string) => normalizePath(path).replace(/\.[^.]+$/, '');
+  const normalizedRoot = normalizePath(monorepoRoot);
+  const normalizedSrcDir = normalizePath(srcDir);
+
+  return (chunkInfo: { facadeModuleId?: string | null; name: string }) => {
+    const facadeModuleId = chunkInfo.facadeModuleId ? normalizePath(chunkInfo.facadeModuleId) : undefined;
+    let name = normalizePath(chunkInfo.name);
+
+    if (facadeModuleId?.startsWith(`${normalizedSrcDir}/`)) {
+      name = stripExtension(relative(normalizedSrcDir, facadeModuleId));
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/shared/src/`)) {
+      name = `_internal/shared/${stripExtension(relative(`${normalizedRoot}/packages/shared/src`, facadeModuleId))}`;
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/shared/dist/`)) {
+      name = `_internal/shared/${stripExtension(relative(`${normalizedRoot}/packages/shared/dist`, facadeModuleId))}`;
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/.cache/common-js-types/`)) {
+      name = `_internal/common/${stripExtension(
+        relative(`${normalizedRoot}/packages/.cache/common-js-types`, facadeModuleId),
+      )}`;
+    } else if (facadeModuleId?.startsWith(`${normalizedRoot}/packages/common/`)) {
+      name = `_internal/common/${stripExtension(relative(`${normalizedRoot}/packages/common`, facadeModuleId))}`;
+    } else {
+      name = name
+        .replace(/^packages\/\.cache\/common-js-types\//, '_internal/common/')
+        .replace(/^\.cache\/common-js-types\//, '_internal/common/')
+        .replace(/^packages\/shared\/src\//, '_internal/shared/')
+        .replace(/^shared\/src\//, '_internal/shared/')
+        .replace(/^shared\/dist\//, '_internal/shared/')
+        .replace(/^packages\/common\//, '_internal/common/')
+        .replace(/^node_modules\/\.pnpm\/[^/]+\/node_modules\//, '');
+    }
+
+    return `${name}.js`;
+  };
+}
+
+/** IIFE 仅外置明确声明的浏览器 peer 依赖。 */
+export function createIifeExternal(externals: string[] = []) {
+  return (id: string) => externals.some((dep) => id === dep || id.startsWith(`${dep}/`));
+}
+
+/** IIFE 外部依赖的浏览器全局名。 */
+export function createIifeGlobals(globals: Record<string, string> = {}) {
+  return (id: string) => {
+    if (globals[id]) return globals[id];
+
+    if (id.startsWith('@tdesign/web-components/') && globals['@tdesign/web-components']) {
+      return globals['@tdesign/web-components'];
+    }
+
+    return id.replace(/^@/, '_').replace(/[^\w$]/g, '_');
+  };
+}
+
+/** 收集库构建入口（preserveModules 多入口） */
+export function collectLibInputs(srcDir: string) {
+  const inputList = [
+    `${srcDir}/**/*.ts`,
+    `${srcDir}/**/*.tsx`,
+    `!${srcDir}/**/node_modules/**`,
+    `!${srcDir}/**/_example/**`,
+    `!${srcDir}/**/mock/**`,
+    `!${srcDir}/**/__tests__/**`,
+    `!${srcDir}/browser.ts`,
+    `!${srcDir}/**/*.d.ts`,
+  ];
+  return fg.sync(inputList, { absolute: true });
+}

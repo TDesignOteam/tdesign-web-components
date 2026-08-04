@@ -1,24 +1,22 @@
 {
   "name": "@tdesign/components",
   "private": true,
-  "main": "index.ts",
-  "author": "tdesign",
-  "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf dist tsconfig.build.tsbuildinfo",
+    "build": "tsc -b tsconfig.build.json"
+  },
   "dependencies": {
-    "@babel/runtime": "^7.24.7",
-    "@popperjs/core": "^2.11.8",
-    "copy-to-clipboard": "^3.3.3",
-    "dayjs": "^1.11.19",
-    "htm": "^3.1.1",
-    "lodash-es": "^4.17.21",
-    "omi": "^7.7.13",
-    "omi-transition": "^0.1.11",
-    "tdesign-icons-web-components": "^0.3.2"
+    "@popperjs/core": "catalog:runtime",
+    "dayjs": "catalog:runtime",
+    "lodash-es": "catalog:runtime",
+    "omi": "catalog:runtime",
+    "omi-transition": "catalog:runtime",
+    "tdesign-icons-web-components": "catalog:runtime"
   },
   "devDependencies": {
     "@tdesign/web-components-shared": "workspace:^"
   },
   "peerDependencies": {
-    "omi": "^7.7.0"
+    "omi": "catalog:runtime"
   }
 }

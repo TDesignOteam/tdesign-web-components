@@ -43,7 +43,7 @@ export default class Loading extends Component<LoadingProps> {
 
   lockClass = `${getClassPrefix()}-loading--lock`;
 
-  timer: NodeJS.Timeout;
+  timer: ReturnType<typeof setTimeout>;
 
   get calcStyles() {
     const { size, zIndex } = this.props;

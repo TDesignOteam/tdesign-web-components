@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import { getWorkspaceRoot } from '../../../script/lib/get-root-path.mjs';
+import { getWorkspaceRoot } from '@tdesign/vite-config/get-root-path';
 import { fileURLToPath } from 'node:url';
 import { dirname } from 'path';
 
@@ -12,5 +12,13 @@ import rootTailwindConfig from '../../../tailwind.config';
 
 export default {
   ...rootTailwindConfig,
-  content: ['./index.html', `${ROOT}/packages/components/**/*.{js,ts,jsx,tsx}`, `${ROOT}/packages/pro-components/chat/**/*.{js,ts,jsx,tsx}`, './**/*.{js,ts,jsx,tsx}'],
+  content: [
+    './index.html',
+    './**/*.{js,ts,jsx,tsx}',
+    '!**/node_modules/**',
+    `${ROOT}/packages/components/**/*.{js,ts,jsx,tsx}`,
+    `!${ROOT}/packages/components/node_modules/**`,
+    `${ROOT}/packages/pro-components/chat/**/*.{js,ts,jsx,tsx}`,
+    `!${ROOT}/packages/pro-components/chat/node_modules/**`,
+  ],
 };

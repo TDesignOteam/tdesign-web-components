@@ -9,7 +9,7 @@ import classname from '@tdesign/web-components-shared/_util/classname';
 import noop from '@tdesign/web-components-shared/_util/noop';
 import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
 import { DragSortInnerProps } from '@tdesign/web-components-shared/_util/useDragSorter';
-import { debounce, omit, toArray } from 'lodash-es';
+import { debounce, type DebouncedFunc, omit, toArray } from 'lodash-es';
 import { Component, createRef, signal, tag, VNode } from 'omi';
 
 import { TabValue, TdTabPanelProps, TdTabsProps } from './type';
@@ -78,7 +78,7 @@ export default class TabNav extends Component<TabNavProps> {
 
   activeTab: HTMLElement | null = null;
 
-  timeout: NodeJS.Timeout;
+  timeout: ReturnType<typeof setTimeout>;
 
   setOffset = (offset: number) => {
     this.scrollLeftSignal.value = calcValidOffset(offset, this.maxScrollLeft);
@@ -135,7 +135,7 @@ export default class TabNav extends Component<TabNavProps> {
     }
   };
 
-  private onResize = debounce(this.getMaxScrollLeft, 300);
+  private onResize: DebouncedFunc<() => void> = debounce(this.getMaxScrollLeft, 300);
 
   // FIXME: 非卡片状态下激活tab滚动调整有问题
   private onChangeActiveTab = () => {

@@ -8,10 +8,41 @@ packages:
   - 'packages/*/site'
 
   # 公共工具（外部独立仓库，通过 git submodule 管理）
-  - 'common-utils/_common/js'
-  - 'common-utils/_common/docs'
-  - 'common-utils/_common/style'
-  - 'common-utils/_ai-core/packages/chat-engine'
-  - 'common-utils/_ai-core/packages/shared'
+  - '!packages/common'
+  - 'packages/common/js'
+  - 'packages/common/docs'
+  - 'packages/common/style'
+
+catalogs:
+  runtime:
+    '@popperjs/core': ^2.11.8
+    '@tdesign/ai-chat-engine': ^0.0.2
+    cherry-markdown: 0.11.8
+    classnames: ^2.5.1
+    clsx: ^2.1.1
+    dayjs: ^1.11.21
+    immer: ^10.2.0
+    lodash-es: ^4.17.21
+    omi: ^7.7.13
+    omi-transition: ^0.1.11
+    raf: ^3.4.1
+    tailwind-merge: ^2.6.0
+    tdesign-icons-web-components: ^0.3.6
+  site:
+    omi-router: 4.1.8
+    prismjs: ^1.30.0
+    reactive-signal: ^2.0.1
+    tdesign-icons-view: ^0.5.7
+    '@tdesign/site-components': ^0.19.2
+    '@tdesign/theme-generator': ^1.2.5
+  tooling:
+    '@types/less': ^3.0.8
+    '@types/node': ^22.20.1
+    less: ^4.8.0
+    postcss: ^8.5.22
+    prettier: 3.9.6
+    typescript: ^6.0.3
+    typescript-eslint: ^8.65.0
+    vite: ^8.1.5
 
 shamefullyHoist: true

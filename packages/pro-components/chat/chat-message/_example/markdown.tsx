@@ -1,7 +1,8 @@
 import '../content/markdown-content';
 
-import mdContent from '@tdesign/web-components-chat/common/testMarkdown.md?raw';
 import { Component, signal } from 'omi';
+
+import mdContent from '../../common/_example/testMarkdown';
 
 export default class BasicExample extends Component {
   displayText = signal('');

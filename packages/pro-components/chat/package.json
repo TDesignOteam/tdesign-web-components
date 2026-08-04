@@ -4,21 +4,23 @@
   "main": "index.ts",
   "author": "tdesign",
   "license": "MIT",
+  "scripts": {
+    "prebuild": "rimraf dist tsconfig.build.tsbuildinfo",
+    "build": "tsc -b tsconfig.build.json"
+  },
   "dependencies": {
-    "@tdesign/ai-chat-engine": "workspace:^",
-    "cherry-markdown": "0.11.0-alpha-5",
-    "immer": "^10.1.1",
-    "lodash-es": "^4.17.21",
-    "markdown-it-fence": "^0.1.3",
-    "nanostores": "^0.11.4"
+    "@tdesign/ai-chat-engine": "catalog:runtime",
+    "cherry-markdown": "catalog:runtime",
+    "immer": "catalog:runtime",
+    "lodash-es": "catalog:runtime"
   },
   "devDependencies": {
     "@tdesign/components": "workspace:^",
     "@tdesign/web-components-shared": "workspace:^",
-    "@types/lodash-es": "^4.17.12"
+    "highlight.js": "^11.11.1"
   },
   "peerDependencies": {
     "@tdesign/components": "workspace:^",
-    "omi": "^7.7.0"
+    "omi": "catalog:runtime"
   }
 }

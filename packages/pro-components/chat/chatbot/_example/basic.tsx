@@ -1,14 +1,14 @@
-/* eslint-disable no-await-in-loop */
 import '@tdesign/web-components-chat/chatbot';
 
 import type { AIMessageContent, ChatMessagesData, SSEChunkData } from '@tdesign/web-components-chat/chat-engine';
 import { findTargetElement } from '@tdesign/web-components-chat/chat-engine';
 import { TdChatMessageConfigItem } from '@tdesign/web-components-chat/chatbot';
-import mdContent from '@tdesign/web-components-chat/common/testMarkdown.md?raw';
 import type { TdAttachmentItem } from '@tdesign/web-components-chat/filecard';
 import { Component, createRef } from 'omi';
 
+import mdContent from '../../common/_example/testMarkdown';
 import Chatbot from '../chat';
+import { getDemoSSEPayload, parseImageData } from './sse';
 
 // 天气扩展类型定义
 declare global {
@@ -22,6 +22,7 @@ declare global {
       };
       id?: string;
       slotName?: string;
+      strategy?: 'append' | 'merge';
     };
   }
 }
@@ -31,7 +32,6 @@ function extractMarkdownLinks(msg: string): Array<{ title: string; url?: string 
   const matches = [];
   let match;
 
-  // eslint-disable-next-line no-cond-assign
   while ((match = linkRegex.exec(msg)) !== null) {
     matches.push({
       title: match[1].trim(),
@@ -226,20 +226,21 @@ const defaultChunkParser = (chunk): AIMessageContent => {
 };
 
 function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
-  if (!chunk?.data || typeof chunk === 'string') {
+  const payload = getDemoSSEPayload(chunk.data);
+  if (!payload) {
     return {
       type: 'markdown',
       data: String(chunk),
     };
   }
 
-  const { type, ...rest } = chunk.data;
+  const { type, ...rest } = payload;
   switch (type) {
     case 'error':
       return {
         type: 'text',
         status: 'error',
-        data: rest.content,
+        data: typeof rest.content === 'string' ? rest.content : '',
       };
     case 'search':
       return {
@@ -247,11 +248,11 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
         status: rest.content ? 'streaming' : 'complete',
         data: {
           title: rest.title,
-          references: rest.content,
+          references: Array.isArray(rest.content) ? rest.content : [],
         },
       };
     case 'think':
-      if (rest.step === 'web_search' && rest.docs.length > 0) {
+      if (rest.step === 'web_search' && rest.docs?.length) {
         return {
           type: 'search',
           status: 'complete',
@@ -263,10 +264,10 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       }
       return {
         type: 'thinking',
-        status: /耗时/.test(rest.title) ? 'complete' : 'streaming',
+        status: /耗时/.test(rest.title || '') ? 'complete' : 'streaming',
         data: {
           title: rest.title || '思考中...',
-          text: rest.content || '',
+          text: typeof rest.content === 'string' ? rest.content : '',
         },
       };
 
@@ -281,14 +282,14 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       }
       return {
         type: 'markdown',
-        data: rest?.msg || '',
+        data: rest.msg || '',
       };
     }
 
     case 'image': {
       return {
         type: 'image',
-        data: { ...JSON.parse(chunk.data.content) },
+        data: parseImageData(payload.content),
       };
     }
 
@@ -296,7 +297,7 @@ function handleStructuredData(chunk: SSEChunkData): AIMessageContent {
       return {
         type: 'suggestion',
         // title: '是不是想提问：',
-        data: extractMarkdownLinks(rest.content),
+        data: extractMarkdownLinks(typeof rest.content === 'string' ? rest.content : ''),
       };
 
     case 'weather': {

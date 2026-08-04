@@ -31,6 +31,7 @@ import {
   isUserMessage,
 } from '../chat-engine';
 import { renderAttachments } from './content/attachment-content';
+import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
@@ -294,6 +295,19 @@ export default class ChatItem extends Component<ChatMessageProps> {
                 content: content.data,
                 status: content.status,
                 ...chatContentProps?.thinking,
+                ...content?.ext,
+              })}
+            </slot>
+          );
+        }
+        if (String(content.type) === 'reasoning') {
+          return (
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              {renderReasoning({
+                key: elementKey,
+                content: content.data as Parameters<typeof renderReasoning>[0]['content'],
+                status: content.status,
+                ...chatContentProps?.reasoning,
                 ...content?.ext,
               })}
             </slot>

@@ -1,0 +1,21 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "allowArbitraryExtensions": true,
+    "moduleResolution": "bundler",
+    "noEmit": true
+  },
+  "exclude": [
+    "**/*.jsx",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site"
+  ],
+  "references": [{ "path": "../shared/tsconfig.build.json" }]
+}

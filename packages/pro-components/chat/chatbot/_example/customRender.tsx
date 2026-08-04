@@ -1,4 +1,3 @@
-/* eslint-disable no-await-in-loop */
 import '@tdesign/web-components-chat/chatbot';
 
 import type {
@@ -11,6 +10,7 @@ import type { TdChatMessageConfig } from '@tdesign/web-components-chat/chatbot';
 import { Component, createRef, signal } from 'omi';
 
 import Chatbot from '../chat';
+import { getDemoSSEPayload, parseImageData, parseWeatherData } from './sse';
 
 // 天气扩展类型定义
 declare global {
@@ -24,6 +24,7 @@ declare global {
       };
       id?: string;
       slotName?: string;
+      strategy?: 'append' | 'merge';
     };
   }
 }
@@ -38,13 +39,17 @@ const mockData: ChatMessagesData[] = [
         data: '这张图里的帅哥是谁',
       },
       {
-        type: 'videoAttachment',
-        data: {
-          fileType: 'video',
-          url: 'test.mp4',
-          cover:
-            'https://asset.gdtimg.com/muse_svp_0bc3viaacaaaweanalstw5ud3kweagvaaaka.f0.jpg?dis_k=bfc5cc81010a9d443e91ce45d4fbe774&dis_t=1750323484',
-        },
+        type: 'attachment',
+        data: [
+          {
+            fileType: 'video',
+            url: 'test.mp4',
+            metadata: {
+              cover:
+                'https://asset.gdtimg.com/muse_svp_0bc3viaacaaaweanalstw5ud3kweagvaaaka.f0.jpg?dis_k=bfc5cc81010a9d443e91ce45d4fbe774&dis_t=1750323484',
+            },
+          },
+        ],
       },
     ],
   },
@@ -94,43 +99,45 @@ const defaultChunkParser = (chunk): AIMessageContent => {
 };
 
 function handleStructuredData(chunk: SSEChunkData): AIContentChunkUpdate {
-  if (!chunk?.data || typeof chunk === 'string') {
+  const payload = getDemoSSEPayload(chunk.data);
+  if (!payload) {
     return {
       type: 'markdown',
       data: String(chunk),
     };
   }
 
-  const { type, ...rest } = chunk.data;
+  const { type, ...rest } = payload;
   switch (type) {
     case 'think':
       return {
         type: 'thinking',
         data: {
           title: rest.title || '思考中...',
-          text: rest.content || '',
+          text: typeof rest.content === 'string' ? rest.content : '',
         },
       };
 
     case 'text': {
       return {
         type: 'markdown',
-        data: rest?.msg || '',
+        data: rest.msg || '',
       };
     }
 
     case 'image': {
       return {
         type: 'image',
-        data: { ...JSON.parse(chunk.data.content) },
+        data: parseImageData(payload.content),
       };
     }
 
     case 'weather': {
       return {
-        ...chunk.data,
-        slotName: `weather-${chunk.data.id}`,
-        data: { ...JSON.parse(chunk.data.content) },
+        type: 'weather',
+        id: payload.id,
+        slotName: `weather-${payload.id || ''}`,
+        data: parseWeatherData(payload.content),
         strategy: 'append',
       };
     }
@@ -257,10 +264,12 @@ export default class BasicChat extends Component {
                       今天{item.data.city}天气{item.data.conditions}
                     </div>
                   );
-                case 'videoAttachment': {
+                case 'attachment': {
+                  const video = item.data.find((attachment) => attachment.fileType === 'video');
+                  if (!video) return null;
                   return (
                     <div slot={`${data.id}-${item.type}-${index}`} className="videoAttachment">
-                      <img src={item.data.cover} width={100} height={100} />
+                      <img src={video.metadata?.cover as string} width={100} height={100} />
                     </div>
                   );
                 }

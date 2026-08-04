@@ -1,0 +1,43 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "declaration": true,
+    "declarationMap": true,
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": false,
+    "emitDeclarationOnly": true,
+    "moduleResolution": "node",
+    "allowImportingTsExtensions": false,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "checkJs": false,
+    "baseUrl": ".",
+    "paths": {
+      "@tdesign/web-components": ["."],
+      "@tdesign/web-components/*": ["./*"],
+      "@tdesign/components": ["."],
+      "@tdesign/components/*": ["./*"],
+      "@tdesign/web-components-shared": ["../shared/dist"],
+      "@tdesign/web-components-shared/*": ["../shared/dist/*"],
+      "@common/js/*": ["../.cache/common-js-types/*"],
+      "@common/style/*": ["../common/style/*"],
+      "@": ["."]
+    }
+  },
+  "include": ["./**/*.ts", "./**/*.tsx", "./**/*.js", "./types/**/*.d.ts", "../../typings.d.ts"],
+  "exclude": [
+    "**/*.jsx",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "**/_example/**",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site"
+  ]
+}

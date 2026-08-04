@@ -16,7 +16,6 @@ export const AddPartHook = CherryStream.createSyntaxHook('addPart', CherryStream
     let lastIndex = 0;
     let match;
 
-    // eslint-disable-next-line no-cond-assign
     while ((match = tagRegex.exec(str)) !== null) {
       const [whole, tag, attr = ''] = match;
       const isClosingTag = whole.startsWith('</');

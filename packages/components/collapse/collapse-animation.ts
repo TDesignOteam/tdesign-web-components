@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 export function getCollapseAnimation() {
   const beforeEnter = (el: HTMLElement) => {
     el.dataset.oldPaddingTop = el.style.paddingTop;

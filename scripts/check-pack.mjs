@@ -1,0 +1,164 @@
+import { execFileSync } from 'node:child_process';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
+
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+
+const packages = [
+  {
+    name: 'ui',
+    sourceDir: 'packages/components',
+    packageDir: 'packages/tdesign-web-components',
+    imports: ['@tdesign/web-components', '@tdesign/web-components/button', '@tdesign/web-components/message'],
+    iife: 'dist/web-components.min.js',
+  },
+  {
+    name: 'chat',
+    sourceDir: 'packages/pro-components/chat',
+    packageDir: 'packages/tdesign-web-components-chat',
+    imports: [
+      '@tdesign/web-components-chat',
+      '@tdesign/web-components-chat/chatbot',
+      '@tdesign/web-components-chat/chat-engine',
+    ],
+    iife: 'dist/web-components-chat.min.js',
+  },
+];
+
+const uiPackage = JSON.parse(readFileSync(resolve(repoRoot, 'packages/tdesign-web-components/package.json'), 'utf8'));
+const chatPackage = JSON.parse(
+  readFileSync(resolve(repoRoot, 'packages/tdesign-web-components-chat/package.json'), 'utf8'),
+);
+
+function assert(condition, message) {
+  if (!condition) throw new Error(message);
+}
+
+function checkReleaseVersions() {
+  assert(uiPackage.version === chatPackage.version, 'UI and Chat package versions must match');
+  assert(
+    chatPackage.peerDependencies?.['@tdesign/web-components'] === `^${uiPackage.version}`,
+    'Chat peer dependency must match the current UI package version',
+  );
+  console.log(`[check:pack] release versions aligned (${uiPackage.version})`);
+}
+
+function packFiles(packageDir) {
+  const [pack] = JSON.parse(
+    execFileSync('npm', ['pack', '--dry-run', '--json', '--cache', resolve(tmpdir(), 'npm-cache')], {
+      cwd: resolve(repoRoot, packageDir),
+      encoding: 'utf8',
+    }),
+  );
+  return pack.files.map((file) => file.path);
+}
+
+function checkPackList({ name, packageDir, iife }) {
+  const files = packFiles(packageDir);
+  const forbidden = files.filter(
+    (file) =>
+      /^(cjs|lib|plugins|src|packages)\//.test(file) ||
+      /(^|\/)\.cache(\/|$)/.test(file) ||
+      file.includes('node_modules/') ||
+      file.includes('/packages/') ||
+      file.includes('/shared/src/') ||
+      file.includes('/shared/dist/') ||
+      file.includes('packages/common'),
+  );
+  const required = ['esm/index.js', 'esm/index.d.ts', iife];
+
+  assert(forbidden.length === 0, `[${name}] pack contains forbidden files:\n${forbidden.join('\n')}`);
+  assert(
+    required.every((file) => files.includes(file)),
+    `[${name}] pack is missing ESM or IIFE output`,
+  );
+
+  if (name === 'chat') {
+    for (const ext of ['eot', 'svg', 'ttf', 'woff', 'woff2']) {
+      assert(files.includes(`dist/assets/ch-icon.${ext}`), `[chat] missing CDN font asset: ${ext}`);
+    }
+  }
+
+  console.log(`[check:pack] ${name} pack list ok (${files.length} files)`);
+}
+
+function collectDeclarationFiles(dir) {
+  if (!existsSync(dir)) return [];
+
+  return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
+    const path = resolve(dir, entry.name);
+    if (entry.isDirectory()) return collectDeclarationFiles(path);
+    return entry.name.endsWith('.d.ts') ? [path] : [];
+  });
+}
+
+function checkDeclarationReferences({ name, packageDir }) {
+  const declarationFiles = collectDeclarationFiles(resolve(repoRoot, packageDir, 'esm'));
+  const forbiddenPatterns = [
+    ['common type cache', /\.cache\/common-js-types/],
+    ['common source path', /packages\/common/],
+    ['shared source path', /shared\/(?:src|dist)\//],
+    ['workspace absolute path', /(?:\/Users\/|\/home\/runner\/work\/|[A-Za-z]:\\)/],
+  ];
+  const violations = [];
+
+  for (const file of declarationFiles) {
+    const source = readFileSync(file, 'utf8');
+    for (const [label, pattern] of forbiddenPatterns) {
+      if (pattern.test(source)) violations.push(`${file}: ${label}`);
+    }
+  }
+
+  assert(violations.length === 0, `[${name}] declarations expose internal paths:\n${violations.join('\n')}`);
+  console.log(`[check:pack] ${name} declaration references ok (${declarationFiles.length} files)`);
+}
+
+function checkResolvable({ name, packageDir, imports }) {
+  const packageRoot = resolve(repoRoot, packageDir);
+  const resolvedImports = JSON.parse(
+    execFileSync(
+      process.execPath,
+      [
+        '--input-type=module',
+        '-e',
+        `const specifiers = ${JSON.stringify(imports)}; console.log(JSON.stringify(await Promise.all(specifiers.map(async (specifier) => [specifier, await import.meta.resolve(specifier)]))));`,
+      ],
+      { cwd: packageRoot, encoding: 'utf8' },
+    ),
+  );
+
+  for (const [specifier, resolved] of resolvedImports) {
+    const file = fileURLToPath(resolved);
+    assert(existsSync(file), `[${name}] import target missing: ${specifier} -> ${file}`);
+  }
+
+  console.log(`[check:pack] ${name} ESM exports smoke ok`);
+}
+
+function checkComponentEntries({ name, sourceDir, packageDir }) {
+  const sourceRoot = resolve(repoRoot, sourceDir);
+  const esmRoot = resolve(repoRoot, packageDir, 'esm');
+  const missing = readdirSync(sourceRoot).filter((entry) => {
+    const entryDir = resolve(sourceRoot, entry);
+    return (
+      !entry.startsWith('_') &&
+      statSync(entryDir).isDirectory() &&
+      (existsSync(resolve(entryDir, 'index.ts')) || existsSync(resolve(entryDir, 'index.tsx'))) &&
+      !existsSync(resolve(esmRoot, entry, 'index.js'))
+    );
+  });
+
+  assert(missing.length === 0, `[${name}] missing ESM component entries:\n${missing.join('\n')}`);
+  console.log(`[check:pack] ${name} ESM component entries ok`);
+}
+
+checkReleaseVersions();
+
+for (const pkg of packages) {
+  checkPackList(pkg);
+  checkDeclarationReferences(pkg);
+  checkResolvable(pkg);
+  checkComponentEntries(pkg);
+}

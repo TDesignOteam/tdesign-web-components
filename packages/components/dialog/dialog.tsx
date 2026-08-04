@@ -192,7 +192,7 @@ export default class Dialog extends Component<DialogProps> {
     }
 
     for (const key in options) {
-      if (Object.hasOwn(options, key)) {
+      if (Object.prototype.hasOwnProperty.call(options, key)) {
         this.state.value[key] = options[key];
         if (shouldUpdate) {
           this.update();

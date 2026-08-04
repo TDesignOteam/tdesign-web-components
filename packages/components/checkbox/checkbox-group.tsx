@@ -145,7 +145,6 @@ export default class CheckboxGroup extends Component<CheckboxGroupProps> {
   }
 
   getOptionListBySlots() {
-    // eslint-disable-next-line array-callback-return
     const nodes: VNode[] = toArray(this.props.children).filter((node: VNode) => {
       isString(node.nodeName) && node.nodeName.endsWith('checkbox');
     });

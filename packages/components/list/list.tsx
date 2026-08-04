@@ -36,7 +36,7 @@ export default class BackTop extends Component<ListProps> {
     onScroll: Function,
   };
 
-  getClasses(split: Boolean, stripe: Boolean) {
+  getClasses(split: boolean, stripe: boolean) {
     const cls: string[] = [];
     if (split) {
       cls.push(listclassPrefix('--split'));

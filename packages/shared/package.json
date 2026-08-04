@@ -3,23 +3,31 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "main": "src/index.ts",
-  "types": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
+    }
+  },
   "author": "tdesign",
   "license": "MIT",
   "scripts": {
-    "build": "echo 'shared is internal, no build needed'"
+    "prebuild": "rimraf dist tsconfig.build.tsbuildinfo",
+    "build": "tsc -b tsconfig.build.json"
   },
   "dependencies": {
-    "clsx": "^2.1.1",
-    "lodash-es": "^4.17.21",
-    "raf": "^3.4.1",
-    "tailwind-merge": "^2.6.0"
+    "clsx": "catalog:runtime",
+    "lodash-es": "catalog:runtime",
+    "raf": "catalog:runtime",
+    "tailwind-merge": "catalog:runtime"
   },
   "peerDependencies": {
-    "omi": "^7.0.0"
-  },
-  "devDependencies": {
-    "@types/lodash-es": "^4.17.12"
+    "omi": "catalog:runtime"
   }
 }

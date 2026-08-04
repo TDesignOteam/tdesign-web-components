@@ -7,6 +7,6 @@ export interface TdAttachmentsProps extends StyledProps {
   overflow?: 'scrollX' | 'scrollY' | 'wrap';
   onRemove?: (event: CustomEvent<TdAttachmentItem>) => void;
   onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
-  imageViewer?: Boolean;
-  removable?: Boolean;
+  imageViewer?: boolean;
+  removable?: boolean;
 }

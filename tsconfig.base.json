@@ -1,24 +1,24 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "module": "esnext",
     "target": "esnext",
-    "declaration": true,
-    "sourceMap": true,
     "lib": ["esnext", "dom", "DOM.Iterable"],
-    "importHelpers": true,
+    // 仅类型检查，JS / .d.ts 由 Vite + Oxc / tsc 产出
+    "noEmit": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "allowImportingTsExtensions": true,
-    "noEmit": true,
     "jsx": "preserve",
     "jsxFactory": "Component.h",
     "jsxFragmentFactory": "Component.f",
     "allowJs": true,
     "checkJs": true,
+    "strict": false,
     "downlevelIteration": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "ignoreDeprecations": "6.0"
   },
   "compileOnSave": false
 }

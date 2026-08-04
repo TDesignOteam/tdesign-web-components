@@ -11,3 +11,24 @@ jobs:
       node-version-file: .node-version
       skip-site: true
       package-manager: pnpm
+
+  build-lib:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version-file: .node-version
+
+      - run: pnpm install --frozen-lockfile
+
+      - name: Type check
+        run: pnpm run check:types
+
+      - name: Verify publish packages
+        run: pnpm run check:pack

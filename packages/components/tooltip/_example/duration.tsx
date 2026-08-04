@@ -4,7 +4,7 @@ import '@tdesign/web-components/button';
 import { Component } from 'omi';
 
 export default class Placements extends Component {
-  timer: NodeJS.Timeout;
+  timer: ReturnType<typeof setTimeout>;
 
   reset = true;
 

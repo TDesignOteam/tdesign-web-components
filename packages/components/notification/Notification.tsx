@@ -41,7 +41,7 @@ export default class Notification extends Component<NotificationProps> {
 
   notificationRef = createRef();
 
-  timer: NodeJS.Timeout;
+  timer: ReturnType<typeof setTimeout>;
 
   ready(): void {
     const { id, className, theme } = this.props;

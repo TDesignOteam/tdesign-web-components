@@ -1,7 +1,7 @@
 /**
  * Cherry Markdown Icon Font
  * 用于在 Light DOM 中加载字体，解决 Shadow DOM 中 @font-face 无法加载的问题
- * 打包后字体文件会输出到 lib/assets/ 目录，所以使用 ../assets/ 路径
+ * IIFE 构建会将字体补齐到 dist/assets/，运行时使用 ../assets/ 路径
  */
 
 @font-face {

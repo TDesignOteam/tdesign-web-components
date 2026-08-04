@@ -438,7 +438,7 @@ export default class Popup extends Component<PopupProps> {
   };
 
   // window resize时更新popper位置并重新计算样式
-  handleWindowResize = throttle(() => {
+  handleWindowResize: () => void = throttle(() => {
     if (this.visible) {
       // 重新渲染，目的是更新overlayInnerStyle
       this.update();

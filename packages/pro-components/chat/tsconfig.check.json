@@ -1,0 +1,36 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "allowArbitraryExtensions": true,
+    "moduleResolution": "bundler",
+    "noEmit": true,
+    "paths": {
+      "@tdesign/web-components-chat": ["."],
+      "@tdesign/web-components-chat/*": ["./*"],
+      "@tdesign/pro-components-chat": ["."],
+      "@tdesign/pro-components-chat/*": ["./*"],
+      "@tdesign/web-components": ["../../components/dist"],
+      "@tdesign/web-components/*": ["../../components/dist/*"],
+      "@tdesign/components": ["../../components/dist"],
+      "@tdesign/components/*": ["../../components/dist/*"],
+      "@tdesign/web-components-shared": ["../../shared/dist"],
+      "@tdesign/web-components-shared/*": ["../../shared/dist/*"],
+      "@common/js/*": ["../../.cache/common-js-types/*"],
+      "@common/style/*": ["../../common/style/*"],
+      "@": ["."]
+    }
+  },
+  "exclude": [
+    "**/*.jsx",
+    "**/**/_usage/*",
+    "**/**/__tests__/*",
+    "node_modules",
+    "dist",
+    "lib",
+    "esm",
+    "cjs",
+    "es",
+    "site"
+  ],
+  "references": [{ "path": "../../shared/tsconfig.build.json" }]
+}

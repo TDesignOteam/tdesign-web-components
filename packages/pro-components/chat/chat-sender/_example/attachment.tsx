@@ -6,7 +6,7 @@ import { Component, signal } from 'omi';
 export default class AttachmentExample extends Component {
   inputValue = signal('输入内容');
 
-  loading = signal<Boolean>(false);
+  loading = signal<boolean>(false);
 
   files = signal<TdAttachmentItem[]>([
     {

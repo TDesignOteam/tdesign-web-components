@@ -2,6 +2,8 @@ import './index.css';
 import './pages/test';
 import './pages/layout/component-layout';
 
+import { createSiteRootRedirects } from '@tdesign/vite-config/site-routes';
+
 import sidebar from './sidebar.config';
 
 function createComponentRoutes(config: any[] = []) {
@@ -17,11 +19,11 @@ function createComponentRoutes(config: any[] = []) {
     .filter((item) => item);
 }
 
+const SITE_PREFIX = '/web-components';
+const HOME = `${SITE_PREFIX}/getting-started`;
+
 export const routes = [
-  {
-    path: '/',
-    redirect: '/web-components/getting-started',
-  },
+  ...createSiteRootRedirects(SITE_PREFIX, HOME),
   ...createComponentRoutes(sidebar),
   {
     path: '/web-components/test',

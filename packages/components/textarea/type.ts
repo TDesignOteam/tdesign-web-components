@@ -63,7 +63,7 @@ export interface TdTextareaProps {
    * 文本框值，非受控属性
    */
   defaultValue?: TextareaValue;
-  enterkeyhint?: String;
+  enterkeyhint?: string;
   /**
    * 失去焦点时触发
    */

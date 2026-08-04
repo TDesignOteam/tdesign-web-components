@@ -18,11 +18,11 @@ export const ChatReasoningContent = _ReasoningContent;
 // 外部使用自定义逻辑时使用的CherryMarkdown类必须跟渲染时保持一致
 export const TdMarkdownEngine = CherryStream;
 
-export type { TdChatThinkContentProps } from './content/thinking-content';
+export type * from './content/markdown-content';
+export type { TdChatReasoningProps } from './content/reasoning-content';
 export type { TdChatSearchContentProps } from './content/search-content';
 export type { TdChatSuggestionContentProps } from './content/suggestion-content';
-export type { TdChatReasoningProps } from './content/reasoning-content';
-export type * from './content/markdown-content';
+export type { TdChatThinkContentProps } from './content/thinking-content';
 export type * from './type';
 
 export default ChatMessage;

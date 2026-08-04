@@ -23,4 +23,4 @@ jobs:
 
       - run: pnpm run "/^build:/"
 
-      - run: pnpm dlx pkg-pr-new publish './packages/*' --no-compact --packageManager=pnpm,npm,yarn
+      - run: pnpm dlx pkg-pr-new publish --pnpm './packages/*' --no-compact --packageManager=pnpm,npm,yarn

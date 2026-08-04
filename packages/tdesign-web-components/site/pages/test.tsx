@@ -1,5 +1,5 @@
 // 测试omi相关特性
-/* eslint-disable max-classes-per-file */
+
 import { Component, tag } from 'omi';
 
 @tag('test-component')
