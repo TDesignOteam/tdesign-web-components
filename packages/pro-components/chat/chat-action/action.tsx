@@ -150,7 +150,7 @@ export const renderActions = (
       { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 size="16px" />, '分享') },
     ] as TdChatActionItem[];
 
-  const arrayActions: TdChatActionItem[] =
+  const arrayActions: TdChatActionItem<string>[] =
     Array.isArray(actionBar) && actionBar.length > 0
       ? actionBar.map((action) => {
           // 兼容preset的旧逻辑

@@ -8,19 +8,33 @@ import type {
   ChatServiceConfigSetter,
   ChatStatus,
 } from '../chat-engine';
-import type { TdChatMessageProps } from '../chat-message';
+import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-message';
 import type { TdChatSenderProps } from '../chat-sender';
 
 export interface TdChatProps extends StyledProps {
+  /** 聊天内容 */
   children?: TNode;
-  /** 布局模式 */
+  /**
+   * 布局模式
+   * @default both
+   */
   layout?: 'single' | 'both';
-  /** 倒序渲染 */
+  /**
+   * 倒序渲染
+   * @default false
+   */
   reverse?: boolean;
   /** 消息列表配置（透传至t-chat-list） */
   listProps?: TdChatListProps;
-  /** 消息数据源 */
+  /**
+   * 初始化完成后自动发送的提问
+   * @default ''
+   */
   autoSendPrompt?: string;
+  /**
+   * 初始消息列表
+   * @default []
+   */
   defaultMessages?: Array<ChatMessagesData>;
   /** 角色消息配置 */
   messageProps?: TdChatMessageConfig | ((msg: ChatMessagesData) => TdChatMessageConfigItem);
@@ -28,12 +42,32 @@ export interface TdChatProps extends StyledProps {
   senderProps?: TdChatSenderProps;
   /** 模型服务配置 */
   chatServiceConfig?: ChatServiceConfigSetter;
+  /** Shadow DOM 样式注入配置 */
+  injectCSS?: TdChatInjectCSS;
   /** 消息内容更新回调 */
   onMessageChange?: (e: CustomEvent<ChatMessagesData[]>) => void;
   /** 消息引擎初始化完成回调 */
-  onChatReady?: (e: CustomEvent) => void;
+  onChatReady?: (e: CustomEvent<Record<string, never>>) => void;
   /** 消息发送完回调 */
   onChatAfterSend?: (e: CustomEvent<ChatRequestParams>) => void;
+  /** 用户点击停止按钮时触发 */
+  onChatStop?: (e: CustomEvent<Record<string, never>>) => void;
+  /** 消息操作按钮触发 */
+  onChatMessageAction?: (e: CustomEvent<TdChatMessageActionEvent>) => void;
+}
+
+export interface TdChatMessageActionEvent {
+  action: TdChatMessageActionName;
+  data: unknown;
+}
+
+export interface TdChatInjectCSS {
+  /** 注入 ChatSender 的 CSS */
+  ChatSender?: string;
+  /** 注入 ChatList 的 CSS */
+  chatList?: string;
+  /** 注入每个 ChatMessage 的 CSS */
+  chatItem?: string;
 }
 
 export interface TdChatListScrollToOptions {
@@ -71,7 +105,7 @@ export interface TdChatbotApi {
    * - prepend: 将消息添加到现有消息前面
    * - append: 将消息追加到现有消息后面
    */
-  setMessages: (messages: ChatMessagesData[], mode: ChatMessageSetterMode) => void;
+  setMessages: (messages: ChatMessagesData[], mode?: ChatMessageSetterMode) => void;
 
   /**
    * 清空消息列表
@@ -181,16 +215,20 @@ export interface MetaData {
 
 export type ModelRoleEnum = 'assistant' | 'user' | 'system';
 
+/** @deprecated 使用 `TdChatProps['layout']` */
 export type Layout = 'single' | 'both';
+/** @deprecated 旧版 SSE 工具类型，请使用 `@tdesign/ai-chat-engine` 导出的类型 */
 export interface FetchSSEOptions {
   success?: (res: SSEEvent) => void; // 流式数据解析成功回调
   fail?: () => void; // 流式请求失败回调
   complete?: (isOk: boolean, msg?: string, requestid?: string) => void; // 流式请求完成回调
 }
+/** @deprecated 旧版 SSE 工具类型，请使用 `SSEChunkData` */
 export interface SSEEvent {
   type: string | null;
   data: string | null;
 }
+/** @deprecated 使用 `TdChatListScrollToOptions` */
 export interface BackBottomParams {
   behavior?: 'auto' | 'smooth';
 }

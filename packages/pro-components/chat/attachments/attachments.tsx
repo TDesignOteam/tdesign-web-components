@@ -26,6 +26,7 @@ export default class Attachments extends Component<TdAttachmentsProps> {
   };
 
   static defaultProps: Partial<TdAttachmentsProps> = {
+    overflow: 'wrap',
     removable: true,
     imageViewer: true,
     style: {},

@@ -14,7 +14,7 @@ spline: base
 
 ### ChatLoading Props
 
-| 名称      | 类型                                   | 默认值   | 说明         | 必传 |
-| --------- | -------------------------------------- | -------- | ------------ | ---- |
-| animation | `skeleton/moving/gradient/dots/circle` | `circle` | 动画效果     | N    |
-| text      | `string / TNode`                       | -        | 加载提示文案 | N    |
+| 名称      | 类型                                                         | 默认值     | 说明         | 必传 |
+| --------- | ------------------------------------------------------------ | ---------- | ------------ | ---- |
+| animation | `'skeleton' \| 'moving' \| 'gradient' \| 'dots' \| 'circle'` | `'moving'` | 动画效果     | N    |
+| text      | String                                                       | `''`       | 加载提示文案 | N    |

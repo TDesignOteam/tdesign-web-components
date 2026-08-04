@@ -47,13 +47,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
   static css = [styles];
 
   // 声明哪些prop是slot
-  static slotProps = ['avatar', 'name'];
+  static slotProps = ['avatar', 'name', 'datetime'];
 
   static propTypes = {
     actions: [Array, Function, Boolean],
     name: [String, Object], // 支持传入String或ReactNode
     avatar: [String, Object], // 支持传入String或ReactNode
-    datetime: String,
+    datetime: [String, Object],
     message: Object,
     role: String,
     content: Array,
@@ -181,7 +181,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
     ) : null;
   }
 
-  private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {
+  private handleClickAction = (action: TdChatMessageActionName, data?: any) => {
     const internalMessage = this.getInternalMessage();
     const toData = {
       ...data,

@@ -112,6 +112,21 @@ function checkDeclarationReferences({ name, packageDir }) {
   }
 
   assert(violations.length === 0, `[${name}] declarations expose internal paths:\n${violations.join('\n')}`);
+  if (name === 'chat') {
+    const declarationSource = declarationFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
+    for (const typeName of [
+      'TdChatProps',
+      'TdChatbotApi',
+      'TdChatMessageProps',
+      'TdChatSenderProps',
+      'TdAttachmentItem',
+    ]) {
+      assert(
+        new RegExp(`(?:interface|type) ${typeName}\\b`).test(declarationSource),
+        `[chat] declaration surface is missing ${typeName}`,
+      );
+    }
+  }
   console.log(`[check:pack] ${name} declaration references ok (${declarationFiles.length} files)`);
 }
 

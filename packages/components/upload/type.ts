@@ -1,4 +1,9 @@
-import { FormatResponseContext, ResponseType, SizeLimitObj } from '@common/js/upload/types';
+import {
+  FormatResponseContext,
+  ResponseType,
+  SizeLimitObj,
+  type UploadFile as CommonUploadFile,
+} from '@common/js/upload/types';
 import { PlainObject, StyledProps, TNode } from '@tdesign/web-components-shared/common';
 
 import { ButtonProps } from '../button';
@@ -130,53 +135,10 @@ export interface UploadInstanceFunctions {
   uploadFiles: (files?: UploadFile[]) => void;
 }
 
-export interface UploadFile extends PlainObject {
-  /**
-   * 上一次变更的时间
-   */
-  lastModified?: number;
-  /**
-   * 文件名称
-   * @default ''
-   */
-  name?: string;
-  /**
-   * 下载进度
-   */
-  percent?: number;
-  /**
-   * 原始文件对象
-   */
-  raw?: File;
-  /**
-   * 上传接口返回的数据。`response.error` 存在时会判断此次上传失败，并显示错误文本信息；`response.url` 会作为文件上传成功后的地址，并使用该地址显示图片
-   */
-  response?: { [key: string]: any };
-  /**
-   * 文件大小
-   */
-  size?: number;
-  /**
-   * 文件上传状态：上传成功，上传失败，上传中，等待上传
-   * @default ''
-   */
-  status?: 'success' | 'fail' | 'progress' | 'waiting';
-  /**
-   * 文件类型
-   * @default ''
-   */
-  type?: string;
-  /**
-   * 上传时间
-   * @default ''
-   */
-  uploadTime?: string;
-  /**
-   * 文件上传成功后的下载/访问地址
-   * @default ''
-   */
-  url?: string;
-}
+/**
+ * 上传文件。基础字段由 tdesign-common 统一维护；Web Components 仅补充通用对象扩展能力。
+ */
+export interface UploadFile extends CommonUploadFile, PlainObject {}
 
 export interface UploadSelectChangeContext {
   currentSelectedFiles: UploadFile[];
@@ -192,13 +154,7 @@ export interface UploadChangeContext {
 }
 
 export type UploadChangeTrigger =
-  | 'add'
-  | 'remove'
-  | 'abort'
-  | 'progress-success'
-  | 'progress'
-  | 'progress-fail'
-  | 'default';
+  'add' | 'remove' | 'abort' | 'progress-success' | 'progress' | 'progress-fail' | 'default';
 
 export type SizeUnitArray = ['B', 'KB', 'MB', 'GB'];
 
