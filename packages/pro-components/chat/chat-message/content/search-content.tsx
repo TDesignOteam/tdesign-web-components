@@ -12,18 +12,21 @@ import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-type SearchContent = {
+export interface TdChatSearchContentData {
   title?: string;
   references?: ReferenceItem[];
-};
+}
 export type TdChatSearchContentProps = {
-  key?: string;
-  content?: SearchContent;
-  status?: ChatMessageStatus | ((currentStatus: ChatMessageStatus | undefined) => ChatMessageStatus);
-  onChange?: (value: CollapseValue) => void;
-  handleSearchResultClick?: ({ event, content }: { event: MouseEvent; content: SearchContent }) => void;
+  content?: TdChatSearchContentData;
+  status?: ChatMessageStatus;
+  handleSearchResultClick?: ({ event, content }: { event: MouseEvent; content: TdChatSearchContentData }) => void;
   handleSearchItemClick?: ({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void;
 } & TdChatContentProps['search'];
+
+type RenderSearchProps = TdChatSearchContentProps & {
+  key?: string;
+  onChange?: (value: CollapseValue) => void;
+};
 
 // 纯函数渲染器
 export const renderSearch = ({
@@ -35,7 +38,7 @@ export const renderSearch = ({
   handleSearchResultClick,
   handleSearchItemClick,
   onChange,
-}: TdChatSearchContentProps) => {
+}: RenderSearchProps) => {
   if (!content) return;
   const defaultCollapsed = collapsed ? [] : [1];
   const { references = [], title } = content;
@@ -114,8 +117,8 @@ export default class SearchContentComponent extends Component<TdChatSearchConten
     status: String,
     useCollapse: Boolean,
     collapsed: Boolean,
-    handleSearchItemClick: Object,
-    handleSearchResultClick: Object,
+    handleSearchItemClick: Function,
+    handleSearchResultClick: Function,
   };
 
   pCollapsed = signal(false);

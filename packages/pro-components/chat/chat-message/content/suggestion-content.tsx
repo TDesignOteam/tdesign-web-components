@@ -10,13 +10,14 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 export type TdChatSuggestionContentProps = {
-  key?: string;
   content?: SuggestionItem[];
   handlePromptClick?: ({ event, content }: { event: MouseEvent; content: SuggestionItem }) => void;
 };
 
+type RenderSuggestionProps = TdChatSuggestionContentProps & { key?: string };
+
 // 纯函数渲染器
-export const renderSuggestion = ({ key, content, handlePromptClick }: TdChatSuggestionContentProps) => (
+export const renderSuggestion = ({ key, content, handlePromptClick }: RenderSuggestionProps) => (
   <div key={key} className={`${className}__suggestion`}>
     {content.map(
       (s, i) =>
@@ -40,8 +41,8 @@ export default class SuggestionContentComponent extends Component<TdChatSuggesti
   static css = styles;
 
   static propTypes = {
-    content: Object,
-    handlePromptClick: Object,
+    content: Array,
+    handlePromptClick: Function,
   };
 
   render(props) {

@@ -19,7 +19,6 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 type TdChatReasoningBaseProps = {
-  key?: string;
   content?: AIMessageContent[];
   status?: ChatMessageStatus;
 } & TdChatContentProps['reasoning'];
@@ -30,6 +29,7 @@ export type TdChatReasoningProps = {
 } & TdChatReasoningBaseProps;
 
 export interface IRenderReasoning extends TdChatReasoningBaseProps {
+  key?: string;
   onChange?: (e: CustomEvent<CollapseValue>) => void;
 }
 
@@ -43,7 +43,9 @@ const renderContentItem = (content: AIMessageContent, index: number) => {
         {content.data
           ?.split('\n')
           .filter(Boolean)
-          .map((paragraph, pIndex) => <p key={pIndex}>{paragraph}</p>)}
+          .map((paragraph, pIndex) => (
+            <p key={pIndex}>{paragraph}</p>
+          ))}
       </div>
     );
   }

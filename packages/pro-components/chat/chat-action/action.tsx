@@ -14,7 +14,7 @@ import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { Component, signal, tag } from 'omi';
 
 import { type ChatComment } from '../chat-engine';
-import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
+import { TdChatActionData, TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
 
 import styles from './style/action.less';
 
@@ -47,7 +47,7 @@ export const renderActions = (
     }
   };
 
-  const handleClickAction = (action: TdChatActionsName, data: any) => {
+  const handleClickAction = (action: TdChatActionsName, data: TdChatActionData) => {
     if (action === 'copy') {
       clickCopyHandler();
     }
@@ -198,8 +198,8 @@ export default class ChatAction extends Component<TdChatActionProps> {
   static css = [styles];
 
   static propTypes = {
-    actionBar: Object,
-    handleAction: Object,
+    actionBar: [Array, Boolean],
+    handleAction: Function,
     comment: String,
     copyText: String,
     tooltipProps: Object,

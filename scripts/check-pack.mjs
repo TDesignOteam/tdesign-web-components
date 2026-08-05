@@ -79,6 +79,8 @@ function checkPackList({ name, packageDir, iife }) {
     for (const ext of ['eot', 'svg', 'ttf', 'woff', 'woff2']) {
       assert(files.includes(`dist/assets/ch-icon.${ext}`), `[chat] missing CDN font asset: ${ext}`);
     }
+    const esmIndex = readFileSync(resolve(repoRoot, packageDir, 'esm/index.js'), 'utf8');
+    assert(/\bChatAttachmentContent\b/.test(esmIndex), '[chat] root ESM export is missing ChatAttachmentContent');
   }
 
   console.log(`[check:pack] ${name} pack list ok (${files.length} files)`);
@@ -118,6 +120,7 @@ function checkDeclarationReferences({ name, packageDir }) {
       'TdChatProps',
       'TdChatbotApi',
       'TdChatMessageProps',
+      'TdChatAttachmentContentProps',
       'TdChatSenderProps',
       'TdAttachmentItem',
     ]) {

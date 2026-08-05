@@ -10,10 +10,10 @@ import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-export type TdChatAttachmentContentProps = {
+export interface TdChatAttachmentContentProps {
   content?: AttachmentItem[];
   onFileClick?: (event: CustomEvent<TdAttachmentItem>) => void;
-};
+}
 
 // 纯函数渲染器
 export const renderAttachments = ({ content, onFileClick }: TdChatAttachmentContentProps) => (
@@ -34,7 +34,7 @@ export default class AttachmentContentComponent extends Component<TdChatAttachme
   static css = styles;
 
   static propTypes = {
-    content: Object,
+    content: Array,
     onFileClick: Function,
   };
 

@@ -18,7 +18,6 @@ import styles from '../style/chat-item.less';
 const className = `${getClassPrefix()}-chat__item`;
 
 type TdChatThinkBaseProps = {
-  key?: string;
   content?: {
     text?: string;
     title?: string;
@@ -32,6 +31,7 @@ export type TdChatThinkContentProps = {
 } & TdChatThinkBaseProps;
 
 export interface IRenderThinking extends TdChatThinkBaseProps {
+  key?: string;
   onChange?: (e: CustomEvent<CollapseValue>) => void;
 }
 
@@ -77,7 +77,9 @@ export const renderThinking = ({
               {text
                 ?.split('\n')
                 .filter(Boolean)
-                .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                .map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
             </div>
           </slot>
         </t-auto-scroll>

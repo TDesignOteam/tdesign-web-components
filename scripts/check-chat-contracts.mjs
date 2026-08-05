@@ -5,6 +5,12 @@ import ts from 'typescript';
 
 const repoRoot = resolve(import.meta.dirname, '..');
 const chatRoot = resolve(repoRoot, 'packages/pro-components/chat');
+const tsconfigPath = resolve(chatRoot, 'tsconfig.check.json');
+const tsconfig = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
+if (tsconfig.error) throw new Error(ts.formatDiagnostic(tsconfig.error, ts.createCompilerHost({})));
+const parsedConfig = ts.parseJsonConfigFileContent(tsconfig.config, ts.sys, chatRoot);
+const program = ts.createProgram(parsedConfig.fileNames, parsedConfig.options);
+const checker = program.getTypeChecker();
 
 const contracts = [
   ['chatbot', 'TdChatProps', 'chat.tsx'],
@@ -14,6 +20,15 @@ const contracts = [
   ['filecard', 'TdFileCardProps', 'filecard.tsx'],
   ['chat-action', 'ChatActionProps', 'action.tsx'],
   ['chat-loading', 'ChatLoadingProps', 'loading.tsx'],
+];
+
+const contentContracts = [
+  ['markdown-content.tsx', 'TdChatMarkdownContentProps'],
+  ['search-content.tsx', 'TdChatSearchContentProps'],
+  ['suggestion-content.tsx', 'TdChatSuggestionContentProps'],
+  ['attachment-content.tsx', 'TdChatAttachmentContentProps'],
+  ['thinking-content.tsx', 'TdChatThinkContentProps'],
+  ['reasoning-content.tsx', 'TdChatReasoningProps'],
 ];
 
 const errors = [];
@@ -59,6 +74,47 @@ function runtimeProps(componentPath) {
   return props;
 }
 
+function resolvedPublicTypeProps(typePath, typeName) {
+  const source = program.getSourceFile(typePath);
+  if (!source) throw new Error(`Missing program source: ${typePath}`);
+  const declaration = source.statements.find(
+    (node) => (ts.isInterfaceDeclaration(node) || ts.isTypeAliasDeclaration(node)) && node.name.text === typeName,
+  );
+  if (!declaration) throw new Error(`Missing public type ${typeName}: ${typePath}`);
+  const symbol = checker.getSymbolAtLocation(declaration.name);
+  const type = checker.getDeclaredTypeOfSymbol(symbol);
+  return checker
+    .getPropertiesOfType(type)
+    .filter(
+      (property) =>
+        !property.declarations?.some((member) =>
+          ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'internal'),
+        ),
+    )
+    .map((property) => property.name)
+    .filter((name) => name !== 'children');
+}
+
+function runtimePropValidators(componentPath) {
+  const source = parse(componentPath);
+  const validators = new Map();
+  source.forEachChild((node) => {
+    if (!ts.isClassDeclaration(node)) return;
+    const declaration = node.members.find(
+      (member) =>
+        ts.isPropertyDeclaration(member) &&
+        member.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword) &&
+        propertyName(member) === 'propTypes',
+    );
+    if (!declaration?.initializer || !ts.isObjectLiteralExpression(declaration.initializer)) return;
+    for (const property of declaration.initializer.properties) {
+      if (!ts.isPropertyAssignment(property)) continue;
+      validators.set(propertyName(property), property.initializer.getText(source).replace(/\s+/g, ' '));
+    }
+  });
+  return validators;
+}
+
 for (const [folder, interfaceName, componentFile] of contracts) {
   const typePath = resolve(chatRoot, folder, 'type.ts');
   const componentPath = resolve(chatRoot, folder, componentFile);
@@ -79,6 +135,43 @@ for (const [folder, interfaceName, componentFile] of contracts) {
       errors.push(`${folder}: runtime prop "${name}" is missing from public type`);
     }
   }
+}
+
+const contentReadme = readFileSync(resolve(chatRoot, 'chat-message/content/README.md'), 'utf8');
+for (const [componentFile, typeName] of contentContracts) {
+  const componentPath = resolve(chatRoot, 'chat-message/content', componentFile);
+  const typeProps = resolvedPublicTypeProps(componentPath, typeName);
+  const componentProps = runtimeProps(componentPath);
+  for (const name of typeProps) {
+    if (!componentProps.includes(name)) {
+      errors.push(`chat-message/content/${componentFile}: type prop "${name}" is missing from runtime propTypes`);
+    }
+    if (!new RegExp(`\\b${name}\\b`).test(contentReadme)) {
+      errors.push(`chat-message/content/${componentFile}: type prop "${name}" is missing from README`);
+    }
+  }
+  for (const name of componentProps) {
+    if (!typeProps.includes(name)) {
+      errors.push(`chat-message/content/${componentFile}: runtime prop "${name}" is missing from public type`);
+    }
+  }
+}
+
+const validatorContracts = [
+  ['chat-action/action.tsx', 'actionBar', '[Array, Boolean]'],
+  ['chat-action/action.tsx', 'handleAction', 'Function'],
+  ['chat-message/chat-item.tsx', 'actions', '[Array, Boolean]'],
+  ['chat-message/content/search-content.tsx', 'handleSearchItemClick', 'Function'],
+  ['chat-message/content/search-content.tsx', 'handleSearchResultClick', 'Function'],
+  ['chat-message/content/suggestion-content.tsx', 'content', 'Array'],
+  ['chat-message/content/suggestion-content.tsx', 'handlePromptClick', 'Function'],
+  ['chat-message/content/attachment-content.tsx', 'content', 'Array'],
+];
+for (const [relativePath, prop, expected] of validatorContracts) {
+  const componentPath = resolve(chatRoot, relativePath);
+  const actual = runtimePropValidators(componentPath).get(prop);
+  if (actual !== expected)
+    errors.push(`${relativePath}: runtime validator for "${prop}" is ${actual}, expected ${expected}`);
 }
 
 const forbiddenDocs = new Map([
@@ -106,4 +199,6 @@ if (errors.length) {
   throw new Error(`Chat contract check failed:\n- ${errors.join('\n- ')}`);
 }
 
-console.log(`[check:chat-contracts] ${contracts.length} component contracts aligned`);
+console.log(
+  `[check:chat-contracts] ${contracts.length} primary and ${contentContracts.length} content component contracts aligned`,
+);

@@ -48,7 +48,7 @@ export type TdChatContentProps = {
   thinking?: TdChatContentThinkProps;
   reasoning?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;
-  attachments?: TdChatAttachmentContentProps;
+  attachments?: Omit<TdChatAttachmentContentProps, 'content'>;
 } & TdChatContentPropsOverrides;
 
 export interface TdChatMessageProps {

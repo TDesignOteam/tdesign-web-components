@@ -50,7 +50,7 @@ export default class ChatItem extends Component<ChatMessageProps> {
   static slotProps = ['avatar', 'name', 'datetime'];
 
   static propTypes = {
-    actions: [Array, Function, Boolean],
+    actions: [Array, Boolean],
     name: [String, Object], // 支持传入String或ReactNode
     avatar: [String, Object], // 支持传入String或ReactNode
     datetime: [String, Object],

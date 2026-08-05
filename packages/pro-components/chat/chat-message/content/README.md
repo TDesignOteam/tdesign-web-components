@@ -2,6 +2,48 @@
 
 ChatMessage 内置 Markdown、附件、搜索、建议、Thinking 和 Reasoning 渲染器。消息协议类型来自 `@tdesign/ai-chat-engine`；本目录只维护 Web Components 的展示属性。
 
+## MarkdownContent
+
+`t-chat-md-content` 使用与 ChatMessage 相同的 Cherry Markdown 流式渲染器。
+
+| 名称    | 类型                     | 默认值 | 说明                   |
+| ------- | ------------------------ | ------ | ---------------------- |
+| content | String                   | -      | Markdown 内容          |
+| options | `TdChatContentMDOptions` | `{}`   | Cherry Markdown 配置项 |
+
+`options` 会排除由组件接管的 `id`、`el`、`toolbars`，并支持通过 `themeSettings.codeBlockTheme` 配置代码块主题。
+
+## SearchContent
+
+`t-chat-search-content` 展示搜索标题及引用链接。
+
+| 名称                    | 类型                                                                                    | 默认值 | 说明                         |
+| ----------------------- | --------------------------------------------------------------------------------------- | ------ | ---------------------------- |
+| content                 | `TdChatSearchContentData`                                                               | -      | 搜索标题和引用列表           |
+| status                  | `ChatMessageStatus`                                                                     | -      | 当前消息状态                 |
+| useCollapse             | Boolean                                                                                 | `true` | 是否使用折叠面板             |
+| collapsed               | Boolean                                                                                 | -      | 折叠状态                     |
+| handleSearchResultClick | `({ event, content }: { event: MouseEvent; content: TdChatSearchContentData }) => void` | -      | 非折叠模式点击搜索结果时触发 |
+| handleSearchItemClick   | `({ event, content }: { event: MouseEvent; content: ReferenceItem }) => void`           | -      | 点击引用项时触发             |
+
+## SuggestionContent
+
+`t-chat-suggestion-content` 展示推荐问题。
+
+| 名称              | 类型                                                                           | 默认值 | 说明             |
+| ----------------- | ------------------------------------------------------------------------------ | ------ | ---------------- |
+| content           | `SuggestionItem[]`                                                             | -      | 推荐问题列表     |
+| handlePromptClick | `({ event, content }: { event: MouseEvent; content: SuggestionItem }) => void` | -      | 点击推荐问题回调 |
+
+## AttachmentContent
+
+`t-chat-attachment-content` 展示消息中的附件列表。
+
+| 名称        | 类型                                             | 默认值 | 说明           |
+| ----------- | ------------------------------------------------ | ------ | -------------- |
+| content     | `AttachmentItem[]`                               | -      | 附件列表       |
+| onFileClick | `(event: CustomEvent<TdAttachmentItem>) => void` | -      | 点击附件时触发 |
+
 ## ThinkingContent
 
 `t-chat-thinking-content` 用于展示简单思考内容。

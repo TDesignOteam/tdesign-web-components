@@ -11,6 +11,12 @@ export type TdChatActionItem<TName extends string = TdChatActionsName> = {
   ignoreWrapper?: boolean;
 };
 
+export type TdChatActionData = {
+  event?: MouseEvent;
+  active?: boolean;
+  [key: string]: unknown;
+};
+
 interface ChatActionProps {
   /**
    * 操作按钮及排列顺序
@@ -18,7 +24,7 @@ interface ChatActionProps {
    */
   actionBar?: Array<TdChatActionsName | TdChatActionItem<string>> | boolean;
   /** 操作按钮点击回调 */
-  handleAction?: (name: TdChatActionsName, data: any) => void;
+  handleAction?: (name: TdChatActionsName, data: TdChatActionData) => void;
   /**
    * 当前点赞点踩状态
    * @default ''

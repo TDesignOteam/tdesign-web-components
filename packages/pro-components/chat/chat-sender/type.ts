@@ -61,7 +61,7 @@ export interface TdChatSenderProps {
   /** 是否加载中 */
   loading?: boolean;
   /** 透传attachment参数 */
-  attachmentsProps?: TdAttachmentsProps;
+  attachmentsProps?: Partial<TdAttachmentsProps>;
   /**
    * 高度自动撑开，支持传入 true 或配置项 { minRows, maxRows }
    * - true: 启用自动撑高
