@@ -6,12 +6,12 @@
 
 对照日期：2026-08-06。
 
-| 仓库           | 分支/变更                                                                                                          | 对照提交                                                                                                  |
-| -------------- | ------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------- |
-| Web Components | `rss1102/standardize-chat-types-docs` / [PR #409](https://github.com/TDesignOteam/tdesign-web-components/pull/409) | 以当前 PR HEAD 为准                                                                                       |
-| Vue Next       | `develop`                                                                                                          | [`cc1698ba`](https://github.com/Tencent/tdesign-vue-next/commit/cc1698ba5c85138506c5be6d6cabcdb2e28a53a1) |
-| React          | `develop`                                                                                                          | [`a2a87056`](https://github.com/Tencent/tdesign-react/commit/a2a87056f5c8d2e6dbdf7199ce7e51f75b494efe)    |
-| tdesign-common | `develop`                                                                                                          | [`22c612b2`](https://github.com/Tencent/tdesign-common/commit/22c612b2475a14fd42876a9ea816fab9851aa77d)   |
+| 仓库           | 分支/变更                                                                                                          | 对照提交                                                                                                         |
+| -------------- | ------------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| Web Components | `rss1102/standardize-chat-types-docs` / [PR #409](https://github.com/TDesignOteam/tdesign-web-components/pull/409) | 以当前 PR HEAD 为准                                                                                              |
+| Vue Next       | `develop`                                                                                                          | [Vue Next snapshot](https://github.com/Tencent/tdesign-vue-next/commit/cc1698ba5c85138506c5be6d6cabcdb2e28a53a1) |
+| React          | `develop`                                                                                                          | [`a2a87056`](https://github.com/Tencent/tdesign-react/commit/a2a87056f5c8d2e6dbdf7199ce7e51f75b494efe)           |
+| tdesign-common | `develop`                                                                                                          | [`22c612b2`](https://github.com/Tencent/tdesign-common/commit/22c612b2475a14fd42876a9ea816fab9851aa77d)          |
 
 ## Web Components Chat 内部契约
 
