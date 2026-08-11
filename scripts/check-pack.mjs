@@ -42,6 +42,12 @@ function checkReleaseVersions() {
     chatPackage.peerDependencies?.['@tdesign/web-components'] === `^${uiPackage.version}`,
     'Chat peer dependency must match the current UI package version',
   );
+  for (const [name, pkg] of [
+    ['UI', uiPackage],
+    ['Chat', chatPackage],
+  ]) {
+    assert(pkg.sideEffects?.includes('esm/**/*.js'), `${name} package must preserve ESM registration side effects`);
+  }
   console.log(`[check:pack] release versions aligned (${uiPackage.version})`);
 }
 
@@ -154,6 +160,16 @@ function checkComponentEntries({ name, sourceDir, packageDir }) {
   console.log(`[check:pack] ${name} ESM component entries ok`);
 }
 
+function checkRuntimeExports() {
+  const messageEntry = readFileSync(resolve(repoRoot, 'packages/tdesign-web-components/esm/message/index.js'), 'utf8');
+
+  assert(
+    /export\s*\{[^}]*\bMessagePlugin\b[^}]*\}/s.test(messageEntry),
+    '[ui] message ESM entry is missing the runtime MessagePlugin export',
+  );
+  console.log('[check:pack] UI runtime exports ok');
+}
+
 checkReleaseVersions();
 
 for (const pkg of packages) {
@@ -162,3 +178,5 @@ for (const pkg of packages) {
   checkResolvable(pkg);
   checkComponentEntries(pkg);
 }
+
+checkRuntimeExports();

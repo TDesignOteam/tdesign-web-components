@@ -50,6 +50,7 @@
   ],
   "sideEffects": [
     "dist/**",
+    "esm/**/*.js",
     "**/style/**",
     "**/*.css"
   ],

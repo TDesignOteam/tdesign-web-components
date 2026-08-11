@@ -57,6 +57,19 @@ function createSharedPlugins(monorepoRoot: string, generateEntry: boolean) {
   ];
 }
 
+/**
+ * ESM 构建使用多入口而不是 Vite 的 build.lib，Vite 因此默认允许摇掉入口导出。
+ * 发布包的每个组件 index 都是公开入口，必须完整保留其导出签名。
+ */
+function preservePublicEntryExportsPlugin(): Plugin {
+  return {
+    name: 'preserve-public-entry-exports',
+    options(inputOptions) {
+      return { ...inputOptions, preserveEntrySignatures: 'strict' };
+    },
+  };
+}
+
 function createSharedUserConfig(
   options: LibViteOptions,
   monorepoRoot: string,
@@ -104,7 +117,11 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
         },
       },
     },
-    plugins: [...createSharedPlugins(monorepoRoot, options.generateEntry ?? false), createLibDtsPlugin(options.srcDir)],
+    plugins: [
+      preservePublicEntryExportsPlugin(),
+      ...createSharedPlugins(monorepoRoot, options.generateEntry ?? false),
+      createLibDtsPlugin(options.srcDir),
+    ],
   };
 }
 
