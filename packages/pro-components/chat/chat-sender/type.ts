@@ -6,7 +6,7 @@ import { TdAttachmentItem } from '../filecard';
 
 export type TdChatSenderActionName = 'uploadImage' | 'uploadAttachment' | 'attachment' | 'send';
 
-export type UploadActionType = 'uploadImage' | 'uploadAttachment';
+export type UploadActionType = Extract<TdChatSenderActionName, 'uploadImage' | 'uploadAttachment'>;
 
 export interface TdChatSenderUploadProps {
   /** 接受的文件类型，如 'image/*' 或 '.jpg,.png' */

@@ -1,7 +1,7 @@
 import '@tdesign/web-components';
 import 'tdesign-icons-web-components/esm/components/jump';
 
-import { ChatMessageStatus, ReferenceItem } from '@tdesign/ai-chat-engine';
+import type { ChatMessageStatus, ReferenceItem, SearchContent } from '@tdesign/ai-chat-engine';
 import type { CollapseValue } from '@tdesign/web-components/collapse';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { Component, OmiProps, signal, tag } from 'omi';
@@ -12,10 +12,7 @@ import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
-export interface TdChatSearchContentData {
-  title?: string;
-  references?: ReferenceItem[];
-}
+export type TdChatSearchContentData = SearchContent['data'];
 export type TdChatSearchContentProps = {
   content?: TdChatSearchContentData;
   status?: ChatMessageStatus;

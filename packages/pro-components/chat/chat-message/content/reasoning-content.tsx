@@ -13,6 +13,7 @@ import { isNil } from 'lodash-es';
 import { Component, signal, tag } from 'omi';
 
 import type { TdChatContentProps } from '../type';
+import type { ChatContentRenderProps, TdChatCollapsibleContentProps } from './internal-type';
 
 import styles from '../style/chat-item.less';
 
@@ -23,15 +24,9 @@ type TdChatReasoningBaseProps = {
   status?: ChatMessageStatus;
 } & TdChatContentProps['reasoning'];
 
-export type TdChatReasoningProps = {
-  defaultCollapsed?: boolean;
-  onCollapsedChange?: (e: CustomEvent<boolean>) => void;
-} & TdChatReasoningBaseProps;
+export type TdChatReasoningProps = TdChatCollapsibleContentProps & TdChatReasoningBaseProps;
 
-export interface IRenderReasoning extends TdChatReasoningBaseProps {
-  key?: string;
-  onChange?: (e: CustomEvent<CollapseValue>) => void;
-}
+export type IRenderReasoning = ChatContentRenderProps<TdChatReasoningBaseProps>;
 
 // 渲染单个内容项
 const renderContentItem = (content: AIMessageContent, index: number) => {

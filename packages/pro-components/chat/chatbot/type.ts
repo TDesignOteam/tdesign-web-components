@@ -2,6 +2,7 @@ import type { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 
 import type {
   AIMessageContent,
+  ChatMessageRole,
   ChatMessagesData,
   ChatMessageSetterMode,
   ChatRequestParams,
@@ -174,7 +175,7 @@ export type TdChatMessageConfig = {
   [key in ModelRoleEnum]?: TdChatMessageConfigItem;
 };
 
-export type ScrollPosition = 'top' | 'bottom';
+export type ScrollPosition = NonNullable<TdChatListScrollToOptions['to']>;
 
 export interface TdChatListProps {
   children?: TNode;
@@ -213,10 +214,10 @@ export interface MetaData {
   [key: string]: any;
 }
 
-export type ModelRoleEnum = 'assistant' | 'user' | 'system';
+export type ModelRoleEnum = ChatMessageRole;
 
 /** @deprecated 使用 `TdChatProps['layout']` */
-export type Layout = 'single' | 'both';
+export type Layout = NonNullable<TdChatProps['layout']>;
 /** @deprecated 旧版 SSE 工具类型，请使用 `@tdesign/ai-chat-engine` 导出的类型 */
 export interface FetchSSEOptions {
   success?: (res: SSEEvent) => void; // 流式数据解析成功回调
@@ -230,5 +231,5 @@ export interface SSEEvent {
 }
 /** @deprecated 使用 `TdChatListScrollToOptions` */
 export interface BackBottomParams {
-  behavior?: 'auto' | 'smooth';
+  behavior?: TdChatListScrollToOptions['behavior'];
 }

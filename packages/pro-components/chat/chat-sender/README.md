@@ -69,37 +69,8 @@ spline: base
 | blur       | -                          | 取消焦点     |
 | selectFile | -                          | 触发文件选择 |
 
-### 类型定义
+### 相关公共类型
 
-#### TdChatSenderUploadProps
+`TdChatSenderUploadProps`、`TdChatSenderAction` 和 `TdAttachmentItem` 均由 `@tdesign/web-components-chat` 导出。精确字段、可选性和联合类型以包声明为唯一来源，本文档不再手写复制接口。
 
-上传配置属性。
-
-| 名称     | 类型    | 说明                                            |
-| :------- | :------ | :---------------------------------------------- |
-| accept   | String  | 接受的文件类型，如 `'image/*'` 或 `'.jpg,.png'` |
-| multiple | Boolean | 是否允许多选                                    |
-
-#### TdChatSenderAction
-
-操作按钮配置。
-
-| 名称        | 类型                    | 说明                                                                            |
-| :---------- | :---------------------- | :------------------------------------------------------------------------------ |
-| name        | String                  | 按钮名称，对应预设按钮：`uploadImage`、`uploadAttachment`、`attachment`、`send` |
-| uploadProps | TdChatSenderUploadProps | 上传配置，仅对 `uploadImage` 和 `uploadAttachment` 有效                         |
-
-#### TdAttachmentItem
-
-附件项数据结构。
-
-| 名称   | 类型                                                          | 说明             |
-| :----- | :------------------------------------------------------------ | :--------------- |
-| name   | `string \| undefined`                                         | 文件名称         |
-| url    | `string \| undefined`                                         | 文件地址         |
-| size   | `number \| undefined`                                         | 文件大小（字节） |
-| type   | `string \| undefined`                                         | 文件 MIME 类型   |
-| status | `'success' \| 'fail' \| 'progress' \| 'waiting' \| undefined` | 上传状态         |
-| raw    | `File \| undefined`                                           | 原始文件对象     |
-
-以上上传基础字段由 tdesign-common 统一维护。Chat 仅通过 `TdAttachmentItem` 增加聊天附件字段；发布构建会将共享声明安全收敛到包内路径。
+其中上传基础字段由 tdesign-common 维护，对话附件协议字段由 `@tdesign/ai-chat-engine` 维护，Chat 仅补充 UI 所需字段。

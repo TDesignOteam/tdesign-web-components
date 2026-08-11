@@ -1,17 +1,22 @@
 import type { UploadFile } from '@common/js/upload/types';
 import { StyledProps } from '@tdesign/web-components-shared/common';
 
-import { AttachmentType } from '../chat-engine';
+import type { AttachmentItem } from '../chat-engine';
 
-export interface TdAttachmentItem extends UploadFile {
+interface TdAttachmentProtocolFields {
+  fileType?: AttachmentItem['fileType'];
+  isReference?: AttachmentItem['isReference'];
+  width?: AttachmentItem['width'];
+  height?: AttachmentItem['height'];
+  extension?: AttachmentItem['extension'];
+  metadata?: AttachmentItem['metadata'];
+}
+
+export interface TdAttachmentItem extends UploadFile, TdAttachmentProtocolFields {
   /** 附件唯一标识 */
   key?: string;
-  /** 聊天消息中的附件类型 */
-  fileType?: AttachmentType;
   /** 文件描述 */
   description?: string;
-  /** 文件扩展名 */
-  extension?: string;
 }
 
 export interface TdFileCardProps extends StyledProps {
