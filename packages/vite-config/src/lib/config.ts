@@ -33,6 +33,7 @@ export interface LibViteOptions {
   };
   packageDir: string;
   srcDir: string;
+  declarationSourcemap?: boolean;
   generateEntry?: boolean;
   iifeGlobalName: string;
   iifeExternals?: string[];
@@ -104,7 +105,10 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
         },
       },
     },
-    plugins: [...createSharedPlugins(monorepoRoot, options.generateEntry ?? false), createLibDtsPlugin(options.srcDir)],
+    plugins: [
+      ...createSharedPlugins(monorepoRoot, options.generateEntry ?? false),
+      createLibDtsPlugin(options.srcDir, options.declarationSourcemap ?? true),
+    ],
   };
 }
 

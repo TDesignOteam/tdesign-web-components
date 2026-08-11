@@ -3,7 +3,7 @@
   "compilerOptions": {
     "composite": true,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
     "rootDir": ".",
     "outDir": "dist",
     "noEmit": false,

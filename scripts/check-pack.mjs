@@ -76,6 +76,11 @@ function checkPackList({ name, packageDir, iife }) {
   );
 
   if (name === 'chat') {
+    const declarationMaps = files.filter((file) => file.endsWith('.d.ts.map'));
+    assert(
+      declarationMaps.length === 0,
+      `[chat] pack must not publish declaration maps without their source files:\n${declarationMaps.join('\n')}`,
+    );
     for (const ext of ['eot', 'svg', 'ttf', 'woff', 'woff2']) {
       assert(files.includes(`dist/assets/ch-icon.${ext}`), `[chat] missing CDN font asset: ${ext}`);
     }
