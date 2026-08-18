@@ -102,7 +102,8 @@ function collectDeclarationFiles(dir) {
 }
 
 function checkDeclarationReferences({ name, packageDir }) {
-  const declarationFiles = collectDeclarationFiles(resolve(repoRoot, packageDir, 'esm'));
+  const esmDir = resolve(repoRoot, packageDir, 'esm');
+  const declarationFiles = collectDeclarationFiles(esmDir);
   const forbiddenPatterns = [
     ['common type cache', /\.cache\/common-js-types/],
     ['common source path', /packages\/common/],
@@ -119,8 +120,45 @@ function checkDeclarationReferences({ name, packageDir }) {
   }
 
   assert(violations.length === 0, `[${name}] declarations expose internal paths:\n${violations.join('\n')}`);
+  const declarationSource = declarationFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
+  if (name === 'ui') {
+    for (const typeName of [
+      'TdButtonProps',
+      'ButtonProps',
+      'TdUploadProps',
+      'UploadFile',
+      'TdImageProps',
+      'TdWatermarkProps',
+      'WatermarkText',
+    ]) {
+      assert(
+        new RegExp(`(?:interface|type) ${typeName}\\b`).test(declarationSource),
+        `[ui] declaration surface is missing ${typeName}`,
+      );
+    }
+
+    const entryExports = {
+      'alert/index.d.ts': ['TdAlertProps'],
+      'back-top/index.d.ts': ['BackTopShapeEnum', 'TdBackTopProps'],
+      'badge/index.d.ts': ['TdBadgeProps'],
+      'button/index.d.ts': ['ButtonProps', 'TdButtonProps'],
+      'date-picker/index.d.ts': ['DateValue', 'DisableDate', 'TdDatePickerProps'],
+      'image/index.d.ts': ['ImageSrcset', 'TdImageProps'],
+      'link/index.d.ts': ['TdLinkProps'],
+      'upload/index.d.ts': ['UploadFile', 'TdUploadProps'],
+      'watermark/index.d.ts': ['WatermarkText', 'WatermarkImage', 'TdWatermarkProps'],
+    };
+    for (const [entry, typeNames] of Object.entries(entryExports)) {
+      const source = readFileSync(resolve(esmDir, entry), 'utf8');
+      for (const typeName of typeNames) {
+        assert(
+          new RegExp(`export\\s*\\{[^}]*\\b${typeName}\\b`, 's').test(source),
+          `[ui] ${entry} does not export ${typeName}`,
+        );
+      }
+    }
+  }
   if (name === 'chat') {
-    const declarationSource = declarationFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
     for (const typeName of [
       'TdChatProps',
       'TdChatbotApi',

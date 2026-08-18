@@ -95,6 +95,9 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
       rolldownOptions: {
         input: collectLibInputs(options.srcDir),
         external: createLibExternal(options.pkg),
+        // 所有源文件都是 preserveModules 入口；关闭跨入口摇树，避免声明插件依据
+        // 运行时引用关系删除纯类型导出（例如组件 type.ts 的 Props）。
+        treeshake: false,
         output: {
           format: 'es',
           preserveModules: true,

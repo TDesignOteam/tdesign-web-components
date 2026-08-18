@@ -1,16 +1,8 @@
-export type * from './attachments';
 export * from './attachments';
-export type * from './chat-action';
 export * from './chat-action';
-export type * from './chat-engine';
 export * from './chat-engine';
-export type * from './chat-loading';
 export * from './chat-loading';
-export type * from './chat-message';
 export * from './chat-message';
-export type * from './chat-sender';
 export * from './chat-sender';
-export type * from './chatbot';
 export * from './chatbot';
-export type * from './filecard';
 export * from './filecard';

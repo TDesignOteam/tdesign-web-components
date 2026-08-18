@@ -23,6 +23,9 @@ import { Component, createRef, OmiProps, tag } from 'omi';
 import { PaginationMini } from '../../pagination/PaginationMini';
 import { TdPaginationMiniProps } from '../../pagination/type';
 import { DateValue, DisableDate, PresetDate, TdDatePickerProps } from '../type';
+import type { DatePickerTableCell } from './internal-type';
+
+export type { DatePickerTableCell } from './internal-type';
 
 dayjs.locale('zh-cn');
 dayjs.extend(isoWeek);
@@ -36,26 +39,6 @@ interface YearOption {
 }
 
 type ScrollAnchor = 'default' | 'top' | 'bottom';
-
-export interface DatePickerTableCell {
-  text: string | number;
-  value: Date;
-  time?: string;
-  active?: boolean;
-  highlight?: boolean;
-  hoverHighlight?: boolean;
-  disabled?: boolean;
-  additional?: boolean;
-  now?: boolean;
-  firstDayOfMonth?: boolean;
-  lastDayOfMonth?: boolean;
-  weekOfYear?: boolean;
-  startOfRange?: boolean;
-  endOfRange?: boolean;
-  hoverStartOfRange?: boolean;
-  hoverEndOfRange?: boolean;
-  dayjsObj?: any;
-}
 
 export interface SinglePanelProps extends Pick<
   TdDatePickerProps,

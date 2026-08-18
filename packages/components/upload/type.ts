@@ -2,6 +2,7 @@ import {
   FormatResponseContext,
   ResponseType,
   SizeLimitObj,
+  type SizeUnit as CommonSizeUnit,
   type UploadFile as CommonUploadFile,
 } from '@common/js/upload/types';
 import { PlainObject, StyledProps, TNode } from '@tdesign/web-components-shared/common';
@@ -158,7 +159,7 @@ export type UploadChangeTrigger =
 
 export type SizeUnitArray = ['B', 'KB', 'MB', 'GB'];
 
-export type SizeUnit = SizeUnitArray[number];
+export type SizeUnit = CommonSizeUnit;
 
 export interface UploadFailContext {
   e?: ProgressEvent;
