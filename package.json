@@ -13,7 +13,8 @@
     "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
     "lint": "pnpm run check:types && eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "node --import tsx --test packages/pro-components/chat/chatbot/__tests__/*.test.ts",
+    "test": "pnpm run test:unit",
+    "test:unit": "node --import tsx --test 'packages/**/__tests__/*.{test,spec}.{ts,tsx,js,mjs,cjs}'",
     "prepare": "husky"
   },
   "lint-staged": {
