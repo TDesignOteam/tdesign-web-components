@@ -23,6 +23,7 @@ import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-messag
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
+import { createChatMessageAttachments } from './attachment';
 import type Chatlist from './chat-list';
 import type { TdChatbotApi, TdChatListScrollToOptions, TdChatMessageConfig, TdChatProps } from './type';
 
@@ -299,7 +300,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     const { value, attachments } = e.detail;
     const params = {
       prompt: value,
-      attachments,
+      attachments: createChatMessageAttachments(attachments),
     } as ChatRequestParams;
     await this.sendUserMessage(params);
   };

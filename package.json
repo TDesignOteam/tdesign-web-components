@@ -14,7 +14,8 @@
     "build:chat": "pnpm run build:ui && pnpm --filter @tdesign/web-components-chat build",
     "lint": "pnpm run check:types && eslint .",
     "lint:fix": "eslint . --fix",
-    "test": "echo \"暂无单元测试，跳过\"",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -65,7 +66,8 @@
     "tsx": "^4.21.0",
     "typescript": "catalog:tooling",
     "typescript-eslint": "catalog:tooling",
-    "vite": "catalog:tooling"
+    "vite": "catalog:tooling",
+    "vitest": "catalog:tooling"
   },
   "engines": {
     "node": ">=22.13.0"
