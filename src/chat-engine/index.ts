@@ -4,6 +4,7 @@ import { AGUIAdapter } from './adapters/agui';
 import { MessageStore } from './store/message';
 import type { ChatEventBusOptions, IChatEventBus } from './event-bus';
 import { ChatEngineEventType, ChatEventBus } from './event-bus';
+import { createMessageAttachments } from './message-attachment';
 import MessageProcessor from './processor';
 import { LLMService } from './server';
 import type {
@@ -132,7 +133,7 @@ export default class ChatEngine implements IChatEngine {
       return;
     }
 
-    const userMessage = this.messageProcessor.createUserMessage(prompt, attachments);
+    const userMessage = this.messageProcessor.createUserMessage(prompt, createMessageAttachments(attachments));
     const aiMessage = this.messageProcessor.createAssistantMessage();
     this.messageStore.createMultiMessages([userMessage, aiMessage]);
 
