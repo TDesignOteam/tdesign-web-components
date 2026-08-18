@@ -2,13 +2,14 @@ import { resolve } from 'path';
 
 import { dts } from 'rolldown-plugin-dts';
 
-/** ESM 构建：Rolldown 直出 .d.ts 到发布目录（与 .js 同目录） */
+/** 声明构建：只输出 .d.ts 到 ESM 发布目录。 */
 export function createLibDtsPlugin(srcDir: string, sourcemap = true) {
   return dts({
     tsconfig: resolve(srcDir, 'tsconfig.build.json'),
     cwd: srcDir,
     sourcemap,
     resolver: 'tsc',
+    emitDtsOnly: true,
   });
 }
 
