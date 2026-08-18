@@ -1,5 +1,4 @@
-import assert from 'node:assert/strict';
-import test from 'node:test';
+import { expect, test } from 'vitest';
 
 import type { TdAttachmentItem } from '../../filecard';
 import { createChatMessageAttachments } from '../attachment';
@@ -31,8 +30,8 @@ test('creates owned message DTOs without reading upload-only objects', () => {
 
   const [messageAttachment] = createChatMessageAttachments([source]);
 
-  assert.notEqual(messageAttachment, source);
-  assert.deepEqual(messageAttachment, {
+  expect(Object.is(messageAttachment, source)).toBe(false);
+  expect(messageAttachment).toEqual({
     key: undefined,
     fileType: 'pdf',
     name: 'report.pdf',
@@ -44,8 +43,8 @@ test('creates owned message DTOs without reading upload-only objects', () => {
     description: '1KB',
     percent: undefined,
   });
-  assert.equal('raw' in messageAttachment, false);
-  assert.equal('response' in messageAttachment, false);
+  expect('raw' in messageAttachment).toBe(false);
+  expect('response' in messageAttachment).toBe(false);
 });
 
 test('creates a new snapshot on every send and infers common attachment types', () => {
@@ -57,8 +56,8 @@ test('creates a new snapshot on every send and infers common attachment types', 
   const first = createChatMessageAttachments([source]);
   const second = createChatMessageAttachments([source]);
 
-  assert.notEqual(first, second);
-  assert.notEqual(first?.[0], second?.[0]);
-  assert.equal(first?.[0].fileType, 'audio');
-  assert.equal(first?.[0].extension, 'mp3');
+  expect(first).not.toBe(second);
+  expect(first?.[0]).not.toBe(second?.[0]);
+  expect(first?.[0].fileType).toBe('audio');
+  expect(first?.[0].extension).toBe('mp3');
 });
