@@ -6,13 +6,10 @@ import { TdCheckboxProps } from './type';
 
 export const CheckboxContextKey = 'CheckboxContextKey';
 
-export interface CheckboxComponentProps extends TdCheckboxProps, StyledProps {}
-
-/** @deprecated 请从组件入口导入 CheckboxProps；此别名仅保留深层导入兼容性。 */
-export type CheckboxProps = CheckboxComponentProps;
+export interface CheckboxProps extends TdCheckboxProps, StyledProps {}
 
 @tag('t-checkbox')
-export default class Checkbox extends Component<CheckboxComponentProps> {
+export default class Checkbox extends Component<CheckboxProps> {
   static propTypes = {
     checkAll: Boolean,
     checked: Boolean,

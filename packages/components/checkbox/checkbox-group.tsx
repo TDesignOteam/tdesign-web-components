@@ -13,16 +13,13 @@ import {
   TdCheckboxProps,
 } from './type';
 
-export interface CheckboxGroupComponentProps<T extends CheckboxGroupValue = CheckboxGroupValue>
+export interface CheckboxGroupProps<T extends CheckboxGroupValue = CheckboxGroupValue>
   extends TdCheckboxGroupProps<T>, StyledProps {
   children?: TNode;
 }
 
-/** @deprecated 请从组件入口导入 CheckboxGroupProps；此别名仅保留深层导入兼容性。 */
-export type CheckboxGroupProps<T extends CheckboxGroupValue = CheckboxGroupValue> = CheckboxGroupComponentProps<T>;
-
 @tag('t-checkbox-group')
-export default class CheckboxGroup extends Component<CheckboxGroupComponentProps> {
+export default class CheckboxGroup extends Component<CheckboxGroupProps> {
   static propTypes = {
     disabled: Boolean,
     max: Number,
