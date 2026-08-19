@@ -25,8 +25,6 @@ import { TdPaginationMiniProps } from '../../pagination/type';
 import { DateValue, DisableDate, PresetDate, TdDatePickerProps } from '../type';
 import type { DatePickerTableCell } from './internal-type';
 
-export type { DatePickerTableCell } from './internal-type';
-
 dayjs.locale('zh-cn');
 dayjs.extend(isoWeek);
 

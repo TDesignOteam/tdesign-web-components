@@ -7,7 +7,8 @@ import { convertNodeListToVNodes, getSlotNodes } from '@tdesign/web-components-s
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
-import { type TdChatActionItem, TdChatActionsName } from '../chat-action';
+import type { TdChatActionData } from '../chat-action';
+import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { ChatEngine, getMessageContentForCopy, isAIMessage } from '../chat-engine';
 import {
@@ -19,7 +20,12 @@ import {
   type ChatRequestParams,
   type ChatStatus,
 } from '../chat-engine';
-import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-message/type';
+import type {
+  TdChatMessageAction,
+  TdChatMessageActionData,
+  TdChatMessageActionName,
+  TdChatMessageProps,
+} from '../chat-message/type';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
@@ -331,7 +337,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     action: TdChatMessageActionName,
     opts: {
       messageProps: TdChatMessageProps;
-      data?: any;
+      data?: TdChatActionData;
     },
   ) => {
     const { messageProps, data } = opts;
@@ -339,12 +345,11 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       ...data,
       message: messageProps.message,
     };
-    if (messageProps?.handleActions?.[action]) {
-      messageProps.handleActions[action](toData);
-    }
+    const handleAction = messageProps?.handleActions?.[action] as ((data: TdChatMessageActionData) => void) | undefined;
+    handleAction?.(toData as TdChatMessageActionData);
     this.fire(
       'chatMessageAction',
-      { action, data: toData },
+      { action, data: toData as TdChatMessageActionData },
       {
         composed: true,
       },
@@ -352,7 +357,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     // 兼容旧版 DOM 事件名，后续主事件统一使用 chatMessageAction。
     this.fire(
       'chat_message_action',
-      { action, data: toData },
+      { action, data: toData as TdChatMessageActionData },
       {
         composed: true,
       },
@@ -391,9 +396,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
           {content.length === 0 || (item.status !== 'complete' && item.status !== 'stop') ? null : (
             <t-chat-action
               slot="actionbar"
-              actionBar={
-                this.getChatActionBar(itemProps) as Array<TdChatActionsName | TdChatActionItem<TdChatMessageActionName>>
-              }
+              actionBar={this.getChatActionBar(itemProps) as Array<TdChatActionsName | TdChatMessageAction>}
               handleAction={(action, data) =>
                 this.handleClickAction(action, {
                   messageProps: itemProps,

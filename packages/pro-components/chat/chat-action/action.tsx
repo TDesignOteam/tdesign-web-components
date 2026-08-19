@@ -155,7 +155,8 @@ export const renderActions = (
       ? actionBar.map((action) => {
           // 兼容preset的旧逻辑
           if (typeof action === 'string') {
-            return presetActions().find((item) => item.name === action);
+            // 未知字符串按自定义插槽处理，避免类型扩展或旧版 JS 调用时静默丢失操作项。
+            return presetActions().find((item) => item.name === action) ?? { name: action, render: null };
           }
           return action;
         })

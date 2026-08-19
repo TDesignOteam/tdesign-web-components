@@ -18,7 +18,7 @@ const contracts = [
   ['chat-sender', 'TdChatSenderProps', 'chat-sender.tsx'],
   ['attachments', 'TdAttachmentsProps', 'attachments.tsx'],
   ['filecard', 'TdFileCardProps', 'filecard.tsx'],
-  ['chat-action', 'ChatActionProps', 'action.tsx'],
+  ['chat-action', 'TdChatActionProps', 'action.tsx'],
   ['chat-loading', 'ChatLoadingProps', 'loading.tsx'],
 ];
 
@@ -45,15 +45,30 @@ function propertyName(member) {
 
 function publicInterfaceProps(typePath, interfaceName) {
   const source = parse(typePath);
-  const declaration = source.statements.find(
-    (node) => ts.isInterfaceDeclaration(node) && node.name.text === interfaceName,
+  const declarations = new Map(
+    source.statements.filter((node) => ts.isInterfaceDeclaration(node)).map((node) => [node.name.text, node]),
   );
-  if (!declaration) throw new Error(`Missing interface ${interfaceName}: ${typePath}`);
-
-  return declaration.members
-    .filter((member) => !ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'internal'))
-    .map(propertyName)
-    .filter((name) => name && name !== 'children');
+  const props = new Set();
+  const visited = new Set();
+  const collect = (name) => {
+    if (visited.has(name)) return;
+    visited.add(name);
+    const declaration = declarations.get(name);
+    if (!declaration) return;
+    for (const heritage of declaration.heritageClauses ?? []) {
+      for (const type of heritage.types) {
+        if (ts.isIdentifier(type.expression)) collect(type.expression.text);
+      }
+    }
+    for (const member of declaration.members) {
+      if (ts.getJSDocTags(member).some((tag) => tag.tagName.text === 'internal')) continue;
+      const name = propertyName(member);
+      if (name && name !== 'children') props.add(name);
+    }
+  };
+  collect(interfaceName);
+  if (!visited.has(interfaceName)) throw new Error(`Missing interface ${interfaceName}: ${typePath}`);
+  return [...props];
 }
 
 function runtimeProps(componentPath) {
@@ -193,6 +208,21 @@ if (!/interface UploadFile extends CommonUploadFile, PlainObject/.test(uploadTyp
 const filecardType = readFileSync(resolve(chatRoot, 'filecard/type.ts'), 'utf8');
 if (!/from '@common\/js\/upload\/types'/.test(filecardType)) {
   errors.push('filecard: TdAttachmentItem must derive from the common submodule UploadFile type');
+}
+
+const messageType = readFileSync(resolve(chatRoot, 'chat-message/type.ts'), 'utf8');
+if (!/Array<TdChatActionsName \| TdChatMessageAction>/.test(messageType)) {
+  errors.push('chat-message: actions must only accept preset TdChatActionsName strings or custom items');
+}
+if (!/handleActions\?: TdChatMessageActionHandlers/.test(messageType)) {
+  errors.push('chat-message: handleActions must use the action-specific handler map');
+}
+
+for (const panel of ['RangePanel.tsx', 'SinglePanel.tsx']) {
+  const panelSource = readFileSync(resolve(repoRoot, 'packages/components/date-picker/panel', panel), 'utf8');
+  if (/export type \{ DatePickerTableCell \}/.test(panelSource)) {
+    errors.push(`date-picker/${panel}: internal DatePickerTableCell must not be re-exported`);
+  }
 }
 
 if (errors.length) {

@@ -1,11 +1,14 @@
 import type { TNode } from '@tdesign/web-components-shared/common';
 
-import type { TdChatActionsName } from '../chat-action';
+import type { TdChatActionData, TdChatActionItem, TdChatActionsName } from '../chat-action';
 import type {
   AIMessageContent,
   ChatMessageRole,
   ChatMessagesData,
   ChatMessageStatus,
+  ReferenceItem,
+  SearchContent,
+  SuggestionItem,
   UserMessageContent,
 } from '../chat-engine';
 import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
@@ -31,10 +34,27 @@ type TdChatContentSuggestionProps = {
 export type TdChatMessageVariant = 'base' | 'text' | 'outline';
 
 export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion' | 'codeCopy';
-export interface TdChatMessageAction {
-  name: TdChatMessageActionName;
-  render: TNode;
-}
+/** 消息操作栏中的自定义插槽项；内容事件名称不作为预设按钮名称使用。 */
+export type TdChatMessageAction = TdChatActionItem<string>;
+
+type TdChatMessageActionBaseData = TdChatActionData & {
+  message?: ChatMessagesData;
+};
+
+export type TdChatMessageActionDataMap = {
+  [K in TdChatActionsName]: TdChatMessageActionBaseData;
+} & {
+  searchResult: TdChatMessageActionBaseData & { event: MouseEvent; content: SearchContent['data'] };
+  searchItem: TdChatMessageActionBaseData & { event: MouseEvent; content: ReferenceItem };
+  suggestion: TdChatMessageActionBaseData & { event: MouseEvent; content: SuggestionItem };
+  codeCopy: TdChatMessageActionBaseData & { code: string; lang?: string };
+};
+
+export type TdChatMessageActionData = TdChatMessageActionDataMap[TdChatMessageActionName];
+
+export type TdChatMessageActionHandlers = {
+  [K in TdChatMessageActionName]?: (data: TdChatMessageActionDataMap[K]) => void;
+};
 
 export type TdChatContentProps = {
   markdown?: Omit<TdChatMarkdownContentProps, 'content'>;
@@ -51,7 +71,7 @@ export interface TdChatMessageProps {
    * @default ['replay', 'copy', 'good', 'bad', 'share']
    */
   actions?:
-    | Array<TdChatMessageActionName | TdChatMessageAction>
+    | Array<TdChatActionsName | TdChatMessageAction>
     // | ((preset: TdChatMessageAction[], message: ChatMessagesData) => TdChatMessageAction[])
     | boolean;
   /**
@@ -60,7 +80,7 @@ export interface TdChatMessageProps {
    */
   animation?: ChatLoadingAnimationType;
   /** 操作按钮回调 */
-  handleActions?: Partial<Record<TdChatMessageActionName, (data?: any) => void>>;
+  handleActions?: TdChatMessageActionHandlers;
   /**
    * 作者
    */

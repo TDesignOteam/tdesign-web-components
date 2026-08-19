@@ -18,6 +18,7 @@ import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/ligh
 import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
 
+import type { TdChatActionData } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import type { ChatMessagesData } from '../chat-engine';
 import {
@@ -35,7 +36,7 @@ import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
-import type { TdChatMessageActionName, TdChatMessageProps } from './type';
+import type { TdChatMessageActionData, TdChatMessageActionName, TdChatMessageProps } from './type';
 
 import styles from './style/chat-item.less';
 
@@ -181,15 +182,14 @@ export default class ChatItem extends Component<ChatMessageProps> {
     ) : null;
   }
 
-  private handleClickAction = (action: TdChatMessageActionName, data?: any) => {
+  private handleClickAction = (action: TdChatMessageActionName, data: TdChatActionData = {}) => {
     const internalMessage = this.getInternalMessage();
     const toData = {
       ...data,
       message: internalMessage,
     };
-    if (this.props?.handleActions?.[action]) {
-      this.props.handleActions[action](toData);
-    }
+    const handleAction = this.props?.handleActions?.[action] as ((data: TdChatMessageActionData) => void) | undefined;
+    handleAction?.(toData as TdChatMessageActionData);
     this.fire(
       'chat_message_action',
       { action, data: toData },

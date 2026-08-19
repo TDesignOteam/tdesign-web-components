@@ -3,6 +3,6 @@ import './style/index.js';
 import _BackTop from './back-top';
 
 export type { BackTopProps } from './back-top';
-export * from './type';
+export type * from './type';
 export const BackTop = _BackTop;
 export default BackTop;

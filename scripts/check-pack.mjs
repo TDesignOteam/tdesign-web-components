@@ -122,6 +122,25 @@ function checkDeclarationReferences({ name, packageDir }) {
   assert(violations.length === 0, `[${name}] declarations expose internal paths:\n${violations.join('\n')}`);
   const declarationSource = declarationFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
   if (name === 'ui') {
+    const publicTypeSources = {
+      'alert/type.ts': ['TdAlertProps'],
+      'back-top/type.ts': ['BackTopShapeEnum', 'TdBackTopProps'],
+      'badge/type.ts': ['TdBadgeProps'],
+      'image/type.ts': ['ImageProps', 'ImageSrcset', 'TdImageProps'],
+      'link/type.ts': ['TdLinkProps'],
+      'watermark/type.ts': ['TdWatermarkProps', 'WatermarkImage', 'WatermarkText'],
+    };
+    for (const [relativeSource, expectedNames] of Object.entries(publicTypeSources)) {
+      const source = readFileSync(resolve(repoRoot, 'packages/components', relativeSource), 'utf8');
+      const actualNames = [...source.matchAll(/^export\s+(?:interface|type|enum|const|class)\s+([A-Za-z0-9_]+)/gm)].map(
+        ([, typeName]) => typeName,
+      );
+      assert(
+        actualNames.length === expectedNames.length && expectedNames.every((typeName) => actualNames.includes(typeName)),
+        `[ui] ${relativeSource} public type allowlist changed: ${actualNames.join(', ')}`,
+      );
+    }
+
     for (const typeName of [
       'TdButtonProps',
       'ButtonProps',

@@ -9,7 +9,7 @@ import type {
   ChatServiceConfigSetter,
   ChatStatus,
 } from '../chat-engine';
-import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-message';
+import type { TdChatMessageActionData, TdChatMessageActionName, TdChatMessageProps } from '../chat-message';
 import type { TdChatSenderProps } from '../chat-sender';
 
 export interface TdChatProps extends StyledProps {
@@ -59,7 +59,7 @@ export interface TdChatProps extends StyledProps {
 
 export interface TdChatMessageActionEvent {
   action: TdChatMessageActionName;
-  data: unknown;
+  data: TdChatMessageActionData;
 }
 
 export interface TdChatInjectCSS {
