@@ -20,8 +20,8 @@ export default class DatePickerLimitDemo extends Component {
     rangeValue: ['', ''],
   };
 
-  handleRangeChange = (value: string[]) => {
-    this.state.rangeValue = value;
+  handleRangeChange = (e: CustomEvent) => {
+    this.state.rangeValue = e.detail.value;
     this.update();
   };
 

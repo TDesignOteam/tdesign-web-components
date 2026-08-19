@@ -113,10 +113,15 @@ export default class DateRangePicker extends Component<DateRangePickerProps> {
    * 设置值的受控逻辑
    */
   private setupValueControl(props: DateRangePickerProps) {
-    const [value, setValue] = useControlled(props, 'value', (val, context) => props.onChange?.(val, context), {
-      defaultValue: props.defaultValue,
-      activeComponent: this,
-    });
+    const [value, setValue] = useControlled(
+      props,
+      'value',
+      (val, context) => this.fire('change', { value: val, ...context }),
+      {
+        defaultValue: props.defaultValue,
+        activeComponent: this,
+      },
+    );
     this.valueState = (value as DateRangeValue) || [];
     this.setValueState = (nextValue, context) => {
       setValue(nextValue, context);
@@ -132,7 +137,7 @@ export default class DateRangePicker extends Component<DateRangePickerProps> {
     const [visible, setVisible] = useControlled(
       props,
       'popupVisible',
-      (val, context) => props.onVisibleChange?.(val, context),
+      (val, context) => this.fire('visible-change', { visible: val, ...context }),
       {
         defaultPopupVisible: props.defaultPopupVisible,
         activeComponent: this,
@@ -228,7 +233,7 @@ export default class DateRangePicker extends Component<DateRangePickerProps> {
     this.hoverValueSignal.value = ['', ''];
     this.setValueState?.([], { trigger: 'clear', dayjsValue: [dayjs(), dayjs()] });
     this.setPopupVisibleState?.(false, { trigger: 'clear', ...detail });
-    this.props.onClear?.(detail);
+    this.fire('clear', detail);
   };
 
   /**
@@ -277,7 +282,7 @@ export default class DateRangePicker extends Component<DateRangePickerProps> {
     }
 
     const dayjsValue = parseToDayjs(date, format);
-    this.props.onPick?.(date, { dayjsValue, trigger: 'pick', partial });
+    this.fire('pick', { value: date, dayjsValue, trigger: 'pick', partial });
 
     // 首次点击不关闭，第二次点击（两端都有值）后关闭
     if (isFirstClick) {
@@ -488,7 +493,7 @@ export default class DateRangePicker extends Component<DateRangePickerProps> {
       dayjsValue: formattedPreset.map((p) => parseToDayjs(p, format)),
       trigger: 'preset',
     });
-    this.props.onPresetClick?.(context);
+    this.fire('preset-click', context);
   };
 
   /** 处理范围输入框变化，检测清空操作 */

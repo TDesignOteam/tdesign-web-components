@@ -9,13 +9,13 @@ export default class DatePickerBaseDemo extends Component {
     rangeValue: ['', ''],
   };
 
-  handleDateChange = (value: string) => {
-    this.state.dateValue = value;
+  handleDateChange = (e: CustomEvent) => {
+    this.state.dateValue = e.detail.value;
     this.update();
   };
 
-  handleRangeChange = (value: string[]) => {
-    this.state.rangeValue = value;
+  handleRangeChange = (e: CustomEvent) => {
+    this.state.rangeValue = e.detail.value;
     this.update();
   };
 

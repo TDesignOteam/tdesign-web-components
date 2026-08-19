@@ -7,8 +7,8 @@ export default class DatePickerBaseDemo extends Component {
     dateValue: '',
   };
 
-  handleDateChange = (value: string) => {
-    this.state.dateValue = value;
+  handleDateChange = (e: CustomEvent) => {
+    this.state.dateValue = e.detail.value;
     this.update();
   };
 
