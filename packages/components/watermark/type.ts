@@ -79,9 +79,7 @@ export interface TdWatermarkProps {
 }
 
 /** 水印文本配置，由 tdesign-common 统一维护。 */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface -- 保留既有 interface 公共契约并继承 common 单一事实源
-export interface WatermarkText extends CommonWatermarkText {}
+export type WatermarkText = CommonWatermarkText;
 
 /** 水印图片配置，由 tdesign-common 统一维护。 */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface -- 保留既有 interface 公共契约并继承 common 单一事实源
-export interface WatermarkImage extends CommonWatermarkImage {}
+export type WatermarkImage = CommonWatermarkImage;

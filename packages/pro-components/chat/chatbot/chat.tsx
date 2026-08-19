@@ -438,8 +438,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   // 动态注入插槽需要每次render都更新children
   beforeRender(): void {
-    // @ts-ignore
-    if (this.props?.ignoreAttrs) return;
+    if ('ignoreAttrs' in this.props && this.props.ignoreAttrs) return;
     // 使用缓存和差异检测优化DOM转换
     this.props.children = convertNodeListToVNodes(this.childNodes);
   }

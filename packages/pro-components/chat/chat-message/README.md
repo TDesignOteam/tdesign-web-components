@@ -83,14 +83,4 @@ spline: base
 - `suggestion`：推荐问题配置。
 - `attachments`：附件点击、移除和预览配置。
 
-业务自定义配置可通过 TypeScript 全局声明合并扩展，未声明的任意字段不再默认退化为 `any`：
-
-```ts
-declare global {
-  interface TdChatContentPropsOverrides {
-    activity?: { compact?: boolean };
-  }
-}
-```
-
 消息内容的协议类型来自 `@tdesign/ai-chat-engine`，并由 `@tdesign/web-components-chat/chat-engine` 导出。

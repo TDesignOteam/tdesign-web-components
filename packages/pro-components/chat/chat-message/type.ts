@@ -36,12 +36,6 @@ export interface TdChatMessageAction {
   render: TNode;
 }
 
-declare global {
-  /** 业务自定义内容配置的全局声明合并扩展点。 */
-  // eslint-disable-next-line @typescript-eslint/no-empty-interface -- 供业务通过全局声明合并扩展
-  interface TdChatContentPropsOverrides {}
-}
-
 export type TdChatContentProps = {
   markdown?: Omit<TdChatMarkdownContentProps, 'content'>;
   search?: TdChatContentSearchProps;
@@ -49,7 +43,7 @@ export type TdChatContentProps = {
   reasoning?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;
   attachments?: Omit<TdChatAttachmentContentProps, 'content'>;
-} & TdChatContentPropsOverrides;
+};
 
 export interface TdChatMessageProps {
   /**
