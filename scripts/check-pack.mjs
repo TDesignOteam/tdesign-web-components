@@ -126,7 +126,7 @@ function checkDeclarationReferences({ name, packageDir }) {
       'alert/type.ts': ['TdAlertProps'],
       'back-top/type.ts': ['BackTopShapeEnum', 'TdBackTopProps'],
       'badge/type.ts': ['TdBadgeProps'],
-      'image/type.ts': ['ImageProps', 'ImageSrcset', 'TdImageProps'],
+      'image/type.ts': ['ImageSrcset', 'TdImageProps'],
       'link/type.ts': ['TdLinkProps'],
       'watermark/type.ts': ['TdWatermarkProps', 'WatermarkImage', 'WatermarkText'],
     };
@@ -136,7 +136,8 @@ function checkDeclarationReferences({ name, packageDir }) {
         ([, typeName]) => typeName,
       );
       assert(
-        actualNames.length === expectedNames.length && expectedNames.every((typeName) => actualNames.includes(typeName)),
+        actualNames.length === expectedNames.length &&
+          expectedNames.every((typeName) => actualNames.includes(typeName)),
         `[ui] ${relativeSource} public type allowlist changed: ${actualNames.join(', ')}`,
       );
     }
@@ -157,15 +158,15 @@ function checkDeclarationReferences({ name, packageDir }) {
     }
 
     const entryExports = {
-      'alert/index.d.ts': ['TdAlertProps'],
-      'back-top/index.d.ts': ['BackTopShapeEnum', 'TdBackTopProps'],
-      'badge/index.d.ts': ['TdBadgeProps'],
+      'alert/index.d.ts': ['AlertProps', 'TdAlertProps'],
+      'back-top/index.d.ts': ['BackTopProps', 'BackTopShapeEnum', 'TdBackTopProps'],
+      'badge/index.d.ts': ['BadgeProps', 'TdBadgeProps'],
       'button/index.d.ts': ['ButtonProps', 'TdButtonProps'],
       'date-picker/index.d.ts': ['DateValue', 'DisableDate', 'TdDatePickerProps'],
-      'image/index.d.ts': ['ImageSrcset', 'TdImageProps'],
-      'link/index.d.ts': ['TdLinkProps'],
+      'image/index.d.ts': ['ImageProps', 'ImageSrcset', 'TdImageProps'],
+      'link/index.d.ts': ['LinkProps', 'TdLinkProps'],
       'upload/index.d.ts': ['UploadFile', 'TdUploadProps'],
-      'watermark/index.d.ts': ['WatermarkText', 'WatermarkImage', 'TdWatermarkProps'],
+      'watermark/index.d.ts': ['WatermarkProps', 'WatermarkText', 'WatermarkImage', 'TdWatermarkProps'],
     };
     for (const [entry, typeNames] of Object.entries(entryExports)) {
       const source = readFileSync(resolve(esmDir, entry), 'utf8');

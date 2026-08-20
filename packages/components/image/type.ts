@@ -75,6 +75,3 @@ export interface ImageSrcset {
   'image/avif': string;
   'image/webp': string;
 }
-
-/** @deprecated 请从组件入口导入 ImageProps；此别名仅保留 type.ts 深层导入兼容性。 */
-export type ImageProps = TdImageProps;

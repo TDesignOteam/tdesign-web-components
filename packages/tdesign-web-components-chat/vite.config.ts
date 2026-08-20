@@ -2,7 +2,7 @@ import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
 
 import { createLibBuildConfig, type LibViteOptions } from '@tdesign/vite-config/lib';
-import pkg from './package.json';
+import pkg from './package.json' with { type: 'json' };
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
