@@ -7,7 +7,7 @@ import { Component, tag } from 'omi';
 
 import { TdBreadcrumbProps } from './type';
 
-interface BreadcrumbProps extends TdBreadcrumbProps, StyledProps {}
+export interface BreadcrumbProps extends TdBreadcrumbProps, StyledProps {}
 
 @tag('t-breadcrumb')
 export default class Breadcrumb extends Component<BreadcrumbProps> {

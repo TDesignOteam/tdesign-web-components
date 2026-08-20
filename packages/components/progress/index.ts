@@ -1,9 +1,9 @@
 import './style/index.js';
 
 import _Progress from './progress';
-import type { StatusEnum, TdProgressProps, ThemeEnum } from './type';
+import type { StatusEnum, ThemeEnum } from './type';
 
-export type { StatusEnum, TdProgressProps, ThemeEnum };
+export type { StatusEnum, ThemeEnum };
 
 export type { ProgressProps } from './progress';
 export const Progress = _Progress;

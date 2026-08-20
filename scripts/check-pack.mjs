@@ -125,12 +125,11 @@ function checkDeclarationReferences({ name, packageDir }) {
   const declarationSource = declarationFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
   if (name === 'ui') {
     for (const typeName of [
-      'TdButtonProps',
       'ButtonProps',
-      'TdUploadProps',
+      'UploadProps',
       'UploadFile',
-      'TdImageProps',
-      'TdWatermarkProps',
+      'ImageProps',
+      'WatermarkProps',
       'WatermarkText',
     ]) {
       assert(
@@ -143,11 +142,11 @@ function checkDeclarationReferences({ name, packageDir }) {
       'alert/index.d.ts': ['AlertProps'],
       'back-top/index.d.ts': ['BackTopProps'],
       'badge/index.d.ts': ['BadgeProps'],
-      'button/index.d.ts': ['ButtonProps', 'TdButtonProps'],
-      'date-picker/index.d.ts': ['DateValue', 'DisableDate', 'TdDatePickerProps'],
+      'button/index.d.ts': ['ButtonProps'],
+      'date-picker/index.d.ts': ['DateValue', 'DisableDate', 'DatePickerProps'],
       'image/index.d.ts': ['ImageProps'],
       'link/index.d.ts': ['LinkProps'],
-      'upload/index.d.ts': ['UploadFile', 'TdUploadProps'],
+      'upload/index.d.ts': ['UploadFile', 'UploadProps'],
       'watermark/index.d.ts': ['WatermarkProps'],
     };
     for (const [entry, typeNames] of Object.entries(entryExports)) {
@@ -156,6 +155,51 @@ function checkDeclarationReferences({ name, packageDir }) {
         assert(
           new RegExp(`export\\s*\\{[^}]*\\b${typeName}\\b`, 's').test(source),
           `[ui] ${entry} does not export ${typeName}`,
+        );
+      }
+    }
+
+    const internalPropsByEntry = {
+      'affix/index.d.ts': ['TdAffixProps'],
+      'avatar/index.d.ts': ['TdAvatarProps', 'TdAvatarGroupProps'],
+      'breadcrumb/index.d.ts': ['TdBreadcrumbProps', 'TdBreadcrumbItemProps'],
+      'button/index.d.ts': ['TdButtonProps'],
+      'card/index.d.ts': ['TdCardProps'],
+      'checkbox/index.d.ts': ['TdCheckboxProps', 'TdCheckboxGroupProps'],
+      'collapse/index.d.ts': ['TdCollapseProps', 'TdCollapsePanelProps'],
+      'date-picker/index.d.ts': ['TdDatePickerProps', 'TdDateRangePickerProps'],
+      'dialog/index.d.ts': ['TdDialogProps'],
+      'divider/index.d.ts': ['TdDividerProps'],
+      'grid/index.d.ts': ['TdColProps', 'TdRowProps'],
+      'input/index.d.ts': ['TdInputProps', 'TdInputGroupProps'],
+      'loading/index.d.ts': ['TdLoadingProps'],
+      'menu/index.d.ts': ['TdMenuProps', 'TdMenuItemProps'],
+      'message/index.d.ts': ['TdMessageProps'],
+      'notification/index.d.ts': ['TdNotificationProps'],
+      'popconfirm/index.d.ts': ['TdPopconfirmProps'],
+      'popup/index.d.ts': ['TdPopupProps'],
+      'progress/index.d.ts': ['TdProgressProps'],
+      'radio/index.d.ts': ['TdRadioProps', 'TdRadioGroupProps'],
+      'range-input/index.d.ts': ['TdRangeInputProps', 'TdRangeInputPopupProps'],
+      'select/index.d.ts': ['TdSelectProps', 'TdOptionProps'],
+      'select-input/index.d.ts': ['TdSelectInputProps'],
+      'skeleton/index.d.ts': ['TdSkeletonProps'],
+      'slider/index.d.ts': ['TdSliderProps'],
+      'space/index.d.ts': ['TdSpaceProps'],
+      'swiper/index.d.ts': ['TdSwiperProps'],
+      'switch/index.d.ts': ['TdSwitchProps'],
+      'tabs/index.d.ts': ['TdTabsProps', 'TdTabPanelProps'],
+      'tag-input/index.d.ts': ['TdTagInputProps'],
+      'textarea/index.d.ts': ['TdTextareaProps'],
+      'tooltip/index.d.ts': ['TdTooltipProps'],
+      'upload/index.d.ts': ['TdUploadProps'],
+    };
+    for (const [entry, typeNames] of Object.entries(internalPropsByEntry)) {
+      const source = readFileSync(resolve(esmDir, entry), 'utf8');
+      for (const typeName of typeNames) {
+        assert(
+          !new RegExp(`export\\s*\\{[^}]*\\b${typeName}\\b`, 's').test(source),
+          `[ui] ${entry} must not expose internal ${typeName}`,
         );
       }
     }

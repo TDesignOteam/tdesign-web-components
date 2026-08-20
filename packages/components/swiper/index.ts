@@ -1,9 +1,9 @@
 import './style/index';
 
 import _Swiper from './swiper';
-import type { SwiperChangeSource, SwiperNavigation, SwiperNavigationType, TdSwiperProps } from './type';
+import type { SwiperChangeSource, SwiperNavigation, SwiperNavigationType } from './type';
 
-export type { SwiperChangeSource, SwiperNavigation, SwiperNavigationType, TdSwiperProps };
+export type { SwiperChangeSource, SwiperNavigation, SwiperNavigationType };
 
 export type { SwiperProps } from './swiper';
 

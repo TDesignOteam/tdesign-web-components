@@ -1,9 +1,9 @@
 import './style/index.js';
 
 import _Switch from './switch';
-import type { SwitchValue, TdSwitchProps } from './type';
+import type { SwitchValue } from './type';
 
-export type { SwitchValue, TdSwitchProps };
+export type { SwitchValue };
 
 export type { SwitchProps } from './switch';
 export const Switch = _Switch;

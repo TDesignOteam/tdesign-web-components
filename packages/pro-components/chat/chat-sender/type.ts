@@ -1,4 +1,4 @@
-import { TdTextareaProps } from '@tdesign/web-components/textarea';
+import { TextareaProps } from '@tdesign/web-components/textarea';
 import { TNode } from '@tdesign/web-components-shared/common';
 
 import { TdAttachmentsProps } from '../attachments';
@@ -68,9 +68,9 @@ export interface TdChatSenderProps {
    * - object: 配置最小/最大行数
    * @default { minRows: 2 }
    */
-  autosize?: TdTextareaProps['autosize'];
+  autosize?: TextareaProps['autosize'];
   /** 透传textarea参数 */
-  textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
+  textareaProps?: Partial<Omit<TextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
   /**
    * 文件上传配置
    * @deprecated 已废弃，建议使用 actions 配置上传属性。例如：actions: [{ name: 'uploadImage', uploadProps: { accept: '.png' } }]

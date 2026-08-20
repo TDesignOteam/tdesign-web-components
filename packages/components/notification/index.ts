@@ -16,7 +16,6 @@ import type {
   NotificationSuccessMethod,
   NotificationThemeList,
   NotificationWarningMethod,
-  TdNotificationProps,
 } from './type';
 
 export type {
@@ -33,8 +32,8 @@ export type {
   NotificationSuccessMethod,
   NotificationThemeList,
   NotificationWarningMethod,
-  TdNotificationProps,
 };
+export type { NotificationProps } from './Notification';
 export const Notification = _Notification;
 export const notification = _NotificationPlugin;
 export const NotificationPlugin = _NotificationPlugin;

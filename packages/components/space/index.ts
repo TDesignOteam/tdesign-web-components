@@ -2,7 +2,7 @@ import './style/index.js';
 
 import _Space from './space';
 
-export type { TdSpaceProps } from './type';
+export type { SpaceProps } from './space';
 
 export const Space = _Space;
 

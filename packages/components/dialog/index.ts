@@ -11,7 +11,6 @@ import type {
   DialogMethod,
   DialogOptions,
   TdDialogCardProps,
-  TdDialogProps,
 } from './type';
 
 export type {
@@ -23,7 +22,6 @@ export type {
   DialogMethod,
   DialogOptions,
   TdDialogCardProps,
-  TdDialogProps,
 };
 
 export type { DialogProps } from './dialog';

@@ -2,27 +2,9 @@ import './style/index.js';
 
 import _DatePicker from './DatePicker';
 import _DateRangePicker from './DateRangePicker';
-import type {
-  DateRangeValue,
-  DateValue,
-  DisableDate,
-  DisableDateObject,
-  PresetDate,
-  PresetRange,
-  TdDatePickerProps,
-  TdDateRangePickerProps,
-} from './type';
+import type { DateRangeValue, DateValue, DisableDate, DisableDateObject, PresetDate, PresetRange } from './type';
 
-export type {
-  DateRangeValue,
-  DateValue,
-  DisableDate,
-  DisableDateObject,
-  PresetDate,
-  PresetRange,
-  TdDatePickerProps,
-  TdDateRangePickerProps,
-};
+export type { DateRangeValue, DateValue, DisableDate, DisableDateObject, PresetDate, PresetRange };
 
 export type { DatePickerProps } from './DatePicker';
 export type { DateRangePickerProps } from './DateRangePicker';

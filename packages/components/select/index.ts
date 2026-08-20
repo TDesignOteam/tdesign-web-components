@@ -11,8 +11,6 @@ import type {
   SelectValue,
   SelectValueChangeTrigger,
   TdOptionGroupProps,
-  TdOptionProps,
-  TdSelectProps,
 } from './type';
 
 export type {
@@ -24,9 +22,9 @@ export type {
   SelectValue,
   SelectValueChangeTrigger,
   TdOptionGroupProps,
-  TdOptionProps,
-  TdSelectProps,
 };
+export type { OptionProps } from './Option';
+export type { SelectProps } from './Select';
 export const Select = _Select;
 export const Option = _Option;
 

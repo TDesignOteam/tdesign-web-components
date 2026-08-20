@@ -2,9 +2,9 @@ import './style/index.js';
 
 import _Menu from './Menu';
 import _MenuItem from './MenuItem';
-import type { MenuValue, TdMenuItemProps, TdMenuProps } from './type';
+import type { MenuValue } from './type';
 
-export type { MenuValue, TdMenuItemProps, TdMenuProps };
+export type { MenuValue };
 
 export type { MenuProps } from './Menu';
 export type { MenuItemProps } from './MenuItem';

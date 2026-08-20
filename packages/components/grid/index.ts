@@ -2,9 +2,9 @@ import './style/index.js';
 
 import _Col from './col';
 import _Row from './row';
-import type { BaseColProps, GutterObject, TdColProps, TdRowProps } from './type';
+import type { BaseColProps, GutterObject } from './type';
 
-export type { BaseColProps, GutterObject, TdColProps, TdRowProps };
+export type { BaseColProps, GutterObject };
 
 export type { ColProps } from './col';
 export type { RowProps } from './row';

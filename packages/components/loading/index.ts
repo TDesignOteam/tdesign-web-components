@@ -2,9 +2,9 @@ import './style/index.js';
 
 import _Loading from './loading';
 import { LoadingPlugin as _LoadingPlugin } from './plugin';
-import type { LoadingInstance, LoadingMethod, TdLoadingProps } from './type';
+import type { LoadingInstance, LoadingMethod } from './type';
 
-export type { LoadingInstance, LoadingMethod, TdLoadingProps };
+export type { LoadingInstance, LoadingMethod };
 
 export type { LoadingProps } from './loading';
 export const Loading = _Loading;

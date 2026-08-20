@@ -9,7 +9,6 @@ import type {
   TagInputRemoveTrigger,
   TagInputTriggerSource,
   TagInputValue,
-  TdTagInputProps,
 } from './type';
 
 export type {
@@ -20,7 +19,6 @@ export type {
   TagInputRemoveTrigger,
   TagInputTriggerSource,
   TagInputValue,
-  TdTagInputProps,
 };
 
 export type { TagInputProps } from './tag-input.jsx';
