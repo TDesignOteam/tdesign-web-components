@@ -20,7 +20,7 @@ import type {
   MessageWarningMethod,
 } from './type';
 
-export type { MessageComponentProps as MessageProps } from './messageComponent';
+export type { MessageProps } from './messageComponent';
 export type {
   MessageCloseAllMethod,
   MessageConfigMethod,

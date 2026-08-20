@@ -143,7 +143,6 @@ export default class Swiper extends Component<SwiperProps> {
         style.height = offsetHeight;
         style.transform = `translate3d(0, -${active * 100}%, 0px)`;
       } else {
-        console.log(active);
         style.transform = `translate3d(-${active * 100}%, 0px, 0px)`;
       }
       ['msTransform', 'WebkitTransform'].forEach((key) => {
@@ -191,7 +190,6 @@ export default class Swiper extends Component<SwiperProps> {
     }
 
     this.currentIndex.value = targetIndex;
-    console.log(this.currentIndex.value);
   }
 
   @bind

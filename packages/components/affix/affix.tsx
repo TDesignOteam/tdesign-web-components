@@ -4,9 +4,9 @@ import { ScrollContainerElement, StyledProps } from '@tdesign/web-components-sha
 import { isFunction } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
-import { AffixRef, TdAffixProps } from './type';
+import { TdAffixProps } from './type';
 
-export interface AffixProps extends TdAffixProps, StyledProps, AffixRef {}
+export interface AffixProps extends TdAffixProps, StyledProps {}
 
 @tag('t-affix')
 export default class Affix extends Component<AffixProps> {

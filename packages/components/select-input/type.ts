@@ -1,15 +1,14 @@
-/* eslint-disable */
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
+import { SizeEnum, TElement, TNode } from '@tdesign/web-components-shared/common';
+
 import { InputProps } from '../input';
 import { PopupProps } from '../popup';
-import { TagInputProps, TagInputValue, TagInputChangeContext } from '../tag-input';
-import { TagProps } from '../tag';
 import { PopupVisibleChangeContext } from '../popup';
-import { TNode, TElement, SizeEnum } from '@tdesign/web-components-shared/common';
+import { TagProps } from '../tag';
+import { TagInputChangeContext, TagInputProps, TagInputValue } from '../tag-input';
 
 export interface TdSelectInputProps {
   /**
@@ -218,7 +217,7 @@ export interface SelectInputKeys {
   children?: string;
 }
 
-export type SelectInputValue = string | number | boolean | Date | Object | Array<any> | Array<SelectInputValue>;
+export type SelectInputValue = string | number | boolean | Date | object | SelectInputValue[];
 
 export type SelectInputBlurContext = PopupVisibleChangeContext & { inputValue: string; tagInputValue?: TagInputValue };
 

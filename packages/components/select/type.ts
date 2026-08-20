@@ -1,17 +1,16 @@
-/* eslint-disable */
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
+import { InfinityScroll, PlainObject, SizeEnum, TElement, TNode } from '@tdesign/web-components-shared/common';
+
 import { InputProps } from '../input';
 import { PopupProps } from '../popup';
-import { SelectInputProps } from '../select-input';
-import { TagInputProps } from '../tag-input';
-import { TagProps } from '../tag';
-import { SelectInputValueChangeContext } from '../select-input';
 import { PopupVisibleChangeContext } from '../popup';
-import { PlainObject, TNode, TElement, SizeEnum, InfinityScroll } from '@tdesign/web-components-shared/common';
+import { SelectInputProps } from '../select-input';
+import { SelectInputValueChangeContext } from '../select-input';
+import { TagProps } from '../tag';
+import { TagInputProps } from '../tag-input';
 
 export interface TdSelectProps<T extends SelectOption = SelectOption> {
   /**
