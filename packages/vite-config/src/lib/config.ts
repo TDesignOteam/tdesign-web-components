@@ -94,6 +94,7 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
       rolldownOptions: {
         input: collectLibInputs(options.srcDir),
         external: createLibExternal(options.pkg),
+        preserveEntrySignatures: 'strict',
         output: {
           format: 'es',
           preserveModules: true,
@@ -120,6 +121,7 @@ function createDtsConfig(options: LibViteOptions): UserConfig {
       rolldownOptions: {
         input: collectLibInputs(options.srcDir),
         external: createLibExternal(options.pkg),
+        preserveEntrySignatures: 'strict',
         // 声明必须按源码入口完整生成，不能跟随运行时引用关系摇树。
         treeshake: false,
         output: {
