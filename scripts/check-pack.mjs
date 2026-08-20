@@ -75,12 +75,13 @@ function checkPackList({ name, packageDir, iife }) {
     `[${name}] pack is missing ESM or IIFE output`,
   );
 
+  const declarationMaps = files.filter((file) => file.endsWith('.d.ts.map'));
+  assert(
+    declarationMaps.length === 0,
+    `[${name}] pack must not publish declaration maps without their source files:\n${declarationMaps.join('\n')}`,
+  );
+
   if (name === 'chat') {
-    const declarationMaps = files.filter((file) => file.endsWith('.d.ts.map'));
-    assert(
-      declarationMaps.length === 0,
-      `[chat] pack must not publish declaration maps without their source files:\n${declarationMaps.join('\n')}`,
-    );
     for (const ext of ['eot', 'svg', 'ttf', 'woff', 'woff2']) {
       assert(files.includes(`dist/assets/ch-icon.${ext}`), `[chat] missing CDN font asset: ${ext}`);
     }
@@ -109,6 +110,7 @@ function checkDeclarationReferences({ name, packageDir }) {
     ['common source path', /packages\/common/],
     ['shared source path', /shared\/(?:src|dist)\//],
     ['workspace absolute path', /(?:\/Users\/|\/home\/runner\/work\/|[A-Za-z]:\\)/],
+    ['declaration map reference', /sourceMappingURL=.*\.d\.ts\.map/],
   ];
   const violations = [];
 

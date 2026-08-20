@@ -11,6 +11,8 @@ const libOptions: LibViteOptions = {
   pkg,
   packageDir: __dirname,
   srcDir: resolve(__dirname, '../components'),
+  // 发布包不包含源码，因此只发布可独立使用的 .d.ts，不生成无法解析的声明映射。
+  declarationSourcemap: false,
   generateEntry: true,
   iifeGlobalName: 'TDesignWebComponents',
   pipeline: {},
