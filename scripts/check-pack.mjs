@@ -196,6 +196,27 @@ function checkDeclarationReferences({ name, packageDir }) {
   console.log(`[check:pack] ${name} declaration references ok (${declarationFiles.length} files)`);
 }
 
+function checkRuntimeExports({ name, packageDir }) {
+  if (name !== 'ui') return;
+
+  const runtimeExports = {
+    'esm/index.js': ['Button', 'MessagePlugin'],
+    'esm/message/index.js': ['Message', 'MessagePlugin', 'message'],
+  };
+
+  for (const [entry, exportNames] of Object.entries(runtimeExports)) {
+    const source = readFileSync(resolve(repoRoot, packageDir, entry), 'utf8');
+    for (const exportName of exportNames) {
+      assert(
+        new RegExp(`export\\s*\\{[^}]*\\b${exportName}\\b`, 's').test(source),
+        `[ui] ${entry} does not preserve runtime export ${exportName}`,
+      );
+    }
+  }
+
+  console.log('[check:pack] ui runtime exports preserved');
+}
+
 function checkResolvable({ name, packageDir, imports }) {
   const packageRoot = resolve(repoRoot, packageDir);
   const resolvedImports = JSON.parse(
@@ -240,6 +261,7 @@ checkReleaseVersions();
 for (const pkg of packages) {
   checkPackList(pkg);
   checkDeclarationReferences(pkg);
+  checkRuntimeExports(pkg);
   checkResolvable(pkg);
   checkComponentEntries(pkg);
 }
