@@ -1,10 +1,8 @@
 import './style/index';
 
-import type { BadgeProps } from './badge';
 import _Badge from './badge';
-import type { TdBadgeProps } from './type';
 
-export type { BadgeProps, TdBadgeProps };
+export type { BadgeProps } from './badge';
 
 export const Badge = _Badge;
 export default Badge;
