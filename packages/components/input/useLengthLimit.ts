@@ -22,7 +22,6 @@ export default function useLengthLimit(params: UseLengthLimitParams) {
     }
     if (maxcharacter) {
       const r = getCharacterLength(inputValue, maxcharacter);
-      console.log(r);
       if (typeof r === 'object') {
         return r.characters;
       }

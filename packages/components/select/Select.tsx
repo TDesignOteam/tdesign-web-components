@@ -5,13 +5,16 @@ import '../loading';
 
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { classNames, Component, OmiProps, tag } from 'omi';
 
 import { selectDefaultProps } from './defaultProps';
 import { SelectValue, TdOptionProps, TdSelectProps } from './type';
 
+export interface SelectProps extends TdSelectProps, StyledProps {}
+
 @tag('t-select')
-export default class Select extends Component<TdSelectProps> {
+export default class Select extends Component<SelectProps> {
   static css = [];
 
   static defaultProps = selectDefaultProps;
@@ -53,7 +56,7 @@ export default class Select extends Component<TdSelectProps> {
     setExportparts(this);
   }
 
-  receiveProps(props: TdSelectProps, oldProps: TdSelectProps) {
+  receiveProps(props: SelectProps, oldProps: SelectProps) {
     if (props.value !== undefined && props.value !== oldProps.value) {
       this.state.innerValue = props.value;
     }

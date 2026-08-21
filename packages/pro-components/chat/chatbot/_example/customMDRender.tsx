@@ -126,8 +126,7 @@ const colorText = CherryStream.createSyntaxHook('important', CherryStream.consta
   },
   rule() {
     // 匹配 !!...!! 语法
-    // eslint-disable-next-line no-useless-escape
-    return { reg: /(\!\!)([^\!]+)\1/g };
+    return { reg: /(!{2})([^!]+)\1/g };
   },
 });
 

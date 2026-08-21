@@ -33,6 +33,7 @@ export interface LibViteOptions {
   };
   packageDir: string;
   srcDir: string;
+  declarationSourcemap?: boolean;
   generateEntry?: boolean;
   iifeGlobalName: string;
   iifeExternals?: string[];
@@ -82,7 +83,6 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
 
   return {
     ...createSharedUserConfig(options, monorepoRoot),
-    oxc: { ...libOxcConfig, ...libDtsOxcConfig },
     build: {
       outDir: resolve(options.packageDir, 'esm'),
       ...BROWSER_BUILD_TARGET,
@@ -94,6 +94,7 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
       rolldownOptions: {
         input: collectLibInputs(options.srcDir),
         external: createLibExternal(options.pkg),
+        preserveEntrySignatures: 'strict',
         output: {
           format: 'es',
           preserveModules: true,
@@ -104,7 +105,35 @@ function createEsmConfig(options: LibViteOptions): UserConfig {
         },
       },
     },
-    plugins: [...createSharedPlugins(monorepoRoot, options.generateEntry ?? false), createLibDtsPlugin(options.srcDir)],
+    plugins: createSharedPlugins(monorepoRoot, options.generateEntry ?? false),
+  };
+}
+
+function createDtsConfig(options: LibViteOptions): UserConfig {
+  const monorepoRoot = getWorkspaceRoot(options.packageDir);
+
+  return {
+    ...createSharedUserConfig(options, monorepoRoot),
+    oxc: { ...libOxcConfig, ...libDtsOxcConfig },
+    build: {
+      outDir: resolve(options.packageDir, 'esm'),
+      emptyOutDir: false,
+      rolldownOptions: {
+        input: collectLibInputs(options.srcDir),
+        external: createLibExternal(options.pkg),
+        preserveEntrySignatures: 'strict',
+        // 声明必须按源码入口完整生成，不能跟随运行时引用关系摇树。
+        treeshake: false,
+        output: {
+          format: 'es',
+          preserveModules: true,
+          preserveModulesRoot: options.srcDir,
+          banner: createBanner(options.pkg),
+          entryFileNames: createPreserveModuleFileName(options.srcDir, monorepoRoot),
+        },
+      },
+    },
+    plugins: [createComponentStylePlugin(), createLibDtsPlugin(options.srcDir, options.declarationSourcemap ?? true)],
   };
 }
 
@@ -176,6 +205,9 @@ function createEsmIifeBuildPlugin(options: LibViteOptions): Plugin {
 
       console.log('[lib-esm-iife-build] esm...');
       await build({ configFile: false, ...createEsmConfig(options) });
+
+      console.log('[lib-esm-iife-build] dts...');
+      await build({ configFile: false, ...createDtsConfig(options) });
 
       console.log('[lib-esm-iife-build] iife...');
       await build({ configFile: false, ...createIifeConfig(options) });

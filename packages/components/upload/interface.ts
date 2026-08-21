@@ -1,7 +1,9 @@
-import { StyledProps } from '@tdesign/web-components-shared/common';
 import { VNode } from 'omi';
 
 import { TdUploadProps, UploadFile, UploadInstanceFunctions, UploadRemoveContext } from './type';
+
+/** @deprecated 请从组件入口导入 UploadProps；此转发仅保留 interface.ts 深层导入兼容性。 */
+export type { UploadProps } from './type';
 
 export interface CommonDisplayFileProps {
   accept: string;
@@ -27,8 +29,6 @@ export interface CommonDisplayFileProps {
   // imageViewerProps?: Record<string, any>;
   onRemove?: (p: UploadRemoveContext) => void;
 }
-
-export interface UploadProps<T extends UploadFile = UploadFile> extends TdUploadProps<T>, StyledProps {}
 
 export interface UploadRef extends UploadInstanceFunctions {
   upload: HTMLInputElement;

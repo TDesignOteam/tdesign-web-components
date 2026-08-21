@@ -5,8 +5,7 @@ import _MenuItem from './MenuItem';
 
 export type { MenuProps } from './Menu';
 export type { MenuItemProps } from './MenuItem';
-export * from './type';
-
+export type { MenuValue } from './type';
 export const Menu = _Menu;
 export const MenuItem = _MenuItem;
 

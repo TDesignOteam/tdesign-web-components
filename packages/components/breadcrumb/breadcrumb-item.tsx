@@ -8,7 +8,7 @@ import { bind, Component, OmiDOMAttributes, tag } from 'omi';
 
 import { TdBreadcrumbItemProps } from './type';
 
-interface BreadcrumbItemProps extends TdBreadcrumbItemProps, OmiDOMAttributes {}
+export interface BreadcrumbItemProps extends TdBreadcrumbItemProps, OmiDOMAttributes {}
 
 interface LocalTBreadcrumb {
   separator: TNode | string;

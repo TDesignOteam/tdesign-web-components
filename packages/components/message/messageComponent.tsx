@@ -11,13 +11,13 @@ import { tdClassIsGenerator, tdMessageClassGenerator, tdMessagePrefix } from './
 import { TdMessageProps } from './type';
 
 // Message 组件参数，需在 api 定义上做部分扩展
-export interface MessageComponentProps extends TdMessageProps, StyledProps {
+export interface MessageProps extends TdMessageProps, StyledProps {
   children?: TNode;
 }
 
 // message 直接作为组件使用时
 @tag('t-message')
-export default class MessageComponent extends Component<MessageComponentProps> {
+export default class MessageComponent extends Component<MessageProps> {
   static defaultProps = {
     theme: 'info',
     duration: 3000,
@@ -65,7 +65,7 @@ export default class MessageComponent extends Component<MessageComponentProps> {
     this.clearTimer();
   }
 
-  render(props: Omi.OmiProps<MessageComponentProps> | MessageComponentProps) {
+  render(props: Omi.OmiProps<MessageProps> | MessageProps) {
     const { theme, innerClass, children, innerStyle, icon, content, closeBtn, onCloseBtnClick, onClose } = props;
     const onCloseFn = onClose;
     const onCloseBtnClickFn = onCloseBtnClick;

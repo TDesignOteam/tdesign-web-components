@@ -5,7 +5,6 @@ import _Row from './row';
 
 export type { ColProps } from './col';
 export type { RowProps } from './row';
-export * from './type';
-
+export type { BaseColProps, GutterObject } from './type';
 export const Row = _Row;
 export const Col = _Col;

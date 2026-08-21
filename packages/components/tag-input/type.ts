@@ -1,7 +1,7 @@
-/* eslint-disable */
+import { TElement, TNode } from '@tdesign/web-components-shared/common';
+
 import { InputProps, InputValue } from '../input';
 import { TagProps } from '../tag';
-import { TNode, TElement } from '@tdesign/web-components-shared/common';
 
 export interface TdTagInputProps {
   /**

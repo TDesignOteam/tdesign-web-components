@@ -12,13 +12,13 @@ import { isNil } from 'lodash-es';
 import { Component, signal, tag } from 'omi';
 
 import type { TdChatContentProps } from '../type';
+import type { ChatContentRenderProps, TdChatCollapsibleContentProps } from './internal-type';
 
 import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
 type TdChatThinkBaseProps = {
-  key?: string;
   content?: {
     text?: string;
     title?: string;
@@ -26,14 +26,9 @@ type TdChatThinkBaseProps = {
   status?: ChatMessageStatus;
 } & TdChatContentProps['thinking'];
 
-export type TdChatThinkContentProps = {
-  defaultCollapsed?: boolean;
-  onCollapsedChange?: (e: CustomEvent<boolean>) => void;
-} & TdChatThinkBaseProps;
+export type TdChatThinkContentProps = TdChatCollapsibleContentProps & TdChatThinkBaseProps;
 
-export interface IRenderThinking extends TdChatThinkBaseProps {
-  onChange?: (e: CustomEvent<CollapseValue>) => void;
-}
+export type IRenderThinking = ChatContentRenderProps<TdChatThinkBaseProps>;
 
 // 纯函数渲染器（无shadow root）
 export const renderThinking = ({
@@ -77,7 +72,9 @@ export const renderThinking = ({
               {text
                 ?.split('\n')
                 .filter(Boolean)
-                .map((paragraph, index) => <p key={index}>{paragraph}</p>)}
+                .map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))}
             </div>
           </slot>
         </t-auto-scroll>

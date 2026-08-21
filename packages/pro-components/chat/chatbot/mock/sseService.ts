@@ -59,7 +59,6 @@ export class SSEResponse {
     },
   ];
 
-  //@ts-ignore
   private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }

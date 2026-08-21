@@ -176,7 +176,7 @@ export default class DropdownMenu extends Component<DropdownMenuProps> {
               onClick={
                 optionItem.disabled || optionItem.children
                   ? () => null
-                  : (value: string | number | { [key: string]: any }, context: { e: MouseEvent }) =>
+                  : (value: DropdownOption['value'], context: { e: MouseEvent }) =>
                       this.handleItemClick({ data: optionItem, context })
               }
             >

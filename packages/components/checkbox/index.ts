@@ -2,14 +2,11 @@ import './style/index';
 
 import _Checkbox from './checkbox';
 import _Group from './checkbox-group';
-import type { TdCheckboxGroupProps, TdCheckboxProps } from './type';
 
-export type CheckboxProps = TdCheckboxProps;
-export type CheckboxGroupProps = TdCheckboxGroupProps;
+export type { CheckboxProps } from './checkbox';
+export type { CheckboxGroupProps } from './checkbox-group';
+export type { CheckboxGroupChangeContext, CheckboxGroupValue, CheckboxOption, CheckboxOptionObj } from './type';
 
 export const Checkbox = _Checkbox;
 export const CheckboxGroup = _Group;
-
-export * from './type';
-
 export default Checkbox;

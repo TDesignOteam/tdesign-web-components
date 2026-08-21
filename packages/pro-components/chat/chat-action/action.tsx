@@ -14,7 +14,7 @@ import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { Component, signal, tag } from 'omi';
 
 import { type ChatComment } from '../chat-engine';
-import { TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
+import { TdChatActionData, TdChatActionItem, TdChatActionProps, TdChatActionsName } from './type';
 
 import styles from './style/action.less';
 
@@ -47,7 +47,7 @@ export const renderActions = (
     }
   };
 
-  const handleClickAction = (action: TdChatActionsName, data: any) => {
+  const handleClickAction = (action: TdChatActionsName, data: TdChatActionData) => {
     if (action === 'copy') {
       clickCopyHandler();
     }
@@ -150,12 +150,13 @@ export const renderActions = (
       { name: 'share', render: defaultPresetActions('share', <t-icon-share-1 size="16px" />, '分享') },
     ] as TdChatActionItem[];
 
-  const arrayActions: TdChatActionItem[] =
+  const arrayActions: TdChatActionItem<string>[] =
     Array.isArray(actionBar) && actionBar.length > 0
       ? actionBar.map((action) => {
           // 兼容preset的旧逻辑
           if (typeof action === 'string') {
-            return presetActions().find((item) => item.name === action);
+            // 未知字符串按自定义插槽处理，避免类型扩展或旧版 JS 调用时静默丢失操作项。
+            return presetActions().find((item) => item.name === action) ?? { name: action, render: null };
           }
           return action;
         })
@@ -198,8 +199,8 @@ export default class ChatAction extends Component<TdChatActionProps> {
   static css = [styles];
 
   static propTypes = {
-    actionBar: Object,
-    handleAction: Object,
+    actionBar: [Array, Boolean],
+    handleAction: Function,
     comment: String,
     copyText: String,
     tooltipProps: Object,

@@ -1,4 +1,4 @@
-import { TdTextareaProps } from '@tdesign/web-components/textarea';
+import { TextareaProps } from '@tdesign/web-components/textarea';
 import { TNode } from '@tdesign/web-components-shared/common';
 
 import { TdAttachmentsProps } from '../attachments';
@@ -6,7 +6,7 @@ import { TdAttachmentItem } from '../filecard';
 
 export type TdChatSenderActionName = 'uploadImage' | 'uploadAttachment' | 'attachment' | 'send';
 
-export type UploadActionType = 'uploadImage' | 'uploadAttachment';
+export type UploadActionType = Extract<TdChatSenderActionName, 'uploadImage' | 'uploadAttachment'>;
 
 export interface TdChatSenderUploadProps {
   /** 接受的文件类型，如 'image/*' 或 '.jpg,.png' */
@@ -61,16 +61,16 @@ export interface TdChatSenderProps {
   /** 是否加载中 */
   loading?: boolean;
   /** 透传attachment参数 */
-  attachmentsProps?: TdAttachmentsProps;
+  attachmentsProps?: Partial<TdAttachmentsProps>;
   /**
    * 高度自动撑开，支持传入 true 或配置项 { minRows, maxRows }
    * - true: 启用自动撑高
    * - object: 配置最小/最大行数
    * @default { minRows: 2 }
    */
-  autosize?: TdTextareaProps['autosize'];
+  autosize?: TextareaProps['autosize'];
   /** 透传textarea参数 */
-  textareaProps?: Partial<Omit<TdTextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
+  textareaProps?: Partial<Omit<TextareaProps, 'value' | 'defaultValue' | 'placeholder' | 'disabled' | 'autosize'>>;
   /**
    * 文件上传配置
    * @deprecated 已废弃，建议使用 actions 配置上传属性。例如：actions: [{ name: 'uploadImage', uploadProps: { accept: '.png' } }]

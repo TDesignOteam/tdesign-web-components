@@ -1,11 +1,10 @@
-/* eslint-disable */
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
+import { AttachNode, Styles, TNode } from '@tdesign/web-components-shared/common';
+
 import { ButtonProps } from '../button';
-import { TNode, Styles, AttachNode } from '@tdesign/web-components-shared/common';
 
 export interface TdDialogProps {
   /**
@@ -153,20 +152,19 @@ export interface TdDialogProps {
   children?: TNode;
 }
 
-export interface TdDialogCardProps
-  extends Pick<
-    TdDialogProps,
-    | 'body'
-    | 'cancelBtn'
-    | 'closeBtn'
-    | 'confirmBtn'
-    | 'footer'
-    | 'header'
-    | 'theme'
-    | 'onCancel'
-    | 'onCloseBtnClick'
-    | 'onConfirm'
-  > {}
+export type TdDialogCardProps = Pick<
+  TdDialogProps,
+  | 'body'
+  | 'cancelBtn'
+  | 'closeBtn'
+  | 'confirmBtn'
+  | 'footer'
+  | 'header'
+  | 'theme'
+  | 'onCancel'
+  | 'onCloseBtnClick'
+  | 'onConfirm'
+>;
 
 export interface DialogOptions extends Omit<TdDialogProps, 'attach'> {
   /**

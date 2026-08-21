@@ -10,16 +10,14 @@ spline: base
 
 {{ base }}
 
-
 ## API
 
 ### ChatAction Props
 
-名称 | 类型 | 默认值 | 说明 | 必传
--- | -- | -- | -- | --
-actionBar | `TdChatMessageActionName[] / boolean` | true | 操作按钮配置项，可配置操作按钮选项和顺序。TdChatMessageActionName枚举：`'replay'/'copy'/'good'/'bad'/'goodActived'/'badActived'/'share'` | N
-onActions | `Record<TdChatMessageActionName, (data?: any, callback?: Function) => void>` | - | 操作按钮回调函数 | N
-presetActions | `Record<{name: TdChatMessageActionName, render: TNode, condition?: (message: ChatMessagesData) => boolean;}>` | - | 预制按钮 | N
-message | `any` | - | 对话数据信息 | N
-tooltipProps | `TooltipProps` | - | Tooltip Props  | N
-
+| 名称         | 类型                                                        | 默认值 | 说明                                                         | 必传 |
+| ------------ | ----------------------------------------------------------- | ------ | ------------------------------------------------------------ | ---- |
+| actionBar    | `Array<TdChatActionsName \| TdChatActionItem> \| boolean`   | `true` | 操作按钮及顺序；可使用预设名称或 `{ name, render }` 自定义项 | N    |
+| handleAction | `(name: TdChatActionsName, data: TdChatActionData) => void` | -      | 操作按钮点击回调；`data` 包含 `event`、点赞状态等上下文      | N    |
+| comment      | `ChatComment`                                               | `''`   | 当前点赞点踩状态                                             | N    |
+| copyText     | String                                                      | `''`   | 复制按钮使用的文本                                           | N    |
+| tooltipProps | `TooltipProps`                                              | `{}`   | 透传 Tooltip 属性                                            | N    |

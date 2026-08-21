@@ -6,8 +6,7 @@ import _RadioGroup from './radioGroup.jsx';
 
 export type { RadioProps } from './radio';
 export type { RadioGroupProps } from './radioGroup';
-export * from './type';
-
+export type { RadioOption, RadioOptionObj, RadioValue } from './type';
 export const Radio = _Radio;
 export const RadioButton = _RadioButton;
 export const RadioGroup = _RadioGroup;

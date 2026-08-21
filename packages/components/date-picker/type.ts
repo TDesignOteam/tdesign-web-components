@@ -1,6 +1,7 @@
+import type { DateValue as CommonDateValue } from '@common/js/date-picker/utils';
 import { TNode } from '@tdesign/web-components-shared/common';
 
-export type DateValue = string | number | Date;
+export type DateValue = CommonDateValue;
 
 export type DateRangeValue = Array<DateValue>;
 

@@ -1,6 +1,6 @@
 ---
 title: ChatMessage 对话消息内容
-description: xxx
+description: 用于渲染用户、助手和系统消息，以及 Markdown、思考、搜索、建议和附件等内容。
 isComponent: true
 usage: { title: '', description: '' }
 spline: base
@@ -37,9 +37,11 @@ spline: base
 {{ image }}
 
 ### 附件内容
+
 {{ attachment }}
 
 ### 自定义内容
+
 {{ custom }}
 
 ### 混合内容
@@ -48,40 +50,37 @@ spline: base
 
 ## API
 
-### ChatItem Props
+### ChatMessage Props
 
-## 基础属性
+| 名称             | 类型                                                         | 默认值                                       | 说明                                                                                   | 必传 |
+| ---------------- | ------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------- | ---- |
+| actions          | `Array<TdChatActionsName \| TdChatMessageAction> \| boolean` | `['replay', 'copy', 'good', 'bad', 'share']` | 消息操作按钮及顺序；预设名称仅支持 `TdChatActionsName`，可用 `{ name, render }` 自定义 | N    |
+| animation        | `ChatLoadingAnimationType`                                   | `'skeleton'`                                 | 消息加载动画                                                                           | N    |
+| handleActions    | `TdChatMessageActionHandlers`                                | -                                            | 操作按钮和内容事件回调；参数按 action 名称提供精确类型                                 | N    |
+| name             | `string \| TNode`                                            | -                                            | 作者名称                                                                               | N    |
+| avatar           | `string \| TNode`                                            | -                                            | 作者头像                                                                               | N    |
+| datetime         | `string \| TNode`                                            | -                                            | 消息时间                                                                               | N    |
+| role             | `ChatMessageRole`                                            | -                                            | 消息角色                                                                               | N    |
+| content          | `AIMessageContent[] \| UserMessageContent[]`                 | -                                            | 消息内容；优先级高于 `message.content`                                                 | N    |
+| status           | `ChatMessageStatus`                                          | -                                            | 消息状态；优先级高于 `message.status`                                                  | N    |
+| id               | String                                                       | -                                            | 消息 ID；优先级高于 `message.id`                                                       | N    |
+| variant          | `'base' \| 'text' \| 'outline'`                              | `'text'`                                     | 消息样式                                                                               | N    |
+| placement        | `'left' \| 'right'`                                          | `'left'`                                     | 消息方向                                                                               | N    |
+| message          | `ChatMessagesData`                                           | -                                            | 完整消息对象                                                                           | N    |
+| chatContentProps | `TdChatContentProps`                                         | -                                            | Markdown、搜索、思考、建议和附件等内容配置                                             | N    |
 
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `placeholder` | `string` | - | 输入框占位文本 |
-| `disabled` | `boolean` | `false` | 是否禁用整个输入组件 |
-| `value` | `string` | - | 输入框当前值（受控模式） |
-| `defaultValue` | `string` | - | 输入框默认值（非受控模式） |
-| `status` | `ChatStatus` | `'idle'` | 聊天状态，可选值：'idle'(空闲)、'pending'(等待中)、'streaming'(流式传输中)、'complete'(完成)、'stop'(停止)、'error'(错误) |
+### 操作名称
 
-## 操作按钮配置
+`TdChatMessageActionName` 包含 `copy`、`good`、`bad`、`replay`、`share`、`searchResult`、`searchItem`、`suggestion` 和 `codeCopy`。其中后四项是内容事件名称，只用于 `handleActions`，不作为 `actions` 的预设字符串。
 
-| 属性名 | 类型 | 说明 |
-|--------|------|------|
-| `actions` | `TdChatSenderAction[]` \| `Function` \| `boolean` | 操作按钮配置： - 数组：自定义操作按钮列表 - 函数：(preset) => 操作按钮数组 - 布尔值：是否显示默认操作按钮 |
+### 内容配置
 
-## 透传属性
+`TdChatContentProps` 提供以下内置配置：
 
-| 属性名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| `attachmentsProps` | `TdAttachmentsProps` | `{ items: [], overflow: 'scrollX' }` | 附件列表配置属性 |
-| `textareaProps` | `Partial<TdTextareaProps>` | `{ autosize: { minRows: 2 } }` | 文本输入框配置属性 |
-| `uploadProps` | `Omit<JSX.HTMLAttributes, 'onChange' \| 'ref' \| 'type' \| 'hidden'>` | - | 文件上传输入框的HTML属性 |
+- `markdown`：Markdown 渲染配置。
+- `search`：搜索结果折叠配置。
+- `thinking`、`reasoning`：思考过程布局和动画。
+- `suggestion`：推荐问题配置。
+- `attachments`：附件点击、移除和预览配置。
 
-## 事件回调
-
-| 事件名 | 参数类型 | 说明 |
-|--------|----------|------|
-| `onSend` | `CustomEvent<TdChatSenderParams>` | 点击发送按钮时触发 |
-| `onStop` | `(value: string, context: { e: MouseEvent })` | 点击停止按钮时触发 |
-| `onChange` | `(value: string, context: { e: InputEvent \| MouseEvent \| KeyboardEvent })` | 输入内容变化时触发 |
-| `onBlur` | `(value: string, context: { e: FocusEvent })` | 输入框失去焦点时触发 |
-| `onFocus` | `(value: string, context: { e: FocusEvent })` | 输入框获得焦点时触发 |
-| `onFileSelect` | `(files: File[]) => Promise< TdAttachmentItem[]>` | 选择文件时触发 |
-| `onFileRemove` | `(files: File[]) => Promise< TdAttachmentItem[]>` | 移除文件时触发 |
+消息内容的协议类型来自 `@tdesign/ai-chat-engine`，并由 `@tdesign/web-components-chat/chat-engine` 导出。

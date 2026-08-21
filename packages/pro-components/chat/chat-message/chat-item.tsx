@@ -18,6 +18,7 @@ import { convertToLightDomNode } from '@tdesign/web-components-shared/_util/ligh
 import { isString } from 'lodash-es';
 import { Component, OmiProps, signal, tag } from 'omi';
 
+import type { TdChatActionData } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import type { ChatMessagesData } from '../chat-engine';
 import {
@@ -35,7 +36,7 @@ import { renderReasoning } from './content/reasoning-content';
 import { renderSearch } from './content/search-content';
 import { renderSuggestion } from './content/suggestion-content';
 import { renderThinking } from './content/thinking-content';
-import type { TdChatMessageActionName, TdChatMessageProps } from './type';
+import type { TdChatMessageActionData, TdChatMessageActionName, TdChatMessageProps } from './type';
 
 import styles from './style/chat-item.less';
 
@@ -47,13 +48,13 @@ export default class ChatItem extends Component<ChatMessageProps> {
   static css = [styles];
 
   // 声明哪些prop是slot
-  static slotProps = ['avatar', 'name'];
+  static slotProps = ['avatar', 'name', 'datetime'];
 
   static propTypes = {
-    actions: [Array, Function, Boolean],
+    actions: [Array, Boolean],
     name: [String, Object], // 支持传入String或ReactNode
     avatar: [String, Object], // 支持传入String或ReactNode
-    datetime: String,
+    datetime: [String, Object],
     message: Object,
     role: String,
     content: Array,
@@ -181,15 +182,14 @@ export default class ChatItem extends Component<ChatMessageProps> {
     ) : null;
   }
 
-  private handleClickAction = (action: Partial<TdChatMessageActionName>, data?: any) => {
+  private handleClickAction = (action: TdChatMessageActionName, data: TdChatActionData = {}) => {
     const internalMessage = this.getInternalMessage();
     const toData = {
       ...data,
       message: internalMessage,
     };
-    if (this.props?.handleActions?.[action]) {
-      this.props.handleActions[action](toData);
-    }
+    const handleAction = this.props?.handleActions?.[action] as ((data: TdChatMessageActionData) => void) | undefined;
+    handleAction?.(toData as TdChatMessageActionData);
     this.fire(
       'chat_message_action',
       { action, data: toData },

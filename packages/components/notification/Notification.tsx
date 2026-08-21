@@ -9,9 +9,9 @@ import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, OmiProps, tag } from 'omi';
 
 import { notificationDefaultProps } from './defaultProps';
-import { NotificationInstance, TdNotificationProps } from './type';
+import { TdNotificationProps } from './type';
 
-export interface NotificationProps extends NotificationInstance, TdNotificationProps, StyledProps {
+export interface NotificationProps extends TdNotificationProps, StyledProps {
   id?: string;
 }
 

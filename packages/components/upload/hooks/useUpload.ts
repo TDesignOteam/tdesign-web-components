@@ -119,8 +119,6 @@ export default function useUpload(props: SignalValue<UploadProps>) {
         });
       }),
     );
-    console.log(tmpFiles);
-
     setUploadValue(tmpFiles, {
       trigger: 'add',
       index: uploadValue.value.length,
@@ -143,12 +141,10 @@ export default function useUpload(props: SignalValue<UploadProps>) {
 
   const onFileChange = (files: File[]) => {
     if (disabled.value) return;
-    console.log('====onFileChange', files);
     const params = { currentSelectedFiles: formatToUploadFile([...files], undefined) };
     onSelectChange.value?.([...files], params);
     validateFile({
       uploadValue: uploadValue.value,
-      // @ts-ignore
       files: [...files],
       max: 0,
       sizeLimit: sizeLimit.value,

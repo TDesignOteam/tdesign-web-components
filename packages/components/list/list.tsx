@@ -73,7 +73,6 @@ export default class BackTop extends Component<ListProps> {
 
   handleClickLoad = (e: Event, asyncLoading: string) => {
     if (asyncLoading === 'load-more') {
-      console.log(e);
       this.fire('loadMore', { event: e });
     }
   };

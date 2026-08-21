@@ -1,16 +1,18 @@
 import type { TNode } from '@tdesign/web-components-shared/common';
 
-import type { TdChatActionsName } from '../chat-action';
+import type { TdChatActionData, TdChatActionItem, TdChatActionsName } from '../chat-action';
 import type {
   AIMessageContent,
-  ChatContentType,
   ChatMessageRole,
   ChatMessagesData,
   ChatMessageStatus,
+  ReferenceItem,
+  SearchContent,
+  SuggestionItem,
   UserMessageContent,
 } from '../chat-engine';
 import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
-import { TdChatAttachmentContentProps } from './content/attachment-content';
+import type { TdChatAttachmentContentProps } from './content/attachment-content';
 import type { TdChatMarkdownContentProps } from './content/markdown-content';
 
 type TdChatContentSearchProps = {
@@ -32,10 +34,27 @@ type TdChatContentSuggestionProps = {
 export type TdChatMessageVariant = 'base' | 'text' | 'outline';
 
 export type TdChatMessageActionName = TdChatActionsName | 'searchResult' | 'searchItem' | 'suggestion' | 'codeCopy';
-export interface TdChatMessageAction {
-  name: TdChatMessageActionName;
-  render: TNode;
-}
+/** 消息操作栏中的自定义插槽项；内容事件名称不作为预设按钮名称使用。 */
+export type TdChatMessageAction = TdChatActionItem<string>;
+
+type TdChatMessageActionBaseData = TdChatActionData & {
+  message?: ChatMessagesData;
+};
+
+export type TdChatMessageActionDataMap = {
+  [K in TdChatActionsName]: TdChatMessageActionBaseData;
+} & {
+  searchResult: TdChatMessageActionBaseData & { event: MouseEvent; content: SearchContent['data'] };
+  searchItem: TdChatMessageActionBaseData & { event: MouseEvent; content: ReferenceItem };
+  suggestion: TdChatMessageActionBaseData & { event: MouseEvent; content: SuggestionItem };
+  codeCopy: TdChatMessageActionBaseData & { code: string; lang?: string };
+};
+
+export type TdChatMessageActionData = TdChatMessageActionDataMap[TdChatMessageActionName];
+
+export type TdChatMessageActionHandlers = {
+  [K in TdChatMessageActionName]?: (data: TdChatMessageActionDataMap[K]) => void;
+};
 
 export type TdChatContentProps = {
   markdown?: Omit<TdChatMarkdownContentProps, 'content'>;
@@ -43,20 +62,25 @@ export type TdChatContentProps = {
   thinking?: TdChatContentThinkProps;
   reasoning?: TdChatContentThinkProps;
   suggestion?: TdChatContentSuggestionProps;
-  attachments?: TdChatAttachmentContentProps;
-  [key: string]: any; // 处理其他ContentType情况
-} & Partial<Record<Exclude<ChatContentType, 'markdown' | 'search' | 'thinking' | 'suggestion'>, any>>;
+  attachments?: Omit<TdChatAttachmentContentProps, 'content'>;
+};
 
 export interface TdChatMessageProps {
   /**
    * 操作
+   * @default ['replay', 'copy', 'good', 'bad', 'share']
    */
   actions?:
-    | TdChatMessageActionName[]
+    | Array<TdChatActionsName | TdChatMessageAction>
     // | ((preset: TdChatMessageAction[], message: ChatMessagesData) => TdChatMessageAction[])
     | boolean;
+  /**
+   * 消息加载动画
+   * @default skeleton
+   */
   animation?: ChatLoadingAnimationType;
-  handleActions?: Partial<Record<TdChatMessageActionName, (data?: any) => void>>;
+  /** 操作按钮回调 */
+  handleActions?: TdChatMessageActionHandlers;
   /**
    * 作者
    */
@@ -87,9 +111,13 @@ export interface TdChatMessageProps {
   id?: string;
   /**
    * 消息样式，是否有边框，背景色等
+   * @default text
    */
   variant?: TdChatMessageVariant;
-  /** 气泡方向 */
+  /**
+   * 气泡方向
+   * @default left
+   */
   placement?: 'left' | 'right';
   /** 消息体 (兼容旧版本，优先级低于直接传入的 role/content/status) */
   message?: ChatMessagesData;

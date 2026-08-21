@@ -13,25 +13,20 @@ import { isNil } from 'lodash-es';
 import { Component, signal, tag } from 'omi';
 
 import type { TdChatContentProps } from '../type';
+import type { ChatContentRenderProps, TdChatCollapsibleContentProps } from './internal-type';
 
 import styles from '../style/chat-item.less';
 
 const className = `${getClassPrefix()}-chat__item`;
 
 type TdChatReasoningBaseProps = {
-  key?: string;
   content?: AIMessageContent[];
   status?: ChatMessageStatus;
 } & TdChatContentProps['reasoning'];
 
-export type TdChatReasoningProps = {
-  defaultCollapsed?: boolean;
-  onCollapsedChange?: (e: CustomEvent<boolean>) => void;
-} & TdChatReasoningBaseProps;
+export type TdChatReasoningProps = TdChatCollapsibleContentProps & TdChatReasoningBaseProps;
 
-export interface IRenderReasoning extends TdChatReasoningBaseProps {
-  onChange?: (e: CustomEvent<CollapseValue>) => void;
-}
+export type IRenderReasoning = ChatContentRenderProps<TdChatReasoningBaseProps>;
 
 // 渲染单个内容项
 const renderContentItem = (content: AIMessageContent, index: number) => {
@@ -43,7 +38,9 @@ const renderContentItem = (content: AIMessageContent, index: number) => {
         {content.data
           ?.split('\n')
           .filter(Boolean)
-          .map((paragraph, pIndex) => <p key={pIndex}>{paragraph}</p>)}
+          .map((paragraph, pIndex) => (
+            <p key={pIndex}>{paragraph}</p>
+          ))}
       </div>
     );
   }

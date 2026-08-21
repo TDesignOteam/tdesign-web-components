@@ -1,12 +1,11 @@
-/* eslint-disable */
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
+import { TElement, TNode } from '@tdesign/web-components-shared/common';
+
 import { ImageProps } from '../image';
 import { PopupProps } from '../popup';
-import { TNode, TElement } from '@tdesign/web-components-shared/common';
 
 export interface TdAvatarProps {
   /**

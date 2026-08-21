@@ -1,11 +1,10 @@
-/* eslint-disable */
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
+import { TElement, TNode } from '@tdesign/web-components-shared/common';
+
 import { PopupProps } from '../popup';
-import { TNode, TElement } from '@tdesign/web-components-shared/common';
 
 export interface TdDropdownProps {
   /**
@@ -120,13 +119,13 @@ export interface TdDropdownItemProps {
   /**
    * 下拉操作项唯一标识
    */
-  value?: string | number | { [key: string]: any };
+  value?: string | number | Record<string, unknown>;
   /**
    * 点击时触发
    */
   onClick?: (dropdownItem: DropdownOption, context: { e: MouseEvent }) => void;
 }
 
-export type DropdownOption = { children?: Array<TdDropdownItemProps> } & TdDropdownItemProps & Record<string, any>;
+export type DropdownOption = TdDropdownItemProps & { children?: DropdownOption[] } & Record<string, unknown>;
 
 export type DropdownItemTheme = 'default' | 'success' | 'warning' | 'error';

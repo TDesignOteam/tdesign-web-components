@@ -7,6 +7,7 @@ import { convertNodeListToVNodes, getSlotNodes } from '@tdesign/web-components-s
 import { merge } from 'lodash-es';
 import { Component, createRef, OmiProps, signal, tag } from 'omi';
 
+import type { TdChatActionData } from '../chat-action';
 import { TdChatActionsName } from '../chat-action';
 import { DefaultChatMessageActionsName } from '../chat-action/action';
 import { ChatEngine, getMessageContentForCopy, isAIMessage } from '../chat-engine';
@@ -19,7 +20,12 @@ import {
   type ChatRequestParams,
   type ChatStatus,
 } from '../chat-engine';
-import type { TdChatMessageActionName, TdChatMessageProps } from '../chat-message/type';
+import type {
+  TdChatMessageAction,
+  TdChatMessageActionData,
+  TdChatMessageActionName,
+  TdChatMessageProps,
+} from '../chat-message/type';
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
@@ -35,9 +41,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   static css = [styles];
 
   static propTypes = {
-    clearHistory: Boolean,
     layout: String,
-    autoSendPrompt: Object,
+    autoSendPrompt: String,
     reverse: Boolean,
     defaultMessages: Array,
     messageProps: [Object, Function],
@@ -48,11 +53,12 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     onMessageChange: Function,
     onChatReady: Function,
     onChatAfterSend: Function,
+    onChatStop: Function,
+    onChatMessageAction: Function,
   };
 
   static defaultProps = {
     autoSendPrompt: '',
-    clearHistory: false,
     layout: 'both',
     reverse: false,
     defaultMessages: [],
@@ -68,7 +74,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   public isChatEngineReady = false;
 
-  private chatMessages: Omi.SignalValue<ChatMessagesData[]> = signal(undefined);
+  private chatMessages: Omi.SignalValue<ChatMessagesData[]> = signal([]);
 
   private uploadedAttachments: AttachmentItem[] = [];
 
@@ -311,6 +317,14 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   private handleStop = () => {
     this.chatEngine.abortChat();
     this.fire(
+      'chatStop',
+      {},
+      {
+        composed: true,
+      },
+    );
+    // 兼容旧版 DOM 事件名，后续主事件统一使用 chatStop。
+    this.fire(
       'chat_stop',
       {},
       {
@@ -320,10 +334,10 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   };
 
   private handleClickAction = (
-    action: Partial<TdChatMessageActionName>,
+    action: TdChatMessageActionName,
     opts: {
       messageProps: TdChatMessageProps;
-      data?: any;
+      data?: TdChatActionData;
     },
   ) => {
     const { messageProps, data } = opts;
@@ -331,12 +345,19 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
       ...data,
       message: messageProps.message,
     };
-    if (messageProps?.handleActions?.[action]) {
-      messageProps.handleActions[action](toData);
-    }
+    const handleAction = messageProps?.handleActions?.[action] as ((data: TdChatMessageActionData) => void) | undefined;
+    handleAction?.(toData as TdChatMessageActionData);
+    this.fire(
+      'chatMessageAction',
+      { action, data: toData as TdChatMessageActionData },
+      {
+        composed: true,
+      },
+    );
+    // 兼容旧版 DOM 事件名，后续主事件统一使用 chatMessageAction。
     this.fire(
       'chat_message_action',
-      { action, data: toData },
+      { action, data: toData as TdChatMessageActionData },
       {
         composed: true,
       },
@@ -359,7 +380,13 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
         itemProps = merge({}, itemProps, this.props.messageProps(item) || {});
       }
       return (
-        <t-chat-item key={id} className={`${className}-item-wrapper`} {...itemProps} message={item}>
+        <t-chat-item
+          key={id}
+          className={`${className}-item-wrapper`}
+          css={this.props.injectCSS?.chatItem}
+          {...itemProps}
+          message={item}
+        >
           {/* 根据id筛选item应该分配的slot */}
           {itemSlotNames.map((slotName) => {
             const str = slotName.replace(RegExp(`^${id}-`), '');
@@ -369,7 +396,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
           {content.length === 0 || (item.status !== 'complete' && item.status !== 'stop') ? null : (
             <t-chat-action
               slot="actionbar"
-              actionBar={this.getChatActionBar(itemProps) as TdChatActionsName[]}
+              actionBar={this.getChatActionBar(itemProps) as Array<TdChatActionsName | TdChatMessageAction>}
               handleAction={(action, data) =>
                 this.handleClickAction(action, {
                   messageProps: itemProps,
@@ -414,8 +441,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
 
   // 动态注入插槽需要每次render都更新children
   beforeRender(): void {
-    // @ts-ignore
-    if (this.props?.ignoreAttrs) return;
+    if ('ignoreAttrs' in this.props && this.props.ignoreAttrs) return;
     // 使用缓存和差异检测优化DOM转换
     this.props.children = convertNodeListToVNodes(this.childNodes);
   }
@@ -425,7 +451,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     return (
       <div className={classname(className, layoutClass)}>
         {this.chatMessageValue && (
-          <t-chat-list ref={this.listRef} {...listProps}>
+          <t-chat-list ref={this.listRef} css={injectCSS?.chatList} {...listProps}>
             {this.renderItems()}
           </t-chat-list>
         )}

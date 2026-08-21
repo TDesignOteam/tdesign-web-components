@@ -141,7 +141,7 @@ export default class BasicChat extends Component {
             console.log('复制', data);
           },
           suggestion: ({ content }) => {
-            this.chatRef.current.addPrompt(content.prompt);
+            if (content.prompt) this.chatRef.current.addPrompt(content.prompt);
           },
           searchResult: ({ content }) => {
             console.log('searchResult', content);

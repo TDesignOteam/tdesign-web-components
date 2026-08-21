@@ -75,10 +75,18 @@ function checkPackList({ name, packageDir, iife }) {
     `[${name}] pack is missing ESM or IIFE output`,
   );
 
+  const declarationMaps = files.filter((file) => file.endsWith('.d.ts.map'));
+  assert(
+    declarationMaps.length === 0,
+    `[${name}] pack must not publish declaration maps without their source files:\n${declarationMaps.join('\n')}`,
+  );
+
   if (name === 'chat') {
     for (const ext of ['eot', 'svg', 'ttf', 'woff', 'woff2']) {
       assert(files.includes(`dist/assets/ch-icon.${ext}`), `[chat] missing CDN font asset: ${ext}`);
     }
+    const esmIndex = readFileSync(resolve(repoRoot, packageDir, 'esm/index.js'), 'utf8');
+    assert(/\bChatAttachmentContent\b/.test(esmIndex), '[chat] root ESM export is missing ChatAttachmentContent');
   }
 
   console.log(`[check:pack] ${name} pack list ok (${files.length} files)`);
@@ -95,12 +103,14 @@ function collectDeclarationFiles(dir) {
 }
 
 function checkDeclarationReferences({ name, packageDir }) {
-  const declarationFiles = collectDeclarationFiles(resolve(repoRoot, packageDir, 'esm'));
+  const esmDir = resolve(repoRoot, packageDir, 'esm');
+  const declarationFiles = collectDeclarationFiles(esmDir);
   const forbiddenPatterns = [
     ['common type cache', /\.cache\/common-js-types/],
     ['common source path', /packages\/common/],
     ['shared source path', /shared\/(?:src|dist)\//],
     ['workspace absolute path', /(?:\/Users\/|\/home\/runner\/work\/|[A-Za-z]:\\)/],
+    ['declaration map reference', /sourceMappingURL=.*\.d\.ts\.map/],
   ];
   const violations = [];
 
@@ -112,7 +122,125 @@ function checkDeclarationReferences({ name, packageDir }) {
   }
 
   assert(violations.length === 0, `[${name}] declarations expose internal paths:\n${violations.join('\n')}`);
+  const declarationSource = declarationFiles.map((file) => readFileSync(file, 'utf8')).join('\n');
+  if (name === 'ui') {
+    for (const typeName of [
+      'ButtonProps',
+      'UploadProps',
+      'UploadFile',
+      'ImageProps',
+      'WatermarkProps',
+      'WatermarkText',
+    ]) {
+      assert(
+        new RegExp(`(?:interface|type) ${typeName}\\b`).test(declarationSource),
+        `[ui] declaration surface is missing ${typeName}`,
+      );
+    }
+
+    const entryExports = {
+      'alert/index.d.ts': ['AlertProps'],
+      'back-top/index.d.ts': ['BackTopProps'],
+      'badge/index.d.ts': ['BadgeProps'],
+      'button/index.d.ts': ['ButtonProps'],
+      'date-picker/index.d.ts': ['DateValue', 'DisableDate', 'DatePickerProps'],
+      'image/index.d.ts': ['ImageProps'],
+      'link/index.d.ts': ['LinkProps'],
+      'upload/index.d.ts': ['UploadFile', 'UploadProps'],
+      'watermark/index.d.ts': ['WatermarkProps'],
+    };
+    for (const [entry, typeNames] of Object.entries(entryExports)) {
+      const source = readFileSync(resolve(esmDir, entry), 'utf8');
+      for (const typeName of typeNames) {
+        assert(
+          new RegExp(`export\\s*\\{[^}]*\\b${typeName}\\b`, 's').test(source),
+          `[ui] ${entry} does not export ${typeName}`,
+        );
+      }
+    }
+
+    const internalPropsByEntry = {
+      'affix/index.d.ts': ['TdAffixProps'],
+      'avatar/index.d.ts': ['TdAvatarProps', 'TdAvatarGroupProps'],
+      'breadcrumb/index.d.ts': ['TdBreadcrumbProps', 'TdBreadcrumbItemProps'],
+      'button/index.d.ts': ['TdButtonProps'],
+      'card/index.d.ts': ['TdCardProps'],
+      'checkbox/index.d.ts': ['TdCheckboxProps', 'TdCheckboxGroupProps'],
+      'collapse/index.d.ts': ['TdCollapseProps', 'TdCollapsePanelProps'],
+      'date-picker/index.d.ts': ['TdDatePickerProps', 'TdDateRangePickerProps'],
+      'dialog/index.d.ts': ['TdDialogProps'],
+      'divider/index.d.ts': ['TdDividerProps'],
+      'grid/index.d.ts': ['TdColProps', 'TdRowProps'],
+      'input/index.d.ts': ['TdInputProps', 'TdInputGroupProps'],
+      'loading/index.d.ts': ['TdLoadingProps'],
+      'menu/index.d.ts': ['TdMenuProps', 'TdMenuItemProps'],
+      'message/index.d.ts': ['TdMessageProps'],
+      'notification/index.d.ts': ['TdNotificationProps'],
+      'popconfirm/index.d.ts': ['TdPopconfirmProps'],
+      'popup/index.d.ts': ['TdPopupProps'],
+      'progress/index.d.ts': ['TdProgressProps'],
+      'radio/index.d.ts': ['TdRadioProps', 'TdRadioGroupProps'],
+      'range-input/index.d.ts': ['TdRangeInputProps', 'TdRangeInputPopupProps'],
+      'select/index.d.ts': ['TdSelectProps', 'TdOptionProps'],
+      'select-input/index.d.ts': ['TdSelectInputProps'],
+      'skeleton/index.d.ts': ['TdSkeletonProps'],
+      'slider/index.d.ts': ['TdSliderProps'],
+      'space/index.d.ts': ['TdSpaceProps'],
+      'swiper/index.d.ts': ['TdSwiperProps'],
+      'switch/index.d.ts': ['TdSwitchProps'],
+      'tabs/index.d.ts': ['TdTabsProps', 'TdTabPanelProps'],
+      'tag-input/index.d.ts': ['TdTagInputProps'],
+      'textarea/index.d.ts': ['TdTextareaProps'],
+      'tooltip/index.d.ts': ['TdTooltipProps'],
+      'upload/index.d.ts': ['TdUploadProps'],
+    };
+    for (const [entry, typeNames] of Object.entries(internalPropsByEntry)) {
+      const source = readFileSync(resolve(esmDir, entry), 'utf8');
+      for (const typeName of typeNames) {
+        assert(
+          !new RegExp(`export\\s*\\{[^}]*\\b${typeName}\\b`, 's').test(source),
+          `[ui] ${entry} must not expose internal ${typeName}`,
+        );
+      }
+    }
+  }
+  if (name === 'chat') {
+    for (const typeName of [
+      'TdChatProps',
+      'TdChatbotApi',
+      'TdChatMessageProps',
+      'TdChatAttachmentContentProps',
+      'TdChatSenderProps',
+      'TdAttachmentItem',
+    ]) {
+      assert(
+        new RegExp(`(?:interface|type) ${typeName}\\b`).test(declarationSource),
+        `[chat] declaration surface is missing ${typeName}`,
+      );
+    }
+  }
   console.log(`[check:pack] ${name} declaration references ok (${declarationFiles.length} files)`);
+}
+
+function checkRuntimeExports({ name, packageDir }) {
+  if (name !== 'ui') return;
+
+  const runtimeExports = {
+    'esm/index.js': ['Button', 'MessagePlugin'],
+    'esm/message/index.js': ['Message', 'MessagePlugin', 'message'],
+  };
+
+  for (const [entry, exportNames] of Object.entries(runtimeExports)) {
+    const source = readFileSync(resolve(repoRoot, packageDir, entry), 'utf8');
+    for (const exportName of exportNames) {
+      assert(
+        new RegExp(`export\\s*\\{[^}]*\\b${exportName}\\b`, 's').test(source),
+        `[ui] ${entry} does not preserve runtime export ${exportName}`,
+      );
+    }
+  }
+
+  console.log('[check:pack] ui runtime exports preserved');
 }
 
 function checkResolvable({ name, packageDir, imports }) {
@@ -159,6 +287,7 @@ checkReleaseVersions();
 for (const pkg of packages) {
   checkPackList(pkg);
   checkDeclarationReferences(pkg);
+  checkRuntimeExports(pkg);
   checkResolvable(pkg);
   checkComponentEntries(pkg);
 }

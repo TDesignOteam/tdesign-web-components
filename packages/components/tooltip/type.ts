@@ -1,12 +1,10 @@
-/* eslint-disable */
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
 
-import { PopupPlacement } from '../popup';
-import { TdPopupProps } from '../popup';
-import { Styles, TNode } from '@tdesign/web-components-shared/common';
+import { TNode } from '@tdesign/web-components-shared/common';
+
+import { PopupPlacement, TdPopupProps } from '../popup/type';
 
 export interface TdTooltipProps extends TdPopupProps {
   /**

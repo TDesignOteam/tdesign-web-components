@@ -43,7 +43,7 @@ catalogs:
     prettier: 3.9.6
     typescript: ^6.0.3
     typescript-eslint: ^8.65.0
-    vite: ^8.1.5
+    vite: ^8.2.2
     vitest: ^4.1.10
 
 shamefullyHoist: true

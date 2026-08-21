@@ -6,7 +6,7 @@ import { isObject } from 'lodash-es';
 import { Component, createRef, tag } from 'omi';
 
 // import useControlled from '@tdesign/web-components-shared/_util/useControlled';
-import { TdInputProps } from '../input';
+import { TdInputProps } from '../input/type';
 import { TdSelectInputProps } from './type';
 
 export interface RenderSelectSingleInputParams {
