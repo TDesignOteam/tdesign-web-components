@@ -36,6 +36,10 @@
       "eslint --fix"
     ]
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TDesignOteam/tdesign-web-components.git"
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
