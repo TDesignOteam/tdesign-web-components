@@ -1,8 +1,10 @@
-import type { AttachmentItem, AttachmentType } from '../chat-engine';
+import type { AttachmentItem, AttachmentType, ChatRequestParams } from '../chat-engine';
 import type { TdAttachmentItem } from '../filecard';
 
 export type TdChatMessageAttachment = AttachmentItem &
   Pick<TdAttachmentItem, 'key' | 'status' | 'type' | 'description' | 'percent'>;
+
+type ChatMessageAttachmentSource = Partial<TdAttachmentItem & AttachmentItem>;
 
 const attachmentTypeByMime = (mimeType?: string): AttachmentType | undefined => {
   const category = mimeType?.split('/')[0];
@@ -22,14 +24,14 @@ const attachmentTypeByExtension = (extension?: string): AttachmentType => {
   return 'txt';
 };
 
-const getExtension = (attachment: TdAttachmentItem) =>
+const getExtension = (attachment: ChatMessageAttachmentSource) =>
   attachment.extension || attachment.name?.match(/\.([^.]+)$/)?.[1];
 
 /**
  * 创建由 ChatEngine 自己持有的消息附件快照。
  * 上传过程对象（raw、response 等）只属于发送方，不能进入 Immer 消息状态。
  */
-export const createChatMessageAttachment = (attachment: TdAttachmentItem): TdChatMessageAttachment => {
+export const createChatMessageAttachment = (attachment: ChatMessageAttachmentSource): TdChatMessageAttachment => {
   const extension = getExtension(attachment);
 
   return {
@@ -38,7 +40,11 @@ export const createChatMessageAttachment = (attachment: TdAttachmentItem): TdCha
     name: attachment.name,
     size: attachment.size,
     url: attachment.url,
+    isReference: attachment.isReference,
+    width: attachment.width,
+    height: attachment.height,
     extension,
+    metadata: attachment.metadata ? { ...attachment.metadata } : undefined,
     status: attachment.status,
     type: attachment.type,
     description: attachment.description,
@@ -46,5 +52,10 @@ export const createChatMessageAttachment = (attachment: TdAttachmentItem): TdCha
   };
 };
 
-export const createChatMessageAttachments = (attachments?: TdAttachmentItem[]) =>
+export const createChatMessageAttachments = (attachments?: ChatMessageAttachmentSource[]) =>
   attachments?.map(createChatMessageAttachment);
+
+export const createChatRequestParams = (requestParams: ChatRequestParams): ChatRequestParams => ({
+  ...requestParams,
+  attachments: createChatMessageAttachments(requestParams.attachments),
+});

@@ -29,7 +29,7 @@ import type {
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
-import { createChatMessageAttachments } from './attachment';
+import { createChatRequestParams } from './attachment';
 import type Chatlist from './chat-list';
 import type { TdChatbotApi, TdChatListScrollToOptions, TdChatMessageConfig, TdChatProps } from './type';
 
@@ -185,11 +185,12 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 发送用户消息
    */
   async sendUserMessage(requestParams: ChatRequestParams) {
-    await this.chatEngine.sendUserMessage(requestParams);
+    const ownedRequestParams = createChatRequestParams(requestParams);
+    await this.chatEngine.sendUserMessage(ownedRequestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollList({ to: 'bottom' });
-    this.fire('chat-after-send', requestParams, {
+    this.fire('chat-after-send', ownedRequestParams, {
       composed: true,
     });
   }
@@ -306,7 +307,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     const { value, attachments } = e.detail;
     const params = {
       prompt: value,
-      attachments: createChatMessageAttachments(attachments),
+      attachments,
     } as ChatRequestParams;
     await this.sendUserMessage(params);
   };
