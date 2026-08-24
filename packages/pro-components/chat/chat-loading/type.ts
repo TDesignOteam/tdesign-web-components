@@ -9,7 +9,7 @@ export interface TdChatLoadingProps {
    * 加载的状态形式
    * @default gradient
    */
-  animation?: 'moving' | 'gradient';
+  animation?: 'moving' | 'gradient' | 'dots';
   /**
    * 加载过程展示的文字内容
    * @default ''
