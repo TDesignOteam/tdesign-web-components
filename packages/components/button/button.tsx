@@ -11,6 +11,7 @@ import parseTNode from '@tdesign/web-components-shared/_util/parseTNode';
 import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
+import { buttonDefaultProps } from './defaultProps';
 import { TdButtonProps } from './type';
 
 export interface ButtonProps extends TdButtonProps, StyledProps {}
@@ -39,17 +40,7 @@ export default class Button extends Component<ButtonProps> {
     innerStyle: String,
   };
 
-  static defaultProps = {
-    tag: 'button',
-    variant: 'base',
-    size: 'medium',
-    shape: 'rectangle',
-    loading: false,
-    ghost: false,
-    disabled: false,
-    block: false,
-    ignoreAttributes: [],
-  };
+  static defaultProps = buttonDefaultProps;
 
   get tag() {
     const { tag, href, disabled, loading } = this.props;
