@@ -1,5 +1,3 @@
- 
-
 /**
  * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
  * */
@@ -9,7 +7,7 @@ export interface TdChatLoadingProps {
    * 加载的状态形式
    * @default moving
    */
-  animation?: ChatLoadingAnimationType;
+  animation?: ChatLoadingAnimation;
   /**
    * 加载过程展示的文字内容
    * @default ''
@@ -17,4 +15,4 @@ export interface TdChatLoadingProps {
   text?: string;
 }
 
-export type ChatLoadingAnimationType = 'skeleton' | 'moving' | 'gradient' | 'circle' | 'dots';
+export type ChatLoadingAnimation = 'skeleton' | 'moving' | 'gradient' | 'circle' | 'dots';
