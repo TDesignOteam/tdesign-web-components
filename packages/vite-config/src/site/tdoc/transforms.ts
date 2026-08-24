@@ -1,13 +1,25 @@
 /* eslint-disable no-param-reassign */
 import fs from 'node:fs';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 
 import mdToWc from './md-to-wc.ts';
+
+const require = createRequire(import.meta.url);
 
 let demoImports: Record<string, string> = {};
 let demoCodesImports: Record<string, string> = {};
 
 const ignoreReplaceDemoRegExp = /getting-started\.md/;
+
+// 通过包名解析 @tdesign/common-docs 内的文档路径
+function resolveCommonDocsDoc(pathInPkg: string): string {
+  try {
+    return require.resolve(`@tdesign/common-docs/web/api/${pathInPkg}`);
+  } catch {
+    return '';
+  }
+}
 
 export default {
   before({ source, file }: { source: string; file: string }) {
@@ -20,17 +32,17 @@ export default {
 
     // 统一换成 common 公共文档内容
     if (fileName && source.includes(':: BASE_DOC ::')) {
-      const localeDocPath = path.resolve(resourceDir, `../../../packages/common/docs/web/api/${fileName}`);
-      const defaultDocPath = path.resolve(resourceDir, `../../../packages/common/docs/web/api/${componentName}.md`);
+      const localeDocPath = resolveCommonDocsDoc(fileName);
+      const defaultDocPath = resolveCommonDocsDoc(`${componentName}.md`);
       let baseDoc = '';
-      if (fs.existsSync(localeDocPath)) {
+      if (localeDocPath && fs.existsSync(localeDocPath)) {
         // 优先载入语言版本
         baseDoc = fs.readFileSync(localeDocPath, 'utf-8');
-      } else if (fs.existsSync(defaultDocPath)) {
+      } else if (defaultDocPath && fs.existsSync(defaultDocPath)) {
         // 回退中文默认版本
         baseDoc = fs.readFileSync(defaultDocPath, 'utf-8');
       } else {
-        console.error(`未找到 ${defaultDocPath} 文件`);
+        console.error(`未找到 @tdesign/common-docs/web/api/${componentName}.md 文件`);
       }
       source = source.replace(':: BASE_DOC ::', baseDoc);
     }
