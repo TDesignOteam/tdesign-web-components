@@ -44,7 +44,7 @@ export const createChatMessageAttachment = (attachment: ChatMessageAttachmentSou
     width: attachment.width,
     height: attachment.height,
     extension,
-    metadata: attachment.metadata ? { ...attachment.metadata } : undefined,
+    metadata: attachment.metadata,
     status: attachment.status,
     type: attachment.type,
     description: attachment.description,

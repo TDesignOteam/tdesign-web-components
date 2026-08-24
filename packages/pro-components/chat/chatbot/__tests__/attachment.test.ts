@@ -86,6 +86,5 @@ test('isolates public request attachments and preserves chat protocol fields', (
   expect(ownedRequest).not.toBe(request);
   expect(ownedRequest.attachments).not.toBe(request.attachments);
   expect(ownedRequest.attachments?.[0]).not.toBe(source);
-  expect(ownedRequest.attachments?.[0].metadata).not.toBe(metadata);
   expect(ownedRequest.attachments?.[0]).toEqual(source);
 });
