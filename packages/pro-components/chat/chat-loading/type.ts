@@ -1,18 +1,18 @@
-import { StyledProps } from '@tdesign/web-components-shared/common';
+ 
 
-export type ChatLoadingAnimationType = 'skeleton' | 'moving' | 'gradient' | 'circle' | 'dots';
+/**
+ * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
+ * */
 
-interface ChatLoadingProps {
+export interface TdChatLoadingProps {
   /**
-   * 加载提示文本
+   * 加载的状态形式
+   * @default gradient
+   */
+  animation?: 'moving' | 'gradient';
+  /**
+   * 加载过程展示的文字内容
    * @default ''
    */
   text?: string;
-  /**
-   * 加载动画
-   * @default moving
-   */
-  animation?: ChatLoadingAnimationType;
 }
-
-export interface TdChatLoadingProps extends ChatLoadingProps, StyledProps {}
