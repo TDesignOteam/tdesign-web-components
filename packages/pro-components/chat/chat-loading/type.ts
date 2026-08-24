@@ -7,12 +7,14 @@
 export interface TdChatLoadingProps {
   /**
    * 加载的状态形式
-   * @default gradient
+   * @default moving
    */
-  animation?: 'moving' | 'gradient' | 'dots';
+  animation?: ChatLoadingAnimationType;
   /**
    * 加载过程展示的文字内容
    * @default ''
    */
   text?: string;
 }
+
+export type ChatLoadingAnimationType = 'skeleton' | 'moving' | 'gradient' | 'circle' | 'dots';

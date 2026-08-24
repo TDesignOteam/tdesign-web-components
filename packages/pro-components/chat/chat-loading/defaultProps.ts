@@ -4,4 +4,4 @@
 
 import { TdChatLoadingProps } from './type';
 
-export const chatLoadingDefaultProps: TdChatLoadingProps = { animation: 'gradient' };
+export const chatLoadingDefaultProps: TdChatLoadingProps = { animation: 'moving' };
