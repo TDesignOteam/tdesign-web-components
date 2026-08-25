@@ -1,27 +1,57 @@
+# 主流水线配置：仅保留触发规则与分支映射
+# 可复用的环境配置与 Stage 片段存放于 .cnb/.stages.yml，通过单层 !reference 引用
+
+include:
+  - .cnb/.stages.yml
+
+# develop 分支 push 时执行 lint / test / build
+develop:
+  push:
+    - name: lint-test-build
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.install-deps]
+        - !reference [.lint]
+        - !reference [.test]
+        - !reference [.build]
+
 $:
   push:
-    # 导入密钥仓库文件为环境变量
-    - imports:
+    # 所有分支 push 时同步到 GitHub
+    - name: sync-to-github
+      imports:
         - https://cnb.cool/tencent/tdesign/tdesign-private/-/blob/main/cnb-envs.yml
       stages:
-        - name: sync to github with rebase
-          image: tencentcom/git-sync
-          settings:
-            target_url: https://github.com/TDesignOteam/tdesign-web-components.git
-            auth_type: https
-            username: ${GIT_USERNAME}
-            password: ${GIT_ACCESS_TOKEN}
+        - !reference [.sync-to-github]
+
+  # PR 创建/更新/源分支 push 时执行检查与构建（拆分并行）
+  pull_request:
+    - name: lint
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.install-deps]
+        - !reference [.lint]
+
+    - name: test
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.install-deps]
+        - !reference [.test]
+
+    - name: build
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.install-deps]
+        - !reference [.build]
+
 
   vscode:
-    - docker:
-        image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
-        volumes:
-          - node_modules:cow
-          - .pnpm-store:cow
-      services:
-        - vscode
-        - docker
+    - name: vscode-env
+      docker: !reference [.dev-env-vscode, docker]
+      services: !reference [.dev-env-vscode, services]
       stages:
-        - name: install dependencies
-          script: pnpm install 
-  
+        - !reference [.install-deps]
