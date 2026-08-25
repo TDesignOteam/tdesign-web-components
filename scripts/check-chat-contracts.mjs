@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 import ts from 'typescript';
@@ -19,7 +19,7 @@ const contracts = [
   ['attachments', 'TdAttachmentsProps', 'attachments.tsx'],
   ['filecard', 'TdFileCardProps', 'filecard.tsx'],
   ['chat-action', 'TdChatActionProps', 'action.tsx'],
-  ['chat-loading', 'ChatLoadingProps', 'loading.tsx'],
+  ['chat-loading', 'TdChatLoadingProps', 'loading.tsx'],
 ];
 
 const contentContracts = [
@@ -133,7 +133,8 @@ function runtimePropValidators(componentPath) {
 for (const [folder, interfaceName, componentFile] of contracts) {
   const typePath = resolve(chatRoot, folder, 'type.ts');
   const componentPath = resolve(chatRoot, folder, componentFile);
-  const readmePath = resolve(chatRoot, folder, 'README.md');
+  const defaultReadmePath = resolve(chatRoot, folder, 'README.md');
+  const readmePath = existsSync(defaultReadmePath) ? defaultReadmePath : resolve(chatRoot, folder, `${folder}.md`);
   const typeProps = publicInterfaceProps(typePath, interfaceName);
   const componentProps = runtimeProps(componentPath);
   const readme = readFileSync(readmePath, 'utf8');
