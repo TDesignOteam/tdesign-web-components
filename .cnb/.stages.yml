@@ -1,4 +1,25 @@
-# 可复用的 Stage 片段 — 通过 !reference 插入到各流水线的 stages 中
+# 可复用的环境配置与 Stage 片段 — 通过 !reference 插入到各流水线的 stages 中
+
+# 统一的开发环境镜像（含 node/pnpm 等）
+.dev-env:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+    volumes:
+      - node_modules:cow
+      - .pnpm-store:cow
+  services:
+    - docker
+
+# 含 vscode 服务的开发环境
+.dev-env-vscode:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+    volumes:
+      - node_modules:cow
+      - .pnpm-store:cow
+  services:
+    - vscode
+    - docker
 
 # 初始化子模块（packages/common 为 submodule）
 .init-submodule:

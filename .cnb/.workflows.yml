@@ -1,5 +1,5 @@
 # 可复用的流水线流程模板 — 供 .cnb.yml 通过 !reference 跨文件复用
-# 引用了 .cnb/.shared-config.yml 与 .cnb/.stages.yml 中的公共片段
+# 引用了 .cnb/.stages.yml 中的环境配置与 Stage 片段
 
 # develop 分支 push 时执行 lint / test / build
 .lint-test-build:
