@@ -26,15 +26,39 @@ $:
       stages:
         - !reference [.sync-to-github]
 
-  # PR 创建/更新/源分支 push 时执行类型检查与产物校验
+  # PR 创建/更新/源分支 push 时执行检查与构建（拆分并行）
   pull_request:
-    - name: pr-check
+    - name: lint
       docker: !reference [.dev-env, docker]
       services: !reference [.dev-env, services]
       stages:
+        - !reference [.init-submodule]
         - !reference [.install-deps]
-        - !reference [.type-check]
-        - !reference [.check-packages]
+        - !reference [.lint]
+
+    - name: test
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.init-submodule]
+        - !reference [.install-deps]
+        - !reference [.test]
+
+    - name: build-ui
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.init-submodule]
+        - !reference [.install-deps]
+        - !reference [.build-ui]
+
+    - name: build-chat
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.init-submodule]
+        - !reference [.install-deps]
+        - !reference [.build-chat]
 
   vscode:
     - name: vscode-env

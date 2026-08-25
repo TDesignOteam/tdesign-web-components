@@ -41,10 +41,20 @@
   name: test
   script: pnpm test
 
-# 构建（chat + ui）
+# 构建（chat + ui，默认 build 即 build:chat）
 .build:
   name: build
   script: pnpm run build
+
+# 构建 UI
+.build-ui:
+  name: build ui
+  script: pnpm run build:ui
+
+# 构建 Chat
+.build-chat:
+  name: build chat
+  script: pnpm run build:chat
 
 # 类型检查
 .type-check:
