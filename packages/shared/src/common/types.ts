@@ -1,16 +1,12 @@
-import type { CSSSelector, PlainObject, Styles } from '@common/js/common';
+import type { PlainObject, Styles } from '@common/js/common';
 
 // 从 common 子仓库再导出，避免与本地类型重复定义
 export type {
-  ClassName,
-  CSSSelector,
-  HorizontalAlignEnum,
   OptionData,
   PlainObject,
-  SizeEnum,
   Styles,
-  VerticalAlignEnum,
 } from '@common/js/common';
+
 export {
   ALL_REG,
   ARROW_DOWN_REG,
