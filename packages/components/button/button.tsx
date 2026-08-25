@@ -167,7 +167,7 @@ export default class Button extends Component<ButtonProps> {
       >
         {renderIconSlot()}
         <span className={`${classPrefix}-button__text`} part={`${classPrefix}-button__text`}>
-          <slot></slot>
+          {content ? parseTNode(content) : <slot></slot>}
         </span>
         {suffix && (
           <span className={`${classPrefix}-button__suffix`} part={`${classPrefix}-button__suffix`}>
