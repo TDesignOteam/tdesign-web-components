@@ -14,6 +14,27 @@ develop:
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
 
+    # develop 分支 push 时跑 lint / test / build
+    - name: lint-test-build
+      docker:
+        image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+        volumes:
+          - node_modules:cow
+          - .pnpm-store:cow
+      services:
+        - docker
+      stages:
+        - name: init submodule
+          script: git submodule update --init packages/common
+        - name: install dependencies
+          script: pnpm install
+        - name: lint
+          script: pnpm run lint
+        - name: test
+          script: pnpm test
+        - name: build
+          script: pnpm run build
+
 $:
   pull_request:
     # 不限分支，PR 创建/更新/源分支 push 时触发
