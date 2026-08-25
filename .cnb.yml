@@ -8,10 +8,13 @@ include:
 
 develop:
   push:
-    - !reference [.sync-to-github]
     - !reference [.lint-test-build]
 
 $:
+  push:
+    # 所有分支 push 时同步到 GitHub
+    - !reference [.sync-to-github]
+
   pull_request:
     - !reference [.pr-check]
 
