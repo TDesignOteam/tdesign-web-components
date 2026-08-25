@@ -6,7 +6,6 @@ export type {
   PlainObject,
   Styles,
 } from '@common/js/common';
-
 export {
   ALL_REG,
   ARROW_DOWN_REG,
