@@ -1,6 +1,7 @@
+import '../../style/variables.js';
+
 import { css, globalCSS } from 'omi';
 
-import '../../style/variables.js';
 import styles from './_index.less';
 import cherryIconFont from './cherry-icon-font.less';
 
