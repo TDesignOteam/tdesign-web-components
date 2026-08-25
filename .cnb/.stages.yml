@@ -21,11 +21,6 @@
     - vscode
     - docker
 
-# 初始化子模块（packages/common 为 submodule）
-.init-submodule:
-  name: init submodule
-  script: git submodule update --init
-
 # 安装依赖
 .install-deps:
   name: install dependencies
