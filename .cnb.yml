@@ -41,19 +41,13 @@ $:
         - !reference [.install-deps]
         - !reference [.test]
 
-    - name: build-ui
+    - name: build
       docker: !reference [.dev-env, docker]
       services: !reference [.dev-env, services]
       stages:
         - !reference [.install-deps]
-        - !reference [.build-ui]
+        - !reference [.build]
 
-    - name: build-chat
-      docker: !reference [.dev-env, docker]
-      services: !reference [.dev-env, services]
-      stages:
-        - !reference [.install-deps]
-        - !reference [.build-chat]
 
   vscode:
     - name: vscode-env
