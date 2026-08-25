@@ -1,0 +1,36 @@
+# 可复用的 Stage 片段 — 通过 !reference 插入到各流水线的 stages 中
+
+# 初始化子模块（packages/common 为 submodule）
+.init-submodule:
+  name: init submodule
+  script: git submodule update --init packages/common
+
+# 安装依赖
+.install-deps:
+  name: install dependencies
+  script: pnpm install
+
+# lint（含 check:types + eslint）
+.lint:
+  name: lint
+  script: pnpm run lint
+
+# 单元测试（vitest）
+.test:
+  name: test
+  script: pnpm test
+
+# 构建（chat + ui）
+.build:
+  name: build
+  script: pnpm run build
+
+# 类型检查
+.type-check:
+  name: type check
+  script: pnpm run check:types
+
+# 产物校验（构建 chat 并检查打包产物）
+.check-packages:
+  name: check packages
+  script: pnpm run check:pack

@@ -1,0 +1,29 @@
+# 公共环境配置 — 供其他文件通过 !reference 跨文件复用
+
+# 统一的开发环境镜像（含 node/pnpm 等）
+.dev-env:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+    volumes:
+      - node_modules:cow
+      - .pnpm-store:cow
+  services:
+    - docker
+
+# 无缓存卷的轻量环境（用于仅同步/无依赖构建的场景）
+.dev-env-lite:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+  services:
+    - docker
+
+# 含 vscode 服务的开发环境
+.dev-env-vscode:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+    volumes:
+      - node_modules:cow
+      - .pnpm-store:cow
+  services:
+    - vscode
+    - docker

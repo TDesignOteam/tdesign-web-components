@@ -1,0 +1,47 @@
+# 可复用的流水线流程模板 — 供 .cnb.yml 通过 !reference 跨文件复用
+# 引用了 .cnb/.shared-config.yml 与 .cnb/.stages.yml 中的公共片段
+
+# develop 分支 push 时执行 lint / test / build
+.lint-test-build:
+  name: lint-test-build
+  docker: !reference [.dev-env, docker]
+  services: !reference [.dev-env, services]
+  stages:
+    - !reference [.init-submodule]
+    - !reference [.install-deps]
+    - !reference [.lint]
+    - !reference [.test]
+    - !reference [.build]
+
+# PR 创建/更新/源分支 push 时执行类型检查与产物校验
+.pr-check:
+  name: pr-check
+  docker: !reference [.dev-env, docker]
+  services: !reference [.dev-env, services]
+  stages:
+    - !reference [.install-deps]
+    - !reference [.type-check]
+    - !reference [.check-packages]
+
+# push 到 develop 时同步到 GitHub（需导入密钥仓库）
+.sync-to-github:
+  name: sync-to-github
+  imports:
+    - https://cnb.cool/tencent/tdesign/tdesign-private/-/blob/main/cnb-envs.yml
+  docker: !reference [.dev-env-lite, docker]
+  stages:
+    - name: sync to github with rebase
+      image: tencentcom/git-sync
+      settings:
+        target_url: https://github.com/TDesignOteam/tdesign-web-components.git
+        auth_type: https
+        username: ${GIT_USERNAME}
+        password: ${GIT_ACCESS_TOKEN}
+
+# vscode 开发环境
+.vscode-env:
+  name: vscode-env
+  docker: !reference [.dev-env-vscode, docker]
+  services: !reference [.dev-env-vscode, services]
+  stages:
+    - !reference [.install-deps]
