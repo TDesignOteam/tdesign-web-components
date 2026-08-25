@@ -233,9 +233,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
       // 系统消息渲染
       if (role === 'system') {
         return (
-          <div key={elementKey} className={`${getClassPrefix()}-chat__text--${role}`}>
-            {content.data}
-          </div>
+          <slot key={elementKey} name={`${content.type}-${index}`}>
+            <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>
+          </slot>
         );
       }
       // 用户消息渲染
@@ -249,9 +249,9 @@ export default class ChatItem extends Component<ChatMessageProps> {
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           return (
-            <div key={elementKey} className={`${getClassPrefix()}-chat__text--${role}`}>
-              {content.data}
-            </div>
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              <div className={`${getClassPrefix()}-chat__text--${role}`}>{content.data}</div>
+            </slot>
           );
         }
         return <slot key={elementKey} name={`${content?.slotName || `${content.type}-${index}`}`}></slot>;
@@ -317,20 +317,24 @@ export default class ChatItem extends Component<ChatMessageProps> {
           // 图片
           const { url, name } = content.data;
           return (
-            <div key={elementKey} className={`${className}__image`}>
-              <img src={url} alt={name} width={200} height={200}></img>
-            </div>
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              <div key={elementKey} className={`${className}__image`}>
+                <img src={url} alt={name} width={200} height={200}></img>
+              </div>
+            </slot>
           );
         }
         if (isTextContent(content) || isMarkdownContent(content)) {
           // 正文回答
           return (
-            <t-chat-md-content
-              key={elementKey}
-              className={`${className}__detail`}
-              {...chatContentProps?.markdown}
-              content={content.data}
-            ></t-chat-md-content>
+            <slot key={elementKey} name={`${content.type}-${index}`}>
+              <t-chat-md-content
+                key={elementKey}
+                className={`${className}__detail`}
+                {...chatContentProps?.markdown}
+                content={content.data}
+              ></t-chat-md-content>
+            </slot>
           );
         }
         // 自定义渲染slot
