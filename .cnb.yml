@@ -1,8 +1,10 @@
-$:
+develop:
   push:
     # 导入密钥仓库文件为环境变量
     - imports:
         - https://cnb.cool/tencent/tdesign/tdesign-private/-/blob/main/cnb-envs.yml
+      docker:
+        image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
       stages:
         - name: sync to github with rebase
           image: tencentcom/git-sync
@@ -11,6 +13,21 @@ $:
             auth_type: https
             username: ${GIT_USERNAME}
             password: ${GIT_ACCESS_TOKEN}
+
+$:
+  pull_request:
+    # 不限分支，PR 创建/更新/源分支 push 时触发
+    - docker:
+        image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+      services:
+        - docker
+      stages:
+        - name: install dependencies
+          script: pnpm install
+        - name: type check
+          script: pnpm run check:types
+        - name: check packages
+          script: pnpm run check:pack
 
   vscode:
     - docker:
@@ -23,5 +40,4 @@ $:
         - docker
       stages:
         - name: install dependencies
-          script: pnpm install 
-  
+          script: pnpm install
