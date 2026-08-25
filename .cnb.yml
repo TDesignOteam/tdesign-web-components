@@ -1,21 +1,44 @@
 # 主流水线配置：仅保留触发规则与分支映射
-# 可复用的环境配置 + Stage 片段存放于 .cnb/.stages.yml，流程模板存放于 .cnb/.workflows.yml
+# 可复用的环境配置与 Stage 片段存放于 .cnb/.stages.yml，通过单层 !reference 引用
 
 include:
   - .cnb/.stages.yml
-  - .cnb/.workflows.yml
 
+# develop 分支 push 时执行 lint / test / build
 develop:
   push:
-    - !reference [.lint-test-build]
+    - name: lint-test-build
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.init-submodule]
+        - !reference [.install-deps]
+        - !reference [.lint]
+        - !reference [.test]
+        - !reference [.build]
 
 $:
   push:
     # 所有分支 push 时同步到 GitHub
-    - !reference [.sync-to-github]
+    - name: sync-to-github
+      imports:
+        - https://cnb.cool/tencent/tdesign/tdesign-private/-/blob/main/cnb-envs.yml
+      stages:
+        - !reference [.sync-to-github]
 
+  # PR 创建/更新/源分支 push 时执行类型检查与产物校验
   pull_request:
-    - !reference [.pr-check]
+    - name: pr-check
+      docker: !reference [.dev-env, docker]
+      services: !reference [.dev-env, services]
+      stages:
+        - !reference [.install-deps]
+        - !reference [.type-check]
+        - !reference [.check-packages]
 
   vscode:
-    - !reference [.vscode-env]
+    - name: vscode-env
+      docker: !reference [.dev-env-vscode, docker]
+      services: !reference [.dev-env-vscode, services]
+      stages:
+        - !reference [.install-deps]
