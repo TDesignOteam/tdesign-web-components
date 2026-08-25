@@ -2,27 +2,45 @@ import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, test } from 'vitest';
 
-const componentVariableFiles = [
+const globalVariableFiles = [
   '../chatbot/style/_var.less',
   '../chat-sender/style/_var.less',
   '../chat-action/style/_var.less',
   '../chat-message/style/_var.less',
+  '../attachments/style/_var.less',
+  '../chat-loading/style/_var.less',
 ];
 
-describe('chat Shadow DOM variables', () => {
-  test.each(componentVariableFiles)('%s declares component defaults on the host', (relativePath) => {
+const componentStyleEntries = [
+  '../chatbot/style/index.js',
+  '../chat-sender/style/index.js',
+  '../chat-action/style/index.js',
+  '../chat-message/style/index.js',
+  '../attachments/style/index.js',
+  '../chat-loading/style/index.js',
+  '../filecard/style/index.js',
+];
+
+describe('global Chat variables', () => {
+  test.each(globalVariableFiles)('%s declares defaults on the document root', (relativePath) => {
     const source = readFileSync(fileURLToPath(new URL(relativePath, import.meta.url)), 'utf8');
 
-    expect(source).toMatch(/:host\s*\{/);
-    expect(source).not.toMatch(/:root\s*\{/);
+    expect(source).toMatch(/:root\s*\{/);
+    expect(source).not.toMatch(/:host\s*\{/);
   });
 
-  test('chat sender includes its variables in its own Shadow DOM stylesheet', () => {
-    const source = readFileSync(
-      fileURLToPath(new URL('../chat-sender/style/chat-sender.less', import.meta.url)),
-      'utf8',
-    );
+  test('the shared variable entry combines every distinct Chat variable group', () => {
+    const source = readFileSync(fileURLToPath(new URL('../style/variables.less', import.meta.url)), 'utf8');
 
-    expect(source).toMatch(/^@import\s+["']\.\/import\.less["'];/m);
+    expect(source).toContain('@import "../chatbot/style/_var.less";');
+    expect(source).toContain('@import "../chat-sender/style/_var.less";');
+    expect(source).toContain('@import "../attachments/style/_var.less";');
+    expect(source).toContain('@import "../chat-loading/style/_var.less";');
+  });
+
+  test.each(componentStyleEntries)('%s registers the shared variables for on-demand imports', (relativePath) => {
+    const source = readFileSync(fileURLToPath(new URL(relativePath, import.meta.url)), 'utf8');
+
+    expect(source).toContain("import '../../style/variables.js';");
   });
 });

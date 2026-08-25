@@ -1,5 +1,6 @@
 import { css, globalCSS } from 'omi';
 
+import '../../style/variables.js';
 // 为了做主题切换
 import styles from './_index.less';
 
