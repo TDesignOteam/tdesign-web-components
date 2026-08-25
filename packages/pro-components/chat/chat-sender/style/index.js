@@ -1,3 +1,5 @@
+import '../../style/variables.js';
+
 import { css, globalCSS } from 'omi';
 
 // 为了做主题切换

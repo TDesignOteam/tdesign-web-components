@@ -13,7 +13,7 @@
 
 @import "@common/style/web/components/chat/_var.less";
 
-:root {
+:where(:root) {
   // 盒模型
   --td-chat-list-padding-bottom: 0;
   --td-chat-list-scroll-button-top: calc(100% - 64px);
@@ -200,11 +200,12 @@
   --td-chat-md-blockquote-border-left: 4px solid #d9d9d9;
   --td-chat-md-blockquote-color: var(--td-gray-color-7);
 
+
   --td-chat-md-footnote-bg: var(--td-bg-color-page);
-  
+
   --td-chat-md-hr-margin: 16px 0;
   --td-chat-md-hr-border: 1px solid rgba(0, 0, 0, 0.08);
-  
+
   --td-chat-md-table-border: 1px solid var(--td-bg-color-secondarycontainer);
   --td-chat-md-table-radius: 8px;
   --td-chat-md-table-margin: 8px 0;
