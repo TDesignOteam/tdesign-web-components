@@ -300,6 +300,9 @@ importers:
       '@tdesign/ai-chat-engine':
         specifier: catalog:runtime
         version: 0.0.2(immer@10.2.0)
+      '@tdesign/web-components':
+        specifier: workspace:^
+        version: link:../tdesign-web-components
       cherry-markdown:
         specifier: catalog:runtime
         version: 0.11.8
