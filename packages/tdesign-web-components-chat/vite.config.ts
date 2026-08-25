@@ -21,7 +21,7 @@ const libOptions: LibViteOptions = {
   pipeline: {
     // Chat 的公开附件类型间接依赖 common；独立构建时也必须刷新声明，避免 submodule 更新后复用旧缓存。
     refreshCommonTypes: true,
-    requireUiBuilt: true,
+    requireUiBuilt: false,
   },
 };
 

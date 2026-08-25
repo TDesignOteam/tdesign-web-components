@@ -1,0 +1,62 @@
+# 可复用的环境配置与 Stage 片段 — 通过 !reference 插入到各流水线的 stages 中
+
+# 统一的开发环境镜像（含 node/pnpm 等）
+.dev-env:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+    volumes:
+      - node_modules:cow
+      - .pnpm-store:cow
+  services:
+    - docker
+
+# 含 vscode 服务的开发环境
+.dev-env-vscode:
+  docker:
+    image: docker.cnb.cool/tencent/tdesign/default-dev-env:latest
+    volumes:
+      - node_modules:cow
+      - .pnpm-store:cow
+  services:
+    - vscode
+    - docker
+
+# 安装依赖
+.install-deps:
+  name: install dependencies
+  script: pnpm install
+
+# lint（含 check:types + eslint）
+.lint:
+  name: lint
+  script: pnpm run lint
+
+# 单元测试（vitest）
+.test:
+  name: test
+  script: pnpm test
+
+# 构建（chat + ui，默认 build 即 build:chat）
+.build:
+  name: build
+  script: pnpm run build
+
+# 类型检查
+.type-check:
+  name: type check
+  script: pnpm run check:types
+
+# 产物校验（构建 chat 并检查打包产物）
+.check-packages:
+  name: check packages
+  script: pnpm run check:pack
+
+# 同步到 GitHub（rebase 方式，需导入密钥仓库后使用 ${GIT_USERNAME}/${GIT_ACCESS_TOKEN}）
+.sync-to-github:
+  name: sync to github with rebase
+  image: tencentcom/git-sync
+  settings:
+    target_url: https://github.com/TDesignOteam/tdesign-web-components.git
+    auth_type: https
+    username: ${GIT_USERNAME}
+    password: ${GIT_ACCESS_TOKEN}
