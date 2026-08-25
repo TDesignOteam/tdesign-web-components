@@ -23,12 +23,11 @@
     - !reference [.type-check]
     - !reference [.check-packages]
 
-# push 到 develop 时同步到 GitHub（需导入密钥仓库）
+# 所有分支 push 时同步到 GitHub（需导入密钥仓库）
 .sync-to-github:
   name: sync-to-github
   imports:
     - https://cnb.cool/tencent/tdesign/tdesign-private/-/blob/main/cnb-envs.yml
-  docker: !reference [.dev-env-lite, docker]
   stages:
     - !reference [.sync-to-github]
 
