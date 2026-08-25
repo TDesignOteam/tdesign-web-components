@@ -34,3 +34,13 @@
 .check-packages:
   name: check packages
   script: pnpm run check:pack
+
+# 同步到 GitHub（rebase 方式，需导入密钥仓库后使用 ${GIT_USERNAME}/${GIT_ACCESS_TOKEN}）
+.sync-to-github:
+  name: sync to github with rebase
+  image: tencentcom/git-sync
+  settings:
+    target_url: https://github.com/TDesignOteam/tdesign-web-components.git
+    auth_type: https
+    username: ${GIT_USERNAME}
+    password: ${GIT_ACCESS_TOKEN}

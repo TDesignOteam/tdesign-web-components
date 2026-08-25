@@ -30,13 +30,7 @@
     - https://cnb.cool/tencent/tdesign/tdesign-private/-/blob/main/cnb-envs.yml
   docker: !reference [.dev-env-lite, docker]
   stages:
-    - name: sync to github with rebase
-      image: tencentcom/git-sync
-      settings:
-        target_url: https://github.com/TDesignOteam/tdesign-web-components.git
-        auth_type: https
-        username: ${GIT_USERNAME}
-        password: ${GIT_ACCESS_TOKEN}
+    - !reference [.sync-to-github]
 
 # vscode 开发环境
 .vscode-env:
