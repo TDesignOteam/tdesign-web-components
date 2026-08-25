@@ -11,8 +11,7 @@
 // 如：@button-line-bg-color-hover
 // 如：@button-line-height-s
 
-
-:host {
+:where(:root) {
   --td-attachment-scroll-btn-wh: 24px;
   --td-attachment-scroll-btn-border: 1px solid var(--td-component-border);
   --td-attachment-scroll-btn-bgc: var(--td-bg-color-container);
@@ -26,5 +25,3 @@
 @attachment-arrow-left: 5px;
 
 @attachment-arrow-opacity: 0.6;
-
-

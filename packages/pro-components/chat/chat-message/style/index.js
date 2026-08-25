@@ -1,3 +1,5 @@
+import '../../style/variables.js';
+
 import { css, globalCSS } from 'omi';
 
 import styles from './_index.less';
