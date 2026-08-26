@@ -2,6 +2,7 @@ import '@tdesign/web-components-shared/common/fake-arrow';
 import 'omi-transition';
 
 import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, computed, signal, tag } from 'omi';
 
@@ -58,6 +59,10 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     this.isDisabled = computed(() => this.props.disabled || this.injection.disabled.value);
   }
 
+  ready(): void {
+    setExportparts(this);
+  }
+
   inject = [
     'getUniqId',
     'getCollapseValue',
@@ -109,6 +114,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     return (
       <div
         className={classname(`${className}__icon`, [`${className}__icon--${expandIconPlacement.value}`])}
+        part={`${className}__icon`}
         onClick={this.handleClick}
       >
         {typeof this.props.expandIcon !== 'boolean' ? (
@@ -133,6 +139,7 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
         className={classname(`${className}__header`, {
           [`${classPrefix}-is-clickable`]: expandOnRowClick?.value && !this.isDisabled.value,
         })}
+        part={`${className}__header`}
         onClick={(e) => this.handleClick(e, true)}
       >
         <div className={`${className}__header-left`}>{expandIconPlacement?.value === 'left' && this.renderIcon()}</div>
@@ -174,9 +181,10 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
           afterLeave: this.afterLeave,
         }}
         className={`${className}__body`}
+        part={`${className}__body`}
         show={isActive}
       >
-        <div className={`${className}__content`}>
+        <div className={`${className}__content`} part={`${className}__content`}>
           <slot>{this.props.content}</slot>
         </div>
       </div>
