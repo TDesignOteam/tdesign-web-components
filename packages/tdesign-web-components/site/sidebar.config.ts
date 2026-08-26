@@ -22,7 +22,7 @@ export default [
         title: '自定义样式',
         titleEn: 'Style Customization',
         name: 'style',
-        path: '/webcomponents/style',
+        path: '/web-components/style',
         component: () => import('@docs/style.md'),
       },
       // {
