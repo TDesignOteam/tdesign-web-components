@@ -128,7 +128,7 @@ export default class Collapse extends Component<TdCollapseProps> {
     );
 
     return (
-      <div className={classes} style={innerStyle} part={`${classPrefix}-collapse`}>
+      <div className={classes} style={innerStyle}>
         <slot></slot>
       </div>
     );

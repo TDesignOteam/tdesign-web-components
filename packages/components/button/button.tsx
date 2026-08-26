@@ -168,21 +168,16 @@ export default class Button extends Component<ButtonProps> {
           },
           innerClass,
         )}
-        part={`${classPrefix}-button`}
         onClick={this.clickHandle}
         style={innerStyle}
         disabled={isDisabled || undefined}
         {...rest}
       >
         {renderIconSlot()}
-        <span className={`${classPrefix}-button__text`} part={`${classPrefix}-button__text`}>
+        <span className={`${classPrefix}-button__text`}>
           <slot></slot>
         </span>
-        {suffix && (
-          <span className={`${classPrefix}-button__suffix`} part={`${classPrefix}-button__suffix`}>
-            {parseTNode(suffix)}
-          </span>
-        )}
+        {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
   }
