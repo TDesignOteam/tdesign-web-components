@@ -32,13 +32,18 @@ export function createComponentStylePlugin(): Plugin {
   };
 }
 
-const { visitor } = babelAddPartAttributePlugin({
-  types: t,
-  jsxFactoryName: 'OmiComponent',
-});
+/**
+ * 只为组件源码中的 Omi JSX 自动补充 Shadow DOM part 属性。
+ *
+ * 文档站的 JSX 会被编译为 `OmiComponent.h(...)`，库构建（ESM/IIFE）的 JSX 会被
+ * 编译为 `Component.h(...)`，两者的 pragma 不同，因此需要按场景传入 jsxFactoryName。
+ */
+export function createPartAttributePlugin(jsxFactoryName: string = 'OmiComponent'): Plugin {
+  const { visitor } = babelAddPartAttributePlugin({
+    types: t,
+    jsxFactoryName,
+  });
 
-/** 只为组件源码中的 Omi JSX 自动补充 Shadow DOM part 属性。 */
-export function createPartAttributePlugin(): Plugin {
   return {
     name: 'vite-plugin-add-component-part',
 
@@ -64,5 +69,5 @@ export function createPartAttributePlugin(): Plugin {
 
 /** 文档站需要的组件源码转换集合。 */
 export function createComponentSitePlugins(): Plugin[] {
-  return [createComponentStylePlugin(), createPartAttributePlugin()];
+  return [createComponentStylePlugin(), createPartAttributePlugin('OmiComponent')];
 }

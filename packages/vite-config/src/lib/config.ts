@@ -7,7 +7,7 @@ import { createLibDtsPlugin, libDtsOxcConfig } from './dts.ts';
 import { generateEntryPlugin } from './generate-entry.ts';
 import { cleanPublishArtifacts, LIB_BUILD_PATHS } from './pipeline-utils.ts';
 import { runLibPostProcess } from './post-process.ts';
-import { createComponentStylePlugin } from '../plugins/component.ts';
+import { createComponentStylePlugin, createPartAttributePlugin } from '../plugins/component.ts';
 import { runPrepare } from '../prepare/index.ts';
 import { getWorkspaceRoot } from '../shared/workspace.ts';
 import {
@@ -55,6 +55,8 @@ function createSharedPlugins(monorepoRoot: string, generateEntry: boolean) {
   return [
     ...(generateEntry ? [generateEntryPlugin(resolve(monorepoRoot, 'packages/components'))] : []),
     createComponentStylePlugin(),
+    // 库构建的 JSX pragma 为 `Component.h`（见 libOxcConfig），传入与之一致的 factoryName。
+    createPartAttributePlugin('Component'),
   ];
 }
 
@@ -165,7 +167,7 @@ function createIifeConfig(options: LibViteOptions): UserConfig {
         },
       },
     },
-    plugins: [createComponentStylePlugin()],
+    plugins: [createComponentStylePlugin(), createPartAttributePlugin('Component')],
   };
 }
 
