@@ -1,4 +1,5 @@
 import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, OmiProps, signal, tag } from 'omi';
 
@@ -109,6 +110,10 @@ export default class Collapse extends Component<TdCollapseProps> {
     if (typeof expandOnRowClick !== 'undefined') {
       this.innerExpandOnRowClick.value = expandOnRowClick;
     }
+  }
+
+  ready(): void {
+    setExportparts(this);
   }
 
   render(props: OmiProps<CollapseProps>): TNode {

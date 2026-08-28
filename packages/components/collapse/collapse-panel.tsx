@@ -2,6 +2,7 @@ import '@tdesign/web-components-shared/common/fake-arrow';
 import 'omi-transition';
 
 import classname, { classPrefix } from '@tdesign/web-components-shared/_util/classname';
+import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { StyledProps, TNode } from '@tdesign/web-components-shared/common';
 import { bind, Component, computed, signal, tag } from 'omi';
 
@@ -56,6 +57,10 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
     }
 
     this.isDisabled = computed(() => this.props.disabled || this.injection.disabled.value);
+  }
+
+  ready(): void {
+    setExportparts(this);
   }
 
   inject = [
@@ -137,16 +142,12 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
       >
         <div className={`${className}__header-left`}>{expandIconPlacement?.value === 'left' && this.renderIcon()}</div>
 
-        <div className={`${className}__header-content`} part={`${className}__header-content`}>
+        <div className={`${className}__header-content`}>
           <slot name="header">{this.props.header}</slot>
         </div>
-        <div className={`${className}__header--blank`} part={`${className}__header--blank`}></div>
-        <div className={`${className}__header-right`} part={`${className}__header-right`}>
-          <div
-            className={`${className}__header-right-content`}
-            part={`${className}__header-right-content`}
-            onClick={(e: MouseEvent) => e.stopPropagation()}
-          >
+        <div className={`${className}__header--blank`}></div>
+        <div className={`${className}__header-right`}>
+          <div className={`${className}__header-right-content`} onClick={(e: MouseEvent) => e.stopPropagation()}>
             {this.props.headerRightContent}
           </div>
           {expandIconPlacement?.value === 'right' && this.renderIcon()}
@@ -194,14 +195,12 @@ export default class CollapsePanel extends Component<TdCollapsePanelProps> {
           },
           innerClass,
         )}
-        part={`${className}`}
       >
         <div
           className={classname(`${className}__wrapper`, {
             [`${classPrefix}--borderless`]: this.injection?.borderless?.value,
           })}
           style={innerStyle}
-          part={`${className}__wrapper`}
         >
           {this.renderHeader()}
           {this.renderBody()}
