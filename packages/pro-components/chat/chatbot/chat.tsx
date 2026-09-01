@@ -29,7 +29,7 @@ import type {
 import { TdChatSenderParams } from '../chat-sender';
 import type ChatSender from '../chat-sender/chat-sender';
 import { TdAttachmentItem } from '../filecard';
-import { createChatMessageAttachments } from './attachment';
+import { createChatRequestParams } from './attachment';
 import type Chatlist from './chat-list';
 import type { TdChatbotApi, TdChatListScrollToOptions, TdChatMessageConfig, TdChatProps } from './type';
 
@@ -116,6 +116,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
     return false;
   }
 
+  private slotObserver?: MutationObserver;
+
   install() {
     this.chatEngine = new ChatEngine();
   }
@@ -123,6 +125,14 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   ready(): void {
     this.initChat();
     this.update();
+    // Vue/React 桥接层会随消息状态动态增删 light DOM 插槽内容（如消息完成后插入的 actionbar）。
+    // 实测 Omi 在 Vue 中 不感知 light DOM 变化（react中会触发变更），新插槽要等下一次 render 才显示.
+    // 这里监听 childList 变化主动触发更新。
+    // beforeRender 中已做 children 的差异刷新，此处仅负责触发渲染。
+    this.slotObserver = new MutationObserver(() => {
+      this.update();
+    });
+    this.slotObserver.observe(this, { childList: true });
   }
 
   /**
@@ -177,6 +187,7 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   }
 
   uninstall() {
+    this.slotObserver?.disconnect();
     this.unsubscribeMsg?.();
     this.handleStop();
   }
@@ -185,11 +196,12 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 发送用户消息
    */
   async sendUserMessage(requestParams: ChatRequestParams) {
-    await this.chatEngine.sendUserMessage(requestParams);
+    const ownedRequestParams = createChatRequestParams(requestParams);
+    await this.chatEngine.sendUserMessage(ownedRequestParams);
     this.uploadedAttachments = [];
     this.files.value = [];
     this.scrollList({ to: 'bottom' });
-    this.fire('chat-after-send', requestParams, {
+    this.fire('chat-after-send', ownedRequestParams, {
       composed: true,
     });
   }
@@ -303,10 +315,11 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
    * 处理发送消息事件
    */
   private handleSend = async (e: CustomEvent<TdChatSenderParams>) => {
+    this.props.senderProps?.onSend?.(e);
     const { value, attachments } = e.detail;
     const params = {
       prompt: value,
-      attachments: createChatMessageAttachments(attachments),
+      attachments,
     } as ChatRequestParams;
     await this.sendUserMessage(params);
   };
@@ -314,7 +327,8 @@ export default class Chatbot extends Component<TdChatProps> implements TdChatbot
   /**
    * 处理停止聊天事件
    */
-  private handleStop = () => {
+  private handleStop = (e?: CustomEvent<string>) => {
+    if (e) this.props.senderProps?.onStop?.(e);
     this.chatEngine.abortChat();
     this.fire(
       'chatStop',

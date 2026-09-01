@@ -342,8 +342,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
                 onChange={this.handleChange}
                 onKeyDown={this.handleKeyDown}
                 onKeyUp={this.handleKeyUp}
-                onCompositionStart={this.handleCompositionStart}
-                onCompositionEnd={this.handleCompositionEnd}
                 onFocus={this.handleFocus}
                 onBlur={this.handleBlur}
               />
@@ -373,7 +371,7 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   private handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'Shift') this.shiftDown = true;
-    if (e.key === 'Enter' && !this.shiftDown) {
+    if (e.key === 'Enter' && !this.shiftDown && !e.isComposing) {
       e.preventDefault();
       this.clickSend();
     }
@@ -381,14 +379,6 @@ export default class ChatSender extends Component<TdChatSenderProps> {
 
   private handleKeyUp = (e: KeyboardEvent) => {
     if (e.key === 'Shift') this.shiftDown = false;
-  };
-
-  private handleCompositionStart = () => {
-    this.shiftDown = true;
-  };
-
-  private handleCompositionEnd = () => {
-    this.shiftDown = false;
   };
 
   private handleFocus = () => {

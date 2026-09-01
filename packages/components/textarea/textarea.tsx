@@ -187,11 +187,7 @@ export default class Textarea extends Component<TdTextareaProps> {
     } = props;
 
     return (
-      <div
-        class={classNames(`${this.classPrefix}-textarea`, innerClass)}
-        part={`${this.classPrefix}-textarea`}
-        style={innerStyle}
-      >
+      <div class={classNames(`${this.classPrefix}-textarea`, innerClass)} style={innerStyle}>
         <textarea
           {...this.eventProps}
           class={this.cls()}
@@ -209,14 +205,7 @@ export default class Textarea extends Component<TdTextareaProps> {
           ref={this.textArea}
           enterkeyhint={enterkeyhint}
         />
-        {tips && (
-          <div
-            class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}
-            part={`${this.classPrefix}-tips`}
-          >
-            {tips}
-          </div>
-        )}
+        {tips && <div class={classNames(`${this.classPrefix}-tips`, this.getTipsStyle(status))}>{tips}</div>}
       </div>
     );
   }

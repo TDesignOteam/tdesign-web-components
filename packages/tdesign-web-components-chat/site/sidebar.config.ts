@@ -19,12 +19,20 @@ export default [
         component: () => import('../CHANGELOG.md'),
       },
       {
-        title: '组件概览',
-        titleEn: 'Overview',
-        name: 'overview',
-        path: '/pro-web-components/overview',
-        component: () => import('@common/docs/web/overview.md'),
+        title: '自定义样式',
+        titleEn: 'Style Customization',
+        name: 'style',
+        path: '/pro-web-components/style',
+        component: () => import('@docs/style.md'),
       },
+      // 目前无chat组件的概览
+      // {
+      //   title: '组件概览',
+      //   titleEn: 'Overview',
+      //   name: 'overview',
+      //   path: '/pro-web-components/overview',
+      //   component: () => import('@common/docs/web/overview.md'),
+      // },
     ],
   },
   {
