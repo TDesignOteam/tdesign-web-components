@@ -6,6 +6,7 @@ import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
 import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, tag } from 'omi';
 
+import { chatLoadingPropTypes } from './propTypes';
 import { TdChatLoadingProps } from './type';
 
 import styles from './style/loading.less';
@@ -16,10 +17,7 @@ const className = `${getClassPrefix()}-chat-loading`;
 export default class Loading extends Component<ChatLoadingProps> {
   static css = [styles];
 
-  static propTypes = {
-    animation: String,
-    text: String,
-  };
+  static propTypes = chatLoadingPropTypes;
 
   static defaultProps: Partial<TdChatLoadingProps> = {
     text: '',

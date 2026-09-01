@@ -12,6 +12,7 @@ import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, tag } from 'omi';
 
 import { buttonDefaultProps } from './defaultProps';
+import { buttonPropTypes } from './propTypes';
 import { TdButtonProps } from './type';
 
 export interface ButtonProps extends TdButtonProps, StyledProps {}
@@ -20,25 +21,7 @@ export interface ButtonProps extends TdButtonProps, StyledProps {}
 export default class Button extends Component<ButtonProps> {
   static css = [];
 
-  static propTypes = {
-    children: [Function, Object, String, Number],
-    theme: String,
-    type: String,
-    variant: String,
-    size: String,
-    shape: String,
-    icon: Object,
-    loading: Boolean,
-    ghost: Boolean,
-    block: Boolean,
-    disabled: Boolean,
-    href: String,
-    tag: String,
-    content: [String, Object],
-    onClick: Function,
-    ignoreAttributes: Array,
-    innerStyle: String,
-  };
+  static propTypes = buttonPropTypes;
 
   static defaultProps = buttonDefaultProps;
 
@@ -166,7 +149,8 @@ export default class Button extends Component<ButtonProps> {
       >
         {renderIconSlot()}
         <span className={`${classPrefix}-button__text`} part={`${classPrefix}-button__text`}>
-          {content ? parseTNode(content) : <slot></slot>}        </span>
+          {content ? parseTNode(content) : <slot></slot>}{' '}
+        </span>
         {suffix && <span className={`${classPrefix}-button__suffix`}>{parseTNode(suffix)}</span>}
       </Tag>
     );
