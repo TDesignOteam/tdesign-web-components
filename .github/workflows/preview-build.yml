@@ -31,6 +31,8 @@ jobs:
 
       - run: pnpm -C packages/tdesign-web-components/site run build --mode=preview
 
+      - run: cp packages/tdesign-web-components/site/dist/index.html packages/tdesign-web-components/site/dist/200.html
+
       - uses: actions/upload-artifact@v7
         with:
           name: tdesign-web-components-site
@@ -54,6 +56,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm -C packages/tdesign-web-components-chat/site run build --mode=preview
+
+      - run: cp packages/tdesign-web-components-chat/site/dist/index.html packages/tdesign-web-components-chat/site/dist/200.html
 
       - uses: actions/upload-artifact@v7
         with:
