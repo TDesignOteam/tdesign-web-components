@@ -19,7 +19,7 @@ const contracts = [
   ['attachments', 'TdAttachmentsProps', 'attachments.tsx'],
   ['filecard', 'TdFileCardProps', 'filecard.tsx'],
   ['chat-action', 'TdChatActionProps', 'action.tsx'],
-  ['chat-loading', 'TdChatLoadingProps', 'loading.tsx'],
+  ['chat-loading', 'TdChatLoadingProps', 'chat-loading.tsx'],
 ];
 
 const contentContracts = [
