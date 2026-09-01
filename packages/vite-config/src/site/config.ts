@@ -51,6 +51,7 @@ export function createSiteViteConfig({ siteDir, port, previewPort, publicPathMap
           // 文档站通过 workspace alias 读取源码；其余路径仍由 Vite 默认严格限制。
           allow: [ROOT],
         },
+        allowedHosts:true,
         proxy: createSseProxy(),
       },
       preview: {
