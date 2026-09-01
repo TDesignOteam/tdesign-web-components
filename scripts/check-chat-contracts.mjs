@@ -1,5 +1,5 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { dirname, resolve } from 'node:path';
 
 import ts from 'typescript';
 
@@ -71,6 +71,48 @@ function publicInterfaceProps(typePath, interfaceName) {
   return [...props];
 }
 
+function resolvePropTypesInitializer(source, initializer) {
+  if (ts.isObjectLiteralExpression(initializer)) {
+    return { source, initializer };
+  }
+  if (!ts.isIdentifier(initializer)) return null;
+  const name = initializer.text;
+  let result = null;
+  source.forEachChild((node) => {
+    if (!ts.isImportDeclaration(node) || result) return;
+    const clause = node.importClause;
+    if (!clause) return;
+    const namedBindings = clause.namedBindings;
+    if (!namedBindings || !ts.isNamedImports(namedBindings)) return;
+    for (const element of namedBindings.elements) {
+      if (element.name.text !== name) continue;
+      const moduleSpecifier = node.moduleSpecifier;
+      if (!ts.isStringLiteral(moduleSpecifier)) return;
+      const basePath = resolve(dirname(source.fileName), moduleSpecifier.text);
+      const extCandidates = ['.ts', '.tsx', '.js', '.jsx', '/index.ts', '/index.tsx'];
+      const importPath = extCandidates.map((ext) => basePath + ext).find((p) => existsSync(p));
+      if (!importPath) return;
+      const importedSource = parse(importPath);
+      for (const stmt of importedSource.statements) {
+        if (!ts.isVariableStatement(stmt)) continue;
+        for (const decl of stmt.declarationList.declarations) {
+          if (
+            decl.name.getText(importedSource) === name &&
+            decl.initializer &&
+            ts.isObjectLiteralExpression(decl.initializer)
+          ) {
+            result = { source: importedSource, initializer: decl.initializer };
+            break;
+          }
+        }
+        if (result) break;
+      }
+      return;
+    }
+  });
+  return result;
+}
+
 function runtimeProps(componentPath) {
   const source = parse(componentPath);
   let props = [];
@@ -82,8 +124,10 @@ function runtimeProps(componentPath) {
         member.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword) &&
         propertyName(member) === 'propTypes',
     );
-    if (declaration?.initializer && ts.isObjectLiteralExpression(declaration.initializer)) {
-      props = declaration.initializer.properties.map(propertyName).filter(Boolean);
+    if (!declaration?.initializer) return;
+    const resolved = resolvePropTypesInitializer(source, declaration.initializer);
+    if (resolved) {
+      props = resolved.initializer.properties.map(propertyName).filter(Boolean);
     }
   });
   return props;
@@ -121,10 +165,12 @@ function runtimePropValidators(componentPath) {
         member.modifiers?.some((modifier) => modifier.kind === ts.SyntaxKind.StaticKeyword) &&
         propertyName(member) === 'propTypes',
     );
-    if (!declaration?.initializer || !ts.isObjectLiteralExpression(declaration.initializer)) return;
-    for (const property of declaration.initializer.properties) {
+    if (!declaration?.initializer) return;
+    const resolved = resolvePropTypesInitializer(source, declaration.initializer);
+    if (!resolved) return;
+    for (const property of resolved.initializer.properties) {
       if (!ts.isPropertyAssignment(property)) continue;
-      validators.set(propertyName(property), property.initializer.getText(source).replace(/\s+/g, ' '));
+      validators.set(propertyName(property), property.initializer.getText(resolved.source).replace(/\s+/g, ' '));
     }
   });
   return validators;
