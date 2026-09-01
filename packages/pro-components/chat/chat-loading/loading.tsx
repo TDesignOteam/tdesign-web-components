@@ -3,15 +3,17 @@ import '@tdesign/web-components';
 import { getClassPrefix } from '@tdesign/web-components-shared/_util/classname';
 import classname from '@tdesign/web-components-shared/_util/classname';
 import { setExportparts } from '@tdesign/web-components-shared/_util/dom';
+import { StyledProps } from '@tdesign/web-components-shared/common';
 import { Component, createRef, tag } from 'omi';
 
 import { TdChatLoadingProps } from './type';
 
 import styles from './style/loading.less';
+export interface ChatLoadingProps extends TdChatLoadingProps, StyledProps {}
 
 const className = `${getClassPrefix()}-chat-loading`;
 @tag('t-chat-loading')
-export default class Loading extends Component<TdChatLoadingProps> {
+export default class Loading extends Component<ChatLoadingProps> {
   static css = [styles];
 
   static propTypes = {
