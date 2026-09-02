@@ -16,7 +16,7 @@ packages:
 catalogs:
   runtime:
     '@popperjs/core': ^2.11.8
-    '@tdesign/ai-chat-engine': ^0.0.2
+    '@tdesign/ai-chat-engine': ^0.0.3
     cherry-markdown: 0.11.8
     classnames: ^2.5.1
     clsx: ^2.1.1
