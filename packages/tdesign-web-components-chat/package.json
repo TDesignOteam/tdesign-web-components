@@ -1,6 +1,6 @@
 {
   "name": "@tdesign/web-components-chat",
-  "version": "1.3.1-alpha.13",
+  "version": "1.3.2",
   "description": "TDesign Web Components Chat Library",
   "type": "module",
   "main": "./esm/index.js",
