@@ -7,6 +7,11 @@ spline: explain
 
 ## 🌈 1.3.2 `2026-09-03`
 
+### 📦 分包与迁移说明
+
+- `@tdesign/web-components`：承接原包的基础 UI 组件，如 Button、Input、Dialog 等，可独立使用。
+- `@tdesign/web-components-chat`：承接原包的 AI Chat 组件，如 Chatbot、ChatMessage、ChatSender 等，依赖 `@tdesign/web-components` 提供基础 UI，并依赖 `@tdesign/ai-chat-engine` 提供对话引擎能力。
+
 ### 🚀 Features
 
 - `ChatMessage`: 支持通过命名 slot 自定义文本、Markdown、图片等内置消息内容 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
@@ -15,7 +20,7 @@ spline: explain
 
 - `ChatMarkdown`: 修复引用块内列表缩进丢失导致样式重叠的问题 @RSS1102 ([#431](https://github.com/TDesignOteam/tdesign-web-components/pull/431))
 - `ChatSender`: 修复使用中文输入法时，在拼音组合阶段按 Enter 会误发送消息的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
-- `Chatbot`: 
+- `Chatbot`:
   - 修复消息完成后，操作栏等动态内容需要等到下一次更新才显示的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
   - 修复通过 `senderProps` 配置的发送和停止回调不触发的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
 
