@@ -10,7 +10,7 @@ spline: explain
 ### 📦 分包与迁移说明
 
 - `@tdesign/web-components`：承接原包的基础 UI 组件，如 Button、Input、Dialog 等，可独立使用。
-- `@tdesign/web-components-chat`：承接原包的 AI Chat 组件，如 Chatbot、ChatMessage、ChatSender 等，依赖 `@tdesign/web-components` 提供基础 UI，并依赖 `@tdesign/ai-chat-engine` 提供对话引擎能力。
+- `@tdesign/web-components-chat`：承接原包的 AI Chat 组件，如 Chatbot、ChatMessage、ChatSender 等，并且依赖 `@tdesign/web-components` 提供基础 UI，并依赖 `@tdesign/ai-chat-engine` 提供对话引擎能力。
 
 ### 🚀 Features
 
