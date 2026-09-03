@@ -183,6 +183,12 @@
         padding: var(--td-chat-md-blockquote-padding);
         color: var(--td-chat-md-blockquote-color);
         background: transparent;
+
+        // Cherry resets list margins inside blockquotes. Restore only the horizontal
+        // indent so its vertical spacing and nested-list hierarchy remain intact.
+        ul, ol {
+          margin-left: var(--td-chat-md-list-indent);
+        }
       }
 
       hr {
