@@ -9,6 +9,21 @@ spline: explain
 
 ### 📦 分包与迁移说明
 
+> [!WARNING]
+> 原 `tdesign-web-components` 包中的基础 UI 组件与 AI Chat 组件现已拆分为两个独立发布的 npm 包。原包用户升级时需调整依赖名称和引入路径。
+>
+> - `@tdesign/web-components`：承接原包的基础 UI 组件，如 Button、Input、Dialog 等，可独立使用，不依赖 Chat 包。
+> - `@tdesign/web-components-chat`：承接原包的 AI Chat 组件，如 Chatbot、ChatMessage、ChatSender 等，并且依赖 `@tdesign/web-components`，需使用对话组件时请安装此基础 UI 包。
+
+原包用户需调整依赖名称和引入路径：
+
+| 用途 | 原引入路径 | 新引入路径 |
+| --- | --- | --- |
+| 全量基础组件 | `tdesign-web-components` | `@tdesign/web-components` |
+| 按需基础组件 | `tdesign-web-components/button` | `@tdesign/web-components/button` |
+| 基础样式 | `tdesign-web-components/style/index.css` | `@tdesign/web-components/style/index.css` |
+| 对话组件 | `tdesign-web-components/chatbot` | `@tdesign/web-components-chat/chatbot` |
+
 ### 🐞 Bug Fixes
 
 - `Space`: 修复在 React 中无法正确显示子内容，以及动态更新间距不生效的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
