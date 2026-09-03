@@ -5,6 +5,12 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.3.2 `2026-09-03`
+
+### 🐞 Bug Fixes
+
+- `Space`: 修复在 React 中无法正确显示子内容，以及动态更新间距不生效的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
+
 ## 🌈 1.3.1-alpha.13 `2026-07-28`
 
 ### 🚧 Refactor（Breaking Changes）
