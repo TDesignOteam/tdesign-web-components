@@ -5,6 +5,20 @@ toc: false
 spline: explain
 ---
 
+## 🌈 1.3.2 `2026-09-03`
+
+### 🚀 Features
+
+- `ChatMessage`: 支持通过命名 slot 自定义文本、Markdown、图片等内置消息内容 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
+
+### 🐞 Bug Fixes
+
+- `ChatMarkdown`: 修复引用块内列表缩进丢失导致样式重叠的问题 @RSS1102 ([#431](https://github.com/TDesignOteam/tdesign-web-components/pull/431))
+- `ChatSender`: 修复使用中文输入法时，在拼音组合阶段按 Enter 会误发送消息的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
+- `Chatbot`: 
+  - 修复消息完成后，操作栏等动态内容需要等到下一次更新才显示的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
+  - 修复通过 `senderProps` 配置的发送和停止回调不触发的问题 @LzhengH ([#422](https://github.com/TDesignOteam/tdesign-web-components/pull/422))
+
 ## 🌈 1.3.1-alpha.13 `2026-07-28`
 
 ### 🚧 Refactor（Breaking Changes）
