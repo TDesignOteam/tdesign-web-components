@@ -76,7 +76,7 @@ export default [
         title: 'Button 按钮',
         name: 'button',
         path: '/web-components/components/button',
-        component: () => import('@tdesign/web-components/button/README.md'),
+        component: () => import('@tdesign/web-components/button/button.md'),
       },
       {
         title: 'Icon 图标',

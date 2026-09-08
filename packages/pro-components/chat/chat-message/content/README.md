@@ -53,7 +53,7 @@ ChatMessage 内置 Markdown、附件、搜索、建议、Thinking 和 Reasoning 
 | content           | `{ text?: string; title?: string }` | -          | 思考标题和正文 |
 | status            | `ChatMessageStatus`                 | -          | 当前消息状态   |
 | maxHeight         | Number                              | -          | 正文最大高度   |
-| animation         | `ChatLoadingAnimationType`          | `'circle'` | 进行中动画     |
+| animation         | `ChatLoadingAnimation`          | `'circle'` | 进行中动画     |
 | collapsed         | Boolean                             | -          | 受控折叠状态   |
 | defaultCollapsed  | Boolean                             | `false`    | 默认折叠状态   |
 | layout            | `'block' \| 'border'`               | `'block'`  | 展示布局       |
@@ -68,7 +68,7 @@ ChatMessage 内置 Markdown、附件、搜索、建议、Thinking 和 Reasoning 
 | content           | `AIMessageContent[]`                | `[]`       | 推理内容     |
 | status            | `ChatMessageStatus`                 | -          | 当前消息状态 |
 | maxHeight         | Number                              | -          | 正文最大高度 |
-| animation         | `ChatLoadingAnimationType`          | `'circle'` | 进行中动画   |
+| animation         | `ChatLoadingAnimation`          | `'circle'` | 进行中动画   |
 | collapsed         | Boolean                             | -          | 受控折叠状态 |
 | defaultCollapsed  | Boolean                             | `false`    | 默认折叠状态 |
 | layout            | `'block' \| 'border'`               | `'border'` | 展示布局     |

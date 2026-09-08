@@ -55,7 +55,7 @@ spline: base
 | 名称             | 类型                                                         | 默认值                                       | 说明                                                                                   | 必传 |
 | ---------------- | ------------------------------------------------------------ | -------------------------------------------- | -------------------------------------------------------------------------------------- | ---- |
 | actions          | `Array<TdChatActionsName \| TdChatMessageAction> \| boolean` | `['replay', 'copy', 'good', 'bad', 'share']` | 消息操作按钮及顺序；预设名称仅支持 `TdChatActionsName`，可用 `{ name, render }` 自定义 | N    |
-| animation        | `ChatLoadingAnimationType`                                   | `'skeleton'`                                 | 消息加载动画                                                                           | N    |
+| animation        | `ChatLoadingAnimation`                                   | `'skeleton'`                                 | 消息加载动画                                                                           | N    |
 | handleActions    | `TdChatMessageActionHandlers`                                | -                                            | 操作按钮和内容事件回调；参数按 action 名称提供精确类型                                 | N    |
 | name             | `string \| TNode`                                            | -                                            | 作者名称                                                                               | N    |
 | avatar           | `string \| TNode`                                            | -                                            | 作者头像                                                                               | N    |

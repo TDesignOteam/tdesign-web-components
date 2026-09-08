@@ -11,7 +11,7 @@ import type {
   SuggestionItem,
   UserMessageContent,
 } from '../chat-engine';
-import type { ChatLoadingAnimationType, TdChatLoadingProps } from '../chat-loading';
+import type { ChatLoadingAnimation, TdChatLoadingProps } from '../chat-loading';
 import type { TdChatAttachmentContentProps } from './content/attachment-content';
 import type { TdChatMarkdownContentProps } from './content/markdown-content';
 
@@ -78,7 +78,7 @@ export interface TdChatMessageProps {
    * 消息加载动画
    * @default skeleton
    */
-  animation?: ChatLoadingAnimationType;
+  animation?: ChatLoadingAnimation;
   /** 操作按钮回调 */
   handleActions?: TdChatMessageActionHandlers;
   /**

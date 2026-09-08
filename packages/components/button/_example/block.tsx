@@ -4,7 +4,7 @@ import 'tdesign-icons-web-components/esm/components/add';
 
 export default function Button() {
   return (
-    <t-space direction="vertical">
+    <t-space direction="vertical" style={{ width: '100%' }}>
       <t-button block variant="base">
         填充按钮
       </t-button>

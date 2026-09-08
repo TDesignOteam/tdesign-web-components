@@ -68,7 +68,7 @@ export default [
         title: 'ChatLoading 对话加载',
         name: 'chat-loading',
         path: '/pro-web-components/components/chat-loading',
-        component: () => import('@tdesign/web-components-chat/chat-loading/README.md'),
+        component: () => import('@tdesign/web-components-chat/chat-loading/chat-loading.md'),
       },
       {
         title: 'Filecard 文件缩略卡片',

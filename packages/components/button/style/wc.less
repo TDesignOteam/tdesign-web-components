@@ -1,0 +1,10 @@
+@import "@common/style/web/base.less";
+@import "@common/style/web/components/button/_var.less";
+
+// for web-component
+// webc 中图标被包在 .t-icon 内并通过 slot 渲染，svg 不是 .t-button__text 的直接兄弟节点
+.@{prefix}-button {
+  .@{prefix}-icon + .@{prefix}-button__text:not(:empty) {
+    margin-left: @btn-icon-text-margin-left;
+  }
+}

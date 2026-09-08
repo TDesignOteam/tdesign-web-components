@@ -1,4 +1,10 @@
-import { SizeEnum, TNode } from '@tdesign/web-components-shared/common';
+/* eslint-disable */
+
+/**
+ * 该文件为脚本自动生成文件，请勿随意修改。如需修改请联系 PMC
+ * */
+
+import type { TNode, TElement, SizeEnum } from '@tdesign/web-components-shared/common';
 
 export interface TdButtonProps {
   /**
@@ -15,10 +21,13 @@ export interface TdButtonProps {
    */
   content?: TNode;
   /**
-   * 禁用状态
-   * @default false
+   * 禁用状态。优先级：Button.disabled > Form.disabled
    */
   disabled?: boolean;
+  /**
+   * 原生的form属性，支持用于通过 form 属性触发对应 id 的 form 的表单事件
+   */
+  form?: string;
   /**
    * 是否为幽灵按钮（镂空按钮）
    * @default false
@@ -32,11 +41,12 @@ export interface TdButtonProps {
   /**
    * 按钮内部图标，可完全自定义
    */
-  icon?: TNode;
+  icon?: TElement;
   /**
-   * 按钮后置图标，可完全自定义
+   * 在host标签上忽略的属性，例如`['style']`就不会生成style属性
+   * @default []
    */
-  suffix?: TNode;
+  ignoreAttributes?: Array<string>;
   /**
    * 是否显示为加载状态
    * @default false
@@ -52,6 +62,10 @@ export interface TdButtonProps {
    * @default medium
    */
   size?: SizeEnum;
+  /**
+   * 右侧内容，可用于定义右侧图标
+   */
+  suffix?: TElement;
   /**
    * 渲染按钮的 HTML 标签，默认使用标签 `<button>` 渲染，可以自定义为 `<a>` `<div>` 等。透传全部 HTML 属性，如：`href/target/data-*` 等。⚠️ 禁用按钮 `<button disabled>`无法显示 Popup 浮层信息，可通过修改 `tag=div` 解决这个问题
    */
@@ -70,11 +84,6 @@ export interface TdButtonProps {
    * @default base
    */
   variant?: 'base' | 'outline' | 'dashed' | 'text';
-  /**
-   * 在host标签上忽略的属性
-   * @default []
-   */
-  ignoreAttributes?: string[];
   /**
    * 点击时触发
    */
