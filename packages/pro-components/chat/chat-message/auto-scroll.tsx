@@ -32,6 +32,8 @@ export default class ChatThinking extends Component<TdAutoScrollProps> {
 
   private observer: ResizeObserver = null;
 
+  private autoScrollTimer: ReturnType<typeof setTimeout>;
+
   private scrollHeightTmp = 0;
 
   /** 主动滚动产生的阻止自动滚动标记 */
@@ -111,13 +113,17 @@ export default class ChatThinking extends Component<TdAutoScrollProps> {
     }
 
     // 无论首次是否滚到底部，后续都正常触发自动滚动
-    setTimeout(() => {
+    this.autoScrollTimer = setTimeout(() => {
       this.isAutoScrollEnabled = true;
     }, 0);
   }
 
   uninstall(): void {
-    this.observer.disconnect();
+    this.observer?.disconnect();
+    this.observer = null;
+    clearTimeout(this.autoScrollTimer);
+    this.handleAutoScroll.cancel();
+    this.checkAutoScroll.cancel();
   }
 
   render(props: TdAutoScrollProps) {
