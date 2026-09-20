@@ -100,8 +100,8 @@ export function stripGeneratedSourceRegionComments(packageDir: string) {
 }
 
 /**
- * Chat 内联了 Cherry Markdown 的 icon font CSS，CSS 里使用固定的 ../assets/ch-icon.* 路径。
- * Vite 会产出 hash 文件名；发布包需额外补齐固定文件名，保证运行时字体 URL 可解析。
+ * 保留已发布的 dist/assets/ch-icon.* 路径，避免改变现有包资源结构。
+ * Vite 为 ESM 资源追加 hash，收尾时额外保留一份固定文件名的兼容资源。
  */
 export function emitCherryIconFontAssets(packageDir: string) {
   const esmAssets = resolve(packageDir, 'esm/assets');
@@ -110,7 +110,6 @@ export function emitCherryIconFontAssets(packageDir: string) {
 
   mkdirSync(distAssets, { recursive: true });
   for (const ext of ['eot', 'woff2', 'woff', 'ttf', 'svg']) {
-    // Vite 为 ESM 资源追加 hash；IIFE 中的内联 Cherry CSS 仍使用固定文件名。
     const [source] = fg.sync(`ch-icon*.${ext}`, { cwd: esmAssets, absolute: true });
     if (source) copyFileSync(source, resolve(distAssets, `ch-icon.${ext}`));
   }

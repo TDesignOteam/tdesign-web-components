@@ -1,17 +1,17 @@
 /**
  * Cherry Markdown Icon Font
  * 用于在 Light DOM 中加载字体，解决 Shadow DOM 中 @font-face 无法加载的问题
- * IIFE 构建会将字体补齐到 dist/assets/，运行时使用 ../assets/ 路径
+ * 使用依赖中的实际字体文件，让构建工具处理 ESM 和 IIFE 的资源路径
  */
 
 @font-face {
   font-family: "ch-icon";
-  src: url("../assets/ch-icon.eot");
-  src: url("../assets/ch-icon.eot?#iefix") format("eot"),
-       url("../assets/ch-icon.woff2") format("woff2"),
-       url("../assets/ch-icon.woff") format("woff"),
-       url("../assets/ch-icon.ttf") format("truetype"),
-       url("../assets/ch-icon.svg#ch-icon") format("svg");
+  src: url("cherry-markdown/dist/fonts/ch-icon.eot");
+  src: url("cherry-markdown/dist/fonts/ch-icon.eot?#iefix") format("eot"),
+       url("cherry-markdown/dist/fonts/ch-icon.woff2") format("woff2"),
+       url("cherry-markdown/dist/fonts/ch-icon.woff") format("woff"),
+       url("cherry-markdown/dist/fonts/ch-icon.ttf") format("truetype"),
+       url("cherry-markdown/dist/fonts/ch-icon.svg#ch-icon") format("svg");
   font-weight: normal;
   font-style: normal;
 }

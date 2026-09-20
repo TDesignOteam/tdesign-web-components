@@ -80,11 +80,13 @@ function createSharedUserConfig(
   };
 }
 
-function createEsmConfig(options: LibViteOptions): UserConfig {
+export function createEsmConfig(options: LibViteOptions): UserConfig {
   const monorepoRoot = getWorkspaceRoot(options.packageDir);
 
   return {
     ...createSharedUserConfig(options, monorepoRoot),
+    // ESM 中内联的 CSS 需要相对于模块解析资源，不能依赖使用方页面的根路径。
+    base: './',
     build: {
       outDir: resolve(options.packageDir, 'esm'),
       ...BROWSER_BUILD_TARGET,
@@ -139,7 +141,7 @@ function createDtsConfig(options: LibViteOptions): UserConfig {
   };
 }
 
-function createIifeConfig(options: LibViteOptions): UserConfig {
+export function createIifeConfig(options: LibViteOptions): UserConfig {
   const monorepoRoot = getWorkspaceRoot(options.packageDir);
   const packageNameParts = options.pkg.name.split('/');
   const fileName = `${packageNameParts[packageNameParts.length - 1]}.min.js`;
