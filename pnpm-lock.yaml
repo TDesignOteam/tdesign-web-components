@@ -10,8 +10,8 @@ catalogs:
       specifier: ^2.11.8
       version: 2.11.8
     '@tdesign/ai-chat-engine':
-      specifier: ^0.1.0
-      version: 0.1.0
+      specifier: ^0.1.1
+      version: 0.1.1
     cherry-markdown:
       specifier: 0.11.8
       version: 0.11.8
@@ -194,6 +194,12 @@ importers:
         specifier: catalog:tooling
         version: 4.1.10(@types/node@22.20.1)(jsdom@19.0.0)(vite@8.2.2(@types/node@22.20.1)(esbuild@0.28.1)(jiti@2.6.1)(less@4.8.0)(tsx@4.23.1)(yaml@2.8.3))
 
+  packages/common/docs: {}
+
+  packages/common/js: {}
+
+  packages/common/style: {}
+
   packages/components:
     dependencies:
       '@popperjs/core':
@@ -223,7 +229,7 @@ importers:
     dependencies:
       '@tdesign/ai-chat-engine':
         specifier: catalog:runtime
-        version: 0.1.0(immer@10.2.0)
+        version: 0.1.1(immer@10.2.0)
       cherry-markdown:
         specifier: catalog:runtime
         version: 0.11.8
@@ -293,7 +299,7 @@ importers:
     dependencies:
       '@tdesign/ai-chat-engine':
         specifier: catalog:runtime
-        version: 0.1.0(immer@10.2.0)
+        version: 0.1.1(immer@10.2.0)
       '@tdesign/web-components':
         specifier: workspace:^
         version: link:../tdesign-web-components
@@ -314,7 +320,7 @@ importers:
         version: 3.4.1
       tdesign-icons-web-components:
         specifier: catalog:runtime
-        version: 0.3.6(omi@7.7.13)
+        version: 0.3.6(omi@7.7.15)
 
   packages/tdesign-web-components-chat/site:
     devDependencies:
@@ -1038,8 +1044,8 @@ packages:
     peerDependencies:
       tailwindcss: '>=3.0.0 || >=4.0.0 || insiders'
 
-  '@tdesign/ai-chat-engine@0.1.0':
-    resolution: {integrity: sha512-EzonGZtaAN4UdXTnPAhzkiFFtQ4U/86CYoa/AMPnoud/V0FMzdVVCHxSj5v19ukB9K4t3wCOT0C3JIa8p9KmKQ==}
+  '@tdesign/ai-chat-engine@0.1.1':
+    resolution: {integrity: sha512-gmi3PxxVB9Sfst07OazdJqriPRZnA4y7am4qmj2U/RMFJxqN8L9fgxsRHv8ysNPO9wHzbIag/A0KVQ67AP1j4g==}
     peerDependencies:
       immer: ^10.0.0
 
@@ -3013,6 +3019,9 @@ packages:
   omi@7.7.13:
     resolution: {integrity: sha512-LA/rLhGE7PO/OVN9Mp4TG4YL3Dt5dERM9fsVyiPmE75CRCuyW7vVfrYK8Ee7EPbQuTycYRsfbrD1YBQytOY/jw==}
 
+  omi@7.7.15:
+    resolution: {integrity: sha512-/tAKE7belyvo+XFOsl6Sjxu8KTKGAaGqVEINwtyJczZA3BLl4f9AUkUgayvfPjEaaLV1JvYRjAwVTQgKdlr/9g==}
+
   on-finished@2.4.1:
     resolution: {integrity: sha512-oVlzkg3ENAhCk2zdv7IJwd/QUD4z2RxRwpkcGY8psCVcCYZNq4wYnVWALHM+brtuJjePWiYF/ClmuDr8Ch5+kg==}
     engines: {node: '>= 0.8'}
@@ -4571,7 +4580,7 @@ snapshots:
       postcss-selector-parser: 6.0.10
       tailwindcss: 3.4.19(tsx@4.23.1)(yaml@2.8.3)
 
-  '@tdesign/ai-chat-engine@0.1.0(immer@10.2.0)':
+  '@tdesign/ai-chat-engine@0.1.1(immer@10.2.0)':
     dependencies:
       '@json-render/core': 0.19.0
       immer: 10.2.0
@@ -6675,14 +6684,20 @@ snapshots:
 
   omi-router@4.1.8:
     dependencies:
-      omi: 7.7.13
+      omi: 7.7.15
       path-to-regexp: 6.3.0
 
   omi-transition@0.1.11:
     dependencies:
-      omi: 7.7.13
+      omi: 7.7.15
 
   omi@7.7.13:
+    dependencies:
+      construct-style-sheets-polyfill: 3.0.1
+      reactive-signal: 2.0.1
+      weakmap-polyfill: 2.0.4
+
+  omi@7.7.15:
     dependencies:
       construct-style-sheets-polyfill: 3.0.1
       reactive-signal: 2.0.1
@@ -7238,6 +7253,13 @@ snapshots:
       '@babel/runtime': 7.29.2
       clsx: 2.1.1
       omi: 7.7.13
+      tailwind-merge: 2.6.1
+
+  tdesign-icons-web-components@0.3.6(omi@7.7.15):
+    dependencies:
+      '@babel/runtime': 7.29.2
+      clsx: 2.1.1
+      omi: 7.7.15
       tailwind-merge: 2.6.1
 
   tdesign-vue-next@1.17.7(vue@3.5.40(typescript@6.0.3)):
