@@ -79,7 +79,7 @@ export const renderThinking = ({
           </slot>
         </t-auto-scroll>
         <div slot="header" className={`${className}__think__header__content`}>
-          {status !== 'stop' && renderThinkingStatus(status as ChatMessageStatus)}
+          <slot name="icon">{status !== 'stop' && renderThinkingStatus(status as ChatMessageStatus)}</slot>
           {status === 'stop' ? '思考已终止' : title}
         </div>
       </t-collapse-panel>

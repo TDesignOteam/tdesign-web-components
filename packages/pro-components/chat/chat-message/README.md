@@ -24,6 +24,21 @@ spline: base
 
 {{ thinking }}
 
+独立使用 `t-chat-thinking-content` 时，可通过 `slot="icon"` 自定义标题图标。未提供插槽时保留当前状态的默认图标；停止状态默认不显示图标，标题仍为“思考已终止”。
+
+```html
+<t-chat-thinking-content status="pending" content='{"title":"正在思考","text":"整理相关信息"}'>
+  <span slot="icon">✦</span>
+</t-chat-thinking-content>
+```
+
+#### ChatThinkingContent Slots
+
+| 名称 | 说明 |
+| --- | --- |
+| icon | 自定义标题图标，不替换标题或折叠操作。 |
+| content | 自定义思考内容。 |
+
 ### 推荐Prompt
 
 {{ suggestion }}

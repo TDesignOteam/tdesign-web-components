@@ -1,4 +1,5 @@
 import '../content/thinking-content';
+import 'tdesign-icons-web-components/esm/components/lightbulb';
 
 import { Component, signal } from 'omi';
 
@@ -37,6 +38,7 @@ export default class BasicExample extends Component {
           status="streaming"
           animation="moving"
         >
+          <t-icon-lightbulb slot="icon" />
           <div slot="content">自定义content</div>
         </t-chat-thinking-content>
       </div>
